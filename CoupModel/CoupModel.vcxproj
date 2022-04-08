@@ -1,0 +1,937 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}</ProjectGuid>
+    <RootNamespace>CoupModel</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <UseOfMfc>Static</UseOfMfc>
+    <UseOfAtl>Dynamic</UseOfAtl>
+    <PlatformToolset>v143</PlatformToolset>
+    <CLRSupport>false</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfAtl>false</UseOfAtl>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Dev\CoupModel\CoupModel\include;C:\dev\vcpkg\installed\x86-windows\include\boost;C:\Dev\CoupModel\CoupModel\include\win32;C:\Dev\CoupModel\CoupModel\include\NetCDF;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Dev\CoupModel\CoupModel\Lib;$(LibraryPath)</LibraryPath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <EnableCppCoreCheck>true</EnableCppCoreCheck>
+    <EnableExperimentalCppCoreCheck>true</EnableExperimentalCppCoreCheck>
+    <CodeAnalysisRuleSet>CppCoreCheckFuncRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\dev\vcpkg\installed\x86-windows\include\boost;C:\Dev\CoupModel\CoupModel\include;C:\Dev\CoupModel\CoupModel\include\win32;C:\Dev\boost_1_55_0b1;C:\Dev\CoupModel\CoupModel\include\NetCDF;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Dev\CoupModel\CoupModel\Lib;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>ConcurrencyRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;COUP2013;MS_CODE;_WINDOWS;HAVE_EXPM1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>chartDir50.lib;NetCdf.lib;HtmlHelp.lib;xlntd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level1</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;COUP2013;MS_CODE;HAVE_EXPM1;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>chartDir50.lib;NetCdf.lib;HtmlHelp.lib;xlnt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="CoupModel.reg" />
+    <None Include="Model\Functions.csv" />
+    <None Include="Model\ReadMe.txt" />
+    <None Include="ReadMe.txt" />
+    <None Include="res\classview.bmp" />
+    <None Include="res\classview_hc.bmp" />
+    <None Include="res\class_view.ico" />
+    <None Include="res\class_view_hc.ico" />
+    <None Include="res\CoupModel.ico" />
+    <None Include="res\CoupModel.rc2" />
+    <None Include="res\CoupModelDoc.ico" />
+    <None Include="res\explorer.bmp" />
+    <None Include="res\explorer_hc.bmp" />
+    <None Include="res\fileview.bmp" />
+    <None Include="res\fileview_hc.bmp" />
+    <None Include="res\file_view.ico" />
+    <None Include="res\file_view_hc.ico" />
+    <None Include="res\menuimages.bmp" />
+    <None Include="res\menuimages_hc.bmp" />
+    <None Include="res\output_wnd.ico" />
+    <None Include="res\output_wnd_hc.ico" />
+    <None Include="res\properties.bmp" />
+    <None Include="res\properties_hc.bmp" />
+    <None Include="res\properties_wnd.ico" />
+    <None Include="res\properties_wnd_hc.ico" />
+    <None Include="res\ribbon.mfcribbon-ms" />
+    <None Include="res\sort.bmp" />
+    <None Include="res\sort_hc.bmp" />
+    <None Include="res\Toolbar.bmp" />
+    <None Include="res\Toolbar256.bmp" />
+    <None Include="UserImages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Aboutbox.h" />
+    <ClInclude Include="BasicExcel\BasicExcel.hpp" />
+    <ClInclude Include="ChartWnd.h" />
+    <ClInclude Include="Chart\Axis\DrawAxisDesign.h" />
+    <ClInclude Include="Chart\ChartBase.h" />
+    <ClInclude Include="Chart\ChartData\ChartData.h" />
+    <ClInclude Include="Chart\ChartData\DistributionCurves.h" />
+    <ClInclude Include="Chart\ChartData\LoadDataToChart.h" />
+    <ClInclude Include="Chart\ChartFrames\ChartFrame.h" />
+    <ClInclude Include="Chart\ChartFrames\NumFrames.h" />
+    <ClInclude Include="Chart\ChartProperties\ChartProp.h" />
+    <ClInclude Include="Chart\ChartProperties\ChartProp_AxisRepresentation.h" />
+    <ClInclude Include="Chart\ChartProperties\ChartProp_AxisScaleValues.h" />
+    <ClInclude Include="Chart\ChartProperties\ChartProp_Distributions.h" />
+    <ClInclude Include="Chart\ChartProperties\ChartProp_Regression.h" />
+    <ClInclude Include="Chart\ChartProperties\ChartUtil.h" />
+    <ClInclude Include="Chart\ChartViewer.h" />
+    <ClInclude Include="Chart\DrawContourDetails.h" />
+    <ClInclude Include="Chart\DrawDetails.h" />
+    <ClInclude Include="Chart\FileCreate\ChartFileSave.h" />
+    <ClInclude Include="Chart\Legends\DrawVariableLegends.h" />
+    <ClInclude Include="Chart\ModelView.h" />
+    <ClInclude Include="Chart\ParameterPlot.h" />
+    <ClInclude Include="Chart\PlotDesignInfo\PlotInfo.h" />
+    <ClInclude Include="Chart\PlotDesignInfo\PlotStorage.h" />
+    <ClInclude Include="Chart\RealTime.h" />
+    <ClInclude Include="Chart\TableView.h" />
+    <ClInclude Include="Chart\TimeSeriePlot.h" />
+    <ClInclude Include="Chart\ZoomUtil\ZoomTimeSerie.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="ClassView.h" />
+    <ClInclude Include="codecogs\Array\heap_sort.h" />
+    <ClInclude Include="codecogs\computing\array\matrix.h" />
+    <ClInclude Include="codecogs\maths\algebra\Polynomial\poly_eval.h" />
+    <ClInclude Include="codecogs\maths\approximation\regression\discrete.h" />
+    <ClInclude Include="codecogs\maths\approximation\regression\linear.h" />
+    <ClInclude Include="codecogs\maths\special\cdf.h" />
+    <ClInclude Include="codecogs\maths\special\errorfn.h" />
+    <ClInclude Include="codecogs\maths\special\poly_eval.h" />
+    <ClInclude Include="codecogs\stats\dists\continuous\Normal\cdf_inv.h" />
+    <ClInclude Include="CoupModel.h" />
+    <ClInclude Include="CoupModelDoc.h" />
+    <ClInclude Include="CoupModelView.h" />
+    <ClInclude Include="CUG\CalcCug.h" />
+    <ClInclude Include="CUG\ChartProperties\ChartCug.h" />
+    <ClInclude Include="CUG\ChartProperties\ChartCugBase.h" />
+    <ClInclude Include="CUG\ChartProperties\ChartCugChangeValue.h" />
+    <ClInclude Include="CUG\ChartProperties\ChartCugClick.h" />
+    <ClInclude Include="CUG\ChartProperties\ChartCugCommands.h" />
+    <ClInclude Include="CUG\ChartProperties\ChartCugSheets.h" />
+    <ClInclude Include="CUG\ColorPickerCB.h" />
+    <ClInclude Include="CUG\ColourPickerDlg.h" />
+    <ClInclude Include="CUG\CreatePG\PGcug.h" />
+    <ClInclude Include="CUG\CugChartData.h" />
+    <ClInclude Include="CUG\CValidTimeCug.h" />
+    <ClInclude Include="CUG\EvaluateMulti\ValidationCug.h" />
+    <ClInclude Include="CUG\HistoryCug.h" />
+    <ClInclude Include="CUG\LegendChangeDlg.h" />
+    <ClInclude Include="CUG\MakePGCharts\MakePGCharts.h" />
+    <ClInclude Include="CUG\makesimcharts\docclick.h" />
+    <ClInclude Include="CUG\makesimcharts\doccommands.h" />
+    <ClInclude Include="CUG\MakeSimCharts\MakeSimCharts.h" />
+    <ClInclude Include="CUG\MakeSimSheets\MakeSimSheets.h" />
+    <ClInclude Include="CUG\PEJUGCtrl.h" />
+    <ClInclude Include="CUG\PFCug\DBDataCUG.h" />
+    <ClInclude Include="CUG\PFCug\DB_BASCUG.h" />
+    <ClInclude Include="CUG\PFCug\Header.h" />
+    <ClInclude Include="CUG\PFCug\PFCug.h" />
+    <ClInclude Include="CUG\PFCug\PFMenu.h" />
+    <ClInclude Include="CUG\PFCug\PFSheets.h" />
+    <ClInclude Include="CUG\PFCug\SoilData.h" />
+    <ClInclude Include="CUG\PF_Import_Cug.h" />
+    <ClInclude Include="CUG\PGCug.h" />
+    <ClInclude Include="CUG\PGDoc\GridPGDoc.h" />
+    <ClInclude Include="CUG\PGDoc\MyPGcug.h" />
+    <ClInclude Include="CUG\PGDoc\PGButtonEvents.h" />
+    <ClInclude Include="CUG\PGDoc\PGCalcActions.h" />
+    <ClInclude Include="CUG\PGDoc\PGClick.h" />
+    <ClInclude Include="CUG\PGDoc\PGCommands.h" />
+    <ClInclude Include="CUG\PGDoc\PGEditCells.h" />
+    <ClInclude Include="CUG\PGFilecug.h" />
+    <ClInclude Include="CUG\SimDoc\GridSimDoc.h" />
+    <ClInclude Include="CUG\SimDoc\MyCug.h" />
+    <ClInclude Include="CUG\SimpleCug.h" />
+    <ClInclude Include="CUG\SumValidationCug.h" />
+    <ClInclude Include="CUG\targetver.h" />
+    <ClInclude Include="CUG\UG64Bit.h" />
+    <ClInclude Include="CUG\UGCBType.h" />
+    <ClInclude Include="CUG\UGCell.h" />
+    <ClInclude Include="CUG\ugceltyp.h" />
+    <ClInclude Include="CUG\UGCnrBtn.h" />
+    <ClInclude Include="CUG\UGCTarrw.h" />
+    <ClInclude Include="CUG\UGCtrl.h" />
+    <ClInclude Include="CUG\ugdefine.h" />
+    <ClInclude Include="CUG\UGDLType.h" />
+    <ClInclude Include="CUG\UGDrgDrp.h" />
+    <ClInclude Include="CUG\UGDrwHnt.h" />
+    <ClInclude Include="CUG\UGDtaSrc.h" />
+    <ClInclude Include="CUG\UGEdit.h" />
+    <ClInclude Include="CUG\UGEditBase.h" />
+    <ClInclude Include="CUG\ugformat.h" />
+    <ClInclude Include="CUG\uggdinfo.h" />
+    <ClInclude Include="CUG\UGGrid.h" />
+    <ClInclude Include="CUG\UGHint.h" />
+    <ClInclude Include="CUG\ughscrol.h" />
+    <ClInclude Include="CUG\uglstbox.h" />
+    <ClInclude Include="CUG\UGMEdit.h" />
+    <ClInclude Include="CUG\UGMemMan.h" />
+    <ClInclude Include="CUG\UGMultiS.h" />
+    <ClInclude Include="CUG\ugprint.h" />
+    <ClInclude Include="CUG\ugptrlst.h" />
+    <ClInclude Include="CUG\ugsidehd.h" />
+    <ClInclude Include="CUG\UGStrOp.h" />
+    <ClInclude Include="CUG\ugstruct.h" />
+    <ClInclude Include="CUG\ugtab.h" />
+    <ClInclude Include="CUG\UGTopHdg.h" />
+    <ClInclude Include="CUG\ugvscrol.h" />
+    <ClInclude Include="CUG\ugxpthemes.h" />
+    <ClInclude Include="CUG\utbstrop.h" />
+    <ClInclude Include="CUG\UTMaskedEdit.h" />
+    <ClInclude Include="DBDataWnd.h" />
+    <ClInclude Include="DBWnd.h" />
+    <ClInclude Include="DB\DB_Header.h" />
+    <ClInclude Include="DB\DB_Plant.h" />
+    <ClInclude Include="DB\DB_Storage.h" />
+    <ClInclude Include="DB\GetDB.h" />
+    <ClInclude Include="EvalMultiWnd.h" />
+    <ClInclude Include="include\xlnt\cell\cell.hpp" />
+    <ClInclude Include="include\xlnt\xlnt.hpp" />
+    <ClInclude Include="include\xlnt\xlnt_config.hpp" />
+    <ClInclude Include="ModelTypes\FixedInteger_PlantComp.h" />
+    <ClInclude Include="Model\Atmosphere\Functors\SoilEvaporation_Functors.h" />
+    <ClInclude Include="Model\Atmosphere\Functors\SurfaceWater_Functors.h" />
+    <ClInclude Include="Model\HBV\Functor\HBV_Functor.h" />
+    <ClInclude Include="Model\ModelFunctions.h" />
+    <ClInclude Include="ModelTypes\FunctFactory.h" />
+    <ClInclude Include="Model\Atmosphere\Functors\Met_Functors.h" />
+    <ClInclude Include="Model\Atmosphere\Functors\SnowPack_Functors.h" />
+    <ClInclude Include="Model\PLANT\Functors\Salt_Functors.h" />
+    <ClInclude Include="Model\PLANT\Functors\WaterUptake_Functors.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\Allocation\AlloLeafMass.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\Allocation\AlloRootMass.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\BiomassDescription\BioMass.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\GrowthStages\GrowthStages.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\LitterFall\LitterTemplate.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\NC_Plant_Functors.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\GPP_Drivers.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\LogisticGrowth.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoGreenIndexResponse.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoNLeafResponse.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoPLeafResponse.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoRadEff.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTemplate.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempResponseDirect.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempSumResponse.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\UptakeFromSoil\PlantUptake.h" />
+    <ClInclude Include="Model\SOIL\Functors\Drainage_Functor.h" />
+    <ClInclude Include="Model\SOIL\Functors\HydFunctors.h" />
+    <ClInclude Include="Model\SOIL\Functors\Profile_Functors.h" />
+    <ClInclude Include="Model\SOIL\Functors\Thermal_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\BasicGas_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\Methane_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\NC_ExternalInputs_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\NC_GasFluxFunctors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\NC_Minerals_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\NC_Organic_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\NC_Soil_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\NOxide_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\Functors\P_Minerals_Functors.h" />
+    <ClInclude Include="Model\SOIL_NC\P_ExternalInputs.h" />
+    <ClInclude Include="Model\SOIL_NC\P_ExternalInputs_Functions.h" />
+    <ClInclude Include="Model\SOIL_NC\P_Mineral.h" />
+    <ClInclude Include="Model\SOIL_NC\P_Mineral_Functions.h" />
+    <ClInclude Include="Model\Structure\Functors\Structure_Functors.h" />
+    <ClInclude Include="Model\Structure\Functors\Technical_Functors.h" />
+    <ClInclude Include="Model\Units.h" />
+    <ClInclude Include="MultiRun\ConStrainByInput.h" />
+    <ClInclude Include="NewBase\Nelder_Mead\optimizer.h" />
+    <ClInclude Include="NewBase\PhysFunc.h" />
+    <ClInclude Include="PG\FileImport\ExtraLinkedInformation.h" />
+    <ClInclude Include="FileView.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="mcmc\lot.h" />
+    <ClInclude Include="mcmc\MCMC.h" />
+    <ClInclude Include="mcmc\util.h" />
+    <ClInclude Include="ModelTypes\CDB.h" />
+    <ClInclude Include="ModelTypes\D.h" />
+    <ClInclude Include="ModelTypes\Ds.h" />
+    <ClInclude Include="ModelTypes\F.h" />
+    <ClInclude Include="ModelTypes\FCSV.h" />
+    <ClInclude Include="ModelTypes\Func.h" />
+    <ClInclude Include="ModelTypes\G.h" />
+    <ClInclude Include="ModelTypes\Gs.h" />
+    <ClInclude Include="ModelTypes\NE.h" />
+    <ClInclude Include="ModelTypes\NewModelType.h" />
+    <ClInclude Include="ModelTypes\OutBase.h" />
+    <ClInclude Include="ModelTypes\OutSingle.h" />
+    <ClInclude Include="ModelTypes\OutVector.h" />
+    <ClInclude Include="ModelTypes\P.h" />
+    <ClInclude Include="ModelTypes\Par.h" />
+    <ClInclude Include="ModelTypes\Ps.h" />
+    <ClInclude Include="ModelTypes\RunInfo.h" />
+    <ClInclude Include="ModelTypes\SimB.h" />
+    <ClInclude Include="ModelTypes\Sw.h" />
+    <ClInclude Include="ModelTypes\T.h" />
+    <ClInclude Include="ModelTypes\Tab.h" />
+    <ClInclude Include="ModelTypes\Ts.h" />
+    <ClInclude Include="ModelTypes\X.h" />
+    <ClInclude Include="ModelTypes\Xs.h" />
+    <ClInclude Include="ModelWnd.h" />
+    <ClInclude Include="Model\Atmosphere\AtmModel.h" />
+    <ClInclude Include="Model\Atmosphere\Irrigation.h" />
+    <ClInclude Include="Model\Atmosphere\Irrigation_Functions.h" />
+    <ClInclude Include="Model\Atmosphere\Meteorological_Data.h" />
+    <ClInclude Include="Model\Atmosphere\Meteorological_Data_Functions.h" />
+    <ClInclude Include="Model\Atmosphere\Radiation.h" />
+    <ClInclude Include="Model\Atmosphere\Radiation_Functions.h" />
+    <ClInclude Include="Model\Atmosphere\SnowPack.h" />
+    <ClInclude Include="Model\Atmosphere\SnowPack_Functions.h" />
+    <ClInclude Include="Model\Atmosphere\SoilEvaporation.h" />
+    <ClInclude Include="Model\Atmosphere\SoilEvaporation_Functions.h" />
+    <ClInclude Include="Model\Atmosphere\Surface_Water.h" />
+    <ClInclude Include="Model\Atmosphere\Surface_Water_Functions.h" />
+    <ClInclude Include="Model\FunctionProperties.h" />
+    <ClInclude Include="Model\GlobalInfo.h" />
+    <ClInclude Include="Model\HBV\HBV.h" />
+    <ClInclude Include="Model\HBV\HBVModel.h" />
+    <ClInclude Include="Model\ModelConst.h" />
+    <ClInclude Include="Model\PhysConst.h" />
+    <ClInclude Include="Model\PLANT\Interception.h" />
+    <ClInclude Include="Model\PLANT\Plant.h" />
+    <ClInclude Include="Model\PLANT\PlantModel.h" />
+    <ClInclude Include="Model\PLANT\Potential_Transpiration.h" />
+    <ClInclude Include="Model\PLANT\Salt.h" />
+    <ClInclude Include="Model\PLANT\WaterUptake.h" />
+    <ClInclude Include="Model\PLANT_NC\NC_Drivings.h" />
+    <ClInclude Include="Model\PLANT_NC\NC_Drivings_Functions.h" />
+    <ClInclude Include="Model\PLANT_NC\NC_Plant.h" />
+    <ClInclude Include="Model\PLANT_NC\NC_Plant_Functions.h" />
+    <ClInclude Include="Model\PLANT_NC\PlantOrgModel.h" />
+    <ClInclude Include="CUG\PGDoc\PGMaps.h" />
+    <ClInclude Include="PG\FileImport\PGFileImportBase.h" />
+    <ClInclude Include="PG\NewAddMixPGFiles.h" />
+    <ClInclude Include="NewBase\SimArchive.h" />
+    <ClInclude Include="Model\SimModule.h" />
+    <ClInclude Include="Model\SOIL\Hydraulic.h" />
+    <ClInclude Include="Model\SOIL\Hydraulic_Functions.h" />
+    <ClInclude Include="Model\SOIL\Profile.h" />
+    <ClInclude Include="Model\SOIL\Profile_Functions.h" />
+    <ClInclude Include="Model\SOIL\SoilModel.h" />
+    <ClInclude Include="Model\SOIL\Soil_Drainage.h" />
+    <ClInclude Include="Model\SOIL\Soil_Drainage_Functions.h" />
+    <ClInclude Include="Model\SOIL\Soil_Frost.h" />
+    <ClInclude Include="Model\SOIL\Soil_Frost_Functions.h" />
+    <ClInclude Include="Model\SOIL\Soil_HeatF.h" />
+    <ClInclude Include="Model\SOIL\Soil_HeatF_Functions.h" />
+    <ClInclude Include="Model\SOIL\Soil_HeatPump.h" />
+    <ClInclude Include="Model\SOIL\Soil_HeatPump_Functions.h" />
+    <ClInclude Include="Model\SOIL\Soil_WaterF.h" />
+    <ClInclude Include="Model\SOIL\Soil_WaterF_Functions.h" />
+    <ClInclude Include="Model\SOIL\Thermal.h" />
+    <ClInclude Include="Model\SOIL\ThermalCoef.h" />
+    <ClInclude Include="Model\SOIL\Thermal_Functions.h" />
+    <ClInclude Include="Model\SOIL_NC\AbioticResponses.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_ExternalInputs.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_ExternalInputs_Functions.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_GasFlux.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_GasFlux_Functions.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_Mineral.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_Mineral_Functions.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_Organic.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_Organic_Functions.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_SoilManagement.h" />
+    <ClInclude Include="Model\SOIL_NC\NC_SoilManagement_Functions.h" />
+    <ClInclude Include="Model\SOIL_NC\SoilOrgModel.h" />
+    <ClInclude Include="Model\Structure\Additional_BioticVariables.h" />
+    <ClInclude Include="Model\Structure\Additional_BioticVariables_Functions.h" />
+    <ClInclude Include="Model\Structure\Additional_Variables.h" />
+    <ClInclude Include="Model\Structure\Additional_Variables_Functions.h" />
+    <ClInclude Include="Model\Structure\Numerical.h" />
+    <ClInclude Include="Model\Structure\Numerical_Functions.h" />
+    <ClInclude Include="Model\Structure\Structure.h" />
+    <ClInclude Include="Model\Structure\StructureModel.h" />
+    <ClInclude Include="Model\Structure\Structure_Functions.h" />
+    <ClInclude Include="Model\Structure\Technical.h" />
+    <ClInclude Include="Model\Structure\Technical_Functions.h" />
+    <ClInclude Include="MultiRun\DimNewValue.h" />
+    <ClInclude Include="MultiRun\MultiRun.h" />
+    <ClInclude Include="MultiRun\MultiRunTable.h" />
+    <ClInclude Include="MultiRun\MultiStorageData.h" />
+    <ClInclude Include="MultiRun\MultiStorageStatData.h" />
+    <ClInclude Include="MultiRun\Residuals.h" />
+    <ClInclude Include="MultiRun\ResidualsBase.h" />
+    <ClInclude Include="MultiRun\SelectedAddEnsembles.h" />
+    <ClInclude Include="MultiRun\SelectedEnsembles.h" />
+    <ClInclude Include="NetCDF\ncAtt.h" />
+    <ClInclude Include="NetCDF\ncByte.h" />
+    <ClInclude Include="NetCDF\ncChar.h" />
+    <ClInclude Include="NetCDF\ncCheck.h" />
+    <ClInclude Include="NetCDF\ncCompoundType.h" />
+    <ClInclude Include="NetCDF\ncDim.h" />
+    <ClInclude Include="NetCDF\ncDouble.h" />
+    <ClInclude Include="NetCDF\ncEnumType.h" />
+    <ClInclude Include="NetCDF\ncException.h" />
+    <ClInclude Include="NetCDF\ncFile.h" />
+    <ClInclude Include="NetCDF\ncFloat.h" />
+    <ClInclude Include="NetCDF\ncGroup.h" />
+    <ClInclude Include="NetCDF\ncGroupAtt.h" />
+    <ClInclude Include="NetCDF\ncInt.h" />
+    <ClInclude Include="NetCDF\ncInt64.h" />
+    <ClInclude Include="NetCDF\ncOpaqueType.h" />
+    <ClInclude Include="NetCDF\ncShort.h" />
+    <ClInclude Include="NetCDF\ncString.h" />
+    <ClInclude Include="NetCDF\ncType.h" />
+    <ClInclude Include="NetCDF\ncUbyte.h" />
+    <ClInclude Include="NetCDF\ncUint.h" />
+    <ClInclude Include="NetCDF\ncUint64.h" />
+    <ClInclude Include="NetCDF\ncUshort.h" />
+    <ClInclude Include="NetCDF\ncvalues.h" />
+    <ClInclude Include="NetCDF\ncVar.h" />
+    <ClInclude Include="NetCDF\ncVarAtt.h" />
+    <ClInclude Include="NetCDF\ncVlenType.h" />
+    <ClInclude Include="NetCDF\netcdfcpp.h" />
+    <ClInclude Include="NetCDF\NetCDFTransfer.h" />
+    <ClInclude Include="NewBase\Bayes\BayesStatistics.h" />
+    <ClInclude Include="NewBase\CH.h" />
+    <ClInclude Include="NewBase\CommonModelInfo.h" />
+    <ClInclude Include="NewBase\DB.h" />
+    <ClInclude Include="NewBase\Doc.h" />
+    <ClInclude Include="NewBase\FileScanner.h" />
+    <ClInclude Include="NewBase\History.h" />
+    <ClInclude Include="NewBase\HistoryList.h" />
+    <ClInclude Include="NewBase\Link.h" />
+    <ClInclude Include="NewBase\ModelBase.h" />
+    <ClInclude Include="NewBase\ModelFiles.h" />
+    <ClInclude Include="NewBase\ModelMap.h" />
+    <ClInclude Include="NewBase\MR.h" />
+    <ClInclude Include="NewBase\NewMap.h" />
+    <ClInclude Include="NewBase\ParValueChangeRead\ChangeFromFile.h" />
+    <ClInclude Include="NewBase\Sim.h" />
+    <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="PFWnd.h" />
+    <ClInclude Include="PG\CalculateVariable.h" />
+    <ClInclude Include="PG\ChangePeriod.h" />
+    <ClInclude Include="PG\ChangeToNewResolution.h" />
+    <ClInclude Include="PG\CreatePG.h" />
+    <ClInclude Include="PG\NewPGVariables.h" />
+    <ClInclude Include="PG\NoaaCoord.h" />
+    <ClInclude Include="PG\PG.H" />
+    <ClInclude Include="PG\PGBase.h" />
+    <ClInclude Include="PG\PGCalc.h" />
+    <ClInclude Include="PG\PGFile.h" />
+    <ClInclude Include="PG\PGFileArchive.h" />
+    <ClInclude Include="PG\FileImport\PGFileImport.h" />
+    <ClInclude Include="PG\PGUtil.h" />
+    <ClInclude Include="PG\PGView.h" />
+    <ClInclude Include="PG\PG_FILEDLG.h" />
+    <ClInclude Include="PG\SelectPGTimeRange.h" />
+    <ClInclude Include="PG\TimeAggregate.h" />
+    <ClInclude Include="PG\PG_MEMORY.h" />
+    <ClInclude Include="PG\PG_Stream.h" />
+    <ClInclude Include="PhotoTempResponseDirect.h" />
+    <ClInclude Include="PropertiesWnd.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Run\ChaParDuringRun.h" />
+    <ClInclude Include="Simulator\ModelInfo.h" />
+    <ClInclude Include="Simulator\Simulator.h" />
+    <ClInclude Include="CUG\EvaluateMulti\ValidationCugButtons.h" />
+    <ClInclude Include="SoilData\PlotPF\GausKreuger.h" />
+    <ClInclude Include="SoilData\PlotPF\GetPFCurve.h" />
+    <ClInclude Include="SoilData\PlotPF\PFCurve.h" />
+    <ClInclude Include="SoilData\PlotPF\PFStorage.h" />
+    <ClInclude Include="std.h" />
+    <ClInclude Include="Util\CoupSim_XML.h" />
+    <ClInclude Include="Util\pugiconfig.hpp" />
+    <ClInclude Include="Util\pugixml.hpp" />
+    <ClInclude Include="Validation\SmartFlexDataAdmin.h" />
+    <ClInclude Include="Util\Constants.h" />
+    <ClInclude Include="Validation\SmartFlexibleValidation.h" />
+    <ClInclude Include="SoilDataWnd.h" />
+    <ClInclude Include="SoilData\GetSoilStorage.h" />
+    <ClInclude Include="SoilData\SoilStorage.h" />
+    <ClInclude Include="SP\SP_EXCHANGE1.h" />
+    <ClInclude Include="SP\SP_Export.h" />
+    <ClInclude Include="SP\SP_ImportDlg.h" />
+    <ClInclude Include="SP\SP_Retrieve.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="UserSetup.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="Util\FUtil.h" />
+    <ClInclude Include="Util\MFC_Util.h" />
+    <ClInclude Include="Util\ModelUtil.h" />
+    <ClInclude Include="Util\ReadWriteTypes.h" />
+    <ClInclude Include="Util\StatUtil.h" />
+    <ClInclude Include="Validation\ValidationData.h" />
+    <ClInclude Include="Validation\SelectWindowForValidationSummaryVariables.h" />
+    <ClInclude Include="Validation\ValidationVariables.h" />
+    <ClInclude Include="ViewTree.h" />
+    <ClInclude Include="Welcome.h" />
+    <ClInclude Include="WindowNames.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Aboutbox.cpp" />
+    <ClCompile Include="BasicExcel\BasicExcel.cpp" />
+    <ClCompile Include="ChartWnd.cpp" />
+    <ClCompile Include="Chart\Axis\DrawAxisDesign.cpp" />
+    <ClCompile Include="Chart\Chartbase.cpp" />
+    <ClCompile Include="Chart\ChartData\ChartData.cpp" />
+    <ClCompile Include="Chart\ChartData\DistributionCurves.cpp" />
+    <ClCompile Include="Chart\ChartData\LoadDataToChart.cpp" />
+    <ClCompile Include="Chart\ChartFrames\ChartFrame.cpp" />
+    <ClCompile Include="Chart\ChartFrames\NumFrames.cpp" />
+    <ClCompile Include="Chart\ChartProperties\ChartProp.cpp" />
+    <ClCompile Include="Chart\ChartProperties\ChartProp_AxisRepresentation.cpp" />
+    <ClCompile Include="Chart\ChartProperties\ChartProp_AxisScaleValues.cpp" />
+    <ClCompile Include="Chart\ChartProperties\ChartProp_Distributions.cpp" />
+    <ClCompile Include="Chart\ChartProperties\ChartProp_Regression.cpp" />
+    <ClCompile Include="Chart\ChartProperties\ChartUtil.cpp" />
+    <ClCompile Include="Chart\ChartViewer.cpp" />
+    <ClCompile Include="Chart\DrawContourDetails.cpp" />
+    <ClCompile Include="Chart\DrawDetails.cpp" />
+    <ClCompile Include="Chart\FileCreate\ChartFileSave.cpp" />
+    <ClCompile Include="Chart\Legends\DrawVariableLegends.cpp" />
+    <ClCompile Include="Chart\ModelView.cpp" />
+    <ClCompile Include="Chart\ParameterPlot.cpp" />
+    <ClCompile Include="Chart\PlotDesignInfo\PlotInfo.cpp" />
+    <ClCompile Include="Chart\PlotDesignInfo\PlotStorage.cpp" />
+    <ClCompile Include="Chart\RealTime.cpp" />
+    <ClCompile Include="Chart\TableView.cpp" />
+    <ClCompile Include="Chart\TimeSeriePlot.cpp" />
+    <ClCompile Include="Chart\ZoomUtil\ZoomTimeSerie.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="ClassView.cpp" />
+    <ClCompile Include="CoupModel.cpp" />
+    <ClCompile Include="CoupModelDoc.cpp" />
+    <ClCompile Include="CoupModelView.cpp" />
+    <ClCompile Include="CUG\Calccug.cpp" />
+    <ClCompile Include="CUG\ChartProperties\Chartcug.cpp" />
+    <ClCompile Include="CUG\ChartProperties\ChartcugBase.cpp" />
+    <ClCompile Include="CUG\ChartProperties\ChartCugChangeValue.cpp" />
+    <ClCompile Include="CUG\ChartProperties\ChartCugClick.cpp" />
+    <ClCompile Include="CUG\ChartProperties\ChartCugCommands.cpp" />
+    <ClCompile Include="CUG\ChartProperties\ChartCugSheets.cpp" />
+    <ClCompile Include="CUG\ColorPickerCB.cpp" />
+    <ClCompile Include="CUG\ColourPickerDlg.cpp" />
+    <ClCompile Include="CUG\CreatePG\PGcug.cpp" />
+    <ClCompile Include="CUG\CugChartData.cpp" />
+    <ClCompile Include="CUG\CValidTimeCug.cpp" />
+    <ClCompile Include="CUG\EvaluateMulti\ValidationCug.cpp" />
+    <ClCompile Include="CUG\Historycug.cpp" />
+    <ClCompile Include="CUG\LegendChangeDlg.cpp" />
+    <ClCompile Include="CUG\MakePGCharts\MakePGCharts.cpp" />
+    <ClCompile Include="CUG\MakeSimCharts\DocClick.cpp" />
+    <ClCompile Include="CUG\MakeSimCharts\DocCommands.cpp" />
+    <ClCompile Include="CUG\MakeSimCharts\MakeSimCharts.cpp" />
+    <ClCompile Include="CUG\MakeSimSheets\MakeSimSheets.cpp" />
+    <ClCompile Include="CUG\PEJUGCtrl.cpp" />
+    <ClCompile Include="CUG\PFCug\DBDataCUG.cpp" />
+    <ClCompile Include="CUG\PFCug\DB_BASCUG.cpp" />
+    <ClCompile Include="CUG\PFCug\PFButtons.cpp" />
+    <ClCompile Include="CUG\PFCug\PFCommands.cpp" />
+    <ClCompile Include="CUG\PFCug\PFCUG.cpp" />
+    <ClCompile Include="CUG\PFCug\PFMenu.cpp" />
+    <ClCompile Include="CUG\PFCug\PFSheets.cpp" />
+    <ClCompile Include="CUG\PFCug\SoilData.cpp" />
+    <ClCompile Include="CUG\PF_Import_CUG.cpp" />
+    <ClCompile Include="CUG\PGDoc\GridPGDoc.cpp" />
+    <ClCompile Include="CUG\PGDoc\MyPGcug.cpp" />
+    <ClCompile Include="CUG\PGDoc\PGBUttonEvents.cpp" />
+    <ClCompile Include="CUG\PGDoc\PGCalcActions.cpp" />
+    <ClCompile Include="CUG\PGDoc\PGClick.cpp" />
+    <ClCompile Include="CUG\PGDoc\PGCommands.cpp" />
+    <ClCompile Include="CUG\PGDoc\PGEditCells.cpp" />
+    <ClCompile Include="CUG\PGFilecug.cpp" />
+    <ClCompile Include="CUG\SimDoc\GridSimDoc.cpp" />
+    <ClCompile Include="CUG\SimDoc\Mycug.cpp" />
+    <ClCompile Include="CUG\Simplecug.cpp" />
+    <ClCompile Include="CUG\SumValidationCug.cpp" />
+    <ClCompile Include="CUG\UGCBType.cpp" />
+    <ClCompile Include="CUG\UGCell.cpp" />
+    <ClCompile Include="CUG\UGCelTyp.cpp" />
+    <ClCompile Include="CUG\UGCnrBtn.cpp" />
+    <ClCompile Include="CUG\UGCTarrw.cpp" />
+    <ClCompile Include="CUG\UGCtrl.cpp" />
+    <ClCompile Include="CUG\UGDLType.cpp" />
+    <ClCompile Include="CUG\UGDrgDrp.cpp" />
+    <ClCompile Include="CUG\UGDrwHnt.cpp" />
+    <ClCompile Include="CUG\UGDtaSrc.cpp" />
+    <ClCompile Include="CUG\UGEdit.cpp" />
+    <ClCompile Include="CUG\UGEditBase.cpp" />
+    <ClCompile Include="CUG\ugformat.cpp" />
+    <ClCompile Include="CUG\uggdinfo.cpp" />
+    <ClCompile Include="CUG\UGGrid.cpp" />
+    <ClCompile Include="CUG\UGHint.cpp" />
+    <ClCompile Include="CUG\ughscrol.cpp" />
+    <ClCompile Include="CUG\ugLstBox.cpp" />
+    <ClCompile Include="CUG\UGMEdit.cpp" />
+    <ClCompile Include="CUG\UGMemMan.cpp" />
+    <ClCompile Include="CUG\UGMultiS.cpp" />
+    <ClCompile Include="CUG\ugprint.cpp" />
+    <ClCompile Include="CUG\ugptrlst.cpp" />
+    <ClCompile Include="CUG\ugsidehd.cpp" />
+    <ClCompile Include="CUG\UGStrOp.cpp" />
+    <ClCompile Include="CUG\ugtab.cpp" />
+    <ClCompile Include="CUG\UGTopHdg.cpp" />
+    <ClCompile Include="CUG\ugvscrol.cpp" />
+    <ClCompile Include="CUG\UGXPThemes.cpp" />
+    <ClCompile Include="CUG\UTBStrOp.cpp" />
+    <ClCompile Include="DBDataWnd.cpp" />
+    <ClCompile Include="DBWnd.cpp" />
+    <ClCompile Include="DB\DB_Header.cpp" />
+    <ClCompile Include="DB\DB_Plant.cpp" />
+    <ClCompile Include="DB\DB_Storage.cpp" />
+    <ClCompile Include="DB\GetDB.cpp" />
+    <ClCompile Include="EvalMultiWnd.cpp" />
+    <ClCompile Include="Model\ModelFunctions.cpp" />
+    <ClCompile Include="ModelTypes\FunctFactory.cpp" />
+    <ClCompile Include="Model\Atmosphere\Functors\Radiation_Functors.h" />
+    <ClCompile Include="Model\PLANT\Functors\InterCeption_Functors.h" />
+    <ClCompile Include="Model\PLANT\Functors\Plant_Functors.h" />
+    <ClCompile Include="Model\PLANT\Functors\PotTranspiration_Functors.h" />
+    <ClCompile Include="Model\SOIL_NC\P_ExternalInputs.cpp" />
+    <ClCompile Include="Model\SOIL_NC\P_ExternalInputs_Functions.cpp" />
+    <ClCompile Include="Model\SOIL_NC\P_Mineral.cpp" />
+    <ClCompile Include="Model\SOIL_NC\P_Mineral_Functions.cpp" />
+    <ClCompile Include="Model\Units.cpp" />
+    <ClCompile Include="MultiRun\ConStrainByInput.cpp" />
+    <ClCompile Include="PG\FileImport\ExtraLinkedInformation.cpp" />
+    <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="mcmc\Density.cpp" />
+    <ClCompile Include="mcmc\intervals.cpp" />
+    <ClCompile Include="mcmc\lot.cpp" />
+    <ClCompile Include="mcmc\MCMC.cpp" />
+    <ClCompile Include="mcmc\ratio.cpp" />
+    <ClCompile Include="mcmc\statistics.cpp" />
+    <ClCompile Include="mcmc\util.cpp" />
+    <ClCompile Include="ModelTypes\CDB.cpp" />
+    <ClCompile Include="ModelTypes\CRunInfo.cpp" />
+    <ClCompile Include="ModelTypes\D.cpp" />
+    <ClCompile Include="ModelTypes\Ds.cpp" />
+    <ClCompile Include="ModelTypes\F.cpp" />
+    <ClCompile Include="ModelTypes\FCSV.cpp" />
+    <ClCompile Include="ModelTypes\Func.cpp" />
+    <ClCompile Include="ModelTypes\G.cpp" />
+    <ClCompile Include="ModelTypes\Gs.cpp" />
+    <ClCompile Include="ModelTypes\NE.cpp" />
+    <ClCompile Include="ModelTypes\OutBase.cpp" />
+    <ClCompile Include="ModelTypes\OutSingle.cpp" />
+    <ClCompile Include="ModelTypes\OutVector.cpp" />
+    <ClCompile Include="ModelTypes\P.cpp" />
+    <ClCompile Include="ModelTypes\Par.cpp" />
+    <ClCompile Include="ModelTypes\Ps.cpp" />
+    <ClCompile Include="ModelTypes\SimB.cpp" />
+    <ClCompile Include="ModelTypes\Sw.cpp" />
+    <ClCompile Include="ModelTypes\T.cpp" />
+    <ClCompile Include="ModelTypes\Tab.cpp" />
+    <ClCompile Include="ModelTypes\Ts.cpp" />
+    <ClCompile Include="ModelTypes\X.cpp" />
+    <ClCompile Include="ModelTypes\Xs.cpp" />
+    <ClCompile Include="ModelWnd.cpp" />
+    <ClCompile Include="Model\Atmosphere\AtmModel.cpp" />
+    <ClCompile Include="Model\Atmosphere\Irrigation.cpp" />
+    <ClCompile Include="Model\Atmosphere\Irrigation_Functions.cpp" />
+    <ClCompile Include="Model\Atmosphere\Meteorological_Data.cpp" />
+    <ClCompile Include="Model\Atmosphere\Meteorological_Data_Functions.cpp" />
+    <ClCompile Include="Model\Atmosphere\Radiation.cpp" />
+    <ClCompile Include="Model\Atmosphere\Radiation_Functions.cpp" />
+    <ClCompile Include="Model\Atmosphere\SnowPack.cpp" />
+    <ClCompile Include="Model\Atmosphere\SnowPack_Functions.cpp" />
+    <ClCompile Include="Model\Atmosphere\SoilEvaporation.cpp" />
+    <ClCompile Include="Model\Atmosphere\SoilEvaporation_Functions.cpp" />
+    <ClCompile Include="Model\Atmosphere\Surface_Water.cpp" />
+    <ClCompile Include="Model\Atmosphere\Surface_Water_Functions.cpp" />
+    <ClCompile Include="Model\FunctionProperties.cpp" />
+    <ClCompile Include="Model\GlobalInfo.cpp" />
+    <ClCompile Include="Model\HBV\HBV.cpp" />
+    <ClCompile Include="Model\HBV\HBVModel.cpp" />
+    <ClCompile Include="Model\ModelConst.cpp" />
+    <ClCompile Include="Model\PhysConst.cpp" />
+    <ClCompile Include="Model\PLANT\Interception.cpp" />
+    <ClCompile Include="Model\PLANT\Plant.cpp" />
+    <ClCompile Include="Model\PLANT\PlantModel.cpp" />
+    <ClCompile Include="Model\PLANT\Potential_Transpiration.cpp" />
+    <ClCompile Include="Model\PLANT\Salt.cpp" />
+    <ClCompile Include="Model\PLANT\WaterUptake.cpp" />
+    <ClCompile Include="Model\PLANT_NC\NC_Drivings.cpp" />
+    <ClCompile Include="Model\PLANT_NC\NC_Drivings_Functions.cpp" />
+    <ClCompile Include="Model\PLANT_NC\NC_Plant.cpp" />
+    <ClCompile Include="Model\PLANT_NC\NC_Plant_Functions.cpp" />
+    <ClCompile Include="Model\PLANT_NC\PlantOrgModel.cpp" />
+    <ClCompile Include="Model\SimModule.cpp" />
+    <ClCompile Include="Model\SOIL\Hydraulic.cpp" />
+    <ClCompile Include="Model\SOIL\Hydraulic_Functions.cpp" />
+    <ClCompile Include="Model\SOIL\Profile.cpp" />
+    <ClCompile Include="Model\SOIL\Profile_Functions.cpp" />
+    <ClCompile Include="Model\SOIL\SoilModel.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_Drainage.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_Drainage_Functions.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_Frost.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_Frost_Functions.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_HeatF.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_HeatF_Functions.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_HeatPump.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_HeatPump_Functions.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_WaterF.cpp" />
+    <ClCompile Include="Model\SOIL\Soil_WaterF_Functions.cpp" />
+    <ClCompile Include="Model\SOIL\Thermal.cpp" />
+    <ClCompile Include="Model\SOIL\ThermalCoef.cpp" />
+    <ClCompile Include="Model\SOIL\Thermal_Functions.cpp" />
+    <ClCompile Include="Model\SOIL_NC\AbioticResponses.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_ExternalInputs.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_ExternalInputs_Functions.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_GasFlux.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_GasFlux_Functions.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_Mineral.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_Mineral_Functions.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_Organic.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_Organic_Functions.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_SoilManagement.cpp" />
+    <ClCompile Include="Model\SOIL_NC\NC_SoilManagement_Functions.cpp" />
+    <ClCompile Include="Model\SOIL_NC\SoilOrgModel.cpp" />
+    <ClCompile Include="Model\Structure\Additional_BioticVariables.cpp" />
+    <ClCompile Include="Model\Structure\Additional_BioticVariables_Functions.cpp" />
+    <ClCompile Include="Model\Structure\Additional_Variables.cpp" />
+    <ClCompile Include="Model\Structure\Additional_Variables_Functions.cpp" />
+    <ClCompile Include="Model\Structure\Numerical.cpp" />
+    <ClCompile Include="Model\Structure\Numerical_Functions.cpp" />
+    <ClCompile Include="Model\Structure\Structure.cpp" />
+    <ClCompile Include="Model\Structure\StructureModel.cpp" />
+    <ClCompile Include="Model\Structure\Structure_Functions.cpp" />
+    <ClCompile Include="Model\Structure\Technical.cpp" />
+    <ClCompile Include="Model\Structure\Technical_Functions.cpp" />
+    <ClCompile Include="MultiRun\DimNewValue.cpp" />
+    <ClCompile Include="MultiRun\MultiRun.cpp" />
+    <ClCompile Include="MultiRun\MultiRunTable.cpp" />
+    <ClCompile Include="MultiRun\MultiStorageData.cpp" />
+    <ClCompile Include="MultiRun\MultiStorageStatData.cpp" />
+    <ClCompile Include="MultiRun\Residuals.cpp" />
+    <ClCompile Include="MultiRun\ResidualsBase.cpp" />
+    <ClCompile Include="MultiRun\SelectedAddEnsembles.cpp" />
+    <ClCompile Include="MultiRun\SelectedEnsembles.cpp" />
+    <ClCompile Include="NetCDF\ncAtt.cpp" />
+    <ClCompile Include="NetCDF\ncByte.cpp" />
+    <ClCompile Include="NetCDF\ncChar.cpp" />
+    <ClCompile Include="NetCDF\ncCheck.cpp" />
+    <ClCompile Include="NetCDF\ncCompoundType.cpp" />
+    <ClCompile Include="NetCDF\ncDim.cpp" />
+    <ClCompile Include="NetCDF\ncDouble.cpp" />
+    <ClCompile Include="NetCDF\ncEnumType.cpp" />
+    <ClCompile Include="NetCDF\ncException.cpp" />
+    <ClCompile Include="NetCDF\ncFile.cpp" />
+    <ClCompile Include="NetCDF\ncFloat.cpp" />
+    <ClCompile Include="NetCDF\ncGroup.cpp" />
+    <ClCompile Include="NetCDF\ncGroupAtt.cpp" />
+    <ClCompile Include="NetCDF\ncInt.cpp" />
+    <ClCompile Include="NetCDF\ncInt64.cpp" />
+    <ClCompile Include="NetCDF\ncOpaqueType.cpp" />
+    <ClCompile Include="NetCDF\ncShort.cpp" />
+    <ClCompile Include="NetCDF\ncString.cpp" />
+    <ClCompile Include="NetCDF\ncType.cpp" />
+    <ClCompile Include="NetCDF\ncUbyte.cpp" />
+    <ClCompile Include="NetCDF\ncUint.cpp" />
+    <ClCompile Include="NetCDF\ncUint64.cpp" />
+    <ClCompile Include="NetCDF\ncUshort.cpp" />
+    <ClCompile Include="NetCDF\ncvalues.cpp" />
+    <ClCompile Include="NetCDF\ncVar.cpp" />
+    <ClCompile Include="NetCDF\ncVarAtt.cpp" />
+    <ClCompile Include="NetCDF\ncVlenType.cpp" />
+    <ClCompile Include="NetCDF\netcdf.cpp" />
+    <ClCompile Include="NetCDF\NetCDFTransfer.cpp" />
+    <ClCompile Include="CUG\PGDoc\PGMaps.cpp" />
+    <ClCompile Include="PG\FileImport\PGFileImportBase.cpp" />
+    <ClCompile Include="PG\NewAddMixPGFiles.cpp" />
+    <ClCompile Include="NewBase\Bayes\BayesStatistics.cpp" />
+    <ClCompile Include="NewBase\CH.cpp" />
+    <ClCompile Include="NewBase\CommonModelInfo.cpp" />
+    <ClCompile Include="NewBase\DB.cpp" />
+    <ClCompile Include="NewBase\Doc.cpp" />
+    <ClCompile Include="NewBase\FileScanner.cpp" />
+    <ClCompile Include="NewBase\History.cpp" />
+    <ClCompile Include="NewBase\HistoryList.cpp" />
+    <ClCompile Include="NewBase\Link.cpp" />
+    <ClCompile Include="NewBase\ModelBase.cpp" />
+    <ClCompile Include="NewBase\ModelFiles.cpp" />
+    <ClCompile Include="NewBase\ModelMap.cpp" />
+    <ClCompile Include="NewBase\MR.cpp" />
+    <ClCompile Include="NewBase\NewMap.cpp" />
+    <ClCompile Include="NewBase\ParValueChangeRead\ChangeFromFile.cpp" />
+    <ClCompile Include="NewBase\Sim.cpp" />
+    <ClCompile Include="NewBase\SimArchive.cpp" />
+    <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="PFWnd.cpp" />
+    <ClCompile Include="PG\CalculateVariable.cpp" />
+    <ClCompile Include="PG\ChangePeriod.cpp" />
+    <ClCompile Include="PG\ChangeToNewResolution.cpp" />
+    <ClCompile Include="PG\CreatePG.cpp" />
+    <ClCompile Include="PG\NewPGVariables.cpp" />
+    <ClCompile Include="PG\NoaaCoord.cpp" />
+    <ClCompile Include="PG\PG.CPP" />
+    <ClCompile Include="PG\PGBase.cpp" />
+    <ClCompile Include="PG\PGCalc.cpp" />
+    <ClCompile Include="PG\PGFile.cpp" />
+    <ClCompile Include="PG\PGFileArchive.cpp" />
+    <ClCompile Include="PG\FileImport\PGFileImport.cpp" />
+    <ClCompile Include="PG\PGUtil.cpp" />
+    <ClCompile Include="PG\PGView.cpp" />
+    <ClCompile Include="PG\PG_FILEDLG.cpp" />
+    <ClCompile Include="PG\SelectPGTimeRange.cpp" />
+    <ClCompile Include="PG\TimeAggregate.cpp" />
+    <ClCompile Include="PG\PG_MEMORY.cpp" />
+    <ClCompile Include="PG\PG_Stream.cpp" />
+    <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="Run\ChaParDuringRun.cpp" />
+    <ClCompile Include="Simulator\ModelInfo.cpp" />
+    <ClCompile Include="Simulator\Simulator.cpp" />
+    <ClCompile Include="CUG\EvaluateMulti\ValidationCugButtons.cpp" />
+    <ClCompile Include="SoilData\PlotPF\GausKreuger.cpp" />
+    <ClCompile Include="SoilData\PlotPF\Geodesi.cpp" />
+    <ClCompile Include="SoilData\PlotPF\GetPFCurve.cpp" />
+    <ClCompile Include="SoilData\PlotPF\PFCurve.cpp" />
+    <ClCompile Include="SoilData\PlotPF\PFStorage.cpp" />
+    <ClCompile Include="Util\CoupSim_XML.cpp" />
+    <ClCompile Include="Util\pugixml.cpp" />
+    <ClCompile Include="Validation\SmartFlexDataAdmin.cpp" />
+    <ClCompile Include="Util\Constants.cpp" />
+    <ClCompile Include="Validation\SmartFlexibleValidation.cpp" />
+    <ClCompile Include="SoilDataWnd.cpp" />
+    <ClCompile Include="SoilData\GetSoilStorage.cpp" />
+    <ClCompile Include="SoilData\SoilStorage.cpp" />
+    <ClCompile Include="SP\SP_EXCHANGE1.cpp" />
+    <ClCompile Include="SP\SP_Export.cpp" />
+    <ClCompile Include="SP\SP_ImportDlg.cpp" />
+    <ClCompile Include="SP\SP_Retrieve.cpp" />
+    <ClCompile Include="Std.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UserSetup.cpp" />
+    <ClCompile Include="Util\FUtil.cpp" />
+    <ClCompile Include="Util\MFC_Util.cpp" />
+    <ClCompile Include="Util\ModelUtil.cpp" />
+    <ClCompile Include="Util\ReadWriteTypes.cpp" />
+    <ClCompile Include="Util\StatUtil.cpp" />
+    <ClCompile Include="Validation\ValidationData.cpp" />
+    <ClCompile Include="Validation\SelectWindowForValidationSummaryVariables.cpp" />
+    <ClCompile Include="Validation\ValidationVariables.cpp" />
+    <ClCompile Include="ViewTree.cpp" />
+    <ClCompile Include="Welcome.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CoupModel.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\buttons.bmp" />
+    <Image Include="res\filelarge.bmp" />
+    <Image Include="res\filesmall.bmp" />
+    <Image Include="res\info.bmp" />
+    <Image Include="res\main.bmp" />
+    <Image Include="res\writelarge.bmp" />
+    <Image Include="res\writesmall.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\Users\pej\Documents\CoupModel\Samples\Growth\Grostat_141238 - Copy.xml" />
+    <Xml Include="..\..\..\Users\pej\Documents\CoupModel\Samples\Growth\Grostat_141238.xml" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="CoupModel.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

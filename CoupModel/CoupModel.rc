@@ -1,0 +1,2394 @@
+// Microsoft Visual C++ generated resource script.
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+#include "verrsrc.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\CoupModel.ico"
+
+IDR_CoupModelTYPE       ICON                    "res\\CoupModelDoc.ico"
+
+IDI_FILE_VIEW           ICON                    "res\\file_view.ico"
+
+IDI_FILE_VIEW_HC        ICON                    "res\\file_view_hc.ico"
+
+IDI_CLASS_VIEW          ICON                    "res\\class_view.ico"
+
+IDI_CLASS_VIEW_HC       ICON                    "res\\class_view_hc.ico"
+
+IDI_OUTPUT_WND          ICON                    "res\\output_wnd.ico"
+
+IDI_OUTPUT_WND_HC       ICON                    "res\\output_wnd_hc.ico"
+
+IDI_PROPERTIES_WND      ICON                    "res\\properties_wnd.ico"
+
+IDI_PROPERTIES_WND_HC   ICON                    "res\\properties_wnd_hc.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+
+IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
+
+IDB_MAIN                BITMAP                  "res\\main.bmp"
+
+IDB_FILELARGE           BITMAP                  "res\\filelarge.bmp"
+
+IDB_FILESMALL           BITMAP                  "res\\filesmall.bmp"
+
+IDB_WRITELARGE          BITMAP                  "res\\writelarge.bmp"
+
+IDB_WRITESMALL          BITMAP                  "res\\writesmall.bmp"
+
+IDB_BUTTONS             BITMAP                  "res\\buttons.bmp"
+
+IDR_SORT                BITMAP                  "res\\sort.bmp"
+
+IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
+
+IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
+
+IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
+
+IDB_CLASS_VIEW          BITMAP                  "res\\classview.bmp"
+
+IDB_CLASS_VIEW_24       BITMAP                  "res\\classview_hc.bmp"
+
+IDR_EXPLORER            BITMAP                  "res\\explorer.bmp"
+
+IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
+
+IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
+
+IDB_MENU_IMAGES_24      BITMAP                  "res\\menuimages_hc.bmp"
+
+IDR_PROPERTIES          BITMAP                  "res\\properties.bmp"
+
+IDB_PROPERTIES_HC       BITMAP                  "res\\properties_hc.bmp"
+
+IDB_INFO                BITMAP                  "res\\info.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_SIM_START
+    BUTTON      ID_SIM_MULTI_START
+    BUTTON      ID_SIM_DOCNEW
+    BUTTON      ID_PGFILE_NEW
+    BUTTON      ID_PGFILE_OPEN
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_LINK
+    BUTTON      ID_UNLINK
+    SEPARATOR
+    BUTTON      ID_FILE_SAVE_CHART
+    BUTTON      ID_FILE_SAVE_ECHART
+    BUTTON      ID_WND_ECHART
+    BUTTON      ID_SHIFT_ECHART
+    BUTTON      ID_WND_ECHART_CLEAN
+    SEPARATOR
+    BUTTON      ID_X_PLUS
+    BUTTON      ID_X_MINUS
+    BUTTON      ID_Y_PLUS
+    BUTTON      ID_Y_MINUS
+    SEPARATOR
+    BUTTON      ID_ZOOM_IN
+    BUTTON      ID_ZOOM_OUT
+    BUTTON      ID_ZOOM_FORWARD
+    BUTTON      ID_ZOOM_BACKWARD
+    SEPARATOR
+    BUTTON      ID_VAL_FILE
+    BUTTON      ID_VAL_ADDTSV
+    BUTTON      ID_VAL_ADDSV
+    BUTTON      ID_VAL_VIEW
+    BUTTON      ID_VAL_UNLOCK
+    BUTTON      ID_VAL_ACCEPT
+    SEPARATOR
+    BUTTON      ID_MULTI_NEWCURVE
+    BUTTON      ID_MULTI_S_SHIFT
+    BUTTON      ID_MULTI_M_SHIFT
+END
+
+IDR_MAINFRAME_256 TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_SIM_START
+    BUTTON      ID_SIM_MULTI_START
+    BUTTON      ID_SIM_DOCNEW
+    BUTTON      ID_PGFILE_NEW
+    BUTTON      ID_PGFILE_OPEN
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+    BUTTON      ID_LINK
+    BUTTON      ID_UNLINK
+    SEPARATOR
+    BUTTON      ID_FILE_SAVE_CHART
+    BUTTON      ID_FILE_SAVE_ECHART
+    BUTTON      ID_WND_ECHART
+    BUTTON      ID_SHIFT_ECHART
+    BUTTON      ID_WND_ECHART_CLEAN
+    SEPARATOR
+    BUTTON      ID_X_PLUS
+    BUTTON      ID_X_MINUS
+    BUTTON      ID_Y_PLUS
+    BUTTON      ID_Y_MINUS
+    BUTTON      ID_BUTTON_HAND
+    BUTTON      ID_ZOOM_IN
+    BUTTON      ID_ZOOM_OUT
+    BUTTON      ID_ZOOM_FORWARD
+    BUTTON      ID_ZOOM_BACKWARD
+    SEPARATOR
+    BUTTON      ID_VAL_FILE
+    BUTTON      ID_VAL_ADDTSV
+    BUTTON      ID_VAL_ADDSV
+    BUTTON      ID_VAL_VIEW
+    BUTTON      ID_VAL_UNLOCK
+    BUTTON      ID_VAL_ACCEPT
+    SEPARATOR
+    BUTTON      ID_MULTI_NEWCURVE
+    BUTTON      ID_MULTI_S_SHIFT
+    BUTTON      ID_MULTI_M_SHIFT
+END
+
+IDR_SORT TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_SORT_MENU
+    BUTTON      ID_NEW_FOLDER
+END
+
+IDR_EXPLORER TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_PROPERTIES
+END
+
+IDR_MENU_IMAGES TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_WINDOW_MANAGER
+    SEPARATOR
+    BUTTON      ID_WINDOW_CASCADE
+    BUTTON      ID_WINDOW_TILE_HORZ
+    BUTTON      ID_TOOLS_MACRO
+    BUTTON      ID_SORTING_GROUPBYGROUP
+    BUTTON      ID_SORTING_SORTBYTYPE
+    BUTTON      ID_SORTING_SORTBYACCESS
+    BUTTON      ID_SORTING_GROUPBYTYPE
+END
+
+IDR_PROPERTIES TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_EXPAND_ALL
+    BUTTON      ID_SORTPROPERTIES
+    BUTTON      ID_PROPERTIES1
+    BUTTON      ID_PROPERTIES2
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "&Simulation File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "PG File"
+    BEGIN
+        MENUITEM "New",                         ID_PGFILE_NEW
+        MENUITEM "Open",                        ID_PGFILE_OPEN
+    END
+    POPUP "&View"
+    BEGIN
+        POPUP "&Toolbars and Docking Windows"
+        BEGIN
+            MENUITEM "<placeholder>",               ID_VIEW_TOOLBAR
+        END
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM "&Caption Bar",                ID_VIEW_CAPTION_BAR
+        POPUP "&Application Look"
+        BEGIN
+            MENUITEM "Windows &2000",               ID_VIEW_APPLOOK_WIN_2000
+            MENUITEM "Office &XP",                  ID_VIEW_APPLOOK_OFF_XP
+            MENUITEM "&Windows XP",                 ID_VIEW_APPLOOK_WIN_XP
+            MENUITEM "Office 200&3",                ID_VIEW_APPLOOK_OFF_2003
+            MENUITEM "Visual Studio 200&5",         ID_VIEW_APPLOOK_VS_2005
+            MENUITEM "Visual Studio 200&8",         ID_VIEW_APPLOOK_VS_2008
+            POPUP "Office 200&7"
+            BEGIN
+                MENUITEM "&Blue Style",                 ID_VIEW_APPLOOK_OFF_2007_BLUE
+                MENUITEM "B&lack Style",                ID_VIEW_APPLOOK_OFF_2007_BLACK
+                MENUITEM "&Silver Style",               ID_VIEW_APPLOOK_OFF_2007_SILVER
+                MENUITEM "&Aqua Style",                 ID_VIEW_APPLOOK_OFF_2007_AQUA
+            END
+        END
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help Topics",                ID_HELP_FINDER
+        MENUITEM SEPARATOR
+        MENUITEM "&About CoupModel...",         ID_APP_ABOUT
+        MENUITEM "User Settings",               ID_HELP_USERSETTINGS
+    END
+END
+
+IDR_CoupModelTYPE MENU
+BEGIN
+    POPUP "&Simulation File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "&Save As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "PG File"
+    BEGIN
+        MENUITEM "New",                         ID_PGFILE_NEW
+        MENUITEM "Open",                        ID_PGFILE_OPEN
+    END
+    POPUP "&View"
+    BEGIN
+        POPUP "Toolbars and Docking Station"
+        BEGIN
+            MENUITEM "<placeholder>",               ID_VIEW_TOOLBAR
+        END
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+        MENUITEM "&Caption Bar",                ID_VIEW_CAPTION_BAR
+        POPUP "&Application Look"
+        BEGIN
+            MENUITEM "Windows &2000",               ID_VIEW_APPLOOK_WIN_2000
+            MENUITEM "Office &XP",                  ID_VIEW_APPLOOK_OFF_XP
+            MENUITEM "&Windows XP",                 ID_VIEW_APPLOOK_WIN_XP
+            MENUITEM "Office 200&3",                ID_VIEW_APPLOOK_OFF_2003
+            MENUITEM "Visual Studio 200&5",         ID_VIEW_APPLOOK_VS_2005
+            MENUITEM "Visual Studio 200&8",         ID_VIEW_APPLOOK_VS_2008
+            POPUP "Office 200&7"
+            BEGIN
+                MENUITEM "&Blue Style",                 ID_VIEW_APPLOOK_OFF_2007_BLUE
+                MENUITEM "B&lack Style",                ID_VIEW_APPLOOK_OFF_2007_BLACK
+                MENUITEM "&Silver Style",               ID_VIEW_APPLOOK_OFF_2007_SILVER
+                MENUITEM "&Aqua Style",                 ID_VIEW_APPLOOK_OFF_2007_AQUA
+            END
+        END
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "User Setting",                ID_TOOLS_OPTIONS
+        MENUITEM "&About CoupModel...",         ID_APP_ABOUT
+    END
+END
+
+IDR_POPUP_EDIT MENU
+BEGIN
+    POPUP "Edit"
+    BEGIN
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+    END
+END
+
+IDR_WINDOWS_MENU MENU
+BEGIN
+    MENUITEM "&New Window",                 ID_WINDOW_NEW
+END
+
+IDR_POPUP_SORT MENU
+BEGIN
+    POPUP "Sorting"
+    BEGIN
+        MENUITEM "Sort by &Type",               ID_SORTING_SORTBYTYPE
+        MENUITEM "Sort by Module",              ID_SORTING_GROUPBYGROUP
+        MENUITEM "Annimation Variables by Type", ID_SORTING_GROUPBYTYPE
+        MENUITEM "Annimation Variables by Module", ID_SORTING_GROUPBYACCESS
+    END
+END
+
+IDR_POPUP_EXPLORER MENU
+BEGIN
+    POPUP "Explorer"
+    BEGIN
+        MENUITEM "&Open",                       ID_OPEN
+        MENUITEM "Open &With....",              ID_OPEN_WITH
+        MENUITEM SEPARATOR
+        MENUITEM "&Compile",                    ID_DUMMY_COMPILE
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Remove",                     ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "&Properties...",              ID_PROPERTIES
+    END
+END
+
+IDR_OUTPUT_POPUP MENU
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "&Copy",                       ID_EDIT_COPY
+        MENUITEM "&Clear",                      ID_EDIT_CLEAR
+        MENUITEM SEPARATOR
+        MENUITEM "&Hide",                       ID_VIEW_OUTPUTWND
+    END
+END
+
+IDR_HELP_MENU MENU
+BEGIN
+    MENUITEM "&Help Topics",                ID_HELP_FINDER
+    MENUITEM SEPARATOR
+    MENUITEM "&About CoupModel...",         ID_APP_ABOUT
+END
+
+IDR_THEME_MENU MENU
+BEGIN
+    MENUITEM "Office 2007 (&Blue Style)",   ID_VIEW_APPLOOK_OFF_2007_BLUE
+    MENUITEM "Office 2007 (B&lack Style)",  ID_VIEW_APPLOOK_OFF_2007_BLACK
+    MENUITEM "Office 2007 (&Silver Style)", ID_VIEW_APPLOOK_OFF_2007_SILVER
+    MENUITEM "Office 2007 (&Aqua Style)",   ID_VIEW_APPLOOK_OFF_2007_AQUA
+    MENUITEM "Win&dows 7",                  ID_VIEW_APPLOOK_WINDOWS_7
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    VK_F1,          ID_CONTEXT_HELP,        VIRTKEY, SHIFT, NOINVERT
+    VK_F1,          ID_HELP,                VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_VALIDATIONEVALUATION DIALOGEX 0, 0, 782, 374
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,747,7,28,29
+    PUSHBUTTON      "Cancel",IDCANCEL,747,40,30,31
+    LTEXT           "Static",IDC_GRID,7,0,736,365,SS_SUNKEN | WS_TABSTOP
+END
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TRANSPARENT
+CAPTION "About CoupModel"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "CoupModel, January , 2022, 6.2.0",IDC_STATIC,8,16,156,8,NOT WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
+END
+
+IDD_USER_SETUP DIALOGEX 0, 0, 398, 231
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "User Setup"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,346,9,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,346,47,50,14
+    CONTROL         "Experienced",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,5,17,66,9
+    CONTROL         "Normal",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,5,28,53,9
+    CONTROL         "Beginner",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,5,40,49,9
+    LTEXT           "User Level",IDC_STATIC,5,7,46,8
+    CONTROL         "Highest",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON | WS_GROUP,6,69,55,9
+    CONTROL         "Normal",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON,6,80,53,9
+    CONTROL         "Low",IDC_RADIO6,"Button",BS_AUTORADIOBUTTON,6,90,49,9
+    LTEXT           "Priority level for running in background",IDC_STATIC,2,58,124,9
+    DEFPUSHBUTTON   "Apply",IDC_BUTTON_APPLY,346,28,50,14
+    CONTROL         "Do Animation on screen during simulation",IDC_CHECK2,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,7,173,10
+    CONTROL         "Continous display of help when exploring sim Document",IDC_CHECK3,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,23,190,10
+    LTEXT           "Database directory",IDC_STATIC,6,155,90,8
+    EDITTEXT        IDC_USER_PATH2,102,153,259,12,ES_AUTOHSCROLL
+    LTEXT           "User Signature ",IDC_STATIC,6,122,61,8
+    LTEXT           "User Name",IDC_STATIC,6,109,61,8
+    EDITTEXT        IDC_SIGNATURE,102,123,20,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_USER_NAME,102,107,138,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Browse",IDC_BUTTON_BROWSE_DB,364,151,32,14
+    LTEXT           "Grid Font (high resolution screen)",IDC_STATIC,6,198,118,8
+    EDITTEXT        IDC_HIGH_RESFONT,132,197,56,12,ES_AUTOHSCROLL
+    LTEXT           "Grid Font (low resolution screen)",IDC_STATIC,6,212,116,8
+    EDITTEXT        IDC_LOW_RESFONT,130,212,56,12,ES_AUTOHSCROLL
+END
+
+IDD_PAGE_VIEW DIALOG 0, 0, 416, 68
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Selection of Document View page"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,359,18,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,359,34,50,14
+    CONTROL         "Changed Values ",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,25,13,97,10
+    CONTROL         "Report Window",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,25,24,97,10
+    CONTROL         "Summary results",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,25,35,97,10
+    CONTROL         "Dynamic display of results",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,25,46,97,10
+    CONTROL         "Only from actual file",IDC_RADIO5,"Button",BS_AUTORADIOBUTTON | WS_GROUP,144,13,107,11
+    CONTROL         "From actual file and differences from other opened files",IDC_RADIO6,
+                    "Button",BS_AUTORADIOBUTTON,144,24,189,11
+    CONTROL         "Differences only compared with other opened files",IDC_RADIO7,
+                    "Button",BS_AUTORADIOBUTTON,144,35,187,11
+    LTEXT           "Basic type of information",IDC_STATIC,9,3,121,8
+    LTEXT           "Changed values - Switches and Parameters",IDC_STATIC,133,1,153,8
+END
+
+IDD_DIALOG_CHAPAR DIALOGEX 0, 0, 315, 166
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "ChangeParametersDuringRun"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,287,7,27,23
+    LISTBOX         IDC_LIST1,7,59,306,61,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    CTEXT           "Selected  dates with new values",IDC_STATIC,7,47,104,11
+    EDITTEXT        IDC_EDIT_VALUE,129,135,182,13,ES_AUTOHSCROLL
+    CTEXT           "New Value",IDC_STATIC,129,123,51,9
+    PUSHBUTTON      "Add new date",IDC_BUTTON_ADD,7,7,52,17,BS_MULTILINE
+    PUSHBUTTON      "Delete selected date",IDC_BUTTON_DELETE,71,7,74,17,BS_CENTER | BS_VCENTER | BS_MULTILINE
+    PUSHBUTTON      "Reset all dates in list",IDC_BUTTON_RESET,153,7,74,17,BS_MULTILINE
+    LTEXT           "Year",IDC_STATIC,7,126,18,9
+    EDITTEXT        IDC_EDIT_StartYear,7,136,27,12,ES_AUTOHSCROLL | ES_WANTRETURN | ES_NUMBER,WS_EX_RIGHT
+    EDITTEXT        IDC_EDIT_StartMonth,36,136,20,12,ES_AUTOHSCROLL | ES_NUMBER,WS_EX_RIGHT
+    EDITTEXT        IDC_EDIT_StartDay,58,136,20,12,ES_AUTOHSCROLL,WS_EX_RIGHT
+    EDITTEXT        IDC_EDIT_StartHour,79,136,20,12,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Month",IDC_STATIC,29,126,24,9
+    LTEXT           "Day",IDC_STATIC,59,126,18,9
+    LTEXT           "Hour",IDC_STATIC,79,126,18,9
+    LTEXT           "Minute",IDC_STATIC,98,126,28,9
+    EDITTEXT        IDC_EDIT_StartMinute,99,136,19,12,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Start",IDC_STATIC,70,29,16,8
+    LTEXT           "End",IDC_STATIC,158,29,14,8
+    LTEXT           "Static",IDC_STATIC_End,183,29,57,8
+    LTEXT           "Simulation period",IDC_STATIC,7,28,67,8
+    LTEXT           "Static",IDC_STATIC_Start,91,29,57,8
+    PUSHBUTTON      "Select a new record from data base",IDC_BUTTON_SELECT,193,121,118,14
+END
+
+IDD_DIALOG_DIMNEW DIALOGEX 0, 0, 186, 50
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Speciify new Value on MultiRunDimension"
+FONT 12, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,25,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,7,50,14
+    EDITTEXT        IDC_EDIT1,61,17,49,16,ES_AUTOHSCROLL
+    LTEXT           "New Value:",IDC_STATIC,9,20,38,9
+END
+
+IDD_ValidationSummaryVariables DIALOGEX 0, 0, 671, 332
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Selection of Validation of Summary Variables"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,561,0,37,16
+    LTEXT           "Select Simulated Variable",IDC_STATIC_Simulated,15,1,105,11
+    LISTBOX         IDC_SimulatedVarList2,15,12,119,311,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Reset All Items",IDC_RESET,341,65,51,33,BS_MULTILINE
+    PUSHBUTTON      "Apply Selection to selecked ID",ID_APPLY,231,65,51,33,BS_MULTILINE
+    RTEXT           "Number",IDC_STATIC_Number,157,105,33,11
+    LTEXT           "Validation criterias are defined in combination with summary output variable(s)",IDC_STATIC_Validation3,225,105,264,11
+    PUSHBUTTON      "Disable Validation",IDC_DISABLE,608,1,61,15
+    EDITTEXT        IDC_EDIT2,232,47,123,15,ES_AUTOHSCROLL
+    LTEXT           "Validation Value",IDC_STATIC,300,0,56,10
+    LTEXT           "Simulated Variable",IDC_STATIC,233,34,119,11
+    EDITTEXT        IDC_EDIT3,419,15,47,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT4,472,15,47,14,ES_AUTOHSCROLL
+    LTEXT           "Absolute Error",IDC_STATIC,472,1,54,14
+    LTEXT           "Relative Error",IDC_STATIC,419,1,47,14
+    LTEXT           "Selected Number",IDC_STATIC,342,34,66,11
+    EDITTEXT        IDC_EDIT5,361,48,32,14,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_EDIT6,361,15,56,16,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO1,229,15,61,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP,WS_EX_CLIENTEDGE
+    LTEXT           "Simulated  Type",IDC_STATIC,228,1,62,10
+    PUSHBUTTON      "Import from Excel",IDC_ReadFromExcel,540,17,61,21
+    PUSHBUTTON      "Save to Excel",IDC_SaveToExcel,604,17,65,21
+    EDITTEXT        IDC_EDIT1,140,118,489,205,ES_AUTOHSCROLL
+    LTEXT           "Link To CSV File ",IDC_STATIC22,423,35,89,10
+    COMBOBOX        IDC_COMBO2,295,15,61,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Link Variable Id",IDC_STATIC3,363,4,55,10
+    COMBOBOX        IDC_COMBO3,403,48,266,30,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    COMBOBOX        IDC_COMBO4,399,73,64,30,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    COMBOBOX        IDC_COMBO5,470,72,94,30,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "Key In File",IDC_STATIC4,409,63,53,8
+    LTEXT           "Key in MultiSimList",IDC_STATIC5,472,63,55,8
+    PUSHBUTTON      "Apply Selection to all File ID",ID_APPLY2,286,65,51,33,BS_MULTILINE
+    LTEXT           "Dependent Variable",IDC_STATIC,140,2,73,11
+    COMBOBOX        IDC_COMBO6,138,15,83,112,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_EDIT_START,138,47,85,15,ES_MULTILINE | ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_END,138,78,85,15,ES_AUTOHSCROLL
+    LTEXT           "Start Date",IDC_STATIC_Start,138,38,79,8
+    LTEXT           "End Date",IDC_STATIC_End,138,65,85,12
+END
+
+IDD_DIALOG_ESTIMATE_TEX DIALOGEX 0, 0, 395, 286
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Estimate Hydraulic Properties from Texture"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,339,4,51,14
+    PUSHBUTTON      "Cancel",IDCANCEL,339,22,52,14
+    LTEXT           "Enter Soil Characteristics",IDC_STATIC,4,7,101,10
+    LTEXT           "Clay (mass %)",IDC_STATIC,4,22,54,12
+    LTEXT           "Sand (mass %)",IDC_STATIC,4,37,50,9
+    LTEXT           "Porosity (vol %)",IDC_STATIC,4,53,59,10
+    EDITTEXT        IDC_EDIT1,65,22,25,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT3,65,36,25,12,ES_AUTOHSCROLL | ES_NOHIDESEL
+    EDITTEXT        IDC_EDIT4,66,50,25,12,ES_AUTOHSCROLL
+    LISTBOX         IDC_LIST1,4,229,387,57,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Estimated Coefficients",IDC_STATIC,245,198,90,8
+    PUSHBUTTON      "Estimate From Texture",ID_ESTIMATE,115,143,83,14
+    LTEXT           "Clay",IDC_STATIC11,50,217,24,10
+    LTEXT           "",IDC_STATIC2,261,209,40,19,NOT WS_GROUP
+    LTEXT           "Static3",IDC_STATIC3,303,209,40,19
+    LTEXT           "Static4",IDC_STATIC4,345,209,40,19
+    LTEXT           "Static1",IDC_STATIC1,219,209,40,19,NOT WS_GROUP
+    LTEXT           "Sand",IDC_STATIC6,88,217,31,10
+    LTEXT           "Porosity",IDC_STATIC7,133,217,32,10
+    LISTBOX         IDC_LIST_PF,113,35,66,102,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Pressure \nHead",IDC_STATIC,114,16,32,19
+    LTEXT           "Water \nContent",IDC_STATIC,152,16,30,19
+    LTEXT           "Water Retention",IDC_STATIC,146,7,87,10
+    PUSHBUTTON      "Add Points",IDC_EDIT_RETENTION,192,23,68,14
+    PUSHBUTTON      "Estimate From pF-curve",IDC_ESTIMATE_PF,116,160,83,14
+    LTEXT           "Minimum",IDC_STATIC,185,88,30,9
+    EDITTEXT        IDC_EDIT_MIN,181,98,40,13,ES_AUTOHSCROLL
+    LTEXT           "Valid Pressured Head Range",IDC_STATIC,180,80,95,8
+    LTEXT           "Maximum",IDC_STATIC,185,113,30,9
+    EDITTEXT        IDC_EDIT_MAX,181,123,40,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Edit Points",IDC_EDIT_RETENTION_EDIT,192,39,68,14
+    PUSHBUTTON      "Reset Points",IDC_EDIT_RETENTION_RESET,191,56,68,14
+    LTEXT           "r2-(n)",IDC_STATIC8,183,217,32,10
+    LTEXT           "Profile no:",IDC_Prof_num,295,93,93,11
+    LTEXT           "Layer:",IDC_Prof_Layer,264,119,71,9
+    LTEXT           "Name :",IDC_Prof_Name,268,106,87,11
+    LTEXT           "Details on Texture",IDC_STATIC,4,65,74,10
+    LTEXT           "Clay <.002",IDC_STATIC,4,89,43,8
+    LTEXT           "Cumulated",IDC_STATIC,75,76,38,10
+    LTEXT           "Static",IDC_CUM1,88,89,26,8
+    LTEXT           "0.002-0.006",IDC_STATIC,0,100,43,8
+    LTEXT           "Static",IDC_CUM2,88,100,26,8
+    LTEXT           "0.006-0.02",IDC_STATIC,4,111,43,8
+    LTEXT           "Static",IDC_CUM3,88,111,26,8
+    LTEXT           "0.02-0.06",IDC_STATIC,4,122,43,8
+    LTEXT           "Static",IDC_CUM4,88,122,26,8
+    LTEXT           "0.06-0.2",IDC_STATIC,4,133,43,8
+    LTEXT           "Static",IDC_CUM5,88,133,26,8
+    LTEXT           "0.2-0.6",IDC_STATIC,4,144,43,8
+    LTEXT           "Static",IDC_CUM6,88,144,26,8
+    LTEXT           "0.6-2.0",IDC_STATIC,4,155,43,8
+    LTEXT           "Static",IDC_CUM7,88,155,26,8
+    LTEXT           "Loss on ignition",IDC_STATIC,4,166,52,8
+    LTEXT           "Static",IDC_CUM8,88,166,26,8
+    EDITTEXT        IDC_EDIT5,61,99,17,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT6,61,110,17,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT7,61,121,17,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT8,61,132,17,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT9,61,143,17,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT10,61,154,17,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT11,61,165,17,12,ES_AUTOHSCROLL
+    LTEXT           "Fractions (mm)",IDC_STATIC,4,76,51,10
+    LTEXT           "Clay",IDC_STATIC_CLAY,61,89,26,8
+    DEFPUSHBUTTON   "Save texture to database",IDAPPLY2,279,58,108,14
+    PUSHBUTTON      "Estimate From pF curve-fixed residual",ID_ESTIMATE_PF2,115,178,133,14
+    LTEXT           "Residual value (vol %)",IDC_STATIC,261,179,74,11
+    EDITTEXT        IDC_EDIT12,342,178,33,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "Plot Curve",ID_ESTIMATE3,306,142,62,14
+    CONTROL         "",IDC_SPIN2,"msctls_updown32",UDS_ARROWKEYS | WS_GROUP,344,118,11,14
+    PUSHBUTTON      "Button1",IDC_BUTTON_ALL_LAYERS,279,74,108,14
+    LTEXT           "Layer",IDC_STATIC,8,217,29,10
+    DEFPUSHBUTTON   "Retrieve texture from database",IDRETRIEVE,279,42,108,14
+    CONTROL         "Sand Content from\nDetailed Fractions\n(0.06-2.0)",IDC_DETAILEDSAND,
+                    "Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,5,185,107,25
+END
+
+IDD_DIALOG_RETENTION DIALOG 0, 0, 186, 65
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Water Retention points"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,6,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,44,50,14
+    EDITTEXT        IDC_EDIT1,7,26,31,14,NOT WS_TABSTOP
+    EDITTEXT        IDC_EDIT2,69,25,31,14,ES_AUTOHSCROLL
+    LTEXT           "Pressure Head \n(cm water)",IDC_STATIC,7,6,51,21
+    LTEXT           "Water Content\n(vol %)",IDC_STATIC,68,6,54,15
+    DEFPUSHBUTTON   "Apply",IDAPPLY,129,25,50,14
+END
+
+IDD_DIALOG_Retrieve DIALOGEX 0, 0, 807, 450
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Retrieve from Database"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,749,9,41,14
+    PUSHBUTTON      "Cancel",IDCANCEL,751,29,39,33
+    LTEXT           "Static",IDC_PFCUG,11,17,415,423,SS_SUNKEN
+    LTEXT           "Static",IDC_PF_GRID_EST,591,18,143,164,SS_SUNKEN
+    LTEXT           "Static",IDC_STATIC_SELFROMBASE,13,1,215,10
+    LTEXT           "Static",IDC_STATIC_SELTOSIM,428,0,91,11
+    LTEXT           "Static",IDC_PFCUG_DATA,431,264,359,176,SS_SUNKEN
+    EDITTEXT        IDC_COMMENT1,431,191,298,64,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL | NOT WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "Delete Record",IDC_BUTON_DELETE,735,143,55,19,BS_MULTILINE
+    PUSHBUTTON      "Add New Profile",IDC_BUTON_ADD,735,164,55,18,BS_MULTILINE
+    PUSHBUTTON      "Exchange data with local database",IDC_BUTON_EXCHANGE,735,186,55,25,BS_MULTILINE
+    PUSHBUTTON      "Export data ",IDC_BUTON_EXPORT,735,214,55,21,BS_MULTILINE
+    PUSHBUTTON      "Import Data from  ",IDC_BUTON_IMPORT,735,239,55,21,BS_MULTILINE
+    LTEXT           "Static",IDC_PFCUG_TOSIM2,429,18,161,164,SS_SUNKEN
+    LTEXT           "Estimate Options",IDC_STATIC_SELTOSIM2,592,3,91,11
+END
+
+IDD_DIALOG_Save DIALOG 0, 0, 392, 262
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Save to Database"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,334,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,334,24,50,14
+    LTEXT           "Characteristics to be used as identification of the profile",IDC_STATIC,7,7,190,12
+    LTEXT           "Site Profile Number",IDC_STATIC,8,23,72,8
+    LTEXT           "Replicate Profile Number",IDC_STATIC,8,36,72,8
+    EDITTEXT        IDC_EDIT_PROF,87,20,18,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_REP,87,34,18,12,ES_AUTOHSCROLL
+    LTEXT           "Coordinates (Lat) :",IDC_STATIC,188,18,61,10
+    LTEXT           "Additional details:",IDC_STATIC,7,97,62,10
+    LISTBOX         IDC_LIST_SELECTION,7,204,377,51,LBS_SORT | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_NOSEL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Top Soil ",IDC_STATIC,188,46,35,8
+    LTEXT           "Sub Soil",IDC_STATIC,233,47,34,8
+    PUSHBUTTON      "List used numbers and names",IDC_BUTTON_SCAN,7,192,110,11
+    LTEXT           "County/Country codes",IDC_STATIC,167,194,54,9
+    LTEXT           "Coordinates",IDC_STATIC,121,194,39,9
+    LTEXT           "Sand",IDC_STATIC,239,68,26,9
+    LTEXT           "Clay",IDC_STATIC,239,57,22,9
+    LTEXT           "Org.",IDC_STATIC,239,79,18,9
+    EDITTEXT        IDC_EDIT1,87,48,71,14,ES_AUTOHSCROLL
+    LTEXT           "Coordinates (Long) :",IDC_STATIC,188,31,61,10
+    EDITTEXT        IDC_EDIT2,62,79,15,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT3,143,80,15,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT4,254,15,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT5,255,31,40,14,ES_AUTOHSCROLL
+    LTEXT           "Site Name",IDC_STATIC,7,49,65,11
+    LTEXT           "County code",IDC_STATIC,7,80,27,9
+    LTEXT           "Country code",IDC_STATIC,91,80,46,10
+    EDITTEXT        IDC_EDIT9,276,54,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT10,276,66,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT11,276,79,19,12,ES_AUTOHSCROLL
+    LTEXT           "Sand",IDC_STATIC,179,69,26,9
+    LTEXT           "Clay",IDC_STATIC,179,58,22,9
+    LTEXT           "Org.",IDC_STATIC,179,79,18,9
+    EDITTEXT        IDC_EDIT12,216,55,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT13,216,67,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT14,216,80,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT6,7,113,217,62,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL
+    LISTBOX         IDC_LIST_SoilP3,233,124,151,51,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Clay",IDC_NEW,304,114,18,8
+    LTEXT           "Sand",IDC_NEW2,326,114,18,8
+    PUSHBUTTON      "Add Layers",IDC_ADD,334,42,50,14
+    PUSHBUTTON      "Edit Layers",IDC_EDIT,334,58,50,14
+    PUSHBUTTON      "Reset Layers",IDC_RESET,334,76,50,14
+    LTEXT           "Characteristics to be used  when estimating default values on soil physical properties",IDC_NEW1,231,95,153,18
+    LTEXT           "Saturation",IDC_NEW3,349,114,35,8
+    LTEXT           "#",IDC_NEW4,235,114,10,8
+    LTEXT           "Clay     Sand     Org",IDC_STATIC,225,194,64,9
+    LTEXT           "Top Soil",IDC_STATIC,241,182,33,9
+    LTEXT           "Sub Soil",IDC_STATIC,307,183,38,9
+    LTEXT           "Clay     Sand     Org",IDC_STATIC,304,194,64,9
+    EDITTEXT        IDC_EDIT_YEAR,62,64,23,12,ES_AUTOHSCROLL
+    LTEXT           "Sampling Year",IDC_STATIC,7,66,52,9
+    LTEXT           "Depths",IDC_STATIC_DEP,251,114,24,8
+END
+
+IDD_DIALOG_SOIL_CHOICE DIALOG 0, 0, 234, 54
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Reset of Soil Properties"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,177,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,177,24,50,14
+    CONTROL         "Choose a profile from the data base",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,7,125,10
+    CONTROL         "Create a new profile to be added to database",IDC_RADIO2,
+                    "Button",BS_AUTORADIOBUTTON,7,23,159,10
+END
+
+IDD_DIALOG_SP_INIT DIALOG 0, 0, 316, 66
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Initial General Soil Characteristics"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,259,6,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,259,45,50,14
+    EDITTEXT        IDC_EDIT1,107,26,31,14,NOT WS_TABSTOP
+    EDITTEXT        IDC_EDIT2,157,25,31,14,ES_AUTOHSCROLL
+    LTEXT           "Clay Content\n(%)",IDC_STATIC,105,6,45,21
+    LTEXT           "Sand Content\n( %)",IDC_STATIC,154,6,49,15
+    DEFPUSHBUTTON   "Apply",IDAPPLY,259,25,50,14
+    LTEXT           "Saturation\n( vol %)",IDC_STATIC,207,6,39,15
+    EDITTEXT        IDC_EDIT3,207,25,31,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_UDEP,7,26,31,14,NOT WS_TABSTOP
+    LTEXT           "Upper Depth\n(m)",IDC_STATIC,7,6,45,21
+    EDITTEXT        IDC_LDEP,57,26,31,14,NOT WS_TABSTOP
+    LTEXT           "Lower Depth\n(m)",IDC_STATIC,56,6,45,21
+END
+
+IDD_SP_EXCHANGE DIALOGEX 0, 0, 353, 148
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Exchange data between two databases"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,296,7,50,14
+    LISTBOX         IDC_LIST_MAIN,205,54,128,87,LBS_SORT | LBS_MULTIPLESEL | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST_LOCAL,7,54,128,87,LBS_SORT | LBS_MULTIPLESEL | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT1,7,24,123,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Specify name of external database file",IDC_BUTTON_FILE,7,7,129,14
+    LTEXT           "Profiles to be moved to main database",IDC_STATIC,7,43,142,10
+    LTEXT           "Profiles to be moved to local database",IDC_STATIC,205,42,128,10
+    PUSHBUTTON      "Move to local data base",IDC_MOVE_TO_LOCAL,146,98,46,37,BS_CENTER | BS_MULTILINE,WS_EX_RIGHT
+    PUSHBUTTON      "Move to main data base",IDC_MOVE_TO_MAIN,146,57,46,37,BS_CENTER | BS_MULTILINE,WS_EX_RIGHT
+END
+
+IDD_DIALOG_SP_EXCHANGE1 DIALOGEX 0, 0, 353, 148
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+CAPTION "Exchange data between two databases"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,296,7,50,14
+    LISTBOX         IDC_LIST_MAIN,205,54,128,87,LBS_SORT | LBS_MULTIPLESEL | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST_LOCAL,7,54,128,87,LBS_SORT | LBS_MULTIPLESEL | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_MULTICOLUMN | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT1,7,24,200,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Specify name of external database file",IDC_BUTTON_FILE,7,7,129,14
+    LTEXT           "Profiles to be moved to main database",IDC_STATIC,7,43,142,10
+    LTEXT           "Profiles to be moved to local database",IDC_STATIC,205,42,128,10
+    PUSHBUTTON      "Move to local data base",IDC_MOVE_TO_LOCAL,146,98,46,37,BS_CENTER | BS_MULTILINE,WS_EX_RIGHT
+    PUSHBUTTON      "Move to main data base",IDC_MOVE_TO_MAIN,146,57,46,37,BS_CENTER | BS_MULTILINE,WS_EX_RIGHT
+END
+
+IDD_DIALOG_PP_EDIT DIALOGEX 0, 0, 770, 438
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Scan and edit plant characteristics"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,720,5,41,13
+    PUSHBUTTON      "Cancel",IDCANCEL,720,22,41,13
+    PUSHBUTTON      "Apply Current values",IDC_BUTTON_APPLY,721,54,40,32,BS_MULTILINE
+    LTEXT           "Select a parameter set from the list below",IDC_STATIC,6,4,159,12,SS_SUNKEN
+    LTEXT           "Additional details:",IDC_STATIC,384,1,62,9
+    EDITTEXT        IDC_DETAILS,384,19,217,142,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL | NOT WS_TABSTOP
+    PUSHBUTTON      "Create a new record from document",IDC_BUTTON_CREATE,720,91,41,33,BS_MULTILINE
+    LTEXT           "Static",IDC_DATABASECUG,5,18,374,142,SS_SUNKEN
+    LTEXT           "Static",IDC_DATABASE_TOSIM,609,4,98,155,SS_SUNKEN
+    PUSHBUTTON      "Reset Selection",IDC_RESET_SELECTION,719,129,42,25,BS_MULTILINE
+    LTEXT           "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",IDC_DATAFROMBASE,7,164,754,267,SS_SUNKEN
+END
+
+IDD_History DIALOG 0, 0, 520, 213
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Selection of a Parameter Value from Earlier Runs"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,433,3,65,21
+    LTEXT           "Value",IDC_STATIC_Validation,452,58,46,11
+    LISTBOX         IDC_ParameterValueList,4,71,494,101,LBS_SORT | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Change Parameter Value",ID_APPLY,63,3,65,21,BS_MULTILINE
+    LTEXT           "Run Date",IDC_STATIC_Validation2,34,58,49,11
+    LTEXT           "Default Value",IDC_STATIC,26,186,57,8
+    LTEXT           "DefValue",IDC_STATIC_DEFAULT,87,185,31,12
+    LTEXT           "Id text",IDC_STATIC_Validation3,165,57,22,11
+    LTEXT           "Document name",IDC_STATIC_Validation4,205,57,56,11
+    LTEXT           "RunNo",IDC_STATIC_Validation5,4,58,24,11
+    LTEXT           "Version",IDC_STATIC_Validation6,124,57,27,12
+    LTEXT           "Unit",IDC_STATIC_UNIT,122,185,65,11
+END
+
+IDD_DIALOG_SP_EDIT DIALOGEX 0, 0, 417, 270
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTEXTHELP
+CAPTION "Scan and edit soil database"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,359,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,359,24,50,14
+    LTEXT           "Site Profile Number",IDC_STATIC,15,23,65,8
+    LTEXT           "Replicate Profile Number",IDC_STATIC,15,36,62,8
+    EDITTEXT        IDC_EDIT_PROF,82,20,18,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_REP,82,34,18,12,ES_AUTOHSCROLL
+    LTEXT           "Coordinates (Lat) :",IDC_STATIC,14,98,61,10
+    LTEXT           "Additional details:",IDC_STATIC,178,115,62,9
+    LTEXT           "Top Soil ",IDC_STATIC,225,16,35,8
+    LTEXT           "Sub Soil",IDC_STATIC,282,15,30,8
+    PUSHBUTTON      "Apply Current values",IDC_BUTTON_APPLY,89,140,78,11
+    LTEXT           "County/Country codes",IDC_STATIC,167,190,54,9
+    LTEXT           "Coordinates",IDC_STATIC,121,190,39,9
+    LTEXT           "Sand",IDC_STATIC,263,38,22,9
+    LTEXT           "Clay",IDC_STATIC,263,28,22,9
+    LTEXT           "Org.",IDC_STATIC,263,49,22,9
+    EDITTEXT        IDC_EDIT1,82,48,64,14,ES_AUTOHSCROLL
+    LTEXT           "Coordinates (Long) :",IDC_STATIC,14,111,61,10
+    EDITTEXT        IDC_EDIT2,82,79,15,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT3,150,80,15,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT4,82,95,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT5,82,111,40,14,ES_AUTOHSCROLL
+    LTEXT           "Site Name",IDC_STATIC,14,49,65,11
+    LTEXT           "County code",IDC_STATIC,14,80,27,9
+    LTEXT           "Country code",IDC_STATIC,104,80,46,10
+    EDITTEXT        IDC_EDIT9,292,25,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT10,292,38,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT11,292,49,19,12,ES_AUTOHSCROLL
+    LTEXT           "Sand",IDC_STATIC,207,39,26,9
+    LTEXT           "Clay",IDC_STATIC,207,28,22,9
+    LTEXT           "Org.",IDC_STATIC,207,49,18,9
+    EDITTEXT        IDC_EDIT12,234,25,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT13,234,38,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT14,234,50,19,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT6,177,125,232,51,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL | NOT WS_TABSTOP
+    LTEXT           "Clay     Sand     Org",IDC_STATIC,225,190,64,9
+    LTEXT           "Top Soil",IDC_STATIC,242,178,33,9
+    LTEXT           "Sub Soil",IDC_STATIC,307,179,38,9
+    LTEXT           "Clay     Sand     Org",IDC_STATIC,304,190,64,9
+    EDITTEXT        IDC_EDIT_YEAR,82,64,23,12,ES_AUTOHSCROLL
+    LTEXT           "Sampling Year",IDC_STATIC,14,66,52,9
+    PUSHBUTTON      "Delete from database",IDC_BUTTON_DELETE,7,140,78,11
+    LISTBOX         IDC_LIST_SELECTION,7,203,402,60,LBS_SORT | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Select a profile from the list below",IDC_STATIC,7,181,107,8
+    CONTROL         "Move cursor one step forward after apply",IDC_CHECK1,
+                    "Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,7,153,85,23
+    PUSHBUTTON      "Texture ",IDC_TEXTURE_EDIT,272,87,41,11
+    PUSHBUTTON      "Retention",IDC_RETENTION_EDIT,272,101,41,11
+    EDITTEXT        IDC_EDIT_NUM_TENS,240,97,20,12,ES_AUTOHSCROLL
+    LTEXT           "Number of retention points",IDC_STATIC,183,95,51,17
+    PUSHBUTTON      "Coefficients",IDC_COEF,272,73,41,11
+    LTEXT           "Number of layers",IDC_STATIC,188,73,37,16
+    EDITTEXT        IDC_EDIT_NUM_LAYERS,239,75,20,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Profile",IDC_BUTTON_VIEW,329,76,34,11
+    PUSHBUTTON      "Layers",IDC_BUTTON_VIEW_LAYERS,367,76,34,11
+    PUSHBUTTON      "Profile",IDC_BUTTON_VIEW_RET,331,102,34,11
+    PUSHBUTTON      "Layers",IDC_BUTTON_VIEW_LAYERS_RET,368,102,34,11
+    GROUPBOX        "View texture",IDC_STATIC,326,66,79,25
+    GROUPBOX        "Edit layer properties",IDC_STATIC,176,65,145,50
+    GROUPBOX        "View retention",IDC_STATIC,327,92,79,25
+    GROUPBOX        "Edit profile description",IDC_STATIC,7,7,166,124
+    GROUPBOX        "Edit general properties",IDC_STATIC,175,7,146,57
+END
+
+IDD_DIALOG_PP_EXCHANGE DIALOG 0, 0, 397, 269
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Exchange of records between system data base (DBM-type) and local data base (DBS-type)"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,347,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,347,24,50,14
+    LISTBOX         IDC_LIST_LOCAL,7,200,381,63,LBS_SORT | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Select a parameter set from the local list below",IDC_STATIC,7,180,159,8
+    LTEXT           "Plant type",IDC_STATIC_TYPE2,7,189,63,11
+    LTEXT           "Plant name",IDC_STATIC_NAME2,89,189,46,11
+    LTEXT           "Coordinates",IDC_STATIC,205,189,48,11
+    LTEXT           "Country",IDC_STATIC,266,189,32,11
+    LTEXT           "Signature with Id-number",IDC_STATIC,303,189,83,11
+    LTEXT           "Site name",IDC_STATIC,148,189,46,11
+    LISTBOX         IDC_LIST_SYSTEM,7,64,381,71,LBS_SORT | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Select a parameter set from the system list below",IDC_STATIC,7,44,156,8
+    LTEXT           "Plant type",IDC_STATIC_TYPE3,7,53,63,11
+    LTEXT           "Plant name",IDC_STATIC_NAME3,89,53,46,11
+    LTEXT           "Coordinates",IDC_STATIC,205,53,48,11
+    LTEXT           "Country",IDC_STATIC,266,53,32,11
+    LTEXT           "Signature with Id-number",IDC_STATIC,303,53,83,11
+    LTEXT           "Site name",IDC_STATIC,148,53,46,11
+    PUSHBUTTON      "Move to Local data base file (DBS-type)",IDC_BUTTON_TO_LOCAL,105,142,68,28,BS_MULTILINE
+    PUSHBUTTON      "Move to system data base file (DBM-type)",IDC_BUTTON_TO_SYSTEM,201,142,68,28,BS_MULTILINE
+END
+
+IDD_DIALOG_PG_SELECT_DOC DIALOG 0, 0, 332, 114
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Documents to View Outputs from"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,265,7,60,14
+    PUSHBUTTON      "Cancel",IDCANCEL,264,28,61,14
+    LISTBOX         IDC_LIST1,7,18,244,89,LBS_MULTIPLESEL | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Select Run number, with similar output variables",IDC_STATIC,7,7,158,10
+    PUSHBUTTON      "Reset Selections",ID_RESET,264,47,61,16
+END
+
+IDD_DIALOG_PG_VAR_SUM DIALOG 0, 0, 409, 271
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Summary Variables to View"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,303,7,60,14
+    PUSHBUTTON      "Apply",IDAPPLYPLOT,303,28,61,14
+    LISTBOX         IDC_LIST1,7,40,280,77,LBS_MULTIPLESEL | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Select Variables",IDC_STATIC,7,25,59,10
+    PUSHBUTTON      "Reset Selections",ID_RESET,297,81,69,16
+    LTEXT           "Select type of value",IDC_STATIC,7,7,71,10
+    LTEXT           "Start",IDC_STATIC,107,28,20,11
+    LTEXT           "Final",IDC_STATIC,134,28,20,11
+    LTEXT           "Min",IDC_STATIC,161,28,20,11
+    LTEXT           "Accumulated",IDC_STATIC,243,28,41,11
+    LTEXT           "Max",IDC_STATIC,188,28,20,11
+    LTEXT           "Mean",IDC_STATIC,215,28,20,11
+    PUSHBUTTON      "Apply Selections",ID_APPLY,297,61,69,16
+    COMBOBOX        IDC_COMBO1,87,7,110,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST_VAL,7,158,376,54,LBS_MULTIPLESEL | LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Select Validation Variable",IDC_STATIC,7,132,88,12
+    LTEXT           "n",IDC_STATIC,148,147,10,8
+    LTEXT           "r2",IDC_STATIC,176,147,16,8
+    LTEXT           "Intercept",IDC_STATIC,201,147,30,8
+    LTEXT           "ME",IDC_STATIC,267,147,12,8
+    LTEXT           "RMSE",IDC_STATIC,288,147,23,8
+    LTEXT           "M-Sim",IDC_STATIC,320,147,23,8
+    LTEXT           "M-Measured",IDC_STATIC,348,147,43,8
+    LTEXT           "Select type of value",IDC_STATIC,97,129,71,10
+    COMBOBOX        IDC_COMBO2,177,129,134,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Slope",IDC_STATIC,237,147,21,8
+    PUSHBUTTON      "Reset All Selections",ID_RESET2,297,101,69,16
+    COMBOBOX        IDC_COMBO_TYPE,23,234,79,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Independent variables",IDC_STATIC,7,216,74,10
+    LTEXT           "no 1",IDC_STATIC,7,236,16,10
+    LTEXT           "Type",IDC_STATIC,29,225,74,8
+    COMBOBOX        IDC_COMBO_GROUP,103,233,90,55,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Group",IDC_STATIC1,103,222,74,10
+    COMBOBOX        IDC_COMBO_NAME,194,233,98,55,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Name",IDC_STATIC2,196,222,74,10
+    COMBOBOX        IDC_COMBO_INDEX,293,234,31,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Index",IDC_STATIC3,294,222,26,10
+    COMBOBOX        IDC_COMBO_TYPE2,23,252,79,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "no 2",IDC_STATIC4,7,254,16,10
+    COMBOBOX        IDC_COMBO_GROUP2,103,252,90,55,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_NAME2,194,252,98,55,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_INDEX2,293,252,31,55,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT_VALUE1,325,233,39,14,ES_MULTILINE | ES_READONLY | WS_VSCROLL
+    EDITTEXT        IDC_EDIT_VALUE2,326,249,38,14,ES_MULTILINE | ES_READONLY | WS_VSCROLL
+    LTEXT           "Values",IDC_STATIC5,330,222,26,10
+    EDITTEXT        IDC_EDIT_NUM_DIM1,366,232,43,14,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    EDITTEXT        IDC_EDIT_NUM_DIM2,366,250,43,14,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    CONTROL         "No of diff.\noccurences",IDC_STATIC,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,367,215,40,17
+END
+
+IDD_MULTI_RUN_DB DIALOG 0, 0, 439, 143
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "MultiRunSettings"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,389,7,39,24
+    PUSHBUTTON      "Cancel",IDCANCEL,389,32,39,24
+    LISTBOX         IDC_DIMENSIONS,192,21,93,42,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Change number of repetitions",IDC_BUTTON_CHANGE,305,15,66,22,BS_MULTILINE
+    PUSHBUTTON      "Make a new dimension",IDC_BUTTON_NEWDIM,305,63,66,22,BS_MULTILINE
+    PUSHBUTTON      "Delete an unused dimension",IDC_BUTTON_DELETE_DIM,305,87,66,22,BS_MULTILINE
+    PUSHBUTTON      "Reset Counter",IDC_BUTTON_Counter,305,39,66,22,BS_MULTILINE
+    PUSHBUTTON      "Apply",IDC_BUTTO_APPLY,197,84,39,24
+    PUSHBUTTON      "Add data base Record",ID_DATABASE_ADD,15,97,87,13,BS_MULTILINE
+    GROUPBOX        "Dimensions",-1,187,7,190,131
+    GROUPBOX        "Selected Records",-1,7,7,174,131
+    LISTBOX         IDC_Records,13,23,158,67,LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | LBS_NOSEL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Reset data base records",ID_DATABASE_RESET,16,115,87,13,BS_MULTILINE
+END
+
+IDD_MULTI_RUN_PAR DIALOGEX 0, 0, 672, 398
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "MultiRunSettings"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,586,19,39,24
+    PUSHBUTTON      "Cancel",IDCANCEL,586,70,39,24
+    COMBOBOX        IDC_COMBO1,285,22,95,45,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT1,317,41,60,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT2,317,62,60,14,ES_AUTOHSCROLL
+    LTEXT           "Minimum",IDC_STATIC1,273,46,28,8
+    LTEXT           "Maximum",IDC_STATIC2,273,67,30,8
+    LISTBOX         IDC_DIMENSIONS,394,21,93,42,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Change number of repetitions",IDC_BUTTON_CHANGE,507,15,66,22,BS_MULTILINE
+    PUSHBUTTON      "Make a new dimension",IDC_BUTTON_NEWDIM,507,63,66,22,BS_MULTILINE
+    PUSHBUTTON      "Delete an unused dimension",IDC_BUTTON_DELETE_DIM,507,87,66,22,BS_MULTILINE
+    PUSHBUTTON      "Reset All Selections",IDC_BUTTON_Counter,507,39,66,22,BS_MULTILINE
+    PUSHBUTTON      "Apply",IDC_BUTTO_APPLY,586,45,39,24
+    PUSHBUTTON      "Table Values",ID_TABLE_VALUES,269,116,55,13,BS_MULTILINE
+    GROUPBOX        "Dimensions",IDC_STATIC,389,7,272,141
+    GROUPBOX        "Methods",IDC_STATIC,268,7,121,124
+    CONTROL         "",IDC_TREE1,"SysTreeView32",TVS_HASBUTTONS | TVS_SINGLEEXPAND | WS_BORDER | WS_TABSTOP,7,62,152,324
+    CONTROL         "",IDC_LIST1,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,176,147,480,239
+    LTEXT           "Selected Group",IDC_STATIC,171,40,95,10
+    LTEXT           "Select from tree below",IDC_STATIC,7,49,119,11
+    COMBOBOX        IDC_COMBO2,171,105,69,157,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Selected Parameter",IDC_STATIC,169,7,99,114
+    EDITTEXT        IDC_EDIT3,169,23,93,13,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT4,170,52,93,13,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT5,171,80,93,13,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Table Name",IDC_STATIC,171,70,96,10
+    LTEXT           "Table Index",IDC_STATIC,171,95,94,10
+    EDITTEXT        IDC_EDIT6,394,82,42,13,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Total number of MultiRuns",IDC_STATIC,394,70,95,8
+    LTEXT           "Selected Parameters - Click on any line if changes are to be made",IDC_STATIC,167,132,285,15
+    PUSHBUTTON      "Par Tables",IDC_BUTTON_TABLE,7,22,51,17
+    PUSHBUTTON      "Parameters",IDC_BUTTON_NOTABLE,59,22,51,17
+    COMBOBOX        IDC_COMBO3,279,99,102,136,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_EDIT7,319,81,60,14,ES_AUTOHSCROLL
+    LTEXT           "Start Value",IDC_STATIC3,273,84,36,8
+    LTEXT           "Bayesian Step Size",IDC_STATIC,395,96,95,8
+    EDITTEXT        IDC_EDIT8,393,106,42,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Apply start values to Bayesian calibration",IDC_BUTTON1,439,111,134,15
+    PUSHBUTTON      "Apply use of calibrated parameters",IDC_APPLYBAYESIANPARAMETERS,439,126,134,15
+    PUSHBUTTON      "Export to Excel File",IDC_BUTTON2,586,110,75,15
+    PUSHBUTTON      "Import from Excel File",IDC_BUTTON3,586,127,75,15
+    PUSHBUTTON      "Database",IDC_BUTTON_NOTABLE2,112,22,51,17
+    GROUPBOX        "Select Category",IDC_STATIC,7,7,157,36
+    PUSHBUTTON      "Record Values",ID_TABLE_VALUES2,331,116,55,13,BS_MULTILINE,WS_EX_STATICEDGE
+END
+
+IDD_DIALOG_MR_TABLE DIALOGEX 0, 0, 559, 374
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,491,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,491,24,50,14
+    DEFPUSHBUTTON   "Read from File",ID_FILE,491,87,50,35,BS_MULTILINE
+    EDITTEXT        IDC_EDIT1,491,60,8,12,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN | NOT WS_TABSTOP
+    LTEXT           "Static",IDC_SIMPLE_GRID,9,11,477,353,SS_SUNKEN
+END
+
+IDD_DIALOG_SP_EXPORT DIALOG 0, 0, 186, 95
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Export from Data base to Ascii-file"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+END
+
+IDD_MULTI_RUN DIALOGEX 0, 0, 365, 139
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "MultiRunSettings"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,315,7,39,24
+    PUSHBUTTON      "Cancel",IDCANCEL,315,32,39,24
+    COMBOBOX        IDC_COMBO1,13,22,95,105,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT1,47,41,60,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT2,47,62,60,14,ES_AUTOHSCROLL
+    LTEXT           "Minimum",IDC_STATIC1,13,45,28,8
+    LTEXT           "Maximum",IDC_STATIC2,13,64,30,8
+    LISTBOX         IDC_DIMENSIONS,122,21,93,42,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Change number of repetitions",IDC_BUTTON_CHANGE,235,15,66,22,BS_MULTILINE
+    PUSHBUTTON      "Make a new dimension",IDC_BUTTON_NEWDIM,235,63,66,22,BS_MULTILINE
+    PUSHBUTTON      "Delete an unused dimension",IDC_BUTTON_DELETE_DIM,235,87,66,22,BS_MULTILINE
+    PUSHBUTTON      "Reset Counter",IDC_BUTTON_Counter,235,39,66,22,BS_MULTILINE
+    PUSHBUTTON      "Apply",IDC_BUTTO_APPLY,315,84,39,24
+    PUSHBUTTON      "Define Filename ",ID_DEFINE_FILE,17,102,87,13,BS_MULTILINE
+    PUSHBUTTON      "Table Values",ID_TABLE_VALUES,17,116,87,13,BS_MULTILINE
+    GROUPBOX        "Dimensions",-1,117,7,190,125
+    GROUPBOX        "Methods",-1,7,7,110,126
+    LTEXT           "Start",IDC_STATIC3,14,82,16,8
+    EDITTEXT        IDC_EDIT3,47,79,60,14,ES_AUTOHSCROLL
+END
+
+IDD_ValidationTimeSerieVariables DIALOGEX 0, 0, 621, 399
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Selection of Validation Variables"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,577,26,41,21
+    LTEXT           "Select Validation Variable by click on list below",IDC_STATIC_Validation,9,3,168,11
+    LTEXT           "Select Simulated Variable by click on list below",IDC_STATIC_Simulated,254,4,160,11
+    DEFPUSHBUTTON   "Reset Latest Selection",IDCANCEL,577,98,41,38,BS_MULTILINE
+    DEFPUSHBUTTON   "Add More Variables",IDD_ADD,577,57,41,38,BS_MULTILINE
+    LTEXT           "Static",IDC_GRID3,253,15,318,341,SS_SUNKEN
+    LTEXT           "Static",IDC_GRID4,7,14,235,341,SS_SUNKEN
+    LTEXT           "Static",IDC_GRID5,255,370,317,26,SS_SUNKEN
+    LTEXT           "Static",IDC_GRID6,7,368,236,26,SS_SUNKEN
+    LTEXT           "Selected Validation Variable",IDC_STATIC_Validation7,6,358,94,8
+    LTEXT           "Selected Simulated Variable",IDC_STATIC_Simulated2,255,359,105,9
+END
+
+IDD_HOTSPOTDIALOG DIALOGEX 0, 0, 329, 201
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_CHILD | WS_CAPTION
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "TODO: layout dialog bar",IDC_STATIC,126,4,77,8
+    CONTROL         "",IDC_PARAMLIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,27,25,84,136
+    PUSHBUTTON      "OK",IDC_BUTTON1,229,101,50,14
+END
+
+IDD_CREATEPG DIALOGEX 0, 0, 673, 369
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Create new PG File"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,626,4,35,16
+    PUSHBUTTON      "Cancel",IDCANCEL,583,4,40,16
+    LTEXT           "Static",IDC_GRID,306,186,361,152,SS_SUNKEN
+    LTEXT           "Description of Variables",IDC_STATIC,309,176,149,12
+    LTEXT           "Static",IDC_GRID2,0,0,298,360,SS_SUNKEN
+    EDITTEXT        IDC_EDIT1,319,7,44,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT2,399,6,44,14,ES_AUTOHSCROLL
+    LTEXT           "Number of Variables",IDC_STATIC,365,1,35,23
+    LTEXT           "Number of Records",IDC_STATIC,445,2,41,20
+    PUSHBUTTON      "New (replace) data from text (ascii) file",IDC_BUTTON2,502,82,130,11
+    PUSHBUTTON      "Save as PG Bin",IDC_BUTTON3,582,40,90,12
+    EDITTEXT        IDC_EDIT3,316,145,183,14,ES_AUTOHSCROLL
+    LTEXT           "File Name",IDC_STATIC,316,132,149,8
+    PUSHBUTTON      "Clean Grid",IDC_BUTTON5,586,58,86,12
+    EDITTEXT        IDC_EDIT4,319,38,65,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT5,441,39,32,14,ES_AUTOHSCROLL
+    LTEXT           "Start Date ",IDC_STATIC,388,40,35,8
+    LTEXT           "Time Interval (minutes)",IDC_STATIC,479,34,58,16
+    PUSHBUTTON      "ReRead from  PG Bin",IDC_REREADPG,584,25,87,12
+    EDITTEXT        IDC_EDIT6,319,54,65,14,ES_AUTOHSCROLL
+    LTEXT           "End Date ",IDC_STATIC,388,55,35,12
+    EDITTEXT        IDC_EDIT_NEW_START,317,87,65,14,ES_AUTOHSCROLL
+    LTEXT           "Start Date ",IDC_STATIC,389,89,35,8
+    EDITTEXT        IDC_EDIT_NEW_END,317,103,65,14,ES_AUTOHSCROLL
+    LTEXT           "End Date ",IDC_STATIC,389,105,35,12
+    GROUPBOX        "Output period",IDC_STATIC,314,73,157,58
+    GROUPBOX        "File period",IDC_STATIC,313,24,118,48
+    GROUPBOX        "Static",IDC_STATIC,434,24,108,48
+    CONTROL         "Remove Records with missing values",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,318,118,132,10
+    PUSHBUTTON      "Add  from text (ascii) file",IDC_BUTTON_ADD,502,94,130,11
+    COMBOBOX        IDC_COMBODISPLAYSIZE5,502,115,154,105,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Import Format",IDC_STATIC,502,106,125,8
+    GROUPBOX        "Import data from file",IDC_STATIC,485,74,176,58
+    EDITTEXT        IDC_MISSING,409,161,89,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_REGULAR,315,161,85,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_REPIT,489,4,44,14,ES_AUTOHSCROLL
+    LTEXT           "Number of Repetitions",IDC_STATIC,539,1,41,26
+    PUSHBUTTON      "Generate Date/Time",IDC_BUTTONREGEN,448,53,72,15
+    PUSHBUTTON      "Make Repitition Style",IDC_MAKEREPSTYLE,596,144,72,14
+    EDITTEXT        IDC_INCREASE,586,162,86,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_ACTBLOCK,337,350,38,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    EDITTEXT        IDC_NUMBLOCK,433,350,38,14,ES_AUTOHSCROLL | ES_READONLY,WS_EX_RIGHT
+    EDITTEXT        IDC_BLOCKSIZE,500,350,38,14,ES_AUTOHSCROLL,WS_EX_RIGHT
+    LTEXT           "Actual Block",IDC_STATIC,389,354,42,11
+    LTEXT           "Blocks",IDC_STATIC,473,354,23,11
+    LTEXT           "Block Size",IDC_STATIC,539,354,40,11
+    PUSHBUTTON      ">",IDC_INCREASEBLOCK,375,347,11,9
+    PUSHBUTTON      "<",IDC_DECREASEBLOCK,375,356,11,9
+    EDITTEXT        IDC_MEMREADCOMPLETE,502,162,86,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Step by Block  Read",IDC_MEMORY,517,143,72,15
+    PUSHBUTTON      "Update Grid",IDC_UPDATEGRID,576,348,86,12
+END
+
+IDD_REALTIMEDEMO_DIALOG DIALOGEX 0, 0, 626, 356
+STYLE DS_SETFONT | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Realtime Chart Demonstration"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "Run",IDC_RunPB,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE | WS_GROUP,7,8,35,10
+    CONTROL         "Freeze",IDC_FreezePB,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,7,20,73,10
+    COMBOBOX        IDC_UpdatePeriod,8,68,72,72,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_ChartViewer0,"Static",SS_BITMAP,89,7,15,13
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,3,4,84,348
+    LTEXT           "Sampling Period (ms)",IDC_STATIC,8,57,68,9,SS_CENTERIMAGE
+    CONTROL         "",IDC_ChartViewer2,"Static",SS_BITMAP,88,166,15,13
+    CONTROL         "",IDC_ChartViewer3,"Static",SS_BITMAP,355,7,15,13
+    CONTROL         "",IDC_ChartViewer4,"Static",SS_BITMAP,354,166,15,13
+    LTEXT           "SingleRunProgress",IDC_RunReport,6,148,76,9
+    CONTROL         "",IDC_PROGRESS1,"msctls_progress32",WS_BORDER,7,159,78,12
+    LTEXT           "MultiRunProgress",IDC_RunReport2,5,174,78,8
+    CONTROL         "",IDC_PROGRESS2,"msctls_progress32",WS_BORDER,5,185,76,13
+    LTEXT           "Static",IDC_RunReportDate,7,119,74,11
+    LTEXT           "Actual Run No",IDC_RunReportDate2,7,108,76,9,0,WS_EX_RTLREADING
+    LTEXT           "Remaining time \n (Hr : Min: Sec)",IDC_RunReportDate3,7,129,76,19,0,WS_EX_RTLREADING
+    COMBOBOX        IDC_UpdatePeriod2,7,89,72,72,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Update Period (ms)",IDC_STATIC,7,79,68,9,SS_CENTERIMAGE
+    CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,9,44,72,11
+    LTEXT           "Simulation Speed",IDC_STATIC,8,33,75,8
+    CONTROL         "Step",IDC_StepPB2,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE | WS_GROUP,47,8,35,10
+    LTEXT           "Static",IDC_GRIDSIMPLE,6,250,78,99,SS_SUNKEN
+    PUSHBUTTON      "ReDesign Charts",IDC_BUTTON1,5,235,79,12
+    CONTROL         "Multi Sim View",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,220,76,12
+    PUSHBUTTON      "Interupt Multirun",IDC_BUTTON_INTERUPT,5,203,79,12,NOT WS_TABSTOP
+END
+
+IDD_DIALOG_PG_FILES DIALOGEX 0, 0, 511, 150
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,464,7,40,14
+    PUSHBUTTON      "Cancel",IDCANCEL,464,24,40,14
+    LTEXT           "Static",IDC_GRID,7,7,438,136,SS_SUNKEN
+    DEFPUSHBUTTON   "Add More Files",ID_ADD,447,68,57,14
+    DEFPUSHBUTTON   "Create New File",ID_CREATE,447,89,57,14
+END
+
+IDD_DIALOG_CALCULATE DIALOGEX 0, 0, 534, 208
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Calculate new variable"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,484,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,484,25,50,14
+    LTEXT           "Static",IDC_GRID,7,7,293,189,SS_SUNKEN
+    LTEXT           "Static",IDC_GRID2,318,7,138,189,SS_SUNKEN
+    PUSHBUTTON      "Reset Selection",IDC_BUTTON_RESET,469,44,65,12
+END
+
+IDD_DIALOG_HISTORYVIEW DIALOGEX 0, 0, 405, 442
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Options for Real Time Monitoring of Simulations"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,379,4,26,14
+    LTEXT           "Static",IDC_GRID,0,0,379,442,SS_SUNKEN
+END
+
+IDD_PROGRESS DIALOGEX 0, 0, 364, 35
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "File scaning - Please wait when new file is to be created"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_PROGRESS1,"msctls_progress32",WS_BORDER,7,7,255,18
+    LTEXT           "Static",IDC_STATIC_TEXT,279,6,31,17
+    LTEXT           "% done",IDC_STATIC_TEXT2,325,8,31,17
+END
+
+IDD_DIALOG_CHARTOPTIONS DIALOGEX 0, 0, 654, 139
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,639,0,14,38,BS_MULTILINE
+    LTEXT           "Static",IDC_GRID2,0,0,639,139,SS_SUNKEN
+END
+
+IDD_DIALOG_PF_IMPORT DIALOGEX 0, 0, 780, 406
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,723,6,48,24,BS_MULTILINE
+    LTEXT           "Static",IDC_GRID2,0,1,718,405,SS_SUNKEN
+    DEFPUSHBUTTON   "Import Data from sheet",ID_IMPORT,723,39,48,43,BS_MULTILINE
+    EDITTEXT        IDC_EDIT4,723,116,43,19,ES_AUTOHSCROLL
+    LTEXT           "Rows to Import",IDC_STATIC,723,105,49,9
+END
+
+IDD_ADDVARPG DIALOGEX 0, 0, 568, 410
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Adding new  variables to an existing PG File"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,493,21,50,16
+    PUSHBUTTON      "Cancel",IDCANCEL,493,39,50,16
+    LTEXT           "Static",IDC_GRID,7,288,550,115,SS_SUNKEN
+    LTEXT           "Description of Variables from input file",IDC_STATIC,10,113,149,10
+    LTEXT           "Static",IDC_GRID2,7,22,304,80,SS_SUNKEN
+    LTEXT           "Description of Data",IDC_STATIC,10,6,149,14
+    PUSHBUTTON      "Save as PG Bin",IDC_BUTTON3,493,85,52,22
+    COMBOBOX        IDC_COMBO1,319,67,159,53,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Choice of function",IDC_STATIC,319,57,112,8
+    PUSHBUTTON      "Add Variable",IDC_BUTTONADD,321,85,64,14
+    COMBOBOX        IDC_COMBO2,319,21,159,61,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Function Type",IDC_STATIC,321,8,149,8
+    LTEXT           "Description of Variables  created",IDC_STATIC,7,274,115,10
+    LTEXT           "Static",IDC_GRID3,8,130,549,140,SS_SUNKEN
+    LTEXT           "Category",IDC_STATIC,319,34,112,8
+    COMBOBOX        IDC_COMBO3,319,43,159,53,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_HOTSPOTPARAM DIALOG 0, 0, 228, 158
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Hot Spot Properties"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,90,137,50,14
+    CONTROL         "List1",102,"SysListView32",LVS_REPORT | WS_BORDER | WS_TABSTOP,7,7,213,127
+END
+
+IDD_ZOOMSCROLLDEMO_DIALOG DIALOGEX 0, 0, 103, 514
+STYLE DS_SETFONT | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "ChartDirector Zooming and Scrolling Demonstration"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "Pointer",IDC_PointerPB,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE | WS_GROUP,9,7,76,13
+    CONTROL         "Zoom In",IDC_ZoomInPB,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,4,21,38,13
+    CONTROL         "Zoom Out",IDC_ZoomOutPB,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,3,36,38,13
+    CONTROL         "XY Zoom",IDC_XYZoomPB,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE,5,79,41,13
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,3,1,99,318
+    GROUPBOX        "",IDC_STATIC,3,48,44,46,NOT WS_VISIBLE
+    LTEXT           "Zoom Mode",IDC_STATIC,6,54,38,8,SS_CENTERIMAGE
+    PUSHBUTTON      "Save",IDC_BUTTON1,3,108,39,14
+    CONTROL         "Common scale",IDC_COMMONSCALE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,194,62,10
+    CONTROL         "Log Y scale",IDC_LOGSCALE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,205,53,10
+    CONTROL         "Cumulated Y values",IDC_CUMULATE,"Button",BS_AUTOCHECKBOX,5,216,79,10
+    CONTROL         "Add regression line",IDC_REG_LINE,"Button",BS_AUTOCHECKBOX,5,251,75,10
+    CONTROL         "Add Line",IDC_LINE,"Button",BS_AUTOCHECKBOX,5,262,44,10
+    CONTROL         "Add Symbol",IDC_SYMBOL,"Button",BS_AUTOCHECKBOX,5,273,53,10
+    CONTROL         "X Zoom / Y Auto",IDC_XZoomPB,"Button",BS_AUTORADIOBUTTON | BS_ICON | BS_PUSHLIKE | WS_GROUP,5,65,41,13
+    COMBOBOX        IDC_COMBODISPLAYSIZE,47,94,40,105,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Derivate Y values",IDC_DERIVATE,"Button",BS_AUTOCHECKBOX,5,227,72,10
+    LTEXT           "Static",IDC_GRID_CHART,3,335,99,150,SS_SUNKEN
+    CONTROL         "In Focus",IDC_FOCUS,"Button",BS_AUTOCHECKBOX | BS_FLAT,5,96,40,10
+    PUSHBUTTON      "New Curve",IDC_BUTTON_NEWCURVE,47,108,42,14
+    PUSHBUTTON      "New Run (last)",IDC_BUTTON_NEWSEQ,3,124,86,9
+    PUSHBUTTON      "Animate (file saving)",IDC_BUTTON_ANNIMATE,4,146,86,9
+    PUSHBUTTON      "Animate",IDC_BUTTON_ANNIMATE2,4,156,86,9
+    PUSHBUTTON      "New Run (all)",IDC_BUTTON_NEWSEQ2,4,135,86,9
+    COMBOBOX        IDC_COMBODISPLAYSIZE2,48,180,41,105,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Step",IDC_STATIC,5,169,32,8,SS_CENTERIMAGE
+    LTEXT           "Speed",IDC_STATIC,47,169,32,8,SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBODISPLAYSIZE3,5,180,41,105,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBODISPLAYSIZE4,49,38,37,105,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBODISPLAYSIZE5,50,62,37,105,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Zoom",IDC_STATIC,47,20,42,57
+    LTEXT           "Length",IDC_STATIC,49,29,37,10
+    LTEXT           "Start",IDC_STATIC,49,52,35,10
+    GROUPBOX        "Size",IDC_STATIC,47,80,42,30
+    CONTROL         "Versus common year",IDC_COMMONDAY,"Button",BS_AUTOCHECKBOX,5,283,81,10
+    CONTROL         "Versus common day",IDC_COMMONDAY2,"Button",BS_AUTOCHECKBOX,5,292,81,10
+    PUSHBUTTON      "Redesign Chart",IDC_BUTTON2,3,321,95,12
+    CONTROL         "Sorted series of  Y values",IDC_SORTED,"Button",BS_AUTO3STATE,6,238,95,10
+    CONTROL         "Versus Normal Distribution",1276,"Button",BS_AUTOCHECKBOX,5,302,94,10
+END
+
+IDD_PARAMETERPLOT_DIALOG DIALOGEX 0, 0, 191, 269
+STYLE DS_SETFONT | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Parameter Function Plot"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Save to file",IDC_BUTTON1,6,5,183,14
+    CONTROL         "Log Y scale",IDC_LOGSCALE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,24,94,14
+    PUSHBUTTON      "Add Default Value Curve",IDC_ADD_DEFAULT,1,173,113,14
+    PUSHBUTTON      "Add Previous Value Curve",IDC_ADD_PREVIOUS,2,188,113,14
+    EDITTEXT        IDC_EDIT1,86,67,32,13,ES_AUTOHSCROLL
+    LTEXT           "New",IDC_LABEL,83,51,36,12
+    PUSHBUTTON      "Plot New Value",IDC_NEWVALUE,2,155,113,14
+    PUSHBUTTON      "Apply default value",IDC_APPLY_DEFAULT,2,211,113,14
+    PUSHBUTTON      "Apply Previous Value",IDC_APPLY_PREVIOUS,2,227,113,14
+    PUSHBUTTON      "Apply New Value",IDC_APPLY_NEWVALUE,2,243,113,14
+    LTEXT           "Static",IDC_STATIC_PAR,5,51,67,11
+    EDITTEXT        IDC_EDIT2,86,87,32,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT3,86,107,32,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT4,86,127,32,13,ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_STATIC_PARV,3,69,80,18
+    LTEXT           "Static",IDC_STATIC_PARV2,3,89,80,18
+    LTEXT           "Static",IDC_STATIC_PARV3,3,109,80,18
+    LTEXT           "Static",IDC_STATIC_PARV4,3,129,80,18
+    LTEXT           "Previous",IDC_LABEL2,119,52,31,11
+    LTEXT           "OldValue",IDC_STATIC_PAROLD,121,67,30,11
+    LTEXT           "OldValue",IDC_STATIC_PAROLD2,121,88,30,11
+    LTEXT           "OldValue",IDC_STATIC_PAROLD3,121,109,30,11
+    LTEXT           "OldValue",IDC_STATIC_PAROLD4,124,130,30,11
+    LTEXT           "Default",IDC_LABEL3,155,52,31,11
+    LTEXT           "Default",IDC_STATIC_PARDEF,159,67,26,11
+    LTEXT           "Default",IDC_STATIC_PARDEF2,159,88,26,11
+    LTEXT           "Default",IDC_STATIC_PARDEF3,159,109,26,11
+    LTEXT           "Default",IDC_STATIC_PARDEF4,159,130,26,11
+    LTEXT           "Layer",IDC_STATIC_LAYER,105,25,39,12
+    EDITTEXT        IDC_EDIT5,152,22,19,15,ES_AUTOHSCROLL
+    CONTROL         "",IDC_SPIN1,"msctls_updown32",UDS_ARROWKEYS,178,23,11,14
+    LTEXT           "Static",IDC_GRIDSIMPLE,119,156,70,110,SS_SUNKEN
+    PUSHBUTTON      "Apply New Index",IDC_APPLY_ADD,120,141,62,14
+END
+
+IDD_PROJECTSCHOICE DIALOGEX 0, 0, 258, 73
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Choice of project"
+FONT 12, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,201,54,50,14
+    CONTROL         "Do not show it again",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,54,164,19
+    CONTROL         "Work With an existing CoupModel Project",IDC_RADIO1,
+                    "Button",BS_AUTORADIOBUTTON,13,7,164,19
+    CONTROL         "Define a new CoupModel Project",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,13,28,164,19
+END
+
+IDD_DIALOG9 DIALOGEX 0, 0, 402, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Model Structure                                                                Page 1(6)"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,247,163,47,15
+    PUSHBUTTON      "Back",IDC_BUTTON1,298,163,47,15
+    PUSHBUTTON      "Next",IDC_BUTTON2,348,163,47,15
+    CONTROL         "Consider Water Balance in My Model",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | BS_ICON | BS_VCENTER | BS_MULTILINE | BS_NOTIFY | WS_TABSTOP,7,7,131,10,WS_EX_RTLREADING
+    GROUPBOX        "Boundary Conditions",IDC_STATIC,7,25,126,72
+    CONTROL         "Vertical Input (Precipitation)",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,7,34,103,10
+    CONTROL         "Vertical Output (Deep Percolation)",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,47,103,10
+    CONTROL         "Horizontal Input (Lateral Water Input)",IDC_CHECK4,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,60,122,11
+    CONTROL         "Horizontal Output (drainage)",IDC_CHECK5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,74,103,10
+    GROUPBOX        "Evaporation",IDC_STATIC,7,109,190,51
+    CONTROL         "Calculate Evaporation Considering Heat Used for",IDC_RADIO1,
+                    "Button",BS_AUTORADIOBUTTON,7,123,261,12
+    CONTROL         "Calculate Evaporation without Considering Heat Used for",IDC_RADIO2,
+                    "Button",BS_AUTORADIOBUTTON,7,139,227,9
+END
+
+IDD_ModelStructur1 DIALOGEX 0, 0, 374, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Model Structure                                                                   Page 1(6)"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,222,163,47,15
+    PUSHBUTTON      "Back",IDC_BUTTON1,271,163,47,15
+    PUSHBUTTON      "Next",IDC_BUTTON2,320,163,47,15
+    CONTROL         "Consider Water Balance in My Model",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | BS_ICON | BS_VCENTER | BS_MULTILINE | BS_NOTIFY | WS_TABSTOP,7,7,131,10,WS_EX_RTLREADING
+    GROUPBOX        "Boundary Conditions",IDC_STATIC,7,25,126,72
+    CONTROL         "Vertical Input (Precipitation)",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,7,34,103,10
+    CONTROL         "Vertical Output (Deep Percolation)",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,47,103,10
+    CONTROL         "Horizontal Input (Lateral Water Input)",IDC_CHECK4,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,60,122,11
+    CONTROL         "Horizontal Output (drainage)",IDC_CHECK5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,74,103,10
+    GROUPBOX        "Evaporation",IDC_STATIC,7,109,214,51
+    CONTROL         "Calculate Evaporation Considering Heat Used for",IDC_RADIO1,
+                    "Button",BS_AUTORADIOBUTTON,7,123,207,12
+    CONTROL         "Calculate Evaporation without Considering Heat Used for",IDC_RADIO2,
+                    "Button",BS_AUTORADIOBUTTON,7,139,204,9
+    GROUPBOX        "HBV MODULE",IDC_STATIC,145,28,75,43
+    CONTROL         "Yes",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,147,37,54,17
+    CONTROL         "No",IDC_RADIO4,"Button",BS_AUTORADIOBUTTON,148,49,54,17
+END
+
+IDD_ModelStructur2 DIALOGEX 0, 0, 402, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Model Structure                                                                Page 2(6)"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,247,163,47,15
+    PUSHBUTTON      "Back",IDC_BUTTON1,298,163,47,15
+    PUSHBUTTON      "Next",IDC_BUTTON2,348,163,47,15
+    CONTROL         "Consider Soil Temperature in My Model (Heat Equation)",IDC_CHECK1,
+                    "Button",BS_AUTOCHECKBOX | BS_ICON | BS_VCENTER | BS_MULTILINE | BS_NOTIFY | WS_TABSTOP,7,7,213,10,WS_EX_RTLREADING
+END
+
+IDD_ModelStructur3 DIALOGEX 0, 0, 402, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Model Structure                                                                Page 3(6)"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,247,163,47,15
+    PUSHBUTTON      "Back",IDC_BUTTON1,298,163,47,15
+    PUSHBUTTON      "Next",IDC_BUTTON2,348,163,47,15
+    CONTROL         "Consider My Model Vegetated",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | BS_ICON | BS_VCENTER | BS_MULTILINE | BS_NOTIFY | WS_TABSTOP,7,7,213,10,WS_EX_RTLREADING
+    GROUPBOX        "Plant Type",IDC_STATIC,7,29,135,85
+    CONTROL         "Implicit Big Leaf",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,14,48,109,12
+    CONTROL         "Explicit Single Big Leaf",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,14,64,108,17
+    CONTROL         "Explicit Big Leaves",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,14,85,108,17
+END
+
+IDD_ModelStructur4 DIALOGEX 0, 0, 402, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Model Structure                                                                Page 4(6)"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,247,163,47,15
+    PUSHBUTTON      "Back",IDC_BUTTON1,298,163,47,15
+    PUSHBUTTON      "Next",IDC_BUTTON2,348,163,47,15
+    CONTROL         "Consider Nitrogen and Carbon Balance in My Model",IDC_CHECK1,
+                    "Button",BS_AUTOCHECKBOX | BS_ICON | BS_VCENTER | BS_MULTILINE | BS_NOTIFY | WS_TABSTOP,7,7,213,10,WS_EX_RTLREADING
+END
+
+IDD_ModelStructur5 DIALOGEX 0, 0, 402, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Model Structure                                                                Page 5(6)"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,247,163,47,15
+    PUSHBUTTON      "Back",IDC_BUTTON1,298,163,47,15
+    PUSHBUTTON      "Next",IDC_BUTTON2,348,163,47,15
+    CONTROL         "Consider Element Tracing in My Model (chloride Budget)",IDC_CHECK1,
+                    "Button",BS_AUTOCHECKBOX | BS_ICON | BS_VCENTER | BS_MULTILINE | BS_NOTIFY | WS_TABSTOP,7,7,213,10,WS_EX_RTLREADING
+END
+
+IDD_ModelStructur6 DIALOGEX 0, 0, 402, 185
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION 
+"Model Structure                                                                Page 6(6)"
+FONT 10, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,247,163,47,15
+    PUSHBUTTON      "Back",IDC_BUTTON1,298,163,47,15
+    CONTROL         "Consider Snow-Pack in My Model ",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | BS_ICON | BS_VCENTER | BS_MULTILINE | BS_NOTIFY | WS_TABSTOP,7,7,213,10,WS_EX_RTLREADING
+    CONTROL         "Consider Soil Vapour in My Model",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,38,167,14
+    GROUPBOX        "Soil Vapour Flow",IDC_STATIC,7,58,131,67
+    CONTROL         "Only Soil Vapour Flow",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,16,72,118,12
+    CONTROL         "Soil and Snow Vapour Flow",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,16,101,120,19
+    CONTROL         "Only Snow Vapour Flow",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,16,83,108,22
+    PUSHBUTTON      "OK",IDC_BUTTON2,348,163,47,15
+END
+
+IDD_FORMVIEW DIALOGEX 0, 0, 199, 119
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_CHART,"Static",SS_BITMAP,0,0,20,20
+    CONTROL         "",IDC_CHART2,"Static",SS_BITMAP,0,16,15,13
+    CONTROL         "",IDC_CHART3,"Static",SS_BITMAP,1,32,15,13
+    CONTROL         "",IDC_CHART4,"Static",SS_BITMAP,1,45,15,13
+    CONTROL         "",IDC_CHART5,"Static",SS_BITMAP,0,58,15,13
+    CONTROL         "",IDC_CHART6,"Static",SS_BITMAP,0,69,15,13
+    CONTROL         "",IDC_CHART7,"Static",SS_BITMAP,0,83,20,20
+    CONTROL         "",IDC_CHART8,"Static",SS_BITMAP,2,104,15,13
+END
+
+IDD_DIALOGBAR DIALOGEX 0, 0, 285, 499
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    LTEXT           "TODO: layout dialog bar",IDC_STATIC,126,4,77,8
+END
+
+IDD_DIALOG_DIMNEW1 DIALOGEX 0, 0, 186, 50
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Speciify Value to Constrain Chart by Parameter value"
+FONT 12, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,25,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,7,50,14
+    EDITTEXT        IDC_EDIT1,61,9,53,16,ES_AUTOHSCROLL
+    LTEXT           "Min Value:",IDC_STATIC,9,12,38,9
+    EDITTEXT        IDC_EDIT2,62,26,53,16,ES_AUTOHSCROLL
+    LTEXT           "Max Value:",IDC_STATIC,10,29,38,9
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 6,1,5,0
+ PRODUCTVERSION 6,1,5,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "<CoupModel Solutions, Stockholm Sweden>"
+            VALUE "FileDescription", "CoupModel"
+            VALUE "FileVersion", "6.1.5.0"
+            VALUE "InternalName", "CoupModel.exe"
+            VALUE "LegalCopyright", "PEJ - (c) <Per-Erik Jansson, Stockholm, Sweden>.  All rights reserved."
+            VALUE "OriginalFilename", "CoupModel.exe"
+            VALUE "ProductName", "<CoupModel>"
+            VALUE "ProductVersion", "6.1.5.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_VALIDATIONEVALUATION, DIALOG
+    BEGIN
+    END
+
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 163
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_USER_SETUP, DIALOG
+    BEGIN
+        RIGHTMARGIN, 396
+        BOTTOMMARGIN, 229
+    END
+
+    IDD_PAGE_VIEW, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_CHAPAR, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_DIMNEW, DIALOG
+    BEGIN
+    END
+
+    IDD_ValidationSummaryVariables, DIALOG
+    BEGIN
+        RIGHTMARGIN, 669
+    END
+
+    IDD_DIALOG_ESTIMATE_TEX, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_RETENTION, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_Retrieve, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_Save, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_SOIL_CHOICE, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_SP_INIT, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_SP_EXCHANGE1, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_PP_EDIT, DIALOG
+    BEGIN
+    END
+
+    IDD_History, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_SP_EDIT, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_PG_SELECT_DOC, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_PG_VAR_SUM, DIALOG
+    BEGIN
+    END
+
+    IDD_MULTI_RUN_PAR, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_MR_TABLE, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_SP_EXPORT, DIALOG
+    BEGIN
+    END
+
+    IDD_MULTI_RUN, DIALOG
+    BEGIN
+    END
+
+    IDD_ValidationTimeSerieVariables, DIALOG
+    BEGIN
+    END
+
+    IDD_CREATEPG, DIALOG
+    BEGIN
+        RIGHTMARGIN, 672
+        BOTTOMMARGIN, 365
+    END
+
+    IDD_REALTIMEDEMO_DIALOG, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_PG_FILES, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_CALCULATE, DIALOG
+    BEGIN
+    END
+
+    IDD_DIALOG_HISTORYVIEW, DIALOG
+    BEGIN
+        RIGHTMARGIN, 373
+    END
+
+    IDD_DIALOG_PF_IMPORT, DIALOG
+    BEGIN
+    END
+
+    IDD_ADDVARPG, DIALOG
+    BEGIN
+    END
+
+    IDD_ZOOMSCROLLDEMO_DIALOG, DIALOG
+    BEGIN
+    END
+
+    IDD_PARAMETERPLOT_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 1
+    END
+
+    IDD_DIALOG9, DIALOG
+    BEGIN
+    END
+
+    IDD_ModelStructur1, DIALOG
+    BEGIN
+    END
+
+    IDD_FORMVIEW, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 117
+    END
+
+    IDD_DIALOGBAR, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 278
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 492
+    END
+
+    IDD_DIALOG_DIMNEW1, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Ribbon
+//
+
+IDR_RIBBON              RT_RIBBON_XML           "res\\ribbon.mfcribbon-ms"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ValidationSummaryVariables AFX_DIALOG_LAYOUT
+BEGIN
+    0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    50, 50, 100, 100,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 10, 0, 100,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 100, 100,
+    0, 0, 100, 100,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 50, 0, 100,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+END
+
+IDD_DIALOGBAR AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIALOG_CALCULATE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIALOG_DIMNEW1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_USER_SETUP AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_ValidationSummaryVariables DLGINIT
+BEGIN
+    IDC_COMBO6, 0x403, 2, 0
+0x0061, 
+    IDC_COMBO6, 0x403, 2, 0
+0x0062, 
+    IDC_COMBO6, 0x403, 2, 0
+0x0063, 
+    IDC_COMBO6, 0x403, 2, 0
+0x0064, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDP_OLE_INIT_FAILED     "OLE initialization failed.  Make sure that the OLE libraries are the correct version."
+    ID_ERROR_MIN            "Minimum"
+    ID_WARNING_MIN          "Warning min"
+    ID_WARNING_MAX          "Warning Max"
+    ID_ERROR_MAX            "Error Max"
+END
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "CoupModel"
+    IDR_CoupModelTYPE       "\nCoupModel\nCoupModel\nCoupModel Files (*.xml)\n.xml\n.xml\nCoupModel.Document\nCoupModel.Document\nCoupModel.Document"
+    ID_WINDOW_MANAGER       "&Windows..."
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "CoupModel"
+    AFX_IDS_IDLEMESSAGE     "For Help, press F1"
+    AFX_IDS_HELPMODEMESSAGE "Select an object on which to get Help"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_DIRECT    "Print the active document using current options\nQuick Print"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+    ID_HELP_INDEX           "Opens Help\nHelp Topics"
+    ID_HELP_FINDER          "List Help topics\nHelp Topics"
+    ID_HELP_USING           "Display instructions about how to use help\nHelp"
+    ID_CONTEXT_HELP         "Display help for clicked on buttons, menus and windows\nHelp"
+    ID_HELP                 "Display help for current task or command\nHelp"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_MRU_FILE1       "Open this document"
+    ID_FILE_MRU_FILE2       "Open this document"
+    ID_FILE_MRU_FILE3       "Open this document"
+    ID_FILE_MRU_FILE4       "Open this document"
+    ID_FILE_MRU_FILE5       "Open this document"
+    ID_FILE_MRU_FILE6       "Open this document"
+    ID_FILE_MRU_FILE7       "Open this document"
+    ID_FILE_MRU_FILE8       "Open this document"
+    ID_FILE_MRU_FILE9       "Open this document"
+    ID_FILE_MRU_FILE10      "Open this document"
+    ID_FILE_MRU_FILE11      "Open this document"
+    ID_FILE_MRU_FILE12      "Open this document"
+    ID_FILE_MRU_FILE13      "Open this document"
+    ID_FILE_MRU_FILE14      "Open this document"
+    ID_FILE_MRU_FILE15      "Open this document"
+    ID_FILE_MRU_FILE16      "Open this document"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle Status Bar"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_CAPTION_BAR     "Show or hide the caption bar\nToggle Caption Bar"
+    IDS_TOOLBAR_CUSTOMIZE   "Customize..."
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+    AFX_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STATUS_PANE1        "Pane 1"
+    IDS_STATUS_PANE2        "Pane 2"
+    IDS_TOOLBAR_STANDARD    "Standard"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_OUTPUTWND       "Simulation Document"
+    IDS_FILE_VIEW           "File View"
+    IDS_CLASS_VIEW          "Model View"
+    IDS_OUTPUT_WND          "Output"
+    IDS_PROPERTIES_WND      "Properties"
+    IDS_DOCUMENT            "Document"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_EXPLORER            "Explorer"
+    IDS_EDIT_MENU           "Edit"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_BUILD_TAB           "Build"
+    IDS_DEBUG_TAB           "Debug"
+    IDS_FIND_TAB            "Find"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_CAPTION_BUTTON      "Options..."
+    IDS_CAPTION_BUTTON_TIP  "Click here to see more options"
+    IDS_CAPTION_TEXT        "This is a caption bar where various messages will be displayed when using the CoupModel."
+    IDS_CAPTION_IMAGE_TIP   "Important"
+    IDS_CAPTION_IMAGE_TEXT  "Here is an informational message for the user."
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_OUTPUTWND2      "PG File"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_CHARTWND        "Chart View Window"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING1             "Status"
+    IDS_STRING2             "Value"
+    IDS_STRING3             "Parameter"
+END
+
+STRINGTABLE
+BEGIN
+    ID_STATUS_TEXT          "Message"
+    ID_UNIT                 "Unit"
+END
+
+STRINGTABLE
+BEGIN
+    ID_PGFILE_NEW           "Create a new PG file based on values to be entered or imported from clipboard to grid system\nCreate"
+    ID_SIMSINGLE            "Start a Single Run"
+    ID_SIM_DOCNEW           "Make a new Document as copy of simulated document\nNew Document"
+END
+
+STRINGTABLE
+BEGIN
+    ID_SIM_START            "Start Single Simulation\nStart"
+    ID_SIM_MULTI_START      "Start Multi Simulations\nStart Multi"
+END
+
+STRINGTABLE
+BEGIN
+    ID_PGFILE_OPEN          "Open an existing PG file or ascii file for conversion to PG file\nOpen PG file"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LINK                 "Link Documents for comparision in charts with selected outputs\nLink Documents"
+    ID_UNLINK               "Unlink documents to view only active document\nUnlik documents"
+    ID_FILE_SAVE_CHART      "Save current chart to file\nSave Current Chart"
+    ID_FILE_SAVE_ECHART     "Save extra chart to file\nExtra chart to file"
+    ID_SHIFT_ECHART         "Shift display between extra charts\nShift between charts"
+    ID_WND_ECHART           "Move current chart to extra chart window\nExtra chart window"
+    ID_WND_ECHART_CLEAN     "Clean list of extra Charts\nClean chartlist"
+    ID_X_PLUS               "Increase the number of subcharts in the horisontal dimension\nIncrease X "
+    ID_X_MINUS              "Decrease the number of subcharts in the horisontal dimension\nDecrease X"
+    ID_BUTTON32972          "Increase the number of subcharts in the vertical dimension\nIncrease Y "
+    ID_Y_PLUS               "Increase the number of subcharts in the vertical dimension\nIncrease Y "
+    ID_Y_MINUS              "Decrease the number of subcharts in the vertical dimension\nDecrease Y "
+    ID_ZOOM_IN              "Zoom in to view chart\nZoom in"
+END
+
+STRINGTABLE
+BEGIN
+    ID_ZOOM_OUT             "Zoom out in chart\nZoom out"
+    ID_ZOOM_FORWARD         "Move zoom window to right\nMove forward"
+    ID_ZOOM_BACKWARD        "Move zoom window to right\nMove backward"
+    ID_VAL_FILE             "Specify new validation file\nNew validation file"
+    ID_VAL_ADDTSV           "Add simulation variables to be validated by time serie data in validation file\nAdd TSV variable"
+    ID_VAL_SV               "Add single value from a simulation variable to be validated\nAdd SV validation"
+    ID_VAL_VIEW             "View performance results from multirun validation\nView multirun performance"
+    ID_VAL_UNLOCK           "Unlock performance results from multirun to be able to define criterias for acceptance\nUnlock multirun"
+    ID_VAL_ACCEPT           "Save Data to a new PG-File\nA new PG File will be created when you press button"
+    ID_VAL_ADDSV            "Add singe value from simulation variable to be validated\nAdd SV variable"
+    ID_MULTI_NEWCURVE       "Create new curve representing new run no\nNew curve"
+    ID_MULTI_S_SHIFT        "Shift to new run no for latest curve\nMultimode new run no"
+    ID_MULTI_M_SHIFT        "Shift to new run no view for all curves\nMultiMode new run all"
+    ID_BUTTON_HAND          "View Pointer\n Click to stop change of zoom level"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Swedish (Sweden) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_SVE)
+LANGUAGE LANG_SWEDISH, SUBLANG_SWEDISH
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG10 DIALOGEX 0, 0, 310, 141
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,253,120,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,253,120,50,14
+END
+
+IDD_COLOURDLG DIALOGEX 0, 0, 237, 59
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Colour"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,180,15,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,180,31,50,14
+    COMBOBOX        IDC_COLOUR,7,21,165,156,CBS_DROPDOWNLIST | CBS_OWNERDRAWFIXED | CBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_PROGRESS DIALOGEX 0, 0, 358, 33
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "File Scanning"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_PROGRESS1,"msctls_progress32",WS_BORDER,7,7,220,19
+    LTEXT           "Static",IDC_STATIC_TEXT,239,7,39,19
+    LTEXT           "% done",IDC_STATIC_TEXT2,296,7,55,19
+END
+
+IDD_CHANGE_VARNAME DIALOGEX 0, 0, 338, 29
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,285,15,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,285,0,50,14
+    EDITTEXT        IDC_EDIT1,1,0,281,27,ES_AUTOHSCROLL
+END
+
+IDD_DATESELECTION DIALOGEX 0, 0, 162, 432
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Static",IDC_DATE_IN_GRID,7,7,148,418,SS_SUNKEN
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG10, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 303
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 134
+    END
+
+    IDD_COLOURDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 230
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 52
+    END
+
+    IDD_PROGRESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 351
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 26
+    END
+
+    IDD_CHANGE_VARNAME, DIALOG
+    BEGIN
+        RIGHTMARGIN, 310
+    END
+
+    IDD_DATESELECTION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 425
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_CHANGE_VARNAME AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DATESELECTION AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "#include ""verrsrc.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#include ""res\\CoupModel.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""      // Standard components\r\n"
+    "#include ""afxprint.rc""    // printing/print preview resources\r\n"
+    "#if !defined(_AFXDLL)\r\n"
+    "#include ""afxribbon.rc""        // MFC ribbon and control bar resources\r\n"
+    "#endif\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Swedish (Sweden) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#include "res\CoupModel.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"      // Standard components
+#include "afxprint.rc"    // printing/print preview resources
+#if !defined(_AFXDLL)
+#include "afxribbon.rc"        // MFC ribbon and control bar resources
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

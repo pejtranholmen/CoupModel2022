@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MR" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>jppJVWcRRJ13BMLsDTdN4+8xCaUgO9BhblgBxIRS5JM=</HashCode>
+      <FileName>NewBase\MR.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SelectedEnsembles" Collapsed="true">
+    <Position X="7.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KkXHyCASBeEGF+iWYQkU5Y8LA2O0f2obB1rY1BEkEJk=</HashCode>
+      <FileName>MultiRun\SelectedEnsembles.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SelectedAddEnsembles" Collapsed="true">
+    <Position X="7.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQBAAgAAECEAAAAAAAAAA=</HashCode>
+      <FileName>MultiRun\SelectedAddEnsembles.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResidualsBase" Collapsed="true">
+    <Position X="0.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oCAAKBIIIIECABAyKDEBFAIIEIIEABAAGAwUAAoEIC0=</HashCode>
+      <FileName>MultiRun\ResidualsBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MultiStorageStatData" Collapsed="true">
+    <Position X="7.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ApQCFAQBCAokCKITgAQAiAUIACAEgACEggACgRWAMAA=</HashCode>
+      <FileName>MultiRun\MultiStorageStatData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MultiStorageData" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>/8xx/rNbK8lXl2l6JvgUx76fwlO1X1bEl336oKO2Or0=</HashCode>
+      <FileName>MultiRun\MultiStorageData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MultiRun" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAKECEAAEAEIiAAFJAAAQANAAgIIAEAQCAAIACIAAA=</HashCode>
+      <FileName>MultiRun\MultiRun.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="PAR_OPTIONS" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NewBase\MR.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="RESIDUAL_MEAN" Collapsed="true">
+    <Position X="2.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAIQgACAAgAAAAAAAAAA=</HashCode>
+      <FileName>MultiRun\ResidualsBase.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="POS_ENSEMBLE" Collapsed="true">
+    <Position X="0.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAEAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>MultiRun\ResidualsBase.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MBIN_FILE_HEADER" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAgQAAAAAAQAAAIAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>MultiRun\MultiStorageData.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VALIDENSEMBLE" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAACgAQhAABAAAEAAAAAECAIAAAAEAgAAACAEhBA=</HashCode>
+      <FileName>MultiRun\MultiStorageData.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VARTRANSFORMED" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MultiRun\MultiStorageData.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="STAT" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>MultiRun\MultiStorageData.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VALSUM" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAABAAIAAAAAAAAAAAAAAAABABA=</HashCode>
+      <FileName>MultiRun\MultiStorageData.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

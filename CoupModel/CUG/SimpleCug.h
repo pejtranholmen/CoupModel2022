@@ -1,0 +1,168 @@
+// SimpleCug.h : interface of the SimpleCug class
+//
+/////////////////////////////////////////////////////////////////////////////
+#pragma once
+#include "ugctrl.h"
+#include "..\ModelTypes\SimB.h"
+#include "..\CoupModelDoc.h"
+class Doc;
+
+class SimpleCug:public CUGCtrl
+{
+public:
+	SimpleCug();
+	~SimpleCug();
+	BOOL m_bDrawExcelFocus;
+
+protected:
+	void DrawExcelFocusRect(CDC *dc,RECT *rect);
+
+private:
+	long m_col,m_row;
+	BOOL m_Data;
+	Tab* m_pCTab;
+	BOOL m_MultiTable;
+	SIMB m_SIMB;
+
+	int m_pType;
+	Doc *m_pDoc;
+	int m_TabIndex;
+	int m_ActNumValues;
+	COLORREF m_ColorClick, m_ColorChanged, m_ColorHeading;
+	CDialog *m_pDlg;
+	int *m_NumValid;
+	long m_toprow;
+	//CPtrArray m_PtrArray;
+	//CUIntArray m_TabIndexArray;
+	vector<SIMB> m_PtrArray;
+	BOOL m_ShowAll;
+	// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CMainFrame)
+	//}}AFX_VIRTUAL
+
+	
+	//{{AFX_MSG(SimpleCug)
+	// NOTE - the ClassWizard will add and remove member functions here.
+	//    DO NOT EDIT what you see in these blocks of generated code!
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+
+public:
+	//***** Over-ridable Notify Functions *****
+	void OnUpdate(int, int, BOOL, Tab* pTab=nullptr, CDialog *pPlot=nullptr);
+	void SetMultiTable(int, SimB *pBase=nullptr, int tabindex=0, Doc *pDoc=nullptr, CDialog *pDlg=nullptr, int *validnum=nullptr, BOOL All=FALSE);
+	BOOL OnWrite();
+	BOOL OnRead();
+
+
+	virtual void OnSetup();
+
+	virtual void OnSheetSetup(int sheetNumber);
+
+	//movement and sizing
+	virtual int  OnCanMove(int oldcol,long oldrow,int newcol,long newrow);
+	virtual int  OnCanViewMove(int oldcol,long oldrow,int newcol,long newrow);
+	virtual void OnHitBottom(long numrows,long rowspast,long rowsfound);
+	virtual void OnHitTop(long numrows,long rowspast);
+	
+	virtual int  OnCanSizeCol(int col);
+	virtual void OnColSizing(int col,int *width);
+	virtual void OnColSized(int col,int *width);
+	virtual int  OnCanSizeRow(long row);
+	virtual void OnRowSizing(long row,int *height);
+	virtual void OnRowSized(long row,int *height);
+
+	virtual int  OnCanSizeTopHdg();
+	virtual int  OnCanSizeSideHdg();
+	virtual int  OnTopHdgSizing(int *height);
+	virtual int  OnSideHdgSizing(int *width);
+	virtual int  OnTopHdgSized(int *height);
+	virtual int  OnSideHdgSized(int *width);
+		
+	virtual void OnColChange(int oldcol,int newcol);
+	virtual void OnRowChange(long oldrow,long newrow);
+	virtual void OnCellChange(int oldcol,int newcol,long oldrow,long newrow);
+	virtual void OnLeftColChange(int oldcol,int newcol);
+	virtual void OnTopRowChange(long oldrow,long newrow);
+	virtual void OnSelectionChanged(int startCol,long startRow,int endCol,long endRow,int blockNum);
+
+	//mouse and key strokes
+	virtual void OnLClicked(int col,long row,int updn,RECT *rect,POINT *point,int processed);
+	virtual void OnRClicked(int col,long row,int updn,RECT *rect,POINT *point,int processed);
+	virtual void OnDClicked(int col,long row,RECT *rect,POINT *point,BOOL processed);
+	virtual void OnMouseMove(int col,long row,POINT *point,UINT nFlags,BOOL processed=0);
+	virtual void OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnTH_RClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnTH_DClicked(int col,long row,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnSH_RClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnSH_DClicked(int col,long row,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnCB_LClicked(int updn,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnCB_RClicked(int updn,RECT *rect,POINT *point,BOOL processed=0);
+	virtual void OnCB_DClicked(RECT *rect,POINT *point,BOOL processed=0);
+	
+	virtual void OnKeyDown(UINT *vcKey,BOOL processed);
+	virtual void OnCharDown(UINT *vcKey,BOOL processed);
+	
+	//GetCellIndirect notification
+	virtual void OnGetCell(int col,long row,CUGCell *cell);
+	//SetCell notification
+	virtual void OnSetCell(int col,long row,CUGCell *cell);
+	
+	//data source notifications
+	virtual void OnDataSourceNotify(int ID,long msg,long param);
+
+	//cell type notifications
+	virtual int OnCellTypeNotify(long ID,int col,long row,long msg,long param);
+
+	//editing
+	virtual int OnEditStart(int col, long row,CWnd **edit);
+	virtual int OnEditVerify(int col,long row,CWnd *edit,UINT *vcKey);
+	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag);
+	virtual int OnEditContinue(int oldcol,long oldrow,int* newcol,long* newrow);
+
+	//menu notifications
+	virtual void OnMenuCommand(int col,long row,int section,int item);
+	virtual int  OnMenuStart(int col,long row,int section);
+
+	//hints
+	virtual int OnHint(int col,long row,int section,CString *string);
+	virtual int OnVScrollHint(long row,CString *string);
+	virtual int OnHScrollHint(int col,CString *string);
+
+
+	#ifdef __AFXOLE_H__  //OLE must be included
+
+	//drag and drop
+	virtual DROPEFFECT OnDragEnter(COleDataObject* pDataObject);
+	virtual DROPEFFECT OnDragOver(COleDataObject* pDataObject,int col,long row);
+	virtual DROPEFFECT OnDragDrop(COleDataObject* pDataObject,int col,long row);
+
+	#endif
+
+	//sorting
+	virtual int OnSortEvaluate(CUGCell *cell1,CUGCell *cell2,int flags);
+	
+	//DC setup
+	virtual void OnScreenDCSetup(CDC *dc,int section);
+	
+	virtual void OnAdjustComponentSizes(RECT *grid,RECT *topHdg,RECT *sideHdg,RECT *cnrBtn,
+		RECT *vScroll,RECT *hScroll,RECT *tabs);
+
+	virtual void OnTabSelected(int ID);
+	
+	virtual COLORREF OnGetDefBackColor(int section);
+
+	//focus rect setup
+	virtual void OnDrawFocusRect(CDC *dc,RECT *rect);
+	virtual void OnSetFocus(int section);
+	virtual void OnKillFocus(int section);
+
+	//column swapping
+	virtual BOOL OnColSwapStart(int col);
+	virtual BOOL OnCanColSwap(int fromCol,int toCol);
+
+	//trackig window
+	virtual void OnTrackingWindowMoved(RECT *origRect,RECT *newRect);
+};

@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CPG">
+    <Position X="0.5" Y="1.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>X/Li/oBzoDT1YHBzSMR5i7uTBzFSdieHXf7eAtsvbac=</HashCode>
+      <FileName>PG\PG.H</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPGView" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADEUQAAAIAAAAkAAAAAAAAAAAAAACAAAAAAAEAQAAAA=</HashCode>
+      <FileName>PG\PGView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PGUtil" Collapsed="true">
+    <Position X="6.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGIQIADQAhCEAAAQQMAwAQAAAAAQAEIRAoSAAAQAI=</HashCode>
+      <FileName>PG\PGUtil.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPGFile" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>rpgnip/5mC99dji1vwtdcwxMfgr7fFPYhZrfydxLtv4=</HashCode>
+      <FileName>PG\PGFile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPGBase" Collapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kDBBAQCAAAAAAMAAYAIAAIwYAAAgABQcABAAAAZQBIA=</HashCode>
+      <FileName>PG\PGBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPG_FILEDLG" Collapsed="true">
+    <Position X="1.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEEAAQkAAAAAQCEAIBAAAABBBAAAAQAAAAAAEAAAAaY=</HashCode>
+      <FileName>PG\PG_FILEDLG.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NoaaCoord" Collapsed="true">
+    <Position X="2.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DCBgAgAACAAAAAADABwAAQAAIAAAEAAAggAgRAgJAAA=</HashCode>
+      <FileName>PG\NoaaCoord.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="DataView" Collapsed="true">
+    <Position X="4.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>PG\PGView.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IPGTID" Collapsed="true">
+    <Position X="6.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAgEAAAQAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>PG\PGUtil.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PGPOS" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAACAAAAAAAAgEAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>PG\PGFile.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DistStat" Collapsed="true">
+    <Position X="6.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAGAAAgAAAIAAAAAAEIAAAAAAAAAA=</HashCode>
+      <FileName>PG\PGBase.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="InPGFiles" Collapsed="true">
+    <Position X="4.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAIAAAAAAABAEAAAAAQAAAAAAAAAAAAAAIAAAAAAA=</HashCode>
+      <FileName>PG\PGBase.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="AddInfo" Collapsed="true">
+    <Position X="4.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAEAASAAAAQAAQAAAAAAAAAAAAAAAIAAAAAEAAA=</HashCode>
+      <FileName>PG\PGBase.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NOASTAT" Collapsed="true">
+    <Position X="2.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAACAAgAAAAAAAAAQAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>PG\NoaaCoord.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SUBSTAT" Collapsed="true">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEIAAAAKAAAABAAAAAAAAAKAABAAAAAAAAAAA=</HashCode>
+      <FileName>PG\NoaaCoord.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

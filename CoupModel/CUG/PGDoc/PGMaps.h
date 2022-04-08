@@ -1,0 +1,30 @@
+#pragma once
+
+#include "..\..\ModelTypes\SimB.h"
+#include "..\..\NewBase\Doc.h"
+#include "..\..\Model\Units.h"
+
+
+
+class PGMaps 	
+{
+public:
+	PGMaps();
+	~PGMaps();
+
+	void SetUnitMap(elements key, UNIT_TYPES typ) {
+		
+		m_StringMapUnits.insert(pair< size_t, string>(key, m.GetUnitString(typ)));
+		m_Units.insert(pair< elements, UNIT_TYPES>(key, typ));
+	};
+
+	vector<string> GetUnitOptionsNames(enum elements);
+	vector<UNIT_TYPES> GetUnitOptions(enum elements);
+private:
+	Units m;
+	multimap<size_t, string> m_StringMapUnits;
+	multimap<elements, UNIT_TYPES> m_Units;
+	void DefineUnitMap();
+
+};
+
