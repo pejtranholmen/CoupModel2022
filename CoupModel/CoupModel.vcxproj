@@ -48,7 +48,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Dev\CoupModel\CoupModel\include;C:\dev\vcpkg\installed\x86-windows\include\boost;C:\Dev\CoupModel\CoupModel\include\win32;C:\Dev\CoupModel\CoupModel\include\NetCDF;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\CoupModel\CoupModel\include;C:\Dev\vcpkg\installed\x86-windows\include;C:\dev\vcpkg\installed\x86-windows\include\boost;C:\Dev\CoupModel\CoupModel\include\win32;C:\Dev\CoupModel\CoupModel\include\NetCDF;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Dev\CoupModel\CoupModel\Lib;$(LibraryPath)</LibraryPath>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableCppCoreCheck>true</EnableCppCoreCheck>
@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\dev\vcpkg\installed\x86-windows\include\boost;C:\Dev\CoupModel\CoupModel\include;C:\Dev\CoupModel\CoupModel\include\win32;C:\Dev\boost_1_55_0b1;C:\Dev\CoupModel\CoupModel\include\NetCDF;$(IncludePath)</IncludePath>
+    <IncludePath>C:\dev\vcpkg\installed\x86-windows\include\;C:\Dev\CoupModel\CoupModel\include;C:\Dev\CoupModel\CoupModel\include\win32;C:\Dev\boost_1_55_0b1;C:\Dev\CoupModel\CoupModel\include\NetCDF;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Dev\CoupModel\CoupModel\Lib;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>ConcurrencyRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>

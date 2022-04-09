@@ -4907,8 +4907,14 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 	bool DynamicIndexValFile = false;
 	size_t DynamicIndexPos = string::npos;
 
+
 	if (m_pSimDoc->IsMultiSimulation()) {
-		if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
+		bool make_cyclic_sampling = false;
+		auto pP = m_pSimDoc->GetPsPointer("Aggregate Calib Number");
+		if (pP != nullptr) {
+			if (pP->GetValue() > 1.1) make_cyclic_sampling = true;
+		}
+		if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos&&make_cyclic_sampling) {
 			//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
 			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			DynamicIndexPos= m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1();
