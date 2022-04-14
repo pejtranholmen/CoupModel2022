@@ -69,6 +69,8 @@ bool NC_GasFlux_Functions::Def()
 	Define(pGs, "COS PlantUptake", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>0");
 	pGs = new Gs(&COS_TotSoilUptake, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
 	Define(pGs, "COS SoilUptake", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+	pGs = new Gs(&COS_EcoSystemFlux, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	Define(pGs, "COS EcoSystemFlux", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
 
 
 

@@ -621,8 +621,10 @@ double OxidationRatio;
 		else
 			COS_TotPlantUptake = f_COS_Plant(p_Plant->Transpiration_All);
 
-		if (COS_Model_Sw(COS_Model) == COS_Model_Sw::Plant_Soil)
-			COS_TotSoilUptake= f_COS_Soil(O_RespRateProfile[_L1]);
+		if (COS_Model_Sw(COS_Model) == COS_Model_Sw::Plant_Soil) {
+			COS_TotSoilUptake = f_COS_Soil(O_RespRateProfile[_L1]);
+			COS_EcoSystemFlux = COS_TotPlantUptake + COS_TotSoilUptake;
+		}
 	}
 	
 	if(N2O_YearlyFluxes>0) {

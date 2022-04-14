@@ -63,7 +63,7 @@ double CO2_Flux_Out;
 
 double COS_TranspirationRatio, COS_PhotoSynthesisRatio;	//Parameters
 double COS_SoilRespiratonRatio;							//Parameters
-double COS_TotPlantUptake, COS_TotSoilUptake;
+double COS_TotPlantUptake, COS_TotSoilUptake, COS_EcoSystemFlux;
 ;
 ;
 // New CH4 model develop 2007;

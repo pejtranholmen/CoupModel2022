@@ -309,13 +309,13 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 		n = kalle.Find(_T(".SBin"));
 		if (n > 0) {
 			kalle.Delete(n + 1, 4);
-			kalle += "Sim";
+			kalle += "xml";
 			NewDocumentPath = true;
 		}
 		n = kalle.Find(_T(".MBin"));
 		if (n > 0) {
 			kalle.Delete(n + 1, 4);
-			kalle += "Sim";
+			kalle += "xml";
 			NewDocumentPath = true;
 		}
 		pzPathName=kalle;
