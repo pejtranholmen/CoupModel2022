@@ -353,7 +353,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 						string index;
 						index = "Index_" + FUtil::STD_ItoAscii(i + 1);
 						auto n_array = n.append_child(index.c_str());
-						n_array.append_attribute("SingeRunFlag") = pO->GetStoreFlag(i);
+						n_array.append_attribute("SingleRunFlag") = pO->GetStoreFlag(i);
 						n_array.append_attribute("MultiRunFlag") = pO->GetMultiStoreFlag(i);
 					}
 				}
