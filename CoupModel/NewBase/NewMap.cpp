@@ -566,6 +566,20 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 		}
 		else if (type == SWITCH) {
 			RemoveOriginalValues("Switches", "ALL", false);
+			m_pValidIndexSet = dynamic_cast<Sw*>(GetPtr(SWITCH, "IndexForValidation"));
+			if (m_pValidIndexSet != nullptr) {
+				auto iv = m_pValidIndexSet->GetIntValue();
+				m_pValidIndex = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "Index in val file"));
+				m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "No of internal index loop"));
+				m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "Size of internal loop"));
+
+				auto pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "ValidationMode"));
+				m_NumValidFiles = pSw->GetIntValue();
+				ResidualFile_AddFile(m_NumValidFiles);
+			}
+
+
+
 		}
 	return true;
 }
@@ -1671,7 +1685,10 @@ bool NewMap::Read_OutputSummary_FromXmlFile(pugi::xml_node node)
 			if (output.StoreFlag >= 1) output.PgFileIndex++;
 			if (output.StoreFlag == 2) output.PgMultiFileIndex++;
 
-			if (varstr.rfind("_") != string::npos) {
+			pSimB = GetPtr(enum simtype(type_id + 7), varstr);
+
+
+			if (varstr.rfind("_") != string::npos&&pSimB == nullptr) {
 				pSimB = GetPtr(type_id,varstr.substr(0,varstr.rfind("_")));
 				if (pSimB == nullptr) {
 					string oldname = varstr.substr(0, varstr.rfind("_"));
@@ -1681,8 +1698,10 @@ bool NewMap::Read_OutputSummary_FromXmlFile(pugi::xml_node node)
 				OutVector* pVector;
 				pVector = static_cast<OutVector*>(pSimB);
 				output.LocalIndex = FUtil::AtoInt(varstr.substr(varstr.rfind("_") + 1));
-				if (pVector != nullptr)  pVector->AddOutPutVar(output.LocalIndex-1, output);
-				pVector->SetStoreFlag(output.LocalIndex - 1, output.StoreFlag);
+				if (pVector != nullptr) {
+					pVector->AddOutPutVar(output.LocalIndex - 1, output);
+					pVector->SetStoreFlag(output.LocalIndex - 1, output.StoreFlag);
+				}
 			}
 			else {
 				pSimB = GetPtr(enum simtype(type_id+7),varstr);
