@@ -980,18 +980,23 @@ void NC_Organic::Integ()
 		if(DissolvedOrganics>0) {
 			InFlow(O_State[_DIS][_C_], O_Transform[L1_DIS][_C_]);
 			InFlow(O_State[_DIS][_N_], O_Transform[L1_DIS][_N_]);
-			InFlow(O_State[_DIS][_P_], O_Transform[L1_DIS][_P_]);
+
 			OutFlow(O_State[_L1][_C_], O_Transform[L1_DIS][_C_]);
 			OutFlow(O_State[_L1][_N_], O_Transform[L1_DIS][_N_]);
-			OutFlow(O_State[_L1][_P_], O_Transform[L1_DIS][_P_]);
+			if (m_pModelStructure->m_NumActPlantElements >= 3) {
+				InFlow(O_State[_DIS][_P_], O_Transform[L1_DIS][_P_]);
+				OutFlow(O_State[_L1][_P_], O_Transform[L1_DIS][_P_]);
+			}
 
 			if(LitterPools>0) {
 				InFlow(O_State[_DIS][_C_], O_Transform[L2_DIS][_C_]);
 				OutFlow(O_State[_L2][_C_], O_Transform[L2_DIS][_C_]);
 				InFlow(O_State[_DIS][_N_], O_Transform[L2_DIS][_N_]);
 				OutFlow(O_State[_L2][_N_], O_Transform[L2_DIS][_N_]);
-				InFlow(O_State[_DIS][_P_], O_Transform[L2_DIS][_P_]);
-				OutFlow(O_State[_L2][_P_], O_Transform[L2_DIS][_P_]);
+				if (m_pModelStructure->m_NumActPlantElements >= 3) {
+					InFlow(O_State[_DIS][_P_], O_Transform[L2_DIS][_P_]);
+					OutFlow(O_State[_L2][_P_], O_Transform[L2_DIS][_P_]);
+				}
 			}
 
  			if(FaecesPool>0) {
@@ -999,8 +1004,10 @@ void NC_Organic::Integ()
 				OutFlow(O_State[_L2][_C_], O_Transform[F_DIS][_C_]);
 				InFlow(O_State[_DIS][_N_], O_Transform[F_DIS][_N_]);
 				OutFlow(O_State[_L2][_N_], O_Transform[F_DIS][_N_]);
-				InFlow(O_State[_DIS][_P_], O_Transform[F_DIS][_P_]);
-				OutFlow(O_State[_L2][_P_], O_Transform[F_DIS][_P_]);
+				if (m_pModelStructure->m_NumActPlantElements >= 3) {
+					InFlow(O_State[_DIS][_P_], O_Transform[F_DIS][_P_]);
+					OutFlow(O_State[_L2][_P_], O_Transform[F_DIS][_P_]);
+				}
 			}
 
   			if(Microbes>0) {
@@ -1008,8 +1015,10 @@ void NC_Organic::Integ()
 				OutFlow(O_State[_MIC][_C_], O_Transform[MIC_DIS][_C_]);
 				InFlow(O_State[_DIS][_N_], O_Transform[MIC_DIS][_N_]);
 				OutFlow(O_State[_MIC][_N_], O_Transform[MIC_DIS][_N_]);
-				InFlow(O_State[_DIS][_P_], O_Transform[MIC_DIS][_P_]);
-				OutFlow(O_State[_MIC][_P_], O_Transform[MIC_DIS][_P_]);
+				if (m_pModelStructure->m_NumActPlantElements >= 3) {
+					InFlow(O_State[_DIS][_P_], O_Transform[MIC_DIS][_P_]);
+					OutFlow(O_State[_MIC][_P_], O_Transform[MIC_DIS][_P_]);
+				}
 			}
 
 
@@ -1017,8 +1026,10 @@ void NC_Organic::Integ()
 			OutFlow(O_State[_H][_C_], O_Transform[H_DIS][_C_]);
  			InFlow(O_State[_DIS][_N_], O_Transform[H_DIS][_N_]);
 			OutFlow(O_State[_H][_N_], O_Transform[H_DIS][_N_]);
-			InFlow(O_State[_DIS][_P_], O_Transform[H_DIS][_P_]);
-			OutFlow(O_State[_H][_P_], O_Transform[H_DIS][_P_]);
+			if (m_pModelStructure->m_NumActPlantElements >= 3) {
+				InFlow(O_State[_DIS][_P_], O_Transform[H_DIS][_P_]);
+				OutFlow(O_State[_H][_P_], O_Transform[H_DIS][_P_]);
+			}
 
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 				IntFlow(O_State[_DIS][jj], Dissolved[jj].VFlow);

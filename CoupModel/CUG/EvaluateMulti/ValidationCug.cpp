@@ -940,15 +940,15 @@ void ValidationCug::Make_CriteriaSheet()
 
 
 		if(MeanCriteria==1)
-			QuickSetNumber(4,icount,MeanLow);
+			QuickSetNumber(5,icount,MeanLow);
 		else if(MeanCriteria==2)
-			QuickSetNumber(5,icount,MeanHigh);
+			QuickSetNumber(6,icount,MeanHigh);
 		else if(MeanCriteria==3) {
-			QuickSetNumber(4,icount,MeanLow);
-			QuickSetNumber(5,icount,MeanHigh);
+			QuickSetNumber(5,icount,MeanLow);
+			QuickSetNumber(6,icount,MeanHigh);
 		}
 		QuickSetText(1,icount,test);
-		QuickSetText(3,icount,PerformanceVar);
+		QuickSetText(4,icount,PerformanceVar);
 		icount++;
 		QuickSetNumber(-1, icount-1, icount);
 	}
@@ -3091,6 +3091,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			else {
 				SV_Variable = false;
 
+
 			}
 
 			size_t Threshold = 200;
@@ -4793,22 +4794,29 @@ void ValidationCug::FixZeroShiftOfPostMean(size_t ivar) {
 
 	return;
 }
-
-
-
 void ValidationCug::ReducebyR2(size_t ivar, size_t n_left, bool SV_Variable) {
 
 	MFC_Util m;
 	m.SetPaneMessage("Wait when posterior ensemble is reduced to " + FUtil::STD_ItoAscii(n_left) + " runs");
 	vector<float> dist;
 	int ip=ivar;
-	if(!SV_Variable)
-		dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+	bool MeanOfMany = false;
+	if (ivar == m_pSimDoc->GetNumAll_TSV_ValVariables()) MeanOfMany = true;
+
+	if (!SV_Variable) {
+		if (MeanOfMany) {
+			dist = m_pSimDoc->m_MStorage.m_MeanTSV_Accepted[R2_STAT];
+		}
+		else {
+			dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+			ip = ivar;
+		}
+	}
 	else {
 		dist = m_pSimDoc->m_MStorage.GetPost_SV_ValidPerformanceIndicatorVector(ivar, R2_STAT);
 		ip = ivar;
-
 	}
+
 
 	int icount=dist.size();
 	float lastvalid=0.f;
@@ -4819,11 +4827,17 @@ void ValidationCug::ReducebyR2(size_t ivar, size_t n_left, bool SV_Variable) {
 
 	if (dist.size() > n_left - 2) {
 			if (!SV_Variable) {
-				m_pSimDoc->m_MStorage.SetValidLow(ip, 0, lastvalid);
-				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-					m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
-				else
-					m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+				if (MeanOfMany) {
+					m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = lastvalid;
+					m_pSimDoc->m_MStorage.SetMeanCriteria(LOGLI_STAT, ABOVE_MIN_CRITERIA);
+				}
+				else {
+					m_pSimDoc->m_MStorage.SetValidLow(ip, 0, lastvalid);
+					if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+						m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
+					else
+						m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+				}
 
 			}
 			else {
@@ -4842,40 +4856,28 @@ void ValidationCug::ReducebyR2(size_t ivar, size_t n_left, bool SV_Variable) {
 
 				}
 			}
-			m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-			m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
-			m_Changed=TRUE;
-			m_SavedCriteria2File=false;
-			m_pSimDoc->MR_ReCalculatePostDist(false);
 
-			for(int i=0;i<MAXSIMVAL;i++) {
-				CResiduals *pRes;
-				pRes=m_pSimDoc->GetValidResidualPointer(i+1);
-				if(pRes!=nullptr) {
-					pRes->ToBeUpdated();
-					pRes->m_MeanDefined=false;
-				}
-			}
-
-			m_Changed=FALSE;
-			m_Updated=TRUE;
-
-			
-			for(int i=0;i<6;i++)
-				Make_MainSheets(i);
-			Make_CriteriaSheet();
-			Make_OptionSheet();
-			OnSheetSetup(0);
-			SetSheetNumber(0);
+			ReduceUpdateStep(R2_STAT);
+	
 	}
 	return;
 }
 void ValidationCug::ReducebyRMSE(size_t ivar, size_t n_left, bool SV_Variable) {
 	vector<float> dist;
-	int ip=ivar+m_pSimDoc->GetNumAll_TSV_ValVariables()*4;
+	int ip;
+	bool MeanOfMany = false;
+	if (ivar == m_pSimDoc->GetNumAll_TSV_ValVariables()) MeanOfMany = true;
 
-	if (!SV_Variable)
-		dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+	if (!SV_Variable) {
+		if (MeanOfMany) {
+			dist = m_pSimDoc->m_MStorage.m_MeanTSV_Accepted[RMSE_STAT];
+		}
+		else {
+			ip = ivar + m_pSimDoc->GetNumAll_TSV_ValVariables() * RMSE_STAT;
+			dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		}
+
+	}
 	else {
 		dist = m_pSimDoc->m_MStorage.GetPost_SV_ValidPerformanceIndicatorVector(ivar, RMSE_STAT);
 		ip = ivar + m_pSimDoc->m_ValSum_Array.size() *RMSE_STAT;
@@ -4890,12 +4892,17 @@ void ValidationCug::ReducebyRMSE(size_t ivar, size_t n_left, bool SV_Variable) {
 	}
 	if(dist.size()>n_left-2) {
 		if ((!SV_Variable)) {
-			m_pSimDoc->m_MStorage.SetValidHigh(ip, 0, lastvalid);
-			if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 2);
-			else
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
-
+			if (MeanOfMany) {
+				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_HIGH][RMSE_STAT] = lastvalid;
+				m_pSimDoc->m_MStorage.SetMeanCriteria(RMSE_STAT, BELOW_MAX_CRITERIA);
+			}
+			else {
+				m_pSimDoc->m_MStorage.SetValidHigh(ip, 0, lastvalid);
+				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 2);
+				else
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			}
 		}
 		else {
 			if (ivar == m_pSimDoc->m_ValSum_Array.size()) {
@@ -4908,31 +4915,9 @@ void ValidationCug::ReducebyRMSE(size_t ivar, size_t n_left, bool SV_Variable) {
 				m_pSimDoc->m_MStorage.SetSumCriteria(ip, 3);
 			}
 		}
-		m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-			m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
-			m_Changed=TRUE;
-			m_SavedCriteria2File=false;
-			m_pSimDoc->MR_ReCalculatePostDist(false);
 
-			for(int i=0;i<MAXSIMVAL;i++) {
-				CResiduals *pRes;
-				pRes=m_pSimDoc->GetValidResidualPointer(i+1);
-				if(pRes!=nullptr) {
-					pRes->ToBeUpdated();
-					pRes->m_MeanDefined=false;
-				}
-			}
+		ReduceUpdateStep(RMSE_STAT);
 
-			m_Changed=FALSE;
-			m_Updated=TRUE;
-
-			
-			for(int i=0;i<6;i++)
-				Make_MainSheets(i);
-			Make_CriteriaSheet();
-			Make_OptionSheet();
-			OnSheetSetup(4);
-			SetSheetNumber(4);
 	}
 	return;
 }
@@ -4940,9 +4925,18 @@ void ValidationCug::ReducebyNSE(size_t ivar, size_t n_left, bool SV_Variable) {
 
 
 	vector<float> dist;
-	int ip=ivar+m_pSimDoc->GetNumAll_TSV_ValVariables() * 6;
-	if (!SV_Variable)
-		dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+	int ip;
+	bool MeanOfMany = false;
+	if (ivar == m_pSimDoc->GetNumAll_TSV_ValVariables()) MeanOfMany = true;
+	if (!SV_Variable) {
+		if (MeanOfMany) {
+			dist = m_pSimDoc->m_MStorage.m_MeanTSV_Accepted[NSE_STAT];
+		}
+		else {
+			ip = ivar + m_pSimDoc->GetNumAll_TSV_ValVariables() * NSE_STAT;
+			dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		}
+	}
 	else {
 		dist = m_pSimDoc->m_MStorage.GetPost_SV_ValidPerformanceIndicatorVector(ivar, NSE_STAT);
 		ip = ivar + m_pSimDoc->m_ValSum_Array.size() * NSE_STAT;
@@ -4957,13 +4951,20 @@ void ValidationCug::ReducebyNSE(size_t ivar, size_t n_left, bool SV_Variable) {
 		}
 	if(dist.size()>n_left-2) {
 		if (!SV_Variable) {
-			m_pSimDoc->m_MStorage.SetValidLow(ip, 0, lastvalid);
-			if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
-			else
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			if (MeanOfMany) {
+				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][NSE_STAT] = lastvalid;
+				m_pSimDoc->m_MStorage.SetMeanCriteria(NSE_STAT, ABOVE_MIN_CRITERIA);
+			}
+			else {
 
-			m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
+				m_pSimDoc->m_MStorage.SetValidLow(ip, 0, lastvalid);
+				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
+				else
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+
+
+			}
 		}
 		else {
 			if (ivar == m_pSimDoc->m_ValSum_Array.size()) {
@@ -4975,41 +4976,27 @@ void ValidationCug::ReducebyNSE(size_t ivar, size_t n_left, bool SV_Variable) {
 				m_pSimDoc->m_MStorage.SetSumCriteria(ip, 1);
 			}
 		}
-		m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-		m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
-		m_Changed=TRUE;
-		m_SavedCriteria2File=false;
-		m_pSimDoc->MR_ReCalculatePostDist(false);
-
-			for(int i=0;i<MAXSIMVAL;i++) {
-				CResiduals *pRes;
-				pRes=m_pSimDoc->GetValidResidualPointer(i+1);
-				if(pRes!=nullptr) {
-					pRes->ToBeUpdated();
-					pRes->m_MeanDefined=false;
-				}
-			}
-
-			m_Changed=FALSE;
-			m_Updated=TRUE;
-
-			
-			for(int i=0;i<6;i++)
-				Make_MainSheets(i);
-			Make_CriteriaSheet();
-			Make_OptionSheet();
-			OnSheetSetup(6);
-			SetSheetNumber(6);
+		ReduceUpdateStep(NSE_STAT);
 	}
 	return;
 }
 void ValidationCug::ReducebyLogLi(size_t ivar, size_t n_left, bool SV_Variable) {
 
 	vector<float> dist;
+	int ip;
+	bool MeanOfMany = false;
+	if (ivar == m_pSimDoc->GetNumAll_TSV_ValVariables()) MeanOfMany = true;
 
-	int ip = ivar + m_pSimDoc->GetNumAll_TSV_ValVariables() * 5;
-	if (!SV_Variable)
-		dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+
+	if (!SV_Variable){
+		if (MeanOfMany) {
+			dist = m_pSimDoc->m_MStorage.m_MeanTSV_Accepted[LOGLI_STAT];
+		}
+		else {
+			ip = ivar + m_pSimDoc->GetNumAll_TSV_ValVariables() * LOGLI_STAT;
+			dist = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		}
+	}
 	else {
 		ip = ivar + m_pSimDoc->m_ValSum_Array.size() * LOGLI_STAT;
 		dist = m_pSimDoc->m_MStorage.GetPost_SV_ValidPerformanceIndicatorVector(ivar, LOGLI_STAT);
@@ -5028,11 +5015,17 @@ void ValidationCug::ReducebyLogLi(size_t ivar, size_t n_left, bool SV_Variable) 
 
 	if(dist.size()>n_left-2) {
 		if (!SV_Variable) {
-			m_pSimDoc->m_MStorage.SetValidLow(ip, 0, lastvalid);
-			if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
-			else
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			if (MeanOfMany) {
+				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = lastvalid;
+				m_pSimDoc->m_MStorage.SetMeanCriteria(LOGLI_STAT,ABOVE_MIN_CRITERIA);
+			}
+			else {
+				m_pSimDoc->m_MStorage.SetValidLow(ip, 0, lastvalid);
+					if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+						m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
+					else
+						m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			}
 		}
 		else {
 			if (ivar == m_pSimDoc->m_ValSum_Array.size()) {
@@ -5049,48 +5042,31 @@ void ValidationCug::ReducebyLogLi(size_t ivar, size_t n_left, bool SV_Variable) 
 			}
 
 		}
-		m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-			m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
-			m_Changed=TRUE;
-			m_SavedCriteria2File=false;
-			m_pSimDoc->MR_ReCalculatePostDist(false);
+		
+		ReduceUpdateStep(LOGLI_STAT);
 
-			for(int i=0;i<MAXSIMVAL;i++) {
-				CResiduals *pRes;
-				pRes=m_pSimDoc->GetValidResidualPointer(i+1);
-				if(pRes!=nullptr) {
-					pRes->ToBeUpdated();
-					pRes->m_MeanDefined=false;
-				}
-			}
-
-			m_Changed=FALSE;
-			m_Updated=TRUE;
-
-			
-			for(int i=0;i<6;i++)
-				Make_MainSheets(i);
-			Make_CriteriaSheet();
-			Make_OptionSheet();
-			OnSheetSetup(LOGLI_STAT);
-			SetSheetNumber(LOGLI_STAT);
 	}
 	return;
 }
 
 void ValidationCug::ReducebyMeanInterval(size_t ivar, size_t n_left, bool SV_Variable) {
-
+	int ip;
+	bool MeanOfMany = false;
+	if (ivar == m_pSimDoc->GetNumAll_TSV_ValVariables()) MeanOfMany = true;
 	vector<float> distin, distout;
-	int ip=ivar+m_pSimDoc->GetNumAll_TSV_ValVariables()*3;
+
 	if (!SV_Variable) {
-		distin = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		if (MeanOfMany) {
+			distin = m_pSimDoc->m_MStorage.m_MeanTSV_Accepted[ABSME_STAT];
+		}
+		else {
+			ip = ivar + m_pSimDoc->GetNumAll_TSV_ValVariables() * ABSME_STAT;
+			distin = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		}
 	}
 	else {
 		ip = ivar + m_pSimDoc->m_ValSum_Array.size() * ABSME_STAT;
 		distin = m_pSimDoc->m_MStorage.GetPost_SV_ValidPerformanceIndicatorVector(ivar, ABSME_STAT);
-	
-	
-	
 	}
 
 	
@@ -5122,17 +5098,24 @@ void ValidationCug::ReducebyMeanInterval(size_t ivar, size_t n_left, bool SV_Var
 
 	if(distout.size()>n_left-2) {
 		if (!SV_Variable) {
-			m_pSimDoc->m_MStorage.SetValidLow(ip, 0, distout[0]);
-			if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
-			else
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			if (MeanOfMany) {
+				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][A1_STAT] = distout[0];
+				m_pSimDoc->m_MStorage.SetMeanCriteria(A1_STAT, ABOVE_AND_BELOW_CRITERIA);
+				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_HIGH][A1_STAT] = distout[distout.size() - 1];
+			}
+			else {
+				m_pSimDoc->m_MStorage.SetValidLow(ip, 0, distout[0]);
+				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
+				else
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
 
-			m_pSimDoc->m_MStorage.SetValidHigh(ip, 0, distout[distout.size() - 1]);
-			if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 2);
-			else
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+				m_pSimDoc->m_MStorage.SetValidHigh(ip, 0, distout[distout.size() - 1]);
+				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 2);
+				else
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			}
 		}
 		else {
 			if (ivar == m_pSimDoc->m_ValSum_Array.size()) {
@@ -5148,32 +5131,7 @@ void ValidationCug::ReducebyMeanInterval(size_t ivar, size_t n_left, bool SV_Var
 			}
 
 		}
-
-		m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-			m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
-			m_Changed=TRUE;
-			m_SavedCriteria2File=false;
-			m_pSimDoc->MR_ReCalculatePostDist(false);
-
-			for(int i=0;i<MAXSIMVAL;i++) {
-				CResiduals *pRes;
-				pRes=m_pSimDoc->GetValidResidualPointer(i+1);
-				if(pRes!=nullptr) {
-					pRes->ToBeUpdated();
-					pRes->m_MeanDefined=false;
-				}
-			}
-
-			m_Changed=FALSE;
-			m_Updated=TRUE;
-
-			
-			for(int i=0;i<6;i++)
-				Make_MainSheets(i);
-			Make_CriteriaSheet();
-			Make_OptionSheet();
-			OnSheetSetup(ABSME_STAT);
-			SetSheetNumber(ABSME_STAT);
+		ReduceUpdateStep(ABSME_STAT);
 	}
 	return;
 }
@@ -5181,18 +5139,24 @@ void ValidationCug::ReducebyMeanInterval(size_t ivar, size_t n_left, bool SV_Var
 void ValidationCug::ReducebySlopeInterval(size_t ivar, size_t n_left, bool SV_Variable) {
 
 
+	int ip;
+	bool MeanOfMany = false;
+	if (ivar == m_pSimDoc->GetNumAll_TSV_ValVariables()) MeanOfMany = true;
 
-
-
-	int ip=ivar+m_pSimDoc->GetNumAll_TSV_ValVariables()*2;
 	vector<float> distin, distout;	
 	float meanvaluein, meanvalueout;
 
 	if (!SV_Variable) {
-		distin = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
-		ip = ivar + m_pSimDoc->GetNumAll_TSV_ValVariables() * 2;
+		if (MeanOfMany) {
+			distin = m_pSimDoc->m_MStorage.m_MeanTSV_Accepted[A1_STAT];
+		}
+		else {
+			ip = ivar + m_pSimDoc->GetNumAll_TSV_ValVariables() * A1_STAT;
+			distin = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		}
 	}
 	else {
+
 		ip = ivar + m_pSimDoc->m_ValSum_Array.size() * 2;
 		distin = m_pSimDoc->m_MStorage.GetPost_SV_ValidPerformanceIndicatorVector(ivar, A1_STAT);
 
@@ -5225,17 +5189,24 @@ void ValidationCug::ReducebySlopeInterval(size_t ivar, size_t n_left, bool SV_Va
 
 	if(distout.size()>n_left-2) {
 		if (!SV_Variable) {
-			m_pSimDoc->m_MStorage.SetValidLow(ip, 0, distout[0]);
-			if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
-			else
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			if (MeanOfMany) {
+				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][A1_STAT] = distout[0];
+				m_pSimDoc->m_MStorage.SetMeanCriteria(A1_STAT, ABOVE_AND_BELOW_CRITERIA);
+				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_HIGH][A1_STAT] = distout[distout.size()-1];
+			}
+			else {
+				m_pSimDoc->m_MStorage.SetValidLow(ip, 0, distout[0]);
+				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
+				else
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
 
-			m_pSimDoc->m_MStorage.SetValidHigh(ip, 0, distout[distout.size() - 1]);
-			if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
-			else
-				m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+				m_pSimDoc->m_MStorage.SetValidHigh(ip, 0, distout[distout.size() - 1]);
+				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 1);
+				else
+					m_pSimDoc->m_MStorage.SetCriteria(ip, 3);
+			}
 		}
 		else {
 			if (ivar == m_pSimDoc->m_ValSum_Array.size()) {
@@ -5250,33 +5221,34 @@ void ValidationCug::ReducebySlopeInterval(size_t ivar, size_t n_left, bool SV_Va
 				m_pSimDoc->m_MStorage.SetSumCriteria(ip, 3);
 			}
 		}
-
-
-		m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-			m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
-			m_Changed=TRUE;
-			m_SavedCriteria2File=false;
-			m_pSimDoc->MR_ReCalculatePostDist(false);
-
-			for(int i=0;i<MAXSIMVAL;i++) {
-				CResiduals *pRes;
-				pRes=m_pSimDoc->GetValidResidualPointer(i+1);
-				if(pRes!=nullptr) {
-					pRes->ToBeUpdated();
-					pRes->m_MeanDefined=false;
-				}
-			}
-
-			m_Changed=FALSE;
-			m_Updated=TRUE;
-
-			
-			for(int i=0;i<6;i++)
-				Make_MainSheets(i);
-			Make_CriteriaSheet();
-			Make_OptionSheet();
-			OnSheetSetup(A1_STAT);
-			SetSheetNumber(A1_STAT);
+		ReduceUpdateStep(A1_STAT);
 	}
 	return;
+}
+
+void ValidationCug::ReduceUpdateStep(PERFORMANCE_VAR value)
+{
+	m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
+	m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
+	m_Changed = TRUE;
+	m_SavedCriteria2File = false;
+	m_pSimDoc->MR_ReCalculatePostDist(false);
+
+	for (int i = 0; i < MAXSIMVAL; i++) {
+		CResiduals* pRes;
+		pRes = m_pSimDoc->GetValidResidualPointer(i + 1);
+		if (pRes != nullptr) {
+			pRes->ToBeUpdated();
+			pRes->m_MeanDefined = false;
+		}
+	}
+	m_Changed = FALSE;
+	m_Updated = TRUE;
+
+	for (int i = 0; i < 6; i++)
+		Make_MainSheets(i);
+	Make_CriteriaSheet();
+	Make_OptionSheet();
+	OnSheetSetup(value);
+	SetSheetNumber(value);
 }

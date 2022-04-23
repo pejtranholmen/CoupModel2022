@@ -778,6 +778,7 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 			else {
 				m_MeanTSV_STAT[POST_MIN][iv] = vmin;
 				m_MeanTSV_STAT[POST_MAX][iv] = vmax;
+				m_MeanTSV_Accepted[iv] = sample;
 			}
 		}
 	};

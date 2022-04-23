@@ -53,6 +53,7 @@ MultiStorageData::MultiStorageData()
 
 
 	m_MeanTSV_All.resize(7);
+	m_MeanTSV_Accepted.resize(7);
 	m_MeanSV_All.resize(7);
 	
 

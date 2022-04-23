@@ -162,6 +162,8 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 #endif
 
 	auto setall_valid = [&]() {
+		for(size_t i=0; i<6; i++)
+			m_MeanTSV_Accepted[i]=m_MeanTSV_All[i];
 		for (unsigned long i = 0; i<m_TotalNumberRuns; i++) {
 			SetAcceptedRunNo(i, true);
 		}
@@ -266,11 +268,11 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		for (unsigned long i = 0; i<m_TotalNumberRuns; i++) {
 			float fval;
 			if (GetAcceptedRunNo(i)) {
-				/*for (size_t iper = 0; iper < 1; iper++) {
+				for (size_t iper = 0; iper < 6; iper++) {
 					fval = m_MeanTSV_All[iper][i];
 					if (fval > MISSING && (fval<m_MeanTSV_STAT[SELECT_LOW][iper] || fval>m_MeanTSV_STAT[SELECT_HIGH][iper]))
 						SetAcceptedRunNo(i, false);
-				}*/
+				}
 				
 			}
 

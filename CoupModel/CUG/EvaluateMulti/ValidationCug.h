@@ -78,6 +78,8 @@ void	ReducebyNSE(size_t ivar, size_t n_left=200, bool SV_Variable = false);
 void	ReducebyLogLi(size_t ivar, size_t n_left=200, bool SV_Variable = false);
 void	ReducebyMeanInterval(size_t ivar, size_t n_Left=200, bool SV_Variable = false);
 void	ReducebySlopeInterval(size_t ivar, size_t n_Left=200, bool SV_Variable = false);
+void    ReduceUpdateStep(PERFORMANCE_VAR value);
+
 BOOL	EstimateNewLogLi();
 BOOL	MakeSortedResiduals();
 BOOL	MultiPlotClick(int isheet, int col,  int row, bool Add=true, bool All=false);
