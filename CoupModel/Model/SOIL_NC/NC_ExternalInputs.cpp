@@ -234,7 +234,7 @@ void NC_ExternalInputs::Flux()
 	};
 
     if(N_Irrigation==1) {
-		  if(pMet->Dripper==0) {
+		  if(pMet->Dripper==1) { 
 				for(size_t jj=0; jj< SoilNitrateInflow.size(); jj++) SoilNitrateInflow[jj]=pMet->Wsource[jj]*N_Irrig_NO3_Conc/1000.;
 				for(size_t jj=0; jj<SoilAmmoniumInflow.size(); jj++) SoilAmmoniumInflow[jj]=pMet->Wsource[jj]*N_Irrig_NH4_Conc/1000.;
 				N_Irrig_NO3=sum(SoilNitrateInflow);

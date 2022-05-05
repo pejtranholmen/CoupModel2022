@@ -307,7 +307,7 @@ bool NC_Organic_Functions::Def() {
 		else if (j == _F) condition += "|FaecesPool >0";
 		else if (j == _MIC) condition += "|Microbes >0";
 		name = Item[_C_] +"Tot"+ Comp[j] + "RespRate";
-		pGs = new Gs(&O_RespRateProfile[_L1], TOTPROFILE, CARBON, NOFPROC, RESPIRATION, NORMAL);
+		pGs = new Gs(&O_RespRateProfile[j], TOTPROFILE, CARBON, NOFPROC, RESPIRATION, NORMAL);
 		Define(pGs, name, 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1"+condition);
 	}
 	pGs= new Gs(&CTotSoilRespRate,	 TOTPROFILE,CARBON, NOFPROC,RESPIRATION, NORMAL);

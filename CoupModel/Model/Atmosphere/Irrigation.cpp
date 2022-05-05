@@ -136,6 +136,7 @@ void Irrigation::Flux()
  
 				DripOutlet=min(DripIrrigRate, max(0., DripContainer/T_Step));
 
+
 				DripContainer-=DripOutlet*T_Step;
 				for(size_t i=0; i<Wsource.size(); i++) Wsource[i]=DrippInfilDistF[i]*DripOutlet;	  //! WSource is input to soil from container
 				for(size_t i=0; i<Wsource.size(); i++) p_Plant->SaltSourceFlow[i]=Wsource[i]*p_Plant->SaltIrrigationConc;

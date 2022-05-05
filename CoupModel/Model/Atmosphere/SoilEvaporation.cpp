@@ -172,7 +172,7 @@ void SoilEvaporation::Flux()
 		ebal_in.AreaFraction=DripIrrigCover;
 		ebal_in.TotalCoverDegree=min(DripIrrigCover, SoilCoverEvap);
         // Area1 = drip irrigated area
-        //Fraction1=DripIrrigCover
+        Fraction1 = DripIrrigCover;
       //  CoverDegree1=min(DripIrrigCover, SoilCoverEvap)
        // CoverDegree2=max(SoilCoverEvap-CoverDegree1,0.)
 
@@ -259,7 +259,8 @@ void SoilEvaporation::Flux()
             ebal_out.SoilSurfHeatFlow			=Fraction1*ebal_out1.SoilSurfHeatFlow+(1-Fraction1)*ebal_out2.SoilSurfHeatFlow;
             ebal_out.LatentF				=Fraction1*ebal_out1.LatentF+(1-Fraction1)*ebal_out2.LatentF;
             // To be precise for the longwave balance, TempBareSoil**4 should be averaged: 
-			ebal_out.Surface_Temp			=pow(Fraction1*f_radlongout(ebal_out1.Surface_Temp) +(1-Fraction1)*f_radlongout(ebal_out2.Surface_Temp), 0.25)-273.15;
+            //deleted bug May 2022, using longwave radiation instead of temperature raised by 4.
+			ebal_out.Surface_Temp			=pow(Fraction1*pow(ebal_out1.Surface_Temp+273.15,4.0) +(1-Fraction1)*pow(ebal_out2.Surface_Temp+273.15,4.), 0.25)-273.15;
 		}
 		else {
 			ebal_out.SoilEbal = ebal_out1.SoilEbal;
@@ -269,20 +270,26 @@ void SoilEvaporation::Flux()
 			ebal_out.SensibleF = ebal_out1.SensibleF ;
 			ebal_out.SoilSurfHeatFlow = ebal_out1.SoilSurfHeatFlow ;
 			ebal_out.LatentF = ebal_out1.LatentF;
-			// To be precise for the longwave balance, TempBareSoil**4 should be averaged: 
-			ebal_out.Surface_Temp = pow(f_radlongout(ebal_out1.Surface_Temp),0.25 ) - 273.15;
-
-
-
-
+			ebal_out.Surface_Temp = ebal_out1.Surface_Temp;
 		}
-
-
+        SoilEBal1 = ebal_out1.SoilEbal;
+        SoilEBal2 = ebal_out2.SoilEbal;
+        RadNetBareSoil1 = ebal_out1.RadNet;
+        RadNetBareSoil2 = ebal_out2.RadNet;
+         RadNetBareSoil1 = ebal_out1.RadNet;
+         RadNetBareSoil2 = ebal_out2.RadNet;
+         RaSoilSurf1 = ebal_out1.RaSoilSurf;
+         RaSoilSurf2 = ebal_out2.RaSoilSurf;
 		 SoilLatentF1=ebal_out1.LatentF;
 		 SoilLatentF2=ebal_out2.LatentF;
-		 SoilEvaporation1=SoilEvaporationFlux*(SoilLatentF1/ebal_out.LatentF);
-         SoilEvaporation2=SoilEvaporationFlux*(SoilLatentF2/ebal_out.LatentF);
-
+         SoilSensF1 = ebal_out1.SensibleF;
+         SoilSensF2 = ebal_out2.SensibleF;
+		 SoilEvaporation1=SoilLatentF1/Fix::LATE;
+         SoilEvaporation2 = SoilLatentF2 /Fix::LATE;
+         TempBareSoil1 = ebal_out1.Surface_Temp;
+         TempBareSoil2 = ebal_out2.Surface_Temp;
+         SurfHeatFlow1 = ebal_out1.SoilSurfHeatFlow;
+         SurfHeatFlow2 = ebal_out2.SoilSurfHeatFlow;
      }
 	 if(ebal_out.LatentF>-5.E7&&ebal_out.LatentF<1.E8) 
 		   SoilLatentF=ebal_out.LatentF;
