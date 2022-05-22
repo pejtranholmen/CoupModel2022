@@ -214,7 +214,7 @@ void Soil_HeatF::UpperBoundary()
 		//if(p_Atm->SurEbal>1)
 
 		if(p_Atm->SurEbal>1)
-			if(abs(p_Atm->TempBareSoil)<50.)
+			if(abs(p_Atm->TempBareSoil)<70.)
 				TempSoilSurf=p_Atm->TempBareSoil;
 			else {
 				TempSoilSurf=p_Atm->TAir;
@@ -324,10 +324,6 @@ void Soil_HeatF::UpperBoundary()
 			}
 			else
 				AdjustNetRadGround=0.;
-			
-		
-			
-			
 		}
 		//!   Adjusting NetRadiation because of surface temperature of ground
 		//!   When net radiation is estimated

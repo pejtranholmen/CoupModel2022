@@ -91,7 +91,7 @@ void Radiation::Flux()
     //! 
     double RadFracSoilDirect,/*RadFracSoilLong,*/ RadFracDirect ,RadFracDiffuse;
     double SlopeCorrFactor=1.;
-	double PotRis, Hour;
+	double PotRis, Hour=0.;
     double RadFracSoil,IntSnowAlbedoFrac;//, CanopyTotSoilCover;
     double /*AlbedoSoilPartition,*/ AlbedoVarVeg=12.;
 	double RadNetBackup;
@@ -103,7 +103,7 @@ void Radiation::Flux()
        if(Turbidity==1)
           PotRis= f_atmcorrection(TAir, HumRel/100., Hour)*PotRis;
     }
-    else
+    else 
         PotRis=f_potrisday(m_pModelInfo->JDayNum);
           
     
@@ -121,14 +121,21 @@ void Radiation::Flux()
 	      RelSun=max(0., min(1.,(RadInShort/(PotRis)-RadFracAng1)/RadFracAng2));
           CloudFrac=1-RelSun;
 	   }
-       else if(DurBriSun>0) {
-          RelSun=min(1.,max(0., DurBriSun/ f_daylength(m_pModelInfo->JDayNum)));
-          CloudFrac=1-RelSun;
-       }
+
 	}
-    else if (MISSCLOUD&&DurBriSun>0) {
-       RelSun=min(1.,max(0., DurBriSun/f_daylength(m_pModelInfo->JDayNum)));
-       CloudFrac=(1-RelSun);
+    else if (MISSCLOUD&&DurBriSun>0&&PotRis>=2.E7&&Hour>8&&Hour<16) {
+		if (TimeResolution_Sw(m_pModelStructure->TimeResolution) == TimeResolution_Sw::HOURLY) {
+			RelSun = min(1., max(0., DurBriSun / 60.));
+		}
+		else if (TimeResolution_Sw(m_pModelStructure->TimeResolution) == TimeResolution_Sw::TEN_MINUTES) {
+			RelSun = min(1., max(0., DurBriSun / 10.));
+		}
+		else if (TimeResolution_Sw(m_pModelStructure->TimeResolution) == TimeResolution_Sw::DAILY_MEAN)
+			RelSun = min(1., max(0., DurBriSun / f_daylength(m_pModelInfo->JDayNum)));
+		else
+			RelSun = min(1., max(0., DurBriSun / 720.));
+		CloudFrac = 1 - RelSun;
+
 	}
     else if (MISSCLOUD&&CloudInput==4) {
     

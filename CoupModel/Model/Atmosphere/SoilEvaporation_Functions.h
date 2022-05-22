@@ -46,7 +46,8 @@ class SoilEvaporation_Functions : public SnowPack
 	//!parameters
 	//!double  RoughLBareSoilHeat
 	//! Auxiliary variables
-	double EtaSoil,WindspeedSoil;// !,WindspeedIterations,EtaSoilIterations,EbalSoilIterations;
+	//double EtaSoil;// !,WindspeedIterations,EtaSoilIterations,EbalSoilIterations;
+	// Removed EtaSoil to Functors
 
 	//! Local Defined Variables
 	double		RoughLBareSoilHeat, SoilCoverEvapPar, SoilCoverRunoffPar;

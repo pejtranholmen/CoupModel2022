@@ -307,9 +307,7 @@ void Meteorological_Data::Flux()
 		else if (DrivPG1)
 			WindSpeed = max(0.1, GetEcoDat(&m_PGPOS_Meteor[WSpeedIpos.ivar], WSpeedIpos));
 		//! Molnighet
-		if (CloudInput_Sw(CloudInput) == CloudInput_Sw::PARAMETERS)
-			CloudFrac = CloudFMean;
-		else if (CloudInput_Sw(CloudInput) == CloudInput_Sw::ESTIMATED_SUNSHINE || CloudInput_Sw(CloudInput) == CloudInput_Sw::ESTIMATED_TEMPDAYDIFF)
+		if (CloudInput_Sw(CloudInput) == CloudInput_Sw::ESTIMATED_SUNSHINE || CloudInput_Sw(CloudInput) == CloudInput_Sw::ESTIMATED_TEMPDAYDIFF)
 			MISSCLOUD = true;
 		else if (CloudFIpos.ivar > 0) {
 			CloudFrac = GetEcoDat(&m_PGPOS_Meteor[CloudFIpos.ivar], CloudFIpos);
@@ -324,6 +322,10 @@ void Meteorological_Data::Flux()
 				CloudFrac = CloudFMean;
 			}
 		}
+		else if (CloudInput_Sw(CloudInput) == CloudInput_Sw::PARAMETERS&&DBSunInput_Sw(DBSunInput)==DBSunInput_Sw::NOT_USED)
+			CloudFrac = CloudFMean;
+		else if(DBSunInput_Sw(DBSunInput) != DBSunInput_Sw::NOT_USED)
+			MISSCLOUD = true;
 
 		if (TempDayDiffInput_Sw(TempDayDiffInput) >= TempDayDiffInput_Sw::PG_FILE_FIRST && TempDiff_Ipos.ivar > 0)
 			TempDayDifference = GetEcoDat(&m_PGPOS_Meteor[TempDiff_Ipos.ivar], TempDiff_Ipos);
@@ -619,7 +621,7 @@ bool Meteorological_Data::CheckEcoDriv1()
 	     if(Cloud_Count==Cloud_Index||CloudInput==1) 
 			CloudFIpos.ivar=i+1;
 	 }	
-	 else if((name.find("Duration of")!=string::npos||Id.find("DBS")!=string::npos)&&DBSunIpos.ivar==0) {
+	 else if((name.find("SUNSHINE") != string::npos || name.find("Duration of")!=string::npos||Id.find("DBS")!=string::npos)&&DBSunIpos.ivar==0) {
 	     DBSun_Count++;
 	     if(DBSun_Count==DBSun_Index||DBSunInput==1) 
 			DBSunIpos.ivar=i+1;

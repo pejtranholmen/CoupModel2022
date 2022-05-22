@@ -289,11 +289,7 @@ bool SoilEvaporation_Functions::Def()
 	    Define(pGs,   "PotEvapGround", 0.,WATERFLOW_UNIT, "Evaporation > 1|Evaporation Method > 0|WaterEq = 1");
 	pGs= new Gs(&TempBareSoil, ATMBOUNDARY,TEMPERATURE, SOILEVAPORATION,NOBPROC, NORMAL); 
 	    Define(pGs,  "TempBareSoil"  , 10.,TEMP_UNIT,"Evaporation > 0|HeatEq >= 1");
-	pGs= new Gs(&EtaSoil, ATMBOUNDARY,ATMOSPHERE, TURBULENCE,NOBPROC, NORMAL); 
-	    Define(pGs,  "MO-StabParBareSoil"  , 0.,"-","WaterEq = 1|Surface Temperature >=2|Evaporation Method > 0|StabilitySoil >0");
-	pGs= new Gs(&WindspeedSoil, ATMBOUNDARY,ATMOSPHERE, TURBULENCE,NOBPROC, NORMAL); 
-	    Define(pGs,  "WindspeedSoil"  , 0.,"-","WaterEq = 1|Surface Temperature >=2|Evaporation Method > 0|StabilitySoil >0");
-
+	
     //!==============================
     //! AUXILIARY VARIABLES (AREA 1)    
     //!==============================
