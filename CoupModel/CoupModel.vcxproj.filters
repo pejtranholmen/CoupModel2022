@@ -163,6 +163,9 @@
     <Filter Include="Source Files\Model\Atmosphere\Functors">
       <UniqueIdentifier>{b9b539f1-a167-490a-9858-f2f10b51cb23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Model\Plant_NC\Functors\PhotoSynthesis">
+      <UniqueIdentifier>{5f19deba-6315-4042-acb5-c086cdfb3a42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -1259,24 +1262,6 @@
     <ClInclude Include="Model\SOIL\Functors\Drainage_Functor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhotoTempResponseDirect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempResponseDirect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempSumResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoNLeafResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoGreenIndexResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\LogisticGrowth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1284,9 +1269,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\PLANT_NC\Functors\Allocation\AlloLeafMass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoRadEff.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\PLANT_NC\Functors\GrowthStages\GrowthStages.h">
@@ -1311,9 +1293,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\PLANT_NC\Functors\UptakeFromSoil\PlantUptake.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoPLeafResponse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\PLANT_NC\Functors\BiomassDescription\BioMass.h">
@@ -1459,6 +1438,33 @@
     </ClInclude>
     <ClInclude Include="Util\pugixml.hpp">
       <Filter>Source Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTemp.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoGreenIndexResponse.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoNLeafResponse.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoPLeafResponse.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoRadEff.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTemplate.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="PhotoTempResponseDirect.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempResponseDirect.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempSumResponse.h">
+      <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

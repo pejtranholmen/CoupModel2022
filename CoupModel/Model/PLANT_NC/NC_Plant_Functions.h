@@ -76,6 +76,7 @@ size_t Sowing_Switch,Emergence_Switch, StartSeasonTableExist;
 size_t Seedling_Management;
 
 size_t ZadokScale;
+size_t CanopyCO2_Storage;
 
 // State variables;
 

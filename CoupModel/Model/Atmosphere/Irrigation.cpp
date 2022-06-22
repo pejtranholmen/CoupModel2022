@@ -33,7 +33,7 @@ bool Irrigation::Ini()	{
 		if(SumFrac!=1.&&SumFrac>0) 
            for(size_t i=0; i<DrippInfilDistF.size(); i++)
 			   DrippInfilDistF[i]=DrippInfilDistF[i]/SumFrac;
-		
+		DripInUse = true;
 	}
     IrriON=false;
     OpenTank=false;
@@ -114,10 +114,11 @@ void Irrigation::Flux()
 
 			DripInUse=false;
 			for(size_t i=0; i<p_Plant->NumPlants; i++) {
-				if(pNC_Plant->Drip[i]>0&&pNC_Plant->GrowthStageIndex[i]>=0) {
+				if((pNC_Plant->Drip[i]>0&&pNC_Plant->GrowthStageIndex[i]>=0)|| pNC_Plant->Growth == 0) {
 					 DripInUse=true;
 					 PlantIndexDrip=i;
 				}
+
 			}
 
 			if(DripInUse) {

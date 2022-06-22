@@ -310,6 +310,7 @@
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoNLeafResponse.h" />
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoPLeafResponse.h" />
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoRadEff.h" />
+    <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTemp.h" />
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTemplate.h" />
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempResponseDirect.h" />
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempSumResponse.h" />

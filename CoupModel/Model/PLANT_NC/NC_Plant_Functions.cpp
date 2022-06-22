@@ -170,6 +170,10 @@ bool NC_Plant_Functions::Def()
 	pSw = new Sw(&ZadokScale, PLANT, GENERAL, NOFPROC, PHENOLOGY, NORMAL);
 	Define(pSw, "ZadokScale", 0, "off|On|WithOutFile_Australia|WithOutFile_France", "Nitrogen and Carbon > 0|Growth >2");  //Hidden Switch
 
+	pSw = new Sw(&CanopyCO2_Storage, PLANT, GENERAL, NOFPROC, PHOTOSYNTHESIS, NORMAL);
+	Define(pSw, "CanopyCO2_Storage", 0, "Static|Dynamic", "Nitrogen and Carbon > 0|Growth >3");  //Hidden Switch
+
+
 	vector<double> initv;	initv.assign(p_Plant->NumPlants, 0.);
 
 
@@ -178,12 +182,12 @@ bool NC_Plant_Functions::Def()
 		if (i == _P_) conditions += "|Phosphorus>0";
 		for (size_t j = 0; j < NUM_PLANT_COMP; j++) {
 			pX = new X(&P_State[j][i], pNumPlants, PLANT, elements(CARBON + i), STORAGE, LIVING, NORMAL);
-			Define(pX, pNumPlants, P_BioElementName[i] + P_StateCompName[j], initv, MASS_UNIT, conditions);
+			Define(pX, pNumPlants, P_BioElementName[i] + P_StateCompName[j], initv, UNIT_TYPES::MASS_UNIT, conditions);
 		}
 		conditions += "| Mycorrhiza Fungal Growth > 0";
 		for (size_t j = NUM_PLANT_COMP; j < NUM_PLANT_FUNGI_COMP; j++) {
 			pX = new X(&P_State[j][i], pNumPlants, MYCON, elements(i + 2), STORAGE, LIVING, NORMAL);
-			Define(pX, pNumPlants, P_BioElementName[i] + P_StateCompName[j], initv, MASS_UNIT, conditions);
+			Define(pX, pNumPlants, P_BioElementName[i] + P_StateCompName[j], initv, UNIT_TYPES::MASS_UNIT, conditions);
 		}
 	}
 
@@ -195,40 +199,40 @@ bool NC_Plant_Functions::Def()
 	;
 	// Flows;
 	pT = new T(&NFixationPlant, pNumPlants, PLANT, NITROGEN, TRANSPORT, NFIXATION, NORMAL);
-	Define(pT, pNumPlants, "N FixationPlant", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N Fixation >0");
+	Define(pT, pNumPlants, "N FixationPlant", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N Fixation >0");
 	pT = new T(&NPlantAddSupply, pNumPlants, PLANT, NITROGEN, TRANSPORT, NFIXATION, NORMAL);
-	Define(pT, pNumPlants, "N PlandAddSupply", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N Fixed Supply >0");
+	Define(pT, pNumPlants, "N PlandAddSupply", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N Fixed Supply >0");
 	pT = new T(&P_Uptake[PLANT_TOT_N][_N_ - 1], pNumPlants, PLANT, NITROGEN, TRANSPORT, PLANT_NUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "N SoilNewMobile", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
+	Define(pT, pNumPlants, "N SoilNewMobile", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 	pT = new T(&P_Uptake[PLANT_TOT_N][_P_ - 1], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, PLANT_PUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "P SoilNewMobile", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Phosphorus>0");
+	Define(pT, pNumPlants, "P SoilNewMobile", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Phosphorus>0");
 	;
 	pT = new T(&AtmNewMobile, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pT, pNumPlants, "C AtmNewMobile", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
+	Define(pT, pNumPlants, "C AtmNewMobile", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 
 	
 		string conditions = "Nitrogen and Carbon >= 1|Growth >0";
 		pT = new T(&P_CarbonAlloNewMobile.Leaf, pNumPlants, PLANT, elements(CARBON ), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[1], initv, MASSFLOW_UNIT, conditions);
+		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[1], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		pT = new T(&P_CarbonAlloNewMobile.Stem, pNumPlants, PLANT, elements(CARBON), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[2], initv, MASSFLOW_UNIT, conditions);
+		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[2], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		pT = new T(&P_CarbonAlloNewMobile.Roots, pNumPlants, PLANT, elements(CARBON), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[7], initv, MASSFLOW_UNIT, conditions);
+		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[7], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		pT = new T(&P_CarbonAlloNewMobile.CoarseRoots, pNumPlants, PLANT, elements(CARBON), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[8], initv, MASSFLOW_UNIT, conditions);
+		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[0] + P_StateCompName[8], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 
 
 		for (size_t i = 0; i < NUM_BIOELEM - 1; i++) {
 			string conditions = "Nitrogen and Carbon >= 1|Growth >0";
 			if (i == _P_-1) conditions += "|Phosphorus>0";
 			pT = new T(&P_UptakeNewMobile[i].Leaf, pNumPlants, PLANT, elements(NITROGEN+i), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[1], initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[1], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 			pT = new T(&P_UptakeNewMobile[i].Stem, pNumPlants, PLANT, elements(NITROGEN+i), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[2], initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[2], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 			pT = new T(&P_UptakeNewMobile[i].Roots, pNumPlants, PLANT, elements(NITROGEN + i), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[7], initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[7], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 			pT = new T(&P_UptakeNewMobile[i].CoarseRoots, pNumPlants, PLANT, elements(NITROGEN + i), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[8], initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i+1] + P_StateCompName[0] + P_StateCompName[8], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		}
 
 
@@ -237,7 +241,7 @@ bool NC_Plant_Functions::Def()
 
 
 	pT = new T(&P_ReAllocation[NEWMOBILE_FUNGI][_C_], pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pT, pNumPlants, "C NewMobileFungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pT, pNumPlants, "C NewMobileFungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	;
 
 	for (size_t i = 0; i < NUM_BIOELEM - 1; i++) {
@@ -245,57 +249,57 @@ bool NC_Plant_Functions::Def()
 		if (i == _P_) conditions += "|Phosphorus>0";
 		for (size_t j = LEAF_GRAIN; j <= COARSE_ROOT_GRAIN; j++) {
 			pT = new T(&P_ReAllocation[j][i], pNumPlants, PLANT, elements(CARBON + i), TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second], initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		}
 	}
 	/*	pT= new T(&P_Flux.Stem_Grain[_C_]		,  pNumPlants,  PLANT,CARBON, TRANSPORT,REALLOCATION, NORMAL);
-			Define(pT, pNumPlants,  "C StemGrain"		,initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
+			Define(pT, pNumPlants,  "C StemGrain"		,initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 		pT= new T(&P_Flux.Leaf_Grain[_C_]		,  pNumPlants,  PLANT,CARBON, TRANSPORT,REALLOCATION, NORMAL);
-			Define(pT, pNumPlants,  "C LeafGrain"		,initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
+			Define(pT, pNumPlants,  "C LeafGrain"		,initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 		pT= new T(&P_Flux.Root_Grain[_C_]		,  pNumPlants,  PLANT,CARBON, TRANSPORT,REALLOCATION, NORMAL);
-			Define(pT, pNumPlants,  "C RootsGrain"		,initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
+			Define(pT, pNumPlants,  "C RootsGrain"		,initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 		pT= new T(&CCoarseRootsGrain	,  pNumPlants,  PLANT,CARBON, TRANSPORT,REALLOCATION, NORMAL);
-			Define(pT, pNumPlants,  "C CoarseRootsGrain" 	,initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");*/
+			Define(pT, pNumPlants,  "C CoarseRootsGrain" 	,initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");*/
 
 	for (size_t i = 0; i < NUM_BIOELEM - 1; i++) {
 		string conditions = "Nitrogen and Carbon >= 1|Growth >0";
 		if (i == _P_) conditions += "|Phosphorus>0";
 		for (size_t j = 0; j < NUM_PLANT_COMP; j++) {
 			pT = new T(&P_Harvest[j][i], pNumPlants, PLANT, elements(CARBON + i), TRANSPORT, HARVEST, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[j] + "Harvest", initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[j] + "Harvest", initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		}
 	}
 
 	for (size_t j = 0; j < NUM_PLANT_COMP; j++) {
 		pT = new T(&P_Respiration[j], pNumPlants, PLANT, CARBON, TRANSPORT, RESPIRATION, NORMAL);
-		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[j] + "Atm", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
+		Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[j] + "Atm", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 	}
 
 
 	/*	pT= new T(&P_Respiration[_ROOT]			,  pNumPlants,  PLANT,CARBON, TRANSPORT,RESPIRATION, NORMAL);
-			Define(pT, pNumPlants,  "C RootsAtm"	 	,initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
+			Define(pT, pNumPlants,  "C RootsAtm"	 	,initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 		pT= new T(&P_Respiration[_OLD_ROOT]		,  pNumPlants,  PLANT,CARBON, TRANSPORT,RESPIRATION, NORMAL);
-			Define(pT, pNumPlants,  "C OldRootsAtm"   	,initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");*/
+			Define(pT, pNumPlants,  "C OldRootsAtm"   	,initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");*/
 	;
 	pT = new T(&P_Respiration[_FUNGI], pNumPlants, PLANT, CARBON, TRANSPORT, RESPIRATION, NORMAL);
-	Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[11] + "Atm", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pT, pNumPlants, P_BioElementName[0] + P_StateCompName[11] + "Atm", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	;
 	pT = new T(&P_Uptake[FUNGI_TOT_N][_N_ - 1], pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "N FungiUptake", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pT, pNumPlants, "N FungiUptake", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pT = new T(&P_Uptake[FUNGI_TOT_N][_P_ - 1], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "P FungiUptake", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pT, pNumPlants, "P FungiUptake", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 
 
 	pT = new T(&NFungiPlant, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "N FungiPlant", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pT, pNumPlants, "N FungiPlant", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	;
 	pT = new T(&PFungiPlant, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "P FungiPlant", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pT, pNumPlants, "P FungiPlant", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	;
 	pT = new T(&P_Uptake[FUNGI_ORG_N][_N_ - 1], pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "N OrgFungiUptake", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pT, pNumPlants, "N OrgFungiUptake", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pT = new T(&P_Uptake[FUNGI_ORG_N][_P_ - 1], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pT, pNumPlants, "P OrgFungiUptake", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pT, pNumPlants, "P OrgFungiUptake", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 
 
 	;
@@ -305,7 +309,7 @@ bool NC_Plant_Functions::Def()
 		if (i == _P_) conditions += "|Phosphorus>0";
 		for (size_t j = 0; j <= NUM_PLANT_COMP; j++) {
 			pT = new T(&P_LitterFall[j][i], pNumPlants, PLANT, elements(i + CARBON), TRANSPORT, LITTERFALL, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[j] + "Litter", initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[j] + "Litter", initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 
 		}
 	}
@@ -316,7 +320,7 @@ bool NC_Plant_Functions::Def()
 		if (i == _P_) conditions += "|Phosphorus>0";
 		for (size_t j = LEAF_OLD_LEAF; j <= COARSE_ROOT_OLD_COARSE_ROOT; j++) {
 			pT = new T(&P_ReAllocation[j][i], pNumPlants, PLANT, elements(i + 2), TRANSPORT, REALLOCATION, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second], initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		}
 	};
 
@@ -326,7 +330,7 @@ bool NC_Plant_Functions::Def()
 		if (i == _P_) conditions += "|Phosphorus>0";
 		for (size_t j = LEAF_MOBILE_RETURN; j <= OLD_LEAF_MOBILE_RETURN; j++) {
 			pT = new T(&P_ReAllocation[j][i], pNumPlants, PLANT, elements(i + 2), TRANSPORT, REALLOCATION, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second] + " ret", initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second] + " ret", initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		}
 	};
 	for (size_t i = 0; i < NUM_BIOELEM - 1; i++) {
@@ -335,7 +339,7 @@ bool NC_Plant_Functions::Def()
 
 		for (size_t j = OLD_LEAF_MOBILE; j <= MOBILE_NEWMOBILE; j++) {
 			pT = new T(&P_ReAllocation[j][i], pNumPlants, PLANT, elements(i + 2), TRANSPORT, REALLOCATION, NORMAL);
-			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second], initv, MASSFLOW_UNIT, conditions);
+			Define(pT, pNumPlants, P_BioElementName[i] + P_StateCompName[P_ReLink[j].first] + P_StateCompName[P_ReLink[j].second], initv,UNIT_TYPES::MASSFLOW_UNIT, conditions);
 		}
 	};
 
@@ -361,63 +365,63 @@ bool NC_Plant_Functions::Def()
 		pG = new G(&P_State_CarbonRatio[_FUNGI_][jj - 1], pNumPlants, PLANT, CARBON, TRANSPORT, RATIO, NORMAL);
 		Define(pG, pNumPlants, "C" + P_BioElementName[jj] + "RatioFungi", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0" + conditions);
 		pG = new G(&DemandUptake[jj - 1].Demand, pNumPlants, PLANT, NITROGEN, TRANSPORT, bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "PlantDemand", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "PlantDemand", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 	}
 
 
 	pG = new G(&SimPlantYearAge, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL);
 	Define(pG, pNumPlants, "Sim Plant Year Age", initv, "Years", "Nitrogen and Carbon >= 1|Growth>0");
 	pG = new G(&DormingTempSum, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL);
-	Define(pG, pNumPlants, "DormingTempSum", initv, TEMP_UNIT + "day", "Nitrogen and Carbon >= 1|Growth >0");
+	Define(pG, pNumPlants, "DormingTempSum", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 	pG = new G(&GrowthTempSum, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL);
-	Define(pG, pNumPlants, "GrowthTempSum", initv, TEMP_UNIT + "day", "Nitrogen and Carbon >= 1|Growth >0");
+	Define(pG, pNumPlants, "GrowthTempSum", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 	pG = new G(&ZadokIndex, pNumPlants, PLANT, TIME, STORAGE, PHENOLOGY, NORMAL);
 	Define(pG, pNumPlants, "ZadokIndex", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|ZadokScale>0");
 	pG = new G(&ZadokDayNumShift, pNumPlants, PLANT, TIME, STORAGE, PHENOLOGY, NORMAL);
 	Define(pG, pNumPlants, "Zadok DayNum Shift", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|ZadokScale>0");
 	pG = new G(&NFungiAvail, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);//HH
-	Define(pG, pNumPlants, "N FungiAvailable", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "N FungiAvailable", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&NFungiDemand, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "N FungiDemand", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "N FungiDemand", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&PFungiAvail, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "P FungiAvailable", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "P FungiAvailable", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	pG = new G(&PFungiDemand, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "P FungiDemand", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "P FungiDemand", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	;
 	pG = new G(&FungiNorgUptpot, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "Fungi Organic N upt pot", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "Fungi Organic N upt pot", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&FungiNitrateUptpot, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "Fungi Nitrate upt pot", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "Fungi Nitrate upt pot", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&FungiAmmoniumUptpot, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "Fungi Ammonia upt pot", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "Fungi Ammonia upt pot", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	;
 	pG = new G(&FungiPorgUptpot, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "Fungi Organic P upt pot", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "Fungi Organic P upt pot", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	pG = new G(&FungiPhosphateUptpot, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "Fungi Phosphate upt pot", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "Fungi Phosphate upt pot", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	
 	pG = new G(&FungiRootCover, pNumPlants, PLANT, AREA, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "Fungi Root Cover", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "Fungi Root Cover", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&factCNFungi, pNumPlants, PLANT, MYCORRHIZA, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "fact CN Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "fact CN Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&factNSupplyFungi, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "fact Nsupply Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "fact Nsupply Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&factNdemandFungi, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "fact Ndemand Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "fact Ndemand Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&factNavailFungi, pNumPlants, PLANT, NITROGEN, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "fact Navail Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNumPlants, "fact Navail Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	;
 	pG = new G(&factCPFungi, pNumPlants, PLANT, MYCORRHIZA, TRANSPORT, MYCON_NUPTAKE, NORMAL);//HH
-	Define(pG, pNumPlants, "fact CP Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "fact CP Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	pG = new G(&factPSupplyFungi, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "fact Psupply Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "fact Psupply Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	pG = new G(&factPdemandFungi, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "fact Pdemand Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "fact Pdemand Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	pG = new G(&factPavailFungi, pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, MYCON_NUPTAKE, NORMAL);
-	Define(pG, pNumPlants, "fact Pavail Fungi", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
+	Define(pG, pNumPlants, "fact Pavail Fungi", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0|Phosphorus>0");
 	;
 	pG = new G(&RadPlantAdsorbed, pNumPlants, PLANT, RADIATION, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pG, pNumPlants, "Radiation adsorbed", initv, HEATFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >2");
+	Define(pG, pNumPlants, "Radiation adsorbed", initv, UNIT_TYPES::HEATFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >2");
 	;
 
 	pG = new G(&GPP_Driver.Nitrogen, pNumPlants, PLANT, PLANT_STRESS, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
@@ -442,39 +446,39 @@ bool NC_Plant_Functions::Def()
 		string conditions = "";
 		if (jj == _P_) conditions += "|Phosphorus>0";
 		pG = new G(&P_SumPlant[_ROOT_ALL][jj], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL); initv.assign(p_Plant->NumPlants, 0.);//HH
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Roots", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Roots", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pG = new G(&P_SumPlant[_PLANT_WHOLE][jj], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Plant", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Plant", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pG = new G(&P_SumPlant[_LEAF_ALL][jj], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Total Leaf", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Total Leaf", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pG = new G(&P_SumPlant[_ABOVE_GROUND][jj], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Plant AboveG", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Plant AboveG", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pG = new G(&TotalPlantLitterFall[jj], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Plant LitterFall", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Plant LitterFall", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 
 		pGs = new Gs(&P_AllPlants[_ROOT_ALL][jj], PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total Roots", 0.0, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total Roots", 0.0, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pGs = new Gs(&P_AllPlants[_PLANT_WHOLE][jj], PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total Plant", 0.0, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total Plant", 0.0, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pGs = new Gs(&P_AllPlants[_ABOVE_GROUND][jj], PLANT, elements(jj + CARBON), TRANSPORT, LIVING, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total Plant AboveG", 0.0, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total Plant AboveG", 0.0, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pG = new G(&Mobile_Plant_Flux[jj], pNumPlants, PLANT, NITROGEN, TRANSPORT, GROWTH, NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Mobile Plant Flux", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N ReAllocation >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Mobile Plant Flux", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N ReAllocation >0" + conditions);
 		pGs = new Gs(&Mobile_TotPlant_Flux[jj], PLANT, elements(jj + CARBON), TRANSPORT, GROWTH, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Mobile TotPlant Flux", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N ReAllocation >0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Mobile TotPlant Flux", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|N ReAllocation >0" + conditions);
 		if (jj == 0) continue;
 		pG = new G(&UptDeficit_1[jj - 1], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Uptake Deficit 1", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Uptake Deficit 1", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pG = new G(&UptDeficit_2[jj - 1], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "Uptake Deficit 2", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Organic Uptake >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "Uptake Deficit 2", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Organic Uptake >0" + conditions);
 		pG = new G(&UptFungiDeficit_1[jj - 1], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, MYCON_NUPTAKE, NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "UptFungi Deficit 1", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "UptFungi Deficit 1", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0" + conditions);
 		pG = new G(&UptFungiDeficit_2[jj - 1], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, MYCON_NUPTAKE, NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "UptFungi Deficit 2", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Organic Uptake >0|Mycorrhiza Fungal Growth>0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "UptFungi Deficit 2", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Organic Uptake >0|Mycorrhiza Fungal Growth>0" + conditions);
 		pG = new G(&DemandUptake[jj - 1].DemandSoil, pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT,bioprocess( PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "PlantSoilDemand", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "PlantSoilDemand", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pG = new G(&P_Uptake[PLANT_ORG_N][jj - 1], pNumPlants, PLANT, elements(jj + CARBON), TRANSPORT, bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pG, pNumPlants, P_BioElementName[jj] + "PlantOrgUptake", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|OrganicUptake>0" + conditions);
+		Define(pG, pNumPlants, P_BioElementName[jj] + "PlantOrgUptake", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|OrganicUptake>0" + conditions);
 		pGs = new Gs(&C_RatioTotRoots[jj], PLANT, elements(jj + CARBON), TRANSPORT, RATIO, NORMAL);
 		Define(pGs, "C" + P_BioElementName[jj] + "Ratio Total Roots", 0.0, "-", "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 
@@ -489,40 +493,40 @@ bool NC_Plant_Functions::Def()
 
 
 	pG = new G(&CPlantAtm, pNumPlants, PLANT, CARBON, TRANSPORT, RESPIRATION, NORMAL);
-	Define(pG, pNumPlants, "C Plant Resp", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C Plant Resp", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&CPlantAtm_AboveG, pNumPlants, PLANT, CARBON, TRANSPORT, RESPIRATION, NORMAL);
-	Define(pG, pNumPlants, "C Plant Resp AboveG", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C Plant Resp AboveG", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	initv.assign(p_Soil_WaterF->NL, 0.);
 	pG = new G(&CRootsAtmLayer, pNL, TOTPROFILE, CARBON, TRANSPORT, RESPIRATION, NORMAL);
-	Define(pG, pNL, "C RootsAtm Layer", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
+	Define(pG, pNL, "C RootsAtm Layer", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 	pG = new G(&CFungiAtmLayer, pNL, TOTPROFILE, CARBON, TRANSPORT, RESPIRATION, NORMAL);
-	Define(pG, pNL, "C FungiAtm layer", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
+	Define(pG, pNL, "C FungiAtm layer", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0");
 	pG = new G(&CCoarseRootsAtmLayer, pNL, TOTPROFILE, CARBON, TRANSPORT, RESPIRATION, NORMAL);
-	Define(pG, pNL, "C CoarseRootsAtm Layer", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
+	Define(pG, pNL, "C CoarseRootsAtm Layer", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 
 
 
 	initv.assign(p_Plant->NumPlants, 0.);
 	pG = new G(&NPP_Leaf, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C NPP Leaf", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C NPP Leaf", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&NPP_Stem, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C NPP Stem", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C NPP Stem", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&NPP_CoarseRoots, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C NPP CoarseRoot", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C NPP CoarseRoot", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&NPP_Roots, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C NPP Root", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C NPP Root", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&NPP_Plant, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C NPP Plant", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C NPP Plant", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&AccNPP_Leaf, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C AccNPP Leaf", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C AccNPP Leaf", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&AccNPP_Stem, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C AccNPP Stem", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C AccNPP Stem", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&AccNPP_CoarseRoots, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C AccNPP CoarseRoot", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C AccNPP CoarseRoot", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&AccNPP_Roots, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C AccNPP Root", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C AccNPP Root", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pG = new G(&AccNPP_Plant, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "C AccNPP Plant", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "C AccNPP Plant", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	
 	
 	
@@ -533,7 +537,7 @@ bool NC_Plant_Functions::Def()
 	
 	;
 	pG = new G(&Annual_D_CPlant, pNumPlants, PLANT, CARBON, TRANSPORT, GROWTH, NORMAL);
-	Define(pG, pNumPlants, "Annual Change CPlant", initv, MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
+	Define(pG, pNumPlants, "Annual Change CPlant", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >=1|Growth >0");
 	pGs = new Gs(&Tot_Response_N, PLANT, PLANT_STRESS, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pGs, "Total Response N", 0.0, "-", "Nitrogen and Carbon >= 1|Growth >2");
 	pGs = new Gs(&Tot_Response_Temp, PLANT, PLANT_STRESS, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
@@ -547,50 +551,50 @@ bool NC_Plant_Functions::Def()
 		string conditions = "";
 		if (jj == _P_) conditions += "|Phosphorus>0";
 		pGs = new Gs(&TotHarvest[jj], PLANT, elements(jj + CARBON), TRANSPORT, HARVEST, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total Harvest", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total Harvest", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pGs = new Gs(&TotPlantLitter[jj], PLANT, elements(jj + CARBON), TRANSPORT, LITTERFALL, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total PlantLitter", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total PlantLitter", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pGs = new Gs(&TotAbovePlantLitter[jj], PLANT, elements(jj + CARBON), TRANSPORT, LITTERFALL, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total AbovePLitter", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total AbovePLitter", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pGs = new Gs(&TotFungiLitter[jj], PLANT, elements(jj + CARBON), TRANSPORT, LITTERFALL, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total FungiLitter", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total FungiLitter", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0" + conditions);
 		pGs = new Gs(&YearGrainHarvest[jj], PLANT,  elements(jj + CARBON), TRANSPORT, HARVEST, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Grain Latest Harvest", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Grain Latest Harvest", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
 		pGs = new Gs(&YearTotalHarvest[jj], PLANT, elements(jj + CARBON), TRANSPORT, HARVEST, NORMAL);
-		Define(pGs, P_BioElementName[jj] + "Total Latest Harvest", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
+		Define(pGs, P_BioElementName[jj] + "Total Latest Harvest", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
 	}
 	;
 	pGs = new Gs(&C_TotHarvest_1, PLANT, CARBON, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "C Total Harvest_1", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "C Total Harvest_1", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 	pGs = new Gs(&N_TotHarvest_1, PLANT, NITROGEN, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "N Total Harvest_1", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "N Total Harvest_1", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 	pGs = new Gs(&C_TotHarvest_2, PLANT, CARBON, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "C Total Harvest_2", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "C Total Harvest_2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 	pGs = new Gs(&N_TotHarvest_2, PLANT, NITROGEN, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "N Total Harvest_2", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "N Total Harvest_2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 	;
 	pGs = new Gs(&C_Thinning_1, PLANT, CARBON, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "C Total Thinning_1", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "C Total Thinning_1", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 	pGs = new Gs(&N_Thinning_1, PLANT, NITROGEN, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "N Total Thinning_1", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "N Total Thinning_1", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 	pGs = new Gs(&C_Thinning_2, PLANT, CARBON, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "C Total Thinning_2", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "C Total Thinning_2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 	pGs = new Gs(&N_Thinning_2, PLANT, NITROGEN, TRANSPORT, HARVEST, NORMAL);
-	Define(pGs, "N Total Thinning_2", 0.0, MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
+	Define(pGs, "N Total Thinning_2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Terminating Harvest>0|Nitrogen and Carbon >= 1|Growth >0");
 
 	for (size_t jj = 1; jj < NUM_BIOELEM - 1; jj++) {
 		string conditions = "";
 		if (jj == _P_) conditions += "|Phosphorus>0";
 		pGs = new Gs(&DemandFungiUptake[jj - 1].TotalDemand, PLANT, elements(jj + CARBON), TRANSPORT, MYCON_NUPTAKE, NORMAL);
-		Define(pGs, P_BioElementName[jj] + " Total FungiDemand", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0" + conditions);
+		Define(pGs, P_BioElementName[jj] + " Total FungiDemand", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0" + conditions);
 		pGs = new Gs(&Tot_FungiUptake[jj - 1], PLANT, elements(jj + CARBON), TRANSPORT, MYCON_NUPTAKE, NORMAL);
-		Define(pGs, P_BioElementName[jj] + " Total FungiUptake", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0" + conditions);
+		Define(pGs, P_BioElementName[jj] + " Total FungiUptake", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0" + conditions);
 		pGs = new Gs(&Tot_PlantUptake[jj - 1], PLANT, elements(jj + CARBON), TRANSPORT, bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pGs, P_BioElementName[jj] + " Total PlantUptake", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
+		Define(pGs, P_BioElementName[jj] + " Total PlantUptake", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
 		pGs = new Gs(&DemandUptake[jj - 1].TotalDemand, PLANT,  elements(jj + CARBON), TRANSPORT, bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pGs, P_BioElementName[jj] + " Total PlantDemand", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
+		Define(pGs, P_BioElementName[jj] + " Total PlantDemand", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
 		pGs = new Gs(&DemandUptake[jj - 1].TotalDemandSoil, PLANT, elements(jj + CARBON), TRANSPORT,  bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
-		Define(pGs, P_BioElementName[jj] + " Total PlantSoilDem", 0.0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
+		Define(pGs, P_BioElementName[jj] + " Total PlantSoilDem", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + conditions);
 
 
 	}
@@ -602,11 +606,11 @@ bool NC_Plant_Functions::Def()
 	pGs = new Gs(&PCO2_Boundary, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pGs, "PCO2 Canopy", 0.0, "ppm", "Nitrogen and Carbon >= 1|Growth=4");
 	pG = new G(&PRubOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pG, pNumPlants, "P Rubisco", initv, MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
+	Define(pG, pNumPlants, "P Rubisco", initv, UNIT_TYPES::MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
 	pG = new G(&PLightOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pG, pNumPlants, "P Light", initv, MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
+	Define(pG, pNumPlants, "P Light", initv, UNIT_TYPES::MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
 	pG = new G(&PSinkOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pG, pNumPlants, "P Sink", initv, MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
+	Define(pG, pNumPlants, "P Sink", initv, UNIT_TYPES::MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
 	;
 	;
 
@@ -716,7 +720,7 @@ bool NC_Plant_Functions::Def()
 			name = "I " + P_BioElementName[jj] +  P_StateCompName[j];
 			double m_value = max_value[jj]; default_value = 30.; initv.assign(p_Plant->NumPlants, default_value);
 			if (j == _OLD_STEM) m_value *= 20;
-			Define(pP, pNumPlants, name, initv, MASS_UNIT, "Nitrogen and Carbon >= 1" + condition, 0., m_value);
+			Define(pP, pNumPlants, name, initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1" + condition, 0., m_value);
 			mTab_PlantInit[jj].push_back(pP);
 		}
 		pTab = new Tab(&mTab_PlantInit[jj], PLANT, elements(jj + CARBON), TRANSPORT, INITB, NORMAL);
@@ -737,7 +741,7 @@ bool NC_Plant_Functions::Def()
 					m_value *= 10.;
 				}
 				initv.assign(p_Plant->NumPlants, ratio);
-				Define(pP, pNumPlants, name, initv, MASS_UNIT, "Nitrogen and Carbon >= 1" + condition, 0., m_value);
+				Define(pP, pNumPlants, name, initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1" + condition, 0., m_value);
 				mTab_PlantInitRatio[jj - 1].push_back(pP);
 			}
 		}
@@ -778,31 +782,31 @@ bool NC_Plant_Functions::Def()
 
 
 			pP = new P(&P_State_IniValue[_GRAIN][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P Grain", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 50.);
+			Define(pP, pNumPlants, "I P Grain", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 50.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_LEAF][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P Leaf", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 20.);
+			Define(pP, pNumPlants, "I P Leaf", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 20.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_STEM][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P Stem", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 30.);
+			Define(pP, pNumPlants, "I P Stem", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 30.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_ROOT][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P Roots", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 30.);
+			Define(pP, pNumPlants, "I P Roots", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 30.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_OLD_LEAF][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P OldLeaf", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 100.);
+			Define(pP, pNumPlants, "I P OldLeaf", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 100.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_OLD_STEM][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P OldStem", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 500.);
+			Define(pP, pNumPlants, "I P OldStem", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 500.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_OLD_ROOT][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P OldRoots", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 100.);
+			Define(pP, pNumPlants, "I P OldRoots", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 100.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_COARSE_ROOT][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P CRoots", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 30.);
+			Define(pP, pNumPlants, "I P CRoots", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0", 0., 30.);
 			mTab_PlantInitP.push_back(pP);
 			pP = new P(&P_State_IniValue[_OLD_COARSE_ROOT][_P_], pNumPlants, PLANT, PHOSPHORUS, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-			Define(pP, pNumPlants, "I P OldCRoots", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 100.);
+			Define(pP, pNumPlants, "I P OldCRoots", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Perennial Plant >0|Phosphorus>0", 0., 100.);
 			mTab_PlantInitP.push_back(pP);
 
 		pTab = new Tab(&mTab_PlantInitP, PLANT, CARBON, TRANSPORT, INITB, NORMAL);
@@ -957,10 +961,10 @@ bool NC_Plant_Functions::Def()
 	Define(pP, pNumPlants, "Mulch", initv, "-", "Nitrogen and Carbon >= 1", 0.5, 20.);
 	mTab_PlantMan.push_back(pP);
 	pP = new P(&Drip, pNumPlants, PLANT, ORGANIC, IRRIGATION, PLANT_MANAGEMENT, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-	Define(pP, pNumPlants, "Drip", initv, "-", "Nitrogen and Carbon >= 1", 0.5, 20.);
+	Define(pP, pNumPlants, "Drip", initv, "-", "WaterEq = 1|Evaporation Method > 0", 0.5, 20.);
 	mTab_PlantMan.push_back(pP);
 	pTab = new Tab(&mTab_PlantMan, PLANT, NITROGEN, TRANSPORT, PLANT_MANAGEMENT, NORMAL);
-	Define(pTab, "Plant management", "Mulch|Drip", "Nitrogen and Carbon > 0");
+	Define(pTab, "Plant management", "Mulch|Drip", "WaterEq = 1|Evaporation Method > 0");
 	;
 	F* pF;
 	pF = new F(&m_PG_PlantBiomass, PLANT, WATER, FYS_SHAPE, LIVING, NORMAL);
@@ -1031,6 +1035,8 @@ bool NC_Plant_Functions::Def()
 
 	NE *pNUM_StartYears;
 	pNUM_StartYears = new NE(&NUM_DynamicYearStart, 1, 1, 100, 1, 100);
+
+	Define(pNUM_StartYears, "Number of Dynamic StartYears");
 	pP = new P(&m_StartYears, pNUM_StartYears, PLANT, TIME, TRANSPORT, INITB, NORMAL); initv.assign(NUM_DynamicYearStart, 2010.);
 	Define(pP, pNUM_StartYears, "Start Years", initv, "Year", "Nitrogen and Carbon >= 1|Growth>0|StartSeasonTableExist=1", 1., 2500.);
 	mTab_StartYear.push_back(pP);
@@ -1151,7 +1157,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 	Define(pP, pNumPlants, "Emergence Dayno", initv, "#", "Nitrogen and Carbon >= 1|Sowing >0", 0., 365.);
 	mTab_Start.push_back(pP);
 	pP = new P(&C_Seed, pNumPlants, PLANT, CARBON, TRANSPORT, EMERGENCE, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
-	Define(pP, pNumPlants, "C Seed", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Sowing>0", 0.01, 1000.);
+	Define(pP, pNumPlants, "C Seed", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Sowing>0", 0.01, 1000.);
 	mTab_Start.push_back(pP);
 
 	pTab = new Tab(&mTab_Start, PLANT, CARBON, TRANSPORT, EMERGENCE, NORMAL);
@@ -1237,10 +1243,10 @@ bool NC_Plant_Functions::Def_GrowthStages()
 	p_vec.clear();
 
 	pP = new P(&T_Thres_Sowing, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 3.);
-	Define(pP, pNumPlants, "Sow Tth", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
+	Define(pP, pNumPlants, "Sow Tth", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&T_Sum_Sowing, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 30.);
-	Define(pP, pNumPlants, "Sow Tsum", initv, TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 500.);
+	Define(pP, pNumPlants, "Sow Tsum", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 500.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 	
 	pFunc = new Func(PLANT, TIME, NOFPROC, PHENOLOGY, NORMAL);
@@ -1257,14 +1263,14 @@ bool NC_Plant_Functions::Def_GrowthStages()
 
 	
 	pP = new P(&T_Thres_Emerg, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 5.);
-	Define(pP, pNumPlants, "Emerge Tth", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
+	Define(pP, pNumPlants, "Emerge Tth", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&T_Sum_Emerg, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 40.);
-	Define(pP, pNumPlants, "Emerge Tsum", initv, TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 500.);
+	Define(pP, pNumPlants, "Emerge Tsum", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 500.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 
 	pP = new P(&T_Sum_Initial, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-	Define(pP, pNumPlants, "Initial Tsum", initv, TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0., 1500.);
+	Define(pP, pNumPlants, "Initial Tsum", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0., 1500.);
 	mTab_GSI2.push_back(pP); 
 
 
@@ -1296,10 +1302,10 @@ bool NC_Plant_Functions::Def_GrowthStages()
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 	
 	pP = new P(&GrainSI_StepTemp, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 0.2);
-	Define(pP, pNumPlants, "Grain StepTemp", initv, "/" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2|Grain Development >0", 0.01, 10.);
+	Define(pP, pNumPlants, "Grain StepTemp", initv, UNIT_TYPES::INVERSE_TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2|Grain Development >0", 0.01, 10.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&GrainSI_ThresTemp, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 10.);
-	Define(pP, pNumPlants, "Grain ThTemp", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2|Grain Development >0", 0.1, 10.);
+	Define(pP, pNumPlants, "Grain ThTemp", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2|Grain Development >0", 0.1, 10.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 
 	pFunc = new Func(PLANT, TIME, NOFPROC, PHENOLOGY, NORMAL);
@@ -1322,10 +1328,10 @@ bool NC_Plant_Functions::Def_GrowthStages()
 
 	plotpar.X2_Vec = { };
 	pP = new P(&T_Thres_GrainFill, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 5.);
-	Define(pP, pNumPlants, "Mature Tth", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
+	Define(pP, pNumPlants, "Mature Tth", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&T_Sum_GrainFill, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 450.);
-	Define(pP, pNumPlants, "Mature Tsum", initv, TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 5000.);
+	Define(pP, pNumPlants, "Mature Tsum", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 5000.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 
 	pFunc = new Func(PLANT, TIME, NOFPROC, PHENOLOGY, NORMAL);
@@ -1339,10 +1345,10 @@ bool NC_Plant_Functions::Def_GrowthStages()
 
 	plotpar.X2_Vec = { };
 	pP = new P(&T_Thres_Ripening, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 5.);
-	Define(pP, pNumPlants, "Ripening Tth", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
+	Define(pP, pNumPlants, "Ripening Tth", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&T_Sum_Ripening, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 450.);
-	Define(pP, pNumPlants, "Ripening Tsum", initv, TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 5000.);
+	Define(pP, pNumPlants, "Ripening Tsum", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 5000.);
 	mTab_GSI2.push_back(pP); p_vec.push_back(pP);
 
 	pFunc = new Func(PLANT, TIME, NOFPROC, PHENOLOGY, NORMAL);
@@ -1353,7 +1359,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 
 
 	pP = new P(&T_Thres_Dormancy, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 5.);
-	Define(pP, pNumPlants, "Dormancy Tth", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
+	Define(pP, pNumPlants, "Dormancy Tth", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 2", 0.1, 15.);
 	mTab_GSI2.push_back(pP);
 	pTab = new Tab(&mTab_GSI2, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL);
 	Define(pTab, "Growth stage", "Sow Tsum|Sow Tth|Emerge Tsum|Emerge Tth|Grain Step|Grain StepDay|Grain ThDay|Grain StepTemp|Grain ThTemp|Mature Tsum|Mature Tth|Ripe Tsum|Ripe Tth|Dormancy Tth", "Nitrogen and Carbon > 0|Growth > 1");
@@ -1411,7 +1417,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	Define(pP, pNumPlants, "Up End", initv, "#", "Nitrogen and Carbon >= 1|Growth =1");
 	mTab_Nup.push_back(pP);
 	pP = new P(&UptakeACoef, pNumPlants, PLANT, ORGANIC, TRANSPORT, PLANT_NUPTAKE, NORMAL); p_vec.push_back(pP); initv.assign(p_Plant->NumPlants, 20.);
-	Define(pP, pNumPlants, "UpA Coef", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Growth =1");
+	Define(pP, pNumPlants, "UpA Coef", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Growth =1");
 	mTab_Nup.push_back(pP);
 	pP = new P(&UptakeBCoef, pNumPlants, PLANT, ORGANIC, TRANSPORT, PLANT_NUPTAKE, NORMAL);  p_vec.push_back(pP); initv.assign(p_Plant->NumPlants, 1.);
 	Define(pP, pNumPlants, "UpB Coef", initv, "-", "Nitrogen and Carbon >= 1|Growth =1");
@@ -1493,19 +1499,19 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 
 	pP = new P(&TempResMin, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 5.);
 	p_vec.push_back(pP);
-	Define(pP, pNumPlants, "T LMin", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", -10., 10.);
+	Define(pP, pNumPlants, "T LMin", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", -10., 10.);
 	mTab_Photo.push_back(pP);
 	pP = new P(&TempResOpt1, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 15.);
 	p_vec.push_back(pP);
-	Define(pP, pNumPlants, "T LOpt1", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", 3., 30.);
+	Define(pP, pNumPlants, "T LOpt1", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", 3., 30.);
 	mTab_Photo.push_back(pP);
 	pP = new P(&TempResOpt2, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 25.);
 	p_vec.push_back(pP);
-	Define(pP, pNumPlants, "T LOpt2", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", 5., 50.);
+	Define(pP, pNumPlants, "T LOpt2", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", 5., 50.);
 	mTab_Photo.push_back(pP);
 	pP = new P(&TempResMax, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 35.);
 	p_vec.push_back(pP);
-	Define(pP, pNumPlants, "T LMax", initv, TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", 20., 60.);
+	Define(pP, pNumPlants, "T LMax", initv, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3", 20., 60.);
 	mTab_Photo.push_back(pP);
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, PHOTOSYNTHESIS, NORMAL);
@@ -1541,7 +1547,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	p_vec.clear();
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 500;
-	plotpar.X_Label = "Air Temperature Sum ";  plotpar.X_Label += p_ModelInfo->GetUnitString(TEMPSUM_UNIT, true);
+	plotpar.X_Label = "Air Temperature Sum ";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMPSUM_UNIT, true);
 	plotpar.Y_Label = "Response (-)";
 
 
@@ -1550,7 +1556,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	mTab_Photo.push_back(pP);
 	p_vec.push_back(pP);
 	pP = new P(&TempSumResponseOpt, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 200.);
-	Define(pP, pNumPlants, "T Sum Opt", initv, TEMP_UNIT + "day", "Nitrogen and Carbon >= 1|Growth >= 3|Green Index Forcing=0", 0., 500.);
+	Define(pP, pNumPlants, "T Sum Opt", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Growth >= 3|Green Index Forcing=0", 0., 500.);
 	mTab_Photo.push_back(pP);
 	p_vec.push_back(pP);
 	
@@ -1583,8 +1589,8 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 1.E7;
 	plotpar.X_ScalingCoef = -6;
-	plotpar.Y_Label = "Photosynthesis Rate ";   plotpar.Y_Label += p_ModelInfo->GetUnitString(CARBON_MASSFLOW_UNIT);
-	plotpar.X_Label = "Adsorbed Global Radiation "; plotpar.X_Label += p_ModelInfo->GetUnitString(MEGA_HEATFLOW_UNIT);
+	plotpar.Y_Label = "Photosynthesis Rate ";   plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::CARBON_MASSFLOW_UNIT);
+	plotpar.X_Label = "Adsorbed Global Radiation "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MEGA_HEATFLOW_UNIT);
 
 
 
@@ -1650,7 +1656,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	pPs = new Ps(&P_Surface, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pPs, "P_Surface", 1.E5, "Pa", "Nitrogen and Carbon >=1 |Growth>3", 0.9E5, 1.2E5);
 	pPs = new Ps(&CO2_A, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pPs, "CO2_A", 354, "ppm", "Nitrogen and Carbon >= 1|Growth>3", 0., 1.E-1);
+	Define(pPs, "CO2_A", 354, "ppm", "Nitrogen and Carbon >= 1|Growth>3", 0., 1000.);
 	;
 	pP = new P(&C3Type, pNumPlants, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
 	Define(pP, pNumPlants, "C3Type", initv, "-", "Nitrogen and Carbon >= 1|Growth>3", 0., 1.);
@@ -1740,12 +1746,12 @@ bool NC_Plant_Functions::Def_Allocation() {
 
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 300;
-	plotpar.X_Label = "Leaf ";	plotpar.X_Label += p_ModelInfo->GetUnitString(CARBON_MASS_UNIT, true);
-	plotpar.Y_Label = "Degree of Allocation ";	plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Leaf ";	plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::CARBON_MASS_UNIT, true);
+	plotpar.Y_Label = "Degree of Allocation ";	plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 
 	pP = new P(&AlloLeaf2, pNumPlants, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL); initv.assign(p_Plant->NumPlants, -0.0001);
-	Define(pP, pNumPlants, "Leaf c2", initv, INVERSE_MASS_UNIT, "Nitrogen and Carbon >= 1|Leaf Allocation shoot = 1", -.005, .1);
+	Define(pP, pNumPlants, "Leaf c2", initv, UNIT_TYPES::INVERSE_MASS_UNIT, "Nitrogen and Carbon >= 1|Leaf Allocation shoot = 1", -.005, .1);
 	functorprop.Arg = MyArgType::T_D1;
 	mTab_Allo.push_back(pP);
 	p_vec.push_back(pP);
@@ -1777,7 +1783,7 @@ bool NC_Plant_Functions::Def_Allocation() {
 	functorprop.FuncName = MyFunc::ALLO_ROOT_WATER_LINEAR;
 	funcname = "Allocation to Root Water Linear Function";
 	plotpar.X_Max = 1;
-	plotpar.X_Label = "Degree of Potential Water Uptake ";	plotpar.X_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Degree of Potential Water Uptake ";	plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	pP = new P(&AlloRootWater2, pNumPlants, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL); initv.assign(p_Plant->NumPlants, -.1);
 	Define(pP, pNumPlants, "Root Water c2", initv, "-", "Nitrogen and Carbon >= 1|Root Allocation water > 0", -.5, .5);
 	mTab_Allo.push_back(pP);
@@ -1801,7 +1807,7 @@ bool NC_Plant_Functions::Def_Allocation() {
 	functorprop.FuncName = MyFunc::ALLO_ROOT_NITROGEN_FIXED; functorprop.Arg = MyArgType::T_D1;
 	funcname = "Allocation to Root CN Leaf fixed Function";
 	p_vec.clear();
-	plotpar.X_Label = "Degree of Potential Nitrogen Response ";	plotpar.X_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Degree of Potential Nitrogen Response ";	plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 
 	pP = new P(&AlloRoot_CN1, pNumPlants, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL); initv.assign(p_Plant->NumPlants, 0.2);
@@ -1838,7 +1844,7 @@ bool NC_Plant_Functions::Def_Allocation() {
 	p_vec.clear();
 	functorprop.FuncName = MyFunc::ALLO_ROOT_NITROGEN_FIXED; functorprop.Arg = MyArgType::T_D1;
 	p_vec.clear();
-	plotpar.X_Label = "Degree of Potential Phosphorus Response ";	plotpar.X_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Degree of Potential Phosphorus Response ";	plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 
 	pP = new P(&AlloRoot_CP1, pNumPlants, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL); initv.assign(p_Plant->NumPlants, 0.2);
@@ -1876,7 +1882,7 @@ bool NC_Plant_Functions::Def_Allocation() {
 	funcname = "Allocation to Root Above Ground Mass Function";
 	p_vec.clear();
 
-	plotpar.X_Label = "Above Ground Biomass ";	plotpar.X_Label += p_ModelInfo->GetUnitString(CARBON_MASS_UNIT, true);
+	plotpar.X_Label = "Above Ground Biomass ";	plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::CARBON_MASS_UNIT, true);
 	plotpar.X_Max = 300;
 
 
@@ -1891,7 +1897,7 @@ bool NC_Plant_Functions::Def_Allocation() {
 	functorprop.FuncName = MyFunc::ALLO_ROOT_MASS_LINEAR;
 	funcname = "Allocation to Root Above Ground Mass linear Function";
 	pP = new P(&AlloRootTotMass2, pNumPlants, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL); initv.assign(p_Plant->NumPlants, 0.002);
-	Define(pP, pNumPlants, "Root Mass c2", initv, INVERSE_MASS_UNIT, "Nitrogen and Carbon >= 1|Root Allocation mass >0", -.5, 1.);
+	Define(pP, pNumPlants, "Root Mass c2", initv, UNIT_TYPES::INVERSE_MASS_UNIT, "Nitrogen and Carbon >= 1|Root Allocation mass >0", -.5, 1.);
 	mTab_Allo.push_back(pP);
 	p_vec.push_back(pP);
 	pFunc = new Func(PLANT, CARBON, NOFPROC, REALLOCATION, NORMAL);
@@ -1900,7 +1906,7 @@ bool NC_Plant_Functions::Def_Allocation() {
 	functorprop.FuncName = MyFunc::ALLO_ROOT_MASS_EXP;
 	funcname = "Allocation to Root Above Ground Exp Function";
 	pP = new P(&AlloRootTotMass3, pNumPlants, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL); initv.assign(p_Plant->NumPlants, -0.002);
-	Define(pP, pNumPlants, "Root Mass c3", initv, INVERSE_MASS_UNIT, "Nitrogen and Carbon >= 1|Root Allocation mass >1", -10., 0.);
+	Define(pP, pNumPlants, "Root Mass c3", initv, UNIT_TYPES::INVERSE_MASS_UNIT, "Nitrogen and Carbon >= 1|Root Allocation mass >1", -10., 0.);
 	mTab_Allo.push_back(pP);
 	p_vec.push_back(pP);
 	pFunc = new Func(PLANT, CARBON, NOFPROC, REALLOCATION, NORMAL);
@@ -1912,8 +1918,8 @@ bool NC_Plant_Functions::Def_Allocation() {
 
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 3;
-	plotpar.X_Label = "NewMobile ";	plotpar.X_Label += p_ModelInfo->GetUnitString(MASS_UNIT, true);
-	plotpar.Y_Label = "Total Allocation to Growth ";	plotpar.Y_Label += p_ModelInfo->GetUnitString(MASSFLOW_UNIT, true);
+	plotpar.X_Label = "NewMobile ";	plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MASS_UNIT, true);
+	plotpar.Y_Label = "Total Allocation to Growth ";	plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MASSFLOW_UNIT, true);
 
 	;
 	pP = new P(&AlloRateCoef, pNumPlants, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
@@ -1965,13 +1971,13 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "LeafRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.7); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Leaf_LitterTsum1, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
-	Define(pP, pNumPlants, "LeafTsum1", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "LeafTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Leaf_LitterTsum2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1400.);
-	Define(pP, pNumPlants, "LeafTsum2", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 10., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "LeafTsum2", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 10., 3000.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Dorm_FinalDayNo, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 320.);
-	Define(pP, pNumPlants, "Dorm_FinalDayNo", initv, "#" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 100., 366.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "Dorm_FinalDayNo", initv,UNIT_TYPES::DAYOFYEAR_UNIT , "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 100., 366.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
@@ -1989,10 +1995,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "StemRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.7); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Stem_LitterTsum1, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
-	Define(pP, pNumPlants, "StemTsum1", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 10000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "StemTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 10000.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Stem_LitterTsum2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1400.);
-	Define(pP, pNumPlants, "StemTsum2", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 10000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "StemTsum2", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 10000.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
@@ -2012,14 +2018,14 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "GrainRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 0., 0.7); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Grain_LitterTsum1, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
-	Define(pP, pNumPlants, "GrainTsum1", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 0., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "GrainTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 0., 3000.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Grain_LitterTsum2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1400.);
-	Define(pP, pNumPlants, "GrainTsum2", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 10., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "GrainTsum2", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 10., 3000.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 
 	pP = new P(&AboveGroundLitterFall_Position4Target, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-	Define(pP, pNumPlants, "Position4Target", initv, LENGTH_UNIT, "Nitrogen and Carbon >= 1", -10, 0.01);
+	Define(pP, pNumPlants, "Position4Target", initv, UNIT_TYPES::LENGTH_UNIT, "Nitrogen and Carbon >= 1", -10, 0.01);
 	mTab_LitterA.push_back(pP);
 
 
@@ -2057,10 +2063,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "RootRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.5); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&Root_LitterTsum1, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
-	Define(pP, pNumPlants, "RootTsum1", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "RootTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&Root_LitterTsum2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1400.);
-	Define(pP, pNumPlants, "RootTsum2", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 10., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "RootTsum2", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 10., 3000.); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -2083,10 +2089,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "CoarseRootRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.5); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&CoarseRoot_LitterTsum1, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
-	Define(pP, pNumPlants, "CoarseRootTsum1", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "CoarseRootTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&CoarseRoot_LitterTsum2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1400.);
-	Define(pP, pNumPlants, "CoarseRootTsum2", initv, "day" + TEMP_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 10., 3000.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "CoarseRootTsum2", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 10., 3000.); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&CoarseRoot_FracLitter2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 0.1);
 	Define(pP, pNumPlants, "CoarseRoot_LF2", initv, "-", "Nitrogen and Carbon >= 1|LitterPools >0", 0., 1.0);
@@ -2364,16 +2370,16 @@ bool NC_Plant_Functions::Def_Respiration() {
 	pPs = new Ps(&RespTemQ10, PLANT, CARBON, TRANSPORT, RESPIRATION, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "RespTemQ10", 2., "-", "Nitrogen and Carbon > 0|Resp Temp Response < 3|Resp Temp Response > 0", 0.0, 5., 0.5, 4.);
 	pPs = new Ps(&RespTemQ10Bas, PLANT, CARBON, TRANSPORT, RESPIRATION, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "RespTemQ10Bas", 20., TEMP_UNIT, "Nitrogen and Carbon > 0|Resp Temp Response < 3|Resp Temp Response > 0", 0.0001, 100., 10., 30.);
+	Define(pPs, "RespTemQ10Bas", 20., UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Resp Temp Response < 3|Resp Temp Response > 0", 0.0001, 100., 10., 30.);
 	pFunc = new Func(PLANT, CARBON, NOFPROC, RESPIRATION, NORMAL);
 
 	Define(pFunc, functorprop, funcname, ps_vec);
 
 	functorprop.FuncName = MyFunc::PLANTRESP_Q10THRESHOLD_RESPONSE; functorprop.Arg = MyArgType::T_D1;
 
-	funcname = "Plant Respiration Temp Response";
+	funcname = "Plant Respiration Temp Response - with threshold";
 	pPs = new Ps(&RespTemQ10Threshold, PLANT, CARBON, TRANSPORT, RESPIRATION, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "RespTemQ10Threshold", 5., TEMP_UNIT, "Nitrogen and Carbon > 0|Resp Temp Response = 2", 0.0001, 20., 2., 10.);
+	Define(pPs, "RespTemQ10Threshold", 5., UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Resp Temp Response = 2", 0.0001, 20., 2., 10.);
 	
 	pFunc = new Func(PLANT, CARBON, NOFPROC, RESPIRATION, NORMAL);
 
@@ -2436,9 +2442,7 @@ bool NC_Plant_Functions::Def_Fungi() {
 	mTab_FungiGrowth.push_back(pP);
 
 
-	functorprop.FuncName = MyFunc::FUNGI_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D4;
-	funcname = "Fungi LitterFall Static";
-	p_vec.clear();
+
 	pP = new P(&Fungi_LitterRateC1, pNumPlants, MYCON, ORGANIC, TRANSPORT, MYCON_NUPTAKE, NORMAL); initv.assign(p_Plant->NumPlants, 0.004);
 	Define(pP, pNumPlants, "FungiRate1", initv, "-", "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth=1", 0., .1); p_vec.push_back(pP);
 	mTab_FungiGrowth.push_back(pP);
@@ -2448,9 +2452,6 @@ bool NC_Plant_Functions::Def_Fungi() {
 	p_vec.push_back(m_pModelMap->GetPPointer("RootTsum1"));
 	p_vec.push_back(m_pModelMap->GetPPointer("RootTsum2"));
 	p_vec.push_back(m_pModelMap->GetPPointer("Dorm_FinalDayNo"));
-	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
-
 
 	pP = new P(&AreaCoverFungiCoef, pNumPlants, MYCON, ORGANIC, TRANSPORT, MYCON_NUPTAKE, NORMAL); initv.assign(p_Plant->NumPlants, 0.5);
 	Define(pP, pNumPlants, "Myco Degree Fungi Coef", initv, "-", "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0", 0.1, 1.);
@@ -2559,17 +2560,17 @@ void NC_Plant_Functions::Def_Grazing() {
 
 	Xs *pXs;
 	pXs = new Xs(&C_GrazingOrganism, PLANT, NITROGEN, STORAGE, LIVING, NORMAL);
-	Define(pXs, "C GrazingOrganism", 0., MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pXs, "C GrazingOrganism", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pXs = new Xs(&N_GrazingOrganism, PLANT, NITROGEN, STORAGE, LIVING, NORMAL);
-	Define(pXs, "N GrazingOrganism", 0., MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pXs, "N GrazingOrganism", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 
 	vector<double> initv;
 	P *pP = new P(&StubbleLeaf, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL); initv.assign(pNumPlants->GetNEValue(), 15.);
-	Define(pP, pNumPlants, "Stubble Leaf", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=3", 0., 100.);
+	Define(pP, pNumPlants, "Stubble Leaf", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=3", 0., 100.);
 	mTab_Graz.push_back(pP);
 	pP = new P(&StubbleStem, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL); initv.assign(pNumPlants->GetNEValue(), 25.);
-	Define(pP, pNumPlants, "Stubble Stem", initv, MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=3", 0., 500.);
+	Define(pP, pNumPlants, "Stubble Stem", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=3", 0., 500.);
 	mTab_Graz.push_back(pP);
 
 
@@ -2577,9 +2578,9 @@ void NC_Plant_Functions::Def_Grazing() {
 
 
 
-	//Define(pP, pNumPlants,  GrazingOfftake	,"Offtake", 75.	,p_Plant->NumPlants,MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>1",0.,500.)	;
+	//Define(pP, pNumPlants,  GrazingOfftake	,"Offtake", 75.	,p_Plant->NumPlants, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>1",0.,500.)	;
 	Ps *pPs = new Ps(&Pot_C_GrazingRate, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pPs, "Pot C GrazingRate", .5 , MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing==1", 0.001, 50., .01, 1.);
+	Define(pPs, "Pot C GrazingRate", .5 ,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing==1", 0.001, 50., .01, 1.);
 
 	pPs = new Ps(&Max_AvailGrazingFraction, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
 	Define(pPs, "Max Avail Grazing Fraction", .5, "-", "Nitrogen and Carbon >= 1|Grazing>=1", 0.001, 1., .1, .8);
@@ -2590,7 +2591,7 @@ void NC_Plant_Functions::Def_Grazing() {
 
 
 	pPs = new Ps(&GrazingOfftake, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pPs, "Offtake", 75., MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>=13", 0.001, 500.);
+	Define(pPs, "Offtake", 75.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>=13", 0.001, 500.);
 
 
 
@@ -2631,54 +2632,54 @@ void NC_Plant_Functions::Def_Grazing() {
 
 	
 	pTs = new Ts(&C_GrazingRate, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "C Grazing Rate", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "C Grazing Rate", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pTs = new Ts(&N_GrazingRate, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "N Grazing Rate", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "N Grazing Rate", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	
 	pTs = new Ts(&GrazingRespiration, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "Grazing Respiration", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "Grazing Respiration", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 	pTs = new Ts(&C_GrazingGrowth, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "C Grazing Growth", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "C Grazing Growth", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pTs = new Ts(&N_GrazingGrowth, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "N Grazing Growth", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "N Grazing Growth", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	
 	pTs = new Ts(&C_GrazingExport, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "C Grazing Export", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "C Grazing Export", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pTs = new Ts(&C_GrazingMethaneEmission, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "C Grazing Methane emission", .0, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "C Grazing Methane emission", .0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 
 	pTs = new Ts(&N_GrazingExport, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "N Grazing Export", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "N Grazing Export", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 	pTs = new Ts(&C_GrazingManure, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "C Grazing Manure", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "C Grazing Manure", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pTs = new Ts(&N_GrazingManure, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "N Grazing Manure", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "N Grazing Manure", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 	pTs = new Ts(&N_GrazingFaeces, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "N Grazing Faeces", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "N Grazing Faeces", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pTs = new Ts(&N_GrazingAmmonia, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "N Grazing Ammonia", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "N Grazing Ammonia", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pTs = new Ts(&N_GrazingAmmonium, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pTs, "N Grazing Ammonium", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pTs, "N Grazing Ammonium", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 	T  *pT;
 	pT = new T(&CLeafGrazing, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
 	initv.assign(pNumPlants->GetNEValue(), 0.);
-	Define(pT, pNumPlants, "C LeafGrazing Rate",initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pT, pNumPlants, "C LeafGrazing Rate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pT = new T(&CStemGrazing, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pT, pNumPlants, "C StemGrazing Rate", initv,  MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pT, pNumPlants, "C StemGrazing Rate", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pT = new T(&COldLeafGrazing, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pT, pNumPlants, "C OldLeafGrazing Rate", initv,  MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pT, pNumPlants, "C OldLeafGrazing Rate", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 	pT = new T(&NLeafGrazing, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pT, pNumPlants, "N LeafGrazing Rate", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pT, pNumPlants, "N LeafGrazing Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pT = new T(&NStemGrazing, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pT, pNumPlants, "N StemGrazing Rate", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pT, pNumPlants, "N StemGrazing Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 	pT = new T(&NOldLeafGrazing, pNumPlants, PLANT, ORGANIC, TRANSPORT, GRAZING, NORMAL);
-	Define(pT, pNumPlants, "N OldLeafGrazing Rate", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
+	Define(pT, pNumPlants, "N OldLeafGrazing Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Grazing>0");
 
 
 
@@ -2696,22 +2697,22 @@ void NC_Plant_Functions::Def_WoodEating() {
 	
 	Xs *pXs;
 	pXs = new Xs(&C_WoodEater, PLANT, NITROGEN, STORAGE, WOODEATING, NORMAL);
-	Define(pXs, "C Wood Eater", 0., MASS_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pXs, "C Wood Eater", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 	pXs = new Xs(&N_WoodEater, PLANT, NITROGEN, STORAGE, WOODEATING, NORMAL);
-	Define(pXs, "N Wood Eater", 0., MASS_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pXs, "N Wood Eater", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 
 
 	Ps *pPs;
 	pPs = new Ps(&WoodEaterRateCoef, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pPs, "Max Wood Eater Rate Coef", .001, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 0.01, 1.E-5, 1.E-3);
+	Define(pPs, "Max Wood Eater Rate Coef", .001,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 0.01, 1.E-5, 1.E-3);
 	pPs = new Ps(&WoodEatingStartAge, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pPs, "Wood Eating Start Age", 40., YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 5., 100.);
+	Define(pPs, "Wood Eating Start Age", 40., UNIT_TYPES::YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 5., 100.);
 	pPs = new Ps(&WoodEatingStartPeriod, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pPs, "Wood Eating Start Period", 2., YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 1., 10.);
+	Define(pPs, "Wood Eating Start Period", 2., UNIT_TYPES::YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 1., 10.);
 	pPs = new Ps(&WoodEatingOptPeriod, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pPs, "Wood Eating Opt Period", 2., YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 1., 10.);
+	Define(pPs, "Wood Eating Opt Period", 2., UNIT_TYPES::YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 1., 10.);
 	pPs = new Ps(&WoodEatingEndPeriod, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pPs, "Wood Eating End Period", 2., YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 1., 10.);
+	Define(pPs, "Wood Eating End Period", 2., UNIT_TYPES::YEAR_AGE_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0", 0.0, 1000., 1., 10.);
 
 
 	pPs = new Ps(&WoodEaterEfficiency, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
@@ -2730,31 +2731,31 @@ void NC_Plant_Functions::Def_WoodEating() {
 
 	Ts  *pTs;
 	pTs = new Ts(&C_WoodEatingRate, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pTs, "C Wood Eating Rate", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pTs, "C Wood Eating Rate", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 	pTs = new Ts(&N_WoodEatingRate, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pTs, "N Wood Eating Rate", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1||Wood Eating>0");
+	Define(pTs, "N Wood Eating Rate", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1||Wood Eating>0");
 
 	pTs = new Ts(&WoodEatingRespiration, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pTs, "Wood Eating Respiration", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pTs, "Wood Eating Respiration", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 
 	pTs = new Ts(&C_WoodEaterFaecesFlux, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pTs, "C_Wood Eater Faeces Flux", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pTs, "C_Wood Eater Faeces Flux", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 	
 	pTs = new Ts(&N_WoodEaterFaecesFlux, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pTs, "N_Wood Eater Faeces Flux", .4, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pTs, "N_Wood Eater Faeces Flux", .4,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 
 	T  *pT;
 	vector<double> initv;
 	initv.assign(pNumPlants->GetNEValue(), 0.);
 	pT = new T(&COldStemEating, pNumPlants, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pT, pNumPlants, "C OldStemEating Rate", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pT, pNumPlants, "C OldStemEating Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 	pT = new T(&COldCoarseRootEating, pNumPlants, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pT, pNumPlants, "C OldCoarseRootEating", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pT, pNumPlants, "C OldCoarseRootEating", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 	
 	pT = new T(&NOldStemEating, pNumPlants, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pT, pNumPlants, "N OldStemEating Rate", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pT, pNumPlants, "N OldStemEating Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 	pT = new T(&NOldCoarseRootEating, pNumPlants, PLANT, ORGANIC, TRANSPORT, WOODEATING, NORMAL);
-	Define(pT, pNumPlants, "N OldCoarseRootEating", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
+	Define(pT, pNumPlants, "N OldCoarseRootEating", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Wood Eating>0");
 }
 
 void NC_Plant_Functions::Def_NFixation()
@@ -2795,10 +2796,10 @@ void NC_Plant_Functions::Def_NFixation()
 	p_vec.clear();
 
 	pP = new P(&SpecificMaxNFixation, pNumPlants, PLANT, ORGANIC, TRANSPORT, NFIXATION, NORMAL); initv.assign(p_Plant->NumPlants, 73.E-3);
-	Define(pP, pNumPlants, "Specific Max Fixation", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|N fixation>1", 0., 500.);
+	Define(pP, pNumPlants, "Specific Max Fixation", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|N fixation>1", 0., 500.);
 	mTab_NFix.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&SpecificMinNFixation, pNumPlants, PLANT, ORGANIC, TRANSPORT, NFIXATION, NORMAL); initv.assign(p_Plant->NumPlants, 17E-3);
-	Define(pP, pNumPlants, "Specific Min Fixation", initv, MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|N fixation>1", 0., 500.);
+	Define(pP, pNumPlants, "Specific Min Fixation", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|N fixation>1", 0., 500.);
 	mTab_NFix.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&NFixationSensitivity, pNumPlants, PLANT, ORGANIC, TRANSPORT, NFIXATION, NORMAL); initv.assign(p_Plant->NumPlants, -.8);
 	Define(pP, pNumPlants, "Specific N sensivity", initv, "-", "Nitrogen and Carbon >= 1|N fixation>1", -100., 0.);
@@ -3398,15 +3399,10 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 		TPCorr=TP_Corr();	//   	Korrektion av fryspunkten beroende av förhållandet mellan aktuellt och normalt lufttryck
 		co2cap=CasCo2cap(pPlant->MC_DisplVar[index], TPCorr, NDrivTAir);		// mol air / m2
 		RespSoil=pNCSoil->CTotSoilRespRate/Fix::MOL_C/86400;		// konvertering till mol/m2/s
-		RootMRespiration=0.;
-		RespMPlant = 0.;
-		/*
-		for(size_t layer=0; layer<pPlant->Num_NUptMax; layer++)
-			RootMRespiration+=RootM_RespirationLayer(layer, index)+OldRootsRespirationLayer(layer, index);
-		
 
-			RespMPlant=(LeafM_Respiration(index)+StemM_Respiration(index)+OldLeafM_Respiration(index)+ 
-				OldStemM_Respiration(index)+GrainRespiration(index)+RootMRespiration)/Fix::MOL_C/86400;*/
+		RootMRespiration = P_Respiration[_ROOT][index] + P_Respiration[_OLD_ROOT][index];
+		RespMPlant = (P_Respiration[_LEAF][index] + P_Respiration[_STEM][index] + P_Respiration[_OLD_LEAF][index] +
+			P_Respiration[_OLD_LEAF][index] + P_Respiration[_GRAIN][index] + RootMRespiration) / Fix::MOL_C / 86400;
 		
 		GBoundary[index]=GBoundaryFunc(RBoundary[index], TPCorr, pAtm->MC_TempCanopy[index]);
 		GStomata[index]=GStomataFunc(pPlant->MC_ResSurfVar[index], TPCorr, pAtm->MC_TempCanopy[index], GPP_Current.Water[index]);
@@ -3435,7 +3431,7 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 			 P_Sink1=P_SinkLimitedC4(Vmax[index]);
 		
 
-		PCO2A		 = CO2_A * P_Surface;
+		PCO2A		 = CO2_A * P_Surface*1.E-6;
 		FarqRange[index]    = PCO2A  - Gammas[index];
 		ICConv[index] = 0;
 
@@ -3489,13 +3485,18 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 		PCo2I[index] = PCo2y[index][ICConv[index]]+out.Net*P_Surface/(4000*Vmax[index]); // + AssimNY(index, Icconv[index])/(4000*Vmax)*P_surface		
 		PCo2s[index] = PCo2I[index] + out.Net*P_Surface*1.6/GStomata[index];
 
-        Co2b    = pCo2Bp / P_Surface;	// The real C_B forecast with the iterated fluxes.   
-       
-        Co2b	= (Co2b + (RespSoil+RespMPlant-out.Net+CO2_A*GAir[index])*(T_Step*86400/co2cap)) / (1+T_Step*86400/co2cap*GAir[index]);
-		//Denna ekvation är en omskrivning av: cb = cbp + (resp-bruttofoto+ga*(ca-cb))*(tid/kapacitet)
-		//där kvoten tid/kapacitet omvandlar från flöde till mängd
+	
+		if (CanopyCO2_Storage==1) {
+			Co2b = pCo2Bp / P_Surface;	// The real C_B forecast with the iterated fluxes.   
 
-        pCo2Bp	= Co2b * P_Surface;		// go back from molC / mol air to Pascals. Denna används i nästa tidssteg
+			Co2b = (Co2b + (RespSoil + RespMPlant - out.Net + CO2_A * GAir[index] * 1.E-6) * (T_Step * 86400 / co2cap)) / (1 + T_Step * 86400 / co2cap * GAir[index]);
+			//Denna ekvation är en omskrivning av: cb = cbp + (resp-bruttofoto+ga*(ca-cb))*(tid/kapacitet)
+			//där kvoten tid/kapacitet omvandlar från flöde till mängd
+
+			pCo2Bp = Co2b * P_Surface;		// go back from molC / mol air to Pascals. Denna används i nästa tidssteg
+		}
+		else
+			pCo2Bp = CO2_A * P_Surface*1.E-6;
 
 		// Outputs
         Cflux[index]	= GAir[index]/1.4*(Co2b-CO2_A);		// carbon flux between CAS and reference level
@@ -3526,8 +3527,9 @@ double NC_Plant_Functions::StomataCO2Func(double PCO2A, double pCo2Bp, double As
 
 	CO2_B	= pCo2Bp/	P_Surface;	//CO2B is given the value calc in the previous timestep	
 	CO2_A	= PCO2A/	P_Surface;
-   
+   if(CanopyCO2_Storage==1)
 	CO2_B	= (CO2_B+(RespSoil+RespMPlant-Assim+CO2_A*GA)*(T_Step*86400/co2cap))/(1+T_Step*86000/co2cap*GA) ;
+
 	//Sedan beräknas co2A på nytt
 
 	P_CO2_B	= CO2_B * P_Surface;

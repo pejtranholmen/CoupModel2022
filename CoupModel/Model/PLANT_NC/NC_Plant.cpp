@@ -497,7 +497,6 @@ bool NC_Plant::Ini()	{
 			Vmax.resize(pPlant->NumPlants);
 			Jmax.resize(pPlant->NumPlants);
 			PCo2s.resize(pPlant->NumPlants);
-			PCO2B.resize(pPlant->NumPlants);
 			ASSIMNY.resize(pPlant->NumPlants);
 			ASSIMY.resize(pPlant->NumPlants);
 			PCo2I.resize(pPlant->NumPlants);
@@ -532,7 +531,8 @@ bool NC_Plant::Ini()	{
 		GPP_Current.AllCombined.resize(pPlant->NumPlants);
 
 
-		PCO2B.assign(pPlant->NumPlants, CO2_A * P_Surface / 1.E6);
+		PCO2_Boundary = CO2_A ;
+
 
 		GPP_Current.Temp.assign(pPlant->NumPlants, 1);
 		GrazingRespiration = WoodEatingRespiration = WoodEaterRespFlux = C_WoodEatingRate = N_WoodEatingRate = 0.;
@@ -660,7 +660,6 @@ bool NC_Plant::IniFunctors() {
 
 		f_PhotoTempDirect = Get_D1_TableFunctor(MyFunc::PHOTO_DIRECT_TEMP);
 		auto koll = f_PhotoTempDirect(0, 10.);
-
 
 
 		if (GreenIndexForcing_Sw(GreenIndexForcing) == GreenIndexForcing_Sw::on) {

@@ -13,7 +13,7 @@ class PhotoResponsetoWaterAndNitrogen {
 public:
 	PhotoResponsetoWaterAndNitrogen(vector<double> CoefWater,  vector<double> MinResponse) :
 		CoefWater(CoefWater),  MinRespons(MinResponse) {};
-	double operator()(size_t index, double ResponseWater, double ResponseNitrogen) {
+	double operator()(size_t index, double ResponseWater, double ResponseNitrogen) noexcept {
 		return pow(CoefWater[index] * sqrt(ResponseWater) + (1 - CoefWater[index])*sqrt(ResponseNitrogen), 2) + MinRespons[index];
 	};
 
