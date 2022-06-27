@@ -1331,7 +1331,7 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				m_pSim->m_Val_Array[LL].R2=a.r2;
 				m_pSim->m_Val_Array[LL].MeanSim=a.meansim;
 				m_pSim->m_Val_Array[LL].MeanVal=a.meanobs;
-				m_pSim->m_Val_Array[LL].NSE=a.n;
+				m_pSim->m_Val_Array[LL].NSE=a.nse;
 				m_pSim->m_Val_Array[LL].RMSE=a.rmse;
 				m_pSim->m_Val_Array[LL].ME=a.me;
 			}

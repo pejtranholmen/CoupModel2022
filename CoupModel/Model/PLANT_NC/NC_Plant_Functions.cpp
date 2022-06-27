@@ -170,8 +170,16 @@ bool NC_Plant_Functions::Def()
 	pSw = new Sw(&ZadokScale, PLANT, GENERAL, NOFPROC, PHENOLOGY, NORMAL);
 	Define(pSw, "ZadokScale", 0, "off|On|WithOutFile_Australia|WithOutFile_France", "Nitrogen and Carbon > 0|Growth >2");  //Hidden Switch
 
+	pSw = new Sw(&ZadokForcingFromFileInput, PLANT, GENERAL, NOFPROC, PHENOLOGY, NORMAL);
+	Define(pSw, "ZadokFocingFromFileInput", 0, "off|On", "Nitrogen and Carbon > 0|Growth >2|ZadokScale>0");  //Hidden Switch
+
+
 	pSw = new Sw(&CanopyCO2_Storage, PLANT, GENERAL, NOFPROC, PHOTOSYNTHESIS, NORMAL);
 	Define(pSw, "CanopyCO2_Storage", 0, "Static|Dynamic", "Nitrogen and Carbon > 0|Growth >3");  //Hidden Switch
+
+	F* pF;
+	pF = new F(&m_PG_Zadok, PLANT, WATER, FYS_SHAPE, PHENOLOGY, NORMAL);
+	Define(pF, "Zadok Forcing", "ZadokInput.bin", "ZadokFocingFromFileInput >= 1");
 
 
 	vector<double> initv;	initv.assign(p_Plant->NumPlants, 0.);
@@ -966,7 +974,6 @@ bool NC_Plant_Functions::Def()
 	pTab = new Tab(&mTab_PlantMan, PLANT, NITROGEN, TRANSPORT, PLANT_MANAGEMENT, NORMAL);
 	Define(pTab, "Plant management", "Mulch|Drip", "WaterEq = 1|Evaporation Method > 0");
 	;
-	F* pF;
 	pF = new F(&m_PG_PlantBiomass, PLANT, WATER, FYS_SHAPE, LIVING, NORMAL);
 	Define(pF, "Plant Biomass data", "NDrivePhoto.bin", "PhotoInput > 0");
 	//CALL F(Group_24, FileDriv12a,"Plant biomass data","BIN",true,"NDrivPhoto","PhotoInput > 0");
@@ -3486,7 +3493,7 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 		PCo2s[index] = PCo2I[index] + out.Net*P_Surface*1.6/GStomata[index];
 
 	
-		if (CanopyCO2_Storage==1) {
+		if (CanopyCO2_Storage_Sw(CanopyCO2_Storage) == CanopyCO2_Storage_Sw::Dynamic) {
 			Co2b = pCo2Bp / P_Surface;	// The real C_B forecast with the iterated fluxes.   
 
 			Co2b = (Co2b + (RespSoil + RespMPlant - out.Net + CO2_A * GAir[index] * 1.E-6) * (T_Step * 86400 / co2cap)) / (1 + T_Step * 86400 / co2cap * GAir[index]);
@@ -3527,7 +3534,7 @@ double NC_Plant_Functions::StomataCO2Func(double PCO2A, double pCo2Bp, double As
 
 	CO2_B	= pCo2Bp/	P_Surface;	//CO2B is given the value calc in the previous timestep	
 	CO2_A	= PCO2A/	P_Surface;
-   if(CanopyCO2_Storage==1)
+   if(CanopyCO2_Storage_Sw(CanopyCO2_Storage) == CanopyCO2_Storage_Sw::Dynamic)
 	CO2_B	= (CO2_B+(RespSoil+RespMPlant-Assim+CO2_A*GA)*(T_Step*86400/co2cap))/(1+T_Step*86000/co2cap*GA) ;
 
 	//Sedan beräknas co2A på nytt

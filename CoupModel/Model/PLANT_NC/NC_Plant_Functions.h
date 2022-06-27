@@ -75,8 +75,9 @@ size_t TerminatingHarvest, ResetGSI_AtHarvest;
 size_t Sowing_Switch,Emergence_Switch, StartSeasonTableExist;
 size_t Seedling_Management;
 
-size_t ZadokScale;
+size_t ZadokScale, ZadokForcingFromFileInput;
 size_t CanopyCO2_Storage;
+CPG m_PG_Zadok;
 
 // State variables;
 
@@ -624,6 +625,9 @@ function<double(size_t, double, double)> f_Harvest;
 function<double(size_t, double, double, double, double &DormSum, size_t &SpringDev)> f_DormingAndGrowthTempSum;
 function<double(double)> f_Zadok;
 
+
+
+function<bool(size_t year, size_t dayno)> f_sow, f_emergence, f_harvest;
 vector<double> m_RootDensity;	// Local auxiliary variable
 
 function <vector<double>(vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_PlantDemand[2];

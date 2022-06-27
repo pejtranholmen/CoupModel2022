@@ -1,6 +1,31 @@
 #pragma once
 #include "../../../../std.h"
 
+class DayNoControl {
+public:
+	DayNoControl(vector<pair<size_t, size_t>> valuevector): valuevector(valuevector) {};
+	bool operator() (size_t year, size_t dayno) {
+		if (count < valuevector.size()) {
+			if (valuevector[count] == pair<size_t, size_t>(year, dayno)) {
+				count++;
+				return true;
+			}
+			else if (valuevector[count].first < year) {
+				while (valuevector[count].first < year&&valuevector.size()-1>count)
+					count++;
+
+			}
+			else
+				return false;
+		}
+		else
+			return false;
+	}
+	private :
+		vector<pair<size_t, size_t>> valuevector;
+		size_t count{0};
+};
+
 class EmergenceMoistureControl {
 public:
 	EmergenceMoistureControl(double WiltingPoint, double ThetaRange) : WiltingPoint(WiltingPoint), ThetaRange(ThetaRange) {};
@@ -185,7 +210,8 @@ public: ZadokFunctionFromGSI(double Zadok_RangeGSI2, double Zadok30_RangeGSI, do
 
 
 	  double operator() (double GSI) {
-		  if (GSI < 0. || GSI >= 4) return 100.;
+		  if (GSI < 0) return 0.;
+		  if (GSI >= 4) return 100.;
 		  else if (GSI < 1.) return GSI * Zadok_GSI1;
 		  else if (GSI < Zadok30_GSI) {
 			  return Zadok_GSI1 + (GSI - 1.) * Zadok30_GSI_SLOPE;

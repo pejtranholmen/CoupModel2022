@@ -221,7 +221,37 @@ bool NC_Plant::Ini()	{
 		 pZadokOutCreateFile->Reset(true);
 
 	}
-	
+	if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
+
+			string filename = m_PG_Zadok.GetFileName();
+			size_t LL = filename.rfind("_");
+			m_PG_Zadok.ReOpen();
+			auto numrec = m_PG_Zadok.GetNumRecords();
+			auto numvar = m_PG_Zadok.GetNumVariables();
+			vector<pair<size_t, size_t>> sowvector, emergencevector, harvestvector;
+			for (size_t irec = 1; irec <= numrec; irec++) {
+				auto min=m_PG_Zadok.GetDate(irec);
+				auto zadok_value = m_PG_Zadok.GetVarValueRead(1, irec);
+				auto daynum = m_PG_Zadok.GetDayNumber(irec);
+				auto year = m_PG_Zadok.GetYear(irec);
+				if (zadok_value == 0) {
+					sowvector.push_back(pair<size_t, size_t>(year, daynum));
+				}
+				else if (zadok_value == 10) {
+					emergencevector.push_back(pair<size_t, size_t>(year, daynum));
+				}
+				else if (zadok_value == 95) {
+					harvestvector.push_back(pair<size_t, size_t>(year, daynum));
+				}
+			}
+
+			f_sow = DayNoControl(sowvector);
+			f_emergence = DayNoControl(emergencevector);
+			f_harvest = DayNoControl(harvestvector);
+
+
+	}
+
 
 
 	NC_Drivings::Ini();
@@ -1724,9 +1754,14 @@ auto Growth_Stage = [&](size_t index){
 			}
 
 		}
-
-
-		if (SowingDayNo[index] > 0 && Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::Fixed_dayNo) {                            //// 0 Seed in Soil
+		if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
+			if (f_sow(m_pModelInfo->JYearNum, m_pModelInfo->JDayNum)) {
+				out = 0;
+				GrowingSum[index] = 0.;
+				m_LatestSowingDay = m_pModelInfo->JDayNum;
+			}
+		}
+		else if (SowingDayNo[index] > 0 && Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::Fixed_dayNo) {                            //// 0 Seed in Soil
 			if (int(m_pModelInfo->JDayNum) == int(SowingDayNo[index])) {
 				out = 0.;
 				GrowingSum[index] = 0.;
@@ -1752,7 +1787,13 @@ auto Growth_Stage = [&](size_t index){
 		}
 	}
 	else if (GrowthStageIndex[index]<1.&&Max_GSI[index]>0.) { // // 1 emergence
-		if (EmergenceDayNo[index] > 0 && Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Fixed_dayNo) {
+		if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
+			if (f_emergence(m_pModelInfo->JYearNum, m_pModelInfo->JDayNum)) {
+				out = 1;
+				Emergence_Done[index] = false;
+			}
+		}
+		else if (EmergenceDayNo[index] > 0 && Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Fixed_dayNo) {
 			if (int(m_pModelInfo->JDayNum) == int(EmergenceDayNo[index])) {
 				out = 1.;
 				Emergence_Done[index] = false;
@@ -1798,7 +1839,12 @@ auto Growth_Stage = [&](size_t index){
 		}
 	}
 	else if (GrowthStageIndex[index]<4.&&Max_GSI[index]>3.) {	// Grain filling completed
-		if (Harvest_Day == 5) {
+		if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
+			if (f_harvest(m_pModelInfo->JYearNum, m_pModelInfo->JDayNum)) {
+				out = 4;
+			}
+		}
+		else if (Harvest_Day == 5) {
 			if ((int(m_pModelInfo->JDayNum) == int(m_HarvestDays[m_CountStartYear])) && (m_pModelInfo->JYearNum == int(m_StartYears[m_CountStartYear]) || m_YearTest)) {
 				out = 4.;
 			}

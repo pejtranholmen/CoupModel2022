@@ -42,6 +42,8 @@ enum class Grazing_Sw{off, Continous,At_PG_File_Specified_Days_Static_Grazing};
 enum class GrazingClosure_Sw { Growth_Estimate_from_Manure,Manure_Estimate_from_Growth };
 enum class ZadokScale_Sw { 	off, on, withOutPut2File, withOutPut3File};
 enum class Seedling_Management_Sw {	off, After_Final_Harvest, Specific_Years};
+enum class CanopyCO2_Storage_Sw {Static, Dynamic};
+enum class ZadokForcingFromFileInput_Sw{off, on};
 
 
 #include "./BiomassDescription/BioMass.h"

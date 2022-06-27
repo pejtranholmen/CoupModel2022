@@ -136,7 +136,7 @@ void Irrigation::Flux()
 				IrrigationRate=0.;//  ! Irrigationrate is going into container
  
 				DripOutlet=min(DripIrrigRate, max(0., DripContainer/T_Step));
-
+				if (IrrigationInput > 0) IrrigationRate = DripOutlet;
 
 				DripContainer-=DripOutlet*T_Step;
 				for(size_t i=0; i<Wsource.size(); i++) Wsource[i]=DrippInfilDistF[i]*DripOutlet;	  //! WSource is input to soil from container
