@@ -23,9 +23,7 @@ class Doc;
 class ChartProp;
 //enum CHART_TYPES;
 
-enum class DATA_TYPES {ANYDATA, SIM_X, SIM_T, SIM_G, SIM_D, SIM_VAL,
-SIM_PERFORMANCE,SIM_PAR, SIM_OUTSUM, SIM_SUMVAR, PGDATA, MEASURED_VAL, SIM_OUTSUM_X, SIM_OUTSUM_Y
-};
+
 
 // CPlotStorage command target
 enum sumdatatypes { };

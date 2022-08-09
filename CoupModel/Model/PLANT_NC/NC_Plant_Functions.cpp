@@ -375,6 +375,12 @@ bool NC_Plant_Functions::Def()
 		pG = new G(&DemandUptake[jj - 1].Demand, pNumPlants, PLANT, NITROGEN, TRANSPORT, bioprocess(PLANT_NUPTAKE+jj-1), NORMAL);
 		Define(pG, pNumPlants, P_BioElementName[jj] + "PlantDemand", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 	}
+	pG = new G(&SpringDevDayNum, pNumPlants, PLANT, TIME, STORAGE, PHENOLOGY, NORMAL);
+	Define(pG, pNumPlants, "SpringDev DayNum", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|Emergence>0");
+	pG = new G(&DormingStartDayNum, pNumPlants, PLANT, TIME, STORAGE, PHENOLOGY, NORMAL);
+	Define(pG, pNumPlants, "DormingStart DayNum", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|Emergence>0");
+	pG = new G(&GrowingStage, pNumPlants, PLANT, TIME, STORAGE, PHENOLOGY, NORMAL);
+	Define(pG, pNumPlants, "GrowingStage", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|Emergence>0");
 
 
 	pG = new G(&SimPlantYearAge, pNumPlants, PLANT, TIME, TRANSPORT, PHENOLOGY, NORMAL);
@@ -723,10 +729,13 @@ bool NC_Plant_Functions::Def()
 		condition = "";
 		if (jj == _P_) condition = "|Phosphorus >0";
 		for (size_t j = 1; j <= _OLD_COARSE_ROOT; j++) {
-			if (j == _MOBILE) continue;
+			//if (j == _MOBILE) continue;
 			pP = new P(&P_State_IniValue[j][jj], pNumPlants, PLANT, elements(CARBON + jj), TRANSPORT, INITB, NORMAL);
 			name = "I " + P_BioElementName[jj] +  P_StateCompName[j];
-			double m_value = max_value[jj]; default_value = 30.; initv.assign(p_Plant->NumPlants, default_value);
+			double m_value = max_value[jj]; default_value = 30.; 
+			if (j == _MOBILE && jj== _C_) default_value = 5.;
+			if (j == _MOBILE && jj == _N_) default_value = .2;
+			initv.assign(p_Plant->NumPlants, default_value);
 			if (j == _OLD_STEM) m_value *= 20;
 			Define(pP, pNumPlants, name, initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1" + condition, 0., m_value);
 			mTab_PlantInit[jj].push_back(pP);
@@ -739,7 +748,7 @@ bool NC_Plant_Functions::Def()
 		if (jj == 0) continue;
 		double ratio_max[2] = { 100., 600. }; double ratio_def[2] = { 20., 100. };
 		for (size_t j = 1; j <= _OLD_COARSE_ROOT; j++) {
-			if (j != _MOBILE) {
+			//if (j != _MOBILE) {
 				condition = "|Initial Plant Conditions = 0";
 				pP = new P(&P_State_IniCarbonRatio[j][jj - 1], pNumPlants, PLANT, elements(CARBON + jj), TRANSPORT, INITB, NORMAL);
 				name = "I C" + P_BioElementName[jj] + P_StateCompName[j];
@@ -751,7 +760,7 @@ bool NC_Plant_Functions::Def()
 				initv.assign(p_Plant->NumPlants, ratio);
 				Define(pP, pNumPlants, name, initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1" + condition, 0., m_value);
 				mTab_PlantInitRatio[jj - 1].push_back(pP);
-			}
+			//}
 		}
 		pTab = new Tab(&mTab_PlantInitRatio[jj - 1], PLANT, ORGANIC, TRANSPORT, INITB, NORMAL);
 		if (jj == 1) name = "Initial CN ratios of plants";

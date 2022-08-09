@@ -241,7 +241,7 @@ bool NC_Plant::Ini()	{
 					emergencevector.push_back(pair<size_t, size_t>(year, daynum));
 				}
 				else if (zadok_value == 95) {
-					harvestvector.push_back(pair<size_t, size_t>(year, daynum));
+					harvestvector.push_back(pair<size_t, size_t>(year, daynum+2));
 				}
 			}
 
@@ -273,6 +273,8 @@ bool NC_Plant::Ini()	{
 		CleaningToBeDone = true;
 		GrowthTempSum.assign(pPlant->NumPlants, 0.0);
 		DormingTempSum.assign(pPlant->NumPlants, 0.0);
+		SpringDevDayNum.assign(pPlant->NumPlants, 0.0);
+		DormingStartDayNum.assign(pPlant->NumPlants, 0.0);
 		PreviousThinningYear = 0;
 		ICountHarvestCycle = 1;
 		m_pModelInfo->StartStateValue = false;
@@ -335,9 +337,9 @@ bool NC_Plant::Ini()	{
 			if (m_pModelStructure->Phosphorus_Model > 0) PRootUptake.assign(pPlant->NumPlants, 0.0);//HH P initi
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 				for (size_t j = _LEAF; j < NUM_PLANT_FUNGI_COMP; j++) {
-					if (j == _MOBILE) continue;
+					//if (j == _MOBILE) continue;
 					for (size_t i = 0; i < pPlant->NumPlants; i++) {
-						if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::off)
+						if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::off|| Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on)
 							P_State[j][jj][i] = P_State_IniValue[j][jj][i];
 						else
 							P_State[j][jj][i] = 0.;
@@ -359,22 +361,22 @@ bool NC_Plant::Ini()	{
 				}
 				if (jj == _N_ && InitialPlantConditions_Sw(InitialPlantConditions) == InitialPlantConditions_Sw::As_Nitrogen) {
 					for (size_t j = _LEAF; j < NUM_PLANT_FUNGI_COMP; j++) {
-						if (j != _MOBILE) {
+						//if (j != _MOBILE) {
 							for (size_t i = 0; i < pPlant->NumPlants; i++)
-								if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::off)
+								if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::off|| Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on)
 									P_State[j][_C_][i] = P_State_IniValue[j][_N_][i] * P_State_IniCarbonRatio[j][_N_ - 1][i];
 								else
 									P_State[j][_C_][i] = 0.;
-						}
+						//}
 
 					}
 				}//HH
 				if (jj == _P_ && InitialPlantPConditions_Sw(InitialPlantPConditions) == InitialPlantPConditions_Sw::As_CP_ratio_and_Carbon) {
 					for (size_t j = _LEAF; j < NUM_PLANT_FUNGI_COMP; j++) {
-						if (j != _MOBILE) {
+						//if (j != _MOBILE) {
 							for (size_t i = 0; i < pPlant->NumPlants; i++)
 								P_State[j][_P_][i] = P_State_IniValue[j][_C_][i] / P_State_IniCarbonRatio[j][_P_ - 1][i];
-						}
+						//}
 					}
 				}
 			}
@@ -1030,6 +1032,10 @@ bool NC_Plant::IniFunctors() {
 	m_CountStartYear = 0;
 	m_LatestSowingDay=220.;
 
+	f_Emergence = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
+	f_EmergenceWithMoistControl = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
+	f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
+	f_Harvest = PlantTempSum(T_Thres_Ripening, T_Sum_Ripening);
 	return true;
 }
 bool NC_Plant::Dyn()
@@ -1787,21 +1793,34 @@ auto Growth_Stage = [&](size_t index){
 		}
 	}
 	else if (GrowthStageIndex[index]<1.&&Max_GSI[index]>0.) { // // 1 emergence
-		if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
+		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on&& DormingStartDayNum[index] > 1.) {
+			out = 0.;	
+			SpringDevDayNum[index] = 0.;
+			GrowingStage[index] = 0.;
+		}
+		else if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
 			if (f_emergence(m_pModelInfo->JYearNum, m_pModelInfo->JDayNum)) {
 				out = 1;
 				Emergence_Done[index] = false;
+				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+
+
 			}
 		}
 		else if (EmergenceDayNo[index] > 0 && Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Fixed_dayNo) {
 			if (int(m_pModelInfo->JDayNum) == int(EmergenceDayNo[index])) {
 				out = 1.;
 				Emergence_Done[index] = false;
+				GrowingStage[index] = 1.;
+				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+
 			}
 		}
 		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Multiple_DayNo) {
 			if ((int(m_pModelInfo->JDayNum) == int(m_EmergenceDays[m_CountStartYear])) && (m_pModelInfo->JYearNum == int(m_StartYears[m_CountStartYear]) || m_YearTest)) {
 				out = 1.;
+				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+
 				m_YearTest = true;
 				Emergence_Done[index] = false;
 				if (m_pModelInfo->JYearNum == int(m_StartYears[m_CountStartYear]) && m_StartYears.size() > m_CountStartYear + 1) {
@@ -1815,27 +1834,46 @@ auto Growth_Stage = [&](size_t index){
 				}
 			}
 		}
-		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Temperature_Sum) {
+		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Temperature_Sum&&DormingStartDayNum[index]<1.) {
 			out = 0. + f_EmergenceWithMoistControl(index, NDrivTAir, NDrivTheta[0], T_Step);
 			if (out >= 1.) {
+				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+
 				f_Emergence = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
 				f_EmergenceWithMoistControl = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
 				Emergence_Done[index] = false;
+				SpringDevDayNum[index] = m_pModelInfo->JDayNum;
+				GrowingStage[index] = 1.;
 			}
 		}
 		else
 			Emergence_Done[index] = false;
 	}
 	else if (GrowthStageIndex[index]<2.&&Max_GSI[index]>1.) { //
-		out = 1. + f_GrainStart(index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
-		if (out >= 2) {
-			f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
+			out = 0.;
+			SpringDevDayNum[index] = 0.;
+			GrowingStage[index] = 0.;
+		}
+		else {
+			out = 1. + f_GrainStart(index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
+			if (out >= 2) {
+				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+			}
 		}
 	}
-	else if (GrowthStageIndex[index]<3.&&Max_GSI[index]>2.) {		// Grain filling start
-		out = 2. + f_GrainFill(index, NDrivTAir, T_Step);
-		if (out >= 3) {
-			f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
+	else if (GrowthStageIndex[index]<3.&&Max_GSI[index]>2.) {
+	// Grain filling start
+		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
+			out = 0.;
+			SpringDevDayNum[index] = 0.;
+			GrowingStage[index] = 0.;
+		}
+		else {
+			out = 2. + f_GrainFill(index, NDrivTAir, T_Step);
+			if (out >= 3) {
+				f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
+			}
 		}
 	}
 	else if (GrowthStageIndex[index]<4.&&Max_GSI[index]>3.) {	// Grain filling completed
@@ -1937,12 +1975,15 @@ for (size_t jj = 1; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 	P_State_CarbonRatio[_LEAF_][jj - 1] = f_CarbonRatioWithOldBiomass(P_State[_LEAF][_C_], P_State[_OLD_LEAF][_C_], P_State[_LEAF][jj], P_State[_OLD_LEAF][jj], P_State_CarbonRatio[_LEAF_][jj - 1]);
 CN_RatioPlant();
 	
-
+auto PreviousSeason = SpringDev;
 	for(size_t i=0; i<P_State[_LEAF][_N_].size(); i++) {
+
 
 		GrowthStageIndex[i]=Growth_Stage(i);
 		Zadok_Index(i);
 		//GrowthTempSum[i] = f_GrowthTemp(i, NDrivTAir, m_pModelInfo->JDayNum, T_Step);
+
+
 		GrowthTempSum[i] = f_DormingAndGrowthTempSum(i, NDrivTAir, m_pModelInfo->JDayNum, T_Step, DormingTempSum[i], SpringDev);
 		ConditionalUpdateOfPlantAge(i);
 		if(Growth_Sw(Growth)>=Growth_Sw::Water_use_efficiency) {		
@@ -2203,6 +2244,13 @@ void NC_Plant::LitterFall() {
 				P_LitterFall[_OLD_STEM][jj][i] = f_StemLitterFall(false, i, Tsum, m_pModelInfo->JDayNum, max(0., P_State[_OLD_STEM][jj][i]));
 
 
+			}
+			if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on) {
+				if ((Tsum >= Leaf_LitterTsum2[i] && DormingStartDayNum[i] <= 1.) || (m_pModelInfo->JDayNum >= Dorm_FinalDayNo[i] && DormingStartDayNum[i] <= 1.)) {
+					DormingStartDayNum[i] = m_pModelInfo->JDayNum;
+					GrowingStage[i] = 0.;
+				}
+				else if (Tsum <= 1.&& m_pModelInfo->JDayNum <= Dorm_FinalDayNo[i]) DormingStartDayNum[i] = 0.;
 			}
 		}
 	};
@@ -2699,7 +2747,7 @@ void NC_Plant::At_Harvest(bool WithGrazingEvent) {
 		}
 
 		GrowthStageIndex[i] = Min_GSI[i];
-		SimPlantAge[i] = 0.;
+		//SimPlantAge[i] = 0.;
 
 	};
 	auto GrazingExportAsHarvest = [&](size_t i) { 

@@ -196,6 +196,7 @@ double C_RatioTotPlant[NUM_BIOELEM-1], C_RatioTotRoots[NUM_BIOELEM - 1];
 vector<double>  RadPlantAdsorbed,  CP_RatioLeaf;
 vector<double> GrowthTempSum, DormingTempSum,  CP_RatioGrain, CP_RatioStem, CP_RatioRoots, CP_RatioCoarseRoots;
 vector<double>  ZadokIndex, CP_RatioFungi;
+vector<double> SpringDevDayNum, DormingStartDayNum, GrowingStage;
 
 ;
 vector<double> UptDeficit_1[2], UptDeficit_2[2], UptFungiDeficit_1[2], UptFungiDeficit_2[2],factCNFungi,  factNdemandFungi, factNavailFungi, factCPFungi, factPdemandFungi, factPavailFungi;//HH

@@ -82,10 +82,6 @@ public:
 	std::vector<std::string> GetSortedListofBiolProc(vector<bioprocess> v_bioprocess);
 
 
-
-
-
-
 	std::vector<std::string> GetSortedListofGroupNames() { return m_GroupNamesSorted; };
 	std::vector<std::string> GetGroupNames() {
 		vector<string> out;

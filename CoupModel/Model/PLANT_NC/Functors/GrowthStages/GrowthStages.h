@@ -102,13 +102,13 @@ private:
 
 class GrainStart {
 public: GrainStart(vector<double> GrainCommonStep,vector<double> GrainStepDay, vector<double> Grain_ThresDay, vector<double> GrainStepTemp, vector<double> GrainThresTemp ) :
-	GrainStepDay(GrainStepDay), Grain_ThresDay(Grain_ThresDay), GrainStepTemp(GrainStepTemp), GrainThresTemp(GrainThresTemp), GrainCommonStep(GrainCommonStep) {
+	GrainCommonStep(GrainCommonStep), GrainStepDay(GrainStepDay), Grain_ThresDay(Grain_ThresDay), GrainStepTemp(GrainStepTemp), GrainThresTemp(GrainThresTemp) {
 	Sum.resize(GrainStepDay.size());
 	for (size_t i = 0; i < Sum.size(); i++) Sum[i] = 0.;
 };
 double operator ()(size_t index, double DayLength, double Temp, double T_Step) {
-			Sum[index]+=DayLengthScaling(index, DayLength)*TempScaling(index, Temp)*T_Step;
-			return min(1., max(0., Sum[index] * GrainCommonStep[index]));
+			Sum[index]+=DayLengthScaling(index, DayLength)*TempScaling(index, Temp)*T_Step * GrainCommonStep[index];
+			return min(1., max(0., Sum[index] ));
 	}
 	double operator ()(size_t index, double DayLength) {return DayLengthScaling(index, DayLength);	};
 	double operator ()(size_t index, double Temp, double T_Step) {	return TempScaling(index, Temp); };
@@ -156,8 +156,10 @@ public: GrowingSumF(vector<double> ThresHold, vector<double> ThresHold_Dorming, 
 				ContinStopSum = ContinStopSum + T_Step;
 			else
 				ContinStopSum = 0;
-			if (TAir < ThresHold_Dorming[index] && (DayNum > 220 && Latitude > 0) || (DayNum < 180 && Latitude < 0.) )
-				DormSum += max(0., ThresHold_Dorming[index] - TAir)*T_Step;
+			if (TAir < ThresHold_Dorming[index] && (DayNum > 220 && Latitude > 0) || (DayNum < 180 && Latitude < 0.))
+				DormSum += max(0., ThresHold_Dorming[index] - TAir) * T_Step;
+			else if ((DayNum < 180 && Latitude>0) || (DayNum > 180 && Latitude < 0.))
+				DormSum = 0.;
 
 			if (ContinStopSum > 3) Growing = false;
 			if (GSum[index] > 20. && (DayNum < 220.&&Latitude>0) || (DayNum > 360 && Latitude < 0))

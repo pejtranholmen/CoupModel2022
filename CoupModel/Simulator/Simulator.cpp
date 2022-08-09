@@ -1087,9 +1087,10 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		}
 
 		m_ValPGFile[i].simvalfile->ResetPos();
+		PGPOS pos = m_ValPGFile[i].simvalfile->GetPos(m_pModelInfo->m_ActMin);
 		m_ValPGFile[i].file->ResetPos();
 		m_ValPGFile[i].count = 0;
-		PGPOS pos=m_ValPGFile[i].file->GetPos(m_pModelInfo->m_ActMin);
+		pos=m_ValPGFile[i].file->GetPos(m_pModelInfo->m_ActMin);
 		m_ValPGFile[i].ActPos=pos.first-1;
 
 		if(pos.first>1) m_ValPGFile[i].FirstValidRecord=pos.first*(m_ValPGFile[i].varindex.size()+1);
@@ -1125,6 +1126,8 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 				m_ValPGFile[i].PrevPos=1;
 				m_ValPGFile[i].accsimvalues.resize(m_ValPGFile[i].val_listindex.size());
 				m_ValPGFile[i].count=0;
+				m_ValPGFile[i].simvalfile->GetPos(m_pModelInfo->m_ActMin);
+
 			}
 
 		}
@@ -1142,6 +1145,8 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 
 	for(size_t i=0; i<m_ValTest.size(); i++) 
 	double v=GetSimValValue(i);
+
+
 	return true;
 }
 bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
@@ -1336,6 +1341,7 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				m_pSim->m_Val_Array[LL].ME=a.me;
 			}
 			m_ValPGFile[i].file->ResetPos();
+			m_ValPGFile[i].simvalfile->ResetPos();
 
 			if(!MultiFlag||Final) {
 

@@ -129,7 +129,7 @@ bool Radiation_Functions::Def()
 	pPs = new Ps(&Solar_Time_Adjust, SINGLE, RADIATION, GEOMETRIC, NOBPROC, NORMAL);  ps_vec.push_back(pPs);
 
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
-	Define(pPs, "Solar Time Adjust", 0., "minutes", "RadiationInput > 0", -120., 120., -600., 600.);
+	Define(pPs, "Solar Time Adjust", 0., "minutes", "RadiationInput > 0", -600., 600., -240., 240.);
 	functorprop.PhysFuncName = FUNC_CHOICE::POTRISHOUR; functorprop.Arg = MyArgType::D2;
 	functorprop.FuncName = MyFunc::NO_PARFUNC;
 	funcname = "Potential Global Radiation Within Day Function"; functorprop.FunctorInitOption = string::npos;

@@ -101,7 +101,7 @@ class Plant : public SimModule
 
 
 		//! Local Plant Variables
-		double T5, TimeZ, PotRis;
+		double T5{0.}, TimeZ, PotRis;
 		bool Winter;
 
 		double Islut;
