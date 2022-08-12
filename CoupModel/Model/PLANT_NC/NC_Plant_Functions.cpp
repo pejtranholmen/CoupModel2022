@@ -1916,8 +1916,16 @@ bool NC_Plant_Functions::Def_Allocation() {
 	Define(pP, pNumPlants, "Root Mass c2", initv, UNIT_TYPES::INVERSE_MASS_UNIT, "Nitrogen and Carbon >= 1|Root Allocation mass >0", -.5, 1.);
 	mTab_Allo.push_back(pP);
 	p_vec.push_back(pP);
+	
+	pPs = new Ps(&AlloFracMinimumRoots, PLANT, ORGANIC, TRANSPORT, REALLOCATION, NORMAL);
+	Define(pPs, "Allo Frac Miniumum Roots", 0.05, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Root Allocation mass >0", .0, .2);
+	ps_vec.clear();
+	ps_vec.push_back(pPs);
 	pFunc = new Func(PLANT, CARBON, NOFPROC, REALLOCATION, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec, plotpar);
+	Define(pFunc, functorprop, funcname,ps_vec, p_vec, plotpar);
+
+
+
 
 	functorprop.FuncName = MyFunc::ALLO_ROOT_MASS_EXP;
 	funcname = "Allocation to Root Above Ground Exp Function";

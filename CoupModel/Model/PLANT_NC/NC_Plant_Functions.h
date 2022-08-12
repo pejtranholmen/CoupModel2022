@@ -263,6 +263,8 @@ vector<double> AlloLeaf1, AlloLeaf2, AlloLeaf3, AlloRootWater1, AlloRootWater2, 
 vector<double> AlloRoot_CN1, AlloRoot_CN2, AlloRoot_CN3, AlloRootTotMass1, AlloRootTotMass2, AlloRootTotMass3;
 vector<double> AlloRoot_CP1, AlloRoot_CP2, AlloRoot_CP3;
 vector<double> AlloRateCoef, Allo_C_LeafStem;
+
+double AlloFracMinimumRoots;
 ;
 // Parameter to Fungi Models            */;
 ;

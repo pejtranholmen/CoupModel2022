@@ -20,12 +20,13 @@ private:
 };
 class CAlloRootMass_Linear {
 public:
-	CAlloRootMass_Linear(vector<double> AlloRootTotMass1, vector<double> AlloRootTotMass2) :a(AlloRootTotMass1), b(AlloRootTotMass2) {}
+	CAlloRootMass_Linear(vector<double> AlloRootTotMass1, vector<double> AlloRootTotMass2, double minimum) :a(AlloRootTotMass1), b(AlloRootTotMass2), minimum(minimum) {}
 	double operator() (size_t index, double Mass) {
-		return min(0.8, a[index]+b[index]*Mass);
+		return min(0.99, max(minimum, a[index]+b[index]*Mass));
 	}
 private:
 	vector <double> a, b;
+	double minimum;
 };
 class CAlloRootMass_Exp {
 public:

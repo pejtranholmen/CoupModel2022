@@ -1323,7 +1323,7 @@ function<double(size_t, double)> FunctFactory::Set_D1_TableFunctor() {
 				}
 			case::MyFunc::ALLO_ROOT_MASS_LINEAR:
 				if (m_P_Par.size() == 2) {
-					return CAlloRootMass_Linear(m_P_Par[0], m_P_Par[1]);
+					return CAlloRootMass_Linear(m_P_Par[0], m_P_Par[1], m_Ps_Par[0]);
 				}
 			case::MyFunc::ALLO_ROOT_MASS_EXP:
 				if (m_P_Par.size() == 3) {

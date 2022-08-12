@@ -2804,7 +2804,7 @@ void NC_Plant::At_Cleaning() {
 void NC_Plant::MobilePool() {
 	 for(size_t i=0; i< P_ReAllocation[LEAF_MOBILE][_N_].size();i++) {
 
-		if(SimPlantAge[i]<Max_Plant_LifeTime[i]*365.&&Winter_Regulation>0&&N_ReAllocation>0) {		//LK 020524
+		if(SimPlantAge[i]<Max_Plant_LifeTime[i]*365.&&Winter_Regulation>0) {		//LK 020524
 			 P_ReAllocation[LEAF_MOBILE_RETURN][_C_][i]=P_LitterFall[_LEAF][_C_][i]*MobileAlloCoef[i];
 			 P_ReAllocation[LEAF_MOBILE_RETURN][_N_][i] = P_ReAllocation[LEAF_MOBILE_RETURN][_C_][i] / CN_RatioMinLeaf[i];
 			 if (P_State[_LEAF][_N_][i] > 0) {
@@ -2860,7 +2860,13 @@ void NC_Plant::MobilePool() {
 		}
 
 		if(N_ReAllocation>0) {
-			
+			double cnratio, koll;
+			if (P_State[_LEAF][_N_][i] > 0.) {
+				cnratio = P_State[_LEAF][_C_][i] / P_State[_LEAF][_N_][i];
+				if (cnratio < CN_RatioMinLeaf[i]) {
+					koll = max(0., P_State[_LEAF][_N_][i] - P_State[_LEAF][_C_][i] / CN_RatioMinLeaf[i]);
+				}
+			}
 				P_ReAllocation[OLD_LEAF_MOBILE][_N_][i] = max(0., P_State[_OLD_LEAF][_N_][i] - P_State[_OLD_LEAF][_C_][i] / CN_RatioMinLeaf[i]);
 				P_ReAllocation[OLD_STEM_MOBILE][_N_][i] = max(0., P_State[_OLD_STEM][_N_][i] - P_State[_OLD_STEM][_C_][i] / CN_RatioMinStem[i]);
 				P_ReAllocation[OLD_ROOT_MOBILE][_N_][i] = max(0., P_State[_OLD_ROOT][_N_][i] - P_State[_OLD_ROOT][_C_][i] / CN_RatioMinRoots[i]);

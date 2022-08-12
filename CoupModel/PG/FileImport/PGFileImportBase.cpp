@@ -1510,6 +1510,8 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 	
 		size_t Countgaps = 0;
 		bool TimeSetComplete;
+
+
 		auto GetLineFromStream = [&]() {
 				line.clear();
 				line.resize(40000);
@@ -1606,7 +1608,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 				//if (m_format == STANDARD) next_validLine++;
 
 
-				if (next_validLine <= CountLine+1) {
+				if (next_validLine < CountLine+1) {
 
 					if (ActualIndexId == 0&&m_format!=STANDARD)
 						CheckReadOfHeading();
