@@ -543,7 +543,7 @@ bool PG_Stream::WritePGFileStartHeader(size_t nrecords, size_t nrepititions, siz
 	pPGOutStream->write((char*)&totnumrecords, 4);
 	pPGOutStream->write((char*)&lengthRecord, 4);
 
-	if (InputRepNo == string::npos&&nrepititions<=1) {
+	if (InputRepNo == string::npos&&nrepititions<=1&&lengthRecord>8) {
 		unsigned int NewNumberOfRepititions = 1;
 		pPGOutStream->write((char*)&NewNumberOfRepititions, 4);
 	}

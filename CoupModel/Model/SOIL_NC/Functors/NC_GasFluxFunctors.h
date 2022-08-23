@@ -6,7 +6,7 @@
 #include "./NOxide_Functors.h"
 #include "./Methane_Functors.h"		
 enum class COS_Model_Sw { off, OnlyPlant, Plant_Soil };
-enum class COS_PlantModel_Sw { Off, Tranpiration_Base, PhotoSynthesis_Base };
+enum class COS_PlantModel_Sw { Off, Tranpiration_Base, PhotoSynthesis_Base, Experimental };
 enum class COS_SoilMoidel_Sw { Off, Heteotrophic_Respiration_Base };
 
 class FromAnaerobicToAerobicDiffusion {

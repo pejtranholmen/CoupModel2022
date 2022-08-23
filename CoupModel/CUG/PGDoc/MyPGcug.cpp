@@ -249,7 +249,7 @@ void MyPGCug::OnSetup()
 		AddTab("Change Description", 10);
 	}
 
-	SetTabWidth(950); 
+	SetTabWidth(1850); 
 
 	SetDefColWidth(130);
 	if(NumTab>0) 

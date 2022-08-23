@@ -62,8 +62,12 @@ double CO2_Flux_Out;
 
 
 double COS_TranspirationRatio, COS_PhotoSynthesisRatio;	//Parameters
+double COS_TranspirationPotMaxRatio, COS_TranspirationPotRatio;
+double COS_AirResistCoef, COS_CanopyResistCoef, COS_RadHalfCoef, COS_RadScaleCoef;
+double COS_HalfCondCanopy, COS_HalfCondAir;
 double COS_SoilRespiratonRatio;							//Parameters
 double COS_TotPlantUptake, COS_TotSoilUptake, COS_EcoSystemFlux;
+double COS_Option1, COS_Option2, COS_Option3, COS_Option4, COS_Option5, COS_Option6;
 ;
 ;
 // New CH4 model develop 2007;
@@ -83,7 +87,7 @@ vector<double> DailyValuesNO, DailyValuesN2O;
 ;
 vector<double> DenitUptakeMin, DenitUptakeOrg;
 
-function<double(double)> f_COS_Plant, f_COS_Soil;
+function<double(double)> f_COS_Plant,f_COS_PlantTransp, f_COS_PlantTranspPotMax, f_COS_PlantTranspPot, f_COS_Soil;
 
 function<double(double)> f_MethaneOxidation, f_MethaneOxidationRegulation, f_PlantRootRespRegulation;
 function<double(double, double)> f_MethaneVolatility;

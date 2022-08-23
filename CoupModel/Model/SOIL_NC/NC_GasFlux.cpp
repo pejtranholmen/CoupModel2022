@@ -4,6 +4,7 @@
 #include "../SOIL/Soil_HeatPump.h"
 #include "./Functors/NC_GasFluxFunctors.h"
 #include "../PLANT_NC/PlantOrgModel.h"
+#include "../Atmosphere/AtmModel.h"
 
 						   
 NC_GasFlux::NC_GasFlux(void)
@@ -107,8 +108,14 @@ bool NC_GasFlux::IniFunctors() {
 	if (COS_Model_Sw(COS_Model) >= COS_Model_Sw::OnlyPlant) {
 		if (COS_PlantModel_Sw(COS_PlantModel) == COS_PlantModel_Sw::Tranpiration_Base)
 			f_COS_Plant = COS_PlantFlux(COS_TranspirationRatio);
-		else
+		else {
 			f_COS_Plant = COS_PlantFlux(COS_PhotoSynthesisRatio);
+			f_COS_PlantTransp = COS_PlantFlux(COS_TranspirationRatio);
+			f_COS_PlantTranspPot = COS_PlantFlux(COS_TranspirationPotRatio);
+			f_COS_PlantTranspPotMax = COS_PlantFlux(COS_TranspirationPotMaxRatio);
+
+
+		}
 
 		if (COS_Model_Sw(COS_Model) == COS_Model_Sw::Plant_Soil)
 			f_COS_Soil = COS_SoilFlux(COS_SoilRespiratonRatio);
@@ -615,11 +622,28 @@ double OxidationRatio;
 		PlantModel* pPlant = (PlantModel*)m_pModelInfo->GetModelPtr("Plant Model");
 		WaterUptake* p_Plant = &pPlant->m_WaterUptake;
 
+		AtmModel* pAtm = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
+		Irrigation* p_Irrig = &pAtm->m_Irrigation;
 
-		if (COS_PlantModel_Sw(COS_PlantModel) == COS_PlantModel_Sw::PhotoSynthesis_Base)
+
+		if (COS_PlantModel_Sw(COS_PlantModel) == COS_PlantModel_Sw::Experimental) {
+			COS_TotPlantUptake = f_COS_Plant(sum(pNCPlant->AtmNewMobile));
+			COS_Option1 = f_COS_PlantTransp(p_Plant->Transpiration_All);
+			COS_Option2 = f_COS_PlantTranspPot(p_Plant->MC_PotTransp[0]);
+			COS_Option3 = f_COS_PlantTranspPotMax(p_Plant->MC_PotTranspMax[0]);
+
+			COS_Option4 = COS_CanopyResistCoef*(1./( p_Plant->MC_ResSurfVar[0]*COS_HalfCondCanopy+1));
+			COS_Option5 = COS_AirResistCoef*(1. /(p_Plant->MC_ResAir[0]*COS_HalfCondAir+1));
+			COS_Option6 = COS_RadScaleCoef*p_Irrig->RadInShort/(COS_RadHalfCoef+ p_Irrig->RadInShort);
+		}
+		else if (COS_PlantModel_Sw(COS_PlantModel) == COS_PlantModel_Sw::PhotoSynthesis_Base)
 			COS_TotPlantUptake = f_COS_Plant(sum(pNCPlant->AtmNewMobile));
 		else
 			COS_TotPlantUptake = f_COS_Plant(p_Plant->Transpiration_All);
+
+
+
+
 
 		if (COS_Model_Sw(COS_Model) == COS_Model_Sw::Plant_Soil) {
 			COS_TotSoilUptake = f_COS_Soil(O_RespRateProfile[_L1]);

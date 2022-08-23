@@ -60,7 +60,7 @@ bool NC_GasFlux_Functions::Def()
 	Define(pSw, "COS Model", 0, "Off|Only Plant|Both Plant and Soil", "Nitrogen and Carbon > 0");
 	
 	pSw = new Sw(&COS_PlantModel, SIMPROFILE, AIR, NOFPROC, SOIL_GAS_DYNAMICS, NORMAL);
-	Define(pSw, "COS PlantModel", 0, "Off|Tranpiration Base|PhotoSynthesis Base", "Nitrogen and Carbon > 0|COS Model>0");
+	Define(pSw, "COS PlantModel", 0, "Off|Tranpiration Base|PhotoSynthesis Base|Experimental", "Nitrogen and Carbon > 0|COS Model>0");
 
 	pSw = new Sw(&COS_SoilModel, SIMPROFILE, AIR, NOFPROC, SOIL_GAS_DYNAMICS, NORMAL);
 	Define(pSw, "COS SoilModel", 0, "Off|Heteorotrophic Respiration Base", "Nitrogen and Carbon > 0|COS Model>1");
@@ -72,6 +72,22 @@ bool NC_GasFlux_Functions::Def()
 	pGs = new Gs(&COS_EcoSystemFlux, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
 	Define(pGs, "COS EcoSystemFlux", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
 
+	pGs = new Gs(&COS_Option1, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	Define(pGs, "COS Opt1 Transp", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+
+	pGs = new Gs(&COS_Option2, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	Define(pGs, "COS Opt2 PotTransp", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+	pGs = new Gs(&COS_Option3, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	Define(pGs, "COS Opt3 MaxPotTransp", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+
+
+	pGs = new Gs(&COS_Option4, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	Define(pGs, "COS Opt4 CanRes", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+
+	pGs = new Gs(&COS_Option5, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	Define(pGs, "COS Opt5 AirRes", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+	pGs = new Gs(&COS_Option6, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	Define(pGs, "COS Opt6 GlobalRad", 0.0, MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
 
 
 	pSw= new Sw(&Methane_Model,  SIMPROFILE,AIR, NOFPROC,SOIL_GAS_DYNAMICS, NORMAL);
@@ -384,8 +400,28 @@ plotpar.Y_Label = "Relative Rate (-)";
 
 
 	pPs = new Ps(&COS_TranspirationRatio, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
-	  Define(pPs, "COS Transpiration Ratio", 12., MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel == 1", 1.E-03, 1.E3);
-	pPs = new Ps(&COS_PhotoSynthesisRatio, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS Transpiration Ratio", 15., MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E-03, 1.E3);
+	pPs = new Ps(&COS_TranspirationPotRatio, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS Pot Transp Ratio", 10., MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E-03, 1.E3);
+	pPs = new Ps(&COS_TranspirationPotMaxRatio, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS Pot MaxTransp Ratio", 4., MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E-03, 1.E3);
+  
+  pPs = new Ps(&COS_CanopyResistCoef, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS CanopyResistCoef", 8.E4, MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E-03, 1.E6);
+  pPs = new Ps(&COS_AirResistCoef, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS AirResistCoef", 4800., MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E-03, 1.E3);
+  pPs = new Ps(&COS_HalfCondCanopy, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS HalfCondCanopy", 30., WIND_SPEED_UNIT, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1., 1.E3);
+  pPs = new Ps(&COS_HalfCondAir, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS HalfCondAir", 10., WIND_SPEED_UNIT, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1., 1.E3);
+
+	pPs = new Ps(&COS_RadHalfCoef, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS RadHalfCoef", 5.E7,HEATFLOW_UNIT , "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E3, 1.E9);
+  pPs = new Ps(&COS_RadScaleCoef, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
+	  Define(pPs, "COS RadScaleCoef", 100., MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1., 1.E3);
+
+	  
+	  pPs = new Ps(&COS_PhotoSynthesisRatio, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
 	  Define(pPs, "COS Photosynthesis Ratio", 3., MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel == 2", 1.E-03, 1.E3);
 	pPs = new Ps(&COS_SoilRespiratonRatio, TOTPROFILE, COS, NOFPROC, COS_TRANSPORT, NORMAL);
 	  Define(pPs, "COS Soil Respiration Ratio", 1.6, MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS Model >= 1", 1.E-03, 1.E3);

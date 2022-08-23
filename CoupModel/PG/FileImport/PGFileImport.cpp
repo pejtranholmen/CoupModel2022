@@ -1720,18 +1720,18 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 
 	auto GetLineFromStream = [&]() {
 		line.clear();
-		line.resize(20000);
+		line.resize(40000);
 		//string line;
 		//if(ich>0) line=str.substr(0,ich);
-		istream.getline(&line[0], 20000);
+		istream.getline(&line[0], 40000);
 		size_t koll = line.size();
 		ich = line.find('\0');
 		line.resize(ich);
 		if (ich <= 0) {
 			if (istream.good()) {
 				line.clear();
-				line.resize(20000);
-				istream.getline(&line[0], 20000);
+				line.resize(40000);
+				istream.getline(&line[0], 40000);
 				ich = line.find('\0');
 				line.resize(ich);
 			}
@@ -2123,6 +2123,12 @@ FILEINFO PGFileImport::GetFileInfo(FILEINFO input, size_t ActualIndexId) {
 		if (input.LinkedSites.size()>0)
 			m_totrec_a = m_CurrentFile.NumRec;
 
+
+	}
+	else if(m_format == SMHI_OPENDATA) {
+		m_CurrentFile.NumRec = input.TotRec - input.NumHeads;
+		m_totrec_a = input.TotRec - input.NumHeads;
+		m_ImportedFileVector.push_back(m_CurrentFile);
 
 	}
 	else {

@@ -1579,7 +1579,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 			CountLine=SetStreamToStartPos(linetobypass);
 
 		}
-		else if (m_format == STANDARD) {
+		else if (m_format == STANDARD||m_format==SMHI_OPENDATA) {
 			CountLine = SetStreamToStartPos(linetobypass);
 
 		}
@@ -1610,9 +1610,11 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 
 				if (next_validLine < CountLine+1) {
 
-					if (ActualIndexId == 0&&m_format!=STANDARD)
+					if (ActualIndexId == 0 && m_format == SMHI_OPENDATA)
+						m_HeadingRead = true;
+					else if (ActualIndexId == 0&&m_format!=STANDARD)
 						CheckReadOfHeading();
-					else
+					else 
 						m_HeadingRead = true;
 
 					auto SetVectorValuesFromFixedFormat = [&]() {
@@ -1755,7 +1757,15 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 
 					if (m_HeadingRead) {
 						SetVectorValueFromLine();
-						if (m_format != STANDARD && m_format != CZECH_COL_TRANS && m_format != MONTH_COL_TRANS && TimeSetComplete &&
+						if (m_format == STANDARD|| m_format ==SMHI_OPENDATA) {
+							if (CountLine == next_validLine && !skipline) {
+								SetPGTimeVar_Minut_To_PG_Var();
+								AdjustValuesToNewUnits();
+								WriteCompleteRecord();
+								nrec++;
+							}
+						}
+						else if (m_format != STANDARD && m_format != CZECH_COL_TRANS && m_format != MONTH_COL_TRANS && TimeSetComplete &&
 							(CountLine + 1 - input.NumHeads) % input.LinkedSites[ActualIndexId].TimeCheck.RecordStep == 0
 							) {
 							nrec++;
@@ -1763,22 +1773,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 							AdjustValuesToNewUnits();
 							WriteCompleteRecord();
 						}
-						else if (m_format == STANDARD) {
-							if (CountLine == next_validLine && !skipline) {
-								SetPGTimeVar_Minut_To_PG_Var();
-								AdjustValuesToNewUnits();
-								WriteCompleteRecord();
-								nrec++;
-							}
-							else {
-								int koll2 = 1;
 
-							}
-
-
-
-
-						}
 
 #ifndef COUPSTD
 						if (nrec % 5000 == 0) {

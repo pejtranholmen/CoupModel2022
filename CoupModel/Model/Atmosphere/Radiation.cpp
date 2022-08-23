@@ -160,7 +160,7 @@ void Radiation::Flux()
     RadInDiffuse=RadInShort;
     if(m_pModelStructure->TimeResolution!=1){  //! Removed 
              
-       RadInDiffuse=RadInShort*f_DiffuseRadRatio(f_ThetaAngleHour(Hour), CloudFrac);
+       RadInDiffuse=RadInShort*f_DiffuseRadRatio(CloudFrac, f_ThetaAngleHour(Hour));
        RadInDirect=(RadInShort-RadInDiffuse)*f_SlopeCorrDirectRad(Hour); // ! Only correcting direct radiation /PEJ
        RadInShort=RadInDiffuse+RadInDirect ;//     ! Recalculating RadInShort to accout for extra direct radiation/PEJ
  
