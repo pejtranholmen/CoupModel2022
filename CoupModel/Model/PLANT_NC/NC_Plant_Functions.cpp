@@ -618,7 +618,7 @@ bool NC_Plant_Functions::Def()
 	pG = new G(&PCO2_Surface, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pG, pNumPlants, "PCO2 Surface", initv, "ppm", "Nitrogen and Carbon >= 1|Growth=4");
 	pGs = new Gs(&PCO2_Boundary, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pGs, "PCO2 Canopy", 0.0, "ppm", "Nitrogen and Carbon >= 1|Growth=4");
+	Define(pGs, "PCO2 Canopy", 0.0, "ppm", "Nitrogen and Carbon >= 1|Growth>=3");
 	pG = new G(&PRubOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pG, pNumPlants, "P Rubisco", initv, UNIT_TYPES::MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
 	pG = new G(&PLightOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
@@ -1672,7 +1672,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	pPs = new Ps(&P_Surface, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pPs, "P_Surface", 1.E5, "Pa", "Nitrogen and Carbon >=1 |Growth>3", 0.9E5, 1.2E5);
 	pPs = new Ps(&CO2_A, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
-	Define(pPs, "CO2_A", 354, "ppm", "Nitrogen and Carbon >= 1|Growth>3", 0., 1000.);
+	Define(pPs, "CO2_A", 354., "ppm", "Nitrogen and Carbon >= 1|Growth>=3", 0., 1000.);
 	;
 	pP = new P(&C3Type, pNumPlants, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
 	Define(pP, pNumPlants, "C3Type", initv, "-", "Nitrogen and Carbon >= 1|Growth>3", 0., 1.);

@@ -742,15 +742,15 @@ double WaterUptake::MaxUptakeRate(size_t Index, size_t IndexP) {
 }
 double WaterUptake::PlantResistanceFuncL(size_t Index, size_t IndexP) {
 
-	double	OPressure;
-	if (PlantResistance == 0)
-		OPressure = 0.;
+	double	OsmoticPressureScaling=1.;
+	if (PlantResistance_Sw(PlantResistance) == PlantResistance_Sw::No_salt_effect)
+		OsmoticPressureScaling = 1.;
 	else
-		OPressure = OsmoticPressure[Index];
+		OsmoticPressureScaling = f_WaterUptakeSalt(0,OsmoticPressure[Index]);
 
 	double Temperature = ((Soil_HeatF*)p_Soil_HeatF)->Temp[Index];
 	return f_PlantResistance(PlantHeight[IndexP], RootLength[IndexP] )/
-		max(0.0000001, f_WaterUptakeSalt(0, OPressure)*f_WaterUptakeTemp(Temperature, m_pModelInfo->JDayNum));
+		max(0.0000001, OsmoticPressureScaling*f_WaterUptakeTemp(Temperature, m_pModelInfo->JDayNum));
 }
 double WaterUptake::MaxPlantWaterStorage(size_t IndexP) {
 	if (PlantWaterStorage_Sw(PlantWaterStorage) == PlantWaterStorage_Sw::f_LAI)
@@ -769,7 +769,7 @@ double WaterUptake::WaterUptakeSaltFuncL(size_t Index, size_t IndexPlant) {
 void WaterUptake::Integ()
 {
 	OutFlow(p_Soil_WaterF->WaterStorage,WUptakeRate);
-	if(PlantWaterStorage>0) {
+	if(PlantWaterStorage_Sw(PlantWaterStorage)> PlantWaterStorage_Sw::Not_considered) {
 		InFlow(PlantWater, PlantWaterUptake);
 		OutFlow(PlantWater, Transpiration);
 	}

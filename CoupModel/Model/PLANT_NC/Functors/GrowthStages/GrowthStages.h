@@ -162,7 +162,7 @@ public: GrowingSumF(vector<double> ThresHold, vector<double> ThresHold_Dorming, 
 				DormSum = 0.;
 
 			if (ContinStopSum > 3) Growing = false;
-			if (GSum[index] > 20. && (DayNum < 220.&&Latitude>0) || (DayNum > 360 && Latitude < 0))
+			if (GSum[index] > 200. && (DayNum < 220.&&Latitude>0) || (DayNum > 360 && Latitude < 0))
 				SpringDev = true;
 			else
 				SpringDev = false;

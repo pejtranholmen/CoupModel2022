@@ -490,10 +490,20 @@ bool NC_Plant::Ini()	{
 		ContinStopSum = 0.;
 		SpringDev = true;
 		Growing = true;
+		Emergence_Done.resize(pPlant->NumPlants);
 		if (!Winter_Regulation) {
 			Growing = true;
 			SpringDev = false;
+
+			for (size_t i = 0; i < Initial_GSI.size(); i++)    if (Initial_GSI[i] > 1.) Emergence_Done[i] = true;
 		}
+		else {
+			SpringDev = false;
+			for (size_t i = 0; i < Initial_GSI.size(); i++)    if (Initial_GSI[i] <= 1.) Emergence_Done[i] = false;
+
+		}
+	
+		
 
 		UptakeDistWithDepth.resize(pPlant->NumPlants);
 		for (size_t i = 0; i < UptakeDistWithDepth.size(); i++)
@@ -551,8 +561,7 @@ bool NC_Plant::Ini()	{
 			}
 		}
 
-		Emergence_Done.resize(pPlant->NumPlants);
-		for (size_t i = 0; i < Initial_GSI.size(); i++)    if (Initial_GSI[i] >= 1.) Emergence_Done[i] = true;
+	
 		GPP_Current.Light.resize(pPlant->NumPlants);
 		GPP_Current.Nitrogen.resize(pPlant->NumPlants);
 		GPP_Current.Water.resize(pPlant->NumPlants);
@@ -1145,8 +1154,10 @@ void NC_Plant::Integ()
 				InFlow(P_State[P_ReLink[j].second][jj], P_ReAllocation[j][jj]);
 			}
 			for (size_t j = OLD_LEAF_MOBILE; j <= COARSE_ROOT_MOBILE; j++) {
-				OutFlow(P_State[P_ReLink[j].first][jj], P_ReAllocation[j][jj]);
-				InFlow(P_State[P_ReLink[j].second][jj], P_ReAllocation[j][jj]);
+				if (j != 17) {
+					OutFlow(P_State[P_ReLink[j].first][jj], P_ReAllocation[j][jj]);
+					InFlow(P_State[P_ReLink[j].second][jj], P_ReAllocation[j][jj]);
+				}
 			}
 			for (size_t j = MOBILE_LEAF; j < MOBILE_NEWMOBILE; j++) {
 				OutFlow(P_State[P_ReLink[j].first][jj], P_ReAllocation[j][jj]);
@@ -1792,13 +1803,8 @@ auto Growth_Stage = [&](size_t index){
 			}
 		}
 	}
-	else if (GrowthStageIndex[index]<1.&&Max_GSI[index]>0.) { // // 1 emergence
-		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on&& DormingStartDayNum[index] > 1.) {
-			out = 0.;	
-			SpringDevDayNum[index] = 0.;
-			GrowingStage[index] = 0.;
-		}
-		else if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
+	else if (GrowthStageIndex[index]<=1.&&Max_GSI[index]>0.&&!Emergence_Done[index]) { // // 1 emergence
+        if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
 			if (f_emergence(m_pModelInfo->JYearNum, m_pModelInfo->JDayNum)) {
 				out = 1;
 				Emergence_Done[index] = false;
@@ -1841,15 +1847,20 @@ auto Growth_Stage = [&](size_t index){
 
 				f_Emergence = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
 				f_EmergenceWithMoistControl = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
-				Emergence_Done[index] = false;
+				Emergence_Done[index] = true;
 				SpringDevDayNum[index] = m_pModelInfo->JDayNum;
 				GrowingStage[index] = 1.;
 			}
 		}
+		else if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
+			out = 0.;
+			SpringDevDayNum[index] = 0.;
+			GrowingStage[index] = 0.;
+		}
 		else
 			Emergence_Done[index] = false;
 	}
-	else if (GrowthStageIndex[index]<2.&&Max_GSI[index]>1.) { //
+	else if (GrowthStageIndex[index]<2.&&Max_GSI[index]>1.&&Emergence_Done[index]) { //
 		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
 			out = 0.;
 			SpringDevDayNum[index] = 0.;
@@ -2866,6 +2877,8 @@ void NC_Plant::MobilePool() {
 				if (cnratio < CN_RatioMinLeaf[i]) {
 					koll = max(0., P_State[_LEAF][_N_][i] - P_State[_LEAF][_C_][i] / CN_RatioMinLeaf[i]);
 				}
+				else
+					koll = max(0., P_State[_LEAF][_N_][i] - P_State[_LEAF][_C_][i] / CN_RatioMinLeaf[i]);
 			}
 				P_ReAllocation[OLD_LEAF_MOBILE][_N_][i] = max(0., P_State[_OLD_LEAF][_N_][i] - P_State[_OLD_LEAF][_C_][i] / CN_RatioMinLeaf[i]);
 				P_ReAllocation[OLD_STEM_MOBILE][_N_][i] = max(0., P_State[_OLD_STEM][_N_][i] - P_State[_OLD_STEM][_C_][i] / CN_RatioMinStem[i]);
@@ -3320,6 +3333,7 @@ void NC_Plant::At_YearShifting() {//year shift for P added by HH
 		}
 
 		DormingTempSum[i] = 0.;
+		Emergence_Done[i] = false;
 		f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
 
 

@@ -599,7 +599,7 @@ bool NewMap::WriteHeaderToXmlFile(pugi::xml_node node) {
 	general.append_attribute("OriginalFileName") = "kk";
 
 	string ExeDate;
-	ExeDate = "Version 6.2.0, ";
+	ExeDate = "Version 6.2.1, ";
 #ifndef COUPSTD
 	CWinApp* pApp;
 	pApp = AfxGetApp();
@@ -1541,6 +1541,7 @@ bool NewMap::Read_History_FromXmlFile(pugi::xml_node node)
 		h.tvalue= level1.attribute("TimeStamp").as_uint();
 		h.User = level1.attribute("User").as_string();
 		h.Computer = level1.attribute("Computer").as_string();
+		History_NewAdd(h.RunInfoType, group, type, name, h.strvalue, h.LocalIndex, h.tvalue, h.User, h.Computer);
 	}
 
 	return false;
@@ -2425,7 +2426,7 @@ bool NewMap::Info_Header(bool reading)
 		}
 		else { //kk
 			string ExeDate; 
-			ExeDate="Version 6.2.0, ";
+			ExeDate="Version 6.2.1, ";
 #ifndef COUPSTD
 			CWinApp *pApp;
 			pApp=AfxGetApp();

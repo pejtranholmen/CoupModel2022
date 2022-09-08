@@ -1,6 +1,7 @@
 #include "Potential_Transpiration.h"
 #include "../Atmosphere/SnowPack.h"
 #include "../../Simulator/Simulator.h"
+#include "../Util.h"
 						   
 Potential_Transpiration::Potential_Transpiration(void)
 {
@@ -207,7 +208,22 @@ bool Potential_Transpiration::Def()
 	functorprop.FunctorInitOption = string::npos;
 	funcname = "Canopy Conductance - CO2 influence)";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
-	Define(pFunc, functorprop, funcname, ps_vec);
+
+	plotpar.Num_Of_Curves = 1;
+	plotpar.Num_Of_Points = 300;
+	plotpar.Num_Of_X = 1;
+	plotpar.X_Min = 300;
+	plotpar.X_Max = 450;
+	plotpar.X_Label = "CO2 Conc (PPM)";
+	plotpar.Y_Label = "Scaling on Canopy Conductance (-)";
+	plotpar.LogXScale = false;
+	plotpar.LogYScale = false;
+	plotpar.Num_Of_Opt = 1;
+
+
+
+
+	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
 	P* pP;
@@ -615,7 +631,7 @@ void Potential_Transpiration::Flux()
 		  if (ConductanceCO2_Dependence == 0)
 			  ResSurfVar = f_CanopyResistance(f_Conductance(Winter, pMet->RadInShort, pMet->VapourPDef), LAI_Total);
 		  else if (ConductanceCO2_Dependence == 1)
-			  ResSurfVar = f_CanopyResistance(f_Conductance(Winter, pMet->RadInShort, pMet->VapourPDef)*f_Conductance_CO2(pNC_Plant->CO2_A*1.E6), LAI_Total);
+			  ResSurfVar = f_CanopyResistance(f_Conductance(Winter, pMet->RadInShort, pMet->VapourPDef)*f_Conductance_CO2(pNC_Plant->CO2_A), LAI_Total);
 	  }
          //ResSurfVar=Lohammar(LAI_Total);
 	  else if (RSMethod == 0) {
@@ -668,7 +684,19 @@ void Potential_Transpiration::Flux()
          if(MultiRoughness==0) // No - Common
             UsedPHeight=MaxHeight;
       
-         DisplVar=ShawP_Displ(MC_CanDensMax[MaxIndex], PAI, pMet->RefHeight, MaxHeight);
+         
+
+		 if (pMet->RefHeight - MaxHeight*1.2<0.) {
+
+#ifndef COUPSTD
+			 MFC_Util::MessageBox("Reference Height(Meteorological Data) too low, a forced adjustment made. \n"
+				 "New Reference Height is 1.4 * Max Plant Heigth\n"
+				 "Please consider a correct Reference Height above max plant height.\n");
+#endif
+			 pMet->RefHeight = MaxHeight * 1.4;
+		 }
+		 DisplVar = ShawP_Displ(MC_CanDensMax[MaxIndex], PAI, pMet->RefHeight, MaxHeight);
+
 
 		 if(pMet->MC_LAIAbove.size()<NumPlants) {
 			 pMet->MC_LAIAbove.resize(NumPlants);
@@ -783,7 +811,7 @@ double Potential_Transpiration::Lohammar_LL(size_t index) {
 
 	double scaleCoef = 1;
 	if (ConductanceCO2_Dependence == 1) {
-		scaleCoef = f_Conductance_CO2(pNC_Plant->CO2_A*1.E6);
+		scaleCoef = f_Conductance_CO2(pNC_Plant->CO2_A);
 	}
 	else if (ConductanceCO2_Dependence == 2) {
 		scaleCoef = f_Conductance_CO2(pNC_Plant->PCO2_Surface[index]);

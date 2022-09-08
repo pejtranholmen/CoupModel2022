@@ -2503,11 +2503,14 @@ void MyCug::OnCB_LClicked(int updn,RECT *rect,POINT *point,BOOL processed)
 
 
 
-	else if(isheet==12) {
+	else if(isheet==11) {
 		if(m_ShowHistoryList)
 			m_ShowHistoryList=FALSE;
-		else
-			m_ShowHistoryList=TRUE;
+		else {
+			m_ShowHistoryList = TRUE;
+			m_pSimDoc->m_ViewAll = true;
+
+		}
 
 		BeginWaitCursor();		
 		EnableUpdate(FALSE); 

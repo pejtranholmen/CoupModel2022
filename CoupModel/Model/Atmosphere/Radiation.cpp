@@ -100,6 +100,10 @@ void Radiation::Flux()
        Hour=(m_pModelInfo->T_Current-int(m_pModelInfo->T_Current))*24.;
 
        PotRis=f_potrishour(Hour, m_pModelInfo->JDayNum);
+	   if (PotRis < 0) {
+		   PotRis = 0.;
+
+	   }
        if(Turbidity==1)
           PotRis= f_atmcorrection(TAir, HumRel/100., Hour)*PotRis;
     }
@@ -123,7 +127,7 @@ void Radiation::Flux()
 	   }
 
 	}
-    else if (MISSCLOUD&&DurBriSun>0&&PotRis>=2.E7&&Hour>8&&Hour<16) {
+    else if (MISSCLOUD&&DurBriSun>0&&PotRis>=2.E7&&Hour>4&&Hour<20) {
 		if (TimeResolution_Sw(m_pModelStructure->TimeResolution) == TimeResolution_Sw::HOURLY) {
 			RelSun = min(1., max(0., DurBriSun / 60.));
 		}
@@ -160,10 +164,11 @@ void Radiation::Flux()
     RadInDiffuse=RadInShort;
     if(m_pModelStructure->TimeResolution!=1){  //! Removed 
              
-       RadInDiffuse=RadInShort*f_DiffuseRadRatio(CloudFrac, f_ThetaAngleHour(Hour));
+       RadInDiffuse=RadInShort*f_DiffuseRadRatio(CloudFrac, f_ThetaAngleHour(Hour, m_pModelInfo->JDayNum));
        RadInDirect=(RadInShort-RadInDiffuse)*f_SlopeCorrDirectRad(Hour); // ! Only correcting direct radiation /PEJ
+	  
        RadInShort=RadInDiffuse+RadInDirect ;//     ! Recalculating RadInShort to accout for extra direct radiation/PEJ
- 
+	   RadFracDirect = RadInDirect / RadInShort;
     }
    // ! END SNOWMIP2 ADDITION, DG 2008-09-02
 	RADDIST radout;
@@ -582,7 +587,7 @@ RADDIST Radiation::RadInterceptFunc(double TotalAmount, enum radtypes ActRadType
 		if(p_Plant->SoilCoverFraction[i]<=0||p_Plant->SoilCoverFraction[i]>3)
 			p_Plant->SoilCoverFraction[i]=0.01;
 		if(p_Plant->SoilCoverFraction[i]<1.&&DirectShortWaveSwitch) 
-			p_Plant->SoilCoverFraction[i]=max(1., p_Plant->SoilCoverFraction[i]/f_CanopyShadeCover(f_ThetaAngleHour(Hour), p_Plant->PlantHeight[i]));
+			p_Plant->SoilCoverFraction[i]=max(1., p_Plant->SoilCoverFraction[i]/f_CanopyShadeCover(f_ThetaAngleHour(Hour , m_pModelInfo->JDayNum), p_Plant->PlantHeight[i]));
 	}
 	p_Plant->TotSoilCovFrac=sum(p_Plant->SoilCoverFraction);
 

@@ -117,7 +117,11 @@ string PGUtil::DateConv(dateformats d, string instr)
 			p1 = instr.find("/");
 			p2 = instr.rfind("/");
 		}
-
+		auto phyf1 = instr.find("-");
+		auto phyf2 = instr.rfind("-");
+		if (phyf1 <= 2 && phyf2>2) {
+			instr = "20" + instr;
+		}
 
 
 		if (p1!=string::npos) {
@@ -144,6 +148,7 @@ string PGUtil::DateConv(dateformats d, string instr)
 
 			return outstr;
 		}
+		
 		return instr;
 }
 /*void PGUtil::setpgaddinfo(char *filename, int *irep, float *x, float *y, float *z)
