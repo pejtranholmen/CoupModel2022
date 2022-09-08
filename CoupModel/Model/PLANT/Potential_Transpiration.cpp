@@ -206,7 +206,7 @@ bool Potential_Transpiration::Def()
 
 	functorprop.FuncName = MyFunc::CONDUCTANCE_CO2; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = string::npos;
-	funcname = "Canopy Conductance - CO2 influence)";
+	funcname = "Canopy Conductance - CO2 influence";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 
 	plotpar.Num_Of_Curves = 1;
@@ -216,6 +216,8 @@ bool Potential_Transpiration::Def()
 	plotpar.X_Max = 450;
 	plotpar.X_Label = "CO2 Conc (PPM)";
 	plotpar.Y_Label = "Scaling on Canopy Conductance (-)";
+	plotpar.LegendsVec = {};
+
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
