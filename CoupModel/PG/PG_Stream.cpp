@@ -523,7 +523,9 @@ bool PG_Stream::WritePGFileStartHeader(size_t nrecords, size_t nrepititions, siz
 {
 	if (pPGOutStream == nullptr) {
 		if (m_UseMainStream) pPGOutStream = &m_MainPGStreamReadWrite;
-		else  pPGOutStream = &m_ExtraPGStreamWrite;
+		else {
+			pPGOutStream = &m_ExtraPGStreamWrite;
+		}
 	}
 	
 	unsigned int lengthRecord = pg.Shape.NumVar * 4 + 4;
@@ -540,6 +542,11 @@ bool PG_Stream::WritePGFileStartHeader(size_t nrecords, size_t nrepititions, siz
 
 	pPGOutStream->seekp(newpos, ios::beg);
 	actpos = pPGOutStream->tellp();
+
+	if (pPGOutStream->good() != true) {
+		auto koll = actpos;
+
+	}
 	pPGOutStream->write((char*)&totnumrecords, 4);
 	pPGOutStream->write((char*)&lengthRecord, 4);
 
@@ -876,6 +883,7 @@ bool PG_Stream::CreateNewFile(size_t numv, size_t numr, size_t repit)
 		pg.status.b.buf_Size = pg.Shape.RecordSize_Repetion;
 		pg.status.b.NumberOfBuf = 0;
 		pg.status.a.LocalStartIndex = 0;
+		m_UseMainStream = true;
 	}
 
 	else {

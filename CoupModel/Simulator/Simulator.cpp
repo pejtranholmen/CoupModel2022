@@ -215,6 +215,8 @@ bool Simulator::Start(bool MultiFlag, bool First)
 			cout << " problems when creating file:" +m_pSim->m_PG_MultiOutputFile.GetFileName();
 
 #endif
+			auto koll = m_pSim->m_PG_MultiOutputFile.GetFileName();
+			int i = 12;
 
 
 		}
