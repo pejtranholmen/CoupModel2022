@@ -25,7 +25,12 @@ bool Soil_HeatF::Ini()	{
 	function<void(vector<double>*, vector<double>*, vector<double>*)> f_ThCond;
 	f_ThCond=GetVectorPointer_D3_Functor(MyFunc::THERMALCOND_KERSTEN);
 	f_ThCond(&ThCondV, &p_Soil_WaterF->Theta, &ThQual);
-	f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_KERSTEN);
+
+	if (ThCondFunction_Sw(ThCondFunction) == ThCondFunction_Sw::Ballard_Arp)
+		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_MODEL_BALLARD_ARP);
+	else
+		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_KERSTEN);
+	
 	Thermal_ReCalc();
 	DAMPDEPTH=0.1;
 	T_Step=*pT_Step;
@@ -112,7 +117,10 @@ bool Soil_HeatF::Ini()	{
 }
 bool Soil_HeatF::IniFunctors() {
 
-	f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_KERSTEN);
+	if(ThCondFunction_Sw(ThCondFunction)==ThCondFunction_Sw::Ballard_Arp)
+		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_MODEL_BALLARD_ARP);
+	else
+		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_KERSTEN);
 	return true;
 }
 bool Soil_HeatF::Dyn()
@@ -473,7 +481,7 @@ void Soil_HeatF::HeatVapourFlow()
 {
 	for(size_t i=0; i<SoilHeat.size()-2&&i<p_Soil_WaterF->NCalc; i++) {
 		SoilHeatFlow[i]+=p_Soil_WaterF->VapourFlow[i]*Fix::LATE;
-		if(ThCondOutput==2) {
+		if(ThCondOutput == 2) {
 			if(abs(Temp[i]-Temp[i+1])>0.01) {
 				double testv=SoilHeatFlow[i]/(Temp[i]-Temp[i+1])*p_Soil_WaterF->DistanceMidpLayers[i];
 				if(testv>0.05) ThCondV[i]=testv;

@@ -1485,11 +1485,16 @@ function<double(size_t, double, double)> FunctFactory::Set_D2_TableFunctor() {
 			}
 			return LeafAreaIndex(parvv[0], parvv[1]);
 		}
-	case MyFunc::THERMALCOND_BALLARD_ARP:
-		if (m_P_Par.size() == 10)
+	case MyFunc::THERMALCOND_MODEL_BALLARD_ARP:
+		if (m_P_Par.size() == 10) // Corresponds to model layers
 			return ThCond_BallarpArp(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_P_Par[0],
 				m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4], m_P_Par[5], m_P_Par[6],
 				m_P_Par[7], m_P_Par[8], m_P_Par[9]);
+		break;
+	case MyFunc::THERMALCOND_MEAS_BALLARD_ARP:
+	if (m_P_Par.size() == 5) // Corresponds to measured layers
+			return ThCond_BallarpArp(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_P_Par[0],
+				m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4]);
 		break;
 	case MyFunc::THERMALCOND_KERSTEN:
 		if (m_P_Par.size() == 6) {

@@ -314,7 +314,7 @@ public:
 			double ThCondF = (fc1*pow(10., fc2*bd[index])+ fc3*pow(10., fc4*bd[index])*ThetaW);
 			THCOND = ThQual*ThCondF + (1 - ThQual)*THCOND;
 		}
-		return max(THCOND, 0.02);
+		return max(min(10.,THCOND), 0.02);
 	}
 	double operator() (double Theta, double BulkDensity, double ThQual) {
 		double ThetaW;
@@ -325,7 +325,7 @@ public:
 			double ThCondF = (fc1*pow(10., fc2*BulkDensity) + fc3*pow(10., fc4*BulkDensity)*ThetaW);
 			THCOND = ThQual*ThCondF + (1 - ThQual)*THCOND;
 		}
-		return max(THCOND, 0.02);
+		return max(min(10.,THCOND), 0.02);
 	}
 private:
 	double c1, c2, c3, fc1, fc2, fc3, fc4;
@@ -434,34 +434,33 @@ private:
 };
 class KerstenFactor {
 public:
-	KerstenFactor(double Th_Beta, vector<double> SolidVol_FracOrg, vector<double> BallardArpCoef, vector<double> Saturation) : Th_Beta(Th_Beta), m_SolidVol_FracOld(SolidVol_FracOrg),
-		m_BallardArpCoef(BallardArpCoef), m_Saturation(Saturation) {}
+	KerstenFactor(double Th_Beta, vector<double> SolidVol_FracOrg, vector<double> BallardArpCoef, vector<double> Saturation) : Th_Beta(Th_Beta), m_SolidVol_FracOrg(SolidVol_FracOrg),
+		m_BallardArpCoef(BallardArpCoef), m_Saturation(Saturation) { }
 	double operator() (size_t index, double Theta, double ThQual) {
 		double RelSat;
-		if (m_SolidVol_FracOld.size() <= index) return 0.;
+		if (m_SolidVol_FracOrg.size() <= index) return 0.;
 		RelSat = min(1., Theta / m_Saturation[index]);
 		if (ThQual <= 0) {
 			if (RelSat >= 1) return 1.;
 			return pow(RelSat, m_BallardArpCoef[index])*pow(1. / (1 + exp(-Th_Beta*RelSat)), 3.)
-				- pow(pow((1 - RelSat) / 2, 3), 1 - m_SolidVol_FracOld[index]);
+				- pow(pow((1 - RelSat) / 2, 3), 1 - m_SolidVol_FracOrg[index]);
 		}
 		else
-			return pow(RelSat*(1 - ThQual) + RelSat*ThQual*1.1, 1 + m_SolidVol_FracOld[index]);
+			return pow(RelSat*(1 - ThQual) + RelSat*ThQual*1.1, 1 + m_SolidVol_FracOrg[index]);
 	}
 
 private:
-	vector<double> m_SolidVol_FracOld, m_BallardArpCoef, m_Saturation;
+	vector<double> m_SolidVol_FracOrg, m_BallardArpCoef, m_Saturation;
 	double Th_Beta;
 
 };
 
-enum class BArpOutputs {Solid, Dry, FixedSaturated};
 class ThCond_BallarpArp {
 public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<double> Meas_Sand, vector<double> Meas_Gravel, vector<double> Meas_Organic, vector<double> Meas_QuartsFraction,
 	vector<double> Meas_Saturation,
 	vector<double> UpperDepth, vector<double> LowerDepth, vector<double> DepthLayers, vector<double> ThicknessLayers, vector<double> DepthMidpLayer) {
 
-	vector<double> VolumeSolid,  FracGravel,  FracSand, FracQuarts, FracOrg,  BulkDens;
+	vector<double> FracSolid, Sim_Saturation, FracGravel,  FracSand, FracQuarts, FracOrg,  BulkDens;
 	vector<double> DummyFracMidPoint;
 
 	function<void(vector<double>&, vector<double>&, vector<double>& , bool)> f_ModelLayers= FromMeasuredLayersToModelLayers(UpperDepth, LowerDepth, DepthLayers, ThicknessLayers, DepthMidpLayer);
@@ -470,53 +469,87 @@ public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<do
 	f_ModelLayers(Meas_QuartsFraction, DummyFracMidPoint, FracQuarts, true);
 	f_ModelLayers(Meas_Organic, DummyFracMidPoint, FracOrg, true);
 	f_ModelLayers(Meas_Gravel, DummyFracMidPoint, FracGravel, true);
-	f_ModelLayers(Meas_Saturation, DummyFracMidPoint, VolumeSolid, true);
-	BulkDens.resize(VolumeSolid.size());
+	f_ModelLayers(Meas_Saturation, DummyFracMidPoint, Saturation, true);
+	BulkDens.resize(Saturation.size());
+	FracSolid.resize(Saturation.size());
 
 	for (size_t i = 0; i < FracSand.size(); i++) {
-		BulkDens[i]=(100 - VolumeSolid[i]) / 100.*Fix::DensityofSolidSoil;
+		BulkDens[i]=(100 - Saturation[i]) / 100.*Fix::DensityofSolidSoil;
 		FracSand[i] = FracSand[i] / 100.;
 		FracQuarts[i] = FracQuarts[i] / 100.;
 		FracOrg[i] = FracOrg[i] / 100.;
 		FracGravel[i] = FracGravel[i] / 100.;
-		VolumeSolid[i] = 1. - VolumeSolid[i] / 100.; // Convert from Saturation to Volume of Solid...
+		FracSolid[i] = 1. - Saturation[i] / 100.; // Convert from Saturation to Volume of Solid...
 
 	}
 
 	vector<double> VolFracOrg;
-	for (size_t i = 0; i < VolumeSolid.size(); i++) {
-		f_Mineral = ThSolidFrac(Fix::ThermalCond_Mineral, 1 - VolumeSolid[i]*FracQuarts[i] - VolumeSolid[i]*FracOrg[i]);
-		f_Org = ThSolidFrac(Fix::ThermalCond_Organic, VolumeSolid[i]*FracOrg[i]);
-		f_Quarts = ThSolidFrac(Fix::ThermalCond_Quarts, VolumeSolid[i]*FracQuarts[i]);
-		VolFracOrg.push_back(VolumeSolid[i] * FracOrg[i]);
-		Saturation.push_back(1 - VolumeSolid[i]);
+	for (size_t i = 0; i < FracSolid.size(); i++) {
+		f_Mineral = ThSolidFrac(Fix::ThermalCond_Mineral, 1 - FracSolid[i]*FracQuarts[i] - FracSolid[i]*FracOrg[i]);
+		f_Org = ThSolidFrac(Fix::ThermalCond_Organic, FracSolid[i]*FracOrg[i]);
+		f_Quarts = ThSolidFrac(Fix::ThermalCond_Quarts, FracSolid[i]*FracQuarts[i]);
+		VolFracOrg.push_back(FracSolid[i] * FracOrg[i]);
+		Saturation_Fraction.push_back(1. -FracSolid[i]); // volumetric %
 		double ThSolid = f_Org()*f_Quarts()*f_Mineral()	;
-		f_Solid = ThSolidFrac(ThSolid, VolumeSolid[i]);
-		f_Sat = ThSolidFrac(Fix::ThermalCond_Water, 1 - VolumeSolid[i]);
+		f_Solid = ThSolidFrac(ThSolid, FracSolid[i]);
+		f_Sat = ThSolidFrac(Fix::ThermalCond_Water, Saturation_Fraction[i]);
 		ThSolid_Out.push_back(ThSolid);
 		ThDry_Out.push_back(((Th_a*ThSolid - Fix::ThermalCond_Air)*BulkDens[i] + Fix::ThermalCond_Air*Fix::DensityofSolidSoil) /
 			(Fix::DensityofSolidSoil - (1 - Th_a)*BulkDens[i]));
 		ThFixedSaturated_Out.push_back(f_Solid()*f_Sat());
-		Ballard_Arp_PowerCoef.push_back(0.5*(1 + VolumeSolid[i] * FracOrg[i] - Th_Alfa* VolumeSolid[i] * FracSand[i] - VolumeSolid[i] * FracGravel[i]));
+		Ballard_Arp_PowerCoef.push_back(0.5*(1 + FracSolid[i] * FracOrg[i] - Th_Alfa* FracSolid[i] * FracSand[i] - FracSolid[i] * FracGravel[i]));
 
 	}
 	f_KerstenFactor = KerstenFactor(Th_Beta, VolFracOrg, Ballard_Arp_PowerCoef, Saturation);
 }
-	vector<double> operator() (BArpOutputs Value) {
-			switch (Value) {
-			case BArpOutputs::Dry:	return ThDry_Out;
-			case BArpOutputs::FixedSaturated: return ThFixedSaturated_Out;
-			case BArpOutputs::Solid:	return ThSolid_Out;
-			}
-		}
+	  ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<double> Meas_Sand, vector<double> Meas_Gravel, vector<double> Meas_Organic, vector<double> Meas_QuartsFraction,
+		  vector<double> Meas_Saturation): Saturation(Meas_Saturation) {
+
+		  vector<double> BulkDens, FracSand, FracQuarts, FracOrg, FracGravel, FracSolid;
+		  
+
+		  BulkDens.resize(Meas_Saturation.size()); FracSand.resize(Meas_Saturation.size());
+		  FracQuarts.resize(Meas_Saturation.size()); FracOrg.resize(Meas_Saturation.size());
+		  FracGravel.resize(Meas_Saturation.size()); FracSolid.resize(Meas_Saturation.size());
+
+		  for (size_t i = 0; i < Meas_Saturation.size(); i++) {
+			  BulkDens[i] = (100 - Meas_Saturation[i]) / 100. * Fix::DensityofSolidSoil;
+			  FracSand[i] = Meas_Sand[i] / 100.;
+			  FracQuarts[i] = Meas_QuartsFraction[i] / 100.;
+			  FracOrg[i] = Meas_Organic[i] / 100.;
+			  FracGravel[i] = Meas_Gravel[i] / 100.;
+			  FracSolid[i] = 1. - Meas_Saturation[i] / 100.; // Convert from Saturation to Volume of Solid...
+
+		  }
+
+		  vector<double> VolFracOrg;
+		  for (size_t i = 0; i < FracSolid.size(); i++) {
+			  f_Mineral = ThSolidFrac(Fix::ThermalCond_Mineral, 1 - FracSolid[i] * FracQuarts[i] - FracSolid[i] * FracOrg[i]);
+			  f_Org = ThSolidFrac(Fix::ThermalCond_Organic, FracSolid[i] * FracOrg[i]);
+			  f_Quarts = ThSolidFrac(Fix::ThermalCond_Quarts, FracSolid[i] * FracQuarts[i]);
+			  VolFracOrg.push_back(FracSolid[i] * FracOrg[i]);
+			  Saturation_Fraction.push_back(1. - FracSolid[i]); // volumetric %
+			  double ThSolid = f_Org() * f_Quarts() * f_Mineral();
+			  f_Solid = ThSolidFrac(ThSolid, FracSolid[i]);
+			  f_Sat = ThSolidFrac(Fix::ThermalCond_Water, Saturation_Fraction[i]);
+			  ThSolid_Out.push_back(ThSolid);
+			  ThDry_Out.push_back(((Th_a * ThSolid - Fix::ThermalCond_Air) * BulkDens[i] + Fix::ThermalCond_Air * Fix::DensityofSolidSoil) /
+				  (Fix::DensityofSolidSoil - (1 - Th_a) * BulkDens[i]));
+			  ThFixedSaturated_Out.push_back(f_Solid() * f_Sat());
+			  Ballard_Arp_PowerCoef.push_back(0.5 * (1 + FracSolid[i] * FracOrg[i] - Th_Alfa * FracSolid[i] * FracSand[i] - FracSolid[i] * FracGravel[i]));
+
+		  }
+		  f_KerstenFactor = KerstenFactor(Th_Beta, VolFracOrg, Ballard_Arp_PowerCoef, Saturation);
+	  }
+
 	double operator() (size_t index, double Theta, double ThQual) {
 
 		double ThSat;
-		if (ThQual < 0.001) ThSat = f_Sat();
+		if (ThQual < 0.001) ThSat = ThSolid_Out[index] * f_Sat();
 		else {
 			function<double()> f_Water, f_Ice;
-			f_Water = ThSolidFrac(Fix::ThermalCond_Water, Saturation[index]*(1-ThQual));
-			f_Ice = ThSolidFrac(Fix::ThermalCond_Ice, Saturation[index] * ThQual);
+			f_Water = ThSolidFrac(Fix::ThermalCond_Water, Saturation_Fraction[index]*(1-ThQual));
+			f_Ice = ThSolidFrac(Fix::ThermalCond_Ice, Saturation_Fraction[index] * ThQual);
 			ThSat = ThSolid_Out[index] * f_Water()*f_Ice();
 		}
 		return ThSat*f_KerstenFactor(index, Theta, ThQual) + (1 - f_KerstenFactor(index, Theta, ThQual)*ThDry_Out[index]);
@@ -526,7 +559,7 @@ private:
 	function<double()> f_Mineral, f_Quarts, f_Org, f_Solid, f_Sat;
 	function<double(size_t, double, double)> f_KerstenFactor;
 	vector<double> ThSolid_Out, ThDry_Out, ThFixedSaturated_Out, Ballard_Arp_PowerCoef;
-	vector<double> Saturation;
+	vector<double> Saturation, Saturation_Fraction;
 };
 
 class SoilTempDampingDepth {

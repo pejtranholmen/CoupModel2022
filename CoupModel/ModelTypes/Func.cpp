@@ -295,6 +295,8 @@ bool Func::MakeOperation() {
 		return ((Profile_Functions*)m_Class)->Profile_ReCalc();
 	case MyFunc::HYDRAULIC_RECALC:
 		return ((Hydraulic_Functions*)m_Class)->ReCalc();
+	case MyFunc::BALLARD_ARP_RECALC:
+		return ((Thermal_Functions*)m_Class)->Thermal_ReCalc();
 	case MyFunc::DRAINAGE_RECALC:
 		return ((Soil_Drainage_Functions*)m_Class)->SetDrainageFunctors();
 

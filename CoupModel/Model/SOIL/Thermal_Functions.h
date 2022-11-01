@@ -29,15 +29,8 @@ class Thermal_Functions : public SimModule, public Thermal_Coef
 
 		bool Def();
 		bool FunctionDef();
-		bool  GetFunctionValue(size_t option);
-		double GetFunctionValue(size_t option, double x1);
-		double GetFunctionValue(size_t option,  double x1, double x2);
-		double GetFunctionValue(size_t option,  double x1, double x2, double x3);
-		double GetFunctionValue(size_t option,  double x1, double x2, double x3, double x4);
-		double GetFunctionValue(size_t option, size_t index, double x1);
-		double GetFunctionValue(size_t option, size_t index, double x1, double x2);
-		double GetFunctionValue(size_t option, size_t index, double x1, double x2, double x3);
-		double GetFunctionValue(size_t option, size_t index, double x1, double x2, double x3, double x4);
+		bool Thermal_ReCalc() noexcept;
+
 
 		Soil_Frost *p_Soil_WaterF; // Soil Water Flow module
 		Irrigation *p_Atm; // Atm Module
@@ -54,10 +47,11 @@ class Thermal_Functions : public SimModule, public Thermal_Coef
 
 		double Th_Alfa, Th_Beta, Th_a;
 		vector<double>	ThScale, ThScaleLog, K_IndType, BulkDenS, HeatCapSolid,	HeatCapSolidDist, ThQual;
-		vector<double> m_Vol_Quarts, m_Vol_Org, m_Vol_Sand, m_Vol_Coarse, m_Thermal_Dry, m_Thermal_Saturated;
+		vector<double> m_Quarts, m_SandFrac, m_GravelFrac, m_OrgFrac;
+	
 
 
-		vector<P*> mTab_ThScale, mTab_HeatCap, mTab_ModelTexture; 
+		vector<P*> mTab_ThScale, mTab_HeatCap;
 	
 
 size_t SolidHeatCapDist;
@@ -73,9 +67,7 @@ double ResIntegDepth;		//! The depth for which resitance is calculated when
 						//! Thickness
 double m_HeatCapSoilWater, m_HeatCapSoilIceMixture, m_FreezingStartTemperature;
 
-		bool Thermal_ReCalc();
-
-
+	
 
 		double SurfFlowDamp( double TempSurf);
 	 	double DampDepthYear(double Thetav);

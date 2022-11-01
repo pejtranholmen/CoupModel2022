@@ -15,8 +15,9 @@ class P : public Par
 		P(void) {P();};
 		void SetValue(vector<double> vec) {*_ptarget=vec;};
 		double GetValue(size_t index) { if (_ptarget->size() > index) return _ptarget->at(index); else return MISSING; };
+		vector<double> GetVector() { return *_ptarget;}
 		void SetSize(size_t NRow) {if(pNE!=nullptr) ((NE*)pNE)->ReSizeValue(NRow);};
-		size_t GetSize() {return _ptarget->size();};
+		size_t  GetSize() noexcept {return _ptarget->size();};
 		void Def(size_t ModuleNo, string name, vector<double> init, string unit, string conditions, 
 			double errormin, double errormax, double warningmin, double warningmax,
 			int recalc=0,  int view=0);

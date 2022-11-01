@@ -1,6 +1,7 @@
 #include "Thermal_Functions.h"
 #include "../PLANT/PlantModel.h"
 #include "../SOIL/SoilModel.h"
+#include "../SOIL/Functors/Profile_Functors.h"
 
 Thermal_Functions::Thermal_Functions(void)
 {
@@ -35,6 +36,17 @@ bool Thermal_Functions::Def()
 	string funcname;
 
 	FunctorProp functorprop;
+
+	funcname = "ReCalc Soil Thermal Function";
+	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
+
+
+	functorprop.FuncName = MyFunc::BALLARD_ARP_RECALC;
+	functorprop.Arg = MyArgType::BLANK;
+	Define(pFunc, functorprop, this, funcname, plotpar);
+
+	//auto tt = pFunc->MakeOperation();
+
 	P* pP;
 	vector<P*> p_vec;
 	vector<Ps*> ps_vec;
@@ -50,9 +62,7 @@ bool Thermal_Functions::Def()
 	pPs=new Ps(&Th_Beta, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED); ps_vec.push_back(pPs);
 	Define(pPs,"Ballard_Arp Beta",18.3,"-","HeatEq >= 1|Thermal Conductivity Function=1", 10.,30.);	
 
-	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
-
-	functorprop.FuncName = MyFunc::THERMALCOND_BALLARD_ARP; functorprop.Arg = MyArgType::T_D2;
+	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLARD_ARP; functorprop.Arg = MyArgType::T_D2;
 	funcname = "ThermalConduction Ballard_Arp"; functorprop.FunctorInitOption = string::npos;
 	functorprop.Set_PlotPar = true;
 	
@@ -62,14 +72,98 @@ bool Thermal_Functions::Def()
 	p_vec.push_back(m_pModelMap->GetPPointer("Quarts fraction of Sand"));
 
 	p_vec.push_back(m_pModelMap->GetPPointer("Saturation"));
-	p_vec.push_back(m_pModelMap->GetPPointer("Upper Depth"));
-	p_vec.push_back(m_pModelMap->GetPPointer("Lower Depth"));
+
+	plotpar.Num_Of_Curves = 2;
+	plotpar.Num_Of_Points = 100;
+	plotpar.Num_Of_X = 2;
+	plotpar.X_Min = 0;
+	plotpar.X_Max = 10;
+	plotpar.X_MaxPar = "mSaturation";
+	plotpar.X_Label = "Water Content (vol %)";
+	plotpar.Y_Label = "Thermal Conductivity (W/m/C)";
+	plotpar.LogXScale = false;
+	plotpar.LogYScale = false;
+	plotpar.Num_Of_Opt = 2;
+	plotpar.X2_Vec = { 0.,1. };
+	plotpar.LegendsVec = { "unfrozen","frozen" };
+	funcname = "ThermalConduction Orig Layers Ballard_Arp";
+
+	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLARD_ARP;
+	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
+	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear();
+	
+	
+	
+	
+	ps_vec.clear();
+
+	function<void(vector<double>&, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
+		m_pModelMap->GetPPointer("Lower Depth")->GetVector(),
+		m_pModelMap->GetPPointer("DepthLayers")->GetVector(),
+		m_pModelMap->GetPPointer("Thickness Layers")->GetVector(),
+		m_pModelMap->GetPPointer("DepthMidpLayers")->GetVector());
+
+	vector<double> DummyFracMidPoint, initv;
+
+	f_ModelLayers(m_pModelMap->GetPPointer("Quarts fraction of Sand")->GetVector(), DummyFracMidPoint, initv, true);
+
+	NE* pNL;
+	pNL = m_pModelMap->GetNEPointer("Number of Layers");
+
+	pP = new P(&m_Quarts, pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
+	mTab_ThScale.push_back(pP);
+
+	Define(pP, pNL, "mQuarts", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+
+	pP = new P(&m_SandFrac, pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
+	mTab_ThScale.push_back(pP);
+	f_ModelLayers(m_pModelMap->GetPPointer("Sand Content")->GetVector(), DummyFracMidPoint, initv, true);
+
+	Define(pP, pNL, "mSandFrac", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+
+	pP = new P(&m_GravelFrac, pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
+	mTab_ThScale.push_back(pP);
+	f_ModelLayers(m_pModelMap->GetPPointer("Gravel Content")->GetVector(), DummyFracMidPoint, initv, true);
+	Define(pP, pNL, "mGravelFrac", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+
+	pP = new P(&m_OrgFrac, pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
+	mTab_ThScale.push_back(pP);
+
+
+	f_ModelLayers(m_pModelMap->GetPPointer("Organic Content")->GetVector(), DummyFracMidPoint, initv, true);
+	Define(pP, pNL, "mOrgFrac", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+	Tab* pTab;
+	pTab = new  Tab(&mTab_ThScale, SIMPROFILE, HEAT, STORAGE, NOBPROC, DETAILED);
+
+	Define(pTab, "Thermal Conductivity, Model Layers", 1);
+
+
+	funcname = "ThermalConduction Model Layers Ballard_Arp";
+	functorprop.FuncName = MyFunc::THERMALCOND_MODEL_BALLARD_ARP;
+	ps_vec.clear(); p_vec.clear();
+
+	ps_vec.push_back(m_pModelMap->GetPsPointer("Ballard_Arp a"));
+	ps_vec.push_back(m_pModelMap->GetPsPointer("Ballard_Arp Alpha"));
+	ps_vec.push_back(m_pModelMap->GetPsPointer("Ballard_Arp Beta"));
+
+
+	p_vec.push_back(m_pModelMap->GetPPointer("mSandFrac"));
+	p_vec.push_back(m_pModelMap->GetPPointer("mGravelFrac"));
+	p_vec.push_back(m_pModelMap->GetPPointer("mOrgFrac"));
+	p_vec.push_back(m_pModelMap->GetPPointer("mQuarts"));
+	p_vec.push_back(m_pModelMap->GetPPointer("mSaturation"));
+	p_vec.push_back(m_pModelMap->GetPPointer("mUpper Depth"));
+	p_vec.push_back(m_pModelMap->GetPPointer("mLower Depth"));
 	p_vec.push_back(m_pModelMap->GetPPointer("DepthLayers"));
 	p_vec.push_back(m_pModelMap->GetPPointer("Thickness Layers"));
 	p_vec.push_back(m_pModelMap->GetPPointer("DepthMidpLayers"));
 
-	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
-	
+	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
+	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); ps_vec.clear(); p_vec.clear();
+
+
+
+
 
 
 	p_vec.push_back(m_pModelMap->GetPPointer("Saturation"));
@@ -87,8 +181,8 @@ bool Thermal_Functions::Def()
 
 	function<vector<double>(bool)> f_DryBulk = GetVector_boolBlank_Functor(MyFunc::DRYBULKDENSITY);
 	vector<double> bd = f_DryBulk(true);
-	NE *pNL;
-	pNL = m_pModelMap->GetNEPointer("Number of Layers");
+
+	
 	pP = new P(&BulkDenS, pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
 	Define(pP, pNL, "Bulk_DenS", bd, "-", "HeatEq >= 1", -3., 3., -1., 1.);
 
@@ -104,9 +198,6 @@ bool Thermal_Functions::Def()
 	function<vector<double>()> f_HeatCapSoil = GetVector_Blank_Functor(MyFunc::HEATCAPACITY_SOLID);
 	auto ccc = f_HeatCapSoil();
 
-	f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_BALLARD_ARP);
-
-	auto res = f_ThermalCond(0, 20., 0.);
 	pPs = new Ps(&OrganicLayerThickness, SINGLE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED); ps_vec.push_back(pPs);
 	Define(pPs, "OrganicLayerThick", 0., "m", "HeatEq >= 1", 0., 100., 0.0, 10.); 
 	
@@ -157,19 +248,19 @@ bool Thermal_Functions::Def()
 
 	p_vec.push_back(m_pModelMap->GetPPointer("Bulk_DenS"));
 
-	vector<double>initv;
+	
 	initv.resize(p_Soil_WaterF->NL);
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
 
 	pP=new P(&ThScaleLog,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED); p_vec.push_back(pP);
 	for (auto i = initv.begin(); i != initv.end(); ++i) *i = 0.;
-	Define(pP, pNL,"ThScaleLog",initv,"-","HeatEq >= 1", -3.,3.,-1.,1., 5);  // 5 is recalc to thermal properties functions
+	Define(pP, pNL,"ThScaleLog",initv,"-","HeatEq >= 1|Thermal Conductivity Function=0;", -3.,3.,-1.,1., 5);  // 5 is recalc to thermal properties functions
 
 	p_vec.push_back(m_pModelMap->GetPPointer("DepthMidpLayers"));
 	p_vec.push_back(m_pModelMap->GetPPointer("DistanceMidpLayers"));
 	p_vec.push_back(m_pModelMap->GetPPointer("bLambda"));
 	p_vec.push_back(m_pModelMap->GetPPointer("mWilting Point"));
-	functorprop.Set_PlotPar = false;
+	functorprop.Set_PlotPar = true;
 	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::THERMALCOND_KERSTEN; functorprop.Arg = MyArgType::T_D2;
 	funcname = "ThermalConduction Kersten"; functorprop.FunctorInitOption = string::npos;
@@ -177,7 +268,7 @@ bool Thermal_Functions::Def()
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
 
 	f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_KERSTEN);
-	auto kk = f_ThermalCond(0, 10., 0.);
+	auto kk = f_ThermalCond(0, 20., 0.);
 
 
 	ps_vec.push_back(m_pModelMap->GetPsPointer("OrganicC1"));
@@ -262,10 +353,27 @@ bool Thermal_Functions::Def()
 
 
 
+	pP=new P(&ThScaleLog,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
+		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
 	mTab_ThScale.push_back(pP);
-	pP=new P(&ThScale,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
-		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.;
-		Define(pP, pNL,"ThScale",initv,"-","HeatEq >= 1", .0001,30.);
+	Define(pP, pNL,"ThScaleLog",initv,"-","HeatEq >= 1|Thermal Conductivity Function=0", .0001,30.);
+
+	functorprop.FuncName = MyFunc::THERMALCOND_KERSTEN; functorprop.Arg = MyArgType::T_D2;
+	funcname = "Thermal Conductivity - Kersten"; functorprop.FunctorInitOption = string::npos;
+
+	pFunc = new Func(SINGLE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
+	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
+
+
+	vector<double> P1[5];
+	auto koll = (m_pModelMap->GetPPointer("Upper Depth"))->GetVector();
+	
+
+
+
+
+
+
 	pP=new P(&K_IndType,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0;
 		Define(pP, pNL,"K_IndType",initv,"-","HeatEq >= 1|Thermal Conductivity Function=0", -3.,3.,-1.,1.);
@@ -303,54 +411,18 @@ bool Thermal_Functions::Def()
 	pP=new P(&HeatCapSolidDist,pNL, SIMPROFILE, HEAT, STORAGE, NOBPROC, DETAILED);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=2.E6;
 		Define(pP, pNL,"C bulk",initv,"J/m3","HeatEq >= 1|SolidHeatCapDist", 1.E5,4.E6);
-		mTab_HeatCap.push_back(pP);
-	Tab *pTab;
-	pTab= new  Tab(&mTab_ThScale, SIMPROFILE, HEAT, STORAGE, NOBPROC, DETAILED);
-
-	Define(pTab, "Scaling coefficient", "ThScaleLog","HeatEq >= 1");
-
-//	mTab_ModelTexture
-	pTab= new  Tab(&mTab_ModelTexture, SIMPROFILE, HEAT, TRANSPORT, NOBPROC, DETAILED);
+	
+	mTab_HeatCap.push_back(pP);
 
 
-	pP=m_pModelMap->GetPPointer("mUpper Depth");
-	mTab_ModelTexture.push_back(pP);
-	pP=m_pModelMap->GetPPointer("mLower Depth");
-	mTab_ModelTexture.push_back(pP);
-
-	pP=new P(&m_Vol_Quarts,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
-	for(auto i=initv.begin(); i!=initv.end();++i) *i=4.;
-	Define(pP, pNL,"Quarts",initv,"vol %","HeatEq >= 1|Thermal Conductivity Function>0", 0.,100.,-1.,1., 0,405);
-	mTab_ModelTexture.push_back(pP);
-	for(auto i=initv.begin(); i!=initv.end();++i) *i=.8;
-	pP=new P(&m_Vol_Org,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
-	Define(pP, pNL,"Organic",initv,"vol %","HeatEq >= 1|Thermal Conductivity Function>0", 0.,100.,-1.,1., 0,405);
-	mTab_ModelTexture.push_back(pP);
-	for(auto i=initv.begin(); i!=initv.end();++i) *i=50.0;
-	pP=new P(&m_Vol_Sand,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
-	Define(pP, pNL,"Sand",initv,"vol %","HeatEq >= 1|Thermal Conductivity Function>0", 0.,100.,-1.,1., 0,405);
-	mTab_ModelTexture.push_back(pP);
-	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.0;
-	pP=new P(&m_Vol_Coarse,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
-	Define(pP, pNL,"Coarse",initv,"vol %","HeatEq >= 1|Thermal Conductivity Function>0", 0.,100.,-1.,1., 0,405);
-	mTab_ModelTexture.push_back(pP);
-	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.3;
-	pP=new P(&m_Thermal_Dry,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
-	Define(pP, pNL,"k Dry",initv,"vol %","HeatEq >= 1|Thermal Conductivity Function>0", 0.,100.,-1.,1., 0,405);
-	mTab_ModelTexture.push_back(pP);
-	for(auto i=initv.begin(); i!=initv.end();++i) *i=1.5;
-	pP=new P(&m_Thermal_Saturated,pNL, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED);
-	Define(pP, pNL,"k Saturated",initv,"vol %","HeatEq >= 1|Thermal Conductivity Function>0", 0.,100.,-1.,1., 0,405);
-	mTab_ModelTexture.push_back(pP);
-
-	Define(pTab, "Soil Thermal Properties",3);
+//
 
 	return true;
 
 }
 
 
-bool Thermal_Functions::Thermal_ReCalc() 
+bool Thermal_Functions::Thermal_ReCalc() noexcept 
 {
 	    HumusMixedBoundaryId=0;
 		FractionOfOrgMixedBoundary=0.;
@@ -397,8 +469,25 @@ bool Thermal_Functions::Thermal_ReCalc()
 		  
 		}
 
+		function<void(vector<double>&, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
+			m_pModelMap->GetPPointer("Lower Depth")->GetVector(),
+			m_pModelMap->GetPPointer("DepthLayers")->GetVector(),
+			m_pModelMap->GetPPointer("Thickness Layers")->GetVector(),
+			m_pModelMap->GetPPointer("DepthMidpLayers")->GetVector());
 
+		vector<double> DummyFracMidPoint, newvalues;
 
+		f_ModelLayers(m_pModelMap->GetPPointer("Quarts fraction of Sand")->GetVector(), DummyFracMidPoint, newvalues, true);
+		m_pModelMap->GetPPointer("mQuarts")->SetValue(newvalues);
+
+		f_ModelLayers(m_pModelMap->GetPPointer("Sand Content")->GetVector(), DummyFracMidPoint, newvalues, true);
+		m_pModelMap->GetPPointer("mSandFrac")->SetValue(newvalues);	
+		
+		f_ModelLayers(m_pModelMap->GetPPointer("Gravel Content")->GetVector(), DummyFracMidPoint, newvalues, true);
+		m_pModelMap->GetPPointer("mGravelFrac")->SetValue(newvalues);
+
+		f_ModelLayers(m_pModelMap->GetPPointer("Organic Content")->GetVector(), DummyFracMidPoint, newvalues, true);
+		m_pModelMap->GetPPointer("mOrgFrac")->SetValue(newvalues);
 		return true;
 }
 
@@ -626,3 +715,4 @@ double Thermal_Functions::Soil_Temp_HeatDemoFunc(double SoilHeat) {
 double Thermal_Functions::FreezingStartFunction(double OsmoticPotential) {
 	return pow(10, p_Soil_WaterF->OsmoticScaleSens)*Fix::TempToOsmoticP*OsmoticPotential;
 }
+

@@ -276,6 +276,11 @@ void ParameterPlot::MakeSoilReCalc() {
 		if(pFunc!=nullptr)
 			pFunc->MakeOperation();
 
+		pFunc = m_pSimDoc->GetFuncPointer(MyFunc::THERMALCOND_MODEL_BALLARD_ARP);
+
+
+		if (pFunc != nullptr) pFunc->MakeOperation();
+
 		if(m_ThermalReCalc) {
 			pSimB1=m_pSimDoc->GetPtr(FUNCTION,"ThermalScalingCoefEstimate");
 			pFunc=dynamic_cast<Func*>(pSimB1);
@@ -290,6 +295,8 @@ void ParameterPlot::MakeSoilReCalc() {
 
 
 	if (pFunc != nullptr) pFunc->MakeOperation();
+
+
 
 }
 

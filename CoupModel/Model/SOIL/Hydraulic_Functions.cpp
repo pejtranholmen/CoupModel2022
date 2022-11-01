@@ -425,7 +425,6 @@ bool Hydraulic_Functions::FunctionDef() {
 	pFunc= new Func(MPROFILE,WATER, WATERUPTAKE,NOBPROC, NORMAL);
 
 
-
 	functorprop.FuncName = MyFunc::HYDRAULIC_RECALC;
 	functorprop.Arg = MyArgType::BLANK;
 	Define(pFunc,functorprop,this,funcname, plotpar ); 
