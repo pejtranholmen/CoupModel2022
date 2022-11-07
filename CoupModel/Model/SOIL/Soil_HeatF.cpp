@@ -26,8 +26,8 @@ bool Soil_HeatF::Ini()	{
 	f_ThCond=GetVectorPointer_D3_Functor(MyFunc::THERMALCOND_KERSTEN);
 	f_ThCond(&ThCondV, &p_Soil_WaterF->Theta, &ThQual);
 
-	if (ThCondFunction_Sw(ThCondFunction) == ThCondFunction_Sw::Ballard_Arp)
-		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_MODEL_BALLARD_ARP);
+	if (ThCondFunction_Sw(ThCondFunction) == ThCondFunction_Sw::Balland_Arp)
+		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_MODEL_BALLAND_ARP);
 	else
 		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_KERSTEN);
 	
@@ -117,8 +117,8 @@ bool Soil_HeatF::Ini()	{
 }
 bool Soil_HeatF::IniFunctors() {
 
-	if(ThCondFunction_Sw(ThCondFunction)==ThCondFunction_Sw::Ballard_Arp)
-		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_MODEL_BALLARD_ARP);
+	if(ThCondFunction_Sw(ThCondFunction)==ThCondFunction_Sw::Balland_Arp)
+		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_MODEL_BALLAND_ARP);
 	else
 		f_ThermalCond = Get_D2_TableFunctor(MyFunc::THERMALCOND_KERSTEN);
 	return true;

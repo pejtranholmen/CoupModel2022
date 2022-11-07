@@ -30,7 +30,7 @@ bool Thermal_Functions::Def()
 	Sw *pSw;
 	pSw= new Sw(&ThCondFunction,SIMPROFILE,HEAT, HEAT_CONDUCTION,NOBPROC, NORMAL);
 
-    Define(pSw  ,"Thermal Conductivity Function",0,"Kersten|Ballard&Arp","HeatEq >= 1", 4 ); // 4 is ReCalc Function
+    Define(pSw  ,"Thermal Conductivity Function",0,"Kersten|Balland&Arp","HeatEq >= 1", 4 ); // 4 is ReCalc Function
 
 	Func *pFunc;
 	string funcname;
@@ -41,7 +41,7 @@ bool Thermal_Functions::Def()
 	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 
 
-	functorprop.FuncName = MyFunc::BALLARD_ARP_RECALC;
+	functorprop.FuncName = MyFunc::BALLAND_ARP_RECALC;
 	functorprop.Arg = MyArgType::BLANK;
 	Define(pFunc, functorprop, this, funcname, plotpar);
 
@@ -56,14 +56,14 @@ bool Thermal_Functions::Def()
 
 	Ps* pPs;
 	pPs = new Ps(&Th_a, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "Ballard_Arp a", 0.53, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0.4, 0.7);
+	Define(pPs, "Balland_Arp a", 0.53, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0.4, 0.7);
 	pPs=new Ps(&Th_Alfa, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"Ballard_Arp Alpha",.24,"-","HeatEq >= 1|Thermal Conductivity Function=1", .1,.4);	
+	Define(pPs,"Balland_Arp Alpha",.24,"-","HeatEq >= 1|Thermal Conductivity Function=1", .1,.4);	
 	pPs=new Ps(&Th_Beta, SIMPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"Ballard_Arp Beta",18.3,"-","HeatEq >= 1|Thermal Conductivity Function=1", 10.,30.);	
+	Define(pPs,"Balland_Arp Beta",18.3,"-","HeatEq >= 1|Thermal Conductivity Function=1", 10.,30.);	
 
-	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLARD_ARP; functorprop.Arg = MyArgType::T_D2;
-	funcname = "ThermalConduction Ballard_Arp"; functorprop.FunctorInitOption = string::npos;
+	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLAND_ARP; functorprop.Arg = MyArgType::T_D2;
+	funcname = "ThermalConduction Balland_Arp"; functorprop.FunctorInitOption = string::npos;
 	functorprop.Set_PlotPar = true;
 	
 	p_vec.push_back(m_pModelMap->GetPPointer("Sand Content"));
@@ -86,9 +86,9 @@ bool Thermal_Functions::Def()
 	plotpar.Num_Of_Opt = 2;
 	plotpar.X2_Vec = { 0.,1. };
 	plotpar.LegendsVec = { "unfrozen","frozen" };
-	funcname = "ThermalConduction Orig Layers Ballard_Arp";
+	funcname = "ThermalConduction Orig Layers Balland_Arp";
 
-	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLARD_ARP;
+	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLAND_ARP;
 	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear();
 	
@@ -138,13 +138,13 @@ bool Thermal_Functions::Def()
 	Define(pTab, "Thermal Conductivity, Model Layers", 1);
 
 
-	funcname = "ThermalConduction Model Layers Ballard_Arp";
-	functorprop.FuncName = MyFunc::THERMALCOND_MODEL_BALLARD_ARP;
+	funcname = "ThermalConduction Model Layers Balland_Arp";
+	functorprop.FuncName = MyFunc::THERMALCOND_MODEL_BALLAND_ARP;
 	ps_vec.clear(); p_vec.clear();
 
-	ps_vec.push_back(m_pModelMap->GetPsPointer("Ballard_Arp a"));
-	ps_vec.push_back(m_pModelMap->GetPsPointer("Ballard_Arp Alpha"));
-	ps_vec.push_back(m_pModelMap->GetPsPointer("Ballard_Arp Beta"));
+	ps_vec.push_back(m_pModelMap->GetPsPointer("Balland_Arp a"));
+	ps_vec.push_back(m_pModelMap->GetPsPointer("Balland_Arp Alpha"));
+	ps_vec.push_back(m_pModelMap->GetPsPointer("Balland_Arp Beta"));
 
 
 	p_vec.push_back(m_pModelMap->GetPPointer("mSandFrac"));

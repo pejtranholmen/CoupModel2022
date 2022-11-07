@@ -276,7 +276,7 @@ void ParameterPlot::MakeSoilReCalc() {
 		if(pFunc!=nullptr)
 			pFunc->MakeOperation();
 
-		pFunc = m_pSimDoc->GetFuncPointer(MyFunc::THERMALCOND_MODEL_BALLARD_ARP);
+		pFunc = m_pSimDoc->GetFuncPointer(MyFunc::THERMALCOND_MODEL_BALLAND_ARP);
 
 
 		if (pFunc != nullptr) pFunc->MakeOperation();

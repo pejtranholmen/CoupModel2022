@@ -4,7 +4,7 @@
 #include "./Profile_Functors.h"
 //#include "../Soil_HeatF.h"
 //#include "../ThermalCoef.h"
-enum class ThCondFunction_Sw{ Kersten,Ballard_Arp };
+enum class ThCondFunction_Sw{ Kersten,Balland_Arp };
 struct KERSTEN_COEF {
 	double UC1, UC2, UC3;
 	double FC1, FC2, FC3, FC4;
@@ -497,10 +497,10 @@ public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<do
 		ThDry_Out.push_back(((Th_a*ThSolid - Fix::ThermalCond_Air)*BulkDens[i] + Fix::ThermalCond_Air*Fix::DensityofSolidSoil) /
 			(Fix::DensityofSolidSoil - (1 - Th_a)*BulkDens[i]));
 		ThFixedSaturated_Out.push_back(f_Solid()*f_Sat());
-		Ballard_Arp_PowerCoef.push_back(0.5*(1 + FracSolid[i] * FracOrg[i] - Th_Alfa* FracSolid[i] * FracSand[i] - FracSolid[i] * FracGravel[i]));
+		Balland_Arp_PowerCoef.push_back(0.5*(1 + FracSolid[i] * FracOrg[i] - Th_Alfa* FracSolid[i] * FracSand[i] - FracSolid[i] * FracGravel[i]));
 
 	}
-	f_KerstenFactor = KerstenFactor(Th_Beta, VolFracOrg, Ballard_Arp_PowerCoef, Saturation);
+	f_KerstenFactor = KerstenFactor(Th_Beta, VolFracOrg, Balland_Arp_PowerCoef, Saturation);
 }
 	  ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<double> Meas_Sand, vector<double> Meas_Gravel, vector<double> Meas_Organic, vector<double> Meas_QuartsFraction,
 		  vector<double> Meas_Saturation): Saturation(Meas_Saturation) {
@@ -536,10 +536,10 @@ public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<do
 			  ThDry_Out.push_back(((Th_a * ThSolid - Fix::ThermalCond_Air) * BulkDens[i] + Fix::ThermalCond_Air * Fix::DensityofSolidSoil) /
 				  (Fix::DensityofSolidSoil - (1 - Th_a) * BulkDens[i]));
 			  ThFixedSaturated_Out.push_back(f_Solid() * f_Sat());
-			  Ballard_Arp_PowerCoef.push_back(0.5 * (1 + FracSolid[i] * FracOrg[i] - Th_Alfa * FracSolid[i] * FracSand[i] - FracSolid[i] * FracGravel[i]));
+			  Balland_Arp_PowerCoef.push_back(0.5 * (1 + FracSolid[i] * FracOrg[i] - Th_Alfa * FracSolid[i] * FracSand[i] - FracSolid[i] * FracGravel[i]));
 
 		  }
-		  f_KerstenFactor = KerstenFactor(Th_Beta, VolFracOrg, Ballard_Arp_PowerCoef, Saturation);
+		  f_KerstenFactor = KerstenFactor(Th_Beta, VolFracOrg, Balland_Arp_PowerCoef, Saturation);
 	  }
 
 	double operator() (size_t index, double Theta, double ThQual) {
@@ -558,7 +558,7 @@ public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<do
 private:
 	function<double()> f_Mineral, f_Quarts, f_Org, f_Solid, f_Sat;
 	function<double(size_t, double, double)> f_KerstenFactor;
-	vector<double> ThSolid_Out, ThDry_Out, ThFixedSaturated_Out, Ballard_Arp_PowerCoef;
+	vector<double> ThSolid_Out, ThDry_Out, ThFixedSaturated_Out, Balland_Arp_PowerCoef;
 	vector<double> Saturation, Saturation_Fraction;
 };
 
