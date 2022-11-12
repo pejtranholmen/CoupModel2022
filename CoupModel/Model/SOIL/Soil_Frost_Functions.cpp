@@ -458,13 +458,13 @@ void Soil_Frost_Functions::FrostBoundaries(vector<double> Heat, double HeatSurf)
 		 
 	  }
 	}// End Do Loop_over_layers
-  if(Heat.back()<0.&&IL<2) 
-         IL++;
-		if(IL<=1) 
-			FrostLowerB_1=-DepthLayers.back();
-		else
-            FrostLowerB_2=-DepthLayers.back();
-	
+  if (Heat.back() < 0. && IL < 2) {
+	  IL++;
+	  if (IL <= 1)
+		  FrostLowerB_1 = -DepthLayers.back();
+	  else
+		  FrostLowerB_2 = -DepthLayers.back();
+  }
 	  if(IU==0) FrostUpperB_1=0.;
 	  if(IU<=1) FrostUpperB_2=0.;
 	  if(IL==0) FrostLowerB_1=0.;

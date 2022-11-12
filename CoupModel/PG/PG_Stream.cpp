@@ -799,10 +799,14 @@ bool PG_Stream::Open(string filename, bool ShowError)
 	if(m_IsOpen)
 		return true; // When file already open
 	m_IsOpen=false;	
+	string prevname = filename;
 	filename = PGUtil::CheckedForExistingBinFileName(filename);
 
-		
-		if(pg.status.CompleteFileRead) {
+		if (filename == "") {
+			return false;
+
+		}
+		else if(pg.status.CompleteFileRead) {
 			if(!GetAllFileInfo(filename, ShowError)) {
 				if(ShowError) {
 #ifndef COUPSTD
@@ -822,7 +826,7 @@ bool PG_Stream::Open(string filename, bool ShowError)
 #ifndef COUPSTD
 				TRACE("Can't Open file %s to show description of data", pg.status.FileName); 
 					string str;
-					str="The PG-file: ";str+=pg.status.FileName; str+=" couldn´t be opened.";
+					str="The PG-file: ";str+=prevname; str+=" couldn´t be opened.";
 			//Display error message
 				MFC_Util::MessageBox(str.c_str(),"File Open Error",MB_OK|MB_ICONEXCLAMATION);
 #endif

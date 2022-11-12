@@ -52,7 +52,7 @@ bool Surface_Water_Functions::Def()
 	pPs = new Ps(&SurfCoef, SURFACEPOOL, WATER, SURFACERUNOFF, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs,"SurfCoef", 0.8,"-","WaterEq = 1",0., 1000.,0.,10.);
 	pPs= new Ps(&SurfPoolMax ,SURFACEPOOL,WATER, STORAGE,NOBPROC, NORMAL);
-	Define(pPs,  "SurfPoolMax", 0.,"mm","WaterEq = 1",0., 100.); ps_vec.push_back(pPs); 
+	Define(pPs,  "SurfPoolMax", 0.,"mm","WaterEq = 1",0., 200.); ps_vec.push_back(pPs); 
 
 	pFunc = new Func(SURFACEPOOL, WATER, SURFACERUNOFF, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar); ps_vec.clear();

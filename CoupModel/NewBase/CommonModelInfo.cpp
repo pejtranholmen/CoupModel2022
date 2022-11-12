@@ -256,7 +256,7 @@ CommonModelInfo::CommonModelInfo() {
 	m_GroupCategoryNo.insert(pair<size_t,size_t>(31,7));
 	m_GroupCategoryNo.insert(pair<size_t,size_t>(32,6));
 	m_GroupCategoryNo.insert(pair<size_t,size_t>(33,6));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(34,0));
+	m_GroupCategoryNo.insert(pair<size_t,size_t>(34,4));
 	m_GroupCategoryNo.insert(pair<size_t,size_t>(35,0));
 	m_GroupCategoryNo.insert(pair<size_t, size_t>(36, 6));
 	m_GroupCategoryNo.insert(pair<size_t, size_t>(37, 5));

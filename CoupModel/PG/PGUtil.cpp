@@ -398,8 +398,8 @@ int PGUtil::YearNumFunction(unsigned int min) {
 	return year;
 }
 size_t  PGUtil::YearFunction(unsigned int julian)
-{  unsigned int jul, jalpha, ja, jb, jc, jd, je;
-   unsigned int  year, month, day, hour, minut;
+{  int jul, jalpha, ja, jb, jc, jd, je;
+   int  year, month, day, hour, minut;
    string Datum; string tmp;
 
    jul = julian;
