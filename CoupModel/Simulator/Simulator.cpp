@@ -355,7 +355,7 @@ bool Simulator::Run(bool MultiFlag)
 			}
 			if (m_pModelInfo->m_ActMin >= m_pSim->RunOpt.longMinStart) {
 				if (!StartedSimPeriod) {
-					if (!m_StructureModel.Ini()) return false;
+					//if (!m_StructureModel.Ini()) return false;
 					Stat_Ini();
 
 					StartedSimPeriod = true;
