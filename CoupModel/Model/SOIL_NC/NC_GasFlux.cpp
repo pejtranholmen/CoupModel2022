@@ -18,6 +18,10 @@ bool NC_GasFlux::Ini()	{
 	NC_Organic::Ini();
 	SoilModel* p_Soil=(SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 	Soil_HeatPump *pSoilHeat=&p_Soil->m_HeatPump;
+	AtmModel* p_AtmModel = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
+	double* pSoilEvap = &p_AtmModel->m_Irrigation.RaSoilSurf;
+	double Rasurf = *pSoilEvap;
+
 	T_Step = *pT_Step;
 	NC_GasFlux::IniFunctors();
 //	Use Parameters
@@ -102,7 +106,10 @@ bool NC_GasFlux::IniFunctors() {
 		f_MethaneProduction_OneLitter = MethaneProduction(CH4_RateCoefRatio, RateCoefLitter1, RateCoefLitter2, RateCoefHumus);
 		f_Ebullition = Get_D2_Functor(MyFunc::METHANE_EBULLITION);
 		f_PlantEmissionbyWaterUptake = MethaneEmissionByTranspiration(CH4_LimitWaterUptake, CH4_WaterPowerCoef, CH4_WaterPlantCoef);
-		f_MethaneBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir);
+		if(Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux)== Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
+			f_MethaneBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir);
+		else 
+		    f_MethaneDynResBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir, CH4_ResistanceAirLogScale);
 		f_MethaneOxidationInPlant = Get_D1_Functor(MyFunc::METHANE_PLANTOXIDATION_OF_WATERUPTAKE);
 	}
 	if (COS_Model_Sw(COS_Model) >= COS_Model_Sw::OnlyPlant) {
@@ -156,6 +163,11 @@ void NC_GasFlux::Flux()
 {
 	SoilModel* p_Soil=(SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 	Soil_HeatPump *pSoilHeat=&p_Soil->m_HeatPump;
+
+	AtmModel* p_AtmModel = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
+	double* pSoilEvap = &p_AtmModel->m_Irrigation.RaSoilSurf;
+	double RaSurf = max(0.0001, *pSoilEvap);
+
 /*	Use CommonStruc
 Use Timeinfo
 Use AbioticResponses
@@ -591,7 +603,11 @@ double OxidationRatio;
   	   
   
   	   //Uppermost layer
-		CH4_SurfaceEmission = f_MethaneBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front());
+
+	   if (Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux) == Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
+			CH4_SurfaceEmission = f_MethaneBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front());
+	   else
+			CH4_SurfaceEmission = f_MethaneDynResBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front(), RaSurf);
 
 		//RAFunction(RefHeight, RoughLBareSoilMom, ) Check which RA function to apply assuming a fixed aerodynamic resistance of 30
    

@@ -11,7 +11,7 @@ class NC_GasFlux_Functions : public NC_Organic
 
 
 size_t  Trace_Gas_Emissions, Oxygen_Model, Methane_Model,Methane_Plant_Oxidation, Methane_Soil_Oxidation,
-Methane_Plant_Emission;
+Methane_Plant_Emission, Methane_SoilBoundary_Flux;
 size_t COS_Model, COS_PlantModel, COS_SoilModel;
 size_t  N2O_YearlyFluxes/*, CO2_SoilModel Moved to AbioticResponses_Functions*/;  
 vector<double> Oxygen, Oxygen_Flux, Oxygen_Consumption, CO2Soil, CO2_FluxSoil,CO2_Production;
@@ -48,6 +48,7 @@ double  CH4_EbullMax, CH4_BubbleRateConstant;
 double  CH4_PlantOxidationEff, CH4_WaterPlantCoef, CH4_ResistanceAir;
 double CH4_AccBubbles, CH4_AccPlant, CH4_AccEmission, CH4_DiffTotStorage, CH4_MassBalanceCheck;
 double CH4_AccProduction, CH4_AccOxidation;
+double CH4_ResistanceAirLogScale;
 
 double CH4_TotPlantUptake, CH4_TotPlantEmission, CH4_TotPlantOxidation, CH4_TotSoilOxidation;
 ////Added by Marco III;
@@ -95,6 +96,7 @@ function<double(double, double)> f_Ebullition;
 function<double(double, double)> f_MethaneProduction_OneLitter;
 function<double(double, double)> f_PlantEmissionbyWaterUptake;
 function<double(double, double)> f_MethaneBoundaryLayerFlux;
+function<double(double, double, double)> f_MethaneDynResBoundaryLayerFlux;
 function<double(double)> f_MethaneOxidationInPlant;
 function<double(double, double, double)> f_MethaneProduction_TwoLitter;
 

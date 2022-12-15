@@ -99,6 +99,9 @@ bool NC_GasFlux_Functions::Def()
 	pSw= new Sw(&Methane_Plant_Emission ,  SIMPROFILE,AIR, NOFPROC,METHANE_PRODUCTION, NORMAL);
 	    Define(pSw,"Methane emission by plants",0,"off|on","Nitrogen and Carbon > 0|Methane Model>0");
 
+	pSw = new Sw(&Methane_SoilBoundary_Flux, SIMPROFILE, AIR, NOFPROC, METHANE_PRODUCTION, NORMAL);
+		Define(pSw, "Methane SoilBoundary", 0, "Fixed Air Resistance|Dynamic Air Resistance ", "Nitrogen and Carbon > 0|Methane Model>0");
+
 	pSw= new Sw(&N2O_YearlyFluxes ,  SIMPROFILE,AIR, NOFPROC,SOIL_GAS_DYNAMICS, NORMAL);
 	    Define(pSw,"N2O Yearly Flux Statistics",0,"off|on","Nitrogen and Carbon > 0|Trace Gas Emissions >0");
 
@@ -385,11 +388,14 @@ plotpar.Y_Label = "Relative Rate (-)";
 	pPs = new Ps(&CH4_CONC_Atm, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
 		Define(pPs, "CH4 Air Conc", 1.8E-06, "g/g", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 1.E-09, 1.E-03);	ps_vec.push_back(pPs);
 	pPs = new Ps(&CH4_ResistanceAir, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
-		Define(pPs, "CH4 Resistance Air", 30., "-", "Nitrogen and Carbon >=1|Methane Model>0", 10., 500.); ps_vec.push_back(pPs);
+		Define(pPs, "CH4 Resistance Air", 30., "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane SoilBoundary=0", 1., 500.); ps_vec.push_back(pPs);
 
 	
 	pFunc = new Func(TOTPROFILE, METHANE, NOFPROC, METHANE_PRODUCTION, NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
+
+	pPs = new Ps(&CH4_ResistanceAirLogScale, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+		Define(pPs, "CH4 AirResistance LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane SoilBoundary=1", -2., 2.); 
 
 
 	pPs = new Ps(&CO2_CONC_Atm, SIMPROFILE, METHANE, STORAGE, INITB, NORMAL);

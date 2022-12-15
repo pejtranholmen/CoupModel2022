@@ -4,6 +4,7 @@ enum class Methane_Model_Sw { off, on };
 enum class Methane_Plant_Oxidation_Sw { off, on };
 enum class Methane_Soil_Oxidation_Sw { off, on_orignal, New };
 enum class Methane_Plant_Emission_Sw { off, on };
+enum class Methane_SoilBoundary_Flux_Sw{ Fixed_Air_Resistance,Dynamic_Air_Resistance};
 enum class N2O_YearlyFluxes_Sw { off, on };
 
 
@@ -46,6 +47,7 @@ private:
 class MethaneBoundaryLayerFlux {
 public:
 	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir) noexcept : ref_conc(ref_conc), ra(ResistanceAir) { ra /= Fix::SECPERDAY;};
+	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir, double LogScale) noexcept : ref_conc(ref_conc), ra(ResistanceAir) { ra /= Fix::SECPERDAY; scalecoef = pow(10., LogScale); };
 
 	double operator() (double ConcSurface) noexcept {
 		return ( ConcSurface- ref_conc) / ra;
@@ -58,11 +60,19 @@ public:
 		else
 			return flux;
 	};
+	double operator() (double ConcSurface, double TempSurface, double AirResistance) {
+		double MethaneMassConcAtm = ref_conc * Fix::MOL_RATIO_CH4_AIR * AirDensityTempFunc(TempSurface);
+		double flux = (ConcSurface - MethaneMassConcAtm) / (AirResistance/Fix::SECPERDAY*scalecoef);
+		if (TempSurface < 0.)
+			return max(0., flux);
+		else
+			return flux;
+	};
 
 
 
 private:
-	double ra, ref_conc;
+	double ra, ref_conc, scalecoef;
 
 };
 class MethaneProduction {
