@@ -46,13 +46,15 @@ private:
 };
 class MethaneBoundaryLayerFlux {
 public:
-	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir) noexcept : ref_conc(ref_conc), ra(ResistanceAir) { ra /= Fix::SECPERDAY;};
-	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir, double LogScale) noexcept : ref_conc(ref_conc), ra(ResistanceAir) { ra /= Fix::SECPERDAY; scalecoef = pow(10., LogScale); };
+	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir) noexcept : ref_conc(ref_conc), ra(ResistanceAir) { // This is the instantiation for fixed air resistance
+		ra /= Fix::SECPERDAY;};
+	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir, double LogScale) noexcept : ref_conc(ref_conc), ra(ResistanceAir) { //This is the instantiantion for dynamics scaling of surface flux
+		ra /= Fix::SECPERDAY; scalecoef = pow(10., LogScale); };
 
 	double operator() (double ConcSurface) noexcept {
 		return ( ConcSurface- ref_conc) / ra;
 	};
-	double operator() (double ConcSurface, double TempSurface) {
+	double operator() (double ConcSurface, double TempSurface) { // This is the default fixed ra operator
 		double MethaneMassConcAtm = ref_conc * Fix::MOL_RATIO_CH4_AIR * AirDensityTempFunc(TempSurface);
 		double flux= (ConcSurface - MethaneMassConcAtm) / ra;
 		if (TempSurface < 0.)
@@ -60,7 +62,7 @@ public:
 		else
 			return flux;
 	};
-	double operator() (double ConcSurface, double TempSurface, double AirResistance) {
+	double operator() (double ConcSurface, double TempSurface, double AirResistance) { //This is the operator for dynamics scaling of surface flux
 		double MethaneMassConcAtm = ref_conc * Fix::MOL_RATIO_CH4_AIR * AirDensityTempFunc(TempSurface);
 		double flux = (ConcSurface - MethaneMassConcAtm) / (AirResistance/Fix::SECPERDAY*scalecoef);
 		if (TempSurface < 0.)

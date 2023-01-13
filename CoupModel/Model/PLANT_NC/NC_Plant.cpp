@@ -1838,7 +1838,7 @@ auto Growth_Stage = [&](size_t index) {
 			}
 		}
 		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Temperature_Sum&&DormingStartDayNum[index]<1.) {
-			out = 0. + f_EmergenceWithMoistControl(index, NDrivTAir, NDrivTheta[0], T_Step);
+			out = max(0., Min_GSI[index]) + f_EmergenceWithMoistControl(index, NDrivTAir, NDrivTheta[0], T_Step);
 			if (out >= 1.) {
 				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
 
@@ -1850,7 +1850,7 @@ auto Growth_Stage = [&](size_t index) {
 			}
 		}
 		else if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
-			out = 0.;
+			out = max(0., Min_GSI[index]);
 			SpringDevDayNum[index] = 0.;
 			GrowingStage[index] = 0.;
 		}
@@ -1859,7 +1859,7 @@ auto Growth_Stage = [&](size_t index) {
 	}
 	else if (GrowthStageIndex[index]<2.&&Max_GSI[index]>1.&&Emergence_Done[index]) { //
 		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
-			out = 0.;
+			out = Min_GSI[index];
 			SpringDevDayNum[index] = 0.;
 			GrowingStage[index] = 0.;
 		}
