@@ -105,9 +105,9 @@ bool Plant::Def()
 
 
 	pPs = new Ps(&TSumStart, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
-	Define(pPs, "TempSumStart", 50., "Cdays", "PlantType > 0|PlantDevelopment = 1|WaterEq = 1", 10., 400., 20., 100.);
+	Define(pPs, "TempSumStart", 50., UNIT_TYPES::TEMPSUM_UNIT, "PlantType > 0|PlantDevelopment = 1|WaterEq = 1", 10., 400., 20., 100.);
 	pPs = new Ps(&TSumCrit, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
-	Define(pPs, "TempSumCrit", 5., TEMP_UNIT, "PlantType > 0|PlantDevelopment = 1|WaterEq = 1", 0., 10., 3., 7.);
+	Define(pPs, "TempSumCrit", 5., UNIT_TYPES::TEMP_UNIT, "PlantType > 0|PlantDevelopment = 1|WaterEq = 1", 0., 10., 3., 7.);
 	pPs = new Ps(&AlbedoLeaf, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
 	Define(pPs, "AlbedoLeaf", 25., "%", "AlbedoVeg = 0|PlantType >= 2", 1., 100., 8., 30.);
 	pPs = new Ps(&RandomNumberSeed, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
@@ -274,8 +274,8 @@ bool Plant::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 300;
-	plotpar.X_Label = "Leaf Carbon "; plotpar.X_Label += p_ModelInfo->GetUnitString(CARBON_MASS_UNIT, true);
-	plotpar.Y_Label = "Leaf Area Index "; plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Leaf Carbon "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::CARBON_MASS_UNIT, true);
+	plotpar.Y_Label = "Leaf Area Index "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -320,8 +320,8 @@ bool Plant::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 500.;
-	plotpar.X_Label = "Below ground Carbon "; plotpar.X_Label += p_ModelInfo->GetUnitString(CARBON_MASS_UNIT, true);
-	plotpar.Y_Label = "Root Depth "; plotpar.Y_Label += p_ModelInfo->GetUnitString(LENGTH_UNIT, true);
+	plotpar.X_Label = "Below ground Carbon "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::CARBON_MASS_UNIT, true);
+	plotpar.Y_Label = "Root Depth "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::LENGTH_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.LegendsVec = { };
@@ -395,8 +395,8 @@ bool Plant::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 5000;
-	plotpar.X_Label = "Above ground Carbon "; plotpar.X_Label += p_ModelInfo->GetUnitString(CARBON_MASS_UNIT, true);
-	plotpar.Y_Label = "Plant Height "; plotpar.Y_Label += p_ModelInfo->GetUnitString(LENGTH_UNIT, true);
+	plotpar.X_Label = "Above ground Carbon "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::CARBON_MASS_UNIT, true);
+	plotpar.Y_Label = "Plant Height "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::LENGTH_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.X2_Vec = { 1.0f,5.f, 10.f, 25.f, 50.f, 100.f };
@@ -593,24 +593,24 @@ bool Plant::Def()
 		"PlantType > 2|RootInput =0");
 
 	pP = new P(&RL_StartValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
-	Define(pP, pNumPlants, "rlStart Value", initv, "m/" + AREA_UNIT, "PlantType >=2|RootInput =0", -20., -0.01);
+	Define(pP, pNumPlants, "rlStart Value", initv, UNIT_TYPES:: INVERSE_AREA_UNIT, "PlantType >=2|RootInput =0", -20., -0.01);
 	mTab_RootLength.push_back(pP);
 	p_vec.push_back(pP);
 
 	pP = new P(&RL_OptValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
 	initv.assign(NumPlants, 10000.);
-	Define(pP, pNumPlants, "rlOptimum Value", initv, "m/" + AREA_UNIT, "PlantType >= 3|RootInput =0", -20., -0.01);
+	Define(pP, pNumPlants, "rlOptimum Value", initv, UNIT_TYPES::INVERSE_AREA_UNIT, "PlantType >= 3|RootInput =0", -20., -0.01);
 	mTab_RootLength.push_back(pP);
 	p_vec.push_back(pP);
 	pP = new P(&RL_EndValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
 	initv.assign(NumPlants, 0.);
-	Define(pP, pNumPlants, "rlEnd Value", initv, "m/" + AREA_UNIT, "PlantType >= 3|RootInput =0", -20., -0.01);
+	Define(pP, pNumPlants, "rlEnd Value", initv, UNIT_TYPES::INVERSE_AREA_UNIT, "PlantType >= 3|RootInput =0", -20., -0.01);
 	mTab_RootLength.push_back(pP);
 	p_vec.push_back(pP);
 	functorprop.FuncName = MyFunc::ROOTLENGTH_SEASON; functorprop.Arg = MyArgType::T_D1;
 	functorprop.FunctorInitOption = string::npos;
 	funcname = "Root Length - with season";
-	plotpar.Y_Label = "Length (m/";	  plotpar.Y_Label += AREA_UNIT+")";
+	plotpar.Y_Label = "Length ";	  plotpar.Y_Label += +"()";
 	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
 
@@ -625,7 +625,7 @@ bool Plant::Def()
 
 	pP = new P(&MaxPlantCover, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
 	initv.assign(NumPlants, 1.);
-	Define(pP, pNumPlants, "Max Cover", initv, AREA_UNIT + "/" + AREA_UNIT, "PlantType >=3", 0., 10., 0., 1.); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "Max Cover", initv, UNIT_TYPES::NO_UNIT, "PlantType >=3", 0., 10., 0., 1.); p_vec.push_back(pP);
 	mTab_CanCover.push_back(pP);
 	pP = new P(&KExpPlantCover, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
 	initv.assign(NumPlants, .5);
@@ -701,7 +701,7 @@ bool Plant::Def()
 
 
 	pG = new G(&RelRootDist, pNL, SIMPROFILE, WATER, FYS_SHAPE, NOBPROC, NORMAL); initv.assign(pNL->GetNEValue(), 0.);
-	Define(pG, pNL, "RootDepthDistribution", initv, NO_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Selected Plant RootDistOutput>0");
+	Define(pG, pNL, "RootDepthDistribution", initv,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Selected Plant RootDistOutput>0");
 
 	pGs = new Gs(&TsumPlant, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
 	Define(pGs, "TsumPlant", 0., "CDay", "PlantType > 0|PlantDevelopment = 1|WaterEq = 1");

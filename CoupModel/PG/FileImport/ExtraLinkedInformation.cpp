@@ -327,11 +327,11 @@ bool ExtraLinkedInformation::SetFileDescriptionFromLinkedFileDataBase()
 						pg.Des.addinfo[i + m_countf*pg.Shape.NumVar].StationName = m_CurrentFileInfo.StatName;
 						pg.Des.addinfo[i + m_countf*pg.Shape.NumVar].CountryCode = "Australia";
 					}
-					pg.Des.base.Name[0] = "Global Radiation"; pg.Des.base.Unit[0] = p_ModelInfo->GetUnitString(HEATFLOW_UNIT);
-					pg.Des.base.Name[1] = "Air Temperature"; pg.Des.base.Unit[1] = p_ModelInfo->GetUnitString(TEMP_UNIT);
-					pg.Des.base.Name[2] = "Precipitation"; pg.Des.base.Unit[2] = p_ModelInfo->GetUnitString(WATERFLOW_UNIT);
-					pg.Des.base.Name[3] = "Pan Evaporation"; pg.Des.base.Unit[3] = p_ModelInfo->GetUnitString(WATERFLOW_UNIT);
-					pg.Des.base.Name[4] = "Vapour Pressure"; pg.Des.base.Unit[4] = p_ModelInfo->GetUnitString(PRESSURE_UNIT);
+					pg.Des.base.Name[0] = "Global Radiation"; pg.Des.base.Unit[0] = p_ModelInfo->GetUnitString(UNIT_TYPES::HEATFLOW_UNIT);
+					pg.Des.base.Name[1] = "Air Temperature"; pg.Des.base.Unit[1] = p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT);
+					pg.Des.base.Name[2] = "Precipitation"; pg.Des.base.Unit[2] = p_ModelInfo->GetUnitString(UNIT_TYPES::WATERFLOW_UNIT);
+					pg.Des.base.Name[3] = "Pan Evaporation"; pg.Des.base.Unit[3] = p_ModelInfo->GetUnitString(UNIT_TYPES::WATERFLOW_UNIT);
+					pg.Des.base.Name[4] = "Vapour Pressure"; pg.Des.base.Unit[4] = p_ModelInfo->GetUnitString(UNIT_TYPES::PRESSURE_UNIT);
 				}
 				else if(m_format==CZECH_COL_TRANS|| m_format ==MONTH_COL_TRANS) {
 					for(size_t ii=0; ii<m_ImportedFileVector.size();ii++) {

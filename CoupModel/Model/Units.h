@@ -28,7 +28,7 @@ public:
 		if (it != m_StringBasedUnits.end())
 			return (*it).second;
 		else
-			return NO_UNIT;
+			return UNIT_TYPES::NO_UNIT;
 	};
 	vector<string> GetAllStringBasedUnits() {
 		vector<string> out;

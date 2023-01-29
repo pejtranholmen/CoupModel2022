@@ -145,21 +145,21 @@ bool Additional_Variables_Functions::Def()
 	initv.assign(NTempSensors,0.);
 	pG= new G(&TempSensors ,pNTempSensors, SINGLE, WATER, SENSOR,NOBPROC, NORMAL); 
 	initv.assign(NTempSensors,0.);
-   Define(pG, pNTempSensors,"Temp Sensors" ,initv,TEMP_UNIT,"HeatEq = 1");
+   Define(pG, pNTempSensors,"Temp Sensors" ,initv,UNIT_TYPES::TEMP_UNIT,"HeatEq = 1");
    Gs *pGs;
    pGs= new Gs(&Evapotranspiration, ATMBOUNDARY, WATER, EVAPOTRANSPIRATION,NOBPROC, NORMAL);
-	  Define(pGs, "Evapotranspiration", 5., WATERFLOW_UNIT,"Evaporation > 0|WaterEq = 1");
+	  Define(pGs, "Evapotranspiration", 5.,UNIT_TYPES::WATERFLOW_UNIT,"Evaporation > 0|WaterEq = 1");
   pGs= new Gs(&TotalLatentFlow, ATMBOUNDARY, HEAT, EVAPOTRANSPIRATION,NOBPROC, NORMAL);
-		Define(pGs, "TotalLatentFlow", 5., HEATFLOW_UNIT,"Evaporation > 0|WaterEq = 1");
+		Define(pGs, "TotalLatentFlow", 5.,UNIT_TYPES::HEATFLOW_UNIT,"Evaporation > 0|WaterEq = 1");
   pGs= new Gs(&TotalSensibleFlow, ATMBOUNDARY, HEAT, EVAPOTRANSPIRATION,NOBPROC, NORMAL);
-		Define(pGs,"TotalSensibleFlow",5.,HEATFLOW_UNIT,"Evaporation >0|WaterEq = 1");
+		Define(pGs,"TotalSensibleFlow",5.,UNIT_TYPES::HEATFLOW_UNIT,"Evaporation >0|WaterEq = 1");
 
   NE *pNumPlants;
   pNumPlants=m_pModelMap->GetNEPointer("Number of Plants");
 
 
   pGs= new Gs(&p_Plant->TempCanopy, ATMBOUNDARY, TEMPERATURE, EBAL_PARTITIONING,NOBPROC, NORMAL);
-		Define(pGs ,"TempCanopy",5.,TEMP_UNIT,"Evaporation >0|WaterEq = 1");
+		Define(pGs ,"TempCanopy",5.,UNIT_TYPES::TEMP_UNIT,"Evaporation >0|WaterEq = 1");
 
   pGs= new Gs(&PlantWaterStorage, ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
     Define(pGs, "PlantAvailableWater" ,0.,"mm","WaterEq = 1");

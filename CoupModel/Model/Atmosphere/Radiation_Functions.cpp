@@ -99,7 +99,7 @@ bool Radiation_Functions::Def()
 
 	plotpar.X_Max = 365;
 	plotpar.X_Label = "Day Number";
-	plotpar.Y_Label = "Day Length "; plotpar.Y_Label += p_ModelInfo->GetUnitString(TIME_MINUTE_UNIT, true);
+	plotpar.Y_Label = "Day Length "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TIME_MINUTE_UNIT, true);
 
 
 
@@ -115,7 +115,7 @@ bool Radiation_Functions::Def()
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	functorprop.PhysFuncName = FUNC_CHOICE::POTRISDAILY; functorprop.Arg = MyArgType::D1;
 	funcname = "Potential Global Radiation Function"; functorprop.FunctorInitOption = string::npos;
-	plotpar.Y_Label = "Global Radiation "; plotpar.Y_Label += p_ModelInfo->GetUnitString(MEGA_HEATFLOW_UNIT, true);
+	plotpar.Y_Label = "Global Radiation "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MEGA_HEATFLOW_UNIT, true);
 	plotpar.Y_ScalingCoef = -6;
 
 	Define(pFunc, functorprop, funcname, ps_vec,plotpar);
@@ -139,7 +139,7 @@ bool Radiation_Functions::Def()
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 24;
 	plotpar.X_Label = "Hour of Day";
-	plotpar.Y_Label = "Radiation ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(MEGA_HEATFLOW_UNIT, true);
+	plotpar.Y_Label = "Radiation ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MEGA_HEATFLOW_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 
@@ -156,8 +156,8 @@ bool Radiation_Functions::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 1;
-	plotpar.Y_Label = "Degree of Radiation ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
-	plotpar.X_Label = "Degree of Cloudiness";   plotpar.X_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.Y_Label = "Degree of Radiation ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
+	plotpar.X_Label = "Degree of Cloudiness";   plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 
 	ps_vec.clear();
@@ -176,8 +176,8 @@ bool Radiation_Functions::Def()
 	plotpar.Num_Of_Points = 100;
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Max = 10.;
-	plotpar.Y_Label = "Radiation Adsorbed ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
-	plotpar.X_Label = "Hour of Day";   plotpar.X_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.Y_Label = "Radiation Adsorbed ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
+	plotpar.X_Label = "Hour of Day";   plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	plotpar.Y_ScalingCoef = 0;
 
 	pPs= new Ps(&RntLAI, SINGLE,RADIATION, ADSORPTION,NOBPROC, NORMAL);
@@ -285,8 +285,8 @@ bool Radiation_Functions::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = -20;
 	plotpar.X_Max = 30;
-	plotpar.X_Label = "Temperature";  plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
-	plotpar.Y_Label = "Radiation ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(MEGA_HEATFLOW_UNIT, true);
+	plotpar.X_Label = "Temperature";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
+	plotpar.Y_Label = "Radiation ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MEGA_HEATFLOW_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Y_ScalingCoef = -6;
@@ -326,9 +326,9 @@ bool Radiation_Functions::Def()
 	Define(pPs,  "Thornton B2",-0.185,"-","RadiationInput > 0|CloudInput=4",-0.3,-0.1);
 
 	pPs = new Ps(&ParB.DTR_YEAR_MEAN, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "DTR Year Mean", 15., TEMP_UNIT, "RadiationInput > 0|CloudInput=4", 0., 30., 3., 25.);
+	Define(pPs, "DTR Year Mean", 15.,UNIT_TYPES::TEMP_UNIT, "RadiationInput > 0|CloudInput=4", 0., 30., 3., 25.);
 	pPs = new Ps(&ParB.DTR_YEAR_AMP, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "DTR Year Amp", 10., TEMP_UNIT, "RadiationInput > 0|CloudInput=4", 0., 10., 3., 20.);
+	Define(pPs, "DTR Year Amp", 10.,UNIT_TYPES::TEMP_UNIT, "RadiationInput > 0|CloudInput=4", 0., 10., 3., 20.);
 	pPs = new Ps(&ParB.DTR_YEAR_SHIFT, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "DTR Year Shift", 15., "DayNo", "RadiationInput > 0|CloudInput=4", 0., 30., 3., 25.);
 
@@ -351,8 +351,8 @@ bool Radiation_Functions::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 1.;
-	plotpar.X_Label = "Cloudiness ";  plotpar.X_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
-	plotpar.Y_Label = "Diffuse Fraction ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Cloudiness ";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
+	plotpar.Y_Label = "Diffuse Fraction ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	plotpar.X2_Vec = { 1. };
 	plotpar.LegendsVec = { ""};
 	plotpar.Y_ScalingCoef = 0;
@@ -382,11 +382,11 @@ bool Radiation_Functions::Def()
 
 	functorprop.FuncName = MyFunc::CANOPY_SHADE_COVER; functorprop.Arg = MyArgType::D2;
 	plotpar.Num_Of_Curves = 2;
-	plotpar.Y_Label = "Enhanced Shadowing Factor ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.Y_Label = "Enhanced Shadowing Factor ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	funcname = "Shadowing Cover for Canopy Heights"; functorprop.FunctorInitOption = string::npos;
 	plotpar.X2_Vec = { 0.1f, 100.f };
 	plotpar.LegendsVec = { "1 m tree","10 m tree"};
-	plotpar.X_Label = "Solar Zenit Angle ";  plotpar.X_Label += p_ModelInfo->GetUnitString(ANGLE_UNIT, true);
+	plotpar.X_Label = "Solar Zenit Angle ";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::ANGLE_UNIT, true);
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 1.57;
 
@@ -541,20 +541,20 @@ bool Radiation_Functions::Def()
 	Gs *pGs;
 	pGs= new Gs(&RadNetGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
 
-    Define(pGs,  "RadNetGround",0.,HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0");
+    Define(pGs,  "RadNetGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0");
 	pGs= new Gs(&RadNetShort, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetShort",0.,HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0");
+    Define(pGs,  "RadNetShort",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0");
 	pGs= new Gs(&AlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
     Define(pGs,  "AlbedoVar",0.,"%","RadiationInput > 0");
 	pGs= new Gs(&CanopyFracRad, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
     Define(pGs,  "CanopyFracRad",0.,"-","RadiationInput > 0");
 	pGs= new Gs(&RadInLongGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadInLongGround",0.,HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1");
+    Define(pGs,  "RadInLongGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1");
 //    ! AUXILIARY VARIABLES FOR PARTITIONING OF RADIATION AT GROUND SURFACE ON IRRIGATED AND NON-IRRIGATED
 	pGs= new Gs(&RadNetGround1, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetGround1",0.,HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0|SoilPartitioningArea>1");
+    Define(pGs,  "RadNetGround1",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0|SoilPartitioningArea>1");
 	pGs= new Gs(&RadNetGround2, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetGround2",0.,HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0|SoilPartitioningArea>1");
+    Define(pGs,  "RadNetGround2",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0|SoilPartitioningArea>1");
 
 	pGs= new Gs(&CanopyFracRad1, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
     Define(pGs,  "CanopyFracRad1",0.,"-","RadiationInput > 0|SoilPartitioningArea>1");
@@ -562,9 +562,9 @@ bool Radiation_Functions::Def()
     Define(pGs,  "CanopyFracRad2",0.,"-","RadiationInput > 0|SoilPartitioningArea>1");
 
 	pGs= new Gs(&RadInLongGround1, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadInLongGround1",0.,HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1|SoilPartitioningArea>1");
+    Define(pGs,  "RadInLongGround1",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1|SoilPartitioningArea>1");
 	pGs= new Gs(&RadInLongGround2, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadInLongGround2",0.,HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1|SoilPartitioningArea>1");
+    Define(pGs,  "RadInLongGround2",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1|SoilPartitioningArea>1");
     
 //    ! AUXILIARY NEEDED FOR CALCULATIONS
 	pGs= new Gs(&CanopyFracRadDirect, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
@@ -574,34 +574,34 @@ bool Radiation_Functions::Def()
 	pGs= new Gs(&CanopyFracRadLong, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
     Define(pGs,  "CanopyFracRadLong",0.,"-","RadiationInput > 0|PlantType > 2|CanopyShade>0|LongRadCanopy = 1");
 	pGs= new Gs(&RadInDirect, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadInDirect",0.,HEATFLOW_UNIT,"RadiationInput > 0|SplitGlobal>0|LongRadCanopy = 1");
+    Define(pGs,  "RadInDirect",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SplitGlobal>0|LongRadCanopy = 1");
 	pGs= new Gs(&RadInDiffuse, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadInDiffuse",0.,HEATFLOW_UNIT,"RadiationInput > 0|SplitGlobal>0|LongRadCanopy = 1");
+    Define(pGs,  "RadInDiffuse",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SplitGlobal>0|LongRadCanopy = 1");
 
 //    ! AUXILIARY NEEDED FOR SNOWMIP2I
 	pGs= new Gs(&RadNetCanopy, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetCanopy",0.,HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 0|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
+    Define(pGs,  "RadNetCanopy",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 0|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
 	pGs= new Gs(&RadNetLongCanopy, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetLongCanopy",0.,HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
+    Define(pGs,  "RadNetLongCanopy",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
 	pGs= new Gs(&RadNetLongGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetLongGround",0.,HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
+    Define(pGs,  "RadNetLongGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
 	pGs= new Gs(&RadLongOutVar, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadLongOut",0.,HEATFLOW_UNIT,"RadiationInput > 0|SoilEvap > 0|Evaporation > 0");
+    Define(pGs,  "RadLongOut",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SoilEvap > 0|Evaporation > 0");
 	pGs= new Gs(&RadNetShortCanopy, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetShortCanopy",0.,HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
+    Define(pGs,  "RadNetShortCanopy",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
 	pGs= new Gs(&RadInShortGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadInShortGround",0.,HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
+    Define(pGs,  "RadInShortGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
 	pGs= new Gs(&RadNetShortGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadNetShortGround",0.,HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
+    Define(pGs,  "RadNetShortGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
 	pGs= new Gs(&RadShortOut, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
-    Define(pGs,  "RadShortOut",0.,HEATFLOW_UNIT,"RadiationInput > 0|SoilEvap > 0|Evaporation > 0");
+    Define(pGs,  "RadShortOut",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SoilEvap > 0|Evaporation > 0");
 
 	pGs= new Gs(&SnowAlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
-    Define(pGs,  "Snow Albedo",0.,HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
+    Define(pGs,  "Snow Albedo",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
 	pGs= new Gs(&SoilAlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
-    Define(pGs,  "Soil Albedo",0.,HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
+    Define(pGs,  "Soil Albedo",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
 	pGs= new Gs(&GroundAlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
-    Define(pGs,  "Ground Albedo",0.,HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
+    Define(pGs,  "Ground Albedo",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
 
 
 	return FunctionDef();

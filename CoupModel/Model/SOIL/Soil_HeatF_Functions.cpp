@@ -55,19 +55,19 @@ bool Soil_HeatF_Functions::Def()
 		
 	Ps* pPs;
   	pPs= new Ps(&GeothermalF , SINGLE, HEAT, TRANSPORT, NOBPROC, NORMAL);      
-		Define(pPs, "GeothermalFlow", -1.E5,HEATFLOW_UNIT,"Lower Boundary = 1",-1.E7, -1.E3);
+		Define(pPs, "GeothermalFlow", -1.E5,UNIT_TYPES::HEATFLOW_UNIT,"Lower Boundary = 1",-1.E7, -1.E3);
  	pPs= new Ps(&TempDiffPrec_Air, SINGLE, HEAT, TRANSPORT, NOBPROC, NORMAL);      
-		Define(pPs, "TempDiffPrec_Air", -2., TEMP_UNIT,"HeatEq > 0|WaterEq > 0",-50., 50.,-30.,30.);
+		Define(pPs, "TempDiffPrec_Air", -2.,UNIT_TYPES::TEMP_UNIT,"HeatEq > 0|WaterEq > 0",-50., 50.,-30.,30.);
 	pPs= new Ps(&SoilInitTemp, SINGLE, HEAT, INITF, NOBPROC, NORMAL);      
-		Define(pPs, "SoilInitTempConst", 10., TEMP_UNIT,"Initial Heat Conditions = 0|Nitrogen and Carbon < 2|StartWithPrevious =0",-270., 100., -50., 50.);
+		Define(pPs, "SoilInitTempConst", 10.,UNIT_TYPES::TEMP_UNIT,"Initial Heat Conditions = 0|Nitrogen and Carbon < 2|StartWithPrevious =0",-270., 100., -50., 50.);
 	pPs= new Ps(&HeatProdCoef_B, SINGLE, HEAT, HEATSOURCE, NOBPROC, NORMAL);      
-		Define(pPs, "HeatProdCoef_B", 0.0964,"1/"+TEMP_UNIT,"Heat Source >0|Heat Source <5",0., 1.);
+		Define(pPs, "HeatProdCoef_B", 0.0964, UNIT_TYPES::TEMP_UNIT,"Heat Source >0|Heat Source <5",0., 1.);
 	pPs= new Ps(&HeatProdCoef_AA, SINGLE, HEAT, HEATSOURCE, NOBPROC, NORMAL);      
-		Define(pPs, "HeatProdCoef_AA", 3000. ,HEATSOURCE_UNIT,"Heat Source =2",0., 1.e7);
+		Define(pPs, "HeatProdCoef_AA", 3000. , UNIT_TYPES::HEATSOURCE_UNIT,"Heat Source =2",0., 1.e7);
 	pPs= new Ps(&HeatProdCoef_AA2, SINGLE, HEAT, HEATSOURCE, NOBPROC, NORMAL);      
-		Define(pPs, "HeatProdCoef_AA2", 3000. ,HEATSOURCE_UNIT,"Heat Source =2",0., 1.e7);
+		Define(pPs, "HeatProdCoef_AA2", 3000. , UNIT_TYPES::HEATSOURCE_UNIT,"Heat Source =2",0., 1.e7);
 	pPs= new Ps(&HeatProd_Threshold, SINGLE, HEAT, HEATSOURCE, NOBPROC, NORMAL);      
-		Define(pPs, "HeatProd_Threshold", 30. ,TEMP_UNIT,"Heat Source >0|Heat Source <5",0., 200.);
+		Define(pPs, "HeatProd_Threshold", 30. ,UNIT_TYPES::TEMP_UNIT,"Heat Source >0|Heat Source <5",0., 200.);
 	pPs= new Ps(&HeatSourceRateCoef1, SINGLE, HEAT, HEATSOURCE, NOBPROC, NORMAL);      
  		Define(pPs, "Source1 Decay Coef", 0. ,"1/day","Heat Source >0|Heat Source <5",0., 100.);
 	pPs= new Ps(&HeatSourceRateCoef2, SINGLE, HEAT, HEATSOURCE, NOBPROC, NORMAL);      
@@ -80,7 +80,7 @@ bool Soil_HeatF_Functions::Def()
 // 	! Parameters for Single layers source 
  	
 	pPs= new Ps(&HeatCableOptValue, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL);      
- 	Define(pPs, "HeatCable Power", 0. ,HEATFLOW_UNIT,"Heat Source =5",0., 10.E6 ) ;
+ 	Define(pPs, "HeatCable Power", 0. ,UNIT_TYPES::HEATFLOW_UNIT,"Heat Source =5",0., 10.E6 ) ;
 	pPs= new Ps(&StartHCableDay, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL);      
  	Define(pPs, "HeatCable Day Start", 121. ,"#","Heat Source =5",0., 365. );
 	pPs= new Ps(&OptHCableDay, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL);      
@@ -99,15 +99,15 @@ bool Soil_HeatF_Functions::Def()
     
  	// Parameters for Single layers source 
  	pPs= new Ps(&HighTempControl, SINGLE,HEAT, HEATPIPE, NOBPROC, NORMAL);
-		Define(pPs, "High Temp Control", 3. ,TEMP_UNIT,"Heat Source =5",0., 10.);
+		Define(pPs, "High Temp Control", 3. ,UNIT_TYPES::TEMP_UNIT,"Heat Source =5",0., 10.);
     pPs= new Ps(&LowTempControl, SINGLE,HEAT, HEATPIPE, NOBPROC, NORMAL);
-		Define(pPs, "Low Temp Control", 0. ,TEMP_UNIT,"Heat Source =5",0., 10. );
+		Define(pPs, "Low Temp Control", 0. ,UNIT_TYPES::TEMP_UNIT,"Heat Source =5",0., 10. );
     
  	// Parameters for Single layers sink 
  	pPs= new Ps(&HighTempCooling,  SINGLE,HEAT, HEATPIPE, NOBPROC, NORMAL);
-		Define(pPs, "High Temp Cooling", 35. ,TEMP_UNIT,"Heat Source =5",0., 100.);
+		Define(pPs, "High Temp Cooling", 35. ,UNIT_TYPES::TEMP_UNIT,"Heat Source =5",0., 100.);
     pPs= new Ps(&LowTempCooling, SINGLE,HEAT, HEATPIPE, NOBPROC, NORMAL);
-		Define(pPs, "Low Temp Cooling", 30. ,TEMP_UNIT,"Heat Source =5",0., 100. );  
+		Define(pPs, "Low Temp Cooling", 30. ,UNIT_TYPES::TEMP_UNIT,"Heat Source =5",0., 100. );  
     
  	
  	
@@ -124,11 +124,11 @@ bool Soil_HeatF_Functions::Def()
 	vector<double> initv;
 	initv.resize(p_Soil_WaterF->NL);
 	initv.assign(p_Soil_WaterF->NL,	0.);
- 		Define(pP, pNL,"ProdCoef_A",initv, HEATSOURCE_UNIT,"Heat Source >=1",0., 1.E5);
+ 		Define(pP, pNL,"ProdCoef_A",initv, UNIT_TYPES::HEATSOURCE_UNIT,"Heat Source >=1",0., 1.E5);
 		mTab_HeatSource.push_back(pP);
 	
 	pP= new P(&HeatProdCoef_A2, pNL, SIMPROFILE, HEAT, HEATSOURCE, NOBPROC, DETAILED);
-		Define(pP, pNL,"ProdCoef_A2",initv, HEATSOURCE_UNIT,"Heat Source >=3",0., 1.E5);
+		Define(pP, pNL,"ProdCoef_A2",initv, UNIT_TYPES::HEATSOURCE_UNIT,"Heat Source >=3",0., 1.E5);
 		mTab_HeatSource.push_back(pP);
 	
 	Tab *pTab;
@@ -139,12 +139,12 @@ bool Soil_HeatF_Functions::Def()
 		
 	pP= new P(&SoilHeatInitial, pNL, SIMPROFILE, HEAT, INITF, NOBPROC, DETAILED);
 		initv.assign(p_Soil_WaterF->NL,	1.E6);
- 		Define(pP, pNL,"Heat storage",initv, HEATSTORE_UNIT, "Initial Heat Conditions=3", 0., 1.E8);
+ 		Define(pP, pNL,"Heat storage",initv, UNIT_TYPES::HEATSTORE_UNIT, "Initial Heat Conditions=3", 0., 1.E8);
 		mTab_InitHeat.push_back(pP);
 
 	pP= new P(&SoilInitTempVar, pNL, SIMPROFILE, HEAT, INITF, NOBPROC, DETAILED);
 		initv.assign(p_Soil_WaterF->NL,	10.);
-		Define(pP, pNL,"Temperature",initv,TEMP_UNIT,"Initial Heat Conditions=1",-20.,70.);
+		Define(pP, pNL,"Temperature",initv,UNIT_TYPES::TEMP_UNIT,"Initial Heat Conditions=1",-20.,70.);
  		mTab_InitTemp.push_back(pP);
 
 	
@@ -160,7 +160,7 @@ bool Soil_HeatF_Functions::Def()
 	X* pX;
 	pX= new X(&SoilHeat,pNL,SIMPROFILE, HEAT, STORAGE, NOBPROC, NORMAL); 
 	initv.assign(p_Soil_WaterF->NL,1000.);
-	Define(pX,pNL , "SoilHeat",initv,HEATSTORE_UNIT, "");
+	Define(pX,pNL , "SoilHeat",initv, UNIT_TYPES::HEATSTORE_UNIT, "");
 	
 	NE* pNPS, *pNHB;
 	pNPS=new NE(&NPS, 20,1,100,1,100);
@@ -170,13 +170,13 @@ bool Soil_HeatF_Functions::Def()
 	pNHB=new NE(&NHB,4,1,100,1,100);//		!Element is Table	Heat boxes	
 	Define(pNHB,"Num of Heat Boxes");
 	pX=new  X(&ColdPipeHeat,pNPS,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL); 
-	Define(pX,pNPS, "ColdPipeHeat",initv,HEATSTORE_UNIT, "Insulated Water Pipe>0");
+	Define(pX,pNPS, "ColdPipeHeat",initv, UNIT_TYPES::HEATSTORE_UNIT, "Insulated Water Pipe>0");
 	pX=new  X(&OutPipeHeat,pNPS,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL); 
 
-	Define(pX,pNPS, "OutPipeHeat", initv,HEATSTORE_UNIT, "Insulated Water Pipe>0");
+	Define(pX,pNPS, "OutPipeHeat", initv, UNIT_TYPES::HEATSTORE_UNIT, "Insulated Water Pipe>0");
 	Xs* pXs;
 	pXs=new  Xs(&SewageHeatStore,SINGLE, HEAT, STORAGE, NOBPROC, NORMAL);
-	Define(pXs,"SewageHeatStore", 1000.,HEATSTORE_UNIT, "Insulated Water Pipe>0");
+	Define(pXs,"SewageHeatStore", 1000., UNIT_TYPES::HEATSTORE_UNIT, "Insulated Water Pipe>0");
 	pXs=new  Xs(&SewageWaterStore,SINGLE, WATER, STORAGE, NOBPROC, NORMAL); 
 	Define(pXs, "SewageWaterStore", 10.,"mm", "Insulated Water Pipe>0");
 	pXs=new  Xs(&TravelDistance,SINGLE, HEAT, STORAGE, NOBPROC, NORMAL); 
@@ -184,79 +184,79 @@ bool Soil_HeatF_Functions::Def()
 	T* pT;
 	pT=new T(&ColdPipeFlux,pNPS,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL); 
 	
-	Define(pT, pNPS, "ColdPipeFlux",initv,HEATFLOW_UNIT,	"Insulated Water Pipe>0");
+	Define(pT, pNPS, "ColdPipeFlux",initv,UNIT_TYPES::HEATFLOW_UNIT,	"Insulated Water Pipe>0");
 	pT=new T(&ColdPipeSinkFlux,pNPS,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL); 	
-	Define(pT,pNPS,  "ColdPipeSinkFlux",initv,HEATFLOW_UNIT,	"Insulated Water Pipe>0");
+	Define(pT,pNPS,  "ColdPipeSinkFlux",initv,UNIT_TYPES::HEATFLOW_UNIT,	"Insulated Water Pipe>0");
 	pT=new T(&OutPipeFlux,pNPS,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL); 	
-	Define(pT,pNPS, "OutPipeFlux",initv,HEATFLOW_UNIT,	"Insulated Water Pipe>0" );
+	Define(pT,pNPS, "OutPipeFlux",initv,UNIT_TYPES::HEATFLOW_UNIT,	"Insulated Water Pipe>0" );
 	pT=new T(&OutPipeSinkFlux, pNPS,WATERPIPE, HEAT, TRANSPORT, NOBPROC, NORMAL); 		
-	Define(pT, pNPS, "OutPipeSinkFlux",initv,HEATFLOW_UNIT,	"Insulated Water Pipe>0");	
+	Define(pT, pNPS, "OutPipeSinkFlux",initv,UNIT_TYPES::HEATFLOW_UNIT,	"Insulated Water Pipe>0");	
 	Ts *pTs=new Ts(&SewageSinkFlux ,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL);  	
-	Define(pTs ,"SewageSinkFlux", 0.,HEATFLOW_UNIT,"Insulated Water Pipe>0")	;
+	Define(pTs ,"SewageSinkFlux", 0.,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>0")	;
 	pTs=new Ts(&SewageWaterIn  ,SINGLE, WATER, STORAGE, NOBPROC, NORMAL);  	
 	
-	Define(pTs,"SewageWaterIn" , 0.,WATERFLOW_UNIT,"Insulated Water Pipe>0");
+	Define(pTs,"SewageWaterIn" , 0.,UNIT_TYPES::WATERFLOW_UNIT,"Insulated Water Pipe>0");
 	pTs=new Ts(&SewageWaterOut  , SINGLE, WATER, HEATPIPE, NOBPROC, NORMAL);  	
-	Define(pTs,"SewageWaterOut"  , 0.,WATERFLOW_UNIT,"Insulated Water Pipe>0");
+	Define(pTs,"SewageWaterOut"  , 0.,UNIT_TYPES::WATERFLOW_UNIT,"Insulated Water Pipe>0");
 	pTs=new Ts(&SewageInflow  , SINGLE, WATER, HEATPIPE, NOBPROC, NORMAL);  	
-	Define(pTs,"SewageInflow"  , 0.,HEATFLOW_UNIT,"Insulated Water Pipe>0");
+	Define(pTs,"SewageInflow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>0");
 	pTs=new Ts(&SewageOutflow  , SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL);  	
-	Define(pTs, "Sewageoutflow", 0.,HEATFLOW_UNIT,"Insulated Water Pipe>0");	
+	Define(pTs, "Sewageoutflow", 0.,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>0");	
 	pTs=new Ts(&ColdPipeInFlux  , SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL);  	
-	Define(pTs,"ColdPipeInFlux", 0.,HEATFLOW_UNIT,"Insulated Water Pipe>0");
+	Define(pTs,"ColdPipeInFlux", 0.,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>0");
 	pTs=new Ts(&OutPipeOutFlux  ,SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL);  	
-	Define(pTs,"OutPipeOutFlux"     , 0.,HEATFLOW_UNIT,"Insulated Water Pipe>0");
+	Define(pTs,"OutPipeOutFlux"     , 0.,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>0");
   	Gs* pGs;
 	pGs=new Gs(&SewageTemp, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL);  	
-    Define(pGs,"Temp Sewage"  , 10.,TEMP_UNIT,"Insulated Water Pipe>0");
+    Define(pGs,"Temp Sewage"  , 10.,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0");
 	G* pG=new G(&ColdPipeTemp, pNPS,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL);  	
     initv.assign(NPS,10.);
-	Define(pG,pNPS, "Temp ColdPipe", initv,TEMP_UNIT,"Insulated Water Pipe>0");
+	Define(pG,pNPS, "Temp ColdPipe", initv,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0");
 	
 	pG=new G(&OutPipeTemp, pNPS,WATERPIPE, HEAT, STORAGE, NOBPROC, NORMAL);  	
-    Define(pG,pNPS,"Temp OutPipe"  ,initv,TEMP_UNIT,"Insulated Water Pipe>0");  
+    Define(pG,pNPS,"Temp OutPipe"  ,initv,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0");  
 	pG=new G(&ThCondV,pNL ,SIMPROFILE, HEAT, TRANSPORT, NOBPROC, NORMAL);  
 	initv.assign(p_Soil_WaterF->NL,	0.);
-    Define(pG,pNL, "Thermal Conductivity"  , initv,HEATCOND_UNIT,"Thermal Conductivity>0");
+    Define(pG,pNL, "Thermal Conductivity"  , initv,UNIT_TYPES::HEATCOND_UNIT,"Thermal Conductivity>0");
            
 	
 	pT=new T(&SoilHeatFlow, pNL,SIMPROFILE, HEAT, STORAGE, NOBPROC, NORMAL);  	
-	Define(pT,pNL, "SoilHeatFlow", initv,HEATFLOW_UNIT, "");
+	Define(pT,pNL, "SoilHeatFlow", initv,UNIT_TYPES::HEATFLOW_UNIT, "");
 	pT=new T(&SoilHeatSink,pNL,SIMPROFILE, HEAT, EXTRACTION, NOBPROC, NORMAL);   	
-	Define(pT, pNL,"SoilHeatSink",initv,HEATFLOW_UNIT,	"HeatEq >= 1");
+	Define(pT, pNL,"SoilHeatSink",initv,UNIT_TYPES::HEATFLOW_UNIT,	"HeatEq >= 1");
 	pT=new T(&SoilHeatSource, pNL,SIMPROFILE, HEAT, HEATSOURCE, NOBPROC, NORMAL);   	
-	Define(pT,pNL, "SoilHeatSource",initv,HEATFLOW_UNIT,	"Heat Source >0");
+	Define(pT,pNL, "SoilHeatSource",initv,UNIT_TYPES::HEATFLOW_UNIT,	"Heat Source >0");
   	pTs=new Ts(&SurfHeatFlow,SINGLE, HEAT, UPPERBOUNDARY, NOBPROC, NORMAL);  
-  	Define(pTs,"SurfHeatFlow"     , 0.,HEATFLOW_UNIT,"");
+  	Define(pTs,"SurfHeatFlow"     , 0.,UNIT_TYPES::HEATFLOW_UNIT,"");
 	pTs=new Ts(&TotalGroundSensFlow, SINGLE, HEAT, UPPERBOUNDARY, NOBPROC, NORMAL);   		
-  	Define(pTs,"TotalGroundSensFlow" ,0.,HEATFLOW_UNIT, "Evaporation > 0|SurEbal > 0|WaterEq > 0") ;
+  	Define(pTs,"TotalGroundSensFlow" ,0.,UNIT_TYPES::HEATFLOW_UNIT, "Evaporation > 0|SurEbal > 0|WaterEq > 0") ;
 	pTs=new Ts(&TotalGroundLatFlow, SINGLE, HEAT, UPPERBOUNDARY, NOBPROC, NORMAL);   	
-    Define(pTs,"TotalGroundLatFlow"     , 0.,HEATFLOW_UNIT, "Evaporation > 0|SurEbal > 0|WaterEq > 0")	;
+    Define(pTs,"TotalGroundLatFlow"     , 0.,UNIT_TYPES::HEATFLOW_UNIT, "Evaporation > 0|SurEbal > 0|WaterEq > 0")	;
 	
 	pGs=new Gs(&TempSoilSurf,  SINGLE, TEMPERATURE, UPPERBOUNDARY, NOBPROC, NORMAL); 	
-  	Define(pGs,"TempSoilSurf"  , 10.,TEMP_UNIT,"");
+  	Define(pGs,"TempSoilSurf"  , 10.,UNIT_TYPES::TEMP_UNIT,"");
   
 	pG=new G(&Temp,pNL,SIMPROFILE, TEMPERATURE, STORAGE, NOBPROC, NORMAL);  	
-  	Define(pG,pNL,"Temperature",initv, TEMP_UNIT,"");
+  	Define(pG,pNL,"Temperature",initv,UNIT_TYPES::TEMP_UNIT,"");
 	pG=new G(&ExactTemperature, pNL,SIMPROFILE, TEMPERATURE, STORAGE, NOBPROC, NORMAL); 	
-  	Define(pG,pNL, "ExactTemperature",initv,TEMP_UNIT,"Analytical Solution >0");
+  	Define(pG,pNL, "ExactTemperature",initv,UNIT_TYPES::TEMP_UNIT,"Analytical Solution >0");
 
 	pG=new G(&ThQual, pNL,SIMPROFILE, HEAT, STORAGE, NOBPROC, NORMAL);  	
 	Define(pG,pNL,"ThermalQualilty"    ,initv,"-","");
 
 	initv.assign(NHB,1000.);
 	pX=new X(&HeatBoxStorage, pNHB,HEATBOX, HEAT, STORAGE, NOBPROC, NORMAL);  	
-	Define(pX, pNHB,"HeatBoxStorage",initv,HEATSTORE_UNIT, "Insulated Water Pipe>0");
+	Define(pX, pNHB,"HeatBoxStorage",initv, UNIT_TYPES::HEATSTORE_UNIT, "Insulated Water Pipe>0");
 	pT=new T(&HeatBoxBoundaryFlux, pNHB,HEATBOX, HEAT, TRANSPORT, NOBPROC, NORMAL);  	
-  	Define(pT ,pNHB, "HeatBoxBoundaryFlux",initv,HEATFLOW_UNIT,"Insulated Water Pipe>0");	
+  	Define(pT ,pNHB, "HeatBoxBoundaryFlux",initv,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>0");	
 	pT=new T(&HeatBoxHeaterFlux, pNHB,HEATBOX, HEAT, TRANSPORT, NOBPROC, NORMAL);  	
  	initv.assign(NHB,0.);
-  	Define(pT,pNHB   ,"HeatBoxHeaterFlux",initv,HEATFLOW_UNIT,"Insulated Water Pipe>1");	
+  	Define(pT,pNHB   ,"HeatBoxHeaterFlux",initv,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>1");	
 	pTs=new Ts(&HeatBoxReturnFlow,SINGLE, HEAT, TRANSPORT, NOBPROC, NORMAL);  	
-	Define(pTs,"HeatBox ReturnFlow",0.,HEATFLOW_UNIT,"Insulated Water Pipe>0");	
+	Define(pTs,"HeatBox ReturnFlow",0.,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe>0");	
  	initv.assign(NHB,10.);
 	pX=new X(&HeatBoxTemp, pNHB,HEATBOX, TEMPERATURE, STORAGE, NOBPROC, NORMAL); 
-    Define(pX,pNHB,"HeatBoxTemp"  ,initv,TEMP_UNIT,"Insulated Water Pipe>0") ;
+    Define(pX,pNHB,"HeatBoxTemp"  ,initv,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0") ;
 	pGs=new Gs(&HeatBoxEnhancer,SINGLE, HEAT, TRANSPORT, NOBPROC, NORMAL);  	
    	Define(pGs,"HeatBoxEnhancer"  , 1.,"-","Insulated Water Pipe>0") ;
   
@@ -266,9 +266,9 @@ bool Soil_HeatF_Functions::Def()
  	pPs=new Ps(&WaterPipeFluxFluc, SINGLE, WATER, HEATPIPE, NOBPROC, NORMAL);  	
 	Define(pPs, "Pipe Fluctuation", 0. ,"-","Insulated Water Pipe>0",0., 1. );
  	pPs=new Ps(&WaterPipeInTemp, SINGLE, WATER, HEATPIPE, NOBPROC, NORMAL); 
-	Define(pPs, "WPipe Input Temp", 5. ,TEMP_UNIT,"Insulated Water Pipe>0",0., 10. );
+	Define(pPs, "WPipe Input Temp", 5. ,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0",0., 10. );
  	pPs=new Ps(&WaterSewageInputAdd, SINGLE, WATER, HEATPIPE, NOBPROC, NORMAL);  	
-	Define(pPs, "Water Sewage Add Temp", 4. ,TEMP_UNIT,"Insulated Water Pipe>0",0., 30. );
+	Define(pPs, "Water Sewage Add Temp", 4. ,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0",0., 30. );
  	pPs=new Ps(&WaterSewageBuffer, SINGLE, WATER, HEATPIPE, NOBPROC, NORMAL);  	
 	Define(pPs, "Water Sewage Buffer", 20. ,"mm","Insulated Water Pipe>0",0., 30. ) ;
  	pPs=new Ps(&HeatPipeResistance, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL); 	
@@ -280,9 +280,9 @@ bool Soil_HeatF_Functions::Def()
   	pPs=new Ps(&ThCondInsulator, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL); 	
    	Define(pPs, "ThCond Insulator", 0.04 ,"W/m/K","Insulated Water Pipe>0",0.001, 2. ) ;
   	pPs=new Ps(&HeaterFluxRate, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL); 		
-	Define(pPs, "HeaterFluxRate",1.E6 ,HEATFLOW_UNIT,"Insulated Water Pipe=2",0., 1.E7);
+	Define(pPs, "HeaterFluxRate",1.E6 ,UNIT_TYPES::HEATFLOW_UNIT,"Insulated Water Pipe=2",0., 1.E7);
   	pPs=new Ps(&HeaterTempThreshold, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL); 	 	
-	Define(pPs, "HeatTempThreshold",-3. ,TEMP_UNIT,"Insulated Water Pipe=4",-10.,0.); 
+	Define(pPs, "HeatTempThreshold",-3. ,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe=4",-10.,0.); 
    	pPs=new Ps(&HeaterDuration, SINGLE, HEAT, HEATPIPE, NOBPROC, NORMAL); 	
 	Define(pPs, "HeaterDuration",1. ,"-","Insulated Water Pipe=2",0.,1.) ;
 	pP=new P(&WaterPipeLayer, pNHB,HEATBOX, HEAT, STORAGE, NOBPROC, NORMAL);

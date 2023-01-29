@@ -142,7 +142,7 @@ bool HBV::Def()
 
 	ps_vec.clear();
 	pPs = new Ps(&MaxPerc, SINGLE, WATER, PERCOLATION, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "PMaxPerc", 0.5, WATERFLOW_UNIT, "", 0.1, 0.6);
+	Define(pPs, "PMaxPerc", 0.5,UNIT_TYPES::WATERFLOW_UNIT, "", 0.1, 0.6);
 	functorprop.FuncName = MyFunc::HBV_GROUNDWATER_REDIST; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = string::npos;
 	funcname = "HBV GroundWater Redistribution Function";
@@ -193,21 +193,21 @@ bool HBV::Def()
 
 	Ts* pTs;
 	pTs = new Ts(&HBV_Input_Soil, SINGLE, WATER, INFILTRATION, NOBPROC, NORMAL);
-	Define(pTs, "HBV Input SOIL", 0.0, WATERFLOW_UNIT);
+	Define(pTs, "HBV Input SOIL", 0.0,UNIT_TYPES::WATERFLOW_UNIT);
 	pTs = new Ts(&HBV_Input_GW, SINGLE, WATER, REDISTRIBUTION, NOBPROC, NORMAL);
-	Define(pTs, "HBV Input GW", 0.0, WATERFLOW_UNIT);
+	Define(pTs, "HBV Input GW", 0.0,UNIT_TYPES::WATERFLOW_UNIT);
 	pTs = new Ts(&HBV_GW_Redist, SINGLE, WATER, REDISTRIBUTION, NOBPROC, NORMAL);
-	Define(pTs, "HBV GW ReDist", 0.0, WATERFLOW_UNIT);
+	Define(pTs, "HBV GW ReDist", 0.0,UNIT_TYPES::WATERFLOW_UNIT);
 	pTs = new Ts(&Q_Base, SINGLE, WATER, RUNOFF, NOBPROC, NORMAL);
-	Define(pTs, "Base Flow", 0.0, WATERFLOW_UNIT);
+	Define(pTs, "Base Flow", 0.0,UNIT_TYPES::WATERFLOW_UNIT);
 	pTs = new Ts(&Q_Peak, SINGLE, WATER, RUNOFF, NOBPROC, NORMAL);
-	Define(pTs, "Peak Flow", 0.0, WATERFLOW_UNIT);
+	Define(pTs, "Peak Flow", 0.0,UNIT_TYPES::WATERFLOW_UNIT);
 	Gs *pGs = new Gs(&HBV_GWLev, SINGLE, WATER, RUNOFF, NOBPROC, NORMAL);
-	Define(pGs, "HBV GroundWaterLevel", 0.0, WATERFLOW_UNIT);
+	Define(pGs, "HBV GroundWaterLevel", 0.0,UNIT_TYPES::WATERFLOW_UNIT);
 	pTs = new Ts(&Q, SINGLE, WATER, RUNOFF, NOBPROC, NORMAL);
-	Define(pTs, "HBV RunOff", 0.0, WATERFLOW_UNIT);
+	Define(pTs, "HBV RunOff", 0.0,UNIT_TYPES::WATERFLOW_UNIT);
 	pTs = new Ts(&HBV_Evaporation, SINGLE, WATER, EVAPOTRANSPIRATION, NOBPROC, NORMAL);
-	Define(pTs, "HBV Evap", 0.0, WATERFLOW_UNIT, "");
+	Define(pTs, "HBV Evap", 0.0,UNIT_TYPES::WATERFLOW_UNIT, "");
 
 	return true;
 }

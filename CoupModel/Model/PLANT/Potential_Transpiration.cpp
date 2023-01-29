@@ -1,7 +1,7 @@
 #include "Potential_Transpiration.h"
 #include "../Atmosphere/SnowPack.h"
 #include "../../Simulator/Simulator.h"
-#include "../Util.h"
+#include "../../Util.h"
 						   
 Potential_Transpiration::Potential_Transpiration(void)
 {
@@ -65,7 +65,7 @@ bool Potential_Transpiration::Def()
 	pPs = new Ps(&EPPeriod, SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
 	Define(pPs, "EPPeriod", 200., "days", "PlantType = 1|PotTranspInput = 0", 10., 365.); ps_vec.push_back(pPs);
 	pPs = new Ps(&EPMaxRate, SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
-	Define(pPs, "EPMaxRate", 4., WATERFLOW_UNIT, "PlantType = 1|PotTranspInput = 0", 0.1, 20., 1., 10.); ps_vec.push_back(pPs);
+	Define(pPs, "EPMaxRate", 4.,UNIT_TYPES::WATERFLOW_UNIT, "PlantType = 1|PotTranspInput = 0", 0.1, 20., 1., 10.); ps_vec.push_back(pPs);
 
 	functorprop.FuncName = MyFunc::POTTRANSPIRATION_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = string::npos;
@@ -110,7 +110,7 @@ bool Potential_Transpiration::Def()
 
 
 	pPs = new Ps(&CondRis, SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
-	Define(pPs, "CondRis", 5.E6, HEATFLOW_UNIT, "RSMethod >1|PlantType = 2", 1.E6, 500.E6);
+	Define(pPs, "CondRis", 5.E6,UNIT_TYPES::HEATFLOW_UNIT, "RSMethod >1|PlantType = 2", 1.E6, 500.E6);
 	pPs = new Ps(&CondVPD, SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
 	Define(pPs, "CondVPD", 100., "Pa", "RSMethod >1|PlantType = 2", 10., 10000., 50., 4000.);
 
@@ -258,7 +258,7 @@ bool Potential_Transpiration::Def()
 
 	pP = new P(&MC_CondRis, pNumPlants, PLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
 	initv.assign(NumPlants, 5.E6);
-	Define(pP, pNumPlants, "Conduct Ris", initv, HEATFLOW_UNIT, "PlantType >= 3", 1.E6, 500.E6);
+	Define(pP, pNumPlants, "Conduct Ris", initv,UNIT_TYPES::HEATFLOW_UNIT, "PlantType >= 3", 1.E6, 500.E6);
 	mTab_EvapMulti.push_back(pP);
 
 	pP = new P(&MC_CondVPD, pNumPlants, PLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);

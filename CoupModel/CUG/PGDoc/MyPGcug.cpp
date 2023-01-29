@@ -1449,7 +1449,7 @@ int MyPGCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 			size_t iopt;
 			if (ParV == m_UnitTypeNewVariables.Param) {
 				
-				iopt = p_ModelInfo->GetUnitType(After);
+				iopt = size_t(p_ModelInfo->GetUnitType(After));
 			}
 			else {
 				if (ParV == m_ElementTypeNewVariables.Param) {
@@ -1474,7 +1474,7 @@ int MyPGCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 		size_t iopt;
 		if (ParV == m_UnitTypeVariables.Param) {
 
-			iopt = p_ModelInfo->GetUnitType(After);
+			iopt = size_t(p_ModelInfo->GetUnitType(After));
 		}
 		if (ParV == m_ElementTypeVariables.Param) {
 

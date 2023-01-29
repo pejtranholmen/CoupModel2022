@@ -109,7 +109,7 @@ bool AbioticResponses::Def()
 	pPs = new Ps(&CommonTemQ10, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
 	Define(pPs, "TemQ10", 2., "-", "Nitrogen and Carbon > 0|Temp Response < 2", 0.0, 5., 0.5, 4.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonTemQ10Bas, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
-	Define(pPs, "TemQ10Bas", 20., TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response < 2", 0.0001, 100., 10., 30.); ps_vec.push_back(pPs);
+	Define(pPs, "TemQ10Bas", 20.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response < 2", 0.0001, 100., 10., 30.); ps_vec.push_back(pPs);
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, DECOMPOSITION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -118,7 +118,7 @@ bool AbioticResponses::Def()
 	funcname = "Q10  with Threshold Temperature Response";
 
 	pPs = new Ps(&CommonTemQ10Threshold, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
-	Define(pPs, "TemQ10Threshold", 5., TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 1", 0.0001, 20., 2., 10.); ps_vec.push_back(pPs);
+	Define(pPs, "TemQ10Threshold", 5.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 1", 0.0001, 20., 2., 10.); ps_vec.push_back(pPs);
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, DECOMPOSITION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -128,9 +128,9 @@ bool AbioticResponses::Def()
 	funcname = "Ratkowsky Temperature Response";
 	ps_vec.clear();
 	pPs = new Ps(&CommonTempMin, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
-	Define(pPs, "TempMin", -8., TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 2", -20., 10., -10., 5.); ps_vec.push_back(pPs);
+	Define(pPs, "TempMin", -8.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 2", -20., 10., -10., 5.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonTempMax, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "TempMax", 20., TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 2", 0.0001, 100., 10., 30.);
+	Define(pPs, "TempMax", 20.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 2", 0.0001, 100., 10., 30.);
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, DECOMPOSITION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -143,9 +143,9 @@ bool AbioticResponses::Def()
 	pPs = new Ps(&CommonNeillForm, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
 	Define(pPs, "Neill Form", 4.28, "-", "Temp Response = 3", 0.1, 100.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonNeillMax, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
-	Define(pPs, "Neill Max Temp", 42., TEMP_UNIT, "Temp Response = 3", 20., 100.); ps_vec.push_back(pPs);
+	Define(pPs, "Neill Max Temp", 42.,UNIT_TYPES::TEMP_UNIT, "Temp Response = 3", 20., 100.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonNeillOpt, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
-	Define(pPs, "Neill Opt Temp", 27.5, TEMP_UNIT, "Temp Response = 3", 10., 80.); ps_vec.push_back(pPs);
+	Define(pPs, "Neill Opt Temp", 27.5,UNIT_TYPES::TEMP_UNIT, "Temp Response = 3", 10., 80.); ps_vec.push_back(pPs);
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, DECOMPOSITION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -158,9 +158,9 @@ bool AbioticResponses::Def()
 	plotpar.Y_Label = "Response ()";
 	ps_vec.clear();
 	pPs = new Ps(&CommonArrheniusActWea, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
-	Define(pPs, "Arrhenius Act Wea", 47300., ENERGY_MOLE, "Nitrogen and Carbon > 0|Temp Response = 4", 10000., 200000., 20000., 100000.); ps_vec.push_back(pPs);
+	Define(pPs, "Arrhenius Act Wea", 47300., UNIT_TYPES::ENERGY_MOLE, "Nitrogen and Carbon > 0|Temp Response = 4", 10000., 200000., 20000., 100000.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonArrheniusTemp0, SIMPROFILE, ORGANIC, NOFPROC, DECOMPOSITION, NORMAL);
-	Define(pPs, "Arrhenius Temp0", 10., TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 4", 1., 100., 5., 30.); ps_vec.push_back(pPs);
+	Define(pPs, "Arrhenius Temp0", 10.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response = 4", 1., 100., 5., 30.); ps_vec.push_back(pPs);
 
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, DECOMPOSITION, NORMAL);

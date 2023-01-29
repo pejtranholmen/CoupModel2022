@@ -106,11 +106,11 @@ bool Meteorological_Data_Functions::Def()
 	Ps* pPs;
 	pPs = new Ps(&T_Step, ATMBOUNDARY, TIME, NOFPROC, NOBPROC, DETAILED);
 	T_Step =1./m_pModelMap->RunOpt.noofiter;
-	Define(pPs, "Time Step", .03125, TIME_UNIT, "WaterEq >100", 0.1E-9, 1., .125, 1.);
+	Define(pPs, "Time Step", .03125, UNIT_TYPES::TIME_UNIT, "WaterEq >100", 0.1E-9, 1., .125, 1.);
 
 	pPs= new Ps(&TempDayDiff_Fixed  , ATMBOUNDARY,  TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
 
-	Define(pPs,"TempDay Difference",10.,TEMP_UNIT,"WaterEq > 0|TempDayDiffInput=0|CloudInput=4", 0., 100.,10.,30.);
+	Define(pPs,"TempDay Difference",10.,UNIT_TYPES::TEMP_UNIT,"WaterEq > 0|TempDayDiffInput=0|CloudInput=4", 0., 100.,10.,30.);
 
 	pPs= new Ps(&PrecA0Corr, ATMBOUNDARY,  PRECIPITATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pPs,"PrecA0Corr",1.07,"-","WaterEq > 0|PrecInput = 1", 0., 10.,0.8,1.2);
@@ -126,15 +126,15 @@ bool Meteorological_Data_Functions::Def()
 	functorprop.FuncName = MyFunc::PREC_GENERATOR; functorprop.Arg = MyArgType::D1;	funcname = "Precipitation Generator";
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 30;
-	plotpar.X_Label = "Time Sequence "; plotpar.X_Label += p_ModelInfo->GetUnitString(TIME_UNIT, true);
-	plotpar.Y_Label = "Precipitation Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(WATERFLOW_UNIT, true);
+	plotpar.X_Label = "Time Sequence "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TIME_UNIT, true);
+	plotpar.Y_Label = "Precipitation Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERFLOW_UNIT, true);
 
 	pPs= new Ps(&PrecRate, ATMBOUNDARY,  PRECIPITATION, NOFPROC, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs,"PrecRate",20.,WATERFLOW_UNIT,"WaterEq > 0|PrecInput = 0", 0., 5000., 0., 500.);
+	Define(pPs,"PrecRate",20.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq > 0|PrecInput = 0", 0., 5000., 0., 500.);
 	pPs= new Ps(&PrecFreq, ATMBOUNDARY,  PRECIPITATION, NOFPROC, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,"PrecFreq",7.,"days"  ,"WaterEq > 0|PrecInput = 0",0., 1000., 0., 100.);
 	pPs= new Ps(&PrecStartDay, ATMBOUNDARY,  PRECIPITATION, NOFPROC, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs,"PrecStartDay",0.,WATERFLOW_UNIT,"WaterEq > 0|PrecInput = 0", 0., 50., 0., 50.);
+	Define(pPs,"PrecStartDay",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq > 0|PrecInput = 0", 0., 50., 0., 50.);
 
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
@@ -145,14 +145,14 @@ bool Meteorological_Data_Functions::Def()
 	functorprop.PhysFuncName = FUNC_CHOICE::AIRTEMP_YEAR;
 	plotpar.Num_Of_Points = 300;
 	plotpar.X_Max = 365;
-	plotpar.X_Label = "Time Sequence "; plotpar.X_Label += p_ModelInfo->GetUnitString(TIME_UNIT, true);
-	plotpar.Y_Label = "Air Temperature "; plotpar.Y_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
+	plotpar.X_Label = "Time Sequence "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TIME_UNIT, true);
+	plotpar.Y_Label = "Air Temperature "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
 
 
 	pPs= new Ps(&TAirMean, ATMBOUNDARY,  TEMPERATURE, NOFPROC, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "TempAirMean", 10.,TEMP_UNIT,"TempCycleInput > 0", -273.15, 100., -50. , 50.);
+	Define(pPs, "TempAirMean", 10.,UNIT_TYPES::TEMP_UNIT,"TempCycleInput > 0", -273.15, 100., -50. , 50.);
 	pPs= new Ps(&TAirAmpl, ATMBOUNDARY,  TEMPERATURE, NOFPROC, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs,"TempAirAmpl", 10.,TEMP_UNIT,"TempCycleInput > 0", 0., 50., 0., 25.);
+	Define(pPs,"TempAirAmpl", 10.,UNIT_TYPES::TEMP_UNIT,"TempCycleInput > 0", 0., 50., 0., 25.);
 	pPs= new Ps(&TAirPhase, ATMBOUNDARY,  TEMPERATURE, NOFPROC, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,"TempAirPhase",0.,"days","TempCycleInput > 0", 0., 365., 0., 30.);
 
@@ -199,8 +199,8 @@ bool Meteorological_Data_Functions::Def()
 	functorprop.FuncName = MyFunc::AIRTEMP_ALT_CORR;	functorprop.Arg = MyArgType::D1; funcname = "Air Temperature Altitude Function";
 
 	plotpar.X_Max = 25.;
-	plotpar.X_Label = "Air Temperature at Station "; plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
-	plotpar.Y_Label = "Corrected Air Temperature "; plotpar.Y_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
+	plotpar.X_Label = "Air Temperature at Station "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
+	plotpar.Y_Label = "Corrected Air Temperature "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
 
 	pPs= new Ps(&AltMetStation, ATMBOUNDARY,  TEMPERATURE, NOFPROC, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,"AltMetStation",0.,"m","HeatEq > 0",0., 10000.);
@@ -275,19 +275,19 @@ bool Meteorological_Data_Functions::Def()
 
   	Ds* pDs;
 	pDs = new Ds(&PotTransp, SINGLE,WATER, TRANSPIRATION, NOBPROC, NORMAL);
-	Define(pDs,"PotTranspiration",0,WATERFLOW_UNIT,"PlantType > 0|WaterEq > 0");
+	Define(pDs,"PotTranspiration",0,UNIT_TYPES::WATERFLOW_UNIT,"PlantType > 0|WaterEq > 0");
 	pDs = new Ds(&PotTranspMax, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs	,"PotMaxTranspiration",0.,WATERFLOW_UNIT,"PlantType > 0|WaterEq > 0");
+	Define(pDs	,"PotMaxTranspiration",0.,UNIT_TYPES::WATERFLOW_UNIT,"PlantType > 0|WaterEq > 0");
 	pDs = new Ds(&TAirDailyMean, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
 	
-	Define(pDs, "TAirDailyMean",0.,TEMP_UNIT,"TempCycleInput> 0");
+	Define(pDs, "TAirDailyMean",0.,UNIT_TYPES::TEMP_UNIT,"TempCycleInput> 0");
 
 	pDs = new Ds(&TAir, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs,"TemperatureAir",0.,TEMP_UNIT,"WaterEq >0");
+	Define(pDs,"TemperatureAir",0.,UNIT_TYPES::TEMP_UNIT,"WaterEq >0");
 	pDs = new Ds(&PrecMeas, ATMBOUNDARY,PRECIPITATION, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs	,"PrecMeasured",0.,WATERFLOW_UNIT,"WaterEq > 0")	;
+	Define(pDs	,"PrecMeasured",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq > 0")	;
 	pDs = new Ds(&PrecCorr, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs	,"PrecCorrected",0.,WATERFLOW_UNIT,"WaterEq > 0") ;
+	Define(pDs	,"PrecCorrected",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq > 0") ;
 	pDs = new Ds(&HumRel, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
 	Define(pDs	,"HumidityRelative",0.,"%","RadiationInput > 0|WaterEq > 0");
 	pDs = new Ds(&VapourPAir, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
@@ -297,22 +297,22 @@ bool Meteorological_Data_Functions::Def()
 	pDs = new Ds(&WindSpeed, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
 	Define(pDs ,"WindSpeed",0., "m/s","RadiationInput > 0|WaterEq > 0");
 	pDs = new Ds(&RadNetTot, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs	,"RadiationNetTot",0.,HEATFLOW_UNIT,"RadiationInput > 0|WaterEq > 0");
+	Define(pDs	,"RadiationNetTot",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|WaterEq > 0");
 	pDs = new Ds(&CloudFrac, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
 	Define(pDs ,"CloudFrac",0.,"-","RadiationInput > 0");
 	pDs = new Ds(&DurBriSun, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
 	Define(pDs	,"DurBriSunshine",0.,"minutes","RadiationInput > 0|DBSunInput >0") ;
 	pDs = new Ds(&RadInShort, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs,"GlobalRadiation",0.,HEATFLOW_UNIT,"RadiationInput > 0");
+	Define(pDs,"GlobalRadiation",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0");
 	pDs = new Ds(&TempDayDifference, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-    Define(pDs ,"TempDayDifference",0.,TEMP_UNIT,"RadiationInput > 0|CloudInput=5");
+    Define(pDs ,"TempDayDifference",0.,UNIT_TYPES::TEMP_UNIT,"RadiationInput > 0|CloudInput=5");
 	pDs = new Ds(&TrafficIntensity, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
     Define(pDs,"TrafficIntensity",0.,"#/day","TrafficInput > 0");
 //!   David 19/6-97	
 	pDs = new Ds(&RadInLong, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs ,"RadiationInLong",0.,HEATFLOW_UNIT,"RadiationInput > 0|WaterEq > 0||LongWaveBalance >=1");
+	Define(pDs ,"RadiationInLong",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|WaterEq > 0||LongWaveBalance >=1");
 	pDs = new Ds(&IrrigationRate, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs,"IrrigatationRate",0.,WATERFLOW_UNIT,"WaterEq > 0|Irrigation > 0");
+	Define(pDs,"IrrigatationRate",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq > 0|Irrigation > 0");
 
 
 	D* pD;
@@ -324,9 +324,9 @@ bool Meteorological_Data_Functions::Def()
 	pD = new D(&Wsource,pNL, SIMPROFILE, WATER, WATERSOURCE, NOBPROC, NORMAL);
 	initv.assign(p_Soil_WaterF->NL,0.);
 
-	Define(pD,pNL, "Wsource",initv,WATERFLOW_UNIT,"WaterEq >= 1");
+	Define(pD,pNL, "Wsource",initv,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq >= 1");
 	pDs = new Ds(&SpoolRunOn, ATMBOUNDARY,TEMPERATURE, NOFPROC, NOBPROC, NORMAL);
-	Define(pDs,"SPool RunOn",0.,WATERFLOW_UNIT,"LateralInput >= 1|WaterEq > 0");
+	Define(pDs,"SPool RunOn",0.,UNIT_TYPES::WATERFLOW_UNIT,"LateralInput >= 1|WaterEq > 0");
 
 	
 

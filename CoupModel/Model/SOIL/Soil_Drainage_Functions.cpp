@@ -44,7 +44,7 @@ bool Soil_Drainage_Functions::Def()
 	
    	Define(pPs, "GWSourceLayer",3.,"#","GroundWaterFlow >=1|WaterEq = 1",0.,100.);
 	pPs= new Ps(&GWSoFlow ,  SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
-	Define(pPs, "GWSourceFlow" ,0.,WATERFLOW_UNIT,"GroundWaterFlow >= 1|WaterEq = 1",0., 100.);
+	Define(pPs, "GWSourceFlow" ,0.,UNIT_TYPES::WATERFLOW_UNIT,"GroundWaterFlow >= 1|WaterEq = 1",0., 100.);
 
 	FunctorProp functorprop;
 	string funcname;
@@ -64,8 +64,8 @@ bool Soil_Drainage_Functions::Def()
 	plotpar.X_Max = 0;
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
-	plotpar.X_Label = "Ground Water Level ";	 plotpar.X_Label += p_ModelInfo->GetUnitString(LENGTH_UNIT, true);
-	plotpar.Y_Label = "Ground Water Flow ";	 plotpar.Y_Label += p_ModelInfo->GetUnitString(WATERFLOW_UNIT, true);
+	plotpar.X_Label = "Ground Water Level ";	 plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::LENGTH_UNIT, true);
+	plotpar.Y_Label = "Ground Water Flow ";	 plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERFLOW_UNIT, true);
 	plotpar.LegendsVec = { "" };
 
 	
@@ -74,9 +74,9 @@ bool Soil_Drainage_Functions::Def()
 	pPs= new Ps(&GFLevPeak,  SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
 		Define(pPs, "EmpGFLevPeak",-1.,"m", "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",-100., 0.);  ps_vec.push_back(pPs);
 	pPs= new Ps(&GFlowBase,  SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
-		Define(pPs, "EmpGFLowbase",2.,WATERFLOW_UNIT, "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",0., 100.); ps_vec.push_back(pPs);
+		Define(pPs, "EmpGFLowbase",2.,UNIT_TYPES::WATERFLOW_UNIT, "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",0., 100.); ps_vec.push_back(pPs);
 	pPs= new Ps(&GFlowPeak,  SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
-		Define(pPs, "EmpGFlowPeak",10.,WATERFLOW_UNIT, "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",0., 100.);	ps_vec.push_back(pPs);
+		Define(pPs, "EmpGFlowPeak",10.,UNIT_TYPES::WATERFLOW_UNIT, "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",0., 100.);	ps_vec.push_back(pPs);
 
 	pFunc = new Func(SIMPROFILE, GENERAL, LOWERBOUNDARY, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();
@@ -114,7 +114,7 @@ bool Soil_Drainage_Functions::Def()
 	pPs= new Ps(&PumpLowLevel  ,  SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
    	Define(pPs,  "PumpLowLevel"  ,-5.,"m","GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 0.);
 	pPs= new Ps(&PumpFlowRate  ,  SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
-   	Define(pPs,  "PumpFlowRate"  ,5.,WATERFLOW_UNIT,"GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 1000.);
+   	Define(pPs,  "PumpFlowRate"  ,5.,UNIT_TYPES::WATERFLOW_UNIT,"GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 1000.);
 
 	pPs= new Ps(&HFlow_Input_Index  ,  SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
    	Define(pPs,  "HFlow Input Index"  ,0.,"-","GroundWaterFlow =1|WaterEq = 1|LateralInput=2",0.,99999.);
@@ -132,11 +132,11 @@ bool Soil_Drainage_Functions::Def()
 	pT= new T(&WaterDrainFlow,pNL,SIMPROFILE, WATER, DRAINAGE, NOBPROC, NORMAL);
 	initv.resize(NL);
 	initv.assign(NL, 0);
-	Define(pT,pNL, "WaterDrainflow", initv,WATERFLOW_UNIT,"WaterEq = 1|GroundWaterFlow > 0");
+	Define(pT,pNL, "WaterDrainflow", initv,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|GroundWaterFlow > 0");
 	Ts *pTs;
  	pTs= new Ts(&DeepPerc	,   SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
  
-	Define(pTs, "DeepPerc", 0., WATERFLOW_UNIT, "WaterEq = 1"); 
+	Define(pTs, "DeepPerc", 0.,UNIT_TYPES::WATERFLOW_UNIT, "WaterEq = 1"); 
 	G* pG;
  	pG= new G(&CorrHH,pNL,SIMPROFILE, WATER, DRAINAGE, NOBPROC, NORMAL);
 
@@ -146,13 +146,13 @@ bool Soil_Drainage_Functions::Def()
 
 	Define(pGs, "SaturationLevel",0.,"m","GroundWaterFlow >= 1|WaterEq = 1");
  	pTs= new Ts(&NetEmpDrainage, SINGLE, WATER, DRAINAGE, NOBPROC, NORMAL);
- 	Define(pTs,  "NetEmpDrainage", 0., WATERFLOW_UNIT,"GroundWaterFlow = 1|EmpiricalDrainEq > 0");
+ 	Define(pTs,  "NetEmpDrainage", 0.,UNIT_TYPES::WATERFLOW_UNIT,"GroundWaterFlow = 1|EmpiricalDrainEq > 0");
  	pTs= new Ts(&NetPhysDrainage,   SINGLE, WATER, DRAINAGE, NOBPROC, NORMAL);
- 	Define(pTs, "NetPhysDrainage", 0., WATERFLOW_UNIT,"GroundWaterFlow = 1|PhysicalDrainEq >0");
+ 	Define(pTs, "NetPhysDrainage", 0.,UNIT_TYPES::WATERFLOW_UNIT,"GroundWaterFlow = 1|PhysicalDrainEq >0");
  	pTs= new Ts(&TotalDrainage,   SINGLE, WATER, DRAINAGE, NOBPROC, NORMAL);
- 	Define(pTs, "TotalDrainage", 0., WATERFLOW_UNIT,"GroundWaterFlow >= 1");
+ 	Define(pTs, "TotalDrainage", 0.,UNIT_TYPES::WATERFLOW_UNIT,"GroundWaterFlow >= 1");
  	pTs= new Ts(&TotalRunoff,   SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
- 	Define(pTs, "TotalRunoff",0.,WATERFLOW_UNIT, "WaterEq = 1");
+ 	Define(pTs, "TotalRunoff",0.,UNIT_TYPES::WATERFLOW_UNIT, "WaterEq = 1");
  	pTs= new Ts(&vDriveDrainLevel,   SINGLE, WATER, LOWERBOUNDARY, NOBPROC, NORMAL);
  	Define(pTs, "vDriveDrainLevel",0.,"m","DrainFileUse=1") ;
 

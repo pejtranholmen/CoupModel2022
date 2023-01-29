@@ -108,8 +108,8 @@ bool SnowPack_Functions::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = -5;
 	plotpar.X_Max = 5;
-	plotpar.X_Label = "Temperature";  plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
-	plotpar.Y_Label = "Factor "; plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Temperature";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
+	plotpar.Y_Label = "Factor "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
  
 	pPs= new Ps(&PRainLim ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);	ps_vec.push_back(pPs);
 	Define(pPs, "OnlyRainPrecTemp", 2., "C", "SnowPack >= 1", -4., 10.);
@@ -167,8 +167,8 @@ functorprop.FuncName = MyFunc::SNOW_THERMALCOND; functorprop.Arg = MyArgType::D1
 	funcname = "Thermal Conductivity of Snow";
 	plotpar.X_Min = 100;
 	plotpar.X_Max = 900;
-	plotpar.Y_Label = "Thermal Conductivity ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(THERMAL_CONDUCTIVY_UNIT, true);
-	plotpar.X_Label = "Density "; plotpar.X_Label += p_ModelInfo->GetUnitString(KILO_MASSDENSITY_UNIT, true);
+	plotpar.Y_Label = "Thermal Conductivity ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, true);
+	plotpar.X_Label = "Density "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::KILO_MASSDENSITY_UNIT, true);
 
  	pPs= new Ps(&SThCon ,SINGLE,SNOW, HEAT_CONVECTION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
     Define(pPs,"SThermalCondCoef",2.86E-6,"Wm5/°C·Kg²","SnowPack >= 1", 1.E-9,1.E-5);
@@ -188,8 +188,8 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 15.;
-	plotpar.Y_Label = "Resistance ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(AERODYNAMIC_RESISTANCE_UNIT, true);
-	plotpar.X_Label = "Wind Speed at 2m height"; plotpar.X_Label += p_ModelInfo->GetUnitString(WIND_SPEED_UNIT, true);
+	plotpar.Y_Label = "Resistance ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::AERODYNAMIC_RESISTANCE_UNIT, true);
+	plotpar.X_Label = "Wind Speed at 2m height"; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WIND_SPEED_UNIT, true);
 	plotpar.X2_Vec = { 2. };
 	plotpar.LogYScale = true;
 
@@ -238,8 +238,8 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	plotpar.X_Max = .2;
 	plotpar.LogYScale = false;
 	plotpar.LegendsVec = {""};
-	plotpar.X_Label = "Snow Height "; plotpar.X_Label += p_ModelInfo->GetUnitString(LENGTH_UNIT, true);
-	plotpar.Y_Label = "Bare Soil "; plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Snow Height "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::LENGTH_UNIT, true);
+	plotpar.Y_Label = "Bare Soil "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 	pPs = new Ps(&HCSnowCover, SINGLE, SNOW, LOWERBOUNDARY, NOBPROC, NORMAL); ps_vec.push_back(pPs);
     Define(pPs 	,"CritDepthSnowCover", .01, "m", "SnowPack >= 1",0.0001,3.,0.01,0.3);
@@ -256,8 +256,8 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	plotpar.Num_Of_Curves = 3;
 	plotpar.X_Min = -2;
 	plotpar.X_Max = 5.;
-	plotpar.X_Label = "Air Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
-	plotpar.Y_Label = "Melting Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(WATERFLOW_UNIT, true);
+	plotpar.X_Label = "Air Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
+	plotpar.Y_Label = "Melting Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERFLOW_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -293,8 +293,8 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	plotpar.Num_Of_Curves = 3;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 300.;
-	plotpar.X_Label = "Amount of Snow "; plotpar.X_Label += p_ModelInfo->GetUnitString(WATERMASS_UNIT, true);
-	plotpar.Y_Label = "Snow Density "; plotpar.Y_Label += p_ModelInfo->GetUnitString(KILO_MASSDENSITY_UNIT, true);
+	plotpar.X_Label = "Amount of Snow "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERMASS_UNIT, true);
+	plotpar.Y_Label = "Snow Density "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::KILO_MASSDENSITY_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -347,14 +347,14 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	plotpar.Num_Of_Curves = 4;
 	plotpar.X_Min = -5;
 	plotpar.X_Max = 0.;
-	plotpar.X_Label = "Air Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
-	plotpar.Y_Label = "Snow Melting "; plotpar.Y_Label += p_ModelInfo->GetUnitString(WATERMASS_UNIT, true);
+	plotpar.X_Label = "Air Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
+	plotpar.Y_Label = "Snow Melting "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERMASS_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = true;
 	plotpar.Num_Of_Opt = 1;
 	plotpar.LegendsVec = { "50 ", "100 ", "150 ","200 " };
 
-	for (size_t i = 0; i < 4; ++i) plotpar.LegendsVec[i]+= p_ModelInfo->GetUnitString(mMASS_UNIT, true);
+	for (size_t i = 0; i < 4; ++i) plotpar.LegendsVec[i]+= p_ModelInfo->GetUnitString(UNIT_TYPES::mMASS_UNIT, true);
 	plotpar.X2_Vec = { 50.f,	100.f , 150.f, 200.f};
 
  	pPs= new Ps(&ChlorideMeltConc ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
@@ -397,9 +397,9 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 //   ! Flow Variable	(August 2005)
 	Ts* pTs;
 	pTs= new Ts(&SnowExport,SINGLE,SNOW, TRANSPORT,NOBPROC, NORMAL);
-	    Define(pTs,"Snow mass export", 0.0,WATERFLOW_UNIT, "SnowPack>=1|SnowPloughing>=1");
+	    Define(pTs,"Snow mass export", 0.0,UNIT_TYPES::WATERFLOW_UNIT, "SnowPack>=1|SnowPloughing>=1");
 	pTs= new Ts(&SnowImport,SINGLE,SNOW, TRANSPORT,NOBPROC, NORMAL);    
-		Define(pTs,"Snow mass import", 0.0,WATERFLOW_UNIT , "SnowPack>=1|SnowPloughinput>=1");
+		Define(pTs,"Snow mass import", 0.0,UNIT_TYPES::WATERFLOW_UNIT , "SnowPack>=1|SnowPloughinput>=1");
 
 	pTs= new Ts(&SnowOutFlow, SINGLE,	SNOW, TRANSPORT, NOBPROC, NORMAL);
 		Define(pTs,"SnowWaterOutflow",0.,"mm/day");
@@ -440,21 +440,21 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 
  //   ! H,LE,G & Rn
 	 pGs= new Gs(&SnowSensF, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-     Define(pGs ,"SnowSensibleFlow"  , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
+     Define(pGs ,"SnowSensibleFlow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  	 pGs= new Gs(&SnowLatentF, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-    Define(pGs ,"SnowLatentFlow"  , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
+    Define(pGs ,"SnowLatentFlow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  	 pGs= new Gs(&SnowSurfHeatF, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-    Define(pGs ,"SnowSurfHeatFlow"  , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
+    Define(pGs ,"SnowSurfHeatFlow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  	 pGs= new Gs(&RadNetSnowCover, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-    Define(pGs ,"RadNetSnowCover"  , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
+    Define(pGs ,"RadNetSnowCover"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  	 pGs= new Gs(&RadNetShortSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-    Define(pGs ,"RadNetShortSnow"  , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
+    Define(pGs ,"RadNetShortSnow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  	 pGs= new Gs(&RadNetLongSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-    Define(pGs ,"RadNetLongSnow"  , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
+    Define(pGs ,"RadNetLongSnow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
 
 //    ! Rn-H-LE-G=residual energy balance error
  	 pGs= new Gs(&SnowEbal, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-    Define(pGs ,"SnowEbalClosure"  , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
+    Define(pGs ,"SnowEbalClosure"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  	 pGs= new Gs(&RaSnowSurf, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
     Define(pGs ,"ResAirAboveSnow"  , 0.,"s/m","SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  	 pGs= new Gs(&VapourPSnowSurf, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
@@ -474,13 +474,13 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
     Define(pGs,  "TempSnowPack"   , 0.,"°C","SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
 
  	 pGs= new Gs(&QMeltSurface, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-     Define(pGs ,"QMeltSurface"   , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
+     Define(pGs ,"QMeltSurface"   , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
    	 pGs= new Gs(&QSnowSoil, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-   Define(pGs ,   "QSnowSoil"         , 0.,HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
+   Define(pGs ,   "QSnowSoil"         , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
 
 //    ! Snow adjustment variables
     pGs= new Gs(&PrecAdjustSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
-	Define(pGs ,"PrecAdjustSnow"  , 0.,WATERFLOW_UNIT,"SnowPack >= 1|SnowAdjustment > 0");
+	Define(pGs ,"PrecAdjustSnow"  , 0.,UNIT_TYPES::WATERFLOW_UNIT,"SnowPack >= 1|SnowAdjustment > 0");
 	Ds *pDs;
 	pDs= new Ds(&SnowMeasured, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
 

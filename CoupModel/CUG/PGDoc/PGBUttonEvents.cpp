@@ -480,7 +480,7 @@ void PGButtonEvents::DescriptionButtons(int ParV)
 					string str;
 					UNIT_TYPES unit=pPG->GetVarUnitType(ivar, 1);
 
-					if (unit < NO_UNIT&&unit >= UNIT_TYPES(0)) {
+					if (unit < UNIT_TYPES::NO_UNIT&&unit >= UNIT_TYPES(0)) {
 						pPG->SetVarUnit(ivar, p_ModelInfo->GetUnitString(unit), irep);
 						pPG->pg.status.FileModified = true;
 					}

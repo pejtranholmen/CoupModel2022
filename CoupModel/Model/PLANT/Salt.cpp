@@ -441,52 +441,52 @@ bool Salt::Def()
 	Define(pSw, "Resisitivy Output", 0, "off|on", "");
 
 	Xs *pXs = new Xs(&AccSaltInput, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pXs, "AccSaltInput", 0., mMASS_UNIT, "");
+	Define(pXs, "AccSaltInput", 0.,UNIT_TYPES::mMASS_UNIT, "");
 	pXs = new Xs(&AccSaltOutput, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pXs, "AccSaltOutput", 0., mMASS_UNIT, "");
+	Define(pXs, "AccSaltOutput", 0.,UNIT_TYPES::mMASS_UNIT, "");
 	pXs = new Xs(&TE_Balance, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pXs, "TE_Balance", 0., mMASS_UNIT, "");
+	Define(pXs, "TE_Balance", 0.,UNIT_TYPES::mMASS_UNIT, "");
 	pXs = new Xs(&SaltOnRoad, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pXs, "SaltOnRoad", 0., mMASS_UNIT, "SaltRoadStorage >0");
+	Define(pXs, "SaltOnRoad", 0.,UNIT_TYPES::mMASS_UNIT, "SaltRoadStorage >0");
 	pXs = new Xs(&SaltCloseToRoad, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pXs, "SaltCloseToRoad", 0., mMASS_UNIT, "SaltRoadStorage >0");
+	Define(pXs, "SaltCloseToRoad", 0.,UNIT_TYPES::mMASS_UNIT, "SaltRoadStorage >0");
 	pXs = new Xs(&SaltInSnow, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pXs, "Salt in SnowPack", 0., mMASS_UNIT, "SaltSnowStorage >0");
+	Define(pXs, "Salt in SnowPack", 0.,UNIT_TYPES::mMASS_UNIT, "SaltSnowStorage >0");
 	X* pX;
 	NE *pNL; pNL = m_pModelMap->GetNEPointer("Number of Layers");
 	vector<double> initv;
 	initv.assign(p_Soil_WaterF->NL, 0.);
 	pX = new X(&SaltStorage, pNL, SIMPROFILE, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pX, pNL, "SaltStorage", initv, mMASS_UNIT, "");
+	Define(pX, pNL, "SaltStorage", initv,UNIT_TYPES::mMASS_UNIT, "");
 	T* pT = new T(&SaltFlow, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pT, pNL, "SaltFlow", initv, mMASSFLOW_UNIT, "");
+	Define(pT, pNL, "SaltFlow", initv,UNIT_TYPES::mMASSFLOW_UNIT, "");
 	pT = new T(&SaltDrainFlow, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pT, pNL, "SaltDrainFlow", initv, mMASSFLOW_UNIT, "");
+	Define(pT, pNL, "SaltDrainFlow", initv,UNIT_TYPES::mMASSFLOW_UNIT, "");
 	pT = new T(&SaltSourceFlow, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pT, pNL, "SaltSourceFlow", initv, mMASSFLOW_UNIT, "EnableSaltSource =1");
+	Define(pT, pNL, "SaltSourceFlow", initv,UNIT_TYPES::mMASSFLOW_UNIT, "EnableSaltSource =1");
 
 	Ts *pTs = new Ts(&TotSaltSourceFlow, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pTs, "TotSaltSourceFlow", 0., mMASSFLOW_UNIT, "EnableSaltSource =1");
+	Define(pTs, "TotSaltSourceFlow", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "EnableSaltSource =1");
 	pT = new T(&SaltPlantUptake, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pT, pNL, "SaltPlantUptake", initv, mMASSFLOW_UNIT, "TraceElementUptake > 0");
+	Define(pT, pNL, "SaltPlantUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "TraceElementUptake > 0");
 
 	pTs = new Ts(&SaltToSnow, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pTs, "Salt To SnowPack", 0., mMASSFLOW_UNIT, "SaltSnowStorage>0");
+	Define(pTs, "Salt To SnowPack", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltSnowStorage>0");
 	pTs = new Ts(&SaltFromSnow, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pTs, "Salt From SnowPack", 0., mMASSFLOW_UNIT, "SaltSnowStorage>0");
+	Define(pTs, "Salt From SnowPack", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltSnowStorage>0");
 
 	pTs = new Ts(&SaltInfiltration, SINGLE, SALT, INFILTRATION, NOBPROC, NORMAL);
-	Define(pTs, "SaltInfiltration", 0., mMASSFLOW_UNIT, "");
+	Define(pTs, "SaltInfiltration", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 
 	pTs = new Ts(&SaltEmissions, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
-	Define(pTs, "SaltEmissions", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "SaltEmissions", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 	//! New Emission variables created August 2005
 	pTs = new Ts(&SaltAirEmission, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pTs, "Salt AirEmission", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "Salt AirEmission", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 	pTs = new Ts(&SaltPloughEmission, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pTs, "Salt PloughEmission", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "Salt PloughEmission", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 	pTs = new Ts(&SaltRunOffEmission, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
-	Define(pTs, "Salt RunoffEmission", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "Salt RunoffEmission", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 
 
 	//! New Outputs Resisvity
@@ -501,7 +501,7 @@ bool Salt::Def()
 
 
 	pPs = new Ps(&Res_Temp_N, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
-	Define(pPs, "Resisitivy NormT", 25., TEMP_UNIT, "Resisitivy Output>0", 15., 30.);
+	Define(pPs, "Resisitivy NormT", 25.,UNIT_TYPES::TEMP_UNIT, "Resisitivy Output>0", 15., 30.);
 	pPs = new Ps(&Res_Temp_Sens, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
 	Define(pPs, "Resisitivy SensT", 0.019, "", "Resisitivy Output>0", 0.00, 0.020);
 	pPs = new Ps(&Res_IonCoef, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
@@ -520,18 +520,18 @@ bool Salt::Def()
 
 
 	pTs = new Ts(&SaltToRoad, ROADSURFACE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pTs, "SaltToRoad", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "SaltToRoad", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 	pTs = new Ts(&SaltDeepPercolation, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pTs, "SaltDeepPercolation", 0., mMASSFLOW_UNIT, "");
+	Define(pTs, "SaltDeepPercolation", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 	pTs = new Ts(&SaltSurfaceOutFlow, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pTs, "SaltSurfaceOutflow", 0., mMASSFLOW_UNIT, "");
+	Define(pTs, "SaltSurfaceOutflow", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 
 	pTs = new Ts(&SaltRunOffEmission2, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
-	Define(pTs, "Salt RunoffTotal", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "Salt RunoffTotal", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 	pTs = new Ts(&SaltRoadCaptured, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
-	Define(pTs, "Salt RoadCaptured", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "Salt RoadCaptured", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 	pTs = new Ts(&SaltRoadLossed, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
-	Define(pTs, "Salt RoadLossed", 0., mMASSFLOW_UNIT, "SaltRoadStorage >0");
+	Define(pTs, "Salt RoadLossed", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 
 
 	Gs *pGs = new Gs(&DepthofFront, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
@@ -552,11 +552,11 @@ bool Salt::Def()
 
 
 	pPs = new Ps(&SaltAppRate, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
-	Define(pPs, "Salt Application Rate", 10000., mMASSFLOW_UNIT, "RoadSaltApplication = 0", 0., 10000.);
+	Define(pPs, "Salt Application Rate", 10000.,UNIT_TYPES::mMASSFLOW_UNIT, "RoadSaltApplication = 0", 0., 10000.);
 	pPs = new Ps(&TempSaltLowLimit, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
-	Define(pPs, "Temp Salt Low Limit", -6., TEMP_UNIT, "RoadSaltApplication = 0", -20., 1.);
+	Define(pPs, "Temp Salt Low Limit", -6.,UNIT_TYPES::TEMP_UNIT, "RoadSaltApplication = 0", -20., 1.);
 	pPs = new Ps(&TempSaltHighLimit, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
-	Define(pPs, "Temp Salt High Limit", 2., TEMP_UNIT, "RoadSaltApplication = 0", -1., 20.);
+	Define(pPs, "Temp Salt High Limit", 2.,UNIT_TYPES::TEMP_UNIT, "RoadSaltApplication = 0", -1., 20.);
 	pPs = new Ps(&FractionOfRoad, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
 	Define(pPs, "Fraction of Road", 0.01, "-", "SaltRoadStorage >0|RoadSaltApplication >= 1", 0., 1.);
 	pPs = new Ps(&EmissionRateCoef, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
@@ -618,65 +618,65 @@ bool Salt::Def()
 	pG = new G(&OsmoticPressure, pNL, SIMPROFILE, SALT, STORAGE, NOBPROC, NORMAL);
 	Define(pG, pNL, "OsmoticPressure", initv, "cm", "SaltTracer >= 1");
 	pGs = new Gs(&TotalSaltDrainFlow, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pGs, "TotalSaltDrainFlow", 0., mMASSFLOW_UNIT, "");
+	Define(pGs, "TotalSaltDrainFlow", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 
 	Ds *pDs = new Ds(&SaltInfilConc, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
 	Define(pDs, "SaltInfilConc", 0., "mg/l", "SaltTracer >= 1");
 	pDs = new Ds(&SaltIrrigationConc, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
 	Define(pDs, "SaltIrrigationConc", 0., "mg/l", "SaltTracer >= 1");
 	pDs = new Ds(&SaltAirDeposition, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pDs, "SaltAirDeposition", 0., mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
+	Define(pDs, "SaltAirDeposition", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
 	pDs = new Ds(&SaltPloughDeposition, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pDs, "SaltPloughDeposition", 0., mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
+	Define(pDs, "SaltPloughDeposition", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
 	pDs = new Ds(&SaltRunOffDeposition, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pDs, "SaltRunOffDeposition", 0., mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
+	Define(pDs, "SaltRunOffDeposition", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
 
 
 	//! Trace Elements below
 	initv.assign(NumPlants, 0.);
 	pX = new X(&TE_OldRoots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pX, pNumPlants, "TE OldRoots", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNumPlants, "TE OldRoots", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
 	pX = new X(&TE_Grain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
 
-	Define(pX, pNumPlants, "TE Grain", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNumPlants, "TE Grain", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 	pX = new X(&TE_Stem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pX, pNumPlants, "TE Stem", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNumPlants, "TE Stem", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 	pX = new X(&TE_Roots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pX, pNumPlants, "TE Roots", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNumPlants, "TE Roots", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 	pX = new X(&TE_Leaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pX, pNumPlants, "TE Leaf", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNumPlants, "TE Leaf", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
 	pX = new X(&TE_OldStem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pX, pNumPlants, "TE OldStem", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNumPlants, "TE OldStem", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 	pX = new X(&TE_OldLeaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pX, pNumPlants, "TE OldLeaf", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNumPlants, "TE OldLeaf", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
 	pXs = new Xs(&TE_SurfaceLitter, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pXs, "TE Surface Litter", 0., mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pXs, "TE Surface Litter", 0.,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
 	pX = new X(&TE_Litter1, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
 	initv.assign(p_Soil_WaterF->NL, 10.);
-	Define(pX, pNL, "TE Litter1", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNL, "TE Litter1", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 	pX = new X(&TE_Humus, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
 
-	Define(pX, pNL, "TE Humus", initv, mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
+	Define(pX, pNL, "TE Humus", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
 
 	//! Trace elements Transfer
 	pT = new T(&TE_PlantLeafUptake, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
 
-	Define(pT, pNumPlants, "TE PlantLeafUptake", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE PlantLeafUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_PlantStemUptake, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE PlantStemUptake", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE PlantStemUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_PlantRootUptake, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE PlantRootUptake", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE PlantRootUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_StemGrain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE StemGrain", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE StemGrain", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
 	pT = new T(&TE_LeafGrain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE LeafGrain", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE LeafGrain", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
 	pT = new T(&TE_RootsGrain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE RootsGrain", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE RootsGrain", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
 	//! Define(pT,  NGrainHarvest		,"N GrainHarvest" 	,NumPlants,		0.,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 	//!	Define(pT,  NStemHarvest		,"N StemHarvest"  	,NumPlants,		0.,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 	//!	Define(pT,  NOldStemHarvest	,"N OldStemHarvest"		,initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
@@ -685,45 +685,45 @@ bool Salt::Def()
 	//!	Define(pT,  NRootsHarvest		,"N RootsHarvest"  	,NumPlants,		0.,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 	//!	Define(pT,  NOldRootsHarvest	,"N OldRootsHarvest"  	,initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 	pT = new T(&TE_RootsLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE RootsLitter", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE RootsLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_LeafSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE LeafSurfaceLitter", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE LeafSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_StemSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE StemSurfaceLitter", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE StemSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_GrainSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE GrainSurfaceLitter", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE GrainSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	//!	Call T("Hidden", N_NewMobileSurfaceLitter,"N NewMobilSurfLitter",initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0")	!LK 010906
 	//!	Call T("Hidden", NMobileSurfaceLitter,"N MobileSurfLitter",initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0")	!LK 010906
 	//!	Define(pT,  NPlantUptake		,"N SoilNewMobile"	,initv0D0,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0")
 	pT = new T(&TE_OldRootsLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE OldRootsLitter", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE OldRootsLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_OldLeafSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE OldLeafSurfaceLitter", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE OldLeafSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_OldStemSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE OldStemSurfaceLitter", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE OldStemSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_StemOldStem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE StemOldStem", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE StemOldStem", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_LeafOldLeaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE LeafOldLeaf", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE LeafOldLeaf", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pT = new T(&TE_RootsOldRoots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "TE RootsOldRoots", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pT, pNumPlants, "TE RootsOldRoots", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
 
 	pTs = new Ts(&TE_SurfaceLitter_L1, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pTs, "TE SurfaceLitter_L1", 0., mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
+	Define(pTs, "TE SurfaceLitter_L1", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
 	pTs = new Ts(&TE_SurfaceLitter_Hum, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pTs, "TE SurfaceLitter_Humus", 0., mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes >0|TraceElementUptake>0");
+	Define(pTs, "TE SurfaceLitter_Humus", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes >0|TraceElementUptake>0");
 
 	pT = new T(&TE_RootsLitter1, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
 	initv.assign(p_Soil_WaterF->NL, 0.);
-	Define(pT, pNL, "TE RootsLitter1", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
+	Define(pT, pNL, "TE RootsLitter1", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
 
 	pT = new T(&TE_Litter1MinRate, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
-	Define(pT, pNL, "TE Litter1MinRate", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes = 0|TraceElementUptake>0");
+	Define(pT, pNL, "TE Litter1MinRate", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes = 0|TraceElementUptake>0");
 	pT = new T(&TE_HumusMinRate, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
-	Define(pT, pNL, "TE HumusMinRate", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
+	Define(pT, pNL, "TE HumusMinRate", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
 	pT = new T(&TE_Litter1HumusRate, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
-	Define(pT, pNL, "TE Litter1HumusRate", initv, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
+	Define(pT, pNL, "TE Litter1HumusRate", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
 
 
 	pG = new G(&TEC_RatioLeaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
@@ -744,26 +744,26 @@ bool Salt::Def()
 	Define(pG, pNumPlants, "TEC RatioOldRoots", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
 	pGs = new Gs(&TE_TotPlant, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pGs, "TE Total Plant", 0.0, mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pGs, "TE Total Plant", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
 	pGs = new Gs(&TE_TotHumus, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pGs, "TE Total Humus", 0.0, mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pGs, "TE Total Humus", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pGs = new Gs(&TE_TotLitter, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pGs, "TE Total Litter", 0.0, mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pGs, "TE Total Litter", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pGs = new Gs(&TE_TotMineral, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pGs, "TE Total Mineral", 0.0, mMASS_UNIT, "");
+	Define(pGs, "TE Total Mineral", 0.0,UNIT_TYPES::mMASS_UNIT, "");
 	//!	Define(pGs,  TE_TotMinDiss,"TE Total Mineral Dissolved", 0.0,mMASS_UNIT, "");
 	//!	Define(pGs,  TE_TotMinAds,"TE Total Mineral Adsorbed", 0.0,mMASS_UNIT, "");
 
 	pGs = new Gs(&TE_TotStorage, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
-	Define(pGs, "TE Total Storage", 0.0, mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pGs, "TE Total Storage", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
 	pGs = new Gs(&TE_TotPlantUptake, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pGs, "TE Total PlantUptake", 0.0, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pGs, "TE Total PlantUptake", 0.0,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pGs = new Gs(&TE_TotLitterFall, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pGs, "TE Total Litterfall", 0.0, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pGs, "TE Total Litterfall", 0.0,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	pGs = new Gs(&TE_TotMineralisation, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
-	Define(pGs, "TE Total Mineralisation", 0.0, mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
+	Define(pGs, "TE Total Mineralisation", 0.0,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
 	pPs = new Ps(&PassiveUptScaling, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
 	Define(pPs, "PassiveUptScaling", 1.E-3, "-", "TraceElementUptake>0|PassiveUptake>0", 0., 1.);

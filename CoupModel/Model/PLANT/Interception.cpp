@@ -104,7 +104,7 @@ bool Interception::Def()
 	ps_vec.push_back(pPs);
 	ps_vec.push_back(m_pModelMap->GetPsPointer("Ratio_Eva-Transp"));
 	pPs = new Ps(&TiStep, ATMBOUNDARY, TIME, NOFPROC, NOBPROC, DETAILED);
-	Define(pPs, "Time Step Interception", .03125, TIME_UNIT, "WaterEq >100", 0.1E-9, 1., .125, 1.); ps_vec.push_back(pPs);
+	Define(pPs, "Time Step Interception", .03125, UNIT_TYPES::TIME_UNIT, "WaterEq >100", 0.1E-9, 1., .125, 1.); ps_vec.push_back(pPs);
 	plotpar.Num_Of_Curves = 2;
 	plotpar.X_Max = 6;
 	plotpar.X_Label = "Potential Transpiration (mm/day)";
@@ -164,15 +164,15 @@ bool Interception::Def()
 	Gs* pGs = new Gs(&IntCapacity, SINGLEPLANT, WATER, INTERCEPTION, NOBPROC, NORMAL);
 	Define(pGs, "InterceptionCapacity", 0., "mm");
 	pGs = new Gs(&IntRate, SINGLEPLANT, WATER, INTERCEPTION, NOBPROC, NORMAL);
-	Define(pGs, "InterceptionRate", 0., WATERFLOW_UNIT);
+	Define(pGs, "InterceptionRate", 0.,UNIT_TYPES::WATERFLOW_UNIT);
 	pGs = new Gs(&IntStorage, SINGLEPLANT, WATER, INTERCEPTION, NOBPROC, NORMAL);
 	Define(pGs, "InterceptionStorage", 0., "mm");
 	pGs = new Gs(&ThroughFall, SINGLEPLANT, WATER, INTERCEPTION, NOBPROC, NORMAL);
-	Define(pGs, "Throughfall", 0., WATERFLOW_UNIT);
+	Define(pGs, "Throughfall", 0.,UNIT_TYPES::WATERFLOW_UNIT);
 	pGs = new Gs(&EvaPotInt, SINGLEPLANT, WATER, INTERCEPTION, NOBPROC, NORMAL);
-	Define(pGs, "InterceptionPotEva", 0., WATERFLOW_UNIT);
+	Define(pGs, "InterceptionPotEva", 0.,UNIT_TYPES::WATERFLOW_UNIT);
 	pGs = new Gs(&EvaActInt, SINGLEPLANT, WATER, INTERCEPTION, NOBPROC, NORMAL);
-	Define(pGs, "InterceptionActEva", 0., WATERFLOW_UNIT);
+	Define(pGs, "InterceptionActEva", 0.,UNIT_TYPES::WATERFLOW_UNIT);
 	pGs = new Gs(&IntThQual, SINGLEPLANT, WATER, INTERCEPTION, NOBPROC, NORMAL);
 	Define(pGs, "InterceptedWaterThQ", 0., "-");
 
@@ -186,10 +186,10 @@ bool Interception::Def()
 
 
 	T* pT = new T(&MC_EvaActInt, pNumPlants, PLANT, PRECIPITATION, INTERCEPTION, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "Canopy Interc ActEva", initv, WATERFLOW_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq > 0");
+	Define(pT, pNumPlants, "Canopy Interc ActEva", initv,UNIT_TYPES::WATERFLOW_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq > 0");
 
 	pG = new G(&MC_EvaPotInt, pNumPlants, PLANT, PRECIPITATION, INTERCEPTION, NOBPROC, NORMAL);
-	Define(pG, pNumPlants, "Canopy Interc PotEva", initv, WATERFLOW_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq > 0");
+	Define(pG, pNumPlants, "Canopy Interc PotEva", initv,UNIT_TYPES::WATERFLOW_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq > 0");
 
 
 	return true;

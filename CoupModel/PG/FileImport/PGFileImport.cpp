@@ -1464,7 +1464,7 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 		if (out.LinkedSites.back().TimeCheck.RecordStep == string::npos) num = out.FirstValidHeads.size();
 		out.Des.addinfo.resize(num);
 		for_each(out.Des.addinfo.begin(), out.Des.addinfo.end(), [](AddInfo& info) {
-			info.Unit = NO_UNIT; info.Element = GENERAL; } );
+			info.Unit = UNIT_TYPES::NO_UNIT; info.Element = GENERAL; } );
 		out.Des.base.Name.resize(num);
 		out.Des.base.Unit.resize(num);
 		out.Des.base.Id.resize(num);
@@ -1856,7 +1856,7 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 		m_countf = i;
 		size_t index_out;
 		index_out = m_countf * pg.Shape.NumVar;
-		string tunit= p_ModelInfo->GetUnitString(TEMP_UNIT);
+		string tunit= p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT);
 		
 		for (size_t jj = 0; jj < 32; jj++) {
 			pg.Des.base.Name[index_out+jj] = "Temperature";

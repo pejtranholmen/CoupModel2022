@@ -39,8 +39,8 @@ bool Surface_Water_Functions::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 50;
-	plotpar.X_Label = "Surface Pool "; plotpar.X_Label += p_ModelInfo->GetUnitString(WATERMASS_UNIT, true);
-	plotpar.Y_Label = "Water Flow Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(WATERFLOW_UNIT, true);
+	plotpar.X_Label = "Surface Pool "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERMASS_UNIT, true);
+	plotpar.Y_Label = "Water Flow Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERFLOW_UNIT, true);
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -66,8 +66,8 @@ bool Surface_Water_Functions::Def()
 	functorprop.FuncName = MyFunc::SURFACE_WATER_COVER; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = string::npos;
 	funcname = "Surface Pool Cover Function";
-	plotpar.X_Label = "Surface Pool "; plotpar.X_Label += p_ModelInfo->GetUnitString(WATERMASS_UNIT, true);
-	plotpar.Y_Label = "Degree of Soil Cover "; plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Surface Pool "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERMASS_UNIT, true);
+	plotpar.Y_Label = "Degree of Soil Cover "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 
 	pPs= new Ps(&SPCovMax ,SURFACEPOOL,WATER, SURFACERUNOFF,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
@@ -108,25 +108,25 @@ bool Surface_Water_Functions::Def()
 	Ts *pTs;
 	pTs= new Ts(&Spoolinflow, SURFACEPOOL,WATER, SURFACERUNOFF,NOBPROC, NORMAL);
 
-	Define(pTs, "Spoolinflow",0.,WATERFLOW_UNIT,"WaterEq = 1");
+	Define(pTs, "Spoolinflow",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1");
 	pTs= new Ts(&SpoolRunoff, SURFACEPOOL,WATER, SURFACERUNOFF,NOBPROC, NORMAL);
-	Define(pTs,  "SpoolRunoff",0.,WATERFLOW_UNIT,"WaterEq = 1");
+	Define(pTs,  "SpoolRunoff",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1");
 	pTs= new Ts(&FurrowInfil, SURFACEPOOL,WATER, SURFACERUNOFF,NOBPROC, NORMAL);	
-	Define(pTs, "FurrowInfil",0.,WATERFLOW_UNIT,"Furrow >= 1");
+	Define(pTs, "FurrowInfil",0.,UNIT_TYPES::WATERFLOW_UNIT,"Furrow >= 1");
 	pTs= new Ts(&FurrowPrec, SURFACEPOOL,WATER, SURFACERUNOFF,NOBPROC, NORMAL);
-	Define(pTs, "FurrowPrec",0.,WATERFLOW_UNIT,"Furrow >= 2");
+	Define(pTs, "FurrowPrec",0.,UNIT_TYPES::WATERFLOW_UNIT,"Furrow >= 2");
 	
 	pTs= new Ts(&PumpInFlow, WATERPOND,WATER, SURFACERUNOFF,NOBPROC, NORMAL);	
-	Define(pTs, "PumpInFlow",0.,WATERFLOW_UNIT,"WaterEq = 1|PumpStation>0");
+	Define(pTs, "PumpInFlow",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|PumpStation>0");
 	pTs= new Ts(&PumpOutFlow, WATERPOND,WATER, SURFACERUNOFF,NOBPROC, NORMAL);	
-	Define(pTs, "PumpOutFlow",0.,WATERFLOW_UNIT,"WaterEq = 1|PumpStation>0");
+	Define(pTs, "PumpOutFlow",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|PumpStation>0");
 	pTs= new Ts(&SpoolDelayRunoff, WATERPOND,WATER, SURFACERUNOFF,NOBPROC, NORMAL);
-	Define(pTs, "SpoolDelayRunoff",0.,WATERFLOW_UNIT,"WaterEq = 1|PumpStation>0");
+	Define(pTs, "SpoolDelayRunoff",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|PumpStation>0");
 
 	pTs= new Ts(&SpoolSoilInfil, WATERPOND,WATER, SURFACERUNOFF,NOBPROC, NORMAL);
-	Define(pTs,"SpoolSoilInfil",0.0,WATERFLOW_UNIT,"WaterEq = 1");
+	Define(pTs,"SpoolSoilInfil",0.0,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1");
 	pTs= new Ts(&SoilInfil, WATERPOND,WATER, SURFACERUNOFF,NOBPROC, NORMAL);
-	Define(pTs, "SoilInfil",0.,WATERFLOW_UNIT,"WaterEq = 1");
+	Define(pTs, "SoilInfil",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1");
 
 	Gs *pGs;
 	pGs= new Gs(&SpoolCover, SURFACEPOOL,WATER, SURFACERUNOFF,NOBPROC, NORMAL);

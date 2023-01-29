@@ -3413,7 +3413,7 @@ UNIT_TYPES CPG::GetVarUnitType(size_t index, size_t repit)
 	if (pg.Des.addinfo.size() >= index)
 		return pg.Des.addinfo[index - 1].Unit;
 	else
-		return NO_UNIT;
+		return UNIT_TYPES::NO_UNIT;
 
 }
 

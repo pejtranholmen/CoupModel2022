@@ -52,15 +52,15 @@ bool NC_Drivings_Functions::Def()
 
 	Ps *pPs;
 	pPs= new Ps(&SoilTemperature ,ALL_SOIL_LAYERS,TEMPERATURE  , NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pPs,   "SoilTemperature", 10.,TEMP_UNIT,"SoilTempInput = 0|Nitrogen and Carbon > 0", -273.15, 100., -50. , 50.);
+		Define(pPs,   "SoilTemperature", 10.,UNIT_TYPES::TEMP_UNIT,"SoilTempInput = 0|Nitrogen and Carbon > 0", -273.15, 100., -50. , 50.);
 	pPs= new Ps(&SoilWaterContent,ALL_SOIL_LAYERS,WATER  , NOFPROC, FORCING_BIOLOGY, NORMAL);
 		Define(pPs  , "SoilWaterContent", 10.,"Vol %","SoilWaterInput = 0|Nitrogen and Carbon > 0", 0.1, 100., 1. , 95.);
 	pPs= new Ps(&SoilWaterFlow,ALL_SOIL_LAYERS,TEMPERATURE  , NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pPs  , "SoilWaterFlow", 2.,WATERFLOW_UNIT,"SoilWaterFlowInput = 0|Nitrogen and Carbon > 0", 0., 100., 0. , 50.);
+		Define(pPs  , "SoilWaterFlow", 2.,UNIT_TYPES::WATERFLOW_UNIT,"SoilWaterFlowInput = 0|Nitrogen and Carbon > 0", 0., 100., 0. , 50.);
 	pPs= new Ps(&SoilDrainage,ALL_SOIL_LAYERS,TEMPERATURE  , NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pPs  , "SoilDrainage", 2.,WATERFLOW_UNIT,"SoilDrainageInput = 1|Nitrogen and Carbon > 0", 0., 100., 0. , 50.);
+		Define(pPs  , "SoilDrainage", 2.,UNIT_TYPES::WATERFLOW_UNIT,"SoilDrainageInput = 1|Nitrogen and Carbon > 0", 0., 100., 0. , 50.);
 	pPs= new Ps(&SoilInfiltration,SOILSURFACE,WATER  , NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pPs  , "SoilInfiltration", 2.,WATERFLOW_UNIT,"SoilInfilInput = 0|Nitrogen and Carbon > 0", 0., 100., 0. , 50.);
+		Define(pPs  , "SoilInfiltration", 2.,UNIT_TYPES::WATERFLOW_UNIT,"SoilInfilInput = 0|Nitrogen and Carbon > 0", 0., 100., 0. , 50.);
 	pPs= new Ps(&PlantWaterStress,PLANT,WATER  , NOFPROC, FORCING_BIOLOGY, NORMAL);
 		Define(pPs  , "PlantWaterStress", 0.7,"-","WaterStressInput = 0|Nitrogen and Carbon > 0", 0., 1., 0. , 1.);
 	pPs= new Ps(&DeepPercolation,SOILBOTTOM,WATER  , NOFPROC, FORCING_BIOLOGY, NORMAL);
@@ -81,13 +81,13 @@ bool NC_Drivings_Functions::Def()
 	NE *pNL; pNL=m_pModelMap->GetNEPointer("Number of Layers");
 	
 	pD= new D(&NDrivTemperature, pNL,SIMPROFILE,  TEMPERATURE, NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pD, pNL  ,"NDrivTemperature",initv,TEMP_UNIT,"Nitrogen and Carbon >= 1");
+		Define(pD, pNL  ,"NDrivTemperature",initv,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon >= 1");
 	pD= new D(&NDrivTheta , pNL,SIMPROFILE,  TEMPERATURE, NOFPROC, FORCING_BIOLOGY, NORMAL);
 		Define(pD,pNL   ,"NDrivTheta",initv,"Vol %","Nitrogen and Carbon >= 1");
 	pD= new D(&NDrivWaterFlow , pNL,SIMPROFILE,  TEMPERATURE, NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pD,pNL   ,"NDrivWaterFlow",initv,WATERFLOW_UNIT,"Nitrogen and Carbon >= 1");
+		Define(pD,pNL   ,"NDrivWaterFlow",initv,UNIT_TYPES::WATERFLOW_UNIT,"Nitrogen and Carbon >= 1");
 	pD= new D(&NDrivDrainage , pNL,SIMPROFILE,  TEMPERATURE, NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pD,pNL   ,"NDrivDrainage",initv,WATERFLOW_UNIT,"Nitrogen and Carbon >= 1|WaterDrainageInput>0");
+		Define(pD,pNL   ,"NDrivDrainage",initv,UNIT_TYPES::WATERFLOW_UNIT,"Nitrogen and Carbon >= 1|WaterDrainageInput>0");
 	
 	NE *pNumPlants;
 	pNumPlants=m_pModelMap->GetNEPointer("Number of Plants");
@@ -100,9 +100,9 @@ bool NC_Drivings_Functions::Def()
 
 	Ds *pDs;
 	pDs= new Ds(&NDrivInfiltration,SOILSURFACE,WATER  , NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pDs,"NDrivInfiltration", 0.,WATERFLOW_UNIT,"Nitrogen and Carbon >= 1");
+		Define(pDs,"NDrivInfiltration", 0.,UNIT_TYPES::WATERFLOW_UNIT,"Nitrogen and Carbon >= 1");
 	pDs= new Ds(&NDrivDeepPercolation,SOILBOTTOM,WATER  , NOFPROC, FORCING_BIOLOGY, NORMAL);
-		Define(pDs,  "NDrivDeepPercolation", 0.,WATERFLOW_UNIT,"Nitrogen and Carbon >= 1|DeepPercolationInput >0");
+		Define(pDs,  "NDrivDeepPercolation", 0.,UNIT_TYPES::WATERFLOW_UNIT,"Nitrogen and Carbon >= 1|DeepPercolationInput >0");
 
 	pDs = new Ds(&GreenIndexDriver, ALLPLANTS, PLANT_STRESS, NOFPROC, FORCING_BIOLOGY, NORMAL);
 		Define(pDs, "GreenIndexChange", 0., "-", "Nitrogen and Carbon >= 1|Green Index Forcing >0");

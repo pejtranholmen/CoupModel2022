@@ -48,7 +48,7 @@ bool Hydraulic_Functions::Def()
 	pPs= new Ps(&CMinUC,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
 	Define(pPs,"MinimumCondValue",1.E-5,"mm/day","WaterEq = 1", 1.E-20,1.E-1,1.E-14,1.E-3,0,0,402);	//!Scalar parameter
 	pPs= new Ps(&CommonConductivityValue,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
-	Define(pPs,"Common value", 10.,WATERFLOW_UNIT,"WaterEq = 1|Matric Conductivity =2", 1.E-03,100.,1.E-4,1000.,1,0,422);
+	Define(pPs,"Common value", 10.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|Matric Conductivity =2", 1.E-03,100.,1.E-4,1000.,1,0,422);
 	pPs= new Ps(&SensAboveThreshold,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
 	Define(pPs,"Sensivity", 0.5,"-","WaterEq = 1|Matric Conductivity =2", 0.,1.,1,0,422);
 	
@@ -534,7 +534,7 @@ bool Hydraulic_Functions::FunctionDef() {
 
 bool Hydraulic_Functions::ReCalc() {
 
-	function<void(vector<double>, vector<double>&, vector<double>&, bool)> f_conv;
+	function<void(vector<double>&, vector<double>&, vector<double>&, bool)> f_conv;
 
 	f_conv = FromMeasuredLayersToModelLayers(UpperDepth, LowerDepth, DepthLayers, ThicknessLayers, DepthMidpLayer);
 

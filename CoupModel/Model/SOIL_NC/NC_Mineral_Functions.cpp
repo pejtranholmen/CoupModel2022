@@ -94,8 +94,8 @@ bool NC_Mineral_Functions::Def()
 		functorprop.FuncName = MyFunc::DENIT_THETA_RESPONSE; functorprop.Arg = MyArgType::T_D1;
 		funcname = "Denitrification Water Content Response";
 		ps_vec.clear();
-		plotpar.X_Label = "Water Content "; plotpar.X_Label+= p_ModelInfo->GetUnitString(WATERCONTENT_UNIT,true);
-		plotpar.Y_Label = "Relative Response "; 	plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+		plotpar.X_Label = "Water Content "; plotpar.X_Label+= p_ModelInfo->GetUnitString(UNIT_TYPES::WATERCONTENT_UNIT,true);
+		plotpar.Y_Label = "Relative Response "; 	plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 
 // Denitrification responses
@@ -113,15 +113,15 @@ bool NC_Mineral_Functions::Def()
 	funcname = "Q10 Temperature Response";
 	plotpar.X_Min = -10;
 	plotpar.X_Max = 30;
-	plotpar.X_Label = "Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
-	plotpar.Y_Label = "Relative Response "; 	plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
+	plotpar.Y_Label = "Relative Response "; 	plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 		ps_vec.clear();
 
 
 	pPs = new Ps(&DenitTemQ10, TOTPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "DenitTemQ10", 2., "-","Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response < 3|Denit Temp Response > 0",0.0, 5., 0.5, 4.);
 	pPs= new Ps(&DenitTemQ10Bas, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs,   "DenitTemQ10Bas", 20., TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response < 3|Denit Temp Response > 0",0.0001, 100., 10., 30.);
+		Define(pPs,   "DenitTemQ10Bas", 20.,UNIT_TYPES::TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response < 3|Denit Temp Response > 0",0.0001, 100., 10., 30.);
 
 	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -129,7 +129,7 @@ bool NC_Mineral_Functions::Def()
 	functorprop.FuncName = MyFunc::DENIT_TEMP_Q10THRESHOLD_RESPONSE; functorprop.Arg = MyArgType::D1;
 	funcname = "Q10  with Threshold Temperature Response";
 	pPs = new Ps(&DenitTemQ10Threshold, TOTPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs,   "DenitTemQ10Threshold", 5., TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 2",0.0001, 20., 2., 10.);
+		Define(pPs,   "DenitTemQ10Threshold", 5.,UNIT_TYPES::TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 2",0.0001, 20., 2., 10.);
 
 	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -141,9 +141,9 @@ bool NC_Mineral_Functions::Def()
 	ps_vec.clear();
 
 	pPs = new Ps(&DenitTempMin, TOTPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs, "DenitTempMin", -8., TEMP_UNIT, "Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 3", -20., 10., -10., 5.);
+		Define(pPs, "DenitTempMin", -8.,UNIT_TYPES::TEMP_UNIT, "Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 3", -20., 10., -10., 5.);
 	pPs= new Ps(&DenitTempMax, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs,   "DenitTempMax", 20., TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 3",0.0001, 100., 10., 30.);
+		Define(pPs,   "DenitTempMax", 20.,UNIT_TYPES::TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 3",0.0001, 100., 10., 30.);
 
 
 
@@ -152,13 +152,13 @@ bool NC_Mineral_Functions::Def()
 
 	functorprop.FuncName = MyFunc::DENIT_NITRATE_RESPONSE; functorprop.Arg = MyArgType::D1;
 	funcname = "Denitrification Michaelis Menten Response";
-	plotpar.X_Label = "Nitrate Concentration "; plotpar.X_Label += p_ModelInfo->GetUnitString(mMASS_LITER_UNIT, true);
+	plotpar.X_Label = "Nitrate Concentration "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::mMASS_LITER_UNIT, true);
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 30;
 	ps_vec.clear();
 
 	pPs= new Ps(&DenitNitrateHalfSat, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
-	Define(pPs, "DenitNitrateHalfSat", 10., mMASS_LITER_UNIT, "Denitrification > 0|Nitrogen and Carbon > 0", 0.0001, 100., 0.01, 50.); ps_vec.push_back(pPs);
+	Define(pPs, "DenitNitrateHalfSat", 10., UNIT_TYPES::mMASS_LITER_UNIT, "Denitrification > 0|Nitrogen and Carbon > 0", 0.0001, 100., 0.01, 50.); ps_vec.push_back(pPs);
 
 	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -166,7 +166,7 @@ bool NC_Mineral_Functions::Def()
 
 // Denitification potential and distribution;
 	pPs= new Ps(&DenitPotentialRate, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
-		Define(pPs,   "DenitPotentialRate", 0.04, MASSFLOW_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0",0., 1., 0.001, 0.4);
+		Define(pPs,   "DenitPotentialRate", 0.04,UNIT_TYPES::MASSFLOW_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0",0., 1., 0.001, 0.4);
 
 
 	vector<double> initv;
@@ -203,21 +203,21 @@ bool NC_Mineral_Functions::Def()
 	// Nitrification;
 	functorprop.FuncName = MyFunc::NITRIFICATION_SIMPLE; functorprop.Arg = MyArgType::D2;
 	funcname = "Nitrification Rate Function";
-		plotpar.X_Label = "Ammonium "; plotpar.X_Label += p_ModelInfo->GetUnitString(MASS_UNIT, true);
+		plotpar.X_Label = "Ammonium "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MASS_UNIT, true);
 		plotpar.X_Min = 0;
 		plotpar.X_Max = 3.;
-		plotpar.Y_Label = "Nitrification Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(MASSFLOW_UNIT, true);
+		plotpar.Y_Label = "Nitrification Rate "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MASSFLOW_UNIT, true);
 		plotpar.Num_Of_Curves = 3;
 		plotpar.Num_Of_X = 2;
 		plotpar.X2_Vec={ .1,10.,20. };
 		plotpar.LegendsVec = { "Nitrate .1 ", "Nitrate 10 ","Nitrate 20 " };
-		for(size_t i=0; i<3; ++i) plotpar.LegendsVec[i]+= p_ModelInfo->GetUnitString(MASS_UNIT, true);
+		for(size_t i=0; i<3; ++i) plotpar.LegendsVec[i]+= p_ModelInfo->GetUnitString(UNIT_TYPES::MASS_UNIT, true);
 		ps_vec.clear();
 
 	pPs= new Ps(&Nitr_Amm_Ratio, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL);
-		Define(pPs, "NitrateAmmRatio", 8., MASS_RATIO_UNIT, "Nitrogen and Carbon > 0|Nitrification = 0", 0.1, 100., 1., 15.); ps_vec.push_back(pPs);
+		Define(pPs, "NitrateAmmRatio", 8., UNIT_TYPES::MASS_RATIO_UNIT, "Nitrogen and Carbon > 0|Nitrification = 0", 0.1, 100., 1., 15.); ps_vec.push_back(pPs);
 	pPs= new Ps(&Nitr_Specific_Rate, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL);
-		Define(pPs,   "NitrificSpecificRate", .2, RATECOEF_UNIT,"Nitrogen and Carbon > 0|Nitrification =0",0.01, 1., .01, .8); ps_vec.push_back(pPs);
+		Define(pPs,   "NitrificSpecificRate", .2, UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon > 0|Nitrification =0",0.01, 1., .01, .8); ps_vec.push_back(pPs);
 
 	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, NITRIFICATION, NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -226,8 +226,8 @@ bool NC_Mineral_Functions::Def()
 	funcname = "Q10 Temperature Response";
 	plotpar.X_Min = -10.;
 	plotpar.X_Max = 30.;
-	plotpar.X_Label = "Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
-	plotpar.Y_Label = "Relative Response "; plotpar.Y_Label += p_ModelInfo->GetUnitString(NO_UNIT, true);
+	plotpar.X_Label = "Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
+	plotpar.Y_Label = "Relative Response "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_X = 1;
 	plotpar.X2_Vec = {};
@@ -238,7 +238,7 @@ bool NC_Mineral_Functions::Def()
 pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "NitriTemQ10", 2., "-","Nitrogen and Carbon > 0|Nitrific Temp Response < 3|Nitrific Temp Response > 0",0.0, 5., 0.5, 4.);
 	pPs= new Ps(&NitriTemQ10Bas, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs,   "NitriTemQ10Bas", 20., TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response < 3|Nitrific Temp Response > 0",0.0001, 100., 10., 30.);
+		Define(pPs,   "NitriTemQ10Bas", 20.,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response < 3|Nitrific Temp Response > 0",0.0001, 100., 10., 30.);
 
 		pFunc = new Func(PLANT, CARBON, NOFPROC, NITRIFICATION, NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -248,7 +248,7 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 
 
 	pPs= new Ps(&NitriTemQ10Threshold, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs,   "NitriTemQ10Threshold", 5., TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response = 2",0.0001, 20., 2., 10.);
+		Define(pPs,   "NitriTemQ10Threshold", 5.,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response = 2",0.0001, 20., 2., 10.);
 		pFunc = new Func(PLANT, CARBON, NOFPROC, NITRIFICATION, NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 		
@@ -256,9 +256,9 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 		funcname = "Ratkowsky Temperature Response";
 		ps_vec.clear();
 		pPs = new Ps(&NitriTempMin, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs, "NitriTempMin", -8., TEMP_UNIT, "Nitrogen and Carbon > 0|Nitrific Temp Response = 3", -20., 10., -10., 5.);
+		Define(pPs, "NitriTempMin", -8.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Nitrific Temp Response = 3", -20., 10., -10., 5.);
 	pPs= new Ps(&NitriTempMax, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
-		Define(pPs,   "NitriTempMax", 20., TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response = 3",0.0001, 100., 10., 30.);
+		Define(pPs,   "NitriTempMax", 20.,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response = 3",0.0001, 100., 10., 30.);
 		pFunc = new Func(PLANT, CARBON, NOFPROC, NITRIFICATION, NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 	
@@ -284,13 +284,13 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 ;
 // Uptake of mineral N and P;
 	pPs= new Ps(&NUptMaxAvailFrac, TOTPROFILE,MINERAL_N, NOFPROC,PLANT_NUPTAKE, NORMAL);
-		Define(pPs,   "NUptMaxAvailFrac", 0.08, TEMP_UNIT,"Nitrogen and Carbon > 0",0.001, 0.7, .01, 0.2);
+		Define(pPs,   "NUptMaxAvailFrac", 0.08,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0",0.001, 0.7, .01, 0.2);
 	pPs= new Ps(&NUptFlexDegree, TOTPROFILE,MINERAL_N, NOFPROC,PLANT_NUPTAKE, NORMAL);
-		Define(pPs,   	"NUptFlexibilityDeg", .5, TEMP_UNIT,"Nitrogen and Carbon > 0|Flexible Uptake = 0",0.0, 1.);
+		Define(pPs,   	"NUptFlexibilityDeg", .5,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Flexible Uptake = 0",0.0, 1.);
 	pPs= new Ps(&NUptRootCoefMin, TOTPROFILE,MINERAL_N, NOFPROC,PLANT_NUPTAKE, NORMAL);
-		Define(pPs,   	"NUptRootCoefMin", .01, TEMP_UNIT,"Nitrogen and Carbon > 0|Root_Density_Influence>0",0.0001, 1.);
+		Define(pPs,   	"NUptRootCoefMin", .01,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Root_Density_Influence>0",0.0001, 1.);
 	pPs = new Ps(&PUptMaxAvailFrac, TOTPROFILE, MINERAL_P, NOFPROC, PLANT_NUPTAKE, NORMAL);
-		Define(pPs, "PUptMaxAvailFrac", 0.08, TEMP_UNIT, "Nitrogen and Carbon > 0|Phosphorus>0", 0.001, 0.7, .01, 0.2);
+		Define(pPs, "PUptMaxAvailFrac", 0.08,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Phosphorus>0", 0.001, 0.7, .01, 0.2);
 ;
 ;
 	pP= new P(&NUptPlantFlexDegree,pNumPlants,SIMPROFILE,AMMONIUM, TRANSPORT,SORPTION, NORMAL);
@@ -367,7 +367,7 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 	pPs= new Ps(&NitrifierDepth, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
 		Define(pPs,  "NitrifierDepth",-1.,"m", "Nitrification >0",-5.,0.);
 	pPs= new Ps(&InitNitrifier, TOTPROFILE,NITRIFIERS, NOFPROC,INITB, NORMAL);
-		Define(pPs,  "InitNitrifier",1.,MASS_UNIT, "Nitrification >0",0.,100.);
+		Define(pPs,  "InitNitrifier",1.,UNIT_TYPES::MASS_UNIT, "Nitrification >0",0.,100.);
 	pPs= new Ps(&NitrificationRateCoef, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
 		Define(pPs,  "NitrificationRateCoef",.25,"mg ha/(l day kg)", "Nitrification >0",0.1E-5,1.);
 	pPs= new Ps(&NitriHalfRateNH4, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
@@ -393,32 +393,32 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 ;
 	pX= new X(&SoilNitrate ,pNL,SIMPROFILE,AMMONIUM, STORAGE,NOBPROC, NORMAL);
 	initv.assign(pSoil->NL,10.);
-	Define(pX, pNL ,			"SoilNitrate",initv,MASS_UNIT, "Nitrogen and Carbon >= 1");
+	Define(pX, pNL ,			"SoilNitrate",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1");
 	pX= new X(&SoilAmmonium ,pNL,SIMPROFILE,AMMONIUM, STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,			"SoilAmmonium",initv,MASS_UNIT, "Nitrogen and Carbon >= 1");
+		Define(pX, pNL ,			"SoilAmmonium",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1");
 	initv.assign(pSoil->NL,0.);
 	pT= new T(&SoilNitrateFlow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL ,		"SoilNitrateFlow",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
+		Define(pT, pNL ,		"SoilNitrateFlow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
 	pT= new T(&SoilNitrateDrainage ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL ,	"SoilNitrateDrainage",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|SoilDrainageInput > 0");
+		Define(pT, pNL ,	"SoilNitrateDrainage",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|SoilDrainageInput > 0");
 	pT= new T(&SoilNitrateInflow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL ,	"SoilNitrateInflow",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Irrigation > 0|Dripper>0");
+		Define(pT, pNL ,	"SoilNitrateInflow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Irrigation > 0|Dripper>0");
 	pT= new T(&SoilNitrateUptake ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL ,	"SoilNitrateUptake",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
+		Define(pT, pNL ,	"SoilNitrateUptake",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
 	
 	pT= new T(&SoilAmmoniumFlow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-	    Define(pT, pNL ,		"SoilAmmoniumFlow",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Ammonium Mobility > 0");
+	    Define(pT, pNL ,		"SoilAmmoniumFlow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Ammonium Mobility > 0");
 	pT= new T(&SoilAmmoniumDrainage ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL , "SoilAmmoniumDrainage",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|SoilDrainageInput > 0|Ammonium Mobility > 0");
+		Define(pT, pNL , "SoilAmmoniumDrainage",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|SoilDrainageInput > 0|Ammonium Mobility > 0");
 	pT= new T(&SoilAmmoniumUptake ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL ,	"SoilAmmoniumUptake",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
+		Define(pT, pNL ,	"SoilAmmoniumUptake",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
 	pT= new T(&SoilAmmoniumInflow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL , "SoilAmmoniumInflow",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Irrigation >0|Dripper>0");
+		Define(pT, pNL , "SoilAmmoniumInflow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Irrigation >0|Dripper>0");
 	
 	pT= new T(&DenitrificationRate ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-	    Define(pT, pNL ,	"DenitrificationRate",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification > 0");
+	    Define(pT, pNL ,	"DenitrificationRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification > 0");
 	pT= new T(&NitrificationRate ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pT, pNL   ,	"NitrificationRate",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
+		Define(pT, pNL   ,	"NitrificationRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
 ;
 	pG= new G(&DenitResponse ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
 		Define(pG, pNL , "DenitResponse",initv,"-", "Nitrogen and Carbon >= 1|Denitrification > 0");
@@ -429,11 +429,11 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 		Define(pG, pNL , "SoilAmmoniumConc",initv,"mg-N/l", "Nitrogen and Carbon >= 1");
 ;
 	pGs= new Gs(&NTotMinN_Drainage,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,  "N Tot MinN Drainage", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs,  "N Tot MinN Drainage", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 	pGs= new Gs(&NTotNO3_Drainage,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,  "N Tot NO3 Drainage", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs,  "N Tot NO3 Drainage", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 	pGs= new Gs(&NTotNH4_Drainage ,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs, "N Tot NH4 Drainage", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs, "N Tot NH4 Drainage", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 
 	pGs= new Gs(&NTotMinNConc_Drainage ,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
 		Define(pGs, "N Conc MinN Drainage", 0.,"mg-N/l" , "Nitrogen and Carbon >0");
@@ -443,109 +443,109 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 		Define(pGs,  "N Conc NH4 Drainage", 0.,"mg-N/l" , "Nitrogen and Carbon >0");
 	
 	pGs= new Gs(&NTotDenitrification,TOTPROFILE ,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,  "N Tot Denitrification", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs,  "N Tot Denitrification", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 	pGs= new Gs(&NTotNitrification,TOTPROFILE ,MINERAL_N, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,  "N Tot Nitrification", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs,  "N Tot Nitrification", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 ;
 	pGs= new Gs(&NTotMin_PlantUptake,TOTPROFILE ,MINERAL_N, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,  "N Tot Min Plant Uptake", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs,  "N Tot Min Plant Uptake", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 	pGs= new Gs(&NTotNO3_PlantUptake,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,  "N Tot NO3 Plant Uptake", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs,  "N Tot NO3 Plant Uptake", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 	pGs= new Gs(&NTotNH4_PlantUptake,TOTPROFILE ,AMMONIUM, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,  "N Tot NH4 Plant Uptake", 0., MASSFLOW_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs,  "N Tot NH4 Plant Uptake", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 ;
 	pGs= new Gs(&NTotNitrate,TOTPROFILE ,NITRATE, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs, "N Tot Nitrate Soil", 0., MASS_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs, "N Tot Nitrate Soil", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >0");
 	pGs= new Gs(&NTotAmmonium,TOTPROFILE ,AMMONIUM, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs, "N Tot Ammonium Soil", 0., MASS_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs, "N Tot Ammonium Soil", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >0");
 	pGs= new Gs(&NTotMinN_Soil,TOTPROFILE ,MINERAL_N, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs, "N Tot MinN Soil", 0., MASS_UNIT, "Nitrogen and Carbon >0");
+		Define(pGs, "N Tot MinN Soil", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >0");
 ;
 // Microbial based variables
 	initv.assign(pSoil->NL, 10.);
 	pX= new X(&Nitrifier_Biomass ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"Nitrifier_Biomass",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
+		Define(pX, pNL ,	"Nitrifier_Biomass",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
 	pT= new T(&Nitrifier_GrowthRate ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);	
 	initv.assign(pSoil->NL, 0.);
-	Define(pT, pNL ,	"Nitrifier GrowthRate",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
+	Define(pT, pNL ,	"Nitrifier GrowthRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
 	pT= new T(&Nitrifier_DeathRate ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);	
-		Define(pT, pNL ,	"Nitrifier DeathRate",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
+		Define(pT, pNL ,	"Nitrifier DeathRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
 	pT= new T(&Nitrifier_RespRate ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);	
-		Define(pT, pNL ,	"Nitrifier_RespRate",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
+		Define(pT, pNL ,	"Nitrifier_RespRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
 ;
 
 // Microbial base Denitrification
 	initv.assign(pSoil->NL,25.);
 	pX= new X(&Denitrifier_Biomass ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"Denitrifier_Biomass",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pX, pNL ,	"Denitrifier_Biomass",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	initv.assign(pSoil->NL,0.5);
 	pX= new X(&Denitrifier_Activity ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"Denitrifier_Activity",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pX, pNL ,	"Denitrifier_Activity",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 ;	initv.assign(pSoil->NL,0.);
 	pX= new X(&An_NO3 ,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"An_NO3",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pX, pNL ,	"An_NO3",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pX= new X(&An_NO2 ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"An_NO2",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pX, pNL ,	"An_NO2",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pX= new X(&An_NO ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"An_NO",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pX, pNL ,	"An_NO",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pX= new X(&An_N2O ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"An_N20",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pX, pNL ,	"An_N20",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pX= new X(&An_N2 ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
-		Define(pX, pNL ,	"An_N2",initv,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pX, pNL ,	"An_N2",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&Denitrifier_Growth ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
 	initv.assign(pSoil->NL,0.);
-		Define(pT, pNL , "Denitrifier_Growth",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "Denitrifier_Growth",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&Denitrifier_Death ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "Denitrifier_Death",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "Denitrifier_Death",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	initv.assign(pSoil->NL,0.);
 	pT= new T(&Denitrifier_ActivityRate ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
 		Define(pT, pNL , "Denitrifier_ActivityRate",initv,"-", "Nitrogen and Carbon >= 1|Denitrification = 2");
 
 	pT= new T(&An_Cons_NO3 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Cons_NO3",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Cons_NO3",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&An_Cons_NO2 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Cons_NO2",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Cons_NO2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&An_Cons_NO ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Cons_NO",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Cons_NO",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&An_Cons_N2O ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Cons_N20",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Cons_N20",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 
 	pT= new T(&An_Prod_NO2 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Prod_NO2",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Prod_NO2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&An_Prod_NO ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Prod_NO",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Prod_NO",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&An_Prod_N2O ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Prod_N2O",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Prod_N2O",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pT= new T(&An_Prod_N2 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
-		Define(pT, pNL , "An_Prod_N2",initv,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pT, pNL , "An_Prod_N2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_TotCons_NO3,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
-	Define(pGs,   "NTot_An_Cons_NO3", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+	Define(pGs,   "NTot_An_Cons_NO3", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_TotCons_NO2,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,   "NTot_An_Cons_NO2", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_Cons_NO2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_TotCons_NO,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,   "NTot_An_Cons_NO", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_Cons_NO", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_TotCons_N2O, TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,   "NTot_An_Cons_N20", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_Cons_N20", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 
 	pGs= new Gs(&An_TotProd_NO2,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
-		Define(pGs,   "NTot_An_Prod_NO2",0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_Prod_NO2",0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_TotProd_NO,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
-		Define(pGs,   "NTot_An_Prod_NO", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_Prod_NO", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_TotProd_N2O,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
-		Define(pGs,   "NTot_An_Prod_N2O", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_Prod_N2O", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_TotProd_N2,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
-		Define(pGs,   "NTot_An_Prod_N2", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_Prod_N2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 
 	pGs= new Gs(&An_Tot_NO3,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,   "NTot_An_NO3", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_NO3", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_Tot_NO2, TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  "NTot_An_NO2", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,  "NTot_An_NO2", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_Tot_NO,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,   "NTot_An_NO", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_NO", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_Tot_N2O,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,   "NTot_An_N20", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,   "NTot_An_N20", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&An_Tot_N2,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-	    Define(pGs,   "NTot_An_N2", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+	    Define(pGs,   "NTot_An_N2", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	initv.assign(pSoil->NL,0.);
 	pG= new G(&An_NO3_Conc,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);	
 	Define(pG, pNL, 	"An_NO3_Conc",initv,"mg/l", "Nitrogen and Carbon >= 1|Denitrification = 2");
@@ -559,29 +559,29 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 		Define(pG, pNL, 	"An_N2_Conc",initv,"mg/l", "Nitrogen and Carbon >= 1|Denitrification = 2");
 	
 	pGs= new Gs(&N_Tot_AnarobicGasStorage ,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  "NTotGasStorage", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,  "NTotGasStorage", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&N_Tot_DenitMicrobeStorage,TOTPROFILE ,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  	"NTotDenitMicrobe", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,  	"NTotDenitMicrobe", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&N_Tot_NitriMicrobeStorage ,TOTPROFILE ,NITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  	"NTotNitriMicrobe", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
+		Define(pGs,  	"NTotNitriMicrobe", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
 	pGs= new Gs(&N_Tot_DenitGrowthRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  	"NTotDenitMicGrowthRate", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,  	"NTotDenitMicGrowthRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&N_Tot_NitriGrowthRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  	"NTotNitriMicGrowthRate", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
+		Define(pGs,  	"NTotNitriMicGrowthRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
 	pGs= new Gs(&N_Tot_DenitDeathRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  	"NTotDenitMicDeathRate", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+		Define(pGs,  	"NTotDenitMicDeathRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&N_Tot_NitriDeathRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-		Define(pGs,  	"NTotNitriMicDeathRate", 0.0,MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
+		Define(pGs,  	"NTotNitriMicDeathRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
 
 
 	pGs= new Gs(&N_Tot_DenitGrowth_NO3,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-	    Define(pGs,	"NTotDenitMicGrowth_NO3", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+	    Define(pGs,	"NTotDenitMicGrowth_NO3", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&N_Tot_DenitGrowth_NO2,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-	    Define(pGs,  	"NTotDenitMicGrowth_NO2", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+	    Define(pGs,  	"NTotDenitMicGrowth_NO2", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&N_Tot_DenitGrowth_NO,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-	    Define(pGs,  	"NTotDenitMicGrowth_NO", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+	    Define(pGs,  	"NTotDenitMicGrowth_NO", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	pGs= new Gs(&N_Tot_DenitGrowth_N2O,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
-	    Define(pGs,  	"NTotDenitMicGrowth_N2O", 0.0,MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+	    Define(pGs,  	"NTotDenitMicGrowth_N2O", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	
 	return true;
 }

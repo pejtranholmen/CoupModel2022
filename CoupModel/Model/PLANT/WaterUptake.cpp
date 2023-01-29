@@ -66,16 +66,16 @@ bool WaterUptake::Def()
 
 
 	pPs = new Ps(&AirMinContent, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "AirMinContent", 5., WATERCONTENT_UNIT, "PlantType > 0|WaterEq = 1|WaterUptakeFunction=0", 0., 20.);
+	Define(pPs, "AirMinContent", 5., UNIT_TYPES::WATERCONTENT_UNIT, "PlantType > 0|WaterEq = 1|WaterUptakeFunction=0", 0., 20.);
 	pPs = new Ps(&AirRedCoef, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "AirRedCoef", 4., NO_UNIT, "PlantType > 0|WaterEq = 1|WaterUptakeFunction=0", 0., 20.);
+	Define(pPs, "AirRedCoef", 4.,UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|WaterUptakeFunction=0", 0., 20.);
 	pPs = new Ps(&WupCri, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "CritThresholdDry", 400., PRESSUREHEAD_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 10000.);
+	Define(pPs, "CritThresholdDry", 400., UNIT_TYPES::PRESSUREHEAD_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 10000.);
 	pPs = new Ps(&WupF, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "DemandRelCoef", 0.3, INVERSE_WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 2.);
+	Define(pPs, "DemandRelCoef", 0.3, UNIT_TYPES::INVERSE_WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 2.);
 	//!010213	Define(pPs, WupFThres,"DemandRelThreshold"  ,0.3,"1/day", "PlantType > 0|WaterEq = 1|Demand influence=2|Basic equation =0",0.,2.,view=1901)	
 	pPs = new Ps(&WupFB, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "NonDemandRelCoef", 0.1, NO_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 20.);
+	Define(pPs, "NonDemandRelCoef", 0.1,UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 20.);
 	
 	pPs = new Ps(&DripScaleWUpt, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 	Define(pPs, "DripScaleWupt", 2., "-", "Irrigation >0|Dripper>0", 0., 10000.);
@@ -121,16 +121,16 @@ bool WaterUptake::Def()
 	plotpar.X_Max = 20;
 	plotpar.LogXScale = false;
 	plotpar.X2_Vec = {1.f,200.f};
-	plotpar.X_Label = "Soil Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
+	plotpar.X_Label = "Soil Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
 	plotpar.LegendsVec = { "DayNo 1", "DayNo 200"};
 
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();
 
 	pPs = new Ps(&WupCTe, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "TempCoefC", 0., TEMP_UNIT, "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction = 0", 0., 9.);
+	Define(pPs, "TempCoefC", 0.,UNIT_TYPES::TEMP_UNIT, "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction = 0", 0., 9.);
 	pPs = new Ps(&WupDTe, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "TempCoefD", 15., TEMP_UNIT, "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction = 0", 10., 50.);
+	Define(pPs, "TempCoefD", 15.,UNIT_TYPES::TEMP_UNIT, "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction = 0", 10., 50.);
 	pPs = new Ps(&WupETe, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 	Define(pPs, "TempCoefE", 1., "-", "PlantType > 0|WaterEq = 1|Temperature response=3|WaterUptakeFunction = 0", 0., 20.);
 
@@ -168,7 +168,7 @@ bool WaterUptake::Def()
 	Define(pPs, "RootDistMax", .01, "m", "Basic equation =1", 1.E-6, 0.1);
 
 	pPs = new Ps(&RootDensityCoef, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);ps_vec.push_back(pPs);
-	Define(pPs, "RootDensityCoef", .5, AREA_UNIT, "Basic equation =1", 0.00001, 5.);
+	Define(pPs, "RootDensityCoef", .5, UNIT_TYPES::AREA_UNIT, "Basic equation =1", 0.00001, 5.);
 
 	functorprop.FunctorInitOption = string::npos;
 	functorprop.FuncName = MyFunc::ROOT_DISTANCE_FROM_DENSITY; functorprop.Arg = MyArgType::D1;
@@ -241,7 +241,7 @@ bool WaterUptake::Def()
 	funcname = "Water Uptake SaltFunction";
 
 	plotpar.Num_Of_Curves = 1;
-	plotpar.X_Label = "Osmotic Pressure Head "; plotpar.X_Label += p_ModelInfo->GetUnitString(PRESSUREHEAD_UNIT, true);
+	plotpar.X_Label = "Osmotic Pressure Head "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::PRESSUREHEAD_UNIT, true);
 	plotpar.Y_Label = "Degree of Uptake (-)";
 	plotpar.X_Min = 1;
 	plotpar.X_Max = 5.;
@@ -272,7 +272,7 @@ bool WaterUptake::Def()
 	funcname = "Water UptakeFunction";
 
 	plotpar.Num_Of_Curves = 1;
-	plotpar.X_Label = "Pressure Head "; plotpar.X_Label += p_ModelInfo->GetUnitString(PRESSUREHEAD_UNIT, true);
+	plotpar.X_Label = "Pressure Head "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::PRESSUREHEAD_UNIT, true);
 	plotpar.Y_Label = "Degree of Uptake (-)";
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 5.;
@@ -280,15 +280,15 @@ bool WaterUptake::Def()
 
 
 	pP = new P(&v_AirMinContent, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL); p_vec.push_back(pP); initv.assign(NumPlants, 5.);	mTab_WaterResponse.push_back(pP);
-	Define(pP, pNumPlants, "v_AirMinContent", initv, WATERCONTENT_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 20.);
+	Define(pP, pNumPlants, "v_AirMinContent", initv, UNIT_TYPES::WATERCONTENT_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 20.);
 	pP = new P(&v_AirRedCoef, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL); p_vec.push_back(pP); initv.assign(NumPlants, 4.);	mTab_WaterResponse.push_back(pP);
-	Define(pP, pNumPlants, "v_AirRedCoef", initv, NO_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 20.);
+	Define(pP, pNumPlants, "v_AirRedCoef", initv,UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 20.);
 	pP = new P(&v_WupCri, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL); p_vec.push_back(pP); initv.assign(NumPlants, 400.);	mTab_WaterResponse.push_back(pP);
-	Define(pP, pNumPlants, "v_CritThresholdDry", initv, PRESSUREHEAD_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 10000.);
+	Define(pP, pNumPlants, "v_CritThresholdDry", initv, UNIT_TYPES::PRESSUREHEAD_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 10000.);
 	pP = new P(&v_WupF, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL); p_vec.push_back(pP); initv.assign(NumPlants, 0.3);	mTab_WaterResponse.push_back(pP);
-	Define(pP, pNumPlants, "v_DemandRelCoef", initv, INVERSE_WATERFLOW_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 2.);
+	Define(pP, pNumPlants, "v_DemandRelCoef", initv, UNIT_TYPES::INVERSE_WATERFLOW_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 2.);
 	pP = new P(&v_WupFB, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL); p_vec.push_back(pP); initv.assign(NumPlants, .1);	mTab_WaterResponse.push_back(pP);
-	Define(pP, pNumPlants, "v_NonDemandRelCoef", initv, NO_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 20.);	 
+	Define(pP, pNumPlants, "v_NonDemandRelCoef", initv,UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq=1|WaterUptakeFunction > 0", 0., 20.);	 
 
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar); 
@@ -303,7 +303,7 @@ bool WaterUptake::Def()
 	plotpar.X_Max = 20;
 	plotpar.LogXScale = false;
 	plotpar.X2_Vec = { 1.f,200.f };
-	plotpar.X_Label = "Soil Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
+	plotpar.X_Label = "Soil Temperature "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
 	plotpar.LegendsVec = { "DayNo 1", "DayNo 200" };
 
 
@@ -359,19 +359,19 @@ bool WaterUptake::Def()
 	pT = new T(&WUptakeRate, pNL, SIMPROFILE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 
 	initv.assign(p_Soil_WaterF->NL, 0);
-	Define(pT, pNL, "WUptakeRate", initv, WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1");
+	Define(pT, pNL, "WUptakeRate", initv,UNIT_TYPES::WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1");
 
 	pT = new T(&Transpiration, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 	initv.assign(NumPlants, 0.);
-	Define(pT, pNumPlants, "Transpiration", initv, WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1");
+	Define(pT, pNumPlants, "Transpiration", initv,UNIT_TYPES::WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1");
 	pT = new T(&PlantWaterUptake, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL);
-	Define(pT, pNumPlants, "PlantWaterUptake", initv, WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1|PlantWaterStorage>0");
+	Define(pT, pNumPlants, "PlantWaterUptake", initv,UNIT_TYPES::WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1|PlantWaterStorage>0");
 
 	Gs *pGs = new Gs(&PotWaterUptake, ALLPLANTS, WATER, WATERUPTAKE, NOBPROC, NORMAL);
-	Define(pGs, "PotWaterUptake", 0., WATERFLOW_UNIT, "PrecInterception > 0|PlantType > 0|WaterEq = 1");
+	Define(pGs, "PotWaterUptake", 0.,UNIT_TYPES::WATERFLOW_UNIT, "PrecInterception > 0|PlantType > 0|WaterEq = 1");
 
 	pGs = new Gs(&Transpiration_All, ALLPLANTS, WATER, WATERUPTAKE, NOBPROC, NORMAL);
-	Define(pGs, "Transpiration all pl", 0., WATERFLOW_UNIT, "PlantType = 3|WaterEq = 1");
+	Define(pGs, "Transpiration all pl", 0.,UNIT_TYPES::WATERFLOW_UNIT, "PlantType = 3|WaterEq = 1");
 	pGs = new Gs(&WupTrigTemp, ALLPLANTS, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 	Define(pGs, "WaterUptake TrigTemp", 0., "°C", "Temperature response>0|WaterEq = 1");
 	pGs = new Gs(&RedWupTotal_All, ALLPLANTS, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -389,7 +389,7 @@ bool WaterUptake::Def()
 	initv.assign(NumPlants, 0.);
 	Define(pG, pNumPlants, "PlantWaterPotential", initv, "cm water", "PlantWaterStorage>0");
 	pG = new G(&MC_PotWaterUptake, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL);
-	Define(pG, pNumPlants, "Plant PotWaterUptake", initv, WATERFLOW_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq = 1");
+	Define(pG, pNumPlants, "Plant PotWaterUptake", initv,UNIT_TYPES::WATERFLOW_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq = 1");
 
 	pG = new G(&Resist_Plant, pNumPlants, PLANT, WATER, WATERUPTAKE, NOBPROC, NORMAL);
 	Define(pG, pNumPlants, "Resist Plant", initv, "days", "Basic equation >0");

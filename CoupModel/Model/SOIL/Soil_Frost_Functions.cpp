@@ -65,8 +65,8 @@ bool Soil_Frost_Functions::Def()
 		plotpar.X_Max = 1.E6;
 
 		plotpar.X_ScalingCoef = -6;
-		plotpar.X_Label = "Change of Heat Storage ";  plotpar.X_Label += p_ModelInfo->GetUnitString(MEGA_HEATSTORE_VOL_UNIT, true);
-		plotpar.Y_Label = "Temperature "; plotpar.Y_Label += p_ModelInfo->GetUnitString(TEMP_UNIT, true);
+		plotpar.X_Label = "Change of Heat Storage ";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MEGA_HEATSTORE_VOL_UNIT, true);
+		plotpar.Y_Label = "Temperature "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
 		plotpar.X2_Vec = { 20. };
 
 	
@@ -118,13 +118,13 @@ bool Soil_Frost_Functions::Def()
 	T* pT;
 	Infreeze.resize(NL);
 	pT= new T(&Infreeze,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
-		Define(pT,pNL ,"InFreeze",initv,WATERFLOW_UNIT,"HeatEq > 0|FrFlowDomain = 1|FrostInteract = 1|WaterEq > 0");
+		Define(pT,pNL ,"InFreeze",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrFlowDomain = 1|FrostInteract = 1|WaterEq > 0");
 	pT= new T(&WaterflowHFD,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
-		Define(pT,pNL  	,"WaterflowHFD",initv,WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
+		Define(pT,pNL  	,"WaterflowHFD",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
 	pT= new T(&WaterflowHD_LD,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
-		Define(pT,pNL  ,"WaterflowHD_LD",initv,WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
+		Define(pT,pNL  ,"WaterflowHD_LD",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
 	pT= new T(&WaterflowLD_HD,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
-		Define(pT,pNL  ,"WaterflowLD_HD",initv,WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
+		Define(pT,pNL  ,"WaterflowLD_HD",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
 	
 //!	Call Pne(NFL,2,2,2)
 	Gs *pGs= new Gs(&FrostUpperB_1  ,ALL_SOIL_LAYERS,HEAT, FROST_BOUNDARY, NOBPROC, NORMAL);

@@ -36,20 +36,20 @@ bool Soil_WaterF_Functions::Def()
 	vector<double> initv;
 	initv.resize(NL);
 	
-	Define(pX,pNL,"WaterStorage", initv,WATERMASS_UNIT,"");
+	Define(pX,pNL,"WaterStorage", initv,UNIT_TYPES::WATERMASS_UNIT,"");
 	T* pT;
 	pT= new T(&WaterFlow,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, NORMAL);
-	Define(pT, pNL, "Waterflow", initv, WATERFLOW_UNIT,"");
+	Define(pT, pNL, "Waterflow", initv,UNIT_TYPES::WATERFLOW_UNIT,"");
 	G* pG;
 	pG= new G(&WBypassFlow,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, NORMAL);
-	Define(pG, pNL,"WBypassflow", initv,WATERFLOW_UNIT,"Crack >= 1");
+	Define(pG, pNL,"WBypassflow", initv,UNIT_TYPES::WATERFLOW_UNIT,"Crack >= 1");
 	pT =new T(&VapourFlow,pNL, SIMPROFILE, WATER, TRANSPORT,NOBPROC, NORMAL);
-	Define(pT, pNL ,"Vapourflow", initv ,WATERFLOW_UNIT, "SoilVapour >= 1");
+	Define(pT, pNL ,"Vapourflow", initv ,UNIT_TYPES::WATERFLOW_UNIT, "SoilVapour >= 1");
 	Ts *pTs;
 	pTs= new Ts(&SurfaceOutFlow, SINGLE, WATER, TRANSPORT,NOBPROC, NORMAL);
-	Define(pTs, "SurfaceOutFlow", 0.,WATERFLOW_UNIT, "");
+	Define(pTs, "SurfaceOutFlow", 0.,UNIT_TYPES::WATERFLOW_UNIT, "");
 	pTs= new Ts(&VapourFlowSurf, SINGLE, WATER, TRANSPORT,NOBPROC, NORMAL);
-	Define(pTs,"VapourflowSurf",0.,WATERFLOW_UNIT, "SoilVapour >= 1");
+	Define(pTs,"VapourflowSurf",0.,UNIT_TYPES::WATERFLOW_UNIT, "SoilVapour >= 1");
 
 
 	

@@ -1466,6 +1466,9 @@
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\PhotoTempSumResponse.h">
       <Filter>Source Files\Model\Plant_NC\Functors\PhotoSynthesis</Filter>
     </ClInclude>
+    <ClInclude Include="ModelTypes\SimBConst.h">
+      <Filter>Source Files\ModelTypes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoupModel.cpp">
