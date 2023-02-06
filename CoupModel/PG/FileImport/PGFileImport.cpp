@@ -1521,8 +1521,10 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 
 	Input = GetFileInfo(Input, 0);
 	m_time_red = 0;
-	if (Input.NumHeads == 0 || m_format == STANDARD || m_format == SEPARATED_YMDH || m_format == SEPARATED_YMD || m_format == SMHI_OPENDATA || m_format == SEPARATED_YMDHM || m_format == YMD_HM || m_format == SWISS || m_format == CZECH_COL_TRANS || m_format == MONTH_COL_TRANS || m_format == PROFOUND)
+	if (Input.NumHeads == 0 || m_format == STANDARD || m_format == SEPARATED_YMDH || m_format == SEPARATED_YMD || m_format == SMHI_OPENDATA || m_format == SEPARATED_YMDHM || m_format == YMD_HM || m_format == SWISS || m_format == CZECH_COL_TRANS || m_format == MONTH_COL_TRANS || m_format == PROFOUND) {
 		m_time_red = 0;
+		if (Input.MaxVar - Input.ValidVariables.size() > 0) m_time_red = 1;
+	}
 	else
 		m_time_red = 1;
 

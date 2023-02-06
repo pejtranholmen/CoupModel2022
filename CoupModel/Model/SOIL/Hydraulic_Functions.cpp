@@ -393,7 +393,7 @@ bool Hydraulic_Functions::Def()
 		Define(pTab, "Genuchten, water retention, measured horizons",8);
 
 	pTab= new Tab(&mTab_Gen_Model , SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE); 	
-		Define(pTab, "Genuchten, water retention, model layers",8);
+		Define(pTab, "Genuchten, water retention, model layers",6);
 
 	return FunctionDef();
 }

@@ -1726,6 +1726,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 										SetMissingVariable(valid_var_index);
 										valid_var_index++;
 									}
+									if (!TimeSetComplete) TimeSetComplete = SetDefinedTime(next_validLine);
 								}
 								if (npos != string::npos && line.size() > npos)
 									line = line.substr(npos + 1);

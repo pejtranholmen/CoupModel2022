@@ -7,7 +7,7 @@ class FromMeasuredLayersToModelLayers {
 public: 
 	FromMeasuredLayersToModelLayers(vector<double> UpperDepth, vector<double> LowerDepth, vector<double> DepthLayers, vector<double> ThicknessLayers, vector<double> DepthMidpLayer): 
 		UpperDepth(UpperDepth), LowerDepth(LowerDepth), DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers), DepthMidpLayer(DepthMidpLayer) {}
-	void operator() (vector<double> &XX, vector<double> &pm_yy, vector<double> &pb_yy, bool aritmetric) {
+	void operator() (std::vector<double> &XX, vector<double> &pm_yy, vector<double> &pb_yy, bool aritmetric) {
 		double Displacement = 0.;
 		size_t NumSteps = 20;
 		pm_yy.resize(DepthLayers.size()); pb_yy.resize(DepthLayers.size());
