@@ -993,6 +993,9 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			if (pSimB == nullptr) {
 				m_pSim->m_Val_Array[i].Name = FUtil::NameRevision2018(m_pSim->m_Val_Array[i].Name);
 				pSimB = m_pSim->GetPtr(type, m_pSim->m_Val_Array[i].Group, m_pSim->m_Val_Array[i].Name);
+				if (pSimB == nullptr) {
+					pSimB = m_pSim->GetPtrByName(m_pSim->m_Val_Array[i].Name);
+				}
 
 			}
 			a.pBase=pSimB; a.TabIndex=m_pSim->m_Val_Array[i].LocalIndex;

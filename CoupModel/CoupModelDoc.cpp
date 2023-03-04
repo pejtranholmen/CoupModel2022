@@ -278,6 +278,44 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 		Fil.pSimDoc=&m_Doc;
 		MySingle::instance().GetSimArchivePointer()->AddSimDoc(Fil);
 
+	/*	PVOID OldValue = nullptr;
+		Wow64DisableWow64FsRedirection(&OldValue);
+		auto filenamex = LPCSTR(file.c_str());
+		auto verb = LPCSTR("open");
+		auto exe = LPCSTR("C:\\program files(x86)\\PEJ\\CoupModel\\upload_xmlfile.exe");
+		HWND  hwnd{ nullptr };
+
+
+		auto koll=ShellExecuteA(hwnd, verb, filenamex  , exe, NULL, SW_HIDE);
+
+		int i = 1;
+			
+		CreateProcess(NULL,   // No module name (use command line)
+			TEXT("upload_xmlfile.exe"),        // Command line
+			NULL,           // Process handle not inheritable
+			NULL,           // Thread handle not inheritable
+			FALSE,          // Set handle inheritance to FALSE
+			0,              // No creation flags
+			NULL,           // Use parent's environment block
+			NULL,           // Use parent's starting directory 
+			&si,            // Pointer to STARTUPINFO structure
+			&pi);           // Pointer to PROCESS_INFORMATION structure
+		
+		auto kolll = GetLastError();
+		printf("CreateProcess failed (%d).\n", GetLastError());
+		
+
+		// Wait until child process exits.
+		WaitForSingleObject(pi.hProcess, INFINITE);
+		*/
+		// Close process and thread handles. 
+		//CloseHandle(pi.hProcess);
+		//CloseHandle(pi.hThread);
+
+
+
+
+
 	}
 	num=MySingle::instance().GetPGFileArchivePointer()->GetNumPGFile();
     m_Doc.m_UserLevel=pApp->GetProfileInt(strApp, _T("UserLevel"), m_Doc.m_UserLevel);
