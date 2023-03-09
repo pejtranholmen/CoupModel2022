@@ -20,6 +20,7 @@ public:
 		}
 		else
 			return false;
+		return true;
 	}
 	private :
 		vector<pair<size_t, size_t>> valuevector;

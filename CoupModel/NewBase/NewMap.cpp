@@ -550,7 +550,14 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 						if (pF != nullptr) {
 							string str_value = item.attribute("PG_File").as_string();
 							pF->SetValue(str_value);
-							pF->CheckFileNameAndAssignNameToPGClass();
+
+							if (!pF->CheckFileNameAndAssignNameToPGClass()&&item_name=="OutputFile") {
+								str_value = GetOutputFileName(0).c_str();
+								pF->SetValue(str_value);
+								pF->CheckFileNameAndAssignNameToPGClass();
+							}
+
+
 							m_F_Array.push_back(pF);
 						}
 						else {
@@ -2426,7 +2433,7 @@ bool NewMap::Info_Header(bool reading)
 		}
 		else { //kk
 			string ExeDate; 
-			ExeDate="Version 6.2.1, ";
+			ExeDate="Version 6.2.2, ";
 #ifndef COUPSTD
 			CWinApp *pApp;
 			pApp=AfxGetApp();
