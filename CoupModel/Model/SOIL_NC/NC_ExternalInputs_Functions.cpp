@@ -30,7 +30,7 @@ bool NC_ExternalInputs_Functions::Def()
 	Sw* pSw; Xs* pXs; Ts *pTs; Gs *pGs; T* pT; P* pP; Ps *pPs; FCSV *pFCSV;
 	NE *pNumPlants=m_pModelMap->GetNEPointer("Number of Plants");
 	pSw= new Sw(&N_Fertilization, ATMBOUNDARY, NITROGEN, TRANSPORT, FORCING_BIOLOGY, NORMAL);
-		Define(pSw,   "N Fertilization", 0, "off|Parameters|PG-file|Plant Stage Table|Year Based Table - 1 app|Year Based Table - 3 app","Nitrogen and Carbon >0", 117);
+		Define(pSw,   "N Fertilization", 0, "off|Parameters|PG-file|Plant Stage Table|Year Based Table - 1 app|Year Based Table - 3 app|PG_File_AppDatesOnly","Nitrogen and Carbon >0", 117);
 	pSw= new Sw(&FertilizationIndexFileName, ATMBOUNDARY,  CLIMATE, NOFPROC, NOBPROC, NORMAL);
 	Define(pSw, "Dynamic indexed input file",0,"off|Using Single PG file|Using Multi PG file","N Fertilization=2");
 	pSw= new Sw(&DepositionIndexFileName, ATMBOUNDARY,  CLIMATE, NOFPROC, NOBPROC, NORMAL);
@@ -43,7 +43,7 @@ bool NC_ExternalInputs_Functions::Def()
 	pSw= new Sw(&ManureInput, ATMBOUNDARY, NITROGEN, TRANSPORT, FORCING_BIOLOGY, NORMAL);
  		Define(pSw,   "Manure Input", 0, "Parameters|PG-file","Nitrogen and Carbon >0|FaecesPool>0", 117);
 	pSw = new Sw(&ReadYearBasedManagementTable, ATMBOUNDARY, NITROGEN, NOFPROC, NOBPROC, NORMAL);
-		Define(pSw, "Read Values from Dynamic indexed csv-file", 0, "off|on", "N Fertilization=6",12000);
+		Define(pSw, "Read Values from Dynamic indexed csv-file", 0, "off|on", "N Fertilization=5",12000);
 	pXs= new Xs(&N_Fert , SOILSURFACE, NITROGEN, STORAGE, FORCING_BIOLOGY, NORMAL);
 		Define(pXs, "N Fertilizer", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|N Fertilization >0");
 	pTs= new Ts(&N_Fert_App, SOILSURFACE, NITROGEN, TRANSPORT, FORCING_BIOLOGY, NORMAL); 
@@ -290,7 +290,7 @@ bool NC_ExternalInputs_Functions::FunctionDef()
 	pF = new F(&m_PG_Deposition, SOILSURFACE, MANURE, NOFPROC, FORCING_BIOLOGY, NORMAL);
 	Define(pF, "N Deposition File", "NDeposition.bin", "N Deposition > 1");
 	pFCSV = new FCSV(&m_FertTableStream, ATMBOUNDARY, NITROGEN, NOFPROC, FORCING_BIOLOGY, NORMAL);
-	Define(pFCSV, "FertTable File", "BeckumManagement_xxx.csv", "Read Values from Dynamic indexed csv-file>0|N Fertilization =6");
+	Define(pFCSV, "FertTable File", "BeckumManagement_xxx.csv", "Read Values from Dynamic indexed csv-file>0|N Fertilization =5");
 	m_pFertTableStream = pFCSV;
 
 	return true;

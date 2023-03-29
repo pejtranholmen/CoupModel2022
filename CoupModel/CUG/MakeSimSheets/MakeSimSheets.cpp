@@ -632,12 +632,17 @@ bool MakeSimSheets::Make_RunInfoSheet()
 								test=m_pSimDoc->GetOutputFileName(i);
 								size_t ipos=test.find("_COUP_");
 								test=test.substr(ipos-2,18);
-								pCF=m_pSimDoc->ValidationFilePointer(i);
+								pCF=m_pSimDoc->ValidationResult_F_Pointer(i-1);
 								if(pCF!=nullptr) {
-									int niv=pCF->GetNumberOfVariables();
-	
-									if(niv>0&&pCF->m_Exist)
-										str+=test+";";
+									if (pCF->CheckFileNameAndAssignNameToPGClass()) {
+											int niv = pCF->GetNumberOfVariables();
+											CPG* pg = m_pSimDoc->ValidationResult_PG_Pointer(i - 1);
+											if (pg != nullptr) niv = pg->GetNumVariables();
+
+
+										if (niv > 0 && pCF->m_Exist)
+											str += test + ";";
+									}
 								}
 							}
 							if(str.size()>1)

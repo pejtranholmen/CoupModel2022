@@ -1180,7 +1180,9 @@ bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
 			//pPG->WriteNewPGFileRecord();
 			if(First) {
 				pPG->ReCalculateMinMax();
-				pPG->SaveAs(((ModelFiles*)m_pSim)->GetNewOutputFileName(int(i+1)), true);
+				string fileoutname = ((ModelFiles*)m_pSim)->GetNewOutputFileName(int(i + 1));
+				pPG->SaveAs(fileoutname, true);
+				((ModelFiles*)m_pSim)->ValidationResult_F_Pointer(i)->SetValue(fileoutname);
 			}
 		}
 
@@ -1234,7 +1236,12 @@ bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
 
 			}*/
 			pPG->ReCalculateMinMax();
-			pPG->SaveAs(((ModelFiles*)m_pSim)->GetNewOutputFileName(int(i+1)), true);
+			string fileoutname = ((ModelFiles*)m_pSim)->GetNewOutputFileName(int(i + 1));
+			pPG->SaveAs(fileoutname, true);
+
+			// Setting name to F Pointer
+			((ModelFiles*)m_pSim)->ValidationResult_F_Pointer(i)->SetValue(fileoutname);
+
 		}
 	}
 	Valid_Evaluation(Multi, Final);

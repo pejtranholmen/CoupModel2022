@@ -48,6 +48,7 @@ public:
 	static void trim_xmlstring(string& str);
 	static float AtoFloat(string str);
 	static string ItoNumAscii(int);
+	static string ItoNum2Ascii(int);
 	static string	STD_FtoAscii(float v) ;
 	static string GetString(char* buf);
 	static string STD_FtoAsciiPane(float v);

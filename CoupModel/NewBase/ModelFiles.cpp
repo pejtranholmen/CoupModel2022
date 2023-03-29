@@ -168,17 +168,30 @@ string ModelFiles::GetOutputFileName(size_t ValidIndex, bool LastFile, bool Mult
 
 F* ModelFiles::ValidationFilePointer(size_t Index)
 {
-	F* pF = nullptr;
-
-	string name = "Validation File";
-	if (Index>0 && Index <= MAXSIMVAL)
-		name += FUtil::STD_ItoAscii(Index);
-	else
-		name += "1";
-	string grp = "Validation";
-	string typ = "Files";
-	pF = dynamic_cast<F*>(GetPtr(simtype::PGFILE, name));
+	string name = "ValidationFile_";
+	name += FUtil::ItoNum2Ascii(Index );
+	auto pF = static_cast<F*>(GetPtr(simtype::PGFILE, name));
 	return pF;
+}
+CPG* ModelFiles::ValidationResult_PG_Pointer(size_t ValFileIndex)
+{
+	string name = "ValidationOutputFile_";
+	name += FUtil::ItoNum2Ascii(ValFileIndex + 1);
+	auto pF = static_cast<F*>(GetPtr(simtype::PGFILE, name));
+	if (pF != nullptr)
+		return pF->GetPointer();
+	else
+		return nullptr;
+}
+F* ModelFiles::ValidationResult_F_Pointer(size_t ValFileIndex)
+{
+	string name = "ValidationOutputFile_";
+	name += FUtil::ItoNum2Ascii(ValFileIndex + 1);
+	auto pF = static_cast<F*>(GetPtr(simtype::PGFILE, name));
+	if (pF != nullptr)
+		return pF;
+	else
+		return nullptr;
 }
 CResiduals* ModelFiles::GetResidualPointer(size_t ifile, size_t addedfiles) {
 	if (ifile <= m_ResidualFileVector.size()) {

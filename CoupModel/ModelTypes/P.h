@@ -169,8 +169,11 @@ class P : public Par
 		};
 		bool EditChaDateAndValue(size_t indp, long min, double value, size_t index) { if(indp<ChaDateLong.size()) {ChaDateLong[indp][index]=min; ChaParValue[indp][index]=value;return true;};return false;};
 
-		bool DeleteChaDate(size_t indp, size_t index) {ChaDateLong[indp].erase(ChaDateLong[indp].begin()+index);ChaParValue[indp].erase(ChaParValue[indp].begin()+index);ChaParIndex[indp].erase(ChaParIndex[indp].begin()+index);return true;};
-		bool ResetChaDates(size_t indp) { ChaDateLong[indp].clear(); ChaParValue[indp].clear();ChaParIndex[indp].clear();return true;};
+		bool DeleteChaDate(size_t indp, size_t index) {
+			if (indp < ChaDateLong.size()) { ChaDateLong[indp].erase(ChaDateLong[indp].begin() + index); ChaParValue[indp].erase(ChaParValue[indp].begin() + index); ChaParIndex[indp].erase(ChaParIndex[indp].begin() + index); return true; }
+			else return false;	}
+		
+		bool ResetChaDates(size_t indp) { if (indp < ChaDateLong.size()) { ChaDateLong[indp].clear(); ChaParValue[indp].clear(); ChaParIndex[indp].clear(); return true; } else return false; };
 		void MR_Set_Monitoring(size_t indp, size_t value) { 
 			if(indp>=_mrMonitoring.size()) _mrMonitoring.resize(indp+1); _mrMonitoring[indp]=value;};
 		size_t MR_Get_Monitoring(size_t indp) {if(indp<_mrMonitoring.size()) return _mrMonitoring[indp]; return -1;};

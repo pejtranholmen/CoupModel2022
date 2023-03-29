@@ -216,6 +216,17 @@ void FUtil::trim(string& str)
   }
   else str.erase(str.begin(), str.end());
 }
+string FUtil::ItoNum2Ascii(int v) {
+	//CString Num;
+	char buf[100];
+	v = v % 100;
+#ifdef MS_CODE
+	sprintf_s(buf, "%02u", v);
+#else
+	sprintf(buf, "%02u", v);
+#endif
+	return buf;
+}
 void FUtil::trim_datestr(string& str)
 {
   size_t pos=str.find(" ");

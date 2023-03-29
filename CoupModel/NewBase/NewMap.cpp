@@ -539,6 +539,15 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 					}
 					else if (type == simtype::PGFILE) {
 						auto pF = static_cast<F*>(GetPtr(type, item_name));
+
+						if (pF == nullptr && item_name.find("ValidationFile") == 0) {
+							auto nc = item_name.size();
+							string num = item_name.substr(14);
+							if (num.size() == 1) item_name = item_name.substr(0, 14) + "_0" + num;
+							else if (num.size() == 2) item_name = item_name.substr(0, 14) + "_" + num;
+							pF = static_cast<F*>(GetPtr(type, item_name));
+						}
+
  						
 
 						if (pF == nullptr) {
@@ -606,7 +615,7 @@ bool NewMap::WriteHeaderToXmlFile(pugi::xml_node node) {
 	general.append_attribute("OriginalFileName") = "kk";
 
 	string ExeDate;
-	ExeDate = "Version 6.2.1, ";
+	ExeDate = "Version 6.2.2, ";
 #ifndef COUPSTD
 	CWinApp* pApp;
 	pApp = AfxGetApp();
@@ -628,7 +637,7 @@ bool NewMap::WriteHeaderToXmlFile(pugi::xml_node node) {
 
 	general.append_attribute("ExeFileDate") = exdate.c_str();
 
-	//   if(m_DocFile2.m_DateRun.size()>0 ) node.append_attribute("SimulationDate")= m_DocFile2.m_DateRun.c_str();
+	if(m_DocFile2.m_DateRun.size()>0 ) node.append_attribute("SimulationDate")= m_DocFile2.m_DateRun.c_str();
 	general.append_attribute("MultiSimulation") = m_DocFile.m_MultiRunning;
 	general.append_attribute("Finished") = m_DocFile.m_FinishedSimulation;
 	general.append_attribute("MBinFile") = m_DocFile2.m_Multi_MBin_File.c_str();
@@ -682,12 +691,18 @@ bool NewMap::Read_Header_FromXmlFile(pugi::xml_node node) {
 		m_FileVersionNumberRead=item.attribute("FileVersionNumber").as_int();
 		m_DocFile2.m_OriginFileName = item.attribute("OrignalFileName").as_string();
 		m_DocFile2.m_ExeFileDate = item.attribute("ExeFileDate").as_string();
+		m_DocFile2.m_DateRun = item.attribute("SimulationDate").as_string();
 		m_DocFile.m_MultiRunning = item.attribute("MultiSimulation").as_bool();
 		m_DocFile.m_FinishedSimulation = item.attribute("Finished").as_bool();
 		m_DocFile2.m_Multi_MBin_File = item.attribute("MBinFile").as_string();
 		m_DocFile2.m_Comments = item.attribute("Comments").as_string();
 		m_DocFile2.m_RunId = item.attribute("RunId").as_string(); 
 		m_DocFile.m_SimulationRunNo = item.attribute("SimNumber").as_uint();
+		m_DocFile.m_TimeCreated = item.attribute("Date_Created").as_uint();
+		m_DocFile.m_TimeModified = item.attribute("Date_Modification").as_uint();
+
+
+
 		auto sim_period = item.next_sibling();
 		RunOpt.longMinStart=sim_period.attribute("SimStartMin").as_uint();
 		auto datestart = sim_period.attribute("SimStartDate").as_string();
@@ -702,6 +717,7 @@ bool NewMap::Read_Header_FromXmlFile(pugi::xml_node node) {
 		auto time_resolution = sim_period.next_sibling();
 		RunOpt.oiminutes = time_resolution.attribute("OutputInterval_Minutes").as_int();
 		RunOpt.oidays = time_resolution.attribute("OutputInterval_Days").as_int();
+
 
 		auto numerical = time_resolution.next_sibling();
 		RunOpt.noofiter = numerical.attribute("NumberIterations").as_int();
@@ -2071,7 +2087,6 @@ bool NewMap::ReadDocFile(string file)
 
 		if(m_Report_Array.size()>0) {
 			m_HasBeenRunning=true;
-			m_Protect=true;
 			if(m_FileVersionNumberRead<36) m_DocFile.m_FinishedSimulation=true;
 		}
 		if(m_DocFileIn.good()) {

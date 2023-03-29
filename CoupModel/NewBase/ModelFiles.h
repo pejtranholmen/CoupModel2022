@@ -13,6 +13,8 @@ public:
 
 
 	F* ValidationFilePointer(size_t ValFileIndex = 1);
+	F* ValidationResult_F_Pointer(size_t ValFileIndex = 1);
+	CPG* ValidationResult_PG_Pointer(size_t ValFileIndex = 1);
 	CResiduals* GetResidualPointer(size_t iFile = 1, size_t addedfiles = 0);
 	CResiduals* GetValidResidualPointer(size_t iFile = 1, size_t addedfiles = 0);
 	bool	MR_XBin_IsOpen(size_t, size_t addfile = 0);

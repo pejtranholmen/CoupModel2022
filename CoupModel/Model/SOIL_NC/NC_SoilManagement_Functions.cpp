@@ -5,6 +5,8 @@
 #include "../PLANT/PlantModel.h"
 
 
+
+
 NC_SoilManagement_Functions::NC_SoilManagement_Functions(void)
 {
 
@@ -22,17 +24,25 @@ bool NC_SoilManagement_Functions::Def()
 	Sw* pSw; Ps *pPs;	
 	pSw= new Sw(&SurfaceCultivation ,  SIMPROFILE, ORGANIC, TRANSPORT,SOILMIXING, NORMAL);
 
-	Define(pSw, "Surface cultivation",0,"off|on","Growth > 0");
+	Define(pSw, "Surface cultivation",0,"off|Parameter|PG File Specified","Growth > 0");
 	pSw= new Sw(&Ploughing,  SIMPROFILE, ORGANIC, TRANSPORT,SOILMIXING, NORMAL);
-	Define(pSw ,"Deep ploughing",0,"off|on","Growth > 0");
+	Define(pSw ,"Deep ploughing",0,"off|Parameter|PG File Specified","Growth > 0");
 	pPs= new Ps(&SurfaceCultDay ,  SIMPROFILE, ORGANIC, TRANSPORT,SOILMIXING, NORMAL);
    
-	Define(pPs,	"SurfaceCultDay", 0.,"#","Surface cultivation >0",0.,365.);
+	Define(pPs,	"SurfaceCultDay", 0.,"#","Surface cultivation=1",0.,365.);
 //!	Call P(Group_30, SurfaceCultDepth,	"SurfaceCultDepth", -0.1,"m","Surface cultivation >0",-.2,0.);
 	pPs= new Ps(&PloughingDay ,  SIMPROFILE, ORGANIC, TRANSPORT,SOILMIXING, NORMAL);
-	Define(pPs,	"PloughingDay", 0.,"#","Deep ploughing >0",0.,365.);
+	Define(pPs,	"PloughingDay", 0.,"#","Deep ploughing =1",0.,365.);
 	pPs= new Ps(&PloughingDepth ,  SIMPROFILE, ORGANIC, TRANSPORT,SOILMIXING, NORMAL);
 	Define(pPs,	"PloughingDepth", -0.3,"m","Deep ploughing >0",-.7,0.);
+
+	F* pF = new F(&m_PG_SurfaceCult, SIMPROFILE, ORGANIC, TRANSPORT, SOILMIXING, NORMAL);
+	Define(pF, "Surface Cultivation date data", "SurfaceCultivationDates.bin", "Surface cultivation =2");
+
+	pF = new F(&m_PG_Deep_Ploughing, SIMPROFILE, ORGANIC, TRANSPORT, SOILMIXING, NORMAL);
+	Define(pF, "Ploughing date data", "PloughingDates.bin", "Deep ploughing =2");
+
+
 
 return true;
 }

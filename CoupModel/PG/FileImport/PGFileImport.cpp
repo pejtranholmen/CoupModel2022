@@ -565,59 +565,10 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 		if (out.YearColumn = string::npos && out.MonthColumn != string::npos && out.DayColumn != string::npos) out.IdentifiedDateFormat = YMD;
 		
-		/*if (out.Des.base.Name.size() > 0) {
-			size_t origsize = out.Des.base.Name.size();
-			for (size_t j = 0; j <origsize ; j++) {
 
-				for (size_t jj = 0; jj < out.FirstValidHeads.size(); jj++) {				
-					if (out.Des.base.Name[j] == out.FirstValidHeads[jj]) {
-						if (out.Des.base.Name.size() < jj + 1) out.Des.base.Name.resize(jj + 1);
-						//out.Des.base.Name[j] = "";
-						out.Des.base.Name[jj] = out.FirstValidHeads[jj];
-						if (out.Des.base.Unit.size() < jj + 1) out.Des.base.Unit.resize(jj + 1);
-						out.Des.base.Unit[jj] = out.Des.base.Unit[j];
-						
-					}
-				 }
-			}
-
-
-		} */
-		
 		
 		m_CurrentFileInfo = out;
 
-
-
-
-
-		/*		else if (ClimSelect&&(out.FirstValidHeads[i].find("pF_m") == 0 || out.FirstValidHeads[i].find("wsF_m") == 0
-		||out.FirstValidHeads[i].find("vpdF_h") == 0||out.FirstValidHeads[i].find("lwInF_W") == 0||out.FirstValidHeads[i].find("swInF_W") == 0||
-		out.FirstValidHeads[i].find("taF_d") == 0)
-		)
-		{
-		m_ProFoundOption = 1;
-		out.ValidVariables.push_back(true);
-
-		}
-		else if (FluxSelect&&(out.FirstValidHeads[i].find("neeVutRef_") == 0 || out.FirstValidHeads[i].find("recoNtVutRef_") == 0
-		|| out.FirstValidHeads[i].find("gppNtVutRef_") == 0 || out.FirstValidHeads[i].find("leCORR_") == 0 || out.FirstValidHeads[i].find("hCORR_") == 0 )	)
-		{
-		out.ValidVariables.push_back(true);
-		m_ProFoundOption = 2;
-
-		}
-		else if (SoilSelect && (out.FirstValidHeads[i].find("tsFMDS") == 0 || out.FirstValidHeads[i].find("swcFMDS") == 0))
-		{
-		out.ValidVariables.push_back(true);
-		m_ProFoundOption = 3;
-
-		}
-		/*		else if (out.FirstValidHeads[i].find("site")==0|| out.FirstValidHeads[i].find("record")==0 || out.FirstValidHeads[i] == "timestepStart" || out.FirstValidHeads[i] == "timestepEnd"
-		|| out.FirstValidHeads[i] == "year" || out.FirstValidHeads[i] == "day" || out.FirstValidHeads[i] == "mo" || out.FirstValidHeads[i] == "mo"
-		|| out.FirstValidHeads[i].find("tmin")==0 || out.FirstValidHeads[i].find("tmax")==0 || out.FirstValidHeads[i].find("airpress") == 0 || out.FirstValidHeads[i].find("timestamp") == 0) {
-		out.ValidVariables.push_back(false);
-		}*/
 
 		out.RedNumVar = 0;
 		for (size_t i = 0; i < out.ValidVariables.size(); i++) 	if (!out.ValidVariables[i]) out.RedNumVar++;
@@ -656,6 +607,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
     enum class ReadVar  {StatNamn, ParNamn, Period, DatumStart, No};
 	auto ReadStatus = ReadVar::No;
 	size_t Valid_Line = 0;
+	bool datestring = false;
 	auto CountHeads = [&]() {
 	
 		if (m_format == SITES) {
@@ -863,6 +815,11 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				return;
 			}
 			if (nrec < 14 && varstr == "NaN") return;
+			if (nrec == 2) {
+				auto datestring=PGUtil::CheckForPossiblePGDateString(varstr);
+				if (datestring) return;
+			}
+
 			if (nrec <= 9 && varstr.find("Variable ") != string::npos||m_format==STANDARD) {
 				nhead = min(9, nrec);
 				out.DateColumn = 1;
@@ -898,7 +855,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				else if ((varstr.find("julian") == 0 || varstr.find("Julian") == 0)) {
 					nhead = nrec;
 					out.DayNumberColumn = out.FirstValidHeads.size() + 1;
-					m_format = STANDARD;
+					//m_format = STANDARD;
 				}
 				else if ((varstr.find("hour") == 0 || varstr.find("Hour") == 0)) {
 					nhead = nrec;
@@ -1286,7 +1243,6 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				if (m_format != IDSCAN&&nhead!=string::npos) {
 					if (nrec == nhead + 1&&!ValidTime) {
 						CheckAndSetDateFormats();
-
  					}
 					if (nrec >= nhead + 1&& !ValidTime) {
 						ValidTime = SetTimeVariable(nrec, varstr, nvar);

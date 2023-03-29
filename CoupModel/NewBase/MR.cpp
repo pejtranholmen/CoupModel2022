@@ -2988,7 +2988,7 @@ bool MR::LinkedChangeToSwitches(Sw *pSw1, size_t option) {
 			break;
 		case 117: // N Fertilization Switch
 			SetSwValue("EnableInputN",0);
-			if(pSw1->GetIntValue()==2||GetSwValue("Manure Input")==1)
+			if(pSw1->GetIntValue()==2||GetSwValue("Manure Input")==1|| pSw1->GetIntValue() == 6)
 				SetSwValue("EnableInputN",1);
 			return true;
 			break;

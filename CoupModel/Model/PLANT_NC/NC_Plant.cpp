@@ -605,16 +605,77 @@ bool NC_Plant::Ini()	{
 				return false;
 
 		}
+		if (Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::PG_File_specified) {
+			m_PG_Sowing.Open(m_PG_Sowing.GetFileName());
+			auto num = m_PG_Sowing.GetNumRecords();
+			ISowingDates.resize(num);
+			for (size_t i = 0; i < num; i++)
+				ISowingDates[i] = m_PG_Sowing.GetLongTime(i + 1);
+			for (int i = num - 1; i >= 0; i--)
+				if (m_pModelInfo->m_ActMin < ISowingDates[i]) ISowingCount = i;
+			m_PG_Sowing.CloseFile();
+		}
+		if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::PG_File_specified) {
+			m_PG_Emergence.Open(m_PG_Emergence.GetFileName());
+			auto num = m_PG_Emergence.GetNumRecords();
+			IEmergenceDates.resize(num);
+			for (size_t i = 0; i < num; i++)
+				IEmergenceDates[i] = m_PG_Emergence.GetLongTime(i + 1);
+			for (int i = num - 1; i >= 0; i--)
+				if (m_pModelInfo->m_ActMin < IEmergenceDates[i]) IEmergenceCount = i;
+			m_PG_Emergence.CloseFile();
+		}
 
 		if (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::PG_File_specified) {
 			m_PG_HarvestDate.Open(m_PG_HarvestDate.GetFileName());
 			NumValidHarvest = m_PG_HarvestDate.GetNumRecords();
+			size_t NumParToChange = m_PG_HarvestDate.GetNumVariables();
+
+
+
+			ChangeParAtHarvestDate.resize(NumParToChange);
+			
+			for (size_t i = 0; i < NumParToChange; i++) {
+				string name = m_PG_HarvestDate.GetVarName(i + 1);
+				auto pos1 = name.find("("); auto pos2 = name.rfind(")");
+				if (pos2 > pos1 + 1) {
+					auto indexstr = name.substr(pos1 + 1, pos2 - pos1 - 1);
+					auto index = FUtil::AtoInt(indexstr);
+					auto str = name.substr(0, pos1);
+					auto pointer = m_pModelMap->GetPPointer(str);
+					if (pointer != nullptr) {
+						ChangeParAtHarvestDate[i].pBase = pointer;
+						ChangeParAtHarvestDate[i].TabIndex = index;
+					}
+					else {
+						NumParToChange--;
+					}
+				}
+				else if (pos1 == string::npos && pos2 == string::npos) {
+					auto pointer = m_pModelMap->GetPsPointer(name);
+					if (pointer != nullptr) {
+						ChangeParAtHarvestDate[i].pBase = pointer;
+						ChangeParAtHarvestDate[i].TabIndex = string::npos;
+					}
+					else {
+						NumParToChange--;
+					}
+				}
+			}
+			ChangeParAtHarvestDate.resize(NumParToChange);
+			if (NumParToChange > 0) {
+				ChangeParAtHarvestValues.resize(NumValidHarvest);
+				for (size_t i = 0; i < NumValidHarvest; i++)
+					ChangeParAtHarvestValues[i].resize(NumParToChange);
+			}
 
 			if (NumValidHarvest > 0. && NumValidHarvest < 1000) {
 				IHarvestDates.resize(NumValidHarvest);
-				for (size_t i = 0; i < NumValidHarvest; i++)
+				for (size_t i = 0; i < NumValidHarvest; i++) {
 					IHarvestDates[i] = m_PG_HarvestDate.GetLongTime(i + 1);
-
+					for (size_t ii = 0; ii < NumParToChange; ii++)
+						ChangeParAtHarvestValues[i][ii] = m_PG_HarvestDate.GetVarValue(ii + 1);
+				}
 				ICountHarvest = NumValidHarvest + 1;
 
 				for (int i = NumValidHarvest - 1; i >= 0; i--)
@@ -1820,6 +1881,16 @@ auto Growth_Stage = [&](size_t index) {
 				m_LatestSowingDay = m_pModelInfo->JDayNum;
 			}
 		}
+		else if (Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::PG_File_specified) {
+			if (m_pModelInfo->m_ActMin >= ISowingDates[ISowingCount]) {
+				m_LatestSowingDay = m_pModelInfo->JDayNum;
+				auto year=PGUtil::YearFunction(m_pModelInfo->JDayNum);
+				ISowingCount++;
+				GrowingSum[index] = 0.;
+				Emergence_Done[index] = false;
+				out = 0.;
+			}
+		}
 	}
 	else if (GrowthStageIndex[index] <= 1. && Max_GSI[index] > 0. && !Emergence_Done[index]) { // // 1 emergence
 		if (ZadokForcingFromFileInput_Sw(ZadokForcingFromFileInput) == ZadokForcingFromFileInput_Sw::on) {
@@ -1863,6 +1934,16 @@ auto Growth_Stage = [&](size_t index) {
 
 				}
 
+			}
+		}
+		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::PG_File_specified) {
+			if (m_pModelInfo->m_ActMin >= IEmergenceDates[IEmergenceCount]) {
+				out = 1.;
+				Emergence_Done[index] = false;
+				auto year = PGUtil::YearFunction(m_pModelInfo->JDayNum);
+				GrowingStage[index] = 1.;
+				IEmergenceCount++;
+				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
 			}
 		}
 		else if ((Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Temperature_Sum|| Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on )&&DormingStartDayNum[index]<1.) {
@@ -2013,7 +2094,7 @@ for (size_t jj = 1; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 CN_RatioPlant();
 	
 auto PreviousSeason = SpringDev;
-	for(size_t i=0; i<P_State[_LEAF][_N_].size(); i++) {
+	for(size_t i=0; i<P_State[_LEAF][_N_].size(); i++) { // Loop over plants
 
 
 		GrowthStageIndex[i]=Growth_Stage(i);
@@ -2031,6 +2112,7 @@ auto PreviousSeason = SpringDev;
 			else if(GrowthStageIndex[i]>1&& GrowthStageIndex[i]<=2&&P_State[_MOBILE][_N_][i]>1.E-4&&SpringDev) 
 				LeafShootingFromMobilePool(i);	
 			else if (GrowthStageIndex[i] >= 1 && GrowthStageIndex[i] < 1.1) {
+				int koll;
 
 			}
 		}
@@ -2425,6 +2507,14 @@ void NC_Plant::Cleaning_Harvest_Events() {
    		    DoHarvest=false;
    		    if(m_pModelInfo->m_ActMin>=IHarvestDates[ICountHarvest]) {
    		        HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;
+					if (ChangeParAtHarvestDate.size() > 0) {
+						size_t count_plant = 0;
+						for (SIMB p : ChangeParAtHarvestDate) {
+							if (p.TabIndex == string::npos) static_cast<Ps*>(p.pBase)->SetValue(ChangeParAtHarvestValues[ICountHarvest][count_plant]);
+							else if(i_plant+1==p.TabIndex) static_cast<P*>(p.pBase)->SetValue(i_plant, ChangeParAtHarvestValues[ICountHarvest][count_plant]);
+							count_plant++;
+						}
+					}
    		        ICountHarvest++;
    		        DoHarvest=true;
 			}
@@ -2771,6 +2861,7 @@ void NC_Plant::At_Harvest(bool WithGrazingEvent) {
 				HarvestFrac = P_HarvFracGrain[i];
 			}
 			P_LitterFall[_GRAIN][jj][i] = LitterFrac* (P_State[_GRAIN][jj][i] - (P_State[_GRAIN][jj][i]*HarvestFrac))*1. / T_Step;
+
 			P_LitterFall[_NEWMOBILE][jj][i] = P_State[_NEWMOBILE][jj][i] * 1. / T_Step;
 			if (SimPlantAge[i] >= Max_Plant_LifeTime[i] * 365. - 365 || HarvFracStem[i] == 1 || LitterFracStem[i] == 1.)
 				P_LitterFall[_MOBILE][jj][i] = P_State[_MOBILE][jj][i] * 1. / T_Step;

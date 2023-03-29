@@ -38,7 +38,7 @@ bool NC_ExternalInputs::Ini()	{
     N_Irrig_NO3=0.;
     N_Irrig_NH4=0.;
 
-	if(ManureInput>0||N_Fertilization==2) {		// Initiate PG-file read;
+	if(ManureInput>0|| N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::PG_file) {		// Initiate PG-file read;
 		string filename=m_PG_Manure.GetFileName();
 		if(FertilizationIndexFileName==1) {
 			size_t LL=filename.rfind("_");
@@ -86,7 +86,7 @@ bool NC_ExternalInputs::Ini()	{
 		}
 	}
 
-	if (N_Fertilization == 5 && ReadYearBasedManagementTable == 1) {
+	if (N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::Year_Based_Table_3_app && ReadYearBasedManagementTable == 1) {
 
 		size_t LL;
 		if (m_pModelInfo->ActualNoMulRun <= 1) {
@@ -135,6 +135,19 @@ bool NC_ExternalInputs::Ini()	{
 		}
 
 
+	}
+
+	if (N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::PG_File_AppDatesOnly) {
+		m_PG_Manure.Open(m_PG_Manure.GetFileName());
+		auto num = m_PG_Manure.GetNumRecords();
+		IFertDates.resize(num);
+		FertAppValues = m_PG_Manure.GetVarVector(1);
+		for (size_t i = 0; i < num; i++) {
+			IFertDates[i] = m_PG_Manure.GetLongTime(i + 1);			
+		}
+		for (int i = num - 1; i >= 0; i--)
+			if (m_pModelInfo->m_ActMin < IFertDates[i]) IFertDatesCount = i;
+		m_PG_Manure.CloseFile();
 	}
 
 	if(N_Deposition==2) {		// Initiate PG-file read;
@@ -226,8 +239,16 @@ void NC_ExternalInputs::Flux()
 		  else if(N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::Plant_Stage_Table) {
 			 N_Fert_App= f_N_AgeStageFertilization(pNC_Plant->SimPlantYearAge.front(), m_pModelInfo->JDayNum);
 			}
-		  else if (N_Fertilization_Sw(N_Fertilization) >= N_Fertilization_Sw::Year_Based_Table_1_app) 
+		  else if (N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::Year_Based_Table_1_app) 
 			  N_Fert_App = f_N_YearStageFertilization(double(m_pModelInfo->JYearNum), m_pModelInfo->JDayNum);	
+		  else if (N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::PG_File_AppDatesOnly) {
+			  if (m_pModelInfo->m_ActMin >= IFertDates[IFertDatesCount]) {			  	  
+				  N_Fert_App = FertAppValues[IFertDatesCount] / T_Step;
+				  IFertDatesCount++;
+			  }
+			  else
+				  N_Fert_App = 0.;
+		  }
 	
 		N_Fert_NO3=N_Fert*N_FertDiss_k*(1-N_Fert_NH4_Frac);
 		N_Fert_NH4=N_Fert*N_FertDiss_k*N_Fert_NH4_Frac;

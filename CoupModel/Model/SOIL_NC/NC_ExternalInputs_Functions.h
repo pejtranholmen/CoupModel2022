@@ -74,6 +74,11 @@ ININFO FertNIpos, ManNHIpos, ManNLNIpos, CNBEDIpos, ManFNIpos, CNFECIpos, ManDep
 ifstream m_FertTableStream;
 FCSV *m_pFertTableStream;
 
+vector<size_t> IFertDates;
+vector<float> FertAppValues;
+size_t IFertDatesCount;
+
+
 size_t NumValidInput4, NumValidDeposition;
 //Real, Dimension, Allocatable :: NDrivEcoDat	! Driving variables
 
