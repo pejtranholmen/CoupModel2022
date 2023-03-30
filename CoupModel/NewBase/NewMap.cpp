@@ -6117,6 +6117,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 	auto GetFileName = [&](string DocName) {
 		string fileout;
 		auto ip = DocName.find(".Sim");
+		if (ip == string::npos) ip = DocName.find(".xml");
 		if (ip != string::npos) {
 			fileout = DocName.substr(0,ip);
 			if (AllItems) fileout += "_Extended";

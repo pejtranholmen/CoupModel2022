@@ -7,6 +7,13 @@
 #include "../Structure/Functors/Structure_Functors.h"
 #include "../../Simulator/Simulator.h"
 
+#ifndef COUPSTD
+#include "../../Util\MFC_Util.h"
+
+#endif
+
+
+
 
 
 class ZadokOutCreateFile{
@@ -625,17 +632,14 @@ bool NC_Plant::Ini()	{
 				if (m_pModelInfo->m_ActMin < IEmergenceDates[i]) IEmergenceCount = i;
 			m_PG_Emergence.CloseFile();
 		}
-
 		if (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::PG_File_specified) {
 			m_PG_HarvestDate.Open(m_PG_HarvestDate.GetFileName());
 			NumValidHarvest = m_PG_HarvestDate.GetNumRecords();
 			size_t NumParToChange = m_PG_HarvestDate.GetNumVariables();
 
-
-
 			ChangeParAtHarvestDate.resize(NumParToChange);
 			
-			for (size_t i = 0; i < NumParToChange; i++) {
+			for (size_t i = 0; i < ChangeParAtHarvestDate.size(); i++) {
 				string name = m_PG_HarvestDate.GetVarName(i + 1);
 				auto pos1 = name.find("("); auto pos2 = name.rfind(")");
 				if (pos2 > pos1 + 1) {
@@ -647,9 +651,8 @@ bool NC_Plant::Ini()	{
 						ChangeParAtHarvestDate[i].pBase = pointer;
 						ChangeParAtHarvestDate[i].TabIndex = index;
 					}
-					else {
-						NumParToChange--;
-					}
+					else 
+						NumParToChange--;					
 				}
 				else if (pos1 == string::npos && pos2 == string::npos) {
 					auto pointer = m_pModelMap->GetPsPointer(name);
@@ -657,9 +660,8 @@ bool NC_Plant::Ini()	{
 						ChangeParAtHarvestDate[i].pBase = pointer;
 						ChangeParAtHarvestDate[i].TabIndex = string::npos;
 					}
-					else {
+					else 
 						NumParToChange--;
-					}
 				}
 			}
 			ChangeParAtHarvestDate.resize(NumParToChange);
@@ -668,7 +670,14 @@ bool NC_Plant::Ini()	{
 				for (size_t i = 0; i < NumValidHarvest; i++)
 					ChangeParAtHarvestValues[i].resize(NumParToChange);
 			}
+			else {
+#ifndef COUPSTD
+				MFC_Util::MessageBox(" Note that No parameters are defined to change Harvest characteristics! ");
+#else				
+				cout << "No parameters defined to change harvest characteristics " << endl;
+#endif
 
+			}
 			if (NumValidHarvest > 0. && NumValidHarvest < 1000) {
 				IHarvestDates.resize(NumValidHarvest);
 				for (size_t i = 0; i < NumValidHarvest; i++) {
@@ -680,10 +689,11 @@ bool NC_Plant::Ini()	{
 
 				for (int i = NumValidHarvest - 1; i >= 0; i--)
 					if (m_pModelInfo->m_ActMin < IHarvestDates[i]) ICountHarvest = i;
+			}
+			else {
+				NumValidHarvest = 0;
 
 			}
-			else
-				NumValidHarvest = 0;
 
 			m_PG_HarvestDate.CloseFile();
 
