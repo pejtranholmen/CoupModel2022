@@ -27,7 +27,8 @@ ModelBase::ModelBase() {
 	m_DocFile.m_TimePeriodScaleFactor=1;
 	//m_DocFile.m_FileVersionNumber=67;
 	//m_DocFile.m_FileVersionNumber = 68;	  // new from Dec 2019
-	m_DocFile.m_FileVersionNumber = 69;	  // new from Jan 2020
+	//m_DocFile.m_FileVersionNumber = 69;	  // new from Jan 2020
+	m_DocFile.m_FileVersionNumber = 70;	  // new from April 2023
 	m_FileVersionNumberRead=0;
 	m_DocFile.m_SimulationRunNo=1;
 	m_DocFile.m_FinishedSimulation=false;
@@ -152,6 +153,7 @@ ModelBase::ModelBase() {
 		p_PFCurve->SetDataBaseDirectory(m_DataBaseDirectory);
 
 	}
+	m_ChildDocument = false;
  
 
 };
@@ -705,8 +707,14 @@ vector<SimB*> ModelBase::GetPtrVector(enum simtype typ,size_t GroupNo,  bool All
 				 if(typ==pSimB->GetType()&&(pSimB->IsEnabled()||All))
 				 vptr.push_back(pSimB);
 			 }
-			 else if((typ==pSimB->GetType()&&pSimB->GetGroupNo()==GroupNo)&&(pSimB->IsEnabled()||All))
-				 vptr.push_back(pSimB);
+			 else if ((typ == pSimB->GetType() && pSimB->GetGroupNo() == GroupNo) && (pSimB->IsEnabled() || All)) {
+
+				 if(m_ChildDocument&&pSimB->IsChildChanged())
+					vptr.push_back(pSimB);
+				 else if(!m_ChildDocument)
+					 vptr.push_back(pSimB);
+			 }
+
 	}
 	return vptr;
 }

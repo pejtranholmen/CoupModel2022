@@ -63,6 +63,7 @@ CCoupModelDoc::CCoupModelDoc()
 	m_Closing=FALSE;
 	m_Ready=FALSE;
 	m_Doc.m_DocumentType=0;
+	m_ToBeChild = false;
 
 }
 CCoupModelDoc::~CCoupModelDoc()
@@ -462,7 +463,7 @@ BOOL CCoupModelDoc::OnSaveDocument(LPCTSTR pzPathName)
 
 
 	 m_Doc.SetPathName(CT2A(PathName).m_psz);
-   if (!m_Doc.WriteDocFile()) return FALSE;
+   if (!m_Doc.WriteDocFile(m_ToBeChild)) return FALSE;
 
 	
 		

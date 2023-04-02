@@ -281,7 +281,8 @@ void FUtil::trim_xmlstring(string& str)
 	while (pos != string::npos) {
 		str.erase(pos, 1);
 		str.insert(pos, "_");
-		pos = str.find('//');
+		pos = str.find(
+			'//');
 	}
 	pos = str.find('ø');
 	while (pos != string::npos) {

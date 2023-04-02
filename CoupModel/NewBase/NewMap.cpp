@@ -153,7 +153,7 @@ NewMap::~NewMap()
 // It seems to me as if it does nothing at all; it isn"t used 
 // anywhere except outside this function.
 
-string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level)
+string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level, bool ChildDocument)
 {
 	if (m_pCommonModelInfo == nullptr) {
 		auto pP = GetPPointer("Upper Depth");
@@ -612,7 +612,8 @@ bool NewMap::WriteHeaderToXmlFile(pugi::xml_node node) {
 
 	general.append_attribute("FileVersionNumber") = int(m_DocFile.m_FileVersionNumber);
 	const char* test = m_DocFile2.m_OriginFileName.c_str();
-	general.append_attribute("OriginalFileName") = "kk";
+	general.append_attribute("OriginalFileName") = test;
+	general.append_attribute("ChildDocument") = m_ChildDocument;
 
 	string ExeDate;
 	ExeDate = "Version 6.2.2, ";
@@ -689,7 +690,8 @@ bool NewMap::Read_Header_FromXmlFile(pugi::xml_node node) {
 	
 		auto group = item.name();
 		m_FileVersionNumberRead=item.attribute("FileVersionNumber").as_int();
-		m_DocFile2.m_OriginFileName = item.attribute("OrignalFileName").as_string();
+		m_DocFile2.m_OriginFileName = item.attribute("OriginalFileName").as_string();
+		m_ChildDocument = item.attribute("ChildDocument").as_bool();
 		m_DocFile2.m_ExeFileDate = item.attribute("ExeFileDate").as_string();
 		m_DocFile2.m_DateRun = item.attribute("SimulationDate").as_string();
 		m_DocFile.m_MultiRunning = item.attribute("MultiSimulation").as_bool();
@@ -1935,7 +1937,7 @@ bool NewMap::Read_DataBaseLinks_FromXmlFile(pugi::xml_node node)
 }
 
 
-bool NewMap::ReadDocFile(string file)
+bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 {
 
 	#ifndef COUPSTD
@@ -1977,7 +1979,35 @@ bool NewMap::ReadDocFile(string file)
 
 	
 		if (FUtil::IsFileExisting(xmlfile)) {
-			Init_BlankDocument();
+
+			vector<string> parents;
+
+
+			auto ParentFileName = GetParentDocFile(xmlfile);
+			while (FUtil::IsFileExisting(ParentFileName)) {
+				parents.push_back(ParentFileName);
+				ParentFileName = GetParentDocFile(ParentFileName);
+			}
+			if (parents.size()>0) {
+				m_ValidationData.Init(this);
+				m_MStorage.Init(this);
+				m_ChildDocument = false;
+				while (parents.size() > 0) {
+					if (!ReadXmlDocFile(parents[parents.size() - 1])) {
+#ifdef COUPSTD
+						cout << " Reading of Parent Doc file failure, file was not find ("; cout << ParentFileName; cout << ")"; cout << endl;
+#endif
+						return false;
+					}
+					parents.erase(parents.begin()+parents.size() - 1);
+				}
+				m_ChildDocument = true;
+			}
+			else {
+				Init_BlankDocument();
+			}
+			
+			
 			if (ReadXmlDocFile(xmlfile)) {
 #ifndef COUPSTD
 				m_PlotStorage.Update(m_DocFile.m_SimulationRunNo, m_FileVersionNumberRead);
@@ -2170,6 +2200,19 @@ bool NewMap::ReadDocFile(string file)
 return true;
 
 }
+string NewMap::GetParentDocFile(string xmlfile) {
+	pugi::xml_document doc;
+	auto result = doc.load_file(xmlfile.c_str());
+	auto root = doc.root();
+	auto child = root.first_child().first_child();
+	auto item = child.first_child();
+	string str = item.attribute("OriginalFileName").as_string();
+	auto validchild = item.attribute("ChildDocument").as_bool();
+	if (validchild)
+		return str;
+	else
+		return "";
+}
 
 bool NewMap::ReadXmlDocFile(string xmlfile) {
 	pugi::xml_document doc;
@@ -2275,9 +2318,10 @@ void NewMap::Init_BlankDocument()
 		m_ValidationData.Init(this);
 		m_MStorage.Init(this);
 }
-bool NewMap::WriteDocFile()
+bool NewMap::WriteDocFile(bool ChildDocument)
 {
 	if (m_xmlFileToUse) {
+		m_ChildDocument = ChildDocument;
 		auto string=WriteEntireModelToXmlFile(doc_enabled::NOT_DEFAULT);
 		return true;
 	}

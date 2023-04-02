@@ -15,7 +15,7 @@ class NewMap :public MR{
 public:
 	bool MakeMapComplete();
 	bool UpdateFilterTags(bool with_activefilter);
-	string WriteEntireModelToXmlFile(doc_enabled enable_level = doc_enabled::ALL);
+	string WriteEntireModelToXmlFile(doc_enabled enable_level = doc_enabled::ALL, bool ChildDocument=false);
 	bool WriteHeaderToXmlFile(pugi::xml_node node);
 	bool Read_Header_FromXmlFile(pugi::xml_node node);
 	bool WriteValidationToXmlFile(pugi::xml_node node);
@@ -52,9 +52,10 @@ public:
 	~NewMap();						// standard constructor
 			// updates all variable interactions
 	void SetPathName(string filename) {m_DocFileName=filename; m_CurrentFile=filename;};
-	bool ReadDocFile(string filename="");
-	bool WriteDocFile();
+	bool ReadDocFile(string filename="", bool WithParent=false);
+	bool WriteDocFile(bool ChildDocument=false);
 	bool ReadXmlDocFile(string filename);
+	string GetParentDocFile(string filename);
 	bool WriteXmlDocFile();
 	void Init_BlankDocument();
 	bool CreateMapSvFlexFile(size_t index=0);

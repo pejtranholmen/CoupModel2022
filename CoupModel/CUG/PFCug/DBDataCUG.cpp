@@ -432,8 +432,8 @@ void DBDataCug::Make_SwitchesSheet()
 
 		QuickSetText(-3,Counter,"Technical");
 		QuickSetAlignment(-2,Counter, UG_ALIGNLEFT);
-		int i1=((Sw*)pSw)->GetIntValue();
-		str=((Sw*)pSw)->GetOption(i1).c_str();
+		int i1=static_cast<Sw*>(pSw)->GetIntValue();
+		str=static_cast<Sw*>(pSw)->GetOption(i1);
 		QuickSetAlignment(-1,Counter, UG_ALIGNLEFT);
 		QuickSetText(-1,Counter, str);
 				

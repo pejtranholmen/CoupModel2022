@@ -119,14 +119,13 @@ bool MakeSimSheets::Make_RunInfoSheet()
 
 				// 1st Row
 
-				if(m_pSimDoc->IsFinishedSimulation()||m_pSimDoc->IsRunning()) {
-					QuickSetBackColor(-1,0,m_ColorCompleted);
-					if(m_pSimDoc->IsMultiSimulation()) {
-						QuickSetText(0,1, "Multi Run Document");
-						//JoinCells(2,1,3,1);
-						GetCell(1,-1,&cell);
+				if (m_pSimDoc->IsFinishedSimulation() || m_pSimDoc->IsRunning()) {
+					QuickSetBackColor(-1, 0, m_ColorCompleted);
+					if (m_pSimDoc->IsMultiSimulation()) {
+									//JoinCells(2,1,3,1);
+						GetCell(1, -1, &cell);
 						cell.SetFont(&m_largeFont);
-						if(m_pSimDoc->IsRunning()) {
+						if (m_pSimDoc->IsRunning()) {
 							cell.SetText("Multi Run Ongoing");
 							cell.SetBackColor(m_ColorChanged);
 						}
@@ -134,15 +133,14 @@ bool MakeSimSheets::Make_RunInfoSheet()
 							cell.SetText("Completed Multi Run");
 							cell.SetBackColor(m_ColorCompleted);
 						}
-						SetCell(1,-1,&cell);
-						QuickSetText(0,-1,"");
-						QuickSetBackColor(0,-1,m_ColorHeading);
+						SetCell(1, -1, &cell);
+						QuickSetText(0, -1, "");
+						QuickSetBackColor(0, -1, m_ColorHeading);
 					}
 					else {
-						QuickSetText(0,1, "Single Run Document");
-						GetCell(0,-1,&cell);
+						GetCell(0, -1, &cell);
 						cell.SetFont(&m_largeFont);
-						if(m_pSimDoc->IsRunning()) {
+						if (m_pSimDoc->IsRunning()) {
 							cell.SetText("Single Run Ongoing");
 							cell.SetBackColor(m_ColorChanged);
 						}
@@ -150,24 +148,63 @@ bool MakeSimSheets::Make_RunInfoSheet()
 							cell.SetText("Completed Single Run");
 							cell.SetBackColor(m_ColorCompleted);
 						}
-						SetCell(0,-1,&cell);	
-						QuickSetText(1,-1,"");
-						QuickSetBackColor(1,-1,m_ColorHeading);
+						SetCell(0, -1, &cell);
+						QuickSetText(1, -1, "");
+						QuickSetBackColor(1, -1, m_ColorHeading);
+						if (m_pSimDoc->m_ChildDocument) {
+							GetCell(1, -1, &cell);
+							cell.SetFont(&m_largeFont);
+							if (m_pSimDoc->IsRunning()) {
+								cell.SetText("Single Run Ongoing");
+								cell.SetBackColor(m_ColorChanged);
+							}
+							else {
+								cell.SetText("Child Document");
+								cell.SetBackColor(m_ColorCompleted);
+							}
+							SetCell(1, -1, &cell);
+							QuickSetBackColor(1, -1, m_ColorCompleted);
+						}
+						else {
+							GetCell(1, -1, &cell);
+							cell.SetFont(&m_largeFont);
+							if (m_pSimDoc->IsRunning()) {
+								cell.SetText("Single Run Ongoing");
+								cell.SetBackColor(m_ColorChanged);
+							}
+							else {
+								cell.SetText("Normal Document");
+								cell.SetBackColor(m_ColorCompleted);
+							}
+							SetCell(1, -1, &cell);
+						}
+						if (m_pSimDoc->IsFinishedSimulation()) {
+							GetCell(2, -1, &cell);
+							cell.SetBackColor(m_ColorClick);
+							cell.SetFont(&m_largeFont);
+							if (!m_pSimDoc->m_ChildDocument)
+								cell.SetText("Create Copy of Document");
+							else
+								cell.SetText("Copy of Child Document");
+							SetCell(2, -1, &cell);
+
+							GetCell(3, -1, &cell);
+							cell.SetBackColor(m_ColorClick);
+							cell.SetFont(&m_largeFont);
+							if (!m_pSimDoc->m_ChildDocument)
+								cell.SetText("Create Child Document");
+							else
+								cell.SetText("Create Parent Document");
+							SetCell(3, -1, &cell);
+						}
+
+
+						QuickSetText(0, 1, "Created/Modified/Simulated");
+						QuickSetText(1, 1, m_pSimDoc->GetTimeCreated());
+						QuickSetText(2, 1, m_pSimDoc->GetTimeModified());
+						QuickSetText(3, 1, m_pSimDoc->m_DocFile2.m_DateRun);
+
 					}
-
-					GetCell(2,-1,&cell);
-					cell.SetText("Create Copy of Document");
-					cell.SetBackColor(m_ColorClick);
-					cell.SetFont(&m_largeFont);
-					//if(m_pSimDoc->p_ModelInfo->IsReady()) 
-					//	cell.SetBackColor(m_ColorHeading);
-
-					SetCell(2,-1,&cell);
-					QuickSetText(0,1,"Created/Modified/Simulated");
-					QuickSetText(1,1,m_pSimDoc->GetTimeCreated());
-					QuickSetText(2,1,m_pSimDoc->GetTimeModified());
-					QuickSetText(3,1, m_pSimDoc->m_DocFile2.m_DateRun);
-	
 				}
 				else {	
 					QuickSetBackColor(-1,0,m_ColorClick);
@@ -176,22 +213,20 @@ bool MakeSimSheets::Make_RunInfoSheet()
 					QuickSetText(2,1,m_pSimDoc->GetTimeModified());
 					QuickSetText(0,-1,"Make Single Run");
 					QuickSetBackColor(0,-1,m_ColorClick);
-					if(m_pSimDoc->m_MultiRun_Array.size()>0) {
-						str="Make Multiple Runs";
-						QuickSetText(1,-1,str);
-						QuickSetBackColor(1,-1,m_ColorClick);
-						if(m_pSimDoc->m_MultiRun_Array.size()>0&&m_pSimDoc->MR_Get_ActualRunNumber()<m_pSimDoc->MR_Get_TotalNumberofRuns()) {
-							str="ReStart Multiple Run at run no :"+FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_ActualRunNumber());
-							QuickSetText(2,-1,str);
-							QuickSetBackColor(2,-1,m_ColorClick);
-							JoinCells(2,-1,3,-1);
+					if (m_pSimDoc->m_MultiRun_Array.size() > 0) {
+						str = "Make Multiple Runs";
+						QuickSetText(1, -1, str);
+						QuickSetBackColor(1, -1, m_ColorClick);
+						if (m_pSimDoc->m_ChildDocument){
+							str = "Convert from Child Document to Parent";
+							QuickSetBackColor(2, -1, m_ColorClick);
 						}
-						else if(m_pSimDoc->MR_Get_ActualRunNumber()==m_pSimDoc->MR_Get_TotalNumberofRuns()){
-							str="Extend previous MultiRun to a new MultiRun";
-							QuickSetText(2,-1,str);
-							QuickSetBackColor(2,-1, m_ColorClick);
-							JoinCells(2,-1,3,-1);
+						else {
+							str = "Parent Document";
+							QuickSetBackColor(2, -1, m_ColorCompleted);
+							cell.SetBackColor(m_ColorCompleted);
 						}
+						QuickSetBackColor(2, -1, m_ColorClick);
 					}
 					else {
 						QuickSetText(1,-1,"");
@@ -200,7 +235,24 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						QuickSetBackColor(2,-1,m_ColorHeading);
 
 					}
+					if (!m_pSimDoc->IsFinishedSimulation()) {
+						GetCell(2, -1, &cell);
+						cell.SetBackColor(m_ColorCompleted);
+						cell.SetFont(&m_largeFont);
+						if (m_pSimDoc->m_ChildDocument)
+							cell.SetText("Child Document");
+						else
+							cell.SetText("Normal Document");
+					
+						SetCell(2, -1, &cell);
 
+						GetCell(3, -1, &cell);
+						cell.SetText("");
+						cell.SetBackColor(m_ColorHeading);
+						cell.SetFont(&m_largeFont);
+						
+						SetCell(3, -1, &cell);
+					}
 					//JoinCells(1,1,3,1);
 				}
 
@@ -259,7 +311,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				//QuickSetFont(2,5,&m_largeFont);
 				QuickSetText(2,5,"EndDate");
 				
-				pSw=(Sw*)m_pSimDoc->GetPtr(SWITCH,"TimeResolution");
+				pSw=static_cast<Sw*>(m_pSimDoc->GetPtr(SWITCH,"TimeResolution"));
 				GetCell(1,5,&cell);
 				//cell.SetFont(&m_largeFont);
 				cell.SetParam(102);
@@ -360,11 +412,13 @@ bool MakeSimSheets::Make_RunInfoSheet()
 					if(pSw!=nullptr) {
 						ivalue=pSw->GetIntValue();
 						GetCell(1,8, &cell); 
-						cell.SetText(pSw->GetOption(ivalue).c_str());
+						cell.SetText(pSw->GetOption(ivalue));
 						cell.SetCellType(UGCT_DROPLIST);
-						size_t n=pSw->GetNumOptions();
+						auto n=pSw->GetNumOptions();
 						for(size_t j=0;j<n;j++) {
-							optionlist+=pSw->GetOption(j).c_str();
+							auto str = pSw->GetOption(j);
+							if (str.size() == 0) exit;
+							optionlist+=str;
 							optionlist+="\n";
 						}
 						cell.SetLabelText(optionlist);

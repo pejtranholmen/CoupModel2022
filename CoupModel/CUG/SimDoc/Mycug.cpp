@@ -2061,19 +2061,29 @@ void MyCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL
 	int isheet=GetSheetNumber();
 
 
-	if(isheet==0&&updn) {
-		if(col==0&&!m_pSimDoc->IsFinishedSimulation()&&!m_pSimDoc->IsRunning()) {
+	if (isheet == 0 && updn) {
+		if (col == 0 && !m_pSimDoc->IsFinishedSimulation() && !m_pSimDoc->IsRunning()) {
 			MakeSingleRun();
 			Make_RunInfoSheet();
 
 		}
-		else if((col==1||col==2)&&!m_pSimDoc->IsFinishedSimulation()&&!m_pSimDoc->IsRunning())  {
+		else if ((col == 1 || col == 2) && !m_pSimDoc->IsFinishedSimulation() && !m_pSimDoc->IsRunning()) {
 			MakeMultiRuns(col);
 			OnSheetSetup(0);
 
 		}
-		else if(col==2&&(m_pSimDoc->IsFinishedSimulation()||m_pSimDoc->IsRunning()))	// Create new document
-			CreateNewDocFromCurrentDoc();	
+		else if (col == 2 && (m_pSimDoc->IsFinishedSimulation() || m_pSimDoc->IsRunning())) {	// Create new document
+			if (m_pSimDoc->m_ChildDocument)
+				CreateNewDocFromCurrentDoc(true, false);
+			else
+				CreateNewDocFromCurrentDoc(false, false);
+		}
+		else if (col == 3 && (m_pSimDoc->IsFinishedSimulation() || m_pSimDoc->IsRunning()))	{// Create new document
+			if (m_pSimDoc->m_ChildDocument)
+				CreateNewDocFromCurrentDoc(false, false);
+			else
+				CreateNewDocFromCurrentDoc(true, false);
+		}
 		else if(col==1) 
 			return;
 	}
@@ -6885,13 +6895,15 @@ void MyCug::CleanSelectedBySheet(int sheet) {
 
 	
 }
-void MyCug::CreateNewDocFromCurrentDoc()
+void MyCug::CreateNewDocFromCurrentDoc(bool ChildDocument, bool KeepParentDoc)
 {
 	CCoupModelApp* pApp;
 	string pzPathName, Num, newPathName, newMBinPatHName;
 	int ipos_sim, iposext,iposMul;
 		// Create new document
 	//if(ReadyToSimulate) return;
+
+	
 			pApp = (CCoupModelApp*)AfxGetApp();
 			pzPathName=CT2A(m_pDoc->CDocument::GetPathName()).m_psz;
 					iposMul=pzPathName.find("_Multi");
@@ -6944,7 +6956,7 @@ void MyCug::CreateNewDocFromCurrentDoc()
 						m_pSimDoc->MR_ResetDimCounter();
 					
 					string OldOriginFileName=m_pSimDoc->m_DocFile2.m_OriginFileName;
-					m_pSimDoc->m_DocFile2.m_OriginFileName=pzPathName;
+					if(!KeepParentDoc)	m_pSimDoc->m_DocFile2.m_OriginFileName=pzPathName;
 					m_pSimDoc->SetNewSimulation();
 					m_pSimDoc->m_Protect=FALSE;
 					m_pSimDoc->m_DocFile.m_MultiStoragelocked=true;
@@ -6955,16 +6967,17 @@ void MyCug::CreateNewDocFromCurrentDoc()
 					string str;
 					str = FUtil::ItoNumAscii(m_pSimDoc->m_DocFile.m_SimulationRunNo);
 					m_pSimDoc->History_Add(13,str);
+					m_pDoc->SetToBeChild(ChildDocument);
 
 					if (!m_pDoc->OnSaveDocument(CString(newPathName.c_str()))) return;
 				m_pSimDoc->SetFinishedSimulation();
-					if(newPathName!=pzPathName) m_pSimDoc->m_DocFile.m_SimulationRunNo=PreviousRunNo;
+				if (newPathName != pzPathName) {
+					m_pSimDoc->m_DocFile.m_SimulationRunNo = PreviousRunNo;
+				}
 					
 					m_pDoc->SetModifiedFlag(FALSE);
 					m_pSimDoc->m_CurrentFile=string(pzPathName);
 					m_pSimDoc->m_DocFile2.m_OriginFileName=string(OldOriginFileName);
-//					m_pSimDoc->m_DocFile2.m_Multi_MBin_File = saveMBinFileName;
-					//if (!m_pDoc->CDocument::OnSaveDocument(pzPathName)) return;
 
 					//::ReadResultsFromFile=FALSE;
 					m_created_pathname=newPathName;
@@ -7007,7 +7020,7 @@ void MyCug::MakeSingleRun()
 			m_pDoc->CDocument::SetPathName(CString(newPathName.c_str()),FALSE);   
 			m_pSimDoc->SetCurrentFileName(newPathName);
 
-			if (!m_pSimDoc->WriteDocFile()) return;
+			if (!m_pSimDoc->WriteDocFile(m_pSimDoc->m_ChildDocument)) return;
 			m_pSimDoc->OnSimStart();
 
 			QuickSetText(0,-1,"Model Running !");

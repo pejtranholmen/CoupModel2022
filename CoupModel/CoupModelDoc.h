@@ -39,6 +39,7 @@ public:
 	
 	BOOL m_Closing;
 	BOOL m_Ready;
+	bool m_ToBeChild;
 
 	std::vector <void*> m_X_Annimate;
 	std::vector <void*> m_T_Annimate;
@@ -46,6 +47,7 @@ public:
 	std::vector <void*> m_D_Annimate;
 
 	BOOL AddPGFile(string filename);
+	void SetToBeChild(bool value) { m_ToBeChild = value; };
 	BOOL SaveAndOpenDocument();
 	void UpdateIniFileWithDocPath(LPCTSTR lpszPathName);
 	BOOL m_ReReadMStorageFile;

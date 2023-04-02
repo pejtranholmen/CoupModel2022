@@ -12,12 +12,17 @@ public:
 	size_t GetOriginalIntValue() const {return org_value;};
 	size_t SetIntValue(size_t ivalue) {old_value=*_ptarget;_IsOldValue=true;  *_ptarget=ivalue; SendNotice();if(*_ptarget!=org_value) SimB::SetNotOriginalValue();return m_recalc;};
 	void SetNotOldValue() {_IsOldValue=false;};
-	string GetOption(size_t index) const {if(index<_options.size()) return _options[index]; else return ""; };
-	size_t GetNumOptions() const {return _options.size();};
+	std::string GetOption(size_t index) {
+		if(index<_options.size()) 
+			return _options[index]; 
+		else 
+			return ""; 
+	};
+	size_t GetNumOptions();
 	bool IsOldValue() {return _IsOldValue;};
 	size_t SetStrValue(string str);
 	size_t SetDBStrValue(string str);
-	string GetName() {return SimB::GetName();};
+	std::string GetName() {return SimB::GetName();};
 	void SetDBIntValue(size_t value) {_DBIntValue=value; };
 	size_t GetDBIntValue() {return _DBIntValue;};
 	size_t GetOldIntValue() {return old_value;};
@@ -28,5 +33,5 @@ protected:
 	bool _IsOldValue;
 	size_t m_recalc;
 private:
-	vector <string> _options;
+	vector <std::string> _options;
 };

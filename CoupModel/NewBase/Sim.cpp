@@ -70,7 +70,7 @@ UINT _cdecl Run_SingleCoupModel_Background(void *param)
 		//MFC_Util::WriteProfileInt("SimulationRunNo", SimulationRunNo+1);
 
 		
-		if (!pRunDoc->WriteDocFile()){
+		if (!pRunDoc->WriteDocFile(pRunDoc->m_ChildDocument)){
 
 		}
 	}

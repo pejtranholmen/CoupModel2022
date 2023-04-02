@@ -10,7 +10,9 @@ Sw::~Sw()
 Sw::Sw(size_t *target,enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
 	:SimB(SWITCH,data, elem, fproc, bproc, ulev)
 {
-	_ptarget=target; 
+		_ptarget=target; 
+		org_value = old_value = m_recalc = 0;
+		_IsOldValue = false;
 	;
 }
 
@@ -19,6 +21,7 @@ void Sw::Def(size_t ModuleNo,  string name, int def, string opt, string conditio
 	org_value=def;
 	_orgIntValue = def;
 	*_ptarget=def;
+	_options.clear();
 	SetName(name);
 	SetModuleNo(ModuleNo);
 	SetConditions(conditions);
@@ -29,8 +32,8 @@ void Sw::Def(size_t ModuleNo,  string name, int def, string opt, string conditio
 	if (opt.size()<=0) return;
 	
 	while(opt.size()>0) {
-		int npos=opt.find('|');
-		if(npos>0){
+		auto npos=opt.find('|');
+		if(npos!=string::npos) {
 			option=opt.substr(0,npos);
 			opt=opt.substr(npos+1);
 		}
@@ -63,6 +66,9 @@ size_t Sw::SetDBStrValue(string str)
 	}
 	return 0;
 
+}
+size_t Sw::GetNumOptions() {
+	return _options.size();
 }
 
 

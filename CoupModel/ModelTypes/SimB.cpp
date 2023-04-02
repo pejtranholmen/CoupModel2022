@@ -22,6 +22,7 @@ SimB::SimB()
 	_def.bproc = bioprocess::NOBPROC;
 	_def.ulev = userlevel::NORMAL;
 	_ModuleNo = string::npos;
+	m_ChildChange = false;
 
 }
 SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v, enum userlevel user_v)
@@ -34,6 +35,7 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v, enum userle
 	_def.fproc=NOFPROC;
 	_def.bproc=NOBPROC;
 	_def.ulev=user_v;
+	m_ChildChange = false;
 }
 SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v,enum fysprocess fproc, enum bioprocess bproc, enum userlevel user_v)
 {
@@ -44,6 +46,7 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v,enum fysproc
 	_def.fproc=fproc;
 	_def.bproc=bproc;
 	_def.ulev=user_v;
+	m_ChildChange = false;
 }
 SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v)
 {
@@ -54,17 +57,20 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v)
 	_def.fproc=NOFPROC;
 	_def.bproc=NOBPROC;
 	_def.ulev=NORMAL;
+	m_ChildChange = false;
 }
 SimB::SimB(enum simtype d_vt, definitions def) 
 {
 	SimB();
 	_stype=d_vt;
 	_def=def;
+	m_ChildChange = false;
 }
 SimB::SimB(enum simtype d_vt) 
 {
 	SimB();
 	_stype=d_vt;
+	m_ChildChange = false;
 }
 SimB::~SimB(void)
 {

@@ -155,6 +155,8 @@ class SimB
 		virtual ~SimB(void);
 		void SetEnable(bool value) {_enabled=value;};
 		void SetDBEnable(bool value) {_DBenabled=value;};
+		void SetChildChange(bool value) { m_ChildChange = value; };
+		bool IsChildChanged() { return m_ChildChange; };
 		void SetModuleNo(size_t value) {_ModuleNo=value;};
 		void SetName(string str) {_name=str;};
 		void SetConditions(string str) {cond=str;};
@@ -267,6 +269,7 @@ class SimB
 		string	_unit;
 		size_t _DBIntValue;
 		int _orgIntValue;
+		bool m_ChildChange;
 		CommonModelInfo* m_pCommonModelInfo;
 		std::vector<double> _orgFVector;
 	private:

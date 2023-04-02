@@ -57,7 +57,7 @@ public:
 	void SelectTab(int ID);
 
 
-	void CreateNewDocFromCurrentDoc();
+	void CreateNewDocFromCurrentDoc(bool ChildDocument=false, bool KeepParentFile=false);
 	void MakeSingleRun();
 	void MakeMultiRuns(int col);
 

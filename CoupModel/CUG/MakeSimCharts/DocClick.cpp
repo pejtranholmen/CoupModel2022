@@ -54,7 +54,7 @@ int DocClick::ParameterClick(int col, int row) {
  CUGCell cell;
  string Name, Type, Group;
  SimB *pSw;
- if(col>=1) {
+ if(col>=1&&row>=0) {
 			GetCell(2,row, &cell);
 			Name=cell.GetStdText();
 			Type="Parameters";
@@ -69,7 +69,7 @@ int DocClick::ParameterClick(int col, int row) {
 			GTitle=((Ps*)pSw)->GetViewTitle(ival);
 			if(GTitle!="") Make_ParameterChart((Ps*)pSw,nullptr,string::npos,ival);		
  }
- else if(col==0) {
+ else if(col==0&&row>=0) {
 			GetCell(2,row, &cell);
 			Name=cell.GetStdText();
 			Type="Parameters";
