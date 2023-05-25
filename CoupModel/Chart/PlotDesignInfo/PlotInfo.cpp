@@ -477,7 +477,7 @@ PLOTv PlotInfo::GetDefaultPlotInfo() {
 	out.Residual_VarNum=1;
 	out.SubChart_No=0;
 	out.LogLiVersion=0;
-	out.PGRepitNo=0;
+	out.PGRepitNo=1;
 	out.ChartType= CHART_TYPES::SCATTER;
 	out.ChartNumber=0;
 	out.IndepAxis.First=NO_USE;

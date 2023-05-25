@@ -512,7 +512,11 @@ bool ChartCugCommands::ChangeChartOptions(int col, int row)
 				if (m_ResidualSource) {
 					iopt = FUtil::GetOptionIndex(cell.GetStdLabelText(), After);
 					//cell.SetNumber(iopt+1);
-					if (datatype > DATA_TYPES::SIM_VAL) {
+					if (datatype == DATA_TYPES::MEASURED_VAL|| datatype == DATA_TYPES::SIM_VAL) {
+						iopt = FUtil::AtoInt(After);
+						m_pSimDoc->m_PlotStorage.SetPGRepitNo(ArrayIndex, iopt);
+					}
+					else if (datatype > DATA_TYPES::SIM_VAL) {
 						if (After == "All")
 							itype = ENSEMBLE_TYPE::ALL;
 						else if (After == "Accepted")

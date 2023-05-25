@@ -1419,7 +1419,30 @@ bool NewMap::Read_DynamicPar_FromXmlFile(pugi::xml_node node)
 bool NewMap::WriteHistoryToXmlFile(pugi::xml_node node)
 {
 	string group, name, str, type;
-	for (size_t i = 0; i < m_History_Array.size(); i++) {
+
+	size_t startindex;
+
+	if (m_ChildDocument) {
+		startindex = m_History_Array.size() - 1;
+		for (size_t i = 0; i < m_History_Array.size(); i++) {
+			auto h_node = m_History_Array[i];
+			SimB* pBase;
+			pBase = h_node.pBase;
+			if (HIST_INFO(h_node.RunInfoType) == HIST_INFO::RUN_INFO) {
+				name = ((CRunInfo*)pBase)->GetName();
+				if (name == "NewRunNo") {
+					str = h_node.strvalue;
+					size_t runno = FUtil::AtoInt(str);
+					if (m_DocFile.m_SimulationRunNo - 1 <= runno) startindex = i;
+				}
+			}
+		}
+	}
+	else
+		startindex = 0;
+
+
+	for (size_t i = startindex; i < m_History_Array.size(); i++) {
 		auto h_node = m_History_Array[i];
 		string chstring = "Row_";
 		chstring += FUtil::STD_ItoAscii(i + 1);
@@ -1505,28 +1528,38 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 	for (size_t i = 0; i < vpp.size(); i++) {
 		auto pPtr = (SimB*)vpp[i];
 		auto name = pPtr->GetName();
-		if ((name == "WaterStorage" || name == "SoilHeat" || name.find("Humus") != string::npos || name.find("Litter") != string::npos) && pPtr->Is_Vector()) {
+		//if ((name == "WaterStorage" || name == "SoilHeat" || name.find("Humus") != string::npos || name.find("Litter") != string::npos) ) {
 			iv++;
 			vp_final.push_back(pPtr);
-		}
+		//}
 	}
 
-
+	bool IsVector = false;
 	for (size_t i = 0; i < vp_final.size(); i++) {
-		auto pXT = (X*)vp_final[i];
+		auto pXT = static_cast<X*>(vp_final[i]);
+		auto pX = static_cast<Xs*>(vp_final[i]);
+		IsVector = vp_final[i]->Is_Vector();
+
 		string row = "row_" + FUtil::STD_ItoAscii(i + 1);
-		auto xnode=node.append_child(row.c_str());
+		auto xnode = node.append_child(row.c_str());
 		auto group = pXT->GetGroup();
 		auto name = pXT->GetName();
-		auto nn = pXT->GetNumberOfFlags();
 		xnode.append_attribute("Group") = group.c_str();
 		xnode.append_attribute("Name") = name.c_str();
-		xnode.append_attribute("NumberofValue") = nn;
-		for (size_t ii = 0; ii < nn; ii++) {
-			string subrow = "row_" + FUtil::STD_ItoAscii(ii + 1);
-			auto rownode=xnode.append_child(subrow.c_str());
-			rownode.append_attribute("FinalValue") = pXT->GetFinal(ii);
-			rownode.append_attribute("InitalValue") = pXT->GetInitial(ii);
+		size_t nn;
+		if (IsVector) {
+			nn = pXT->GetNumberOfFlags();
+			xnode.append_attribute("NumberofValue") = nn;
+			for (size_t ii = 0; ii < nn; ii++) {
+				string subrow = "row_" + FUtil::STD_ItoAscii(ii + 1);
+				auto rownode = xnode.append_child(subrow.c_str());
+				rownode.append_attribute("FinalValue") = pXT->GetFinal(ii);
+				rownode.append_attribute("InitialValue") = pXT->GetInitial(ii);
+			}
+		}
+		else {
+			xnode.append_attribute("FinalValue") = pX->GetFinal();
+			xnode.append_attribute("InitialValue") = pX->GetInitial();
 		}
 	}
 
@@ -1576,7 +1609,7 @@ bool NewMap::Read_RunReport_FromXmlFile(pugi::xml_node node)
 {
 	m_Report_Array.clear();
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
-		auto str = level1.append_attribute("str").as_string();
+		auto str = level1.attribute("str").as_string();
 		m_Report_Array.push_back(str);
 	}
 	return true;
@@ -1587,13 +1620,14 @@ bool NewMap::WriteRunReportToXmlFile(pugi::xml_node node)
 
 	string str;
 	for (size_t i = 0; i < m_Report_Array.size(); i++) {
-		string chstring = "Row_";
-		chstring += FUtil::STD_ItoAscii(i + 1);
-		auto row = node.append_child(chstring.c_str());
-		
 		auto checkstring = m_Report_Array[i];
-		FUtil::trim_xmlstring(checkstring);
-		row.append_attribute("str") = checkstring.c_str();
+		if (checkstring.size() > 0) {
+			string chstring = "Row_";
+			chstring += FUtil::STD_ItoAscii(i + 1);
+			auto row = node.append_child(chstring.c_str());
+			FUtil::trim_xmlstring(checkstring);
+			row.append_attribute("str") = checkstring.c_str();
+		}
 	}
 
 	return false;
@@ -1775,6 +1809,7 @@ bool NewMap::WriteDataBaseLinksToXmlFile(pugi::xml_node node)
 {
 	string str;
 	time_t timestamp;
+	if (m_ChildDocument) return false;
 	for (size_t i = 0; i < 10; i++) {
 		str = DB_GetNames(i);
 		FUtil::trim_space(str);

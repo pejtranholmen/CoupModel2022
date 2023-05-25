@@ -357,7 +357,7 @@ bool Simulator::Run(bool MultiFlag)
 				if (!StartedSimPeriod) {
 					//if (!m_StructureModel.Ini()) return false;
 					Stat_Ini();
-
+					Set_StateVariables(true); // Initial Values
 					StartedSimPeriod = true;
  				}
 				Stat_Calc();
@@ -420,6 +420,7 @@ bool Simulator::Run(bool MultiFlag)
 
 		}
 	}
+	Set_StateVariables(false); //final statevariable
 
 	return true;
 }
@@ -1477,4 +1478,35 @@ bool Simulator::WShed_StoreWrite() {
 	bool check=true;
 
 	return check;
+}
+
+void Simulator::Set_StateVariables(bool Initial) {
+	vector<SimB*> vp_final, vp_start, vp_single;
+
+	SimB* pPtr;
+	
+	vp_start = m_pSim->GetPtrVector("State Variables", "");
+	for (size_t i = 0; i < vp_start.size(); i++) {
+		pPtr = vp_start[i];
+		auto name = pPtr->GetName();
+		if ((name == "WaterStorage" || name == "SoilHeat" || name.find("Humus") != string::npos || name.find("Litter") != string::npos || name.find("Litter2") != string::npos) && pPtr->Is_Vector()) {
+			vp_final.push_back(pPtr);
+		}
+		else if (!pPtr->Is_Vector())
+			vp_single.push_back(pPtr);
+			
+	}
+	for (auto pPtr : vp_final) {
+		X* pX = static_cast<X*>(pPtr);
+		for (size_t i = 0; i < pX->GetNumberOfFlags(); i++) {
+			if(Initial) pX->SetInitial(i, pX->GetValue(i));
+			else pX->SetFinal(i, pX->GetValue(i));
+		}
+	}
+	for (auto pPtr : vp_single) {
+		Xs* pXs = static_cast<Xs*>(pPtr);
+		if (Initial)	pXs->SetInitial(pXs->GetValue());
+		else pXs->SetFinal(pXs->GetValue());
+	}
+
 }

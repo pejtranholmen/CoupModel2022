@@ -263,11 +263,25 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 			auto datatype=m_pSimDoc->m_PlotStorage.GetDataType(j);
 			auto ens_type= m_pSimDoc->m_PlotStorage.GetEnsembleType(j);
 			if(ens_type!=ENSEMBLE_TYPE::NO||datatype==DATA_TYPES::SIM_VAL||m_ChartInfo.MultiPGMode||m_ChartInfo.MultiValMode) {
-				if(m_ChartInfo.MultiPGMode&&itype!= DATA_TYPES::SIM_VAL)
-					m_pSimDoc->m_PlotStorage.SetPGRepitNo(j, m_pProp->m_MultiSequence);
-				else if(m_ChartInfo.MultiValMode)
+				//if(m_ChartInfo.MultiPGMode&&itype!= DATA_TYPES::SIM_VAL)
+			//		m_pSimDoc->m_PlotStorage.SetPGRepitNo(j, m_pProp->m_MultiSequence);
+				//else 
+				if (m_ChartInfo.MultiValMode) {
+					size_t MaxNumberOfRepit = 1;
+					if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
+						MaxNumberOfRepit = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+					}
+
 					m_pSimDoc->m_PlotStorage.SetValRunNo(j, m_pProp->m_MultiSequence);
-				valid=false;
+					//m_pSimDoc->m_IsValIndexUpdated
+					if (MaxNumberOfRepit > 1) {
+						auto repitseq = m_pProp->m_MultiSequence % MaxNumberOfRepit+1;
+						m_pSimDoc->m_PlotStorage.SetPGRepitNo(j, repitseq);
+
+					}					
+				}
+				valid = false;
+
 			}
 			else
 				il--;

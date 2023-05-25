@@ -113,6 +113,8 @@ string PGUtil::DateConv(dateformats d, string instr)
 		string outstr;
 		auto p1 = instr.find("\\");
 		auto p2 = instr.rfind("\\");
+		auto p_space = instr.rfind(" ");
+		auto p_col = instr.rfind(":");
 		if (p1 == string::npos) {
 			p1 = instr.find("/");
 			p2 = instr.rfind("/");
@@ -126,12 +128,16 @@ string PGUtil::DateConv(dateformats d, string instr)
 
 		if (p1!=string::npos) {
 			if (d == DMY_SLASH) {
-				outstr = instr.substr(p2 + 1); outstr += "-";
-				if (p2 - p1 == 2) outstr += "0";
-				outstr += instr.substr(p1 + 1, p2 - p1 - 1);
-				outstr += "-";
+				outstr = instr.substr(p2 + 1,4); outstr += "-";
 				if (p1 == 1) outstr += "0";
 				outstr += instr.substr(0, p1);
+				outstr += "-";
+				if (p2 - p1 == 2) outstr += "0";
+				outstr += instr.substr(p1 + 1, p2 - p1 - 1);
+				if (p_col != string::npos && p_space != string::npos) {
+					auto time_str = instr.substr(p_space);
+					outstr += time_str;
+				}
 
 
 			}

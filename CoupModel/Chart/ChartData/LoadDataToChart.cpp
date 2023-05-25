@@ -518,6 +518,11 @@ CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
 									PrevRuns += m_pSimDoc->m_MStorage.GetNumberOfAddedRuns(jb - 1);
 								out.pPG1->SetRepititionSequence(p_info.Residual_RunNo - PrevRuns);
 							}
+							else if (p_info.PGRepitNo > 0) {
+
+								out.pPG1->SetRepititionSequence(p_info.PGRepitNo+1,false);
+
+							}
 							else {
 								out.pPG1->SetRepititionMode(true, m_pSimDoc->MR_Get_NumberofRuns());
 								out.pPG1->SetRepititionSequence(p_info.Residual_RunNo);
@@ -592,7 +597,7 @@ void LoadDataToChart::SetChartInfo(CURVEINFO c_info, PLOTv plotv) {
 		if ((plotv.DataType==DATA_TYPES::SIM_VAL|| plotv.DataType == DATA_TYPES::MEASURED_VAL) &&plotv.RepitDataType) {
 			if (m_pSimDoc->IsMultiSimulation()) {
 				auto k = c_info.pPG1->GetNumRepititions();
-				m_ChartInfo.NumOfPoints = c_info.pPG1->GetNumRecords() * k;
+				m_ChartInfo.NumOfPoints = c_info.pPG1->GetNumRecords(); //disregard Number of repititons 
 			}
 			else {
 				m_pPG_Active = c_info.pPG1;
@@ -796,7 +801,25 @@ void LoadDataToChart::AdjustForResiduals(double &v, CResiduals *pRes, long ResRu
 			else if (LogLiVersion == 3) {
 				if (v > 0.1 * MISSING)
 					v -= pRes->GetResiduals(ResRunNo, IndexVal, index);
+				if (index < 247) {
+					auto koll = ResRunNo;
+					if (ResRunNo == 2) {
+						auto koll2= pRes->GetResiduals(0, IndexVal, index);
+						koll2= pRes->GetResiduals(1, IndexVal, index);
+						koll2 = pRes->GetResiduals(2, IndexVal, index);
+						koll2 = pRes->GetResiduals(3, IndexVal, index);
+						koll2 = pRes->GetResiduals(4, IndexVal, index);
+						koll2 = pRes->GetResiduals(5, IndexVal, index);
+						koll2 = pRes->GetResiduals(6, IndexVal, index);
 
+
+
+
+
+
+					}
+
+				}
 			}
 
 
@@ -1949,8 +1972,8 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	//else
 		startRunNo = c_info.ResRunNo;
 	int VAL_PGindex = PGindex;
-
-	if (NumAgg > 1) {
+	size_t act_rep = 0;
+	if (NumAgg > 1|| m_pPG_Active->GetNumRepititions()>1) {
 		SumVal.assign(ActNoPoints, 0);
 		NumValid.assign(ActNoPoints, 0);
 		for (int ii = 0; ii < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(1); ii++) {
@@ -1959,11 +1982,13 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			if (namep == "Index in val file") {
 				ValIndex_In_MultiParList = ii;
 			}
+			else if (namep.find("Index for selection of File") != string::npos) {
+				act_rep = m_pPG_Active->GetRepititionSequence(); // Function of RunNo
+
+			}
 		}
-
-
-
 	}
+
 
 	//for (size_t index_ValAgg = 0; index_ValAgg < NumAgg; index_ValAgg++) {
 
@@ -1976,22 +2001,32 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		if (m_pPG_Active->GetNumRepititions() <= 1) allrep = false;
 		else if (p_info.RepitDataType&& p_info.DataType == DATA_TYPES::SIM_VAL) allrep = true;
 		else if (p_info.RepitDataType && p_info.DataType == DATA_TYPES::MEASURED_VAL) allrep = true;
-		size_t act_rep = 1;
+		if (act_rep > 0) {
+			allrep = false;
+			m_pPG_Active->SetRepititionSequence(act_rep, false);
+		}
+		
 		size_t act_rec;
-
+		//m_pPG_Active->SetRepititionSequence(act_rep);
 
 
 		for (size_t i = 0; i < ActNoPoints; i++) {
 			if (allrep) {
-				act_rep = i / m_pPG_Active->GetNumRecords() + 1;
+
+				//act_rep = i / m_pPG_Active->GetNumRecords() + 1;
+				//act_rep = 2; // Test to be replace by RunNo control
 				m_pPG_Active->SetRepititionSequence(act_rep);
 				act_rec = i % m_pPG_Active->GetNumRecords();
 
 
 
 			}
-			else
+			else {
+
+
 				act_rec = i;
+
+			}
 
 			if (m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex) < -1.E38) {
 				SetDataValueMissing(icurve, pg_control, i);
@@ -2008,6 +2043,14 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				}
 				else {
 					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, act_rec, PGindex);
+
+					if (act_rec < 246) {
+						auto check = pg_control.StartIndex;
+						auto c1 = AA[icurve][246];
+						auto c2 = AA[icurve][246];
+
+
+					}
 
 					if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
 						if (m_ChartInfo.ResidualSource) {
@@ -2059,21 +2102,6 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 //			}
 		}
-	/*	if (NumAgg > 1) {
-			for (size_t i = 0; i < ActNoPoints; i++) {
-				if (AA[icurve][i + pg_control.YearStartIndex]!=Chart::NoValue&&AA[icurve][i + pg_control.YearStartIndex] > -1.E38&&AA[icurve][i + pg_control.YearStartIndex] < 1.E38) {
-					SumVal[i] += AA[icurve][i + pg_control.YearStartIndex];
-					NumValid[i]++;
-
-				}
-				if (index_ValAgg == NumAgg - 1) {
-					if (NumValid[i] > 0) AA[icurve][i + pg_control.YearStartIndex] = SumVal[i] / NumValid[i];
-				}
-				else
-					AA[icurve][i + pg_control.YearStartIndex] = Chart::NoValue;
-			}
-
-		}*/
 	}
 	c_info.ResRunNo = startRunNo;
 	if (p_info.EnsembleType>ENSEMBLE_TYPE::NO && pResAct != nullptr) {

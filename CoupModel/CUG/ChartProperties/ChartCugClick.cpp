@@ -813,9 +813,6 @@ void ChartCugClick::VariablesTimeSerieMode(size_t col, size_t row) {
 					else if(m_TimeSeriePlot.m_ChartInfo.MultiValMode)
 						m_pProp->m_MultiSequence=m_pSimDoc->m_PlotStorage.GetValRunNo(ArrayIndex)+1;
 					m_TimeSeriePlot.OnUpdateSequence(ArrayIndex);
-				//	m_pProp->m_MultiSequence++;Puh88win
-				//	m_pProp->m_MultiSequence=(m_pProp->m_MultiSequence-1)%m_pSimDoc->MR_Get_TotalNumberofRuns()+1;
-				//	m_pSimDoc->m_PlotStorage.SetValRunNo(ArrayIndex, m_pProp->m_MultiSequence);
 					m_pUtil->m_FileSave.OnReDraw(true);
 
 			}

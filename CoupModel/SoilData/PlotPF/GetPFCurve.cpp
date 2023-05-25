@@ -391,6 +391,9 @@ const size_t GetPFCurve::GetKey(int nump, int numr)
 {
 	return nump*100+numr;
 }
+const string GetPFCurve::GetName() {
+	return m_ActProfile.Name;
+}
 const size_t GetPFCurve::GetNewKey(string str)
 {
 	size_t nump, numr;

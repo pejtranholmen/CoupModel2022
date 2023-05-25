@@ -4987,10 +4987,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 			}
 			else {
 				MFC_Util::MessageBoxReturn("Missing OutPut File - No viewing of Validation data possible", "File Missing", MB_OK);
-
-
 			}
-
 		}
 	}
 

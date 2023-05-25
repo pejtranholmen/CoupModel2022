@@ -41,6 +41,8 @@ class OutSingle :
 
 		float   GetInitial() const {return _out.Initial;};
 		float   GetFinal() const {return _out.Final;};
+		void   SetInitial(double value)  { _out.Initial=value; };
+		void   SetFinal(double value) {  _out.Final=value; };
 		float   GetMin() const{return _out.Min;};
 		float   GetMax() const{return _out.Max;};
 		float   GetMean() const{return _out.Mean;};

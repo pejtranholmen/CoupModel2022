@@ -92,6 +92,18 @@ float OutVector::GetFinal(size_t index) const
 	return float(MISSING);
    
 }
+void OutVector::SetInitial(size_t index, double value) 
+{
+	if (SumList.size() > index)
+		SumList[index].Initial=value;
+
+	
+}
+void OutVector::SetFinal(size_t index, double value) 
+{
+	if (SumList.size() > index)
+		SumList[index].Final = value;
+}
 float OutVector::GetMin(size_t index) const
 {
 	if(SumList.size()>index)

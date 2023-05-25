@@ -2482,7 +2482,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 				QuickSetText(9,-1,"Repit No");
 
 			}
-			size_t isubchart, MultiRunNo;
+			size_t isubchart, MultiRunNo, RepitNumber;
 				
 
 			int mLoop=1;
@@ -2525,7 +2525,23 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 						//else
 						    curve_no=curvecount[isubchart-1];
 
-						if(Ens_type!=ENSEMBLE_TYPE::NO||p_info.RepitDataType) {
+						if (Ens_type != ENSEMBLE_TYPE::NO || p_info.RepitDataType || datatype == DATA_TYPES::MEASURED_VAL) {
+							RepitNumber = m_pSimDoc->m_PlotStorage.GetPGRepitNo(ArrayIndex);
+							GetCell(9, lrow, &cell);
+							cell.SetCellType(UGCT_DROPLIST);
+							CString optionlist;
+							optionlist = "";
+							for (size_t ii = 0; ii < 5; ii++) {
+									optionlist.Append(MFC_Util::ItoAscii(ii + 1));
+									optionlist.AppendChar('\n');
+								
+							}
+							cell.SetLabelText(optionlist);
+							if (p_info.RepitDataType)
+								cell.SetNumber(RepitNumber);
+							SetCell(9, lrow, &cell);
+						}
+						else if (Ens_type != ENSEMBLE_TYPE::NO || p_info.RepitDataType){
 							MultiRunNo=m_pSimDoc->m_PlotStorage.GetValRunNo(ArrayIndex);
 							GetCell(9,lrow,&cell);
 							cell.SetCellType(UGCT_DROPLIST);

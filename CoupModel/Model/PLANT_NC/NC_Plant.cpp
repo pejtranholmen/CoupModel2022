@@ -683,7 +683,7 @@ bool NC_Plant::Ini()	{
 				for (size_t i = 0; i < NumValidHarvest; i++) {
 					IHarvestDates[i] = m_PG_HarvestDate.GetLongTime(i + 1);
 					for (size_t ii = 0; ii < NumParToChange; ii++)
-						ChangeParAtHarvestValues[i][ii] = m_PG_HarvestDate.GetVarValue(ii + 1);
+						ChangeParAtHarvestValues[i][ii] = m_PG_HarvestDate.GetVarValue(ii + 1, i+1);
 				}
 				ICountHarvest = NumValidHarvest + 1;
 
@@ -2043,16 +2043,18 @@ auto ConditionalUpdateOfPlantAge = [&](size_t i) {
 };
 auto EmergenceAndRelatedUpdates = [&](size_t i) {
 
+	bool AddSeed = true;
+	double N_added, P_added;
+
 	if (P_State[_ROOT][_C_][i] + P_State[_OLD_ROOT][_C_][i] > 0.1) {
 		C_Seed_Avail = P_State[_ROOT][_C_][i] + P_State[_OLD_ROOT][_C_][i];
 		P_State[_ROOT][_C_][i] = 0.;
 		P_State[_OLD_ROOT][_C_][i] = 0.;
+		AddSeed = false;
 	}
 	else {
 		C_Seed_Avail = C_Seed[i];
 		C_Seed_Added = C_Seed_Added + C_Seed_Avail;
-		N_Seed_Added = N_Seed_Added + C_Seed_Avail / CN_MinRootsFunc(i);
-		P_Seed_Added = P_Seed_Added + C_Seed_Avail / CP_MinRootsFunc(i);
 		Emergence_Done[i] = true;
 	}
 
@@ -2065,11 +2067,20 @@ auto EmergenceAndRelatedUpdates = [&](size_t i) {
 	P_State[_COARSE_ROOT][_N_][i] = P_State[_COARSE_ROOT][_C_][i] / CN_MinCoarseRootsFunc(i);
 	P_State[_LEAF][_N_][i] = P_State[_LEAF][_C_][i] / CN_MinLeafFunc(i);
 	P_State[_STEM][_N_][i] = P_State[_STEM][_C_][i] / CN_MinStemFunc(i);
+	N_added = P_State[_ROOT][_N_][i] + P_State[_COARSE_ROOT][_N_][i] + P_State[_LEAF][_N_][i] + P_State[_STEM][_N_][i];
 
 	P_State[_ROOT][_P_][i] = P_State[_ROOT][_C_][i] / CP_MinRootsFunc(i);
 	P_State[_COARSE_ROOT][_P_][i] = P_State[_COARSE_ROOT][_C_][i] / CP_MinCoarseRootsFunc(i);
 	P_State[_LEAF][_P_][i] = P_State[_LEAF][_C_][i] / CP_MinLeafFunc(i);
 	P_State[_STEM][_P_][i] = P_State[_STEM][_C_][i] / CP_MinStemFunc(i);
+
+	P_added = P_State[_ROOT][_P_][i] + P_State[_COARSE_ROOT][_P_][i] + P_State[_LEAF][_P_][i] + P_State[_STEM][_P_][i];
+
+	if (AddSeed) {
+		N_Seed_Added = N_Seed_Added + N_added;
+		P_Seed_Added = P_Seed_Added + P_added;
+	}
+
 };
 auto LeafShootingFromMobilePool = [&](size_t i) {
 	P_ReAllocation[MOBILE_LEAF][_C_][i] = max(0., ShootCoef[i] * P_State[_MOBILE][_C_][i]);
@@ -2519,6 +2530,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
    		        HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;
 					if (ChangeParAtHarvestDate.size() > 0) {
 						size_t count_plant = 0;
+						
 						for (SIMB p : ChangeParAtHarvestDate) {
 							if (p.TabIndex == string::npos) static_cast<Ps*>(p.pBase)->SetValue(ChangeParAtHarvestValues[ICountHarvest][count_plant]);
 							else if(i_plant+1==p.TabIndex) static_cast<P*>(p.pBase)->SetValue(i_plant, ChangeParAtHarvestValues[ICountHarvest][count_plant]);

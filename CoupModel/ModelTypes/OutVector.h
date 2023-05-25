@@ -59,6 +59,8 @@ class OutVector :
 
 		float   GetInitial(size_t) const;
 		float   GetFinal(size_t) const;
+		void    SetInitial(size_t, double );
+		void    SetFinal(size_t, double );
 		float   GetMin(size_t) const;
 		float   GetMax(size_t) const;
 		float   GetMean(size_t) const;

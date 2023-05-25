@@ -4579,8 +4579,10 @@ BOOL ValidationCug::DefineNewSubPeriod()
 
 					PGPtr[i]=pPG;
 					pPG->ReOpen();
+
+					auto num_repitions = pPG->GetNumRepititions();
 	
-					long numrec=pPG->GetNumRecords();
+					long numrec=pPG->GetNumRecords()*num_repitions;
 					for (int j=0;j<=SplitPeriods;j++) {
 						int indexrec=i*(SplitPeriods+1)+j;
 						recordsa[indexrec]=numrec/SplitPeriods*j;
@@ -4617,9 +4619,13 @@ BOOL ValidationCug::DefineNewSubPeriod()
 			pValFile=m_pSimDoc->ValidationFilePointer(FileNo);
 			auto ind=m_pSimDoc->m_ValidationData.GetValFileIndex(i);
 			CPG *pPG;
+
+
 			BOOL valid;
 			pPG=(CPG*)pValFile->GetPointer();
 			if(pPG==nullptr) {
+
+
 				pPG=new CPG;
 				//CPG_Array.Add(pCPG);
 				valid=pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
@@ -4627,81 +4633,163 @@ BOOL ValidationCug::DefineNewSubPeriod()
 				pPG->CloseFile();
 			}
 			test=pValFile->GetDataDescription(ind).c_str();
-
-
 			long numrec=pPG->GetNumRecords();
 			long numvar=pPG->GetNumVariables();
 			auto start_min=pPG->GetLongTimeStart();
 			auto end_min=pPG->GetLongTimeEnd();
+			auto num_repitions = pPG->GetNumRepititions();
+			size_t numpar_calib = string::npos;
+			if (num_repitions > 1) { // if repitionsfile check type of simulation
+				if (m_pSimDoc->IsMultiSimulation()) { //if multisimulation check value of parameter Val
+													//"Index for selection of File parameter in multirun options				
+					size_t index_split_par;
+					for (int i = 0; i < m_pSimDoc->MR_GetNumberOfDimensions(); i++) {
+						for (int ii = 0; ii < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
+							auto pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
+							auto nTabIndex = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
+							string namep = pPar->GetName();
+							
+							if (namep.find("Index for selection of File") != string::npos) {
+								index_split_par = numpar_calib;
+							}
+							numpar_calib++;
+						}
+					}
+				}
+			}
+
 			long nrec;
 				accsum=0;
 				nrec=0;
 				index++;	
 				mcorr=0.0;
-/*				RelPscan=float(jj+countvar2)/float(countvar)*100;
-
-				ScanMeanProg.ShowWindow(SW_SHOW);
-				ScanMeanProg.Update();*/
 				std::vector <float> meas_v,res_v, sim_v ;
-				meas_v.resize(numrec);
-				meas_v=pPG->GetVarVector(ind+1);
-				res_v.resize(numrec);
-				for (long irun=0;irun<m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
-
-
-					long irun_int;
-					int ifile;
-					ifile=m_pSimDoc->MR_GetAddedFiles(irun);
-					//int index=(addedfiles+1)*i+ifile;
-					//auto pRes=(CResiduals*)ResidualPtr[index];
-					auto pRes=(CResiduals*)m_pSimDoc->GetResidualPointer(FileNo);
-					if(ifile>0) pRes=(CResiduals*)m_pSimDoc->GetResidualPointer(FileNo, ifile);
-					if(ifile!=0) {
-							irun_int=m_pSimDoc->MR_GetInternalRunNo(irun);
-						}
-					else {
-						irun_int=irun;
-					}
-					res_v=pRes->GetResidualVector(irun_int, ResidualIndex[FileNo-1]);
-					sim_v.resize(numrec);
-					for(long ii=0;ii<numrec;ii++)
-						sim_v[ii]=meas_v[ii]-res_v[ii];
-					
-					//STAT_PERF newperf;
-					STAT_PERF split;
-					double AccSim=0., AccMeas=0.;
-					vector<double> sim, obs;
-					for(int index_split=0; index_split<SplitPeriods;index_split++) {
-						int indexrec=i*(SplitPeriods+1)+index_split;
-						//VALIDATION_mp_POSTPREPARE();
-						sim.clear(); obs.clear();
-						//for(unsigned long j=0;j<numrec;j++)
-						for(size_t j=recordsa[indexrec];j<recordsa[indexrec+1];j++)
-						{
-							auto meas=meas_v[j];
-							if(abs(meas)<.9E38&&abs(res_v[j])<0.9E38) {
-							/*	if(cumulated) {
-									AccSim+=sim_v[j];
-									AccMeas+=meas;
-									sim.push_back(AccSim);
-									obs.push_back(AccMeas);
+				
+			
+				pPG->SetCompleteRead(true);
+		
+				
+				if (numpar_calib != string::npos) {
+					if (SplitPeriods == num_repitions) {
+						meas_v.resize(numrec);
+						res_v.resize(numrec);
+						int NumRuns_Repitions = m_pSimDoc->m_MStorage.GetNumberOfRuns() / num_repitions;
+						for (int irep = 0; irep < num_repitions; irep++) {
+							pPG->SetRepititionSequence(1 + irep,true);
+							meas_v = pPG->GetVarVector(ind + 1);
+						
+							for (size_t irun = irep * NumRuns_Repitions; irun < (irep + 1) * NumRuns_Repitions; irun++) {
+								long irun_int;
+								int ifile = m_pSimDoc->MR_GetAddedFiles(irun);
+								auto pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo);
+								if (ifile > 0) pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo, ifile);
+								if (ifile != 0) {
+									irun_int = m_pSimDoc->MR_GetInternalRunNo(irun);
 								}
-								else {*/
-									sim.push_back(sim_v[j]);
-									obs.push_back(meas);						
-								//}
-							}
+								else {
+									irun_int = irun;
+								}
+								for (int ikoll = 0; ikoll < 9; ikoll++) {
+									res_v = pRes->GetResidualVector(irun_int, 0);
+									sim_v.resize(numrec);
+									size_t count1, count2, count3;
+									count1 = count2 = count3 = 0;
+									for (long ii = 0; ii < numrec; ii++) {
+										sim_v[ii] = meas_v[ii] - res_v[ii];
+										auto meas = meas_v[ii];
+										if (abs(meas) < .9E38) {
+											count1++;
+										}
+										if (abs(sim_v[ii]) < .9E38) {
+											count2++;
+										}
+										if (abs(res_v[ii]) < .9E38) {
+											count3++;
 
+										}
+
+									}
+								}
+
+
+								STAT_PERF split;
+								double AccSim = 0., AccMeas = 0.;
+								vector<double> sim, obs;
+								for (long ii = 0; ii < numrec; ii++) {
+									sim_v[ii] = meas_v[ii] - res_v[ii];
+									auto meas = meas_v[ii];
+									if (abs(meas) < .9E38 && abs(res_v[ii]) < 0.9E38) {
+										sim.push_back(sim_v[ii]);
+										obs.push_back(meas);
+									}
+								}
+								split = StatUtil::Get_StatComp(&sim, &obs);
+								split.logli = m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.SumLikelihood(size_t(i), &sim, &obs);
+								int indexrec = i * (SplitPeriods + 1) + irep;
+								m_pSimDoc->m_MStorage.SetPerformance(irun, indexrec, split);
+							}
 						}
-						split=StatUtil::Get_StatComp(&sim, &obs);
-						split.logli=m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.SumLikelihood(size_t(i), &sim, &obs);
-						m_pSimDoc->m_MStorage.SetPerformance(irun,  indexrec, split);
-						//newperf=StatUtil::Get_StatComp(&sim, &obs);
-						//newperf.logli=m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.SumLikelihood(size_t(i), &sim, &obs);
-						//m_pSimDoc->m_MStorage.SetNewPerformance(irun, i, newperf);
 					}
-				ResidualIndex[FileNo-1]++;
-	}
+					else {
+						string message = "Split periods failure check number of repitions in Input file :";
+						MFC_Util::MessageBox(message);				
+
+					}
+
+
+
+				}
+				else {
+					res_v.resize(numrec);
+					meas_v.resize(numrec);
+					meas_v = pPG->GetVarVector(ind + 1);
+					for (long irun = 0; irun < m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
+
+
+						long irun_int;
+						int ifile = m_pSimDoc->MR_GetAddedFiles(irun);
+						auto pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo);
+						if (ifile > 0) pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo, ifile);
+						if (ifile != 0) {
+							irun_int = m_pSimDoc->MR_GetInternalRunNo(irun);
+						}
+						else {
+							irun_int = irun;
+						}
+						res_v = pRes->GetResidualVector(irun_int, ResidualIndex[FileNo - 1]);
+						sim_v.resize(numrec * num_repitions);
+						for (long ii = 0; ii < numrec * num_repitions; ii++)
+							sim_v[ii] = meas_v[ii] - res_v[ii];
+						STAT_PERF split;
+						double AccSim = 0., AccMeas = 0.;
+						vector<double> sim, obs;
+						for (int index_split = 0; index_split < SplitPeriods; index_split++) {
+							int indexrec = i * (SplitPeriods + 1) + index_split;
+							//VALIDATION_mp_POSTPREPARE();
+							sim.clear(); obs.clear();
+							//for(unsigned long j=0;j<numrec;j++)
+							for (size_t j = recordsa[indexrec]; j < recordsa[indexrec + 1]; j++) {
+								auto meas = meas_v[j];
+								if (abs(meas) < .9E38 && abs(res_v[j]) < 0.9E38) {
+									sim.push_back(sim_v[j]);
+									obs.push_back(meas);
+								}
+							}
+							split = StatUtil::Get_StatComp(&sim, &obs);
+							split.logli = m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.SumLikelihood(size_t(i), &sim, &obs);
+							m_pSimDoc->m_MStorage.SetPerformance(irun, indexrec, split);
+							//newperf=StatUtil::Get_StatComp(&sim, &obs);
+							//newperf.logli=m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.SumLikelihood(size_t(i), &sim, &obs);
+							//m_pSimDoc->m_MStorage.SetNewPerformance(irun, i, newperf);
+						}
+						ResidualIndex[FileNo - 1]++;
+					}
+
+				}
+
+
+
+	
 
 
 	//VALIDATION_mp_DEALLO();
