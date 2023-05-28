@@ -56,6 +56,7 @@ MR::MR()
 	m_DistDefault.NumData=0;
 	m_ActualSimplex = Vector(0.5, 0.5);
 	m_BayesianStepSize = 0.5;
+	m_MultiFileSplitMode=false;
 
 }
 MR::~MR()
@@ -1567,6 +1568,25 @@ void MR::MR_CheckCalibMethod() {
 	SetNum_BayesPar(icount);
 	SetNum_BayesChain(MR_Get_TotalNumberofRuns());
 
+}
+bool MR::MR_CheckIndexForFile_RepMode()
+{
+	bool Exist = false;
+	if (IsMultiSimulation()) { //if multisimulation check value of parameter Val
+		//"Index for selection of File parameter in multirun options				
+		size_t index_split_par;
+		for (int i = 0; i < MR_GetNumberOfDimensions(); i++) {
+			for (int ii = 0; ii < MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
+				auto pPar = MR_Get_pPar(i + 1, ii + 1);
+				auto nTabIndex = MR_GetTabIndex(i + 1, ii + 1);
+				string namep = pPar->GetName();
+				if (namep.find("Index for selection of File") != string::npos) {
+					Exist = true;
+				}
+			}
+		}
+	}
+	return Exist;
 }
 void MR::MR_INIT_Bayesian_Nelder_Mead()
 {  

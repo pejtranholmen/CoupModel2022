@@ -166,7 +166,10 @@ void MultiStorageData::AlloSplitPerformance(unsigned long splitperiods)
 	unsigned long ival=m_NumValid/6;
 	if(ival==0) return;  // No Validation Variables in MultiStorageData File
 	m_SplitRec=(m_NumValid+2*m_NumValid/6+m_NumExtraValid)/ival;
-	m_SplitRecRuns=m_TotalNumberRuns*m_SplitRec*m_NumSplitPeriod;
+	if (m_pNewMap->m_MultiFileSplitMode)
+		m_SplitRecRuns = m_TotalNumberRuns * m_SplitRec;
+	else
+		m_SplitRecRuns = m_TotalNumberRuns * m_SplitRec * m_NumSplitPeriod;
 
 	m_VarSplit.resize((unsigned long)(m_SplitRecRuns));
 	//*unsigned long(splitperiods)*m_TotalNumberRuns;
@@ -1484,8 +1487,20 @@ bool MultiStorageData::OpenAndCheckIfSplitPeriod() {
 
 			unsigned long ival = m_NumValid / 6;
 
+
 			m_SplitRec = (m_NumValid + 2 * m_NumValid / 6 + m_NumExtraValid) / ival;
-			m_SplitRecRuns = m_TotalNumberRuns*m_SplitRec*m_NumSplitPeriod;
+			//m_SplitRecRuns = m_TotalNumberRuns*m_SplitRec*m_NumSplitPeriod;
+
+			if (m_pNewMap->MR_CheckIndexForFile_RepMode()&& m_NumSplitPeriod>0)
+				m_pNewMap->m_MultiFileSplitMode = true;
+
+			if (m_pNewMap->m_MultiFileSplitMode)
+				m_SplitRecRuns = m_TotalNumberRuns * m_SplitRec;
+			else
+				m_SplitRecRuns = m_TotalNumberRuns * m_SplitRec * m_NumSplitPeriod;
+
+
+
 
 			m_VarSplit.resize((unsigned long)(m_SplitRecRuns));
 			if (m_SplitPeriodFile.good())

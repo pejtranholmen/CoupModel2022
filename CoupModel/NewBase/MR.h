@@ -156,6 +156,8 @@ public:
 	void MR_INIT_Bayesian_Nelder_Mead();
 	void MR_CHECK_Bayesian(bool UpdateExt=false);
 	void MR_CheckCalibMethod();
+	bool MR_CheckIndexForFile_RepMode();
+	bool m_MultiFileSplitMode;
 	void MR_RESET_Bayesian();
 	bool MR_UseBayesianCoVar;
 	size_t		MR_Get_NumBayesPar();

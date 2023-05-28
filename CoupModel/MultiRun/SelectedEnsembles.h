@@ -178,7 +178,6 @@ public:
 	vector<float> GetPost_SV_ValidPerformanceIndicatorVector(size_t ivar, enum PERFORMANCE_VAR var=R2_STAT );
 
 
-	bool SaveSplitData(unsigned long ind_val);
 	bool RemoveAddedFiles();
 	bool RemoveAddedFile(size_t index);
 	bool AttachNewFiles();

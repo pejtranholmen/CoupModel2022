@@ -1259,11 +1259,13 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					varstr = GetVarString(npos);
 					line.clear();
 				}
+				if (nvar - 1 == m_FilterTestColumn) CountFilterCases();
+
 			}
 			
 
 			if (SiteId_Index != string::npos && nrec > 1) CountSitesAndSiteRecords();
-			if (nvar - 1 == m_FilterTestColumn) CountFilterCases();
+
 
 			if (nrec % 100 == 0) {
 #ifndef COUPSTD

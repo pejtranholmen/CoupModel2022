@@ -113,7 +113,13 @@ int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 	if(sheetNumber==12&&m_pSimDoc->MR_XBin_IsOpen(ifile)) {
 				
 		if (row < 2) {
-			AddMenuItem(4000, "Estimate performance indicators valid for equal big sub periods");
+			if(m_pSimDoc->MR_CheckIndexForFile_RepMode()) 
+				if(m_pSimDoc->m_MultiFileSplitMode) 
+					AddMenuItem(4000, "Reset split performance indicators from Index of parameter in Dimension 1");
+				else
+					AddMenuItem(4000, "Estimate performance indicators for each Index of parameter in Dimension 1");
+			else
+				AddMenuItem(4000, "Estimate performance indicators valid for equal big sub periods");
 		}
 		else if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size()>1&&row>3) {
 			AddMenuItem(4001, "Remove Ensemble");
