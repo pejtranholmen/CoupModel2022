@@ -3128,11 +3128,12 @@ bool MakeSimSheets::Make_ValidationSheet()
 						ncol_extra=2+ncol;
 						SelectMode=TRUE;
 					}
-				}
+			}
 			//if(m_pSimDoc->
 			//int i, ii;
 			if(ncol>1)
 				ncol_extra+=NUM_PERIND;
+
 			SetNumberRows(NumLines+1+nextra);
 			SetNumberCols(ncol*NUM_PERIND+ncol_extra+NumLinesSV);
 			SetSH_NumberCols(1);
@@ -6135,7 +6136,7 @@ CUGCell cell;
 }
 size_t MakeSimSheets::Val_Prior_Header() {
 
-		SetNumberCols(12); 
+		SetNumberCols(16); 
 		SetColWidth(0,40);
 		SetColWidth(1,40);
 		SetColWidth(2,40);
@@ -6157,6 +6158,11 @@ size_t MakeSimSheets::Val_Prior_Header() {
 		QuickSetText(9,-1, "Abs Error");
 		QuickSetText(10,-1, "Duration (min)");
 		QuickSetText(11,-1, "Log Scaling of Obs");
+		QuickSetText(12, -1, "Filter IndexVarNo");
+		QuickSetText(13, -1, "Filter Value");
+		QuickSetText(14, -1, "Quality IndexVarNo");
+		QuickSetText(15, -1, "Quality Value");
+
 
 		return GetNumberRows();
 }
@@ -6248,7 +6254,29 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 			if(pObserved!=nullptr)
 				cell.SetNumber(pObserved->GetValue(i));
 			SetCell(11,i,&cell);
+
+			GetCell(11, i, &cell);
+			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValDuration(i));
+			SetCell(11, i, &cell);
+
+			GetCell(12, i, &cell);
+			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_FilterIndex(i));
+			SetCell(12, i, &cell);
+
+			GetCell(14, i, &cell);
+			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_QualityIndex(i));
+			SetCell(14, i, &cell);
+
+			GetCell(13, i, &cell);
+			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_FilterValue(i));
+			SetCell(13, i, &cell);
+
+			GetCell(15, i, &cell);
+			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_QualityThreshold(i));
+			SetCell(15, i, &cell);
 	
+
+
 		}
 			
 	if(numtsv>0&&NumLinesSV>0) 

@@ -150,6 +150,8 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 
 
 		}
+		out.PG_FilterVarIndex = out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
+		out.PG_FilterVarValue = out.pSimDoc->m_Val_Array[out.Index].PG_FilterValue;
 	}
 	else if(out.ValFileNo>=0&&m_pSimDoc->m_SelectValTime[i].col==1) {
 		F *pF=out.pSimDoc->ValidationFilePointer(out.ValFileNo);
@@ -172,6 +174,8 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 		out.DataType=DATA_TYPES::MEASURED_VAL;
 		if (out.pPG->GetNumRepititions() > 1) out.RepitDataType = true;
 		out.pPG_MeasValFile = out.pPG;
+		out.PG_FilterVarIndex= out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
+		out.PG_FilterVarValue = out.pSimDoc->m_Val_Array[out.Index].PG_FilterValue;
 	}
 
 	

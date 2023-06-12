@@ -54,6 +54,11 @@ public:
 	int GetValDuration(size_t);
 	bool  GetVal_AccTestValue(size_t);
 
+	int GetValPG_FilterIndex(size_t index);
+	int GetValPG_QualityIndex(size_t index);
+	int GetValPG_FilterValue(size_t index);
+	float GetValPG_QualityThreshold(size_t index);
+
 	float GetValSumVarME(size_t, size_t irep = 0);
 	float GetValSumVarRMSE(size_t, size_t irep = 0);
 

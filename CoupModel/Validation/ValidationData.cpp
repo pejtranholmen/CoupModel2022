@@ -1263,12 +1263,34 @@ bool ValidationData::GetVal_AccTestValue(size_t index)
 }
 double ValidationData::GetValLogLi(size_t index)
 {
-
 	if(index<m_pSimDoc->m_Val_Array.size()) {
 		return m_pSimDoc->m_Val_Array[index].LogLi;
 	}
 	return MISSING;
-
+}
+int ValidationData::GetValPG_FilterIndex(size_t index) {
+	if (index < m_pSimDoc->m_Val_Array.size()) {
+		return m_pSimDoc->m_Val_Array[index].PG_FilterIndex;
+	}
+	return -1;
+}
+int ValidationData::GetValPG_FilterValue(size_t index) {
+	if (index < m_pSimDoc->m_Val_Array.size()) {
+		return m_pSimDoc->m_Val_Array[index].PG_FilterValue;
+	}
+	return 0;
+}
+int ValidationData::GetValPG_QualityIndex(size_t index) {
+	if (index < m_pSimDoc->m_Val_Array.size()) {
+		return m_pSimDoc->m_Val_Array[index].PG_QualityIndex;
+	}
+	return -1;
+}
+float ValidationData::GetValPG_QualityThreshold(size_t index) {
+	if (index < m_pSimDoc->m_Val_Array.size()) {
+		return m_pSimDoc->m_Val_Array[index].Quality_Threshold;
+	}
+	return -1;
 }
 void ValidationData::ClearSumVarList(){
 

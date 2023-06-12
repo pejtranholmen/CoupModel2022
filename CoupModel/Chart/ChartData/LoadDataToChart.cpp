@@ -1506,7 +1506,8 @@ void LoadDataToChart::CurveData_SingleTime(size_t icurve, size_t i_band, CURVEIN
 	PG_TIMECONTROL pg_control;
 
 	pg_control.YearStartIndex;
-	pg_control.StartIndex;
+	pg_control.StartIndex=1;
+
 
 
 	if (m_pProp->m_ReShape.m_CommonDayNo || m_pProp->m_ReShape.m_CommonWithDay) {
@@ -1998,7 +1999,8 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 		//}
 		bool allrep = false;
-		if (m_pPG_Active->GetNumRepititions() <= 1) allrep = false;
+		size_t NumRepit = m_pPG_Active->GetNumRepititions();
+		if (NumRepit <= 1) allrep = false;
 		else if (p_info.RepitDataType&& p_info.DataType == DATA_TYPES::SIM_VAL) allrep = true;
 		else if (p_info.RepitDataType && p_info.DataType == DATA_TYPES::MEASURED_VAL) allrep = true;
 		if (act_rep > 0) {
@@ -2008,9 +2010,20 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		
 		size_t act_rec;
 		//m_pPG_Active->SetRepititionSequence(act_rep);
+		size_t last_rep = 0;
+		size_t count = 0;
+		koll = 0;
 
+		if (p_info.DataType == DATA_TYPES::SIM_VAL) {
+
+			p_info.pPG_MeasValFile->ReOpen();
+
+		}
+		//p_info.PG_FilterVarIndex = 1;
+		//p_info.PG_FilterVarValue = 3;
 
 		for (size_t i = 0; i < ActNoPoints; i++) {
+			act_rec = i;
 			if (allrep) {
 
 				//act_rep = i / m_pPG_Active->GetNumRecords() + 1;
@@ -2018,15 +2031,27 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				m_pPG_Active->SetRepititionSequence(act_rep);
 				act_rec = i % m_pPG_Active->GetNumRecords();
 
-
-
 			}
-			else {
-
-
-				act_rec = i;
-
+			else if (m_pProp->m_ConstrainProp.size() > 0&& m_ChartInfo.ResidualSource && NumRepit > 1) {
+				for (size_t rep = m_pProp->m_ConstrainProp[0].MinRangeValue; rep <= m_pProp->m_ConstrainProp[0].MaxRangeValue; rep++) {
+					m_pPG_Active->SetRepititionSequence(rep);
+					if (m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex) > -1.E38) break;
+				}
 			}
+			else if(m_ChartInfo.ResidualSource&& NumRepit > 1){
+
+				count = 0;
+				while(m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex) < -1.E38&&count<5) {
+					last_rep++;					
+					last_rep = last_rep % NumRepit;
+					m_pPG_Active->SetRepititionSequence(last_rep+1);
+					count++;
+				}
+			}
+
+
+			
+
 
 			if (m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex) < -1.E38) {
 				SetDataValueMissing(icurve, pg_control, i);
@@ -2043,16 +2068,11 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				}
 				else {
 					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, act_rec, PGindex);
-
-					if (act_rec < 246) {
-						auto check = pg_control.StartIndex;
-						auto c1 = AA[icurve][246];
-						auto c2 = AA[icurve][246];
-
-
+					if (p_info.PG_FilterVarIndex > 0 && !p_info.pPG_MeasValFile->FilterTest(p_info.PG_FilterVarIndex, act_rec + pg_control.StartIndex, p_info.PG_FilterVarValue)) {
+						SetDataValueMissing(icurve, pg_control, i);
+						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) SetDataBandValueMissing(i_band, pg_control, i);
 					}
-
-					if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+					else if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
 						if (m_ChartInfo.ResidualSource) {
 							BB_MIN[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 							BB_MAX[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
@@ -2093,6 +2113,10 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 						if (m_pUtil->m_ResidualPlot == 1) {
 							auto Meas = p_info.pPG_MeasValFile->GetVarValue(p_info.Residual_VarNum, i + pg_control.StartIndex + pg_control.YearStartIndex);
 							AA[icurve][i + pg_control.YearStartIndex] -= Meas;
+						}
+						else {
+							koll += i;
+
 						}
 					}
 

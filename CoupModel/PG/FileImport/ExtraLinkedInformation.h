@@ -24,6 +24,7 @@ public:
 	vector<size_t> AddInfoLinkIndex;
 	bool m_ExtraFileScanning;
 	bool m_CollectedFile;
+	bool m_ExpandedCurrentFile;
 	InPGFiles m_CurrentFile;
 	size_t m_countf;
 	string m_ExtraInfoFileName;	

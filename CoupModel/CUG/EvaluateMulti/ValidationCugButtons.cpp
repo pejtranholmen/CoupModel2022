@@ -118,6 +118,13 @@ int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 					AddMenuItem(4000, "Reset split performance indicators from Index of parameter in Dimension 1");
 				else
 					AddMenuItem(4000, "Estimate performance indicators for each Index of parameter in Dimension 1");
+			else if (m_pSimDoc->MR_CheckIndexForFilterMode()) {
+				if (m_SplitPeriods > 0)
+					AddMenuItem(4000, "Reset split performance indicators");
+				else
+					AddMenuItem(4000, "Estimate performance indicators based on Filter Variables");
+
+			}
 			else
 				AddMenuItem(4000, "Estimate performance indicators valid for equal big sub periods");
 		}

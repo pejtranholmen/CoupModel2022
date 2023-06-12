@@ -667,13 +667,12 @@ float SelectedEnsembles::GetMinValidAll(unsigned long ip, unsigned long ind_spli
 		}
 		else {
 			size_t numruns = m_TotalNumberRuns;
-			if (m_NumSplitPeriod != 0) numruns /= m_NumSplitPeriod;
-			for (unsigned long i = 0; i < numruns; i++) {
-				if (GetSplitValid(i, ip, ind_split - 1) < v)
-				    v = GetSplitValid(i, ip, ind_split - 1);
-
+			for (unsigned long irun = 0; irun < numruns; irun++) {
+				if (irun % m_NumSplitPeriod == ind_split - 1) {
+					if (GetSplitValid(irun / m_NumSplitPeriod, ip, ind_split - 1) < v)
+						v = GetSplitValid(irun / m_NumSplitPeriod, ip, ind_split - 1);
+				}
 			}
-		//	m_VarValidMinAll[ip + ind_split*(m_NumValid + m_NumExtraValid)] = v;
 			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][ip + ind_split*(m_NumValid + m_NumExtraValid)]  = v;
 			return v;
 
@@ -772,35 +771,27 @@ float SelectedEnsembles::GetMaxValidAll(unsigned long ip, unsigned long ind_spli
 					rmse_o=m_pNewMap->m_ValidationData.GetValRMSE_O(ind)/m_pNewMap->m_ValidationData.GetValn(ind);
 				}
 				size_t numruns = m_TotalNumberRuns;
-				if (m_NumSplitPeriod != 0) numruns /= m_NumSplitPeriod;
 				for(unsigned long i=0;i<numruns;i++) {
 					if(ip<m_NumValid) { 
-						if(GetValid(i,ip)>v/*&&GetValid(i, ind_a1)!=0*/)
-							v=GetValid(i,ip);
+						if(GetValid(i,ip)>v) v=GetValid(i,ip);
 					}
 					else {
 						vtest=1-GetValid(i, ind_rmse)*GetValid(i, ind_rmse)/rmse_o;
-						if(vtest>v/*&&GetValid(i, ind_a1)!=0*/)
-							v=vtest;
-
+						if(vtest>v)	v=vtest;
 					}
 				}
-					//m_VarValidMaxAll[ip]=v;
-					m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip] = v;
-					return v;
+				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip] = v;
+				return v;
 			}
 			else {
 				size_t numruns = m_TotalNumberRuns;
-				if (m_NumSplitPeriod != 0) numruns /= m_NumSplitPeriod;
-
-				for(unsigned long i=0;i<numruns;i++) {
-					if(GetSplitValid(i,ip, ind_split-1)>v)
-						v=GetSplitValid(i,ip, ind_split-1);						
+				for(unsigned long irun =0;irun<numruns;irun++) {
+					if (irun % m_NumSplitPeriod == ind_split - 1) {
+						if (GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1) > v)
+							v = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
+					}
 				}
 
-
-
-			//	m_VarValidMaxAll[ip+ind_split*(m_NumValid+m_NumExtraValid)]=v;
 				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip + ind_split*(m_NumValid + m_NumExtraValid)] = v;
 				return v;
 			}
@@ -827,7 +818,6 @@ float SelectedEnsembles::GetMeanValidAll(unsigned long ip, unsigned long ind_spl
 				rmse_o=m_pNewMap->m_ValidationData.GetValRMSE_O(ind)/m_pNewMap->m_ValidationData.GetValn(ind);
 			}
 			size_t numruns = m_TotalNumberRuns;
-			if (m_NumSplitPeriod != 0) numruns /= m_NumSplitPeriod;
 			for(unsigned long i=0;i<numruns;i++) {
 				//if(GetValid(i, ind_a1)!=0) {
 					count++;
@@ -838,20 +828,26 @@ float SelectedEnsembles::GetMeanValidAll(unsigned long ip, unsigned long ind_spl
 				//}
 			}
 			//m_VarValidMeanAll[ip+ind_split*(m_NumValid+m_NumExtraValid)]=float(sum/count);
-			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip + ind_split*(m_NumValid + m_NumExtraValid)]= float(sum / count);
-			return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip + ind_split*(m_NumValid + m_NumExtraValid)] = float(sum / count);
+			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip ]= float(sum / count);
+			return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip ];
 		}
 		else {
 			double sum=0.;
 			unsigned long count=0;
 			float value;
 			size_t numruns = m_TotalNumberRuns;
-			if (m_NumSplitPeriod != 0) numruns /= m_NumSplitPeriod;
+
+
 			for (unsigned long i = 0; i < numruns; i++) {
-				value=GetSplitValid(i,ip,  ind_split-1);
-				if(abs(value)<0.9E38) {
-					sum+=value;
-					count++;
+				unsigned long irun = i;
+				if (m_NumSplitPeriod > 0) {
+					if (irun % m_NumSplitPeriod == ind_split - 1) {
+						value = GetSplitValid(irun / m_NumSplitPeriod, ip, ind_split - 1);
+						if (abs(value) < 0.9E38) {
+							sum += value;
+							count++;
+						}
+					}
 				}
 			}
 			if(count>0) 
@@ -911,7 +907,7 @@ float SelectedEnsembles::GetMeanValid(unsigned long ip, unsigned long ind_split)
 
 			for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
 				unsigned long irun=Get_AcceptedRuns(i);
-				if (m_NumSplitPeriod > 0 && m_pNewMap->m_MultiFileSplitMode) {
+				if (m_NumSplitPeriod > 0) {
 					if (irun % m_NumSplitPeriod == ind_split - 1) {
 						value = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
 						if (abs(value) < 0.9E38) {
@@ -1162,16 +1158,9 @@ float SelectedEnsembles::GetMaxValid(unsigned long ip, unsigned long ind_split)
 							v = fval;
 					}
 				}
-				//m_VarValidMax[ip+ind_split*(m_NumValid+m_NumExtraValid)]=v;
 				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][ip]=v;
 				return v;
 			}
-		//}
-		//else
-		//	return m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][ip];
-		//	m_VarValidMax[ip+ind_split*(m_NumValid+m_NumExtraValid)];
-
-
 }
 size_t SelectedEnsembles::FindAcceptedRunsFromFlagInPar() {
 
@@ -1799,38 +1788,58 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 
 		}
 		else {
+			unsigned long ind, ind_rmse, ind_a1;
+			float rmse_o, vtest;
+
+
+			if (ip >= m_NumValid) {
+				ind = ip - m_NumValid;
+				ind_rmse = 4 * m_NumValid / 6 + ind;
+				rmse_o = m_pNewMap->m_ValidationData.GetValRMSE_O(ind) / m_pNewMap->m_ValidationData.GetValn(ind);
+			}
+			ind_a1 = 2 * m_NumValid / 6 + ip % (m_NumValid / 6);
+
+
+
 			for (unsigned long i = 0; i < num_runs; i++) {
 				irun = i;
 				if (posterior) irun = Get_AcceptedRuns(i);
-				if (m_pNewMap->m_MultiFileSplitMode && m_NumSplitPeriod > 0)
-					irun = i / m_NumSplitPeriod;
-
-				if (index_trans != string::npos) {
-					size_t indextsv = ip + irun*m_NumValid;
-					candidate = m_VarValidTransformed[index_trans].VarValidVector[indextsv];
+				bool valid = true;
+				if (m_NumSplitPeriod > 0) {		
+					if (irun % m_NumSplitPeriod != ind_split - 1) valid = false;
 				}
-				else
-					candidate = GetSplitValid(irun, ip, ind_split - 1);
-				values.push_back(candidate);
+				if (ip < m_NumValid) {
+					if (valid) {
+						if (index_trans != string::npos) {
+							size_t indextsv = ip + irun * m_NumValid;
+							candidate = m_VarValidTransformed[index_trans].VarValidVector[indextsv];
+						}
+						else
+							candidate = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
+						values.push_back(candidate);
+					}
+				}
 			}
 			
 		}
 		if (values.size() > 0) {
 			SStat(&values[0], values.size(), &icount, &stat);
-
-			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN + shift_pos][ip] = stat.Min;
-			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX + shift_pos][ip] = stat.Max;
-			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN + shift_pos][ip] = stat.Mean;
+	
+			auto index2 =ip +ind_split * (m_NumValid + m_NumExtraValid);
+			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN + shift_pos][index2] = stat.Min;
+			
+			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX + shift_pos][index2] = stat.Max;
+			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN+shift_pos][index2] = stat.Mean;
 			if (stat.Mean != 0)
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV + shift_pos][ip] = stat.Std / stat.Mean;
+				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV + shift_pos][index2] = stat.Std / stat.Mean;
 		}
 	};
 
 
 
 	for (unsigned long isplit = 0; isplit <= m_NumSplitPeriod; isplit++) {
-		if (!AcceptedOnly) for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; MakeStat(iv, isplit, false), iv++);
-		for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; MakeStat(iv, isplit, true), iv++);
+		if (!AcceptedOnly) for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; iv++) MakeStat(iv, isplit, true);
+		for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; iv++) MakeStat(iv, isplit, true);
 	}
 
 }

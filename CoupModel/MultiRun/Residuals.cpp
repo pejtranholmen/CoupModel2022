@@ -881,6 +881,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 		m_Ensembles.resize(m_pNewMap->m_MStorage.m_AcceptedRuns.size());
 	}
 
+
 	for (size_t iens = 0; iens < m_pNewMap->m_MStorage.m_AcceptedRuns.size(); iens++) {
 		m_IsUpdated = true;
 		for (size_t i = 0; i < m_Ensembles.size(); i++) {
@@ -889,15 +890,21 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 			}
 		}
 
-
+		vector<int> NumberValidPoints, NumberValidRecords;
 		if (!m_IsUpdated) {
 			m_NumAccepted = m_pNewMap->m_MStorage.m_AcceptedRuns[iens].size();
 			size_t bayesmeannumber;
 			bayesmeannumber = m_TotNoRuns - BURN_PERIOD;
 			int RelPscan = 0;
 			vector <float> Allv;
+		
+
+			NumberValidPoints.resize(m_NumVar * m_ScalingNumVarWithDim1);
+			NumberValidRecords.resize(m_NumVar * m_ScalingNumVarWithDim1);
 
 			for (size_t ii = 0; ii < m_NumVar*m_ScalingNumVarWithDim1; ii++) {
+				NumberValidPoints[ii] = 0;
+				NumberValidRecords[ii] = 0;
 				if (!m_IsUpdated) {
 					size_t ifile;
 					CResiduals *pRes;
@@ -925,15 +932,8 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 							run_to_read = irun_int;
 							if (m_ScalingNumVarWithDim1 > 1) run_to_read = (irun_int / m_ScalingNumVarWithDim1)*m_ScalingNumVarWithDim1 + ii % m_ScalingNumVarWithDim1;
 
-							if (pRes == nullptr) {
-								return false;
-							}
-							else if (run_to_read == 216&& ifile == 6 ) {
-								int i1 = 4;
-
-							}
 							AcceptedResiduals[i] = pRes->GetResidualVector(run_to_read, var_to_read);
-							//value = pRes->GetResiduals(irun_int, ii, index);
+
 						}
 					}
 
@@ -956,8 +956,6 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 						}
 						if (m_MeanPost.mean.size() <= ii) {
 							AlloResVector();
-
-
 						}
 						if (FArray.size() >= 3) {
 							//BAYESIANCALIB_mp_DIST();
@@ -972,9 +970,10 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 							m_MeanPost.p10[ii][index] = Stat.P5;
 							m_MeanPost.p50[ii][index] = Stat.P50;
 							m_MeanPost.p90[ii][index] = Stat.P95;
+							NumberValidPoints[ii] += ncheck;
+							NumberValidRecords[ii]++;
 						}
 						else {
-
 							m_MeanPost.mean[ii][index] = float(MISSING);
 							m_MeanPost.min[ii][index] = float(MISSING);
 							m_MeanPost.max[ii][index] = float(MISSING);
@@ -982,11 +981,6 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 							m_MeanPost.p10[ii][index] = float(MISSING);
 							m_MeanPost.p50[ii][index] = float(MISSING);
 							m_MeanPost.p90[ii][index] = float(MISSING);
-						}
-						if (ii == 1) {
-
-							int koll = 3;
-
 						}
 					}
 

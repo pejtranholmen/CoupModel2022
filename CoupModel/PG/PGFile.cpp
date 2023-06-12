@@ -1107,6 +1107,13 @@ bool CPGFile::ReCalculateMinMax(size_t repit)
 	}
 	return m_MainPGStreamReadWrite.good();
 }
+bool CPGFile::FilterTest(size_t varno, size_t var_rec, int requiredvalue) {
+
+	if (int(0.01 + GetVarValue(varno, var_rec)) == requiredvalue) return true;
+	else return false;
+
+
+}
 float CPGFile::GetVarValue(size_t varno, size_t var_rec)
 {
 	//return *m_var[varno-1][var_rec-1];

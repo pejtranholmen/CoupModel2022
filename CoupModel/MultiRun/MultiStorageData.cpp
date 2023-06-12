@@ -702,8 +702,6 @@ float MultiStorageData::GetSplitValid(unsigned long irun, unsigned long ip, unsi
 	if(pos!=m_SplitPos) {
 		if(!m_SplitPeriodFile.good()) {
 			ReOpenSplitFile();
-
-
 		}
 		m_SplitPeriodFile.seekg(pos, ios::beg);
 		m_SplitPos=m_SplitPeriodFile.tellg();

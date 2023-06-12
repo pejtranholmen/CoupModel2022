@@ -52,6 +52,10 @@ public:
 	float	A_NewError;
 	float	NewBoxCox_Power;
 	float	NewBoxCox_Offset;
+	int PG_FilterIndex=0;
+	int PG_FilterValue=0;
+	int PG_QualityIndex=0;
+	float Quality_Threshold=0;
 };
 
 class VALSUMv

@@ -76,6 +76,12 @@ struct MULTI_VALID
 	bool MultiValMode;
 };
 
+struct PG_FILTER
+{
+	int FilterVar;
+	int ValidValue;
+};
+
 class ChartProp_AxisRepresentation
 {
 public:
@@ -85,7 +91,9 @@ public:
 	bool IsIndepSet() {if(m_Indep.First!=MULTIRUN_NUM) return true; else return false;};
 	bool IsMultiPGFilePlot() { if(m_Indep.First==PGVAR&&m_Indep.Second==PGVAR) return true; else return false;};
 
-void SetMultiPGFilePlot() { 
+
+
+	void SetMultiPGFilePlot() { 
 		m_Indep.First=PGVAR;m_Indep.Second=PGVAR;};
 	size_t GetFirstIndepIndex(size_t index=0);
 	size_t GetSecondIndepIndex();

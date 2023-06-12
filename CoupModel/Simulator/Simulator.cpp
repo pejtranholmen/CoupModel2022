@@ -1261,7 +1261,7 @@ bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
 }
 bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 	// Estimate the performance and set the values into the Validation Data Structure.
-	vector <float> Sim, Obs, Residual;
+	vector <float> Sim, Obs, Residual, Filter_Values, Quality_Values;
 	vector <double> sim, obs;
 	STAT_PERF a;
 
@@ -1283,6 +1283,7 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 			if(m_ValPGFile[i].file==nullptr) continue;
 			CPG *pPG_Sim=m_ValPGFile[i].simvalfile;
 			CPG *pPG_Obs=m_ValPGFile[i].file;
+			
 			//if(!pPG_Sim->IsOpen()) pPG_Sim->ReOpen();
 			if(!pPG_Obs->IsOpen())	pPG_Obs->ReOpen();
 
@@ -1308,19 +1309,29 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				Residual.resize(Obs.size());
 
 				sim.clear(); obs.clear();
+
+				auto FilterPGIndex = m_pSim->m_Val_Array[LL].PG_FilterIndex;
+				auto FilterTestValue = m_pSim->m_Val_Array[LL].PG_FilterValue;
+				if (FilterPGIndex > 0) 	Filter_Values = pPG_Obs->GetVarVector(size_t(FilterPGIndex));
+
+				auto QualityPGIndex = m_pSim->m_Val_Array[LL].PG_QualityIndex;
+				auto QualityTestValue = m_pSim->m_Val_Array[LL].Quality_Threshold;
+				if (QualityPGIndex > 0) 	Quality_Values = pPG_Obs->GetVarVector(size_t(QualityPGIndex));
+
+
 				for(size_t ii=0; ii<Sim.size(); ii++) {
-					if(Sim[ii]>-1.E37f&&Obs[ii]>-1.E37f) {
-						sim.push_back(double(Sim[ii]));
-						obs.push_back(double(Obs[ii]));
-						Residual[ii]=Obs[ii]-Sim[ii];
-					}
-					else {
-						Residual[ii]=MISSING;
+					Residual[ii] = MISSING;
+					if (Sim[ii] > -1.E37f && Obs[ii] > -1.E37f) {
+						if ((FilterPGIndex == 0 || Filter_Values[ii] == FilterTestValue)
+							&&(QualityPGIndex ==0 || Quality_Values[ii] > QualityTestValue)) {
+							sim.push_back(double(Sim[ii]));
+							obs.push_back(double(Obs[ii]));
+							Residual[ii] = Obs[ii] - Sim[ii];
+						}
 					}
 				}
 				if(m_ValPGFile[i].pRes!=nullptr) {
 					if (m_ValPGFile[i].pRes->AddResiduals(&Residual[0]));
-							
 				}
 				m_pSim->m_Val_Array[LL].LogLi=m_StructureModel.m_Structure.SumLikelihood(LL, &sim, &obs);
 

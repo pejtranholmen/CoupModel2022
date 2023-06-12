@@ -1150,8 +1150,8 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival)
 			CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(ival);
 			if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
 				//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
-				auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
-				pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
+				//auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+			//	pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
 			}
 
 

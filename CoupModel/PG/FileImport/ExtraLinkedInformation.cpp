@@ -236,43 +236,44 @@ bool ExtraLinkedInformation::SetFileDescriptionFromScannedFile()
 	//	pg.Des = m_CurrentFileInfo.Des;/
 	string extrastepId;
 	size_t count = 0;
-	for(size_t ir=0; ir<m_CurrentFileInfo.LinkedSites.back().TimeCheck.RecordStep; ir++)
-	for_each(m_NewVarIndexSelected.begin(), m_NewVarIndexSelected.end(), [&](int &index) {
-		if (m_CurrentFileInfo.LinkedSites.back().TimeCheck.RecordStep > 1) {
-			extrastepId = " (" + FUtil::STD_ItoAscii(ir + 1) + ")";
 
-		}
-		else
-			extrastepId = "";
-		size_t index_out;
-		if(pg.Shape.NumRepetitions>m_countf&&pg.Des.base.Name.size()>=m_countf*m_NewVarIndexSelected.size())
-			index_out= count + m_countf*m_NewVarIndexSelected.size();
-		else
-			index_out = count;
-		if (pg.Des.base.Name.size() > index_out&&m_CurrentFileInfo.Des.base.Name.size()>index) {
-			pg.Des.base.Name[index_out] = m_CurrentFileInfo.Des.base.Name[index];
-			pg.Des.base.Unit[index_out] = m_CurrentFileInfo.Des.base.Unit[index];
-			pg.Des.base.Id[index_out] = m_CurrentFileInfo.Des.base.Id[index]+ extrastepId;
-			pg.Des.base.Pos[index_out] = m_CurrentFileInfo.Des.base.Pos[index];
-			pg.Des.addinfo[index_out].StationName = m_CurrentFileInfo.Des.addinfo[index].StationName;
-			pg.Des.addinfo[index_out].CountryCode = m_CurrentFileInfo.Des.addinfo[index].CountryCode;
-			pg.Des.addinfo[index_out].Lat = m_CurrentFileInfo.Des.addinfo[index].Lat;
-			pg.Des.addinfo[index_out].Long = m_CurrentFileInfo.Des.addinfo[index].Long;
-			pg.Des.addinfo[index_out].Alt = m_CurrentFileInfo.Des.addinfo[index].Alt;
-			if (m_format == SMHI_OPENDATA) {
-				pg.Des.addinfo[index_out].Lat = m_CurrentFileInfo.dec_cord.y;
-				pg.Des.addinfo[index_out].Long = m_CurrentFileInfo.dec_cord.x;
-				pg.Des.addinfo[index_out].Alt = m_CurrentFileInfo.dec_cord.z;
-				pg.Des.addinfo[index_out].StationName = m_CurrentFileInfo.StatName;
-				pg.Des.base.Id[index_out] = m_CurrentFileInfo.StatNo;
+	for (size_t ir = 0; ir < m_CurrentFileInfo.LinkedSites.back().TimeCheck.RecordStep; ir++) {
+		for_each(m_NewVarIndexSelected.begin(), m_NewVarIndexSelected.end(), [&](int& index) {
+			if (m_CurrentFileInfo.LinkedSites.back().TimeCheck.RecordStep > 1) {
+				extrastepId = " (" + FUtil::STD_ItoAscii(ir + 1) + ")";
+
 			}
-			count++;
-		}
-	});
+			else
+				extrastepId = "C_"+FUtil::STD_ItoAscii(m_countf+1);
+			size_t index_out;
+			if (pg.Shape.NumRepetitions > m_countf && pg.Des.base.Name.size() >= m_countf * m_NewVarIndexSelected.size())
+				index_out = count + m_countf * m_NewVarIndexSelected.size();
+			else
+				index_out = count;
+			if (pg.Des.base.Name.size() > index_out && m_CurrentFileInfo.Des.base.Name.size() > index) {
+				pg.Des.base.Name[index_out] = m_CurrentFileInfo.Des.base.Name[index];
+				pg.Des.base.Unit[index_out] = m_CurrentFileInfo.Des.base.Unit[index];
+				pg.Des.base.Id[index_out] = m_CurrentFileInfo.Des.base.Id[index] + extrastepId;
+				pg.Des.base.Pos[index_out] = m_CurrentFileInfo.Des.base.Pos[index];
+				pg.Des.addinfo[index_out].StationName = m_CurrentFileInfo.Des.addinfo[index].StationName;
+				pg.Des.addinfo[index_out].CountryCode = m_CurrentFileInfo.Des.addinfo[index].CountryCode;
+				pg.Des.addinfo[index_out].Lat = m_CurrentFileInfo.Des.addinfo[index].Lat;
+				pg.Des.addinfo[index_out].Long = m_CurrentFileInfo.Des.addinfo[index].Long;
+				pg.Des.addinfo[index_out].Alt = m_CurrentFileInfo.Des.addinfo[index].Alt;
+				if (m_format == SMHI_OPENDATA) {
+					pg.Des.addinfo[index_out].Lat = m_CurrentFileInfo.dec_cord.y;
+					pg.Des.addinfo[index_out].Long = m_CurrentFileInfo.dec_cord.x;
+					pg.Des.addinfo[index_out].Alt = m_CurrentFileInfo.dec_cord.z;
+					pg.Des.addinfo[index_out].StationName = m_CurrentFileInfo.StatName;
+					pg.Des.base.Id[index_out] = m_CurrentFileInfo.StatNo;
+				}
+				count++;
+			}
+			});
 
 
 
-
+	}
 
 
 	return false;
@@ -342,6 +343,7 @@ bool ExtraLinkedInformation::SetFileDescriptionFromLinkedFileDataBase()
 					m_countf=0;
 				}
 				else if (m_CurrentFileInfo.LinkedSites.size()>0) {
+					if(m_CurrentFileInfo.LinkedSites.size()> m_countf)
 						SetAddInfoFromDefinedMap(m_CurrentFileInfo.LinkedSites[m_countf].Ids);
 
 				}

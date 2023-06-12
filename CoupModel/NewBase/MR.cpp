@@ -1569,6 +1569,14 @@ void MR::MR_CheckCalibMethod() {
 	SetNum_BayesChain(MR_Get_TotalNumberofRuns());
 
 }
+bool MR::MR_CheckIndexForFilterMode()
+{
+	for (auto valv : m_pSimDoc->m_Val_Array) {
+		auto test_index = valv.Name.find("Filter_Id");
+		if (test_index != string::npos) return true;
+	}
+	return false;
+}
 bool MR::MR_CheckIndexForFile_RepMode()
 {
 	bool Exist = false;
@@ -2331,6 +2339,7 @@ bool MR::MR_Storage_Open()
 	if(!m_MStorage.IsOpen()&&m_MultiStorageBinFileExist){
 		if(!m_MStorage.OpenFile(m_DocFile2.m_Multi_MBin_File.c_str())){
 			SetMultiStorageBinFileMissing();
+			SetNewSimulation();
 			return false;
 		}
 		m_DocFile2.m_Multi_MBin_File=m_MStorage.GetNameBaseFile();

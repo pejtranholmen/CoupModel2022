@@ -10,7 +10,7 @@
 Technical_Functions::Technical_Functions(void)
 {
 
-
+	Filter_Id1 = Filter_Id2 = Filter_Id3 = 0.;
 
 }
 Technical_Functions::~Technical_Functions(void)
@@ -203,6 +203,16 @@ bool Technical_Functions::Def()
 		
 	pTab = new Tab(&IndexMultiParGroups, FILEDEFINEDPARAMETERS, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pTab, "Index in User Defined Parameter Files", "Key Index","");
+
+
+	Gs* pGs;
+
+	pGs = new Gs(&Filter_Id1, TOTPROFILE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	Define(pGs, "Filter_Id1", 0.0, UNIT_TYPES::NO_UNIT, "ValidationMode> 0");
+	pGs = new Gs(&Filter_Id2, TOTPROFILE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	Define(pGs, "Filter_Id2", 0.0, UNIT_TYPES::NO_UNIT, "ValidationMode> 0");
+	pGs = new Gs(&Filter_Id3, TOTPROFILE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	Define(pGs, "Filter_Id3", 0.0, UNIT_TYPES::NO_UNIT, "ValidationMode> 0");
 
 
 	F* pF;

@@ -61,6 +61,8 @@ struct PLOTv
     size_t PGRepitNo=0;	
 	size_t EnsembleNo=0;// 3 forced  Measured Only
 	INDEP_AXIS IndepAxis;
+	int PG_FilterVarIndex=0;
+	int PG_FilterVarValue=0;
 	vector<CONSTRAIN_BY> m_ConstrainBy;
 };
 

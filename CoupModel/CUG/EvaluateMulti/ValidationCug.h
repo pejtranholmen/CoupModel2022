@@ -89,6 +89,7 @@ BOOL	TimeSeriePlotClick(int isheet, int col,  int row, long mrunno, BOOL Add=TRU
 BOOL	DefineNewSubPeriod();
 bool	EstimateNewPerformance(size_t cumulated=0);
 void    NewPerformanceReady() { m_Changed = true; m_SavedCriteria2File = false; };
+vector<int> m_FilterCase;
 
 protected:
 	ChartProp *m_pProp;

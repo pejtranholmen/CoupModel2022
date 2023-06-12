@@ -212,7 +212,7 @@ double OxidationRatio;
 
 	if(Oxygen_Model_Sw(Oxygen_Model)== Oxygen_Model_Sw::Steady_state) {
 		Oxygen_Flux.back()=0.;
-		double OxygenConcAtm = Init_Oxygen_Conc[0] / 100.;
+		double OxygenConcAtm = Init_Oxygen_Conc[0];
 		OxygenMassConcAtm=f_OxygenDensityFrom_Volume_Temp(OxygenConcAtm,pSoilHeat->Temp.front());
 		for (int i = Oxygen_Flux.size() - 2; i >= 0; i--)
 			Oxygen_Flux[i] = Oxygen_Flux[i + 1] + Oxygen_Consumption[i + 1];

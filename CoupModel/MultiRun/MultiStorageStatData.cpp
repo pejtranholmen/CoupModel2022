@@ -473,12 +473,17 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			size_t num;
 			//m_VarValidTransformed.resize(0);
 			if (m_CumulatedPerformance > 10) return false;
-			m_EvaluationFile.rsize_t(&num);
+			if(!m_EvaluationFile.rsize_t(&num)) return false;
 			VARTRANSFORMED add;
 			for(size_t i = 0; i < num; i++) {
-				m_EvaluationFile.rsize_t(&add.cumvalue);
+				if(!m_EvaluationFile.rsize_t(&add.cumvalue)) return false;
 				size_t numvector;
-				m_EvaluationFile.rsize_t(&numvector);
+				if (i == 83) {
+					auto k = 12;
+
+				}
+				if(!m_EvaluationFile.rsize_t(&numvector)) return false;
+				if (numvector > 100000) return false;
 				add.VarValidVector.resize(numvector);
 				add.VarValidVector=m_EvaluationFile.rFloatArray2(numvector);
 				//if (m_VarValid.size() !=numvector) {

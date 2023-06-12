@@ -158,6 +158,7 @@ public:
 	void MR_CheckCalibMethod();
 	bool MR_CheckIndexForFile_RepMode();
 	bool m_MultiFileSplitMode;
+	bool MR_CheckIndexForFilterMode();
 	void MR_RESET_Bayesian();
 	bool MR_UseBayesianCoVar;
 	size_t		MR_Get_NumBayesPar();

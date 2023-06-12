@@ -33,6 +33,7 @@ PGFileImport::PGFileImport(size_t NumFiles)
 	AddInfoLinkIndex.resize(5);
 	m_FilterTestColumn = string::npos;
 	m_FilterToUseId = "";
+	m_ExpandedCurrentFile = false;
 
 }
 PGFileImport::~PGFileImport(void)
@@ -1497,9 +1498,20 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 	m.SetPaneMessage(str);
 #endif
 	std::streampos  actpos;
+	m_ExpandedCurrentFile = false;
 	if (!m_CollectedFile) m_ImportedFileVector.clear();
-	if (m_ImportedFileVector.size() == 0 || (m_CollectedFile&&m_ImportedFileVector.size() == 0))
-		m_ImportedFileVector.push_back(m_CurrentFile);
+	if (m_ImportedFileVector.size() == 0 || (m_CollectedFile && m_ImportedFileVector.size() == 0)) {
+		auto NewRep=(Input.TotRec - Input.NumHeads) / (m_CurrentFile.NumRec+1);
+		if (NewRep > 1) {
+			for (size_t i = 0; i < NewRep; i++) {
+				Input.LinkedSites.push_back(Input.LinkedSites[0]);
+				m_ImportedFileVector.push_back(m_CurrentFile);
+			}
+			m_ExpandedCurrentFile = true;
+		}
+		else
+			m_ImportedFileVector.push_back(m_CurrentFile);
+	}
 
 	size_t filestart = 0;
 	if (m_CollectedFile&&m_format != PROFOUND)
@@ -1526,8 +1538,6 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 
 		SetFileDescriptions();
 		InitForSettingMinMaxMissingValues();
-
-
 		ReadingVariableValues(Input, m_countf);
 
 		auto SetMinAndMax = [&]() {
@@ -1565,10 +1575,16 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 			}
 			if (m_countf == m_NumToImport - 1 || m_NumToImport == 0) Close = true;
 			if (Close) {
-				WritePGFileHeader(GetNumRecords(), pg.Shape.NumRepetitions);
-				CloseFile();
-				CreatedPGFileName.push_back(pg.status.FileName);
-				m_Closed = true;
+				pg.Shape.NumRepetitions = m_ImportedFileVector.size();
+				if (WritePGFileHeader(GetNumRecords(), pg.Shape.NumRepetitions)) {
+					CloseFile();
+					CreatedPGFileName.push_back(pg.status.FileName);
+					m_Closed = true;
+				}
+				else {
+					m_Closed = true;
+
+				}
 			}
 			else {
 				SetMinAndMax();
@@ -1591,7 +1607,7 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 		else if (m_countf == m_ImportedFileVector.size() - 1 || m_format == CZECH_COL_TRANS) 
 			CloseFileWithRepetions();
 		else
-			CloseFileWithRepetions();
+		    CloseFileWithRepetions();
 
 	}
 	m_FileText.close();

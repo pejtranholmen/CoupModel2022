@@ -97,6 +97,7 @@ vector<P*> ErrorTab, ScalingObsTab;
 vector<P*> IndexMultiParGroups;
 size_t NumberParGroups, UserDefinedCalibrationMode;
 size_t Mascur_Soil_Data;
+double Filter_Id1, Filter_Id2, Filter_Id3;
 
 protected:
 

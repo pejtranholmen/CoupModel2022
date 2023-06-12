@@ -3683,8 +3683,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 			break;
 			case (6) :  // Change of Validation variables
 				if(!m_pSimDoc->IsFinishedSimulation()) {
-					
-					if(col>=6||col<=11) {
+										if(col>=6||col<=16) {
 						float perr, aerr, obsvalue;
 						int ind, itypvalue;
 						GetCell(6,row,&cell);
@@ -3708,6 +3707,8 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 							else if( col==8) {
 								aerr=FUtil::AtoFloat(str);
 							}
+
+
 
 							if(m_pSimDoc->m_ValidationData.SetValSumVarErrors(ind, itypvalue, obsvalue, perr, aerr)) {
 								EnableUpdate(FALSE); 
@@ -3755,6 +3756,21 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 								iDur=FUtil::AtoInt(str);
 								m_pSimDoc->m_ValidationData.SetValDuration(ind, iDur);
 							}
+							else if (col == 12 || col == 14) {
+								auto pgindex = FUtil::AtoInt(str);
+								if (col == 12) m_pSimDoc->m_Val_Array[ind].PG_FilterIndex = pgindex;
+								if (col == 14) m_pSimDoc->m_Val_Array[ind].PG_QualityIndex = pgindex;
+							}
+							else if (col == 13) {
+								auto pgvalue = FUtil::AtoInt(str);
+								m_pSimDoc->m_Val_Array[ind].PG_FilterValue = pgvalue;
+							}
+							else if (col == 15) {
+								auto pgvalue = FUtil::AtoFloat(str);
+								m_pSimDoc->m_Val_Array[ind].Quality_Threshold = pgvalue;
+							}
+
+
 
 							if(m_pSimDoc->m_ValidationData.SetValErrors(ind, perr, aerr, Acc, LogT)||col==11) {
 								EnableUpdate(FALSE); 

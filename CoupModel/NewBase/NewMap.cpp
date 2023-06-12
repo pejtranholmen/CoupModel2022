@@ -734,10 +734,8 @@ bool NewMap::Read_Header_FromXmlFile(pugi::xml_node node) {
 bool NewMap::WriteValidationToXmlFile(pugi::xml_node node) {
 	const std::vector<const char*> valTableAtt = { "ValFileIndex", "OutType", "Group", "Name","LocalIndex", "n", "R2","A0", "A1", "ME", "RMSE", "MeanSim",
 "MeanVal","P_Error","A_Error","LogLi","AccTest","ValFileNumber", "LogTrans","ValidationFileResultIndex","Duration",
-"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset" };
+"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset","PG_FilterIndex", "PG_FilterValue","PG_QualityIndex", "PG_QualityThreshold" };
 
-
-	
 	
 	size_t iv = m_Val_Array.size();
 	if (iv > 0)
@@ -767,6 +765,10 @@ bool NewMap::WriteValidationToXmlFile(pugi::xml_node node) {
 		conditions.append_attribute(valTableAtt[16]) = vst.AccTest;
 		conditions.append_attribute(valTableAtt[18]) = vst.LogTrans;
 		conditions.append_attribute(valTableAtt[20]) = vst.Duration;
+		conditions.append_attribute(valTableAtt[27]) = vst.PG_FilterIndex;
+		conditions.append_attribute(valTableAtt[28]) = vst.PG_FilterValue;
+		conditions.append_attribute(valTableAtt[29]) = vst.PG_QualityIndex;
+		conditions.append_attribute(valTableAtt[30]) = vst.Quality_Threshold;
 
 		string Resultstring = "Results_" + FUtil::STD_ItoAscii(i + 1);
 
@@ -789,7 +791,7 @@ bool NewMap::WriteValidationToXmlFile(pugi::xml_node node) {
 bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 	const std::vector<const char*> valTableAtt = { "ValFileIndex", "OutType", "Group", "Name","LocalIndex", "n", "R2","A0", "A1", "ME", "RMSE", "MeanSim",
 "MeanVal","P_Error","A_Error","LogLi","AccTest","ValFileNumber", "LogTrans","ValidationFileResultIndex","Duration",
-"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset" };
+"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset","PG_FilterIndex", "PG_FilterValue","PG_QualityIndex", "PG_QualityThreshold"};
 	m_Val_Array.clear();
 	VALv vst;
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
@@ -812,6 +814,11 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 			vst.AccTest = level1.attribute(valTableAtt[16]).as_bool();
 			vst.LogTrans = level1.attribute(valTableAtt[18]).as_bool();
 			vst.Duration = level1.attribute(valTableAtt[20]).as_uint();
+			vst.PG_FilterIndex = level1.attribute(valTableAtt[27]).as_int();
+			vst.PG_FilterValue = level1.attribute(valTableAtt[28]).as_int();
+			vst.PG_QualityIndex = level1.attribute(valTableAtt[29]).as_int();
+			vst.Quality_Threshold = level1.attribute(valTableAtt[30]).as_float();
+
 		}
 		else if (namestring.find("Results") == 0) {
 			vst.nNumber=level1.attribute(valTableAtt[5]).as_uint();

@@ -828,6 +828,9 @@ bool PGFileImportBase::CreateNewFileAndDefineSize(FILEINFO input,  size_t Actual
 				else
 					CPGFile::CreateNewFile(input.MaxVar - m_time_red - input.RedNumVar,( input.TotRec - input.NumHeads)/ m_NumToImport, m_NumToImport);
 			}
+			else if (m_ExpandedCurrentFile) {
+				CPGFile::CreateNewFile(input.MaxVar - m_time_red - input.RedNumVar, m_CurrentFile.NumRec+1, m_ImportedFileVector.size());
+			}
 			else {
 				if (m_format == PROFOUND||m_format==STANDARD)
 					CPGFile::CreateNewFile(input.MaxVar - m_time_red - input.RedNumVar, input.LinkedSites[0].Records, input.LinkedSites.size());
@@ -1493,9 +1496,6 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 		size_t ich = string::npos;
 		string datestring;
 
-
-	
-
 		string line;
 		line.resize(40000);
 		ifstream istream;
@@ -1591,23 +1591,21 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 				LastLinetoRead = input.TotRec;
 		else
 			LastLinetoRead = string::npos;
+
+		// hack
+		//LastLinetoRead = input.TotRec;
 			
 		size_t valid_var_index = 1;
 		size_t extralines = 0;
 		size_t extralinestot = 0;
 		size_t next_validLine = 0;
 		bool skipline;
+		size_t ValidMapAdjust = ActualIndexId * input.LinkedSites[ActualIndexId].Records;
 
 		auto itmap = m_CheckedTimeMap.begin();
 			while(istream.good()&&CountLine<LastLinetoRead) {
-
-
 				if (!GetLineFromStream()) return false;
-
-				size_t next_validLine = (*itmap).first;
-				//if (m_format == STANDARD) next_validLine++;
-
-
+				size_t next_validLine = (*itmap).first+ ValidMapAdjust;
 				if (next_validLine < CountLine+1) {
 
 					if (ActualIndexId == 0 && m_format == SMHI_OPENDATA)
@@ -1652,6 +1650,8 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 						size_t npos;
 						size_t NumSelectedOutputs;
 						NumSelectedOutputs = (input.MaxVar - input.RedNumVar);
+
+
 						size_t RecordStep = input.LinkedSites[ActualIndexId].TimeCheck.RecordStep;
 						string varstr;
 						size_t nvar = 0;
@@ -1696,7 +1696,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 										SetValidVariable(valid_var_index, varstr);
 										valid_var_index++;
 									}
-									if (!TimeSetComplete) TimeSetComplete = SetDefinedTime(next_validLine);
+									if (!TimeSetComplete) TimeSetComplete = SetDefinedTime(next_validLine- ValidMapAdjust);
 									/*if (!TimeSetComplete && m_CheckedTimeMap.size() > nrec - extralinestot) {
 										TimeSetComplete = SetDefinedTime((nrec - 1) * input.LinkedSites[ActualIndexId].TimeCheck.RecordStep + 1 + min((int)input.NumHeads, 1) + extralinestot);
 										while (!TimeSetComplete && m_CheckedTimeMap.size() >= nrec - extralinestot) {
@@ -1726,7 +1726,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 										SetMissingVariable(valid_var_index);
 										valid_var_index++;
 									}
-									if (!TimeSetComplete) TimeSetComplete = SetDefinedTime(next_validLine);
+									if (!TimeSetComplete) TimeSetComplete = SetDefinedTime(next_validLine- ValidMapAdjust);
 								}
 								if (npos != string::npos && line.size() > npos)
 									line = line.substr(npos + 1);

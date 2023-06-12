@@ -127,6 +127,7 @@ public:
 		
 	float	GetVarValue(size_t varno) {return pg.Var.v[varno];}; // Return the value in Record 1
 	float	GetVarValue(size_t varno, size_t recno);
+	bool	FilterTest(size_t varno, size_t var_rec, int requiredvalue);
 	float	GetVarValueRead(size_t varno, size_t recno);
 
 	void	SetVarKey(size_t, size_t, size_t repit=1);
