@@ -121,6 +121,26 @@ bool MakeSimSheets::Make_RunInfoSheet()
 
 				if (m_pSimDoc->IsFinishedSimulation() || m_pSimDoc->IsRunning()) {
 					QuickSetBackColor(-1, 0, m_ColorCompleted);
+					if (m_pSimDoc->IsFinishedSimulation()) {
+						GetCell(2, -1, &cell);
+						cell.SetBackColor(m_ColorClick);
+						cell.SetFont(&m_largeFont);
+						if (!m_pSimDoc->m_ChildDocument)
+							cell.SetText("Create Copy of Document");
+						else
+							cell.SetText("Copy of Child Document");
+						SetCell(2, -1, &cell);
+
+						GetCell(3, -1, &cell);
+						cell.SetBackColor(m_ColorClick);
+						cell.SetFont(&m_largeFont);
+						if (!m_pSimDoc->m_ChildDocument)
+							cell.SetText("Create Child Document");
+						else
+							cell.SetText("Create Parent Document");
+						SetCell(3, -1, &cell);
+					}
+
 					if (m_pSimDoc->IsMultiSimulation()) {
 									//JoinCells(2,1,3,1);
 						GetCell(1, -1, &cell);
@@ -178,25 +198,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 							}
 							SetCell(1, -1, &cell);
 						}
-						if (m_pSimDoc->IsFinishedSimulation()) {
-							GetCell(2, -1, &cell);
-							cell.SetBackColor(m_ColorClick);
-							cell.SetFont(&m_largeFont);
-							if (!m_pSimDoc->m_ChildDocument)
-								cell.SetText("Create Copy of Document");
-							else
-								cell.SetText("Copy of Child Document");
-							SetCell(2, -1, &cell);
 
-							GetCell(3, -1, &cell);
-							cell.SetBackColor(m_ColorClick);
-							cell.SetFont(&m_largeFont);
-							if (!m_pSimDoc->m_ChildDocument)
-								cell.SetText("Create Child Document");
-							else
-								cell.SetText("Create Parent Document");
-							SetCell(3, -1, &cell);
-						}
 
 
 						QuickSetText(0, 1, "Created/Modified/Simulated");

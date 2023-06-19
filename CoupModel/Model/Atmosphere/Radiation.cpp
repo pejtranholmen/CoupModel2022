@@ -58,7 +58,7 @@ bool Radiation::IniFunctors() {
 	f_CanopyShadeCover = Get_D2_Functor(MyFunc::CANOPY_SHADE_COVER);// :CanopyShadeCover(CanopyDiameterHeightRatio_Common, CanopyChadeCoef);
 
 
-	f_SlopeCorrDirectRad = Physf(FUNC_CHOICE::SLOPE_CORR, Latitude, AltSimPosition, RadFracAng1, RadFracAng2, Solar_Time_Adjust);
+	f_SlopeCorrDirectRad = Physf(FUNC_CHOICE::SLOPE_CORR, Latitude, AltSimPosition, RadFracAng1, RadFracAng2, Solar_Time_Adjust, px, py);
 
 	f_ThetaAngleHour = Physf(FUNC_CHOICE::THETA_ANGLE, Latitude, AltSimPosition, RadFracAng1, RadFracAng2);
 	f_potrisday = Physf(FUNC_CHOICE::POTRISDAILY, Latitude, AltSimPosition, RadFracAng1, RadFracAng2);
@@ -165,10 +165,15 @@ void Radiation::Flux()
     if(m_pModelStructure->TimeResolution!=1){  //! Removed 
              
        RadInDiffuse=RadInShort*f_DiffuseRadRatio(CloudFrac, f_ThetaAngleHour(Hour, m_pModelInfo->JDayNum));
-       RadInDirect=(RadInShort-RadInDiffuse)*f_SlopeCorrDirectRad(Hour); // ! Only correcting direct radiation /PEJ
-	  
+	   RadInDirect = (RadInShort - RadInDiffuse)*f_SlopeCorrDirectRad(Hour, m_pModelInfo->JDayNum); // ! Only correcting direct radiation /PEJ
+		//RadInDiffuse = RadInShort * 0.5;
+		//RadInDirect = RadInDiffuse;
+
        RadInShort=RadInDiffuse+RadInDirect ;//     ! Recalculating RadInShort to accout for extra direct radiation/PEJ
-	   RadFracDirect = RadInDirect / RadInShort;
+	   if (RadInShort > 0.)
+		   RadFracDirect = RadInDirect / RadInShort;
+	   else
+		   RadFracDirect = 1.;
     }
    // ! END SNOWMIP2 ADDITION, DG 2008-09-02
 	RADDIST radout;

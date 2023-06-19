@@ -105,8 +105,8 @@ class Radiation_Functions : public Meteorological_Data
   function<double(double, double, double)> f_atmcorrection;
 // Local Functions
 
-  function<double(double)> f_AlbedoSoil, f_SlopeCorrDirectRad,f_Angstrom;
-  function<double(double,double)> f_AlbedoSnow, f_DiffuseRadRatio;
+  function<double(double)> f_AlbedoSoil,f_Angstrom;
+  function<double(double,double)> f_AlbedoSnow, f_DiffuseRadRatio, f_SlopeCorrDirectRad;
 
   function<double(double)> f_BeerSingleLeaf;
   function<double(size_t, double)> f_BeerAbsorbedPerLayer;
