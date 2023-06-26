@@ -21,7 +21,7 @@ struct VALIDENSEMBLE {
 	bool tobe_Plotted;
 	bool is_Updated;
 	bool is_Copar_Updated;
-	size_t VarTranformed;
+	size_t VarTranformed{ 0 };
 	vector<float> MeanPerFomanceIndicators[7];
 };
 enum PERFORMANCE_VAR {R2_STAT, AO_STAT, A1_STAT,ABSME_STAT, RMSE_STAT, LOGLI_STAT, NSE_STAT };

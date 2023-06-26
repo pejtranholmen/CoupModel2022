@@ -775,6 +775,21 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 	size_t act_chartno=string::npos;
 	size_t start_varindex= string::npos;
 	size_t max_numvar=0;
+
+	int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0 % TotNumPrior);
+	auto datatype = m_pSimDoc->m_PlotStorage.GetDataType(j);
+	bool commonx_scale = false;
+	if (datatype == DATA_TYPES::SIM_PERFORMANCE&&(m_pProp->m_ChartType == CHART_TYPES::FREQUENCE || m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE)) {
+		commonx_scale = true;
+		m_pProp->m_TimeScale.MaxX = m_pProp->GetCommonXDistMax();
+		m_pProp->m_TimeScale.MinX = m_pProp->GetCommonXDistMin();
+		m_pProp->SetDistScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX, false);
+	}
+
+
+
+
+
 	for(size_t i=0;i<m_ChartInfo.NumVariables;i++) {
 	
 		int j=m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, i%TotNumPrior);
@@ -838,10 +853,14 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 			if((m_pProp->m_ChartType== CHART_TYPES::FREQUENCE||m_pProp->m_ChartType== CHART_TYPES::CUM_FREQUENCE)&&m_EstimateNewDist) {
 					// Get Distribution of data Array
 
-
 				if(j>=0&&datatype==DATA_TYPES::SIM_PAR) {
 					int ilocal=m_pSimDoc->m_PlotStorage.GetLocalIndex(j);
 					m_pProp->SetDistScale(m_pSimDoc->MR_GetMin(ilocal), m_pSimDoc->MR_GetMax(ilocal), m_pSimDoc->MR_GetLogDist(ilocal));
+				}
+				if (commonx_scale) {
+
+
+
 				}
 				
 				Frequence_SetNumberOfPoint_LogScale(i % TotNumPrior);

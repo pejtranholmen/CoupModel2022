@@ -501,20 +501,15 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			size_t num;
 			num = m_VarValidTransformed.size();
 			m_EvaluationFile.wInt(&num);
-
 			if (num == 0 && m_CumulatedPerformance == 0&& m_VarValid.size()>0) {
-
 				//Original Performance indicators to archive
-
 				VARTRANSFORMED vartrans;
 				vartrans.cumvalue = 0;
 				vartrans.VarValidVector = m_VarValid;
 				m_VarValidTransformed.push_back(vartrans);
 				MapOfStoredTSV.insert(pair<size_t, size_t>(vartrans.cumvalue, 0));
 			}
-
 //         Check if VarValidVector has same size as m_VarValid
-		
 
 			for (size_t i = 0; i < m_VarValidTransformed.size(); i++) {
 				m_EvaluationFile.wInt(&m_VarValidTransformed[i].cumvalue);

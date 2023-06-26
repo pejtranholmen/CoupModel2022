@@ -2364,6 +2364,7 @@ float MR::MR_GetBayesianStepSize()
 void MR::GetProfileFromPlotPF(string test)
 {
 			bool Testkey;
+
 			Testkey=true;
 			size_t layer,prof,repNumber,index;
 			repNumber = 1;
