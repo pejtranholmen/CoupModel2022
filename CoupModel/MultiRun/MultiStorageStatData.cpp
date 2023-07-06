@@ -483,7 +483,7 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 
 				}
 				if(!m_EvaluationFile.rsize_t(&numvector)) return false;
-				if (numvector > 100000) return false;
+				//if (numvector > 100000) return false;
 				add.VarValidVector.resize(numvector);
 				add.VarValidVector=m_EvaluationFile.rFloatArray2(numvector);
 				//if (m_VarValid.size() !=numvector) {

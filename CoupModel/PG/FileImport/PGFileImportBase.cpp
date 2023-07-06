@@ -1875,6 +1875,10 @@ if (nvar == m_CurrentFileInfo.DateColumn) {
 		if (m_CurrentFileInfo.HourColumn == string::npos&&m_CurrentFileInfo.TimeColumn == string::npos) return true;
 	}
 }
+else if (nvar == m_CurrentFileInfo.PG_MinColumn) {
+	m_CurrentMin = AtoInt(varstr);
+	return true;
+}
 else if (nvar == m_CurrentFileInfo.YearColumn) {
 	if (varstr.size() == 4) {
 		varstr += "0101";

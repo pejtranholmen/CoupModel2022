@@ -558,6 +558,12 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				out.MinuteColumn = out.ValidVariables.size();
 				DateTimeIdentified = true;
 			}
+			else if (out.FirstValidHeads[i] == "pgmin") {
+				out.ValidVariables.push_back(false);
+				out.PG_MinColumn= out.ValidVariables.size();
+				DateTimeIdentified = true;
+
+			}
 			else if(out.CopyMode)
 				out.ValidVariables.push_back(true);
 			else
@@ -1173,11 +1179,21 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			out.DateColumn = 1;
 
 		}
+		else if (nvar == 1) {
+			auto koll = AtoInt(varstr);
+			if (koll > 100000) {
+				out.PG_MinColumn = 1;
+			}
+
+
+
+		}
 		m_CurrentFileInfo.DateColumn = out.DateColumn;
 		m_CurrentFileInfo.HourColumn = out.HourColumn;
 		m_CurrentFileInfo.TimeColumn = out.TimeColumn;
 		m_CurrentFileInfo.DayNumberColumn = out.DayNumberColumn;
 		m_CurrentFileInfo.YearColumn = out.YearColumn;
+		m_CurrentFileInfo.PG_MinColumn = out.PG_MinColumn;
 
 		m_CurrentFileInfo.IdentifiedDateFormat = out.IdentifiedDateFormat;
 		m_CurrentFileInfo.IdentifiedStartMin = out.IdentifiedStartMin;

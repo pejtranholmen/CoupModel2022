@@ -52,6 +52,7 @@ struct FILEINFO
 	size_t TimeColumn;
 	size_t HourColumn;
 	size_t MinuteColumn;
+	size_t PG_MinColumn;
 	vector<bool> ValidVariables;
 	vector<size_t> ValidVariableIndex;
 	vector<string> FirstValidHeads;
