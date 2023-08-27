@@ -86,9 +86,9 @@ bool NC_Mineral_Functions::Def()
 
 // Initial conditions 
 	pPs= new Ps(&InitNitrateConc, TOTPROFILE,NITRATE, NOFPROC,INITB, NORMAL);
-	Define(pPs,   "InitNitrateConc", 10., "mg-N/l","Initial Mineral N = 0|Nitrogen and Carbon > 0",0.0001, 100., 0.01, 50.);
+	Define(pPs,   "InitNitrateConc", 10., "mg-N/l","Initial Mineral N = 0|Nitrogen and Carbon > 0",0.0001, 1000., 0.01, 50.);
 	pPs= new Ps(&InitAmmoniumConc, TOTPROFILE,AMMONIUM, NOFPROC,INITB, NORMAL);
-		Define(pPs,   "InitAmmoniumConc", 10., "mg-N/l","Initial Mineral N = 0|Nitrogen and Carbon > 0",0.0001, 100., 0.01, 50.);
+		Define(pPs,   "InitAmmoniumConc", 10., "mg-N/l","Initial Mineral N = 0|Nitrogen and Carbon > 0",0.0001, 1000., 0.01, 50.);
 
 
 		functorprop.FuncName = MyFunc::DENIT_THETA_RESPONSE; functorprop.Arg = MyArgType::T_D1;
