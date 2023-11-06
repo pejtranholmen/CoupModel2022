@@ -133,6 +133,9 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 						vmin=m_pProp->GetXmin(ich);
 						vmax=m_pProp->GetXmax(ich);
 						fint=m_pProp->GetXInterv(ich);
+						m_Contour.FirstMin = vmin;
+						m_Contour.FirstMax = vmax;
+						m_Contour.FirstInterval = fint;
 					}
 
 					string xstr;
@@ -193,8 +196,8 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 				pData->setDataName(m_pProp->m_Title.c_str());
 			}
 			else if(!m_Contour.ScaleContourChart) {
-				//c->layout();
-			/*	m_pProp->m_Title=m_Label.test;
+				c->layout();
+				m_pProp->m_Title=m_Label.test;
 				m_pProp->m_Title+="(";
 				string unit=m_Label.unit;
 				FUtil::trim(unit);
@@ -234,7 +237,7 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 				m_pProp->SetXmin(ich, xminvalue);
 				m_pProp->SetXmax(ich, xmaxvalue);
 
-			  */
+			  
 
 			}
 			else  {

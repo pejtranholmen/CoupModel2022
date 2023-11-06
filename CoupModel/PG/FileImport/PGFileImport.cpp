@@ -500,7 +500,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		bool FluxSelect = false;
 		bool SoilSelect = false;
 		bool DateTimeIdentified = false;
-		m_ProFoundOption = 0;
+	m_ProFoundOption = 0;
 		out.HourColumn = out.TimeColumn = out.MinuteColumn = out.DayColumn = out.DayNumberColumn = out.MonthColumn = out.YearColumn = out.DateColumn = string::npos;
 		if (m_format == STANDARD) {
 			out.DateColumn = 1;
@@ -578,6 +578,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 
 		out.RedNumVar = 0;
+		out.MaxVar=max(out.ValidVariables.size()+1, out.MaxVar);
 		for (size_t i = 0; i < out.ValidVariables.size(); i++) 	if (!out.ValidVariables[i]) out.RedNumVar++;
 		
 		return DateTimeIdentified;
@@ -1125,6 +1126,11 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				out.IdentifiedDateFormat = YMD;
 				out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
 			}
+			else if (varstr.find('-') == string::npos) {
+				out.IdentifiedDateFormat = PGMIN;
+				out.IdentifiedStartMin = AtoInt(varstr);
+				out.PG_MinColumn = 1;
+			}
 			else {
 				out.IdentifiedDateFormat = YMDHM;
 				out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
@@ -1498,7 +1504,12 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 	m_time_red = 0;
 	if (Input.NumHeads == 0 || m_format == STANDARD || m_format == SEPARATED_YMDH || m_format == SEPARATED_YMD || m_format == SMHI_OPENDATA || m_format == SEPARATED_YMDHM || m_format == YMD_HM || m_format == SWISS || m_format == CZECH_COL_TRANS || m_format == MONTH_COL_TRANS || m_format == PROFOUND) {
 		m_time_red = 0;
-		if (Input.MaxVar - Input.ValidVariables.size() > 0) m_time_red = 1;
+		if (Input.MaxVar - Input.ValidVariables.size() > 0) {
+			
+			m_time_red = 1;
+			int sizeLeft = Input.MaxVar - Input.ValidVariables.size()-Input.RedNumVar;
+			if (sizeLeft > 1)  Input.RedNumVar = 1;
+		}
 	}
 	else
 		m_time_red = 1;
@@ -1651,7 +1662,7 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 	m_CreateMultiFile = false;
 	std::streamsize nbyte = 1024;
 	m_HeadingRead = true;
-	m_time_red = 0;
+	//m_time_red = 0;
 
 	auto p = m_filename.find("Test.");
 

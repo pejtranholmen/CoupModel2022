@@ -1540,6 +1540,9 @@ function<double(size_t, double, double)> FunctFactory::Set_D2_TableFunctor() {
 			return DisplacementLength(pl);
 		}
 	case MyFunc::LEAF_LITTERFALL_TSUM:
+	case MyFunc::STEM_LITTERFALL_TSUM:
+	case MyFunc::ROOT_LITTERFALL_TSUM:
+	case MyFunc::COARSEROOT_LITTERFALL_TSUM:
 		if (m_P_Par.size() == 5) return LitterFall_Tsum(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4]);
 		break;
 	case MyFunc::PRIOR_GRAIN_TEMP:
@@ -1606,7 +1609,21 @@ function<double(size_t, double, double, double)> FunctFactory::Set_D3_TableFunct
 }
 function<double(size_t, double, double, double, double)> FunctFactory::Set_D4_TableFunctor() {
 
+	switch (m_Prop.FuncName) {
+	case MyFunc::LEAF_LITTERFALL_TSUM:
+	case::MyFunc::LEAF_LITTERFALL_DYNAMIC:
+		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4], m_P_Par[5], m_P_Par[6], m_P_Par[7]);
+		break;
+	case::MyFunc::LEAF_LITTERFALL_STATIC:
+		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3]);
+		break;
+	case::MyFunc::ROOT_LITTERFALL_DYNAMIC:
+		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4], m_P_Par[5], m_P_Par[6]);
+	case::MyFunc::ROOT_LITTERFALL_STATIC:
+		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2]);
 
+	default:;
+	}
 
 
 
@@ -1647,8 +1664,12 @@ function<double(bool, size_t, double, double, double)> FunctFactory::Set_boolD3_
 	switch (m_Prop.FuncName) {
 	case::MyFunc::STEM_LITTERFALL_DYNAMIC:
 		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4], m_P_Par[5], m_P_Par[6]);
+	case::MyFunc::GRAIN_LITTERFALL_DYNAMIC:
+		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4]);
 	case::MyFunc::STEM_LITTERFALL_STATIC:
 		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2]);
+	case::MyFunc::GRAIN_LITTERFALL_STATIC:
+		return LitterFallYear(m_P_Par[0]);
 	case::MyFunc::ROOT_LITTERFALL_DYNAMIC:
 		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4], m_P_Par[5], m_P_Par[6]);
 	case::MyFunc::ROOT_LITTERFALL_STATIC:
@@ -1673,6 +1694,7 @@ function<double(bool, size_t, double, double, double)> FunctFactory::Set_boolD3_
 function<double(bool, size_t, double, double, double, double)> FunctFactory::Set_boolD4_TableFunctor() {
 
 	switch (m_Prop.FuncName) {
+		case::MyFunc::LEAF_LITTERFALL_TSUM:
 		case::MyFunc::LEAF_LITTERFALL_DYNAMIC:
 			return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4], m_P_Par[5], m_P_Par[6], m_P_Par[7]);
 			break;

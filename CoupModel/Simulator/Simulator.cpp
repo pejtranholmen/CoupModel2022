@@ -280,7 +280,7 @@ bool Simulator::Run(bool MultiFlag)
 		  m_pModelInfo->T_RatioNC=1;
 	  }
 	  m_pModelInfo->m_ActMinRead = m_pSim->RunOpt.longMinPreStart;
-	  m_StructureModel.Dyn();
+	  m_StructureModel.Dyn(StartedSimPeriod);
 	//  T_Step_Irrig=T_StepSnow;   //	! Added Irrig Step 7 Oktober 2004
 
       //DST=T_Current
@@ -348,7 +348,7 @@ bool Simulator::Run(bool MultiFlag)
 				m_StructureModel.IniFunctors();
 			};
 
-			m_StructureModel.Dyn();
+			m_StructureModel.Dyn(StartedSimPeriod);
 			if(daycount!=prevday) {
 				m_HBVModel.Dyn();
 				prevday=daycount;

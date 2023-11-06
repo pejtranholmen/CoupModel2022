@@ -371,8 +371,11 @@ void ChartProp_AxisScaleValues::ResetXScale() {
 
 };
 void ChartProp_AxisScaleValues::ResetZScale() {
-	for (size_t i = 0; i<m_ZScaleSet.size(); i++)
+	for (size_t i = 0; i < m_ZScaleSet.size(); i++) {
 		m_ZScaleSet[i] = false;
+		m_ZScaleChanged[i] = false;
+	}
+
 };
 
 void ChartProp_AxisScaleValues::ResetYLabel1(int index) {

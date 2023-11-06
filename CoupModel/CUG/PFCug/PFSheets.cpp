@@ -328,12 +328,12 @@ void PFSheets::MakeSimpleTextureSheet()
 		QuickSetText(0,nrow-2,"Top Soil");
 		JoinCells(0,nrow-1,1, nrow-1);
 		QuickSetText(0,nrow-1,"Sub Soil");
-		QuickSetNumber(2,nrow-2,p_PFCurve->m_ActProfile.Upper_Clay);
-		QuickSetNumber(3,nrow-2,p_PFCurve->m_ActProfile.Upper_Sand);
-		QuickSetNumber(4,nrow-2,p_PFCurve->m_ActProfile.Upper_Org);
-		QuickSetNumber(2,nrow-1,p_PFCurve->m_ActProfile.Lower_Clay);
-		QuickSetNumber(3,nrow-1,p_PFCurve->m_ActProfile.Lower_Sand);
-		QuickSetNumber(4,nrow-1,p_PFCurve->m_ActProfile.Lower_Org);
+		QuickSetNumber(2,nrow-2,p_PFCurve->m_ActProfile.Upper_Clay, false);
+		QuickSetNumber(3,nrow-2,p_PFCurve->m_ActProfile.Upper_Sand, false);
+		QuickSetNumber(4,nrow-2,p_PFCurve->m_ActProfile.Upper_Org, false);
+		QuickSetNumber(2,nrow-1,p_PFCurve->m_ActProfile.Lower_Clay, false);
+		QuickSetNumber(3,nrow-1,p_PFCurve->m_ActProfile.Lower_Sand, false);
+		QuickSetNumber(4,nrow-1,p_PFCurve->m_ActProfile.Lower_Org, false);
 }
 void PFSheets::MakePFCurveSheet()
 {
@@ -591,7 +591,7 @@ void PFSheets::MakeHydraulicCondSheet()
 			QuickSetNumber(1,i,pfcoef.LowerDepth, false);
 			QuickSetNumber(2,i,pfcoef.MatConductivity, false);
 			QuickSetNumber(3,i,pfcoef.TotConductivity, false);
-			QuickSetNumber(4,i,pfcoef.Mualem_n);
+			QuickSetNumber(4,i,pfcoef.Mualem_n, false);
 			GetCell(2,i,&cell); 
 			/*	if(PLOTPF_mp_BSATC[i]<1)
 					cell.SetNumberDecimals(3); 
@@ -600,7 +600,7 @@ void PFSheets::MakeHydraulicCondSheet()
 				else
 					//cell.SetNumberDecimals(0);*/
 			SetCell(2,i, &cell);
-			QuickSetNumber(5,i,pfcoef.N_SrCoef);
+			QuickSetNumber(5,i,pfcoef.N_SrCoef, false);
 			GetCell(3,i,&cell); 
 			/*if(PLOTPF_mp_BBSAT[i]<1)
 				cell.SetNumberDecimals(3); 
@@ -611,7 +611,7 @@ void PFSheets::MakeHydraulicCondSheet()
 
 */
 			SetCell(3,i, &cell); 
-			QuickSetNumber(6,i,pfcoef.N_SECoef);
+			QuickSetNumber(6,i,pfcoef.N_SECoef, false);
 			GetCell(4,i,&cell); 
 			//cell.SetNumberDecimals(1); 
 			SetCell(4,i, &cell); 
@@ -704,13 +704,13 @@ void PFSheets::MakeEstimationSheet()
 		QuickSetText(0,0,"Values to be used when making least square fitting");
 		QuickSetBackColor(0,0, m_ColorHeading);
 		PFCOEF pfcoef;
-		QuickSetNumber(6,0,m_PF_EstimateMin);
-		QuickSetNumber(7,0,m_PF_EstimateMax);
+		QuickSetNumber(6,0,m_PF_EstimateMin,false);
+		QuickSetNumber(7,0,m_PF_EstimateMax, false);
 		
 		if(m_PF_ResidualFix>0) 
-			QuickSetNumber(5,0,m_PF_ResidualFix);
+			QuickSetNumber(5,0,m_PF_ResidualFix, false);
 		else 
-			QuickSetText(5,0,"");
+			QuickSetText(5,0,"", false);
 		
 		if(m_EstimationResults.size()>0) {
 			JoinCells(-1,-1,-1,1);

@@ -1987,12 +1987,22 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Ps *pPs; P *pP;
 	Tab *pTab;
 
+	PLOT_PARAM plotpar;
+	plotpar.Num_Of_Curves = 1;
+	plotpar.Num_Of_Points = 300;
+	plotpar.Num_Of_X = 1;
+	plotpar.X_Min = 0;
+	plotpar.X_Max = 2;
+	plotpar.LogXScale = false;
+	plotpar.LogYScale = false;
+	plotpar.Num_Of_Opt = 1;
+
+
 	functorprop.FunctorInitOption = string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 
-	functorprop.FuncName = MyFunc::LEAF_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D1;
-	funcname = "Leaf LitterFall TempSum Respons";
+
 	p_vec.clear();
 
 	pP = new P(&Leaf_LitterRateC1, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 0.001);
@@ -2011,11 +2021,17 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "Dorm_FinalDayNo", initv,UNIT_TYPES::DAYOFYEAR_UNIT , "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 100., 366.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 
-	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
 
-	functorprop.FuncName = MyFunc::STEM_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D1;
+
+	functorprop.FuncName = MyFunc::STEM_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D2;
 	funcname = "Stem LitterFall TempSum Respons";
+	plotpar.X_Max = 1600;
+	plotpar.X_Label = "Temp Sum (DegreeDays)";
+	plotpar.Y_Label = "Rate Coefficient (-)";
+	plotpar.Num_Of_Curves = 1;
+	plotpar.Num_Of_Points = 200;
+	plotpar.LegendsVec = { };
+
 	p_vec.clear();
 
 
@@ -2031,14 +2047,12 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	pP = new P(&Stem_LitterTsum2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1400.);
 	Define(pP, pNumPlants, "StemTsum2", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 10000.); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
+	p_vec.push_back(m_pModelMap->GetPPointer("Dorm_FinalDayNo"));
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 
-
-	functorprop.FuncName = MyFunc::GRAIN_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D3;
-	funcname = "Grain LitterFall TempSum Respons";
 	p_vec.clear();
 
 
@@ -2061,15 +2075,6 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 
-	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
-
-
-
-
-
-
-
 	pP = new P(&Leaf_FracLitter2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 0.1);
 	Define(pP, pNumPlants, "Leaf_LF2", initv, "-", "Nitrogen and Carbon >= 1|LitterPools >0", 0., 1.0);
 	mTab_LitterBC.push_back(pP);
@@ -2081,9 +2086,9 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	mTab_LitterBC.push_back(pP);
 	;
 
+	plotpar.LegendsVec = { "New Current Year","Old Previous Years" };
 
-
-	functorprop.FuncName = MyFunc::ROOT_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D3;
+	functorprop.FuncName = MyFunc::ROOT_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D2;
 	funcname = "Root LitterFall TempSum Respons";
 	p_vec.clear();
 
@@ -2099,8 +2104,11 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	pP = new P(&Root_LitterTsum2, pNumPlants, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL); initv.assign(p_Plant->NumPlants, 1400.);
 	Define(pP, pNumPlants, "RootTsum2", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 10., 3000.); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
+	
+	
+	p_vec.push_back(m_pModelMap->GetPPointer("Dorm_FinalDayNo"));
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	
 	
@@ -2108,8 +2116,8 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "Root_LF2", initv, "-", "Nitrogen and Carbon >= 1|LitterPools >0", 0., 1.0);
 	mTab_LitterBC.push_back(pP);
 	;
-	functorprop.FuncName = MyFunc::COARSEROOT_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D3;
-	funcname = "Coarse Root LitterFall TempSum Respons";
+	functorprop.FuncName = MyFunc::COARSEROOT_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D2;
+	funcname = "Coarse Root LitterFall TempSum Response";
 	p_vec.clear();
 
 
@@ -2129,8 +2137,9 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "CoarseRoot_LF2", initv, "-", "Nitrogen and Carbon >= 1|LitterPools >0", 0., 1.0);
 	mTab_LitterBC.push_back(pP);
 
+	p_vec.push_back(m_pModelMap->GetPPointer("Dorm_FinalDayNo"));
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 
 	pTab = new Tab(&mTab_LitterA, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL);
@@ -2173,9 +2182,21 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	Define(pP, pNumPlants, "LAI Enh Coef", initv, "-", "Nitrogen and Carbon >= 1", 0., 1.5);
 	mTab_LitterScale.push_back(pP); p_vec.push_back(pP);
 
-	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	plotpar.X_Min = 0;
+	plotpar.X_Max = 10;
+	plotpar.X_Label = "Leaf Area Index (-)";
+	plotpar.Y_Label = "Scaling coefficient (-)";
 
+	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
+
+	plotpar.X_Max = 365;
+	plotpar.X_Label = "Day Number (-)";
+	plotpar.Y_Label = "Remaining Fraction (-)";
+	plotpar.Num_Of_Curves = 4;
+	plotpar.Num_Of_Points = 365;
+	plotpar.LegendsVec = { "New Leaf - LAI 0","Old Leaf - LAI 0","New Leaf - LAI 5","Old Leaf - LAI 5" };
+	
 
 	functorprop.FuncName = MyFunc::LEAF_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D4;
 	funcname = "Leaf LitterFall Static";
@@ -2188,7 +2209,7 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::LEAF_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D4;
 	funcname = "Leaf LitterFall Dynamic";
@@ -2204,11 +2225,40 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	p_vec.push_back(m_pModelMap->GetPPointer("Old Leaf"));
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-	functorprop.FuncName = MyFunc::STEM_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D4;
+	p_vec.clear();
+	p_vec.push_back(m_pModelMap->GetPPointer("LeafRate1"));
+	p_vec.push_back(m_pModelMap->GetPPointer("LeafRate2"));
+	p_vec.push_back(m_pModelMap->GetPPointer("LeafTsum1"));
+	p_vec.push_back(m_pModelMap->GetPPointer("LeafTsum2"));
+	p_vec.push_back(m_pModelMap->GetPPointer("Dorm_FinalDayNo"));
+
+	plotpar.X_Max = 1600;
+	plotpar.X_Label = "Temp Sum (DegreeDays)";
+	plotpar.Y_Label = "Rate Coefficient (-)";
+	plotpar.Num_Of_Curves = 1;
+	plotpar.Num_Of_Points = 200;
+	plotpar.LegendsVec = { };
+
+
+	functorprop.FuncName = MyFunc::LEAF_LITTERFALL_TSUM; functorprop.Arg = MyArgType::T_D2;
+	funcname = "Leaf Rate Coefficient LitterFall TempSum function";
+
+
+	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
+
+
+	functorprop.FuncName = MyFunc::STEM_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Stem LitterFall Static";
 	p_vec.clear();
+	plotpar.X_Max = 365;
+	plotpar.X_Label = "Day Number (-)";
+	plotpar.Y_Label = "Remaining Fraction (-)";
+	plotpar.Num_Of_Curves = 2;
+	plotpar.Num_Of_Points = 365;
+	plotpar.LegendsVec = { "New Current Year","Old Previous Years"};
 
 	p_vec.push_back(m_pModelMap->GetPPointer("StemRate1"));
 	p_vec.push_back(m_pModelMap->GetPPointer("New Stem"));
@@ -2216,9 +2266,9 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-	functorprop.FuncName = MyFunc::STEM_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D4;
+	functorprop.FuncName = MyFunc::STEM_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Stem LitterFall Dynamic";
 	p_vec.clear();
 
@@ -2231,10 +2281,12 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	p_vec.push_back(m_pModelMap->GetPPointer("Old Stem"));//HH
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-	functorprop.FuncName = MyFunc::GRAIN_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D4;
+	functorprop.FuncName = MyFunc::GRAIN_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Grain LitterFall Static";
+	plotpar.Num_Of_Curves = 1;
+	plotpar.LegendsVec = { "Current Year" };
 	p_vec.clear();
 
 	p_vec.push_back(m_pModelMap->GetPPointer("GrainRate1"));
@@ -2242,7 +2294,7 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::GRAIN_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Grain LitterFall Dynamic";
@@ -2256,10 +2308,12 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-	functorprop.FuncName = MyFunc::ROOT_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D4;
+	functorprop.FuncName = MyFunc::ROOT_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D3;
+	plotpar.Num_Of_Curves = 2;
 	funcname = "Root LitterFall Static";
+	plotpar.LegendsVec = { "Current Year","Previous Years"};
 	p_vec.clear();
 
 	p_vec.push_back(m_pModelMap->GetPPointer("RootRate1"));
@@ -2268,9 +2322,11 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-	functorprop.FuncName = MyFunc::ROOT_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D4;
+	
+
+	functorprop.FuncName = MyFunc::ROOT_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Root LitterFall Dynamic";
 	p_vec.clear();
 
@@ -2283,9 +2339,9 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	p_vec.push_back(m_pModelMap->GetPPointer("Old Roots"));
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-	functorprop.FuncName = MyFunc::COARSEROOT_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D4;
+	functorprop.FuncName = MyFunc::COARSEROOT_LITTERFALL_STATIC; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Coarse Root LitterFall Static";
 	p_vec.clear();
 
@@ -2295,9 +2351,9 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-	functorprop.FuncName = MyFunc::COARSEROOT_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D4;
+	functorprop.FuncName = MyFunc::COARSEROOT_LITTERFALL_DYNAMIC; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Coarse Root LitterFall Dynamic";
 	p_vec.clear();
 
@@ -2310,7 +2366,7 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	p_vec.push_back(m_pModelMap->GetPPointer("Old CoarseRoots"));
 
 	pFunc = new Func(PLANT, CARBON, NOFPROC, LITTERFALL, NORMAL);
-	Define(pFunc, functorprop, funcname, p_vec);
+	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	
 	pTab = new Tab(&mTab_LitterScale, PLANT, ORGANIC, TRANSPORT, LITTERFALL, NORMAL);

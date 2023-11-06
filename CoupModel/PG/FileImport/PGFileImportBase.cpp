@@ -1869,6 +1869,10 @@ if (nvar == m_CurrentFileInfo.DateColumn) {
 		m_CurrentMin = PGUtil::MinutConv(PGUtil::DateConv(m_CurrentFileInfo.IdentifiedDateFormat, varstr));
 		if (varstr.size()>=6) return true;
 	}
+	else if (m_CurrentFileInfo.IdentifiedDateFormat == PGMIN) {
+		m_CurrentMin = AtoInt(varstr);
+		return true;
+	}
 	else {
 		m_CurrentMin = PGUtil::MinutConv(varstr);
 		if (varstr.size()>11) return true;

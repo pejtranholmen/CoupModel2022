@@ -389,6 +389,7 @@ bool ChartCugChangeValue::ChangeAxis(int col, int row, CString str)
 							if (m_pProp->m_CommonXScale)
 								m_pProp->SetXmax(string::npos, pV);
 							else {
+								m_pProp->SetXmax(string::npos, pV);
 								//for(size_t iall=0; iall<m_pProp->m_XScaleMax.size(); iall++) m_pProp->m_XScaleMax[iall] = pV;
 
 								//for_each(m_pProp->m_XScaleMax.begin(), m_pProp->m_XScaleMax.end(), [&](auto &value) {

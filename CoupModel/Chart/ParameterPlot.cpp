@@ -1413,6 +1413,7 @@ vector<double> ParameterPlot::GetYVector(size_t j, size_t tabindex, bool test) {
 				auto f_D2 = m_Func->Get_D2_TableFunctor();
 				if (f_D2) {
 					for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) { y = f_D2(opt, AA[0][i], x2);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else out.push_back(y); }
+					break;
 				}
 				else {
 					Hydraulic* pHyd = m_Func->Get_PointerHydraulic();
@@ -1431,6 +1432,40 @@ vector<double> ParameterPlot::GetYVector(size_t j, size_t tabindex, bool test) {
 			}
 								break;
 			case MyArgType::T_D3: {
+				if (FuncName == MyFunc::STEM_LITTERFALL_STATIC|| FuncName == MyFunc::STEM_LITTERFALL_DYNAMIC ||
+					FuncName == MyFunc::ROOT_LITTERFALL_STATIC|| FuncName == MyFunc::ROOT_LITTERFALL_DYNAMIC ||
+					FuncName == MyFunc::COARSEROOT_LITTERFALL_STATIC || FuncName == MyFunc::COARSEROOT_LITTERFALL_DYNAMIC) {
+					auto f_boolD3 = m_Func->Get_boolD3_TableFunctor();
+					y = 1;
+					bool NewItem = true;
+					if (j % 2 == 1) NewItem = false;
+
+					double y_remains = 1;
+					double tsum = 0;
+					for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) {
+						y = f_boolD3(NewItem, opt, tsum, double(i + 1), y_remains);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else {
+							y_remains = max(0., y_remains - y);
+							out.push_back(y_remains);
+						};
+					}
+					break;
+				}
+				else if(FuncName == MyFunc::GRAIN_LITTERFALL_STATIC || FuncName == MyFunc::GRAIN_LITTERFALL_DYNAMIC) {
+					auto f_D3 = m_Func->Get_D3_TableFunctor();
+					double tsum = 0;
+					double y_remains = 1;
+					for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) {
+							y = f_D3(opt, tsum, double(i + 1), y_remains);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else {
+							y_remains = max(0., y_remains - y);
+							out.push_back(y_remains);
+						};
+					}
+					break;
+
+
+
+				}
+
 				auto f_D3 = m_Func->Get_D3_TableFunctor();
 				Hydraulic* pHyd = m_Func->Get_PointerHydraulic();
 				for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) {
@@ -1444,24 +1479,33 @@ vector<double> ParameterPlot::GetYVector(size_t j, size_t tabindex, bool test) {
 				}
 
 			};	break;
-			case MyArgType::TT_D3: {
-				auto f_D3 = m_Func->Get_T_D3_TableFunctor();
-				Hydraulic* pHyd = m_Func->Get_PointerHydraulic();
-				for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) {
-					if (FuncName == MyFunc::WATERUPTAKEMOISTURE && pHyd != nullptr) {
-						x3 = pHyd->f_ThetaPsi_M(opt, AA[0][i]);
-						y = f_D3(opt, 0, AA[0][i], x2, x3);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else out.push_back(y);
-					}
-					else {
-						y = f_D3(opt, 0, AA[0][i], x2, x3);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else out.push_back(y);
-					}
-				}
 
-			};	break;
 			case MyArgType::T_D4: {
-				auto f_D4 = m_Func->Get_D4_TableFunctor();
-				for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) { y = f_D4(opt, AA[0][i], AA[1][i], AA[2][i], AA[3][i]);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else out.push_back(y); }};	break;
+				
+				if (FuncName == MyFunc::LEAF_LITTERFALL_STATIC|| FuncName == MyFunc::LEAF_LITTERFALL_DYNAMIC|| FuncName == MyFunc::LEAF_LITTERFALL_TSUM) {
+					auto f_boolD4 = m_Func->Get_boolD4_TableFunctor();
 
+					y = 1;
+					bool NewLeaf = true;
+					x4 = 0;
+					if (j%2 == 1) NewLeaf = false;
+					if (j > 1) x4 = 5;
+					double y_remains=1;
+					double tsum = 0;
+					for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) { y = f_boolD4(NewLeaf, opt, tsum, double(i+1), x4, y_remains);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else { y_remains = max(0., y_remains - y);
+						if (i > 120&& FuncName == MyFunc::LEAF_LITTERFALL_TSUM) {
+							tsum = tsum + 20;
+						}
+					
+					
+						out.push_back(y_remains); }; }
+					break;
+				}
+				else {
+					auto f_D4 = m_Func->Get_D4_TableFunctor();
+					for (size_t i = 0; i < m_plotp.Num_Of_Points; i++) { y = f_D4(opt, opt, x2, x3, x4);	if (y < -1.e38)	out.push_back(Chart::NoValue);	else out.push_back(y); }
+				};	break;
+			}
 			case MyArgType::Pair_T_D2: {
 						auto f_pair = m_Func->Get_Pair_D2Functor();
 						pair<double, double> Temp_Th;

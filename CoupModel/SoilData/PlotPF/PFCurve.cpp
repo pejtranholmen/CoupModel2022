@@ -640,10 +640,9 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 
 	vector<float> Pressure = GetPF_Pressure(m_ActProfile.RecLayers);
 	WritePressureHeading(Pressure);
-    WritePressureHeading(Pressure);
 //	WritePressureHeading(GetPF_Pressure(m_ActProfile.RecLayers));
 
-
+	m_NumMeasured_PFSteps = Pressure.size();
 	for (size_t i = 0; i < header.NumLayers; i++) {
 		PFCOEF pfcoef;
 		vector<float> ThetaValues = GetPF_Theta(i);

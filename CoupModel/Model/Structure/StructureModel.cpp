@@ -28,10 +28,10 @@ bool StructureModel::IniFunctors()
 	//m_Additional.IniFunctors();
 	return true;
 }
-bool StructureModel::Dyn()
+bool StructureModel::Dyn(bool WithAdditionals)
 {
 	 if(!m_Structure.Dyn()) return false;
-	 if(!m_Additional.Dyn()) return false;
+	 if (WithAdditionals)  if (!m_Additional.Dyn()) return false;
 	 return true;
 }
 

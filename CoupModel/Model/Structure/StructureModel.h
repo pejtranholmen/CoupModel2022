@@ -14,7 +14,7 @@ class StructureModel	:public GlobalInfo
 		bool Def(ModelInfo*, ModelMap*);
 		bool Ini();
 		bool IniFunctors();
-		bool Dyn();
+		bool Dyn(bool withAdditionalVariables=true);
 		bool End();
 		Structure m_Structure;
 		Additional_BioticVariables m_Additional;

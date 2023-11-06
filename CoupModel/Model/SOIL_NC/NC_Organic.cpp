@@ -699,7 +699,7 @@ auto AbioticResponseOnDecomposition = [&]() {
 			double sumdrainage = sum(p_NC_Plant->NDrivDrainage);
 			if (sumdrainage > 0.00001) {
 				Dissolved[jj].TotHFlowConc = sum(Dissolved[jj].HFlow) / sumdrainage*1000;
-				if (jj = 2) Tot_P_DrainageConc = (Dissolved[_P_].TotHFlow + PSurfRunoff + PTotPO4_Drainage) / sumdrainage * 1000;
+				if (jj == 2) Tot_P_DrainageConc = (Dissolved[_P_].TotHFlow + PSurfRunoff + PTotPO4_Drainage) / sumdrainage * 1000;
 			}
 			//if (jj = _P_) Tot_P_DrainageConc = (Dissolved[_P_].TotHFlow + PSurfRunoff + PTotPO4_Drainage) / sumdrainage * 1000;
 		}

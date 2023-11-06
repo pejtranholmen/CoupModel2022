@@ -1114,7 +1114,12 @@ void ChartCug::OnMenuCommand(int col,long row,int section,int item)
 			else {
 				m_pProp->m_ReShape.m_CommonScale = false;
 				m_pProp->m_rightaxis = true;
-				m_pProp->ResetYLeftScale();
+				if (m_pProp->m_ChartType == CHART_TYPES::CONTOUR_CHART) {
+					m_TimeSeriePlot.m_Contour.ScaleContourChart = false;
+					m_pProp->ResetZScale();
+				}
+				else
+					m_pProp->ResetYLeftScale();
 			}
 
 			changemade = true;
