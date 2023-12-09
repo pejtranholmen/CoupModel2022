@@ -12,7 +12,7 @@ class StructureModel	:public GlobalInfo
 		StructureModel(void);
 		~StructureModel(void);
 		bool Def(ModelInfo*, ModelMap*);
-		bool Ini();
+		bool Ini(bool ResetOnlyAdditional=false);
 		bool IniFunctors();
 		bool Dyn(bool withAdditionalVariables=true);
 		bool End();

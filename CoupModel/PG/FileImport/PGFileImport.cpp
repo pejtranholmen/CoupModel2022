@@ -860,6 +860,11 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					nhead = nrec;
 					out.YearColumn = out.FirstValidHeads.size() + 1;
 				}
+				else if ((varstr.find("Dayno") == 0 || varstr.find("dayno") == 0)) {
+					nhead = nrec;
+					out.DayNumberColumn = out.FirstValidHeads.size() + 1;
+					//m_format = STANDARD;
+				}
 				else if ((varstr.find("julian") == 0 || varstr.find("Julian") == 0)) {
 					nhead = nrec;
 					out.DayNumberColumn = out.FirstValidHeads.size() + 1;
@@ -1150,6 +1155,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 		}
 		else if (out.DayNumberColumn == nvar) {
+			
 
 		}
 

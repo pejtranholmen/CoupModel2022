@@ -1891,7 +1891,10 @@ else if (nvar == m_CurrentFileInfo.YearColumn) {
 
 }
 else if (nvar == m_CurrentFileInfo.DayNumberColumn) {
+	
+	m_CurrentMin = PGUtil::MinutConv(PGUtil::DateConv(YMD, "1986-01-01"));
 	m_CurrentMin += (FUtil::AtoInt(varstr) - 1) * 1440;
+	return true;
 }
 else if (nvar == m_CurrentFileInfo.TimeColumn|| nvar == m_CurrentFileInfo.HourColumn) {
 	m_CurrentMin-=720;

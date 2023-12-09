@@ -966,13 +966,11 @@ void MR::MR_UpdateValues()
 	//PARAMETERS_mp_WATERSHED_RUN=
 		auto kollNo=MR_Get_ActualRunNumber();
 
-
 		bool NewRandomEstimate = true;
 
 		pPar = GetPsPointer("Aggregate Calib Number");
 	//if(PARAMETERS_mp_ACTUALNOMULRUN==1)PARAMETERS_mp_RAND_INIT(); 
 		if (m_IsMakingBayesianCalib) {
-
 			if (pPar != nullptr) {
 				size_t n = size_t(pPar->GetValue() + 0.001);
 				if ((MR_Get_ActualRunNumber() - 1) % n == 0)
@@ -987,22 +985,12 @@ void MR::MR_UpdateValues()
 					NewRandomEstimate = true;
 				}
 			}
-
-
-
-
 		}
 
-
-
-
-
 	size_t recalc;
+	if (kollNo == 1 && m_MultiRun_Array.size() > 1) m_ActualDimension = m_MultiRun_Array.size() - 1;
 	if (m_MultiRun_Array.size() == 0) return;
-
-	//for(size_t i=0;i<MR_GetNumberOfDimensions();i++){
-		size_t i = 0;
-		for (size_t i = 0; i < m_ActualDimension + 1; i++) {
+	for (size_t i = 0; i < m_ActualDimension + 1; i++) {
 			irep = m_MultiRun_Array[i].nCount;
 			irep = m_MultiRun_Array[i].NumberOfRepeatitionsWithinDimension;
 			if (irep < 2) irep = 2;
@@ -1017,9 +1005,6 @@ void MR::MR_UpdateValues()
 				//if(MR_GetMethod(i+1,ii+1)<=2) {
 				min = MR_GetMin(i + 1, ii + 1); // This variable does not always have realistic values.
 				max = MR_GetMax(i + 1, ii + 1); // " "
-
-
-			//}
 				switch (MR_GetMethod(i + 1, ii + 1)) {
 				case 0: Ratio = (float)(icount - 1) / (float)(irep - 1);// linear
 					Float = Ratio * max + (1 - Ratio)*min;
@@ -1274,7 +1259,7 @@ void MR::MR_UpdateValues()
 
 			}
 		}
-		if(recalculate_profile) ReCalculateNewSoilProfile(); // Make conditional with soil properties changed
+	if(recalculate_profile) ReCalculateNewSoilProfile(); // Make conditional with soil properties changed
 
 	
 }

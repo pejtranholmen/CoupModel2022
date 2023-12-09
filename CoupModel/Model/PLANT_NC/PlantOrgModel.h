@@ -14,7 +14,6 @@ class PlantOrgModel	:public GlobalInfo
 		bool Ini();
 		bool Dyn();
 		bool End();
-		NC_Drivings m_NC_Drivings;
 		NC_Plant m_NC_Plant;
 
 		

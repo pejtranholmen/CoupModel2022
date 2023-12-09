@@ -40,11 +40,7 @@ Simulator::~Simulator()
 void Simulator::SetSimPointer(ModelBase *simptr)
 {
 	  m_pSim=simptr;
-
 	  m_pModelMap =(ModelMap*)simptr;
-
-
-
 
 	  m_AtmModel.m_Irrigation.setIrrigation(m_pModelInfo, m_pModelMap, m_pModelStructure);
 	  m_SoilModel.m_SoilFrost.setSoil_Frost(m_pModelInfo, m_pModelMap, m_pModelStructure); 
@@ -53,17 +49,14 @@ void Simulator::SetSimPointer(ModelBase *simptr)
 
 	  m_PlantModel.m_WaterUptake.setWaterUptake(m_pModelInfo, m_pModelMap, m_pModelStructure);
 	  m_StructureModel.m_Additional.setAdditional_BioticVariables(m_pModelInfo, m_pModelMap, m_pModelStructure);
-	 // m_PlantOrgModel.m_NC_Drivings.setNC_Drivings(m_pModelInfo, m_pModelMap, m_pModelStructure);
 	  m_SoilOrgModel.m_NC_SoilOrg.setNC_SoilManagement(m_pModelInfo, m_pModelMap, m_pModelStructure); 
 	  m_PlantOrgModel.m_NC_Plant.setNC_Plant(m_pModelInfo, m_pModelMap, m_pModelStructure); 
 	  m_StructureModel.m_Structure.setStructure(m_pModelInfo, m_pModelMap, m_pModelStructure);
-
 
 	  m_SoilModel.m_SoilFrost.Def();
 	  m_SoilModel.m_HeatPump.Def();
 	  m_PlantModel.m_WaterUptake.Def();
 	  m_AtmModel.m_Irrigation.Def();
-	  //plantorgmodel.m_NC_Drivings.Def();
 	  m_PlantOrgModel.m_NC_Plant.Def();
 	  m_SoilOrgModel.m_NC_SoilOrg.Def();
 
@@ -264,8 +257,11 @@ bool Simulator::Run(bool MultiFlag)
 		  m_pModelInfo->T_NumIterNC_Day=size_t(1./ m_pModelInfo->T_Step_NC+0.001);
 	  }
 	  else if(m_StructureModel.m_Structure.NitrogenCarbonStep==2) { //! Nitrogen Carbon step is independent of Water and Heat
-			NC_MinStep=max(int(1440./m_StructureModel.m_Structure.NC_Iterations), int(1440.* m_pModelInfo->T_Step));
-			m_pModelInfo->T_Step_NC=NC_MinStep/1440.;
+
+
+			NC_MinStep=max(m_StructureModel.m_Structure.NC_Iterations, int(1./m_pModelInfo->T_Step));
+			m_pModelInfo->T_Step_NC=1./NC_MinStep;
+			if(m_pModelInfo->T_Step_NC<= m_pModelInfo->T_Step) m_pModelInfo->T_Step_NC= m_pModelInfo->T_Step;
 			m_pModelInfo->T_NumIterNC_Day=size_t(1./ m_pModelInfo->T_Step_NC+0.001);
 	  }
 
@@ -280,13 +276,13 @@ bool Simulator::Run(bool MultiFlag)
 		  m_pModelInfo->T_RatioNC=1;
 	  }
 	  m_pModelInfo->m_ActMinRead = m_pSim->RunOpt.longMinPreStart;
-	  m_StructureModel.Dyn(StartedSimPeriod);
+	  m_StructureModel.Dyn(true);
 	//  T_Step_Irrig=T_StepSnow;   //	! Added Irrig Step 7 Oktober 2004
 
       //DST=T_Current
 	  m_pModelInfo->T_SimPeriod= m_pModelInfo->T_End- m_pModelInfo->T_Start;
 	  m_pModelInfo->RelRunTimeSingle=0.;
-	  m_pModelInfo->RelRunTimeMulti=(m_pModelInfo->ActualNoMulRun-1.)/ m_pModelInfo->TotalNoMulRun;
+	  if(m_pModelInfo->TotalNoMulRun>0) m_pModelInfo->RelRunTimeMulti=(m_pModelInfo->ActualNoMulRun-1.)/ m_pModelInfo->TotalNoMulRun;
 	  size_t daycount=0;
 	  size_t prevday=string::npos;
 
@@ -295,25 +291,18 @@ bool Simulator::Run(bool MultiFlag)
       //CALL CPUOUT( false, true, false)
 	for(size_t num_timescaling=0; num_timescaling<m_pSim->m_DocFile.m_TimePeriodScaleFactor; num_timescaling++) {
 		if(num_timescaling>0) {
-			Reset_DrivingFiles();
-			m_pModelInfo->T_CountIter=0;
-			m_pModelInfo->m_RecOutput=0;
-			m_pModelInfo->T_CountIterOrg=0;
+			Reset_DrivingFiles();m_pModelInfo->T_CountIter=0;m_pModelInfo->m_RecOutput=0;m_pModelInfo->T_CountIterOrg=0;
 		}
 		bool PostPeriod = false;
 		size_t MoveBackMinutes = 365 * 1440;
 		bool PostPeriodStarted = false;
 		if (m_pSim->RunOpt.longMinEnd == m_pSim->RunOpt.longMinPostEnd) PostPeriodStarted = true;
 
-		while(m_pModelInfo->m_ActMinRead<=m_pSim->RunOpt.longMinEnd||(m_pModelInfo->m_RecOutput< m_pModelInfo->m_OutRecord&&(m_StructureModel.m_Structure.TimeSerieOutputLevels==0||!m_pSim->IsMultiSimulation()))) {
-			
+		while(m_pModelInfo->m_ActMinRead<=m_pSim->RunOpt.longMinEnd||(m_pModelInfo->m_RecOutput< m_pModelInfo->m_OutRecord&&(m_StructureModel.m_Structure.TimeSerieOutputLevels==0||!m_pSim->IsMultiSimulation()))) {		
 			if(m_pModelInfo->T_CountIterOrg%m_pSim->RunOpt.noofiter==0&& m_pModelInfo->T_CountIterOrg>0) {
 				daycount++;
-				m_pModelInfo->T_CountIterOrg=0;
-				m_pModelInfo->T_Elapsed=double(daycount);
-	
-			}
-		
+				m_pModelInfo->T_CountIterOrg=0;	m_pModelInfo->T_Elapsed=double(daycount);
+			}	
 			m_pModelInfo->T_Current= m_pModelInfo->T_Start+ m_pModelInfo->T_Elapsed;
 
 			m_pModelInfo->m_ActMin=int(1440.* m_pModelInfo->T_Current);
@@ -326,36 +315,27 @@ bool Simulator::Run(bool MultiFlag)
 						PostPeriodStarted = true;
 						m_pModelInfo->m_ActMinRead = m_pModelInfo->m_ActMin - MoveBackMinutes;
 					}
-
 				}
 				else
 					m_pModelInfo->m_ActMinRead = m_pModelInfo->m_ActMin;
 			}
-
-
-
-
 			m_pModelInfo->RelRunTimeSingle= m_pModelInfo->T_Elapsed/ m_pModelInfo->T_SimPeriod;
-
 			if(m_pModelInfo->m_ActMin%1440==0) {
 				m_pModelInfo->JDayNum=PGUtil::DayNumFunction(m_pModelInfo->m_ActMin);
 				m_pModelInfo->JYearNum=PGUtil::YearNumFunction(m_pModelInfo->m_ActMin);
 			}
-
-		
 			if (((CH*)m_pSim)->Make_ChaParCheck(m_pModelInfo->m_ActMinRead)) {
 				m_StructureModel.m_Structure.p_Soil_WaterF->SetDrainageFunctors();
 				m_StructureModel.IniFunctors();
 			};
-
-			m_StructureModel.Dyn(StartedSimPeriod);
+			m_StructureModel.Dyn(true);
 			if(daycount!=prevday) {
 				m_HBVModel.Dyn();
 				prevday=daycount;
 			}
 			if (m_pModelInfo->m_ActMin >= m_pSim->RunOpt.longMinStart) {
 				if (!StartedSimPeriod) {
-					//if (!m_StructureModel.Ini()) return false;
+					if (!m_StructureModel.m_Additional.Ini()) return false;
 					Stat_Ini();
 					Set_StateVariables(true); // Initial Values
 					StartedSimPeriod = true;
@@ -364,7 +344,6 @@ bool Simulator::Run(bool MultiFlag)
 				Valid_Check();
 			}
 			if(m_pModelInfo->T_CountIter%5000==0) {
-
 				if(m_pSim->IsMultiSimulation()) {
 					string str;
 	

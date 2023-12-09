@@ -13,7 +13,9 @@ private:
 class LitterFall_Tsum {
 public:
 	LitterFall_Tsum(vector<double> Leaf_LitterRateC1, vector<double>Leaf_LitterRateC2, vector<double> Leaf_TSum1, vector<double> Leaf_TSum2, vector<double> Dorm_FinalDayNo) 
-		: RateCoef1(Leaf_LitterRateC1), RateCoef2(Leaf_LitterRateC2), TSum1(Leaf_TSum1), TSum2(Leaf_TSum2), Dorm_FinalDayNo(Dorm_FinalDayNo) { StaticFunc = false; };
+		: RateCoef1(Leaf_LitterRateC1), RateCoef2(Leaf_LitterRateC2), TSum1(Leaf_TSum1), TSum2(Leaf_TSum2), Dorm_FinalDayNo(Dorm_FinalDayNo) {
+		StaticFunc = false; for (size_t i = 0; i < TSum1.size(); i++) { if (TSum1[i] <= TSum2[i]) TSum2[i] = TSum1[i] + 1.; }
+	};
 	LitterFall_Tsum(vector<double> Leaf_LitterRateC1) : RateCoef1(Leaf_LitterRateC1) { StaticFunc = true; };
 
 	double operator() (size_t index) {

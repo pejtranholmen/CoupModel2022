@@ -13,12 +13,15 @@ bool StructureModel::Def(ModelInfo* modelptr, ModelMap* mapptr)
 	//m_Additional.Def();
 	return true;
 }
-bool StructureModel::Ini()
+bool StructureModel::Ini(bool OnlyResetAdditional)
 {
-
-	if(!m_Structure.Ini()) return false;
-
-	m_Additional.Ini();
+	if (OnlyResetAdditional) {
+		m_Additional.Ini();
+	}
+	else {
+		if (!m_Structure.Ini()) return false;
+		m_Additional.Ini();
+	}
 	return true;
 }
 bool StructureModel::IniFunctors()

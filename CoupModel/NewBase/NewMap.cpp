@@ -2745,6 +2745,7 @@ bool NewMap::Info_ParTables(bool reading)
 				if(group=="Driving variables") group="Meteorological Data";
 				if(group=="Soil mineral nitrogen processes") group="Soil mineral N processes";	
 				rString(&name);
+				if (name == "Scaling coefficient") name = "Thermal Conductivity, Model Layers";
 				pTab=dynamic_cast<Tab*>(GetPtr(TABLE,name));
 				rSize_t(&nColSize);
                 
@@ -2915,10 +2916,20 @@ bool NewMap::Info_Files(bool reading)
 
 				if (name == "Validation File") {
 					name = "Validation File1";
-					Sw *pSw;
+					Sw* pSw;
 					pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "ValidationMode"));
 					pSw->SetIntValue(1);
 					//pSw->Apply();			
+				}
+				else if (name.find("ValidationFile_") != string::npos)
+					;
+				else if (name.find("Validation File") != string::npos) {
+					auto ipos = name.find("File");
+					string end = name.substr(ipos + 4);
+					if(end.size()==1)
+						name = "ValidationFile_0" + end;
+					else
+						name = "ValidationFile_" + end;
 				}
 				rString(&FileName);
 				FileName = GetExistingDocFileName(FileName);
