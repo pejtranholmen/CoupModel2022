@@ -81,6 +81,9 @@
 	
 	unit = "m", unit += char(178); unit += "/day";
 	SetUnitMap(UNIT_TYPES::AREA_PER_TIME_UNIT, unit);
+	unit = "m", unit += char(178); unit += "/s";
+	SetUnitMap(UNIT_TYPES::AREA_PER_SEC_TIME_UNIT, unit);
+
 	unit = "s/m";
 	SetUnitMap(UNIT_TYPES::AERODYNAMIC_RESISTANCE_UNIT, unit);
 	unit = "m/s";

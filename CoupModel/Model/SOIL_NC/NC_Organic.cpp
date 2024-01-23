@@ -450,10 +450,18 @@ auto AbioticResponseOnDecomposition = [&]() {
 	for (size_t i = 0; i < Response.Temp.size(); i++) {
 		if (Common_Moisture_Response_Sw(Common_Moisture_Response) == Common_Moisture_Response_Sw::CO2_Function)
 			Response.Theta[i] = f_CO2_Response(CO2_Conc[i]);
-		else if (Common_Moisture_Response_Sw(Common_Moisture_Response) == Common_Moisture_Response_Sw::CombinedThetaCO2)
-			Response.Theta[i] = f_CombinedThetaCO2_Response(i,  p_NC_Plant->NDrivTheta[i], CO2_Conc[i]);
-		else
-			Response.Theta[i] = f_Theta_Response(i, p_NC_Plant->NDrivTheta[i]);
+		else if (Common_Moisture_Response_Sw(Common_Moisture_Response) == Common_Moisture_Response_Sw::CombinedThetaCO2) {
+			if (p_NC_Plant->NDrivTemperature[i] <= 0.&& p_Soil_WaterF->LayerOfSatLevel>i)
+				Response.Theta[i] = 0.;
+			else
+				Response.Theta[i] = f_CombinedThetaCO2_Response(i, p_NC_Plant->NDrivTheta[i], CO2_Conc[i]);
+		}
+		else {
+			if (p_NC_Plant->NDrivTemperature[i] <= 0. && p_Soil_WaterF->LayerOfSatLevel > i)
+				Response.Theta[i] = 0.;
+			else
+				Response.Theta[i] = f_Theta_Response(i, p_NC_Plant->NDrivTheta[i]);
+		}
 		Response.Temp[i] = f_CommonTempResponse(p_NC_Plant->NDrivTemperature[i]);
 		Response.Temp_Theta[i] = Response.Temp[i] * Response.Theta[i];
 		Response.Litter += Response.Temp_Theta[i] * O_State[_L1][_C_][i];

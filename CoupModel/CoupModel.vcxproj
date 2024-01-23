@@ -292,6 +292,7 @@
     <ClInclude Include="ModelTypes\SimBConst.h" />
     <ClInclude Include="Model\Atmosphere\Functors\SoilEvaporation_Functors.h" />
     <ClInclude Include="Model\Atmosphere\Functors\SurfaceWater_Functors.h" />
+    <ClInclude Include="Model\Basic_Functors.h" />
     <ClInclude Include="Model\HBV\Functor\HBV_Functor.h" />
     <ClInclude Include="Model\ModelFunctions.h" />
     <ClInclude Include="ModelTypes\FunctFactory.h" />

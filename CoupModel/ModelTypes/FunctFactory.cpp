@@ -328,10 +328,7 @@ function<double(double)> FunctFactory::Set_D1_Functor() {
 			if (m_Ps_Par.size() == 2)
 				return MethanePlantOxidation(m_Ps_Par[0], m_Ps_Par[1]);
 			break;
-		case MyFunc::METHANE_EBULLITION:
-			if (m_Ps_Par.size() == 2)
-				return Ebullition(m_Ps_Par[0], m_Ps_Par[1]);
-			break;
+
 		case MyFunc::METHANE_BOUNDARYLAYER_FLUX	:
 			if (m_Ps_Par.size() == 2)
 				return MethaneBoundaryLayerFlux(m_Ps_Par[0], m_Ps_Par[1]);
@@ -532,11 +529,7 @@ function<double(double, double)> FunctFactory::Set_D2_Functor() {
 				return HenryLawMethaneVolatility(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2]);
 			}
 			break;
-		case MyFunc::METHANE_PRODUCTION_FROM_ONE_LITTER:
-			if (m_Ps_Par.size() == 4) {
-				return MethaneProduction(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_Ps_Par[3]);
-			}
-			break;
+
 		case MyFunc::METHANE_EBULLITION:
 			if (m_Ps_Par.size() == 2)
 				return Ebullition(m_Ps_Par[0], m_Ps_Par[1]);
@@ -603,6 +596,10 @@ function<double(double, double, double)> FunctFactory::Set_D3_Functor() {
 			return InterceptionEvaporationSinglePlant(m_Ps_Par[0], m_Ps_Par[1]);
 		else
 			return nullptr;
+	case MyFunc::METHANE_EBULLITION:
+		if (m_Ps_Par.size() == 2)
+			return Ebullition(m_Ps_Par[0], m_Ps_Par[1]);
+		break;
 	case MyFunc::POTENTIAL_WATERUPTAKE_INTERCEPTION_EXPLICIT:
 		if (m_Ps_Par.size() == 0) {
 			return PotentialWaterUptake();
@@ -620,12 +617,11 @@ function<double(double, double, double)> FunctFactory::Set_D3_Functor() {
 			return ThCond_KerstenEq(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_Ps_Par[3], m_Ps_Par[4], m_Ps_Par[5], m_Ps_Par[6]);
 		}
 		break;
-	case MyFunc::METHANE_PRODUCTION_FROM_TWO_LITTER:
-		if (m_Ps_Par.size() == 4) {
-			return MethaneProduction(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_Ps_Par[3]);
+	case MyFunc::METHANE_PRODUCTION_FROM_ONE_LITTER:
+		if (m_Ps_Par.size() == 5) {
+			return MethaneProduction(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_Ps_Par[3], m_Ps_Par[4]);
 		}
 		break;
-
 	default:;
 	}
 	return nullptr;
@@ -667,6 +663,11 @@ function<double(double, double, double, double)> FunctFactory::Set_D4_Functor() 
 				return InterceptionEvaporationSinglePlant(m_Ps_Par[0], m_Ps_Par[1]);
 			else
 				return nullptr;
+		case MyFunc::METHANE_PRODUCTION_FROM_TWO_LITTER:
+			if (m_Ps_Par.size() == 5) {
+				return MethaneProduction(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_Ps_Par[3], m_Ps_Par[4]);
+			}
+			break;
 		default:;
 		}
 	}

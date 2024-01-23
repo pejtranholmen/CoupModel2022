@@ -259,7 +259,7 @@ bool Simulator::Run(bool MultiFlag)
 	  else if(m_StructureModel.m_Structure.NitrogenCarbonStep==2) { //! Nitrogen Carbon step is independent of Water and Heat
 
 
-			NC_MinStep=max(m_StructureModel.m_Structure.NC_Iterations, int(1./m_pModelInfo->T_Step));
+			NC_MinStep=max(int(m_StructureModel.m_Structure.NC_Iterations+0.00001), int(1./m_pModelInfo->T_Step));
 			m_pModelInfo->T_Step_NC=1./NC_MinStep;
 			if(m_pModelInfo->T_Step_NC<= m_pModelInfo->T_Step) m_pModelInfo->T_Step_NC= m_pModelInfo->T_Step;
 			m_pModelInfo->T_NumIterNC_Day=size_t(1./ m_pModelInfo->T_Step_NC+0.001);

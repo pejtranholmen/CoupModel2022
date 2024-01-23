@@ -13,7 +13,8 @@ class NC_GasFlux : public NC_GasFlux_Functions
 		void Integ();
 		bool End();
 
-
+	private:
+		function<void(vector<double>, vector<double>, vector<double> *)> f_DiffusionFlux, f_ConvectiveFlux;
 
 
 };
