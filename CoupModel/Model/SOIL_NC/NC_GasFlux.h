@@ -15,6 +15,7 @@ class NC_GasFlux : public NC_GasFlux_Functions
 
 	private:
 		function<void(vector<double>, vector<double>, vector<double> *)> f_DiffusionFlux, f_ConvectiveFlux;
+		function<double(double, double, double , double c)> f_delta_conc;
 
 
 };

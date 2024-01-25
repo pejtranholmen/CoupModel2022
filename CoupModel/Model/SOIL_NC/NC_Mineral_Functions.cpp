@@ -94,7 +94,7 @@ bool NC_Mineral_Functions::Def()
 		functorprop.FuncName = MyFunc::DENIT_THETA_RESPONSE; functorprop.Arg = MyArgType::T_D1;
 		funcname = "Denitrification Water Content Response";
 		ps_vec.clear();
-		plotpar.X_Label = "Water Content "; plotpar.X_Label+= p_ModelInfo->GetUnitString(UNIT_TYPES::WATERCONTENT_UNIT,true);
+		plotpar.X_Label = "Water Content "; plotpar.X_Label+= p_ModelInfo->GetUnitString(UNIT_TYPES::VOLPERCENTAGE_UNIT,true);
 		plotpar.Y_Label = "Relative Response "; 	plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 

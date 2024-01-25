@@ -10,7 +10,7 @@
 	SetUnitMap(UNIT_TYPES::WATERFLOW_UNIT,"mm/day");
 	SetUnitMap(UNIT_TYPES::INVERSE_WATERFLOW_UNIT, "day/mm");
 	
-	SetUnitMap(UNIT_TYPES::WATERCONTENT_UNIT, "Vol %");
+	SetUnitMap(UNIT_TYPES::VOLPERCENTAGE_UNIT, "Vol %");
 	SetUnitMap(UNIT_TYPES::PRESSUREHEAD_UNIT,"cm water");
 	unit = "J/m"; unit += char(178); unit += "/day";
 	SetUnitMap(UNIT_TYPES::HEATFLOW_UNIT,unit);
@@ -75,7 +75,7 @@
 	
 	unit = "g/m", unit += char(178);
 	SetUnitMap(UNIT_TYPES::GAS_MASS_UNIT, unit);
-	SetUnitMap(UNIT_TYPES::GAS_CONC_UNIT,"PPM");
+	SetUnitMap(UNIT_TYPES::PPM_CONC_UNIT,"PPM");
 	
 	SetUnitMap(UNIT_TYPES::YEAR_AGE_UNIT ,"yr");
 	

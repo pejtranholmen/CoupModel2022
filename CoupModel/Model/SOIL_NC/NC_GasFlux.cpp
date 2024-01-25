@@ -29,32 +29,24 @@ bool NC_GasFlux::Ini()	{
 	NC_GasFlux::IniFunctors();
 //	Use Parameters
 //Use Hydraulic, Only	: M_Saturation
-		for(size_t i=0; i<Init_Oxygen_Conc.size(); i++) {
-			
-			Oxygen_Conc[i]=Init_Oxygen_Conc[i]/100.;
+		for(size_t i=0; i<Init_Oxygen_Conc.size(); i++) {		
+			Oxygen_Conc[i]=Init_Oxygen_Conc[i];
 			CO2_Conc[i]=Init_CO2_Conc[i]; //wenxin
 			CO2_FluxSoil[i] = 0.0; //wenxin
 			Air_Porosity[i]=max(0.01, p_Soil_WaterF->M_Saturation[i]-p_Soil_WaterF->ThetaTotal[i]);
-
 			
 			if (!m_pModelInfo->StartStateValue) {
-				Oxygen[i] = Air_Porosity[i]/100. * p_Soil_WaterF->AThicknessLayers[i] *
-					f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc[i], pSoilHeat->Temp[i]);				
-																									
-
-				CO2Soil[i] = CO2_Conc[i] * Air_Porosity[i] * p_Soil_WaterF->AThicknessLayers[i] *
-			 Fix::MOL_RATIO_CO2_AIR*AirDensityTempFunc(pSoilHeat->Temp[i]) / 1.E4; //wenxin density: kg/M-2
-
-			}
-			CH4[i]=0.;
-	      
+				double z_layer = Air_Porosity[i]/Fix::PERCENT_FRAC * p_Soil_WaterF->AThicknessLayers[i]; // Unit [m]
+				Oxygen[i] = z_layer*f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc[i], pSoilHeat->Temp[i]);	// g/m2																												
+				CO2Soil[i] =z_layer*f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_Conc[i],pSoilHeat->Temp[i]); //g/m2
+			}     
 		}
 
 		CH4_AccBubbles=CH4_AccPlant=CH4_AccEmission=CH4_AccProduction=CH4_AccOxidation=0.;
 
-		OxygenMassConcAtm = 0.2095*Fix::MOL_RATIO_O2_AIR*AirDensityTempFunc(pSoilHeat->Temp.front());      //kg/m-3
-		MethaneMassConcAtm = CH4_CONC_Atm*Fix::MOL_RATIO_CH4_AIR*AirDensityTempFunc(pSoilHeat->Temp.front());
-		CO2MassConcAtm = CO2_CONC_Atm*Fix::MOL_RATIO_CO2_AIR*AirDensityTempFunc(pSoilHeat->Temp.front()); 
+		OxygenMassConcAtm = f_OxygenDensityFrom_Volume_Temp(20.95, pSoilHeat->Temp.front());      //g/m-3
+		MethaneMassConcAtm = f_MethaneDensityFrom_Volume_Temp(CH4_CONC_Atm, pSoilHeat->Temp.front());
+		CO2MassConcAtm = f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_CONC_Atm,pSoilHeat->Temp.front());
 		
 		An_VolFraction.assign(p_Soil_WaterF->NL,0.0001); //need to update
 		
@@ -139,9 +131,14 @@ bool NC_GasFlux::IniFunctors() {
 	f_CarbonDiOxideDiffuctionCoef = Get_D2_Functor(MyFunc::DiFFUSION_SOIL_CO2);
 	Ps* pP = (Ps*)m_pModelMap->GetPsPointer("AltSimPosition");
 	f_OxygenDensityFrom_Volume_Temp = GasDensityTempFunction(GasElement::OXYGEN, pP->GetValue());
-	f_OxygenDensityFrom_Temp = GasDensityTempFunction(GasElement::OXYGEN, pP->GetValue());
 	f_CarbonDioOxideDensityFrom_Volume_Temp = GasDensityTempFunction(GasElement::CO2, pP->GetValue());
-	f_CarbonDiOxideDensityFrom_Temp = GasDensityTempFunction(GasElement::CO2, pP->GetValue());
+	f_MethaneDensityFrom_Volume_Temp = GasDensityTempFunction(GasElement::CH4, pP->GetValue());
+	f_AirDensityFrom_Temp = AirDensityTempFunction();
+
+
+
+
+	f_delta_conc = ChangeConcentration();
 
 	f_NitrogenOxideProduction_Temp = Get_D1_Functor(MyFunc::NITRI_NO_PROD_TEMP_RESPONSE);
 	f_NO_Production_Moist = Get_D1_Functor(MyFunc::NITRI_NO_PROD_MOIST_RESPONSE);
@@ -168,45 +165,29 @@ void NC_GasFlux::Flux()
 	Soil_HeatPump *pSoilHeat=&p_Soil->m_HeatPump;
 
 	AtmModel* p_AtmModel = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
-	double* pSoilEvap = &p_AtmModel->m_Irrigation.RaSoilSurf;
-	double RaSurf = max(0.0001, *pSoilEvap);
+	double *ra = &p_AtmModel->m_Irrigation.RaSoilSurf;
+	double RaSurf = max(0.0001, *ra);
 
-/*	Use CommonStruc
-Use Timeinfo
-Use AbioticResponses
-Use Nc_Plant, only	: SimRootDepth, NUM_NUPTMAX, CRootsLitter, NRootsLitter
-Use Plant, only		: RootDistribution, RFracLow
-Use NC_Organic, only	: CRootsSoilLitter, NRootsSoilLitter, LitterPools
-Use GenFunctions, Only	:D_oxygen, D_NO
-Use General, Only	: InflowScalar, OutFlowScalar, OutFlow,InFlow, Intflow
-Use Ifport*/
+	double	Mean_Air_Porosity, Mean_Temp;
+	double OxidationRatio;
 
-
-
-double	Mean_Air_Porosity, Mean_Temp;
-double OxidationRatio;
-
-	for(size_t i=0; i<Init_Oxygen_Conc.size(); i++) {
-		Oxygen_Consumption[i]=Fix::MOL_RATIO_O2_C*(p_NC_Plant->CRootsAtmLayer[i]+p_NC_Plant->CFungiAtmLayer[i]+p_NC_Plant->CCoarseRootsAtmLayer[i]
-			+O_RespRate[_L1][i]+O_RespRate[_L2][i]+O_RespRate[_H][i]+O_RespRate[_MIC][i]+O_RespRate[_F][i]);   
-		
-		//Oxygen_Consumption.back() = .0;  //test boundary condition wenxin	  Removed this line excluding oxygen concumption of lowest layer
-		
-		CO2_Production[i] = Fix::MOL_CO2/Fix::MOL_C*(p_NC_Plant->CRootsAtmLayer[i] + p_NC_Plant->CFungiAtmLayer[i] + p_NC_Plant->CCoarseRootsAtmLayer[i]
-			+ O_RespRate[_L1][i] + O_RespRate[_L2][i] + O_RespRate[_H][i] + O_RespRate[_MIC][i] + O_RespRate[_F][i]);
-
-		Air_Porosity[i]=max(0.01,p_Soil_WaterF->M_Saturation[i]-p_Soil_WaterF->ThetaTotal[i]);
+	for(size_t i=0; i<Oxygen_Consumption.size(); i++) {
+		double tot_CO2_Consumption = p_NC_Plant->CRootsAtmLayer[i] + p_NC_Plant->CFungiAtmLayer[i] + p_NC_Plant->CCoarseRootsAtmLayer[i] +
+			O_RespRate[_L1][i] + O_RespRate[_L2][i] + O_RespRate[_H][i] + O_RespRate[_MIC][i] + O_RespRate[_F][i];
+		Oxygen_Consumption[i]=Fix::MOL_RATIO_O2_C*tot_CO2_Consumption;   // g/m2/day
+		CO2_Production[i] = Fix::MOL_CO2/Fix::MOL_C*tot_CO2_Consumption;	
+		Air_Porosity[i]=max(0.01,p_Soil_WaterF->M_Saturation[i]-p_Soil_WaterF->ThetaTotal[i]);  //%
 	}
 
 
-	DO2_SoilCoef.front() = f_OxygenDiffuctionCoef(Air_Porosity.front(), pSoilHeat->Temp.front()) ;
-	DCO2_SoilCoef.front() = f_CarbonDiOxideDiffuctionCoef(Air_Porosity.front(), pSoilHeat->Temp.front()) ;
+	DO2_SoilCoef.front() = f_OxygenDiffuctionCoef(Air_Porosity.front(), pSoilHeat->Temp.front()) ; // m2/day
+	DCO2_SoilCoef.front() = f_CarbonDiOxideDiffuctionCoef(Air_Porosity.front(), pSoilHeat->Temp.front()) ; // m2/day
 
 	for(size_t i=1; i<Air_Porosity.size()-1; i++) {
 		Mean_Air_Porosity=(Air_Porosity[i-1]+Air_Porosity[i])/2.;  // Mean value using is vol % 
 		Mean_Temp=(pSoilHeat->Temp[i-1]+pSoilHeat->Temp[i])/2.;
-		DO2_SoilCoef[i] = f_OxygenDiffuctionCoef(Mean_Air_Porosity, Mean_Temp) ;
-		DCO2_SoilCoef[i] = f_CarbonDiOxideDiffuctionCoef(Mean_Air_Porosity, Mean_Temp) ;
+		DO2_SoilCoef[i] = f_OxygenDiffuctionCoef(Mean_Air_Porosity, Mean_Temp) ; // m2/day
+		DCO2_SoilCoef[i] = f_CarbonDiOxideDiffuctionCoef(Mean_Air_Porosity, Mean_Temp) ; 
 	}
 	// Added bottom layer values Dec 1 PEJ
 	DO2_SoilCoef.back() = f_OxygenDiffuctionCoef(Air_Porosity.back(), pSoilHeat->Temp.back());
@@ -214,28 +195,30 @@ double OxidationRatio;
 
 
 	if(Oxygen_Model_Sw(Oxygen_Model)== Oxygen_Model_Sw::Steady_state) {
-		Oxygen_Flux.back()=0.;
-		double OxygenConcAtm = Init_Oxygen_Conc[0];
-		OxygenMassConcAtm=f_OxygenDensityFrom_Volume_Temp(OxygenConcAtm,pSoilHeat->Temp.front());
-		for (int i = Oxygen_Flux.size() - 2; i >= 0; i--)
-			Oxygen_Flux[i] = Oxygen_Flux[i + 1] + Oxygen_Consumption[i + 1];
+		// Accumulation of oxygen consumption from the bottom of soil profile to get vertical  oxygen flux
 
+		Oxygen_Flux.back()=0.;
+		for (int i = Oxygen_Flux.size() - 2; i >= 0; i--)
+			Oxygen_Flux[i] = Oxygen_Flux[i + 1] + Oxygen_Consumption[i + 1]; // g/m2  
 		Oxygen_Flux_Infil = Oxygen_Flux.front() + Oxygen_Consumption.front();
 
-		Oxygen_Conc.front() = OxygenConcAtm - (Oxygen_Flux_Infil * p_Soil_WaterF->AThicknessLayers.front() / 2.)
-			/ (DO2_SoilCoef.front()* f_OxygenDensityFrom_Volume_Temp(OxygenConcAtm, pSoilHeat->Temp.front()));
-		Oxygen.front() = f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc.front(), pSoilHeat->Temp.front()) * p_Soil_WaterF->AThicknessLayers.front()* Air_Porosity.front() / 100.;
-
-			
+		// Oxygen concentration in soil profile by stepwise change of concentrations (dc)
+		double dc= f_delta_conc(Oxygen_Flux_Infil, p_Soil_WaterF->AThicknessLayers.front() / 2.,DO2_SoilCoef.front(), f_OxygenDensityFrom_Volume_Temp(Init_Oxygen_Conc[0], pSoilHeat->Temp.front())); //vol %
+		Oxygen_Conc.front() = Init_Oxygen_Conc[0] - dc; //vol %
+		Oxygen.front() = f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc.front(), pSoilHeat->Temp.front()) * p_Soil_WaterF->AThicknessLayers.front()* Air_Porosity.front() / 100.; // g/m2
+		
 
 		for(size_t i=1;i<Air_Porosity.size(); i++) {
-			Oxygen_Conc[i]= Oxygen_Conc[i-1]-Oxygen_Flux[i-1]*p_Soil_WaterF->DistanceMidpLayers[i] /(DO2_SoilCoef[i]* f_OxygenDensityFrom_Volume_Temp(OxygenConcAtm, pSoilHeat->Temp[i]));
-			Oxygen[i] = f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc[i], pSoilHeat->Temp[i])* p_Soil_WaterF->AThicknessLayers[i]* Air_Porosity[i] / 100.;
-		}
-
-		for (size_t i = 0; i < Air_Porosity.size(); i++) {
-			Oxygen_Conc[i] = max(0.0, Oxygen_Conc[i]);
-			Oxygen[i] = max(0.0, Oxygen[i]);
+			if (Oxygen_Conc[i - 1] <= 0) {
+				Oxygen_Conc[i - 1] = 0.;
+				Oxygen[i] = 0.;
+			}
+			else {
+				dc = f_delta_conc(Oxygen_Flux[i], p_Soil_WaterF->DistanceMidpLayers[i], DO2_SoilCoef[i], f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc[i - 1], pSoilHeat->Temp.front())); //vol %
+				Oxygen_Conc[i] = Oxygen_Conc[i - 1] - dc;
+				if (Oxygen_Conc[i] > 0.)
+					Oxygen[i] = f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc[i], pSoilHeat->Temp[i]) * p_Soil_WaterF->AThicknessLayers[i] * Air_Porosity[i] / 100.;		
+			}
 		}
 
 	}
@@ -243,18 +226,19 @@ double OxidationRatio;
 		//oxygen dynamic
 
 	 	OutFlow(Oxygen, Oxygen_Consumption);
-
 		for (size_t i = 0; i < Oxygen_Conc.size(); i++) {
-			Oxygen_Conc[i] = Oxygen[i] / (Fix::MOL_RATIO_O2_AIR*AirDensityTempFunc(pSoilHeat->Temp[i]));
-			DO2_SoilCoef[i] = f_OxygenDiffuctionCoef( Air_Porosity[i], pSoilHeat->Temp[i]);//wenxin
+
+
+			double z_layer = Air_Porosity[i] / Fix::PERCENT_FRAC * p_Soil_WaterF->AThicknessLayers[i]; // Unit [m]
+			Oxygen_Conc[i] = Oxygen[i] /(z_layer*f_OxygenDensityFrom_Volume_Temp(100., pSoilHeat->Temp[i]));
 		}
-		
-		OxygenMassConcAtm = 0.2095*Fix::MOL_RATIO_O2_AIR*AirDensityTempFunc(pSoilHeat->Temp.front());
+	
+		OxygenMassConcAtm = f_OxygenDensityFrom_Volume_Temp(20.9, pSoilHeat->Temp[0]);
 		Oxygen_Flux_Infil=DO2_SoilCoef.front()*(OxygenMassConcAtm-Oxygen_Conc.front())/p_Soil_WaterF->AThicknessLayers.front()/2.;
 		//Do i=2, NL,1
 		for(size_t i=1; i<Oxygen_Flux.size(); i++) 
 			Oxygen_Flux[i-1]=DO2_SoilCoef[i]*(Oxygen_Conc[i-1]-Oxygen_Conc[i])/p_Soil_WaterF->DistanceMidpLayers[i-1];
-		
+	
 
 		InFlow(Oxygen.front(), Oxygen_Flux_Infil);
 		IntFlow(Oxygen, Oxygen_Flux);
@@ -271,22 +255,15 @@ double OxidationRatio;
 			CO2_FluxSoil[i] = CO2_FluxSoil[i + 1] + CO2_Production[i + 1];
 
 		CO2_Flux_Out = CO2_FluxSoil.front() + CO2_Production.front();
+		double dc=f_delta_conc(CO2_Flux_Out, p_Soil_WaterF->AThicknessLayers.front() / 2., DCO2_SoilCoef.front(), f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_CONC_Atm, pSoilHeat->Temp.front())); // PPM
+		CO2_Conc.front() = CO2_CONC_Atm + dc;
+		CO2Soil.front() =f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_Conc.front(), pSoilHeat->Temp.front()) * p_Soil_WaterF->AThicknessLayers.front() * Air_Porosity.front() / 100.;  // g/m2
 
-		CO2_Conc.front() = CO2_CONC_Atm+(CO2_Flux_Out * p_Soil_WaterF->AThicknessLayers.front() / 2.) /
-			(DO2_SoilCoef.front()* f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_CONC_Atm, pSoilHeat->Temp.front())); //Mass Per volume of soil.
-
-		CO2Soil.front() =CO2_Conc.front()*f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_Conc.front(), pSoilHeat->Temp.front()) * p_Soil_WaterF->AThicknessLayers.front() * Air_Porosity.front() / 100.;//Per volume of Air filled soil
-
-		//Do i=2,NL,1
 		for (size_t i = 1; i<Air_Porosity.size(); i++) {
-			CO2_Conc[i] = CO2_Conc[i - 1] + (CO2_FluxSoil[i - 1]*p_Soil_WaterF->DistanceMidpLayers[i]) / (
-				DCO2_SoilCoef[i]* f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_Conc[i], pSoilHeat->Temp[i])); //Per volume soil air.
-			CO2Soil[i] = CO2_Conc[i]*f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_Conc[i], pSoilHeat->Temp[i])* p_Soil_WaterF->AThicknessLayers[i] * Air_Porosity[i] / 100.; //Per volume of CO2 of soil
-		}
-		for (size_t i = 0; i < Air_Porosity.size(); i++) {
-			CO2_Conc[i] = max(0.0, min(1.E5, 1.E6*CO2_Conc[i]));
-			CO2Soil[i] = max(0.0, CO2Soil[i]);
-
+			dc = f_delta_conc(CO2_FluxSoil[i-1], p_Soil_WaterF->DistanceMidpLayers[i], DCO2_SoilCoef[i], f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_Conc[i], pSoilHeat->Temp.front())); // PPM
+			CO2_Conc[i] = CO2_Conc[i - 1] + dc ;		
+			CO2_Conc[i] = max(0.0, min(1.E5, CO2_Conc[i]));				//Per PPM
+			CO2Soil[i] = f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_Conc[i], pSoilHeat->Temp[i])* p_Soil_WaterF->AThicknessLayers[i] * Air_Porosity[i] / 100.; //Per volume of CO2 of soil
 		}
 
 	}
@@ -295,11 +272,12 @@ double OxidationRatio;
 		OutFlow(CO2Soil, CO2_Production);
 
 		for (size_t i = 0; i < CO2_Conc.size(); i++) {
-			CO2_Conc[i] = CO2Soil[i] / (Fix::MOL_RATIO_CO2_AIR*AirDensityTempFunc(pSoilHeat->Temp[i]));
-			DCO2_SoilCoef[i] = D_CO2(DCO2_Tortuosity, Air_Porosity[i], pSoilHeat->Temp[i]);//wenxin
+			double z_layer = Air_Porosity[i] / Fix::PERCENT_FRAC * p_Soil_WaterF->AThicknessLayers[i]; // Unit [m]
+			CO2_Conc[i] =CO2Soil[i]*Fix::PPM_FRAC / (z_layer * f_CarbonDioOxideDensityFrom_Volume_Temp(Fix::PPM_FRAC, pSoilHeat->Temp[i]));
 		}
-		CO2MassConcAtm = CO2_CONC_Atm*Fix::MOL_RATIO_CO2_AIR*AirDensityTempFunc(pSoilHeat->Temp.front());
+		CO2MassConcAtm = f_CarbonDioOxideDensityFrom_Volume_Temp(410. , pSoilHeat->Temp.front());
 		CO2_Flux_Out = DCO2_SoilCoef.front()*(CO2MassConcAtm - CO2_Conc.front()) / p_Soil_WaterF->AThicknessLayers.front() / 2.;
+		
 		for (size_t i = 1; i<CO2_FluxSoil.size(); i++)
 			CO2_FluxSoil[i - 1] = DCO2_SoilCoef[i] * (CO2_Conc[i - 1] - CO2_Conc[i]) / p_Soil_WaterF->DistanceMidpLayers[i - 1];
  
@@ -318,7 +296,7 @@ double OxidationRatio;
 		if (i >= p_Soil_WaterF->LayerOfSatLevel)
 			An_VolFraction[i] = 1;
 		else
-  			An_VolFraction[i] =f_AnaerobicFraction(Oxygen_Conc[i]);
+  			An_VolFraction[i] =f_AnaerobicFraction(Oxygen_Conc[i]/Fix::PERCENT_FRAC);
 	}
 
 

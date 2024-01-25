@@ -39,14 +39,16 @@ struct Fix {
 
 	static constexpr double DNOT_O2 = 2.6E-5;//			! Diffusion of oxygen at 20 C (m2/s)
 	static constexpr double DNOT_CO2 = 1.92E-5;//			! Diffusion of oxygen at 20 C (m2/s)
+	static constexpr double DNOT_CH4 = 2.6E-5;//			! Diffusion of methane at 20 C (m2/s)
 
-	static constexpr double DNOT_CH4 = 2.6E-5;//			! Diffusion of oxygen at 20 C (m2/s)
 	static constexpr double MOL_C = 12.011;//				! Molecular weight of carbon
+	static constexpr double MOL_NO = 30.061;
 	static constexpr double MOL_CO2 = 44.0098;//			! Molecular weight of carbondioxide
 	static constexpr double MOL_O2 = 31.998;//			! Molecular weight of oxygen
 	static constexpr double MOL_AIR = 29.0;//				! Molecular weight of dry air
 	static constexpr double MOL_RATIO_O2_C = 2.664058;//	! Mole ratio oxygen to carbon   
 	static constexpr double MOL_RATIO_O2_AIR = 1.10;//! Mole ratio oxygen to Air
+	static constexpr double MOL_RATIO_NO_AIR = MOL_NO / MOL_AIR;
 	static constexpr double MOL_RATIO_CO2_AIR = MOL_CO2 / MOL_AIR;//! Mole ratio oxygen to Air
 	static constexpr double MOL_VOL_AIR = 44.6;//! Mole air per cubic meter (mol/m3)
 	static constexpr double ABS_ZERO = 273.15;//! Absolute zero (negative sing removed)
@@ -63,7 +65,8 @@ struct Fix {
 	static constexpr double GWP_C_CO2 = 3.6666 * 1. * 3.6525; // to Kg CO2e /ha/yr
 	static constexpr double GWP_C_CH4 = 1.3333 * 28. * 1. * 3.6525;// to CO2e/ha/yr
 	static constexpr double GWP_N_N2O = 1.5714 * 265. * 1. * 3.6525;// tp CO2e/ha/yr
-
-
+	static constexpr double PERCENT_FRAC = 100.;
+	static constexpr double PPM_FRAC = 1.E6;
+	static constexpr double KILO = 1000.;
 
 };

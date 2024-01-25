@@ -2490,6 +2490,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 					}
 					else if(size_t(HarvestYearPlantIndex[jj]+0.01)==i_plant&&jjp==i_plant&&int(SimPlantYearAge[jjp])==int(HarvestYears[jj])) {
 						DoHarvest=true  ;
+						if (Harvest_Type_Years[jj] > 0.5) 	DoFinalHarvest = true;
 						if(jj==HarvestYears.size()-1  ) DoFinalHarvest=true;
     				}
 				}

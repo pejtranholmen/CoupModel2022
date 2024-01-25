@@ -387,7 +387,7 @@ plotpar.Y_Label = "Relative Rate (-)";
 		plotpar.Y_ScalingCoef = 3;
 
 	pPs = new Ps(&CH4_CONC_Atm, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
-		Define(pPs, "CH4 Air Conc", 1.8E-06, "g/g", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 1.E-09, 1.E-03);	ps_vec.push_back(pPs);
+		Define(pPs, "CH4 Air Conc", 1.8, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 1.E-09, 1.E-03);	ps_vec.push_back(pPs);
 	pPs = new Ps(&CH4_ResistanceAir, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
 		Define(pPs, "CH4 Resistance Air", 30., "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane SoilBoundary=0", 1., 500.); ps_vec.push_back(pPs);
 
@@ -400,7 +400,7 @@ plotpar.Y_Label = "Relative Rate (-)";
 
 
 	pPs = new Ps(&CO2_CONC_Atm, SIMPROFILE, METHANE, STORAGE, INITB, NORMAL);
-		Define(pPs, "CO2 Air Conc", 4.E-04, "g/g", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Soil CO2Model>0", 2.E-04, 7.E-04);
+		Define(pPs, "CO2 Air Conc", 400., UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Soil CO2Model>0", 2.E-04, 7.E-04);
 		 //wenxin
 	pPs= new Ps(&CH4_InitConc,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
 	    Define(pPs,   "CH4 init Conc",30.,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",1.E-02,50.);
@@ -553,11 +553,11 @@ plotpar.Y_Label = "Relative Rate (-)";
 // CH4 model above;
 ; initv.assign(pSoil->NL, .0004);
 	pG= new G(&CO2_Conc ,pNL,SIMPROFILE,SOILCO2, TRANSPORT,RESPIRATION, NORMAL); 
-		Define(pG, pNL   , "CO2 Concentration",initv, UNIT_TYPES::GAS_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+		Define(pG, pNL   , "CO2 Concentration",initv, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 		//wenxin ppm = volume ratio?
 	initv.assign(pSoil->NL, 20.);
 	pG= new G(&Oxygen_Conc ,pNL,SIMPROFILE,AIR, TRANSPORT,OXIDATION, NORMAL); 
-		Define(pG, pNL   , "Oxygen Concentration",initv,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+		Define(pG, pNL   , "Oxygen Concentration",initv,UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 	pG= new G(&Air_Porosity ,pNL,SIMPROFILE,AIR, TRANSPORT,OXIDATION, NORMAL); 
 		Define(pG, pNL   , "Air Porosity",initv,"%", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 		initv.assign(pSoil->NL, .0);
@@ -628,7 +628,7 @@ plotpar.Y_Label = "Relative Rate (-)";
 		plotpar.X_Min = 0;
 		plotpar.X_Max = 100.;
 		plotpar.X_Label = "Fraction of total Volume (";
-		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::WATERCONTENT_UNIT) + ")";
+		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::VOLPERCENTAGE_UNIT) + ")";
 		plotpar.X_Label += unit;
 		plotpar.Y_ScalingCoef = 0;
 
@@ -805,13 +805,13 @@ plotpar.Y_ScalingCoef = 0;
 		mTab_Ox.push_back(pP);mTab_Ph.push_back(pP);
 		pP=m_pModelMap->GetPPointer("mLower Depth");
 		mTab_Ox.push_back(pP);mTab_Ph.push_back(pP);
-
+	initv.assign(pSoil->NL, 20.9);
 	pP= new P(&Init_Oxygen_Conc,pNL,SIMPROFILE,ANAROBIC_GAS, TRANSPORT, OXIDATION, NORMAL); 
-		Define(pP, pNL,"Init Oxygen Conc", initv,"-","Nitrogen and Carbon >= 1|Trace Gas Emissions > 0",0.,30.);
+		Define(pP, pNL,"Init Oxygen Conc", initv,UNIT_TYPES::VOLPERCENTAGE_UNIT,"Nitrogen and Carbon >= 1|Trace Gas Emissions > 0",0.,30.);
 		mTab_Ox.push_back(pP);
-;	initv.assign(pSoil->NL, .0004);
+;	initv.assign(pSoil->NL, 5000);
 	pP = new P(&Init_CO2_Conc, pNL, SIMPROFILE, ANAROBIC_GAS, TRANSPORT, OXIDATION, NORMAL);
-		Define(pP, pNL, "Init CO2 Conc", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 30.);
+		Define(pP, pNL, "Init CO2 Conc", initv, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 600.);
 		mTab_Ox.push_back(pP); //wenxin
 
 	pTab= new Tab(&mTab_Ox,  SIMPROFILE,ANAROBIC_GAS, INITF,NOBPROC, NORMAL); 

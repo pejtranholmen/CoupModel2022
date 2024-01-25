@@ -19,41 +19,37 @@ private:
 };
 
 
-class AirDensityTempFunction {
+class AirDensityTempFunction {	// Returns KG/M3 prior 2024 - changed to g/m3  
 public:
-	AirDensityTempFunction(double reftemp_C, double height) { abstemp = 273.15; RelativePressureHeightFunction f; density = f(height)*Fix::DENSA; reftemp = reftemp_C + 273.15; }
-	AirDensityTempFunction(double height) { abstemp = 273.15; RelativePressureHeightFunction f; density = f(height)*Fix::DENSA; reftemp = 293.15; }
-	AirDensityTempFunction() { abstemp = 273.15; density = Fix::DENSA; reftemp = 293.15; }
-	double operator() (double temp) { return density * reftemp / (abstemp + temp); }
-
+	AirDensityTempFunction(double reftemp_C, double height) {  RelativePressureHeightFunction f; density = f(height)*Fix::DENSA*Fix::KILO; reftemp = reftemp_C + Fix::ABS_ZERO; }
+	AirDensityTempFunction(double height) { RelativePressureHeightFunction f; density = f(height)*Fix::DENSA*Fix::KILO; reftemp = 293.15; }
+	AirDensityTempFunction() {  density = Fix::DENSA*Fix::KILO; reftemp = 293.15; }
+	double operator() (double temp) { return density * reftemp / (Fix::ABS_ZERO + temp); }
 private:
-	double abstemp;	double density, reftemp;
-
+	double density, reftemp;
 };
-class GasDensityTempFunction {
+class GasDensityTempFunction {	// Return g/M3
 public:
 	GasDensityTempFunction(GasElement element, double height) {
 		f_AirDensityTempFunction = AirDensityTempFunction(height);
 		switch (element) {
 		case GasElement::OXYGEN:
-			moleRatio = Fix::MOL_RATIO_O2_AIR;
+			moleRatio = Fix::MOL_RATIO_O2_AIR/Fix::PERCENT_FRAC;
 			break;
 		case GasElement::NO:
-			moleRatio = Fix::MOL_RATIO_O2_AIR;
+			moleRatio = Fix::MOL_RATIO_NO_AIR/Fix::PPM_FRAC;
 			break;
 		case GasElement::CO2:
-			moleRatio = Fix::MOL_RATIO_CO2_AIR;
+			moleRatio = Fix::MOL_RATIO_CO2_AIR/Fix::PPM_FRAC;
 			break;
 		case GasElement::CH4:
-			moleRatio = Fix::MOL_RATIO_CH4_AIR;
+			moleRatio = Fix::MOL_RATIO_CH4_AIR/Fix::PPM_FRAC;
 			break;
 		}
 	}
-	double operator() (double temp) {
-		return moleRatio * f_AirDensityTempFunction(temp)*1000.;
-	}
-	double operator() (double volumeconc, double temp) {
-		return volumeconc * moleRatio * f_AirDensityTempFunction(temp)*1000.;
+
+	double operator() (double gas_volume, double temp) {
+		return gas_volume * moleRatio * f_AirDensityTempFunction(temp); // Note the gas_volume have adjusted units
 	}
 private:
 	double moleRatio;
@@ -80,18 +76,15 @@ public:
 	SoilAirDiffusion(GasElement element, double tourtous) noexcept : tourtousf(tourtous) {
 		switch (element) {
 		case GasElement::OXYGEN:
-			D_Coef = Fix::DNOT_O2;
-			break;
 		case GasElement::NO:
 			D_Coef = Fix::DNOT_O2;
 			break;
 		case GasElement::CO2:
-			D_Coef = Fix::DNOT_O2;
+			D_Coef = Fix::DNOT_CO2;
 			break;
 		case GasElement::CH4:
-			D_Coef = Fix::DNOT_O2;
+			D_Coef = Fix::DNOT_CH4;
 			break;
-
 		}
 		f_Temp = TempDiffusionFunc();
 		D_Coef *= 864.;
@@ -102,8 +95,6 @@ public:
 		tourtousf(tourtous), D_PowerCoef(PowerCoef), D_AirThreshold(Threshold), D_MinValue(MinValue) {
 		switch (element) {
 		case GasElement::OXYGEN:
-			D_Coef = Fix::DNOT_O2;
-			break;
 		case GasElement::NO:
 			D_Coef = Fix::DNOT_O2;
 			break;
@@ -111,9 +102,8 @@ public:
 			D_Coef = Fix::DNOT_CO2;
 			break;
 		case GasElement::CH4:
-			D_Coef = Fix::DNOT_O2;
+			D_Coef = Fix::DNOT_CH4;
 			break;
-
 		}
 		D_Coef *= 864.;	 // Note this to convert from m2/s to m2/day, considering the Air Percentage instead of Air Fraction
 						 // 864 instead of 86400	
@@ -147,4 +137,11 @@ private:
 	double D_Coef, tourtousf;
 	double D_MinValue, D_AirThreshold, D_PowerCoef;
 	function<double(double)> f_Temp;
+};
+class ChangeConcentration {
+	public:
+		ChangeConcentration() {};
+		double operator() (double flux, double dz, double Diff, double conc) {
+		return flux * dz / (Diff * conc);
+	}
 };

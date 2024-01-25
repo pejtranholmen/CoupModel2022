@@ -23,7 +23,6 @@ public:
 	DenitrifiersAnaerobicMoistureResponse(double Denit_Act_PowerCoef): powercoef(Denit_Act_PowerCoef)  {}
 	double operator() (double anaerobicfrac) {
 		return pow(anaerobicfrac, powercoef);
-
 }
 private:
 	double powercoef;
@@ -34,7 +33,6 @@ class COS_PlantFlux {
 
 	double operator() (double FluxBase) {
 		return 	FluxBase * Cos_Ratio;
-
 	}
 	private:
 		double Cos_Ratio;
