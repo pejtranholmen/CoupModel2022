@@ -129,7 +129,7 @@ namespace ModelFunctions {
 		return Fix::GRAVCONST*DiffHeight*DiffTemp / ((TempAir + 273.15)*WindSpeed*WindSpeed);
 	}
 	double AirDensityTempFunc(double temp)
-	{
+	{	// KG/M3
 		return Fix::DENSA*293.15 / (273.15 + temp);
 	}
 	double RelativePressureHeightFunc(double height) {

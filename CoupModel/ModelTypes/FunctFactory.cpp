@@ -472,6 +472,10 @@ function<double(double, double)> FunctFactory::Set_D2_Functor() {
 				return PotentialWaterUptake(m_Ps_Par[0]);
 			}
 			break;
+		case MyFunc::METHANE_BOUNDARYLAYER_FLUX:
+			if (m_Ps_Par.size() == 2)
+				return MethaneBoundaryLayerFlux(m_Ps_Par[0], m_Ps_Par[1]);
+			break;
 		case MyFunc::HBV_ACTUALEVAPORATION:
 			if (m_Ps_Par.size() == 2) {
 				return ActualEvaporation(m_Ps_Par[0], m_Ps_Par[1]);

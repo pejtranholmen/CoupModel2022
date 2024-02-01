@@ -51,6 +51,13 @@ public:
 	double operator() (double gas_volume, double temp) {
 		return gas_volume * moleRatio * f_AirDensityTempFunction(temp); // Note the gas_volume have adjusted units
 	}
+	double operator() (double mass_m2, double dz, double temp) {
+		double massratio_water_air = 1.E6/ f_AirDensityTempFunction(temp);
+
+		return mass_m2 / dz /massratio_water_air/moleRatio;
+
+	}
+
 private:
 	double moleRatio;
 	function<double(double)> f_AirDensityTempFunction;

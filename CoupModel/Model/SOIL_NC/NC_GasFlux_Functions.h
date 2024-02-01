@@ -109,7 +109,7 @@ function<double(double, double)> f_OxygenDiffuctionCoef;
 function<double(double, double)> f_CarbonDiOxideDiffuctionCoef;
 function<double(double, double)> f_OxygenDensityFrom_Volume_Temp;
 function<double(double, double)> f_CarbonDioOxideDensityFrom_Volume_Temp, f_MethaneDensityFrom_Volume_Temp;
-function<double(double)> f_AirDensityFrom_Temp;
+function<double(double, double, double)> f_MethaneAirConcFrom_water_Temp;
 
 function<double(double)> f_NitrogenOxideProduction_Temp;
 function<double(double)> f_NO_Production_Moist;

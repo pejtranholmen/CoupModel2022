@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 struct Fix {
 	static constexpr double  DENSW = 1000.;
 	static constexpr double DENSICE = 917.;   // Density of Ice
@@ -21,6 +21,7 @@ struct Fix {
 
 	static constexpr double GRAVCONST = 9.80665;
 	static constexpr double RGAS = 8.314;//	!  J/(molK)
+	static constexpr double RGAS_L_ATM_K= 0.082057;// L⋅atm⋅K−1⋅mol−1
 	static constexpr double DNOT = 2.29E-5;///	  ! m2/s
 	static constexpr double MOLW = 18.016;//
 	static constexpr double RGASC = 47.04;//
@@ -42,6 +43,7 @@ struct Fix {
 	static constexpr double DNOT_CH4 = 2.6E-5;//			! Diffusion of methane at 20 C (m2/s)
 
 	static constexpr double MOL_C = 12.011;//				! Molecular weight of carbon
+	static constexpr double MOL_CH4 = 16.011;//	
 	static constexpr double MOL_NO = 30.061;
 	static constexpr double MOL_CO2 = 44.0098;//			! Molecular weight of carbondioxide
 	static constexpr double MOL_O2 = 31.998;//			! Molecular weight of oxygen
