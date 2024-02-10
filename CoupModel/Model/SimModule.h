@@ -150,6 +150,11 @@ public:
 		if(NumTest(T)) X+= T*T_Step;};
 	
 	void OutFlow(double &X, const double &T) {/*if(NumTest(T))*/ X -= T*T_Step; };
+	void OutFlowZeroControl(double& X, double&T) {
+		if (T * T_Step > X) T = X * 0.5 / T_Step;
+		X -= T * T_Step;
+	}
+
 	void OutFlow(vector<double> &X, const vector<double> &T) { 
 		for (size_t i = 0; i < X.size(); i++) {
 			 if(NumTest(T[i]))	X[i] -= T[i] * T_Step;
@@ -159,6 +164,14 @@ public:
 
 	
 	void IntFlow(vector<double> &X, const vector<double> &T) { for (size_t i = 1; i<X.size(); i++) { X[i - 1] -= T[i - 1]*T_Step; X[i] += T[i - 1]*T_Step; } };
+
+	void IntFlowZeroControl(vector<double>& X, vector<double>& T) { for (size_t i = 1; i < X.size(); i++) { 
+		if (T[i - 1] * T_Step > X[i - 1])
+			T[i - 1] = X[i - 1] * 0.5 / T_Step;
+		else if (T[i - 1]<0. && abs(T[i - 1] * T_Step)> X[i])
+			T[i - 1] = -X[i] * 0.5 / T_Step;
+		X[i - 1] -= T[i - 1] * T_Step; X[i] += T[i - 1] * T_Step; } 
+	};
 
 	void TransFlow(vector<double> &X_out,vector<double> &X_in, const vector<double> &T)
 	{for(size_t i=0; i<X_out.size(); i++) {X_out[i]-=T[i]*T_Step; X_in[i]+=T[i]*T_Step;} };

@@ -11,7 +11,7 @@ class NC_GasFlux_Functions : public NC_Organic
 
 
 size_t  Trace_Gas_Emissions, Oxygen_Model, Methane_Model,Methane_Plant_Oxidation, Methane_Soil_Oxidation,
-Methane_Plant_Emission, Methane_SoilBoundary_Flux;
+Methane_Plant_Emission, Methane_SoilBoundary_Flux, MethaneConvectionSoilFlux;
 size_t COS_Model, COS_PlantModel, COS_SoilModel;
 size_t  N2O_YearlyFluxes/*, CO2_SoilModel Moved to AbioticResponses_Functions*/;  
 vector<double> Oxygen, Oxygen_Flux, Oxygen_Consumption, CO2Soil, CO2_FluxSoil,CO2_Production;

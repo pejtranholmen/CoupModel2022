@@ -7,6 +7,7 @@ enum class Methane_Soil_Oxidation_Sw { off, on_orignal, New };
 enum class Methane_Plant_Emission_Sw { off, on };
 enum class Methane_SoilBoundary_Flux_Sw{ Fixed_Air_Resistance,Dynamic_Air_Resistance};
 enum class N2O_YearlyFluxes_Sw { off, on };
+enum class MethaneConvectionSoilFlux_Sw{off, on};
 
 
 
@@ -39,10 +40,10 @@ public:
 	HenryLawMethaneVolatility(double Henry_cp, double HenryCoefTemp, double RefTemp ) noexcept 	:
 	cp(Henry_cp), ctemp(HenryCoefTemp), reftemp(RefTemp)
 	{		// Converts from mass/mass to mass per volume assuming the denisity of water to 10**6 g/m3
-			// MASS_CH4_WATER as input is mg/L = 1E6 mg/m3
-			// Output unit = g/m3
+			// MASS_CH4_WATER as input is mg/L = or g/m3 
+			// Output unit = g/m3 has the same unit as input unit
 
-		cp = Henry_cp*1.E3*Fix::RGAS_L_ATM_K ; // To get from PPM to 1 Litre = dm3   
+		cp = Henry_cp*Fix::PPM_FRAC*Fix::RGAS_L_ATM_K ; // To get from PPM to 1 Litre and  dm3   
 
 	}
 	double operator() (double Mass_CH4_Water, double Temp) noexcept {
@@ -58,26 +59,30 @@ private:
 class MethaneBoundaryLayerFlux {
 public:
 	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir) noexcept : atm_conc(ref_conc), ra(ResistanceAir) { // This is the instantiation for fixed air resistance
-		atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR;; ra /= Fix::SECPERDAY;ra *=1.E6 ; scalecoef = 3.;
-	};   // corrected from 
+		atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR/Fix::PPM_FRAC; ra /= Fix::SECPERDAY; scalecoef = 3.;
+		f_AirDensity = AirDensityTempFunction();
+	};   // corrected from ra is scaled to convert MassConsAtm and ConSurface from mg/L to g/m3
 	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir, double LogScale) noexcept : atm_conc(ref_conc), ra(ResistanceAir) { //This is the instantiation for dynamics scaling of surface flux
-		atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR; ra /= Fix::SECPERDAY; ra *= 1.E6;	scalecoef = pow(10., LogScale);
+		atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR/Fix::PPM_FRAC; ra /= Fix::SECPERDAY; 	scalecoef = pow(10., LogScale);
+		f_AirDensity = AirDensityTempFunction();
 	};
 
 	double operator() (double ConcSurface) noexcept {
 		return ( ConcSurface- atm_conc) / ra;
 	};
 	double operator() (double ConcSurface, double TempSurface) { // This is the default fixed ra operator
-		double MassConcAtm =atm_conc * AirDensityTempFunc(TempSurface);  // 10 to get volume as dm3 = L
+		double MassConcAtm =atm_conc * f_AirDensity(TempSurface)/Fix::KILO;  // g Methane/m3
 		double flux = (ConcSurface - MassConcAtm) / ra;
-		if (TempSurface < 0.)
+		if (TempSurface < 0.) // No possible uptake of Methane during freezing conditions
 			return max(0., flux);
 		else
 			return flux;
 	};
 	double operator() (double ConcSurface, double TempSurface, double AirResistance) { //This is the operator for dynamics scaling of surface flux
-		double MassConcAtm = atm_conc*Fix::MOL_RATIO_CH4_AIR * AirDensityTempFunc(TempSurface);
-		double flux = (ConcSurface - MassConcAtm) / (AirResistance*1.E6/Fix::SECPERDAY);
+																						// Input units are (mg/L, C, s/m)
+		double MassConcAtm = atm_conc * f_AirDensity(TempSurface)/Fix::KILO;
+		AirResistance = max(1., AirResistance);
+		double flux = (ConcSurface - MassConcAtm) / (AirResistance/Fix::SECPERDAY*scalecoef);
 		if (TempSurface < 0.)
 			return max(0., flux);
 		else
@@ -88,6 +93,7 @@ public:
 
 private:
 	double ra, atm_conc, scalecoef;
+	function<double(double)> f_AirDensity;
 
 };
 
@@ -169,7 +175,7 @@ class GasDiffusionSoilFlux {
 	// Note that concentration in water is in mg/dm3 = g/m3
 public:
 	GasDiffusionSoilFlux(double MethaneDiffCoefWater) {
-		diffcoef_m2_day = MethaneDiffCoefWater * 86400.E-6;
+		diffcoef_m2_day = MethaneDiffCoefWater * Fix::SECPERDAY;
 	};
 	GasDiffusionSoilFlux(GasElement element, double tourtous) {
 		f_DiffusionAir = SoilAirDiffusion(element, 0.66);
@@ -181,7 +187,7 @@ public:
 	};
 	void operator() (vector<double>& AirConc, vector<double>& AirContent, vector<double>& Temp, vector<double>& MidDistance, vector<double>* flux) {
 		for (size_t i = 1; i < flux->size(); i++) {
-			double meanaircontent = (AirContent[i - 1] + AirContent[i]) / 2.*1.E-6;
+			double meanaircontent = (AirContent[i - 1] + AirContent[i]) / 2.;
 			flux->at(i - 1) = -f_DiffusionAir(meanaircontent, Temp[i-1])* (AirConc[i] - AirConc[i - 1]) / MidDistance[i];
 		}
 	};
@@ -193,7 +199,7 @@ private:
 class GasConvectiveSoilFlux {
 // The convective flux is added to the flux of diffusion
 public:
-	GasConvectiveSoilFlux() {scalingcoef = 1.E-6;};
+	GasConvectiveSoilFlux() {scalingcoef = 1.E-3;};
 	void operator() (vector<double> &WaterConc, vector<double> &WaterFlow, vector<double> *CH4_SoilFlux) {
 		for (size_t i = 1; i < CH4_SoilFlux->size(); i++) {
 			if(WaterFlow[i-1]>0.)
@@ -205,4 +211,15 @@ public:
 private:
 	double scalingcoef;
 
+};
+class DiffusionFlux {
+public :
+	DiffusionFlux(double DCoef) : d(DCoef) {
+		d *= Fix::SECPERDAY;
+	};
+	double operator() (double grad) { 
+		// grad in g/m4 return g/m2/day;
+		return d*grad; };
+private :
+	double d;
 };

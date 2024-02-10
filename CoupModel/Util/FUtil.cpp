@@ -560,7 +560,9 @@ string FUtil::NameRevision2018(string name)
 		name = name.substr(0, pos) + str;
 		if (add.size() > 0) name += add;
 	}
+	if (name.find("CH4 Surface Emission") == 0) return "CH4 surface Emission";
 	if (name.find("CH4") == 0|| name.find("CO2") == 0) return name;
+	if (name.find("CH4 Surface Emission") == 0) return "CH4 surface Emission";
 	if (name.find("CN Ratio") == 0|| name.find("Cloud")==0) return name;
 	else if (name.find("C") == 0 && name.find(" ") != 1 && name.find("COS") != 0 && name.find("Tot") != 1 && name.find("Carbon") != 0) {
 		name = "C " + name.substr(1);

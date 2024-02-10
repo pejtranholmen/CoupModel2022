@@ -1178,11 +1178,16 @@ bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
 				size_t LL=m_ValPGFile[i].val_listindex[j];
 				string str;
 				str=m_pSim->m_Val_Array[LL].Name;
-				if(m_pValVar[LL].pBase->Is_Vector()) 
-					 str+='('+FUtil::STD_ItoAscii(m_pValVar[LL].TabIndex+1)+')';
-				pPG->SetVarName(j+1,str);
-				pPG->SetVarUnit(j+1,m_pValVar[LL].pBase->GetUnit());
-				pPG->SetVarId(j+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo) );
+				if (m_pValVar[LL].pBase == nullptr) {
+					pPG->SetVarName(j + 1, str);
+				}
+				else {
+					if (m_pValVar[LL].pBase->Is_Vector())
+						str += '(' + FUtil::STD_ItoAscii(m_pValVar[LL].TabIndex + 1) + ')';
+					pPG->SetVarName(j + 1, str);
+					pPG->SetVarUnit(j + 1, m_pValVar[LL].pBase->GetUnit());
+					pPG->SetVarId(j + 1, FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo));
+				}
 			}
 			PGPOS pos = pPG->GetPos(m_pModelInfo->m_ActMin);
 

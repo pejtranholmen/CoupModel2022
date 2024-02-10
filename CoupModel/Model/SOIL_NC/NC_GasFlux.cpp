@@ -573,9 +573,6 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 		CH4_TotSoilStorage = sum(CH4);
 		CH4_DiffTotStorage = CH4_TotSoilStorage - CH4_InitStorage;
 		double loss_check;
-		//
-		//Do i=1, NL
-		MethaneMassConcAtm = f_MethaneDensityFrom_Volume_Temp(CH4_CONC_Atm, pSoilHeat->Temp.front());
 
 		for (size_t i = 0; i < CH4.size(); i++) { // Loop over all soil layes
 			CH4_Conc_Water[i] = Fix::KILO*CH4[i] / p_Soil_WaterF->WaterStorage[i];  ////// mg/L or g/m3
@@ -611,14 +608,9 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 			else
 				CH4_PlantWaterUptake[i] = 0.;
 
-			if (CH4_PlantWaterUptake[i] > 0.) {
-				CH4_PlantWaterUptake[i] = f_PlantEmissionbyWaterUptake(((WaterUptake*)pPlant)->WUptakeRate[i], CH4_Conc_Water[i] / 1000.);
-
-			}
-
 			loss_check = CH4_Oxidation[i] + CH4_Ebullition[i] + CH4_PlantWaterUptake[i];
 			if (loss_check > CH4[i] * T_Step && CH4[i] >= 0.) {
-				double lossmaxratio = CH4[i] * T_Step / loss_check * 0.1;
+				double lossmaxratio = CH4[i] * T_Step / loss_check * 0.5;
 				CH4_Oxidation[i] = lossmaxratio * CH4_Oxidation[i];
 				CH4_OxidationSoilBacteria[i] = lossmaxratio * CH4_OxidationSoilBacteria[i];
 				CH4_OxidationPlantRoot[i] = lossmaxratio * CH4_OxidationPlantRoot[i];
@@ -637,25 +629,18 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 
 
 		f_DiffusionFlux(CH4_Conc_Water, p_Soil_WaterF->DistanceMidpLayers, &CH4_SoilFlux);
-		f_ConvectiveFlux(CH4_Conc_Water, p_Soil_WaterF->WaterFlow, &CH4_SoilFlux);
+		if(MethaneConvectionSoilFlux_Sw(MethaneConvectionSoilFlux)== MethaneConvectionSoilFlux_Sw::on)
+			f_ConvectiveFlux(CH4_Conc_Water, p_Soil_WaterF->WaterFlow, &CH4_SoilFlux);
 
 		f_DiffusionAirSoilFlux(CH4_CONC_AIR, Air_Porosity, pSoilHeat->Temp, p_Soil_WaterF->DistanceMidpLayers, &CH4_AirSoilFlux);
-		//Uppermost layer
 
 
-         		if (Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux) == Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
+    	if (Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux) == Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
 			CH4_SurfaceEmission =  f_MethaneBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front());
 		else {
-			double* ra = &p_AtmModel->m_Irrigation.RaSoilSurf;
-			double RaSurf = max(0.0001, *ra);
-			CH4_SurfaceEmission = f_MethaneDynResBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front(), RaSurf);
+			CH4_SurfaceEmission = f_MethaneDynResBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front(), p_AtmModel->m_Irrigation.RaSoilSurf);
 		}
-		if (CH4_SurfaceEmission * T_Step > CH4[0] && CH4[0] > 0.) {
-			CH4_SurfaceEmission = CH4[0] / T_Step * 0.5;
-		}
-		else if(CH4[0]<0.) {
-			CH4_SurfaceEmission = 0.;
-		}
+
 
 
 
@@ -688,40 +673,38 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 		OutFlow(CH4, CH4_PlantWaterUptake);
 		checkzero(CH4, prior);
 
+		OutFlowZeroControl(CH4.front(), CH4_SurfaceEmission);
 		// Summation of fluxes to total fluxes
 
 
 		CH4_TotSoilProductionFlux = sum(CH4_Prod);
+		
 		CH4_TotSoilFlux = sum(CH4_Ebullition) + CH4_SurfaceEmission;
-		CH4_TotSoilOxidation = sum(CH4_OxidationSoilBacteria);
 		CH4_TotPlantUptake = sum(CH4_PlantWaterUptake);
-
+		
+		CH4_TotSoilOxidation = sum(CH4_OxidationSoilBacteria);
+		
 		CH4_TotPlantOxidation = f_MethaneOxidationInPlant(CH4_TotPlantUptake) + sum(CH4_OxidationPlantRoot);
 		CH4_TotPlantEmission = CH4_TotPlantUptake - f_MethaneOxidationInPlant(CH4_TotPlantUptake);
 
 		CH4_TotSysFlux = CH4_TotSoilFlux + CH4_TotPlantEmission;
-		prior = CH4;
-		OutFlow(CH4.front(), CH4_SurfaceEmission);
-		checkzero(CH4, prior);
-
-
 
 		// Integration of flows to acc variables
 
 		InFlow(CH4_AccBubbles, sum(CH4_Ebullition));
-		InFlow(CH4_AccPlant, CH4_TotPlantUptake);
 		InFlow(CH4_AccEmission, CH4_TotSoilFlux);
+
 		InFlow(CH4_AccProduction, CH4_TotSoilProductionFlux);
+		
 		InFlow(CH4_AccOxidation, sum(CH4_Oxidation));
+		InFlow(CH4_AccPlant, CH4_TotPlantUptake);
 
 
 
-		prior = CH4;
-		IntFlow(CH4, CH4_SoilFlux);
-		checkzero(CH4, prior);
-		// Redistribution of convective and diffusive flow in water
-		IntFlow(CH4, CH4_AirSoilFlux); // Added  pej Jan 2023 the Diffusive flow in air
-		checkzero(CH4, prior);
+		IntFlowZeroControl(CH4, CH4_SoilFlux);	  // Convective and diffusive flow in water	
+		IntFlowZeroControl(CH4, CH4_AirSoilFlux);  //Diffusive flow in air
+
+
 		CH4_MassBalanceCheck = CH4_AccProduction - CH4_AccEmission - CH4_DiffTotStorage - CH4_AccOxidation - CH4_AccPlant;
 	}
 

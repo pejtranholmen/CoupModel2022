@@ -337,6 +337,10 @@ function<double(double)> FunctFactory::Set_D1_Functor() {
 			if (m_Ps_Par.size() == 3)
 				return MethaneEmissionByTranspiration(m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2]);
 			break;
+		case MyFunc::DIFFUSION_FLUX_FUNCTION:
+			if (m_Ps_Par.size() == 1)
+				return DiffusionFlux(m_Ps_Par[0]);
+			break;
 		case MyFunc::NITRI_N2O_PROD_RESPONSE:
 		case MyFunc::NITRI_NO_PROD_RESPONSE:
 		case MyFunc::METHANE_PLANTOXIDATION_OF_WATERUPTAKE:
