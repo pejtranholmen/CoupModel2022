@@ -17,13 +17,15 @@ private:
 	double Coef;
 	vector<double> v_Coef;
 };
+
 class Michaelis_Menten_Response {
 public:
 	Michaelis_Menten_Response(double Coef) noexcept : c_half_rate(Coef) {};
-	double operator()(double Conc) noexcept { return  Conc / (Conc + c_half_rate);}
+	double operator()(double Conc) noexcept { return  (Conc / (Conc + c_half_rate)); }
 private:
 	double c_half_rate;
 };
+
 class ExpDecline_Response {
 public:
 	ExpDecline_Response(double Coef) noexcept : c (Coef) {};

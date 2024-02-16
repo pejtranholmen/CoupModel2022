@@ -99,12 +99,13 @@ bool NC_GasFlux_Functions::Def()
 		Define(pSw, "Methane Soil oxidation", 1, "off|on original|New", "Nitrogen and Carbon > 0|Methane Model>0");
 	pSw= new Sw(&Methane_Plant_Emission ,  SIMPROFILE,AIR, NOFPROC,METHANE_PRODUCTION, NORMAL);
 	    Define(pSw,"Methane emission by plants",0,"off|on","Nitrogen and Carbon > 0|Methane Model>0");
+	pSw= new Sw(&Methane_Aerenchyma_Emission ,  SIMPROFILE,AIR, NOFPROC,METHANE_PRODUCTION, NORMAL);
+	    Define(pSw,"Methane emission by aerenchyma",0,"off|on","Nitrogen and Carbon > 0|Methane Model>0");
 	pSw = new Sw(&Methane_SoilBoundary_Flux, SIMPROFILE, AIR, NOFPROC, METHANE_PRODUCTION, NORMAL);
 		Define(pSw, "Methane SoilBoundary", 0, "Fixed Air Resistance|Dynamic Air Resistance ", "Nitrogen and Carbon > 0|Methane Model>0");
+	
 	pSw= new Sw(&N2O_YearlyFluxes ,  SIMPROFILE,AIR, NOFPROC,SOIL_GAS_DYNAMICS, NORMAL);
 	    Define(pSw,"N2O Yearly Flux Statistics",0,"off|on","Nitrogen and Carbon > 0|Trace Gas Emissions >0");
-	pSw = new Sw(&MethaneConvectionSoilFlux, SIMPROFILE, AIR, NOFPROC, SOIL_GAS_DYNAMICS, NORMAL);
-		Define(pSw, "Methane Convection SoilFlux", 0, "off|on", "Nitrogen and Carbon > 0|Trace Gas Emissions >0");
 
 	vector<double> initv;
 	pX= new X(&CH4,pNL,SIMPROFILE,METHANE, STORAGE,SOIL_GAS_DYNAMICS, NORMAL);
@@ -134,6 +135,21 @@ bool NC_GasFlux_Functions::Def()
 	    Define(pT, pNL  , "CH4 Sink flux",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
 	pT= new T(&CH4_SoilFlux,pNL,SIMPROFILE,METHANE, STORAGE,METHANE_TRANSPORT, NORMAL); 
 		Define(pT, pNL  , "CH4 soil water flux",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
+
+	pT = new T(&O2_Aere, pNL, SIMPROFILE, METHANE, TRANSPORT, METHANE_TRANSPORT, NORMAL);
+		Define(pT, pNL, "Oxygen Flux Aerenchyma", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0");
+	pT = new T(&CH4_Aere, pNL, SIMPROFILE, METHANE, TRANSPORT, METHANE_TRANSPORT, NORMAL);
+		Define(pT, pNL, "Methane Flux Aerenchyma", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0");
+	pT = new T(&O2_Demand, pNL, SIMPROFILE, METHANE, TRANSPORT, METHANE_TRANSPORT, NORMAL);
+		Define(pT, pNL, "Oxygen Demand", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0");
+	pT = new T(&CH4_Demand, pNL, SIMPROFILE, METHANE, TRANSPORT, METHANE_TRANSPORT, NORMAL);
+		Define(pT, pNL, "Methane Demand", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0");
+	pT = new T(&O2_Oxidation, pNL, SIMPROFILE, METHANE, TRANSPORT, METHANE_TRANSPORT, NORMAL);
+		Define(pT, pNL, "Oxygen Oxidation", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0");
+	pT = new T(&OxygenStress, pNL, SIMPROFILE, METHANE, TRANSPORT, METHANE_TRANSPORT, NORMAL);
+		Define(pT, pNL, "Oxygen Stress", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0");
+	pT = new T(&MethaneStress, pNL, SIMPROFILE, METHANE, TRANSPORT, METHANE_TRANSPORT, NORMAL);
+		Define(pT, pNL, "Methane Stress", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0");
 	;
 ////Vectors added by Marco
 	pT= new T(&CH4_OxidationSoilBacteria ,pNL,SIMPROFILE,METHANE, STORAGE,METHANE_OXIDATION, NORMAL); 
@@ -145,10 +161,13 @@ bool NC_GasFlux_Functions::Def()
 		Define(pT, pNL  , "CH4 ebullition rate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
 	pT= new T(&CH4_PlantWaterUptake ,pNL,SIMPROFILE,METHANE, STORAGE,METHANE_OXIDATION, NORMAL); 
 		Define(pT, pNL  , "CH4 plant uptake",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
+	pT = new T(&CH4_PlantTransport, pNL, SIMPROFILE, METHANE, STORAGE, METHANE_OXIDATION, NORMAL);
+		Define(pT, pNL, "CH4 plant transport", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
 	pTs= new Ts(&CH4_SurfaceEmission,SOILSURFACE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
 	    Define(pTs,   "CH4 surface Emission",0.,UNIT_TYPES::MASSFLOW_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0");
 	pT= new T(&CH4_AirSoilFlux ,pNL,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
 	    Define(pT, pNL  , "CH4 soil air flux",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
+
   ;
 // CH4 Parameters;
   functorprop.FuncName = MyFunc::METHANE_PRODUCTION_FROM_ONE_LITTER; functorprop.Arg = MyArgType::D3;
@@ -238,10 +257,12 @@ plotpar.Y_ScalingCoef = 6;
 	pPs= new Ps(&CH4_HalfRateOxConstant,SIMPROFILE,METHANE, STORAGE,METHANE_OXIDATION, NORMAL); 
 	Define(pPs,   "CH4 HalfRateOxConstant",40, UNIT_TYPES::mMASS_LITER_UNIT,"Nitrogen and Carbon >=1|Methane Model>0",0.,100.);	ps_vec.push_back(pPs);
 	
+
 	pFunc = new Func(TOTPROFILE, METHANE, NOFPROC, METHANE_OXIDATION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
-
+	pPs = new Ps(&Oxygen_HalfRateOxConstant, SIMPROFILE, METHANE, STORAGE, METHANE_OXIDATION, NORMAL);
+	Define(pPs, "Oxygen HalfRateOxConstant", 160, UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >=1|Methane Model>0", 0., 300.);//	ps_vec.push_back(pPs);
 
 	functorprop.FuncName = MyFunc::METHANE_EBULLITION; functorprop.Arg = MyArgType::D2;
 		funcname = "Methane Ebullition Rate Production";
@@ -270,6 +291,13 @@ plotpar.Y_ScalingCoef = 6;
 
 
 ;
+
+    pPs = new Ps(&BubbleFrac, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+        Define(pPs, "CH4 Frac in Bubble", 0.57, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 1.E-02, 1.);
+	pPs = new Ps(&RatioPressThreshold, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+		Define(pPs, "CH4 Frac in Bubble", 0.15, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 1.E-02, .2);
+
+
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_REGULATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
 functorprop.FunctorInitOption = string::npos;
 funcname = "Plant Oxidation Regulation by root respiration";
@@ -363,14 +391,26 @@ plotpar.LegendsVec.clear();
 	
 		
 	pPs= new Ps(&CH4_HStandard,SIMPROFILE,METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
-	    Define(pPs,   "HenryStdCoef_cp",0.0013,"Mol/atm","Nitrogen and Carbon >=1|Methane Model>0",0.001,0.1);	 ps_vec.push_back(pPs);
+	    Define(pPs,   "CH4 HenryStdCoef_cp",0.0014,"Mol/atm","Nitrogen and Carbon >=1|Methane Model>0",0.001,0.1);	 ps_vec.push_back(pPs);
 	pPs= new Ps(&CH4_HTempSens,SIMPROFILE,METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
-	    Define(pPs,   "HenryCoefTempSens",-1700.,"K","Nitrogen and Carbon >=1|Methane Model>0",-10000.,10000.);	 ps_vec.push_back(pPs);
-	pPs= new Ps(&CH4_H_TRef,SIMPROFILE,METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
-	    Define(pPs,   "H_RefTemp",25., UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon >=1|Methane Model>0",-50.,50.);	 ps_vec.push_back(pPs);
+	    Define(pPs,   "CH4 HenryCoefTempSens",-1600.,"K","Nitrogen and Carbon >=1|Methane Model>0",-10000.,10000.);	 ps_vec.push_back(pPs);
+	//pPs = new Ps(&CH4_HConst, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
+	//	Define(pPs, "CH4 HenryConst", 714.29, "L.atm/mol", "Nitrogen and Carbon >=1|Methane Model>0", 10., 1000.);	 ps_vec.push_back(pPs);
+	pPs= new Ps(&H_TRef,SIMPROFILE,METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
+	    Define(pPs,   "H_RefTemp",25., UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon >=1|Methane Model>0",-50.,50.); 	 ps_vec.push_back(pPs);
 
+
+    
 	pFunc = new Func(TOTPROFILE, METHANE, NOFPROC, SOIL_GAS_EQUILIBRIUM, NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
+
+	pPs = new Ps(&O2_HStandard, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
+		Define(pPs, "O2 HenryStdCoef_cp", 0.0013, "Mol/atm", "Nitrogen and Carbon >=1|Methane Model>0", 0.001, 0.1); //	 ps_vec.push_back(pPs);
+	pPs = new Ps(&O2_HTempSens, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
+		Define(pPs, "O2 HenryCoefTempSens", -1500., "K", "Nitrogen and Carbon >=1|Methane Model>0", -10000., 10000.); //	 ps_vec.push_back(pPs);
+		//pPs = new Ps(&O2_HConst, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
+		//	Define(pPs, "O2 HenryConst", 769.23, "L.atm/mol", "Nitrogen and Carbon >=1|Methane Model>0", 10., 1000.);	 ps_vec.push_back(pPs);
+
 	
 	functorprop.FuncName = MyFunc::METHANE_TRANSPIRATION_EFFICIENCY; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = string::npos;
@@ -435,6 +475,8 @@ plotpar.LegendsVec.clear();
 	pPs = new Ps(&CH4_ResistanceAirLogScale, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
 		Define(pPs, "CH4 AirResistance LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane SoilBoundary=1", -2., 2.); 
 
+   pPs = new Ps(&O2_CONC_Atm, SIMPROFILE, OXYGEN, STORAGE, INITB, NORMAL);
+		Define(pPs, "O2 Air Conc", 20.95, UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 100.); 
 
 	pPs = new Ps(&CO2_CONC_Atm, SIMPROFILE, METHANE, STORAGE, INITB, NORMAL);
 		Define(pPs, "CO2 Air Conc", 30., UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Soil CO2Model>0", 2.E-04, 7.E-04);
@@ -442,6 +484,22 @@ plotpar.LegendsVec.clear();
 	pPs= new Ps(&CH4_InitConc,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
 	    Define(pPs,   "CH4 init Conc",20.,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",1.E-02,5.E3);
 
+    //pPs= new Ps(&NPPyr,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	//    Define(pPs,   "Annual NPP",600.,"gC/m2/yr", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,5.E3);
+	//pPs= new Ps(&Porosity_Tiller,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	//    Define(pPs,   "Porosity of tiller",0.3,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
+	//pPs= new Ps(&NPP_Ratio,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	//    Define(pPs,   "NPP Ratio",0.5,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
+	pPs= new Ps(&AereScale,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	    Define(pPs,   "Aerenchyma LogScale",0.,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",-5.,5.);
+	//pPs= new Ps(&Rob,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	//    Define(pPs,   "Ratio Root Len. to Depth",3.,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,20.);
+	pPs= new Ps(&D_CH4_Aere,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	    Define(pPs,   "Diffusivity CH4 through Aerenchyma",0.1875,"cm2/s", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
+	pPs= new Ps(&D_O2_Aere,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	    Define(pPs,   "Diffusivity O2 through Aerenchyma",0.1759,"cm2/s", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
+    //pPs= new Ps(&LAI_Aere,SIMPROFILE,METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+	//    Define(pPs,   "Aerenchyma LAI",4.,"cm2/cm2", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,10.);
 
 	pPs = new Ps(&COS_TranspirationRatio, ALLPLANTS, COS, NOFPROC, COS_TRANSPORT, NORMAL);
 	  Define(pPs, "COS Transpiration Ratio", 15., UNIT_TYPES::MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E-03, 1.E3);
@@ -474,7 +532,10 @@ plotpar.LegendsVec.clear();
 	pG= new G(&CH4_CONC_AIR,pNL,SIMPROFILE,METHANE, STORAGE,METHANE_TRANSPORT, NORMAL); 
 	    Define(pG, pNL,   "CH4 air concentration",initv,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 ;
-;
+    //initv.assign(pSoil->NL, 0.);
+    //pG = new G(&CH4_Conc, pNL, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
+    //    Define(pG, pNL, "CH4 concentration", initv, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+//;
 	pGs = new Gs(&CH4_TotSoilStorage, SIMPROFILE, METHANE, STORAGE, METHANE_PRODUCTION, NORMAL);
 	Define(pGs, "CH4 total soil Storage", 0.0, UNIT_TYPES::MASSFLOW_UNIT, "Methane Model>0");
 
@@ -562,7 +623,7 @@ plotpar.LegendsVec.clear();
 		Define(pT, pNL  , "Nitrous oxide (Nitrification)",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1");
 ;
 	pT= new T(&CO2_FluxSoil ,pNL,SIMPROFILE,SOILCO2, TRANSPORT,RESPIRATION, NORMAL); 
-		Define(pT, pNL  , "CO2_ FluxSoil",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+		Define(pT, pNL  , "CO2_FluxSoil",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 
 
 	pT= new T(&Oxygen_Flux ,pNL,SIMPROFILE,ANAROBIC_GAS, TRANSPORT,OXIDATION, NORMAL); 
@@ -861,6 +922,30 @@ plotpar.Y_ScalingCoef = 0;
 
 	pTab= new Tab(&mTab_Ph,  SIMPROFILE,ANAROBIC_GAS, INITF,NOBPROC, NORMAL);
 		Define(pTab,"pH Soil Profile",3);
+
+	initv.assign(p_Plant->NumPlants, 600.);
+	pP = new P(&NPPyr, pNumPlants, PLANT, PLANT_SHAPE, INTERCEPTION, NOBPROC, NORMAL);
+	mTab_Aere.push_back(pP);
+	Define(pP, pNumPlants, "Annual NPP", initv, "gC/m2/yr", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 5.E3);
+	
+	initv.assign(p_Plant->NumPlants, 0.3);
+	pP = new P(&Porosity_Tiller, pNumPlants, PLANT, PLANT_SHAPE, INTERCEPTION, NOBPROC, NORMAL);
+	mTab_Aere.push_back(pP);
+	Define(pP, pNumPlants, "Porosity of Tiller", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 1.);	 
+	
+	initv.assign(p_Plant->NumPlants, 0.5);
+	pP = new P(&NPP_Ratio, pNumPlants, PLANT, PLANT_SHAPE, INTERCEPTION, NOBPROC, NORMAL);
+	mTab_Aere.push_back(pP);
+    Define(pP, pNumPlants, "NPP Ratio", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 1.); 
+
+	initv.assign(p_Plant->NumPlants, 3.);
+	pP = new P(&Rob, pNumPlants, PLANT, PLANT_SHAPE, INTERCEPTION, NOBPROC, NORMAL);    
+	mTab_Aere.push_back(pP);
+	Define(pP, pNumPlants, "Ratio Root len. to Depth", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 20.);
+		
+	//Tab* pTab;
+	pTab = new Tab(&mTab_Aere, PLANT, PLANT_SHAPE, INTERCEPTION, NOBPROC, NORMAL);
+	Define(pTab, "Aerenchyma Transport", 1);
 
 
 return FunctionDef();

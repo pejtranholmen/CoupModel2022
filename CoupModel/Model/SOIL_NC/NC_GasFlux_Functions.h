@@ -11,7 +11,7 @@ class NC_GasFlux_Functions : public NC_Organic
 
 
 size_t  Trace_Gas_Emissions, Oxygen_Model, Methane_Model,Methane_Plant_Oxidation, Methane_Soil_Oxidation,
-Methane_Plant_Emission, Methane_SoilBoundary_Flux, MethaneConvectionSoilFlux;
+Methane_Plant_Emission, Methane_SoilBoundary_Flux,Methane_Aerenchyma_Emission, Ebullition ;
 size_t COS_Model, COS_PlantModel, COS_SoilModel;
 size_t  N2O_YearlyFluxes/*, CO2_SoilModel Moved to AbioticResponses_Functions*/;  
 vector<double> Oxygen, Oxygen_Flux, Oxygen_Consumption, CO2Soil, CO2_FluxSoil,CO2_Production;
@@ -28,7 +28,7 @@ double  Denit_Act_PowerCoef;
 double  N2O_10Percentil, N2O_50Percentil, N2O_90Percentil, N2O_Ymean;
 double  NO_10Percentil, NO_50Percentil, NO_90Percentil, NO_Ymean;
 vector<double>  pH_Value;
-vector<P*> mTab_Ox, mTab_Ph;
+vector<P*> mTab_Ox, mTab_Ph,mTab_Aere;
 
 vector<double> NO, N2O, N2;
 vector<double> NO_SoilFlux, N2O_SoilFlux, N2_SoilFlux, NO_NitriFlux, N2O_NitriFlux;
@@ -40,12 +40,17 @@ vector<double> CH4_Prod, CH4_Oxidation, CH4_SoilFlux, CH4;
 double  CH4_RateCoefRatio;
 double CH4_ProductionQ10;
 
-vector<double> CH4_Ebullition,CH4_PlantWaterUptake,CH4_Conc_Water;
+//double CH4_Conc_rel, Oxygen_Conc_rel, liqfrac, epsilon_ch4, kh_cc_ch4, epsilon_o2, kh_cc_o2;
+vector<double> RootFrac;
+vector<double> CH4_Ebullition, CH4_PlantWaterUptake, CH4_Conc_Water, Oxygen_Conc_Water, CH4_PlantTransport;
+//vector<double> CH4_Conc_rel, Oxygen_Conc_rel, RootFrac, liqfrac, epsilon_ch4, kh_cc_ch4, epsilon_o2, kh_cc_o2;
+vector<double> CH4_Demand, O2_Demand, CH4_Aere, O2_Aere, O2_Oxidation, OxygenStress, MethaneStress;
 
 ////Added by Marco
 vector<double> CH4_OxidationSoilBacteria,  CH4_OxidationPlantRoot, MethaneBubbleFunc;
-double  CH4_OxidationReactionRate, CH4_HalfRateOxConstant, CH4_PlantOxidationRate, CH4_Water_Diff_Coef;
+double  CH4_OxidationReactionRate, CH4_HalfRateOxConstant, Oxygen_HalfRateOxConstant, CH4_PlantOxidationRate, CH4_Water_Diff_Coef;
 double  CH4_EbullMax, CH4_BubbleRateConstant;
+double BubbleFrac, RatioPressThreshold;
 
 double  CH4_PlantOxidationEff, CH4_WaterPlantCoef, CH4_ResistanceAir;
 double CH4_AccBubbles, CH4_AccPlant, CH4_AccEmission, CH4_DiffTotStorage, CH4_MassBalanceCheck;
@@ -57,10 +62,13 @@ double CH4_TotPlantUptake, CH4_TotPlantEmission, CH4_TotPlantOxidation, CH4_TotS
 
 
 double  CH4_PlantOxShape, CH4_LimitWaterUptake, CH4_Air_Diff_Coef;
-vector<double>  CH4_AirSoilFlux,  CH4_CONC_AIR;
-double   CH4_HStandard, CH4_HTempSens, CH4_H_TRef, CH4_WaterPowerCoef, CH4_InitConc, CH4_SurfaceEmission;
+vector<double>  CH4_AirSoilFlux,  CH4_CONC_AIR, O2_CONC_AIR;
+double   CH4_HStandard, CH4_HTempSens, O2_HStandard, O2_HTempSens, H_TRef, CH4_WaterPowerCoef, CH4_InitConc, CH4_SurfaceEmission;
 ;
 double    CH4_TotSoilFlux, CH4_TotSysFlux, CH4_CONC_Atm, CO2_CONC_Atm;
+double AereScale, D_CH4_Aere, D_O2_Aere;//, LAI_Aere;
+vector<double> NPPyr, Porosity_Tiller, NPP_Ratio, Rob;
+double O2_CONC_Atm;
 double CH4_TotSoilProductionFlux, CH4_TotSoilStorage;
 double CO2_Flux_Out;
 
@@ -93,8 +101,10 @@ vector<double> DenitUptakeMin, DenitUptakeOrg;
 
 function<double(double)> f_COS_Plant,f_COS_PlantTransp, f_COS_PlantTranspPotMax, f_COS_PlantTranspPot, f_COS_Soil;
 
-function<double(double)> f_MethaneOxidation, f_MethaneOxidationRegulation, f_PlantRootRespRegulation;
-function<double(double, double)> f_MethaneVolatility;
+function<double(double)> f_MethaneOxidation, f_MethaneOxidationRegulation, f_MethaneOxidationRegulationCH4, f_PlantRootRespRegulation;
+function<double(double,double)> f_MethaneOxidationRegulationCH4_O2;
+function<double(double, double)> f_MethaneVolatility, f_EbullitionPress;
+function<double(double)> f_GasWaterConcCH4, f_GasWaterConcO2;
 function<double(double, double, double)> f_Ebullition;
 function<double(double, double, double)> f_MethaneProduction_OneLitter;
 function<double(double, double)> f_PlantEmissionbyWaterUptake;
@@ -102,7 +112,8 @@ function<double(double, double)> f_MethaneBoundaryLayerFlux;
 function<double(double, double, double)> f_MethaneDynResBoundaryLayerFlux;
 function<double(double)> f_MethaneOxidationInPlant;
 function<double(double, double, double, double)> f_MethaneProduction_TwoLitter;
-
+function<double(double, double, double, double, double)> f_MethaneResistanceSoilSurface;
+function<double(double, double, double, double, double,double,double,double,double,double)> f_PlantEmissionbyAerenchyma,f_OxygenDiffusionbyAerenchyma;
 function<double(double)> f_AnaerobicFraction;
 
 function<double(double, double)> f_OxygenDiffuctionCoef;

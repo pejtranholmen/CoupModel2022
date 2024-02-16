@@ -11,6 +11,7 @@
 	SetUnitMap(UNIT_TYPES::INVERSE_WATERFLOW_UNIT, "day/mm");
 	
 	SetUnitMap(UNIT_TYPES::VOLPERCENTAGE_UNIT, "Vol %");
+	SetUnitMap(UNIT_TYPES::WATERCONTENT_UNIT, "Vol %");
 	SetUnitMap(UNIT_TYPES::PRESSUREHEAD_UNIT,"cm water");
 	unit = "J/m"; unit += char(178); unit += "/day";
 	SetUnitMap(UNIT_TYPES::HEATFLOW_UNIT,unit);

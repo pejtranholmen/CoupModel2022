@@ -45,18 +45,20 @@ bool NC_GasFlux::Ini()	{
 
 		CH4_AccBubbles=CH4_AccPlant=CH4_AccEmission=CH4_AccProduction=CH4_AccOxidation=0.;
 
-		OxygenMassConcAtm = f_OxygenDensityFrom_Volume_Temp(20.95, pSoilHeat->Temp.front());      //g/m-3
+		OxygenMassConcAtm = f_OxygenDensityFrom_Volume_Temp(O2_CONC_Atm, pSoilHeat->Temp.front());      //g/m-3
 		MethaneMassConcAtm = f_MethaneDensityFrom_Volume_Temp(CH4_CONC_Atm, pSoilHeat->Temp.front());
 		CO2MassConcAtm = f_CarbonDioOxideDensityFrom_Volume_Temp(CO2_CONC_Atm,pSoilHeat->Temp.front());
 
 
 		
 		An_VolFraction.assign(p_Soil_WaterF->NL,0.0001); //need to update
+		fpH.assign(p_Soil_WaterF->NL, 1.);
 		
 		if(Methane_Model_Sw(Methane_Model )> Methane_Model_Sw::off) {
 		    
 			for (size_t i = 0; i < CH4.size(); i++) {
 				CH4[i] = CH4_InitConc * p_Soil_WaterF->WaterStorage[i] * 0.001; // scaling from mg to g.
+				fpH[i] = pow(10., -0.2235 * pH_Value[i] * pH_Value[i] + 2.7727 * pH_Value[i] - 8.6); // consider pH impacts on CH4 prod.
 			//	CH4_CONC_AIR[i] = f_MethaneAirConcFrom_water_Temp(CH4[i], p_Soil_WaterF->WaterStorage[i], pSoilHeat->Temp.front());
 			}
 			
@@ -100,18 +102,30 @@ bool NC_GasFlux::IniFunctors() {
 	
 	if (Methane_Model_Sw(Methane_Model) >= Methane_Model_Sw::SimpleWithStaticTempControl) {
 		f_MethaneOxidation = Get_D1_Functor(MyFunc::METHANE_OXIDATION);
-		f_MethaneOxidationRegulation = Get_D1_Functor(MyFunc::METHANE_OXIDATION_REGULATION_BY_CH4);
+		//f_MethaneOxidationRegulation = Get_D1_Functor(MyFunc::METHANE_OXIDATION_REGULATION_BY_CH4);
+		f_MethaneOxidationRegulationCH4 = Michaelis_Menten(CH4_HalfRateOxConstant);
+		f_MethaneOxidationRegulationCH4_O2 = Double_Michaelis_Menten(CH4_HalfRateOxConstant, Oxygen_HalfRateOxConstant);
 		f_PlantRootRespRegulation = Get_D1_Functor(MyFunc::METHANE_PLANTOXIDATION_BY_ROOTRESPIRATION);
 		f_MethaneVolatility = Get_D2_Functor(MyFunc::METHANE_VOLATIVITY);
 		f_MethaneProduction_TwoLitter = MethaneProduction(CH4_RateCoefRatio,CH4_ProductionQ10, RateCoefLitter1, RateCoefLitter2, RateCoefHumus);
 		f_MethaneProduction_OneLitter = MethaneProduction(CH4_RateCoefRatio,CH4_ProductionQ10, RateCoefLitter1,  RateCoefHumus);
+		f_GasWaterConcCH4 = HenryLawGasWaterConc(CH4_HStandard, CH4_HTempSens,H_TRef);
+		f_GasWaterConcO2 = HenryLawGasWaterConc(O2_HStandard, O2_HTempSens,H_TRef);
 		f_Ebullition = Get_D3_Functor(MyFunc::METHANE_EBULLITION);
+		f_EbullitionPress = EbullitionPressure(BubbleFrac,RatioPressThreshold);
 		f_PlantEmissionbyWaterUptake = MethaneEmissionByTranspiration(CH4_LimitWaterUptake, CH4_WaterPowerCoef, CH4_WaterPlantCoef);
+		if(Methane_Aerenchyma_Emission_Sw(Methane_Aerenchyma_Emission)== Methane_Aerenchyma_Emission_Sw::on){
+		    f_PlantEmissionbyAerenchyma = MethaneEmissionByAerenchyma(MethaneMassConcAtm, AereScale,D_CH4_Aere); 
+			f_OxygenDiffusionbyAerenchyma = OxygenDiffusionByAerenchyma(OxygenMassConcAtm, AereScale,D_O2_Aere); 
+			}
+		
+		
 		if(Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux)== Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
-			f_MethaneBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir);
+			f_MethaneBoundaryLayerFlux = MethaneBoundaryLayerFlux(MethaneMassConcAtm, CH4_ResistanceAir);
 		else 
-		    f_MethaneDynResBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir, CH4_ResistanceAirLogScale);
+		    f_MethaneDynResBoundaryLayerFlux = MethaneBoundaryLayerFlux(MethaneMassConcAtm, CH4_ResistanceAir, CH4_ResistanceAirLogScale);
 		f_MethaneOxidationInPlant = Get_D1_Functor(MyFunc::METHANE_PLANTOXIDATION_OF_WATERUPTAKE);
+		f_MethaneResistanceSoilSurface = SurfaceResistanceCH4(CH4_Water_Diff_Coef, CH4_ResistanceAir);
 	}
 	if (COS_Model_Sw(COS_Model) >= COS_Model_Sw::OnlyPlant) {
 		if (COS_PlantModel_Sw(COS_PlantModel) == COS_PlantModel_Sw::Tranpiration_Base)
@@ -266,20 +280,86 @@ void NC_GasFlux::SoilOxygenCarbonGas_Fluxes() {
 	SoilModel* p_Soil = (SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 	Soil_HeatPump* pSoilHeat = &p_Soil->m_HeatPump;
 	AtmModel* p_AtmModel = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
+	RootFrac.assign(p_Soil_WaterF->NL, 0.);
+	O2_Aere.assign(p_Soil_WaterF->NL, 0.);
+	Oxygen_Conc_Water.assign(p_Soil_WaterF->NL, 0.);
+	O2_CONC_AIR.assign(p_Soil_WaterF->NL, 0.);
+	double liqfrac = 1.;
+	double epsilon_o2 = 0.;
+	double kh_cc_o2 = 0.;
 
 	if (Oxygen_Model_Sw(Oxygen_Model) == Oxygen_Model_Sw::Steady_state) {
-		// Accumulation of oxygen consumption from the bottom of soil profile to get vertical  oxygen flux
-
+		// Accumulation of oxygen consumption from the bottom of soil profile to get vertical oxygen flux
+        //OxygenMassConcAtm = f_OxygenDensityFrom_Volume_Temp(O2_CONC_Atm, pSoilHeat->Temp[0]);
 		Oxygen_Flux.back() = 0.;
-		for (int i = Oxygen_Flux.size() - 2; i >= 0; i--)
-			Oxygen_Flux[i] = Oxygen_Flux[i + 1] + Oxygen_Consumption[i + 1]; // g/m2  
+		for (int i = Oxygen_Flux.size() - 2; i >= 0; i--){
+
+            if (i>0) {
+				//kh_cc_ch4[i] = f_GasWaterConcCH4(p_NC_Plant->NDrivTemperature[i]);
+				kh_cc_o2 = f_GasWaterConcO2(p_NC_Plant->NDrivTemperature[i]);
+			}
+			else {
+                //kh_cc_ch4[i] = f_GasWaterConcCH4(pSoilHeat->Temp.front());
+				kh_cc_o2 = f_GasWaterConcO2(pSoilHeat->Temp.front());
+			}
+
+			//CH4_Conc_Water[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100./kh_cc_ch4[i]); //g/m3-w
+			Oxygen_Conc_Water[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100. / kh_cc_o2); //g/m3-w
+
+			if (p_NC_Plant->NDrivTemperature[i] < 0.) {
+				liqfrac = p_Soil_WaterF->Theta[i] / p_Soil_WaterF->M_Saturation[i];
+				}
+			else liqfrac = 1.;
+
+			if(p_Soil_WaterF->Theta[i] < p_Soil_WaterF->M_Saturation[i]) {
+				//epsilon_ch4[i] = p_Soil_WaterF->Saturation[i]/100. - (1. - kh_cc_ch4[i])*p_Soil_WaterF->ThetaTotal[i]/100.*liqfrac[i];
+				epsilon_o2 = p_Soil_WaterF->M_Saturation[i]/100. - (1. - kh_cc_o2)*p_Soil_WaterF->ThetaTotal[i]/100.*liqfrac;
+			}
+			else{
+				//epsilon_ch4[i] = p_Soil_WaterF->Saturation[i]/100.*liqfrac[i];
+				epsilon_o2 = p_Soil_WaterF->M_Saturation[i]/100.*liqfrac;
+			}
+			
+			//CH4_CONC_AIR[i] = CH4[i]/p_Soil_WaterF->AThicknessLayers[i]/epsilon_ch4[i];
+			O2_CONC_AIR[i] = Oxygen[i]/p_Soil_WaterF->AThicknessLayers[i]/epsilon_o2;
+
+			Oxygen_Flux[i] = Oxygen_Flux[i + 1] + Oxygen_Consumption[i + 1]; // g/m2 
+			Oxygen_Conc_Water[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. 
+				+ Air_Porosity[i] / 100. / kh_cc_o2); //g/m3-w
+
+            if(Methane_Aerenchyma_Emission_Sw(Methane_Aerenchyma_Emission)==Methane_Aerenchyma_Emission_Sw::on){
+				double* ra = &p_AtmModel->m_Irrigation.RaSoilSurf;
+			    double RaSurf = max(0.0001, *ra);
+
+				for (size_t IP = 0; IP < size_t(((WaterUptake*)pPlant)->NumPlants);IP++) {
+					DEPTH_type out;
+					out.NumLay = 0;
+					out = p_Soil_WaterF->DepthDist(((WaterUptake*)pPlant)->RootDistribution, 1., ((WaterUptake*)pPlant)->RootDepth[IP], ((WaterUptake*)pPlant)->RFracLow);
+					out = ((WaterUptake*)pPlant)->f_WaterUptakeDistribution(1., ((WaterUptake*)pPlant)->RootDepth[IP]);
+					RootFrac = out.Dist;
+					if (p_NC_Plant->NDrivTemperature[i] > 0. && p_Soil_WaterF->Theta[i] >= p_Soil_WaterF->M_Saturation[i]) {
+						//O2_CONC_AIR[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Saturation[i] / 100.) / f_GasWaterConc(p_NC_Plant->NDrivTemperature[i]); //g/m3-g
+						O2_Aere[i] += f_OxygenDiffusionbyAerenchyma(O2_CONC_AIR[i], p_NC_Plant->NDrivTemperature[i], RootFrac[i], p_Soil_WaterF->DepthLayers[i], RaSurf,
+							((WaterUptake*)pPlant)->LAI[IP], NPPyr[IP], Porosity_Tiller[IP], NPP_Ratio[IP], Rob[IP]);
+					}
+					else
+						O2_Aere[i] = 0.;
+					
+				}
+				O2_Aere[i] = max(0., O2_Aere[i]);
+				
+			    Oxygen_Flux[i] = Oxygen_Flux[i] + O2_Aere[i];
+			}
+			else
+				O2_Aere[i] = 0.;
+		}
+
 		Oxygen_Flux_Infil = Oxygen_Flux.front() + Oxygen_Consumption.front();
 
 		// Oxygen concentration in soil profile by stepwise change of concentrations (dc)
 		double dc = f_delta_conc(Oxygen_Flux_Infil, p_Soil_WaterF->AThicknessLayers.front() / 2., DO2_SoilCoef.front(), f_OxygenDensityFrom_Volume_Temp(Init_Oxygen_Conc[0], pSoilHeat->Temp.front())); //vol %
 		Oxygen_Conc.front() = Init_Oxygen_Conc[0] - dc; //vol %
 		Oxygen.front() = f_OxygenDensityFrom_Volume_Temp(Oxygen_Conc.front(), pSoilHeat->Temp.front()) * p_Soil_WaterF->AThicknessLayers.front() * Air_Porosity.front() / 100.; // g/m2
-
 
 		for (size_t i = 1; i < Air_Porosity.size(); i++) {
 			if (Oxygen_Conc[i - 1] <= 0) {
@@ -300,7 +380,6 @@ void NC_GasFlux::SoilOxygenCarbonGas_Fluxes() {
 
 		OutFlow(Oxygen, Oxygen_Consumption);
 		for (size_t i = 0; i < Oxygen_Conc.size(); i++) {
-
 
 			double z_layer = Air_Porosity[i] / Fix::PERCENT_FRAC * p_Soil_WaterF->AThicknessLayers[i]; // Unit [m]
 			Oxygen_Conc[i] = Oxygen[i] / (z_layer * f_OxygenDensityFrom_Volume_Temp(100., pSoilHeat->Temp[i]));
@@ -379,8 +458,6 @@ void NC_GasFlux::NitrousGas_Fluxes() {
 			//  Exchange with anaerobic sites
 
 			DO2_ExCoefSoil[i] = f_AnaerobicExchangeEfficiency(relsat) * DO2_SoilCoef[i];
-
-
 
 			NO_Exchange[i] = DO2_ExCoefSoil[i] * An_NO[i];
 
@@ -568,27 +645,88 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 	SoilModel* p_Soil = (SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 	Soil_HeatPump* pSoilHeat = &p_Soil->m_HeatPump;
 	AtmModel* p_AtmModel = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
+	//RootFrac.assign(CH4.size(), 0.);
+	RootFrac.assign(p_Soil_WaterF->NL, 0.);
+	CH4_Aere.assign(p_Soil_WaterF->NL, 0.);
+    double liqfrac = 1.;
+	double epsilon_ch4 = 0.;
+	double kh_cc_ch4 = 0.;
+    double epsilon_o2 = 0.;
+	double kh_cc_o2 = 0.;
 
 	if (Methane_Model_Sw(Methane_Model) > Methane_Model_Sw::off) {
 		CH4_TotSoilStorage = sum(CH4);
 		CH4_DiffTotStorage = CH4_TotSoilStorage - CH4_InitStorage;
 		double loss_check;
+		//
+		//Do i=1, NL
+		MethaneMassConcAtm = 12./16. * f_MethaneDensityFrom_Volume_Temp(CH4_CONC_Atm, pSoilHeat->Temp.front()); // g Methane/m3 --> g C/m3
+        
 
 		for (size_t i = 0; i < CH4.size(); i++) { // Loop over all soil layes
-			CH4_Conc_Water[i] = Fix::KILO*CH4[i] / p_Soil_WaterF->WaterStorage[i];  ////// mg/L or g/m3
-			CH4_CONC_AIR[i] = f_MethaneVolatility(CH4_Conc_Water[i], p_NC_Plant->NDrivTemperature[i]); // Used for diffusion in air between layers and surface flux to atmosphere
+			//CH4_Conc_Water[i] = Fix::KILO*CH4[i] / p_Soil_WaterF->WaterStorage[i];  // mg/L or g/m3
+			//CH4_Conc_tot[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i]; // g/m3-t
+            
+			if (i>0) {
+				kh_cc_ch4 = f_GasWaterConcCH4(p_NC_Plant->NDrivTemperature[i]);
+				kh_cc_o2 = f_GasWaterConcO2(p_NC_Plant->NDrivTemperature[i]);
+			}
+			else {
+                kh_cc_ch4 = f_GasWaterConcCH4(pSoilHeat->Temp.front());
+				kh_cc_o2 = f_GasWaterConcO2(pSoilHeat->Temp.front());
+			}
+
+			CH4_Conc_Water[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100./kh_cc_ch4); //g/m3-w
+			Oxygen_Conc_Water[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100. / kh_cc_o2); //g/m3-w
+
+			if (p_NC_Plant->NDrivTemperature[i] < 0.) {
+				liqfrac = p_Soil_WaterF->Theta[i] / p_Soil_WaterF->M_Saturation[i];
+				}
+			else liqfrac = 1.;
+
+			if(p_Soil_WaterF->Theta[i] < p_Soil_WaterF->M_Saturation[i]) {
+				epsilon_ch4 = p_Soil_WaterF->M_Saturation[i]/100. - (1. - kh_cc_ch4)*p_Soil_WaterF->ThetaTotal[i]/100.*liqfrac;
+				epsilon_o2 = p_Soil_WaterF->M_Saturation[i]/100. - (1. - kh_cc_o2)*p_Soil_WaterF->ThetaTotal[i]/100.*liqfrac;
+			}
+			else{
+				epsilon_ch4 = p_Soil_WaterF->M_Saturation[i]/100.*liqfrac;
+				epsilon_o2 = p_Soil_WaterF->M_Saturation[i]/100.*liqfrac;
+			}
+			
+			CH4_CONC_AIR[i] = CH4[i]/p_Soil_WaterF->AThicknessLayers[i]/epsilon_ch4;
+			O2_CONC_AIR[i] = Oxygen[i]/p_Soil_WaterF->AThicknessLayers[i]/epsilon_o2;
+
+			// mg/L-water,Used for diffusion in air between layers and surface flux to atmosphere
 			if (p_NC_Plant->NDrivTemperature[i] < 0.) {
 				CH4_Oxidation[i] = 0.;
 			}
 			else {
-				if (LitterPools > 0)
-					CH4_Prod[i] = f_MethaneProduction_TwoLitter(O_State[_L1][_C_][i], O_State[_L2][_C_][i], O_State[_H][_C_][i], p_NC_Plant->NDrivTemperature[i]) * An_VolFraction[i];
-				else
-					CH4_Prod[i] = f_MethaneProduction_OneLitter(O_State[_L1][_C_][i], O_State[_H][_C_][i], p_NC_Plant->NDrivTemperature[i]) * An_VolFraction[i];
+				
+				if (LitterPools > 0){
+					CH4_Prod[i] = f_MethaneProduction_TwoLitter(O_State[_L1][_C_][i], O_State[_L2][_C_][i], O_State[_H][_C_][i], p_NC_Plant->NDrivTemperature[i]) * An_VolFraction[i]*fpH[i];
+                     // update of the carbon pools needed, due to the comsumption of C from methane, Mousong
+				    O_State[_L1][_C_][i] = O_State[_L1][_C_][i] - CH4_Prod[i] * T_Step*
+				                      (RateCoefLitter1*O_State[_L1][_C_][i]/(RateCoefLitter1*O_State[_L1][_C_][i]+RateCoefLitter2*O_State[_L2][_C_][i]+RateCoefHumus*O_State[_H][_C_][i]));
+			        O_State[_H][_C_][i] = O_State[_H][_C_][i] - CH4_Prod[i] * T_Step*
+				                      (RateCoefLitter1*O_State[_H][_C_][i]/(RateCoefLitter1*O_State[_L1][_C_][i]+RateCoefLitter2*O_State[_L2][_C_][i]+RateCoefHumus*O_State[_H][_C_][i]));
+				    O_State[_L2][_C_][i] = O_State[_L2][_C_][i] - CH4_Prod[i] * T_Step*
+				                      (RateCoefLitter1*O_State[_H][_C_][i]/(RateCoefLitter1*O_State[_L1][_C_][i]+RateCoefLitter2*O_State[_L2][_C_][i]+RateCoefHumus*O_State[_H][_C_][i]));
+				}
+					
+				else{
+					CH4_Prod[i] = f_MethaneProduction_OneLitter(O_State[_L1][_C_][i], O_State[_H][_C_][i], p_NC_Plant->NDrivTemperature[i]) * An_VolFraction[i]*fpH[i];
+					// update of the carbon pools needed, due to the comsumption of C from methane, Mousong
+			        O_State[_L1][_C_][i] = O_State[_L1][_C_][i] - CH4_Prod[i] * T_Step*
+				                      (RateCoefLitter1*O_State[_L1][_C_][i]/(RateCoefLitter1*O_State[_L1][_C_][i]+RateCoefHumus*O_State[_H][_C_][i]));
+			        O_State[_H][_C_][i] = O_State[_H][_C_][i] - CH4_Prod[i] * T_Step*
+				                      (RateCoefLitter1*O_State[_H][_C_][i]/(RateCoefLitter1*O_State[_L1][_C_][i]+RateCoefHumus*O_State[_H][_C_][i]));
+				}
+					
 				if (Methane_Soil_Oxidation_Sw(Methane_Soil_Oxidation) == Methane_Soil_Oxidation_Sw::on_orignal)
-					CH4_OxidationSoilBacteria[i] = f_MethaneOxidation(CH4[i]) * f_MethaneOxidationRegulation(CH4_Conc_Water[i]) * (1 - An_VolFraction[i]);
+					CH4_OxidationSoilBacteria[i] = f_MethaneOxidation(CH4[i]) * f_MethaneOxidationRegulationCH4(CH4_Conc_Water[i]) * (1 - An_VolFraction[i]);
 				else
-					CH4_OxidationSoilBacteria[i] = f_MethaneOxidation(CH4[i]) * f_MethaneOxidationRegulation(CH4_CONC_AIR[i]) * f_CommonTempResponse(p_NC_Plant->NDrivTemperature[i]) * (1 - An_VolFraction[i]);
+					CH4_OxidationSoilBacteria[i] = f_MethaneOxidation(CH4[i]) * f_MethaneOxidationRegulationCH4_O2(CH4_Conc_Water[i], Oxygen_Conc_Water[i])* (1 - An_VolFraction[i]);
+					//f_MethaneOxidationRegulation(CH4_CONC_AIR[i]) * f_CommonTempResponse(p_NC_Plant->NDrivTemperature[i]) 
 			}
 
 			if (Methane_Plant_Oxidation_Sw(Methane_Plant_Oxidation) > Methane_Plant_Oxidation_Sw::off) {
@@ -599,22 +737,149 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 				CH4_OxidationPlantRoot[i] = 0.;
 
 			CH4_Oxidation[i] = CH4_OxidationSoilBacteria[i] + CH4_OxidationPlantRoot[i];
-			CH4_Ebullition[i] = f_Ebullition(CH4_Conc_Water[i], p_Soil_WaterF->WaterStorage[i], p_NC_Plant->NDrivTemperature[i]);
 
+			if (p_NC_Plant->NDrivTemperature[i] > 0. && p_Soil_WaterF->Theta[i] >= p_Soil_WaterF->M_Saturation[i]) {
+				
+				if (Ebullition_Sw(Ebullition) == Ebullition_Sw::SolubilityBased)
+					CH4_Ebullition[i] = f_Ebullition(CH4_Conc_Water[i], p_Soil_WaterF->WaterStorage[i], p_NC_Plant->NDrivTemperature[i]);
+				else if (Ebullition_Sw(Ebullition) == Ebullition_Sw::PressureBased) {
+					double pressure = p_NC_Plant->P_Surface + Fix::DENSW * Fix::GRAVCONST * (p_Soil_WaterF->DepthLayers[i] + p_Soil_WaterF->SatLev);
+					double pondingdepth = p_AtmModel->m_Irrigation.SurfacePool / Fix::KILO; // Ponding depth, mm-->m
+					double pondfrac = p_AtmModel->m_Irrigation.SpoolCover; // Surface pool cover, fraction
+					if (pondfrac > 0.)
+						pressure += Fix::DENSW * Fix::GRAVCONST * pondingdepth / pondfrac;
+					
+					//CH4_CONC_AIR[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->M_Saturation[i] / 100.) / f_GasWaterConcCH4(p_NC_Plant->NDrivTemperature[i]); //g/m3-g
 
-			////Plants effect
-			if (Methane_Plant_Emission_Sw(Methane_Plant_Emission) > Methane_Plant_Emission_Sw::off)
-				CH4_PlantWaterUptake[i] = f_PlantEmissionbyWaterUptake(((WaterUptake*)pPlant)->WUptakeRate[i], CH4_Conc_Water[i] / 1000.);
+					double vgc = CH4_CONC_AIR[i] * Fix::RGAS * p_NC_Plant->NDrivTemperature[i] / pressure;
+					CH4_Ebullition[i] = f_EbullitionPress(CH4[i], vgc) * p_Soil_WaterF->AThicknessLayers[i] / T_Step;
+				}
+
+			}	
 			else
-				CH4_PlantWaterUptake[i] = 0.;
+				CH4_Ebullition[i] = 0.;
 
-			loss_check = CH4_Oxidation[i] + CH4_Ebullition[i] + CH4_PlantWaterUptake[i];
+			//CH4_Ebullition[i] = f_Ebullition(CH4_Conc_Water[i], p_Soil_WaterF->WaterStorage[i], p_NC_Plant->NDrivTemperature[i]);
+
+
+			////Plants effect, add the aerenchyma transport for considering paddy rice and arctic plants which have aerenchyma, mousong
+			// if only one plant is considered, the plantwaterupatake and aerenchyma parameters are specific for the plant, if more than one plant considered, the 
+			// parameters are for the ecosystem level, therefore need to be generalized, as we did not iterate over plants here.
+
+			if (Methane_Plant_Emission_Sw(Methane_Plant_Emission) > Methane_Plant_Emission_Sw::off){
+                CH4_PlantWaterUptake[i] = f_PlantEmissionbyWaterUptake(((WaterUptake*)pPlant)->WUptakeRate[i], CH4_Conc_Water[i] / 1000.);
+				if(Methane_Aerenchyma_Emission_Sw(Methane_Aerenchyma_Emission) > Methane_Aerenchyma_Emission_Sw::off){
+					double* ra = &p_AtmModel->m_Irrigation.RaSoilSurf;
+			        double RaSurf = max(0.0001, *ra);
+					for (size_t IP = 0; IP < size_t(((WaterUptake*)pPlant)->NumPlants);IP++) {
+						DEPTH_type out;
+						out.NumLay = 0;
+						out = p_Soil_WaterF->DepthDist(((WaterUptake*)pPlant)->RootDistribution, 1., ((WaterUptake*)pPlant)->RootDepth[IP], ((WaterUptake*)pPlant)->RFracLow);
+						out = ((WaterUptake*)pPlant)->f_WaterUptakeDistribution(1., ((WaterUptake*)pPlant)->RootDepth[IP]);
+						RootFrac = out.Dist;
+						if (p_NC_Plant->NDrivTemperature[i] > 0. && p_Soil_WaterF->Theta[i] >= p_Soil_WaterF->M_Saturation[i]) {
+							//CH4_CONC_AIR[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Saturation[i] / 100.) / f_GasWaterConc(p_NC_Plant->NDrivTemperature[i]); //g/m3-g
+							CH4_Aere[i] += f_PlantEmissionbyAerenchyma(CH4_CONC_AIR[i], p_NC_Plant->NDrivTemperature[i],
+								RootFrac[i], p_Soil_WaterF->DepthLayers[i], RaSurf, ((WaterUptake*)pPlant)->LAI[IP], NPPyr[IP], Porosity_Tiller[IP],
+								NPP_Ratio[IP], Rob[IP]) * p_Soil_WaterF->AThicknessLayers[i];
+						}
+						else
+							CH4_Aere[i] = 0.;    
+					}
+					CH4_Aere[i] = max(0., CH4_Aere[i]);
+					CH4_PlantTransport[i] = CH4_PlantWaterUptake[i] + CH4_Aere[i];
+				}
+				else {
+					CH4_Aere[i] = 0.;
+					CH4_PlantTransport[i] = CH4_PlantWaterUptake[i] + CH4_Aere[i];
+				}
+			}	
+			else {
+				CH4_PlantWaterUptake[i] = 0.;
+				CH4_PlantTransport[i] = 0.;
+			}
+
+			//if (CH4_PlantWaterUptake[i] > 0.) {
+			//	CH4_PlantWaterUptake[i] = f_PlantEmissionbyWaterUptake(((WaterUptake*)pPlant)->WUptakeRate[i], CH4_Conc_Water[i] / 1000.);
+
+			//}
+
+			O2_Oxidation[i] = CH4_Oxidation[i]*2.*Fix::MOL_RATIO_O2_C;
+			O2_Demand[i] = Oxygen_Consumption[i] + O2_Oxidation[i];
+			CH4_Demand[i] = CH4_Oxidation[i] + CH4_Ebullition[i] + CH4_PlantTransport[i];
+
+			if (O2_Demand[i] > Oxygen[i] / T_Step + O2_Aere[i] && O2_Demand[i] > 0.) {
+				OxygenStress[i] = min((Oxygen[i] / T_Step + O2_Aere[i]) / O2_Demand[i],1.);		
+			}
+			else 
+				OxygenStress[i] = 1.;
+
+			if (CH4_Demand[i] > 0.) {
+				MethaneStress[i] = min((CH4[i]/T_Step + CH4_Prod[i])/CH4_Demand[i],1.);		
+			}
+			else
+				MethaneStress[i] = 1.;
+
+			if(OxygenStress[i]<1.||MethaneStress[i]<1.) {
+				if(MethaneStress[i] < OxygenStress[i]){
+					// recalculate Oxygen limitation
+					if(OxygenStress[i]<1.){
+					   O2_Demand[i] = Oxygen_Consumption[i];
+				    
+					   if(O2_Demand[i]>0.){
+						   OxygenStress[i] = (Oxygen[i] / T_Step + O2_Aere[i] - 
+						        MethaneStress[i]*2.*Fix::MOL_RATIO_O2_C*CH4_Oxidation[i])/O2_Demand[i];
+						   OxygenStress[i] = min(OxygenStress[i],1.);
+
+					   }
+					   else
+					       OxygenStress[i]=1.;
+					}
+					// reset oxidation
+					CH4_Oxidation[i]=CH4_Oxidation[i]*MethaneStress[i];
+					CH4_OxidationSoilBacteria[i] = MethaneStress[i] * CH4_OxidationSoilBacteria[i];
+					CH4_OxidationPlantRoot[i] = MethaneStress[i] * CH4_OxidationPlantRoot[i];
+					O2_Oxidation[i]=O2_Oxidation[i]*MethaneStress[i];
+
+				}
+				else{
+					// recalculate Methane limitation
+					if(MethaneStress[i]<1.){
+					   CH4_Demand[i] = CH4_PlantTransport[i] + CH4_Ebullition[i];
+				    
+					   if(CH4_Demand[i]>0.){
+						   MethaneStress[i] = (CH4[i]/T_Step + CH4_Prod[i] - 
+						        OxygenStress[i]*CH4_Oxidation[i])/CH4_Demand[i];
+						   MethaneStress[i] = min(MethaneStress[i],1.);
+
+					   }
+					   else
+					       MethaneStress[i]=1.;
+					}
+					// reset oxidation
+					CH4_Oxidation[i]=CH4_Oxidation[i]*OxygenStress[i];
+					CH4_OxidationSoilBacteria[i] = OxygenStress[i] * CH4_OxidationSoilBacteria[i];
+					CH4_OxidationPlantRoot[i] = OxygenStress[i] * CH4_OxidationPlantRoot[i];
+					O2_Oxidation[i]=O2_Oxidation[i]*OxygenStress[i];
+
+				}
+			}
+			// reset non-methanotroph demands
+			CH4_Aere[i]=CH4_Aere[i]*MethaneStress[i];
+			CH4_PlantWaterUptake[i] = CH4_PlantWaterUptake[i]*MethaneStress[i];
+			CH4_Ebullition[i]=CH4_Ebullition[i]*MethaneStress[i];
+			Oxygen_Consumption[i] = Oxygen_Consumption[i]*OxygenStress[i];
+			CH4_PlantTransport[i] = CH4_PlantWaterUptake[i] + CH4_Aere[i];
+
+            // below is the adjustment of the fluxes from PEJ
+			loss_check = CH4_Oxidation[i] + CH4_Ebullition[i] + CH4_PlantTransport[i];
 			if (loss_check > CH4[i] * T_Step && CH4[i] >= 0.) {
-				double lossmaxratio = CH4[i] * T_Step / loss_check * 0.5;
+				double lossmaxratio = CH4[i] * T_Step / loss_check * 0.1;
 				CH4_Oxidation[i] = lossmaxratio * CH4_Oxidation[i];
 				CH4_OxidationSoilBacteria[i] = lossmaxratio * CH4_OxidationSoilBacteria[i];
 				CH4_OxidationPlantRoot[i] = lossmaxratio * CH4_OxidationPlantRoot[i];
 				CH4_Ebullition[i] = lossmaxratio * CH4_Ebullition[i];
+				CH4_Aere[i] = lossmaxratio * CH4_Aere[i];
 				CH4_PlantWaterUptake[i] = lossmaxratio * CH4_PlantWaterUptake[i];
 			}
 			else if (CH4[i] < 0.) {
@@ -623,26 +888,39 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 				CH4_OxidationSoilBacteria[i] = 0.;
 				CH4_OxidationPlantRoot[i] = 0.;
 				CH4_Ebullition[i] = 0.;
+				CH4_Aere[i] = 0.;
 				CH4_PlantWaterUptake[i] = 0.;
 			}
+
+			CH4_PlantTransport[i] = CH4_PlantWaterUptake[i] + CH4_Aere[i];
+
 		}
 
 
 		f_DiffusionFlux(CH4_Conc_Water, p_Soil_WaterF->DistanceMidpLayers, &CH4_SoilFlux);
-		if(MethaneConvectionSoilFlux_Sw(MethaneConvectionSoilFlux)== MethaneConvectionSoilFlux_Sw::on)
-			f_ConvectiveFlux(CH4_Conc_Water, p_Soil_WaterF->WaterFlow, &CH4_SoilFlux);
+		f_ConvectiveFlux(CH4_Conc_Water, p_Soil_WaterF->WaterFlow, &CH4_SoilFlux);
 
 		f_DiffusionAirSoilFlux(CH4_CONC_AIR, Air_Porosity, pSoilHeat->Temp, p_Soil_WaterF->DistanceMidpLayers, &CH4_AirSoilFlux);
+		//Uppermost layer
 
-
-    	if (Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux) == Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
-			CH4_SurfaceEmission =  f_MethaneBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front());
+        if (Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux) == Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
+			CH4_SurfaceEmission =  f_MethaneBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front()); // CH4 concentration needs to be g/m3-air
 		else {
-			CH4_SurfaceEmission = f_MethaneDynResBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front(), p_AtmModel->m_Irrigation.RaSoilSurf);
+			double* ra = &p_AtmModel->m_Irrigation.RaSoilSurf;
+			double RaSurf = max(0.0001, *ra);
+			double snowheight = p_AtmModel->m_Irrigation.HSnow / Fix::KILO; // Snow height, mm-->m
+			double pondingdepth = p_AtmModel->m_Irrigation.SurfacePool / Fix::KILO; // Ponding depth, mm-->m
+			double pondfrac = p_AtmModel->m_Irrigation.SpoolCover; // Surface pool cover, fraction
+			double soilfrac = p_AtmModel->m_Irrigation.FracBare; // Soil cover, fraction
+			double RaSurf_CH4 = f_MethaneResistanceSoilSurface(pondingdepth, snowheight, pondfrac, soilfrac,RaSurf); // s/m
+			CH4_SurfaceEmission = f_MethaneDynResBoundaryLayerFlux(CH4_CONC_AIR[0], pSoilHeat->Temp.front(), RaSurf_CH4);
 		}
-
-
-
+		if (CH4_SurfaceEmission * T_Step > CH4[0] && CH4[0] > 0.) {
+			CH4_SurfaceEmission = CH4[0] / T_Step * 0.5;
+		}
+		else if(CH4[0]<0.) {
+			CH4_SurfaceEmission = 0.;
+		}
 
 		// Integration of flow to methane state varialbes
 		// We might get negative values on the CH4 pools if any of the fluxes are too large...numerical problems
@@ -670,45 +948,41 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 		OutFlow(CH4, CH4_Ebullition);
 		checkzero(CH4, prior);
 		prior = CH4;
-		OutFlow(CH4, CH4_PlantWaterUptake);
+		OutFlow(CH4, CH4_PlantTransport);
 		checkzero(CH4, prior);
 
-		OutFlowZeroControl(CH4.front(), CH4_SurfaceEmission);
 		// Summation of fluxes to total fluxes
 
 
 		CH4_TotSoilProductionFlux = sum(CH4_Prod);
-		
 		CH4_TotSoilFlux = sum(CH4_Ebullition) + CH4_SurfaceEmission;
-		CH4_TotPlantUptake = sum(CH4_PlantWaterUptake);
-		
 		CH4_TotSoilOxidation = sum(CH4_OxidationSoilBacteria);
-		
+		CH4_TotPlantUptake = sum(CH4_PlantTransport);
+
 		CH4_TotPlantOxidation = f_MethaneOxidationInPlant(CH4_TotPlantUptake) + sum(CH4_OxidationPlantRoot);
 		CH4_TotPlantEmission = CH4_TotPlantUptake - f_MethaneOxidationInPlant(CH4_TotPlantUptake);
 
 		CH4_TotSysFlux = CH4_TotSoilFlux + CH4_TotPlantEmission;
+		prior = CH4;
+		OutFlow(CH4.front(), CH4_SurfaceEmission);
+		checkzero(CH4, prior);
 
 		// Integration of flows to acc variables
 
 		InFlow(CH4_AccBubbles, sum(CH4_Ebullition));
-		InFlow(CH4_AccEmission, CH4_TotSoilFlux);
-
-		InFlow(CH4_AccProduction, CH4_TotSoilProductionFlux);
-		
-		InFlow(CH4_AccOxidation, sum(CH4_Oxidation));
 		InFlow(CH4_AccPlant, CH4_TotPlantUptake);
+		InFlow(CH4_AccEmission, CH4_TotSoilFlux);
+		InFlow(CH4_AccProduction, CH4_TotSoilProductionFlux);
+		InFlow(CH4_AccOxidation, sum(CH4_Oxidation));
 
-
-
-		IntFlowZeroControl(CH4, CH4_SoilFlux);	  // Convective and diffusive flow in water	
-		IntFlowZeroControl(CH4, CH4_AirSoilFlux);  //Diffusive flow in air
-
-
+		prior = CH4;
+		IntFlow(CH4, CH4_SoilFlux);
+		checkzero(CH4, prior);
+		// Redistribution of convective and diffusive flow in water
+		IntFlow(CH4, CH4_AirSoilFlux); // Added  pej Jan 2023 the Diffusive flow in air
+		checkzero(CH4, prior);
 		CH4_MassBalanceCheck = CH4_AccProduction - CH4_AccEmission - CH4_DiffTotStorage - CH4_AccOxidation - CH4_AccPlant;
 	}
-
-
 
 }
 void NC_GasFlux::COSGas_Fluxes() {
@@ -738,9 +1012,6 @@ void NC_GasFlux::COSGas_Fluxes() {
 			COS_TotPlantUptake = f_COS_Plant(sum(pNCPlant->AtmNewMobile));
 		else
 			COS_TotPlantUptake = f_COS_Plant(p_Plant->Transpiration_All);
-
-
-
 
 
 		if (COS_Model_Sw(COS_Model) == COS_Model_Sw::Plant_Soil) {
