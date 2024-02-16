@@ -8,6 +8,8 @@ enum class Methane_Plant_Emission_Sw { off, on };
 enum class Ebullition_Sw {SolubilityBased, PressureBased};
 enum class Methane_SoilBoundary_Flux_Sw{ Fixed_Air_Resistance,Dynamic_Air_Resistance};
 enum class Methane_Aerenchyma_Emission_Sw{ off, on};
+enum class MethaneConvectionSoilFlux_Sw { off, on };
+
 enum class N2O_YearlyFluxes_Sw { off, on };
 
 

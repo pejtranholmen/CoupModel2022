@@ -898,6 +898,8 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 
 
 		f_DiffusionFlux(CH4_Conc_Water, p_Soil_WaterF->DistanceMidpLayers, &CH4_SoilFlux);
+		if (MethaneConvectionSoilFlux_Sw(MethaneConvectionSoilFlux) == MethaneConvectionSoilFlux_Sw::on)
+			f_ConvectiveFlux(CH4_Conc_Water, p_Soil_WaterF->WaterFlow, &CH4_SoilFlux);
 		f_ConvectiveFlux(CH4_Conc_Water, p_Soil_WaterF->WaterFlow, &CH4_SoilFlux);
 
 		f_DiffusionAirSoilFlux(CH4_CONC_AIR, Air_Porosity, pSoilHeat->Temp, p_Soil_WaterF->DistanceMidpLayers, &CH4_AirSoilFlux);
@@ -951,21 +953,22 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 		OutFlow(CH4, CH4_PlantTransport);
 		checkzero(CH4, prior);
 
+		OutFlowZeroControl(CH4.front(), CH4_SurfaceEmission);
+
 		// Summation of fluxes to total fluxes
 
 
 		CH4_TotSoilProductionFlux = sum(CH4_Prod);
-		CH4_TotSoilFlux = sum(CH4_Ebullition) + CH4_SurfaceEmission;
-		CH4_TotSoilOxidation = sum(CH4_OxidationSoilBacteria);
+		CH4_TotSoilFlux = sum(CH4_Ebullition) + CH4_SurfaceEmission;		
 		CH4_TotPlantUptake = sum(CH4_PlantTransport);
+		CH4_TotSoilOxidation = sum(CH4_OxidationSoilBacteria);
 
 		CH4_TotPlantOxidation = f_MethaneOxidationInPlant(CH4_TotPlantUptake) + sum(CH4_OxidationPlantRoot);
 		CH4_TotPlantEmission = CH4_TotPlantUptake - f_MethaneOxidationInPlant(CH4_TotPlantUptake);
 
 		CH4_TotSysFlux = CH4_TotSoilFlux + CH4_TotPlantEmission;
-		prior = CH4;
-		OutFlow(CH4.front(), CH4_SurfaceEmission);
-		checkzero(CH4, prior);
+
+	
 
 		// Integration of flows to acc variables
 
@@ -975,12 +978,10 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 		InFlow(CH4_AccProduction, CH4_TotSoilProductionFlux);
 		InFlow(CH4_AccOxidation, sum(CH4_Oxidation));
 
-		prior = CH4;
-		IntFlow(CH4, CH4_SoilFlux);
-		checkzero(CH4, prior);
-		// Redistribution of convective and diffusive flow in water
-		IntFlow(CH4, CH4_AirSoilFlux); // Added  pej Jan 2023 the Diffusive flow in air
-		checkzero(CH4, prior);
+
+		IntFlowZeroControl(CH4, CH4_SoilFlux);
+		IntFlowZeroControl(CH4, CH4_AirSoilFlux); // Added  pej Jan 2023 the Diffusive flow in air
+
 		CH4_MassBalanceCheck = CH4_AccProduction - CH4_AccEmission - CH4_DiffTotStorage - CH4_AccOxidation - CH4_AccPlant;
 	}
 
