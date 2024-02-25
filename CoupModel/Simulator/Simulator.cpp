@@ -9,6 +9,8 @@
 #include "../ModelTypes/SimB.h"
 #include "../Simulator/ModelInfo.h"
 
+
+
 #ifndef COUPSTD
 #include "../MainFrm.h"
 #endif
@@ -252,15 +254,14 @@ bool Simulator::Run(bool MultiFlag)
 	  
 	  m_pModelInfo->SetAbioticTimeSteps(m_StructureModel.m_Structure.TimeResolution);
 
-	  if(m_StructureModel.m_Structure.NitrogenCarbonStep==1) { //! Nitrogen Carbon step is the same as for Water and Heat
+	  if(NitrogenCarbonStep_Sw(m_StructureModel.m_Structure.NitrogenCarbonStep)== NitrogenCarbonStep_Sw::TimeResolutionDetermind) { //! Nitrogen Carbon step is the same as for Water and Heat
 		  m_pModelInfo->T_Step_NC= m_pModelInfo->T_Step;
 		  m_pModelInfo->T_NumIterNC_Day=size_t(1./ m_pModelInfo->T_Step_NC+0.001);
 	  }
-	  else if(m_StructureModel.m_Structure.NitrogenCarbonStep==2) { //! Nitrogen Carbon step is independent of Water and Heat
-
-
-			NC_MinStep=max(int(m_StructureModel.m_Structure.NC_Iterations+0.00001), int(1./m_pModelInfo->T_Step));
-			m_pModelInfo->T_Step_NC=1./NC_MinStep;
+	  else if(NitrogenCarbonStep_Sw(m_StructureModel.m_Structure.NitrogenCarbonStep) == 
+		  NitrogenCarbonStep_Sw::Independent ) { //! Nitrogen Carbon step is independent of Water and Heat
+			NC_MinStep=max(int(1440./m_StructureModel.m_Structure.NC_Iterations+0.00001), int(1440.*m_pModelInfo->T_Step));
+			m_pModelInfo->T_Step_NC=1./(1440./NC_MinStep);
 			if(m_pModelInfo->T_Step_NC<= m_pModelInfo->T_Step) m_pModelInfo->T_Step_NC= m_pModelInfo->T_Step;
 			m_pModelInfo->T_NumIterNC_Day=size_t(1./ m_pModelInfo->T_Step_NC+0.001);
 	  }

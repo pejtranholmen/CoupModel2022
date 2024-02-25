@@ -1469,6 +1469,12 @@
     <ClInclude Include="ModelTypes\SimBConst.h">
       <Filter>Source Files\ModelTypes</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Basic_Functors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Structure\Functors\Numerical_Functors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoupModel.cpp">

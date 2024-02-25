@@ -6,6 +6,7 @@
 #include "../Model/PLANT/PlantModel.h"
 #include "../Model/Atmosphere/AtmModel.h"
 #include "../Model/Structure/StructureModel.h"
+#include "../Model/Structure/Numerical.h"
 #include "../Model/PLANT_NC/PlantOrgModel.h"
 #include "../Model/SOIL_NC/SoilOrgModel.h" 
 

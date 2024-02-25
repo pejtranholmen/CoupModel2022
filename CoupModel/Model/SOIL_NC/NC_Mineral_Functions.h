@@ -23,7 +23,7 @@ double NitriTemQ10, NitriTemQ10Bas, NitriTemQ10Threshold      ;
 double NitriTempMax, NitriTempMin ;
 
 double  	InitNitrateConc,InitAmmoniumConc;
-vector<double>   An_VolFraction,fpH;
+vector<double>   An_VolFraction;
 double Eff_Microbes;
 
 

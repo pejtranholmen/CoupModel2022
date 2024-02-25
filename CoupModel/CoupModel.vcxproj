@@ -334,6 +334,7 @@
     <ClInclude Include="Model\SOIL_NC\P_ExternalInputs_Functions.h" />
     <ClInclude Include="Model\SOIL_NC\P_Mineral.h" />
     <ClInclude Include="Model\SOIL_NC\P_Mineral_Functions.h" />
+    <ClInclude Include="Model\Structure\Functors\Numerical_Functors.h" />
     <ClInclude Include="Model\Structure\Functors\Structure_Functors.h" />
     <ClInclude Include="Model\Structure\Functors\Technical_Functors.h" />
     <ClInclude Include="Model\Units.h" />

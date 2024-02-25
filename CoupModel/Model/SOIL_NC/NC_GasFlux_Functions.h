@@ -12,6 +12,7 @@ class NC_GasFlux_Functions : public NC_Organic
 
 size_t  Trace_Gas_Emissions, Oxygen_Model, Methane_Model,Methane_Plant_Oxidation, Methane_Soil_Oxidation,
 Methane_Plant_Emission, Methane_SoilBoundary_Flux,Methane_Aerenchyma_Emission, Ebullition, MethaneConvectionSoilFlux;
+size_t Dissolved_OxygenGas, MethaneProductionModel;
 size_t COS_Model, COS_PlantModel, COS_SoilModel;
 size_t  N2O_YearlyFluxes/*, CO2_SoilModel Moved to AbioticResponses_Functions*/;  
 vector<double> Oxygen, Oxygen_Flux, Oxygen_Consumption, CO2Soil, CO2_FluxSoil,CO2_Production;
@@ -112,6 +113,10 @@ function<double(double, double)> f_MethaneBoundaryLayerFlux;
 function<double(double, double, double)> f_MethaneDynResBoundaryLayerFlux;
 function<double(double)> f_MethaneOxidationInPlant;
 function<double(double, double, double, double)> f_MethaneProduction_TwoLitter;
+
+function<vector<double>(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>)> f_MethaneProdVector_TwoLitter;
+function<vector<double>(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>)> f_MethaneProdVector_OneLitter;
+function<vector<double>(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, size_t OrgIndex)> f_MethaneProdVector_ByLitterIndex;
 function<double(double, double, double, double, double)> f_MethaneResistanceSoilSurface;
 function<double(double, double, double, double, double,double,double,double,double,double)> f_PlantEmissionbyAerenchyma,f_OxygenDiffusionbyAerenchyma;
 function<double(double)> f_AnaerobicFraction;

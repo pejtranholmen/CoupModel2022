@@ -16,3 +16,4 @@ enum class LateralInput_Sw { No,In_driving_file,WaterShed_approach };
 enum class HBV_Soil_Sw {Off, As_ComplementaryModel, ExcludingRichardEquation};
 enum class OnlyNC_Sw {No, Yes};
 enum class Phosphorus_Model_Sw { off, Simple, Detailed };
+

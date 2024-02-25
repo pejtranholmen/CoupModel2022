@@ -1,5 +1,5 @@
 #pragma once
-
+#include "./Functors/Numerical_Functors.h"
 #include "./Numerical_Functions.h"
 class Numerical : public Numerical_Functions
 {

@@ -93,6 +93,10 @@ bool NC_GasFlux_Functions::Def()
 
 	pSw= new Sw(&Methane_Model,  SIMPROFILE,AIR, NOFPROC,SOIL_GAS_DYNAMICS, NORMAL);
 	    Define(pSw, "Methane Model",0,"off|Simplified|Detailed width temp control","Trace Gas Emissions >0");
+	pSw = new Sw(&MethaneProductionModel, SIMPROFILE, AIR, NOFPROC, SOIL_GAS_DYNAMICS, NORMAL);
+		Define(pSw, "Methane Production Model", 0, "Temp_Control|Temp_pH_Control", "Trace Gas Emissions >0");
+	pSw = new Sw(&Dissolved_OxygenGas, SIMPROFILE, AIR, NOFPROC, SOIL_GAS_DYNAMICS, NORMAL);
+		Define(pSw, "Dissolved oxygen gas", 0, "Implicit|Explicit", "Trace Gas Emissions >0");
 	pSw= new Sw(&Methane_Plant_Oxidation ,  SIMPROFILE,AIR, NOFPROC, METHANE_OXIDATION, NORMAL);
 	    Define(pSw,"Methane oxidation by plants",0,"off|on","Nitrogen and Carbon > 0|Methane Model>0");
 	pSw = new Sw(&Methane_Soil_Oxidation, SIMPROFILE, AIR, NOFPROC, METHANE_OXIDATION, NORMAL);

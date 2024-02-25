@@ -1,6 +1,8 @@
 #pragma once
+
 #include "./NC_Mineral.h"
 #include "./NC_Mineral_Functions.h"
+#include "./Functors/NC_Organic_Functors.h"
 
 
 

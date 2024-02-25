@@ -2,6 +2,8 @@
 #include "../../../std.h"
 #include "../../Basic_Functors.h"
 enum class Methane_Model_Sw { off, SimpleWithStaticTempControl, WithTempControl};
+enum class MethaneProductionModel_Sw{Temp_Function, Temp_pH_Function};
+enum class Dissolved_OxygenGas_Sw {Implicit, Explicit};
 enum class Methane_Plant_Oxidation_Sw { off, on };
 enum class Methane_Soil_Oxidation_Sw { off, on_orignal, New };
 enum class Methane_Plant_Emission_Sw { off, on };
@@ -102,7 +104,7 @@ public:
 			// MASS_CH4_WATER as input is mg/L = or g/m3 
 			// Output unit = g/m3 has the same unit as input unit
 
-		cp = Henry_cp * Fix::KILO * Fix::RGAS_L_ATM_K; // To get from PPM to 1 Litre and  dm3   
+		cp = Henry_cp * Fix::PPM_FRAC * Fix::RGAS_L_ATM_K; // To get from PPM to 1 Litre and  dm3   
 
 	}
 	double operator() (double Mass_CH4_Water, double Temp) noexcept {
@@ -205,21 +207,20 @@ private:
 class MethaneBoundaryLayerFlux {
 public:
 	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir) noexcept : atm_conc(ref_conc), ra(ResistanceAir) { // This is the instantiation for fixed air resistance
-		//atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR; ra /= Fix::SECPERDAY; ra *=Fix::PPM_FRAC ; scalecoef = 3.;
-		ra /= Fix::SECPERDAY;
+		atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR/Fix::PPM_FRAC ; ra /= Fix::SECPERDAY; scalecoef =1.;
 		f_AirDensity = AirDensityTempFunction();
 	};   // corrected from ra is scaled to convert MassConsAtm and ConSurface from mg/L to g/m3
 	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir, double LogScale) noexcept : atm_conc(ref_conc), ra(ResistanceAir) { //This is the instantiation for dynamics scaling of surface flux
-		//atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR; ra /= Fix::SECPERDAY; scalecoef = pow(10., LogScale); ra *= Fix::PPM_FRAC;
-		scalecoef = pow(10., LogScale); ra /= Fix::SECPERDAY;
+		atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR/Fix::PPM_FRAC; ra /= Fix::SECPERDAY; scalecoef = pow(10., LogScale);
+		//scalecoef = pow(10., LogScale); ra /= Fix::SECPERDAY;
 	};
 
 	double operator() (double ConcSurface) noexcept {
 		return ( ConcSurface- atm_conc) / ra;
 	};
 	double operator() (double ConcSurface, double TempSurface) { // This is the default fixed ra operator
-		//double MassConcAtm = atm_conc * f_AirDensity(TempSurface)/Fix::KILO;  // g Methane/m3
-		double flux = (ConcSurface - atm_conc) / ra;
+		double MassConcAtm = atm_conc * f_AirDensity(TempSurface);  // g Methane/m3
+		double flux = (ConcSurface - MassConcAtm) / ra;
 		if (TempSurface < 0.) // No possible uptake of Methane during freezing conditions
 			return max(0., flux);
 		else
@@ -227,8 +228,8 @@ public:
 	};
 	double operator() (double ConcSurface, double TempSurface, double AirResistance) { //This is the operator for dynamics scaling of surface flux
 		f_AirDensity = AirDensityTempFunction();																				// Input units are (mg/L, C, s/m)
-		//double MassConcAtm = atm_conc * f_AirDensity(TempSurface)/Fix::KILO;
-		double flux = (ConcSurface - atm_conc) / (scalecoef*AirResistance/Fix::SECPERDAY);
+		double MassConcAtm = atm_conc * f_AirDensity(TempSurface);
+		double flux = (ConcSurface - MassConcAtm) / (scalecoef*AirResistance/Fix::SECPERDAY);
 		if (TempSurface < 0.)
 			return max(0., flux);
 		else
@@ -243,18 +244,40 @@ private:
 
 
 
-
 class MethaneProduction {
 public:
 	MethaneProduction(double CH4_RateCoef, double q10_prod, double RateCoefLitter1, double RateCoefLitter2, double RateCoefHumus) noexcept
 	{
 		clitter1 = CH4_RateCoef * RateCoefLitter1; clitter2 = CH4_RateCoef * RateCoefLitter2; chumus = CH4_RateCoef * RateCoefHumus;
+		OrgRateCoef.push_back(clitter1); OrgRateCoef.push_back(clitter2); OrgRateCoef.push_back(chumus);
 		f_Temp_Response = Q10(q10_prod, 20., 5.);
 	}
-	MethaneProduction(double CH4_RateCoef,  double q10_prod, double RateCoefLitter1,  double RateCoefHumus) noexcept
+	MethaneProduction(double CH4_RateCoef, double q10_prod, double RateCoefLitter1, double RateCoefHumus) noexcept
 	{
 		clitter1 = CH4_RateCoef * RateCoefLitter1; clitter2 = 0.; chumus = CH4_RateCoef * RateCoefHumus;
+		OrgRateCoef.push_back(clitter1); OrgRateCoef.push_back(clitter2); OrgRateCoef.push_back(chumus);
 		f_Temp_Response = Q10(q10_prod, 20., 5.);
+	}
+	MethaneProduction(double CH4_RateCoef, double q10_prod, double RateCoefLitter1, double RateCoefLitter2, double RateCoefHumus, vector<double> pHValues) noexcept
+	{
+		clitter1 = CH4_RateCoef * RateCoefLitter1; clitter2 = CH4_RateCoef * RateCoefLitter2; chumus = CH4_RateCoef * RateCoefHumus;
+		OrgRateCoef.push_back(clitter1); OrgRateCoef.push_back(clitter2); OrgRateCoef.push_back(chumus);
+
+		f_Temp_Response = Q10(q10_prod, 20., 5.);
+		if (pHValues.size() > 0) {
+			for(size_t i=0; i<pHValues.size(); i++)
+				pH_Influence.push_back(pow(10., -0.2235 * pHValues[i] * pHValues[i] + 2.7727 * pHValues[i] - 8.6));
+		}
+	}
+	MethaneProduction(double CH4_RateCoef,  double q10_prod, double RateCoefLitter1,  double RateCoefHumus, vector<double> pHValues) noexcept
+	{
+		clitter1 = CH4_RateCoef * RateCoefLitter1; clitter2 = 0.; chumus = CH4_RateCoef * RateCoefHumus;
+		OrgRateCoef.push_back(clitter1); OrgRateCoef.push_back(clitter2); OrgRateCoef.push_back(chumus);
+		f_Temp_Response = Q10(q10_prod, 20., 5.);
+		if (pHValues.size() > 0) {
+			for (size_t i = 0; i < pHValues.size(); i++)
+				pH_Influence.push_back(pow(10., -0.2235 * pHValues[i] * pHValues[i] + 2.7727 * pHValues[i] - 8.6));
+		}
 	}
 
 	double operator() (double Litter1, double Litter2, double Humus, double temp) {
@@ -265,13 +288,52 @@ public:
 	double operator() (double Litter1, double Humus, double temp) {
 		return f_Temp_Response(temp)*(clitter1 * Litter1 + chumus * Humus);
 	}
+	vector<double> operator() (const vector<double>& Litter1, const vector<double>& Humus, const vector<double>& temp, const vector<double>& AnaFrac, vector<double>& Prod) {
+		for (size_t i = 0; i < Prod.size(); i++) {
+			Prod[i] = f_Temp_Response(temp[i]) * (clitter1 * Litter1[i] + chumus * Humus[i])*AnaFrac[i];
+			if (pH_Influence.size() == Prod.size())
+				Prod[i] *= pH_Influence[i];
+		}
+		return Prod;
+	}
+	vector<double> operator() (const vector<double> &Litter1, const vector<double> &Litter2, const vector<double> &Humus, const vector<double> &temp, const vector<double>& AnaFrac, vector<double> &Prod) {
+		for (size_t i = 0; i < Prod.size(); i++) {
+			Prod[i] = f_Temp_Response(temp[i]) * (clitter1 * Litter1[i] + clitter2 * Litter2[i] + chumus * Humus[i])*AnaFrac[i];
+			if (pH_Influence.size() == Prod.size())
+				Prod[i] *= pH_Influence[i];
+		}
+			
+		return Prod;
+	}
+	vector<double> operator() (const vector<double>& Litter1, const vector<double>& Litter2, const vector<double>& Humus, const vector<double>& temp, const vector<double>& AnaFrac, size_t OrgIndex) {
+		vector<double> out;
+	
+		for (size_t i = 0; i < Litter1.size(); i++) {
+			out.push_back(f_Temp_Response(temp[i])*AnaFrac[i]);
+			if (OrgIndex == 0) 
+				out[i] *= OrgRateCoef[OrgIndex] * Litter1[i];
+			else if (OrgIndex == 1 && OrgRateCoef.size() == 2) 
+				out[i] *= OrgRateCoef[OrgIndex] * Humus[i];
+			else
+				out[i] *= OrgRateCoef[OrgIndex] * Litter2[i];
+			if (pH_Influence.size() >i)
+				out[i] *= pH_Influence[i];
+		}
+		return out;
+	}
 
 
 private:
 	double clitter1, clitter2, chumus;
+	vector<double> OrgRateCoef;
+	vector<double> pH_Influence;
 	function <double(double)> f_Temp_Response;
 
 };
+
+
+
+
 class MethaneEmissionByTranspiration {
 public:
 	MethaneEmissionByTranspiration(double CH4_LimitWaterUptake, double CH4_WaterPowerCoef, double CH4_WaterPlantCoef) :
