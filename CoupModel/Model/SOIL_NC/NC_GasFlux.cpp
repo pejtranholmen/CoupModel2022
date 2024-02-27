@@ -205,65 +205,56 @@ void NC_GasFlux::Flux()
 	double *ra = &p_AtmModel->m_Irrigation.RaSoilSurf;
 	double RaSurf = max(0.0001, *ra);
 
-	if (Trace_Gas_Emissions_Sw(Trace_Gas_Emissions) == Trace_Gas_Emissions_Sw::off) return;
+	if (Trace_Gas_Emissions_Sw(Trace_Gas_Emissions) > Trace_Gas_Emissions_Sw::off) {
+		GeneralUpdates();
+		SoilOxygenCarbonGas_Fluxes();
+		for (size_t i = 0; i < Oxygen_Conc.size(); i++) {
+			// New unit of oxygen conc as volume/volume instead of Kg/m3
+			//	Oxygen_Conc[i]=Oxygen_Conc[i]/Fix::MOL_RATIO_O2_AIR/AirDensityTempFunc(pSoilHeat->Temp[i]); //Wenxin 
+			if (i >= p_Soil_WaterF->LayerOfSatLevel)
+				An_VolFraction[i] = 1;
+			else
+				An_VolFraction[i] = f_AnaerobicFraction(Oxygen_Conc[i] / Fix::PERCENT_FRAC);
+		}
+		NitrousGas_Fluxes();
+		MethaneGas_Fluxes();
 
+		if (N2O_YearlyFluxes > 0) {
 
-	GeneralUpdates();
-	SoilOxygenCarbonGas_Fluxes();
-
-
-//////////////////////////////////////////////////////////////////////
-
-
-
-	for(size_t i=0; i<Oxygen_Conc.size();i++) {
-	// New unit of oxygen conc as volume/volume instead of Kg/m3
-	//	Oxygen_Conc[i]=Oxygen_Conc[i]/Fix::MOL_RATIO_O2_AIR/AirDensityTempFunc(pSoilHeat->Temp[i]); //Wenxin 
-		if (i >= p_Soil_WaterF->LayerOfSatLevel)
-			An_VolFraction[i] = 1;
-		else
-  			An_VolFraction[i] =f_AnaerobicFraction(Oxygen_Conc[i]/Fix::PERCENT_FRAC);
-	}
-	NitrousGas_Fluxes();
-	MethaneGas_Fluxes();
-	COSGas_Fluxes();
-
-	
-	if(N2O_YearlyFluxes>0) {
-	
-		if(YearShift&&m_pModelInfo->JDayNum==1) {
-	            SortDArray(&DailyValuesNO[0],365);
-	            SortDArray(&DailyValuesN2O[0],365);	            
-	            if(FullYear) {
-	                NO_10Percentil=DailyValuesNO[36];
-	                NO_50Percentil=DailyValuesNO[182];
-	                NO_90Percentil=DailyValuesNO[329];
-	                NO_Ymean=sum(DailyValuesNO)/365.;
-	                N2O_10Percentil=DailyValuesN2O[36];
-	                N2O_50Percentil=DailyValuesN2O[182];
-	                N2O_90Percentil=DailyValuesN2O[329];
-	                N2O_Ymean=sum(DailyValuesN2O)/365.;
+			if (YearShift && m_pModelInfo->JDayNum == 1) {
+				SortDArray(&DailyValuesNO[0], 365);
+				SortDArray(&DailyValuesN2O[0], 365);
+				if (FullYear) {
+					NO_10Percentil = DailyValuesNO[36];
+					NO_50Percentil = DailyValuesNO[182];
+					NO_90Percentil = DailyValuesNO[329];
+					NO_Ymean = sum(DailyValuesNO) / 365.;
+					N2O_10Percentil = DailyValuesN2O[36];
+					N2O_50Percentil = DailyValuesN2O[182];
+					N2O_90Percentil = DailyValuesN2O[329];
+					N2O_Ymean = sum(DailyValuesN2O) / 365.;
 				}
-	            else
-	                FullYear=true;
-	            
-	            
-	            DailyValuesNO.assign(365,0.0);
-	            DailyValuesN2O.assign(365,0.0);
-	            YearShift=false;
-	        }
-	        
-	        if(m_pModelInfo->JDayNum==365) {
-	            YearShift=true;        
-	        }
-	        if(m_pModelInfo->JDayNum>=1&&m_pModelInfo->JDayNum<=365) {
-	            DailyValuesN2O[int(m_pModelInfo->JDayNum)-1]+=N2O_Rate*T_Step	;
-	            DailyValuesNO[int(m_pModelInfo->JDayNum)-1]+=NO_Rate*T_Step;
-	        }    
-	}
-	
-	
+				else
+					FullYear = true;
 
+
+				DailyValuesNO.assign(365, 0.0);
+				DailyValuesN2O.assign(365, 0.0);
+				YearShift = false;
+			}
+
+			if (m_pModelInfo->JDayNum == 365) {
+				YearShift = true;
+			}
+			if (m_pModelInfo->JDayNum >= 1 && m_pModelInfo->JDayNum <= 365) {
+				DailyValuesN2O[int(m_pModelInfo->JDayNum) - 1] += N2O_Rate * T_Step;
+				DailyValuesNO[int(m_pModelInfo->JDayNum) - 1] += NO_Rate * T_Step;
+			}
+		}
+	}
+	if (COS_Model_Sw(COS_Model) >= COS_Model_Sw::OnlyPlant) {
+		COSGas_Fluxes();
+	}
 }
 void NC_GasFlux::GeneralUpdates() {
 	SoilModel* p_Soil = (SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
@@ -933,7 +924,6 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 
 }
 void NC_GasFlux::COSGas_Fluxes() {
-	if (COS_Model_Sw(COS_Model) >= COS_Model_Sw::OnlyPlant) {
 		PlantOrgModel* pPlantOrg = (PlantOrgModel*)m_pModelInfo->GetModelPtr("Plant Org Model");
 		NC_Plant* pNCPlant;
 		pNCPlant = &pPlantOrg->m_NC_Plant;
@@ -965,9 +955,6 @@ void NC_GasFlux::COSGas_Fluxes() {
 			COS_TotSoilUptake = f_COS_Soil(O_RespRateProfile[_L1]);
 			COS_EcoSystemFlux = COS_TotPlantUptake + COS_TotSoilUptake;
 		}
-	}
-
-
 }
 void NC_GasFlux::Integ()
 {

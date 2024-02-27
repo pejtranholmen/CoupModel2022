@@ -97,7 +97,7 @@ bool Thermal_Functions::Def()
 	
 	ps_vec.clear();
 
-	function<void(vector<double>&, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
+	function<void(vector<double>, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
 		m_pModelMap->GetPPointer("Lower Depth")->GetVector(),
 		m_pModelMap->GetPPointer("DepthLayers")->GetVector(),
 		m_pModelMap->GetPPointer("Thickness Layers")->GetVector(),
@@ -466,7 +466,7 @@ bool Thermal_Functions::Thermal_ReCalc() noexcept
 		  
 		}
 
-		function<void(vector<double>&, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
+		function<void(vector<double>, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
 			m_pModelMap->GetPPointer("Lower Depth")->GetVector(),
 			m_pModelMap->GetPPointer("DepthLayers")->GetVector(),
 			m_pModelMap->GetPPointer("Thickness Layers")->GetVector(),
