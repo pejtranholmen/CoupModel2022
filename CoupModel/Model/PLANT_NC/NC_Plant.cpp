@@ -543,6 +543,11 @@ bool NC_Plant::Ini()	{
 			PCo2I.resize(pPlant->NumPlants);
 			GBoundary.resize(pPlant->NumPlants);
 			GStomata.resize(pPlant->NumPlants);
+// new Mousong below
+			GCOSm.resize(pPlant->NumPlants);
+			GtCOS.resize(pPlant->NumPlants);
+			GStomata.resize(pPlant->NumPlants);
+//
 			GAir.resize(pPlant->NumPlants);
 			Qt.resize(pPlant->NumPlants);
 			MMO2V.resize(pPlant->NumPlants);
@@ -554,9 +559,6 @@ bool NC_Plant::Ini()	{
 				PCo2y[i].resize(6);
 				ASSIMNY[i].resize(6);
 				ASSIMY[i].resize(6);
-
-
-
 			}
 		}
 
@@ -572,6 +574,7 @@ bool NC_Plant::Ini()	{
 
 
 		PCO2_Boundary = CO2_A ;
+		PCOS_Boundary = COS_A; /// Mousong
 
 
 		GPP_Current.Temp.assign(pPlant->NumPlants, 1);
@@ -2253,6 +2256,7 @@ void NC_Plant::Light_And_PhotoSynthesis() {
 			GPP_Current.Nitrogen[i]=gresponse.N;
 			GPP_Current.Temp[i]=gresponse.Temp;
 			GPP_Current.Water[i]=gresponse.W;
+			GPP_Current.Light[i] = RadPlantAdsorbed[i] / NDrivRadInShort;
 			if(Salinity_Stress==1) 
 				AtmNewMobile[i]=P_PhoSiB(i)*GPP_Current.Salt[i];
 			else

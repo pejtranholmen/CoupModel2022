@@ -1,4 +1,4 @@
-#include "NC_Plant_Functions.h"
+Ôªø#include "NC_Plant_Functions.h"
 #include "./Functors/NC_Plant_Functors.h"
 #include "../SOIL/SoilModel.h"
 #include "../PLANT/PlantModel.h"
@@ -217,6 +217,13 @@ bool NC_Plant_Functions::Def()
 	;
 	pT = new T(&AtmNewMobile, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pT, pNumPlants, "C AtmNewMobile", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
+
+	pT = new T(&COSAtmNewMobile, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL); //Added by Mousong
+	Define(pT, pNumPlants, "COS AtmNewMobile", initv, "ug/m2/d", "Nitrogen and Carbon >= 1|Growth >0|COS PlantModel >1");
+	pT = new T(&COSSoilNewMobile, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pT, pNumPlants, "COS SoilNewMobile", initv, "ug/m2/d", "Nitrogen and Carbon >= 1|Growth >0|COS PlantModel >1");
+	pT = new T(&SIF_GPPreg, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pT, pNumPlants, "SIF_GPPreg", initv, "ug/m2/d", "Nitrogen and Carbon >= 1|Growth >0|COS PlantModel >1");
 
 	
 		string conditions = "Nitrogen and Carbon >= 1|Growth >0";
@@ -626,6 +633,23 @@ bool NC_Plant_Functions::Def()
 	pG = new G(&PSinkOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pG, pNumPlants, "P Sink", initv, UNIT_TYPES::MIKRO_MOL_SEC_RATE, "Nitrogen and Carbon >= 1|Growth=4");
 	;
+	;
+	pG = new G(&COSPlantOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pG, pNumPlants, "COS Plant", initv, "pmol/m2/s", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
+	pG = new G(&COSSoilOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pG, pNumPlants, "COS Soil", initv, "pmol/m2/s", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
+	pG = new G(&COSFluxOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pG, pNumPlants, "COS Ecosystem", initv, "pmol/m2/s", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
+	pG = new G(&LRUOut, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pG, pNumPlants, "LRU", initv, "-", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
+	pG = new G(&PCOS_Surface, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pG, pNumPlants, "PCOS Surface", initv, "ppt", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
+	pGs = new Gs(&PCOS_Boundary, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pGs, "PCOS Canopy", 0.0, "ppb", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1");
+	pG = new G(&PCOS_Internal, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pG, pNumPlants, "PCOS Stomata", initv, "ppt", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
+	pG = new G(&SIF, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pG, pNumPlants, "SIF", initv, "umol photo/m2/s", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
 	;
 
 
@@ -1680,6 +1704,28 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	Define(pPs, "P_Surface", 1.E5, "Pa", "Nitrogen and Carbon >=1 |Growth>3", 0.9E5, 1.2E5);
 	pPs = new Ps(&CO2_A, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 	Define(pPs, "CO2_A", 354., "ppm", "Nitrogen and Carbon >= 1|Growth>=3", 0., 1000.);
+
+	pPs = new Ps(&COS_A, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pPs, "COS_A", 500., "ppt", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 0., 1000.);
+	pPs = new Ps(&Alpha_COS, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pPs, "Alpha_COS", 1400., "-", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 100., 2000.);
+	pPs = new Ps(&sif_a, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pPs, "sif_a", 6.2473, "-", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 1., 20.);
+	pPs = new Ps(&sif_b, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pPs, "sif_b", 0.5994, "-", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 0.1, 2.);
+	pPs = new Ps(&gpp_a, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pPs, "gpp_a", 6.2473, "-", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 1., 20.);
+	pPs = new Ps(&gpp_b, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pPs, "gpp_b", 0.5994, "-", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 0.1, 2.);
+	pPs = new Ps(&f_leaf, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
+	Define(pPs, "f_leaf", 0.5, "-", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 0.1, 1.0);
+	;
+
+
+
+
+
+
 	;
 	pP = new P(&C3Type, pNumPlants, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
 	Define(pP, pNumPlants, "C3Type", initv, "-", "Nitrogen and Carbon >= 1|Growth>3", 0., 1.);
@@ -1711,11 +1757,21 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	pP = m_pModelMap->GetPPointer("RadEffRed"); mTab_Farq.push_back(pP);
 
 	pP = m_pModelMap->GetPPointer("FixN supply"); mTab_Farq.push_back(pP);
+	pP = new P(&VascularType, pNumPlants, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
+	Define(pP, pNumPlants, "VascularType", initv, "-", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 0, 1.);
+	mTab_Farq.push_back(pP);
+	pP = new P(&Hmoss, pNumPlants, PLANT, ORGANIC, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
+	Define(pP, pNumPlants, "MossHeight", initv, "cm", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1", 0., 50.0);
+	mTab_Farq.push_back(pP);
+
+
+
+
 
 	//Remain add ConductMax, RadEff and FixN
 	pTab = new Tab(&mTab_Farq, PLANT, NITROGEN, TRANSPORT, PHOTOSYNTHESIS, NORMAL);
 
-	Define(pTab, "Farquhar parameters", "C3Type|Vcmax|QuanEff|RBoundary|Conduct Max|RadEffRed|FixN supply", "Nitrogen and Carbon > 0|Growth > 3");
+	Define(pTab, "Farquhar parameters", "C3Type|Vcmax|QuanEff|RBoundary|Conduct Max|RadEffRed|FixN supply|VascularType|MossHeight", "Nitrogen and Carbon > 0|Growth > 3");
 	;
 
 
@@ -3210,6 +3266,33 @@ double NC_Plant_Functions::P_PhoSiB(size_t index) {
 
 }
 
+double NC_Plant_Functions::COS_PhoSiB(size_t index) {
+
+	Photo Sib;
+	Sib = PhoSib(index);
+	COSPlantOut[index] = Sib.cos_plant; // pmol/m2/s
+	LRUOut[index] = Sib.cos_rflux;
+	COSSoilOut[index] = Sib.cos_grnd;
+	COSFluxOut[index] = Sib.COSFlux;
+	return Sib.cos_plant * Fix::MOL_C * 86400 * 1.0e-6;	// Enhet: ugC / m2 / day
+
+}
+
+double NC_Plant_Functions::COS_PhoSiB_Soil(size_t index) {
+
+	Photo Sib;
+	Sib = PhoSib(index);
+	return Sib.cos_grnd * Fix::MOL_C * 86400 * 1.0e-6;	// Enhet: ugC / m2 / day
+
+}
+
+double NC_Plant_Functions::SIF_PhoSiB(size_t index) {
+
+	Photo Sib;
+	Sib = PhoSib(index);
+	return Sib.sif_gpp;
+
+}
 
 double NC_Plant_Functions::PMinFunc(double P_Rub, double P_light,double  P_Sink, double Atheta, double Btheta) {
 		
@@ -3312,7 +3395,7 @@ double NC_Plant_Functions::GAirFunc(double ResAir,double  TP, double Temp) {
 //	Integer index
 
 //	cond=(1/(Lohammar_L[index]*LeafAreaFunctionL[index]))*NDrivWaterStress[index]
-	// Kanske bˆr vi ej multiplicera med LAI om vi r‰knar per LA?
+	// Kanske b√∂r vi ej multiplicera med LAI om vi r√§knar per LA?
 
 	return 1./max(1., ResAir )*Fix::MOL_VOL_AIR*TP/(Temp+Fix::ABS_ZERO); // Conversion from s/m to mol/m2*sec
 }
@@ -3477,13 +3560,24 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 
 		//Real P_Rub, P_Light, P_Sink, P_Sink1, Photo_G, Photo_N
 		
-		double PCO2A, PCO2IN, Co2b, pCo2Bp;
+	
+		double PCO2A;// = 0.0;
+		double PCO2IN;// = 0.0;
+		double Co2b = 0.0;
+		double pCo2Bp;// = 0.0;
 		
 		double  TPCorr, co2cap, RespSoil, RespMPlant, RootMRespiration;
 
+		double c4flag;
+		double T_s, poros, theta_w;
+		double cosprev, coscas;
+		T_s = 0.;
+		poros = 0.;
+		theta_w = 0.;
+		//coscas = COS_A;
 
 
-		TPCorr=TP_Corr();	//   	Korrektion av fryspunkten beroende av fˆrhÂllandet mellan aktuellt och normalt lufttryck
+		TPCorr=TP_Corr();	//   	Korrektion av fryspunkten beroende av f√∂rh√•llandet mellan aktuellt och normalt lufttryck
 		co2cap=CasCo2cap(pPlant->MC_DisplVar[index], TPCorr, NDrivTAir);		// mol air / m2
 		RespSoil=pNCSoil->CTotSoilRespRate/Fix::MOL_C/86400;		// konvertering till mol/m2/s
 
@@ -3546,11 +3640,41 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 
 			ASSIMY[index][ICount]=PMinFunc(P_Rub, P_Light, P_Sink, P_ATheta, P_BTheta);	// Cycalc	
 			ASSIMNY[index][ICount]=ASSIMY[index][ICount]*(1-RespGCoef[index]);
+
+
+			if (C3Type[index] > 0 && VascularType[index] == 0) { // if the plant is moss type (non-vascular), photosynthesis is calculated separately
+				double soilw = (NDrivTheta[1] + NDrivTheta[2]) / 2. / 100.; // approximate soil water at 10 cm depth
+				double canWat = pPlant->MC_IntStorage[index] * 1000.; // mm water to g water/m2 soil
+				double fmass = P_State[_LEAF][_C_][index]; // leaf mass g C/m2 soil
+				double hmoss = Hmoss[index] / 100.; // moss height, cm to m
+				AtmModel* p_AtmModel = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
+				double pondingdepth = p_AtmModel->m_Irrigation.SurfacePool / Fix::KILO; // Ponding depth, mm-->m;
+				GStomata[index] = MossConductFunc(soilw, canWat, fmass, hmoss, pondingdepth);
+
+				PCO2IN = StomataCO2FuncMoss(PCO2A, pCo2Bp, ASSIMNY[index][ICount], RespSoil, RespMPlant, GBoundary[index], GStomata[index], GAir[index], Vmax[index], co2cap);
+				// Williams and Flanagan 1996, Shi et al., 2021, Moss photosynthesis model, also McGill Wetland model concept
+			}
+			else {
+				PCO2IN = StomataCO2Func(PCO2A, pCo2Bp, ASSIMNY[index][ICount], RespSoil, RespMPlant, GBoundary[index], GStomata[index], GAir[index], Vmax[index], co2cap);
+			}
+
+
+
+
+
+
+
+
 // Not to be converted here			/MOL_C/86400)
-			// Dessa ‰r nu per markyta
+			// Dessa √§r nu per markyta
 
  			PCO2IN = StomataCO2Func(PCO2A, pCo2Bp,ASSIMNY[index][ICount] ,RespSoil,RespMPlant, GBoundary[index], GStomata[index], GAir[index], Vmax[index], co2cap);
 			EYY[index][ICount] = PCo2y[index][ICount]- PCO2IN;
+
+
+			out.Gross = ASSIMY[index][ICConv[index]];	// Denna ÔøΩr per markyta
+			out.Net = ASSIMNY[index][ICConv[index]];	// Denna ÔøΩr per markyta
+
 
 			if(ICount>0) {
 				if(abs(EYY[index][ICount-1])>=0.1)
@@ -3563,24 +3687,24 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 			
 		}
 
-		out.Gross=ASSIMY[index][ICConv[index]];	// Denna ‰r per markyta
-		out.Net=ASSIMNY[index][ICConv[index]];	// Denna ‰r per markyta
+		out.Gross=ASSIMY[index][ICConv[index]];	// Denna √§r per markyta
+		out.Net=ASSIMNY[index][ICConv[index]];	// Denna √§r per markyta
 
-//		Fˆljande ekvationer ber‰knar de slutgiltiga v‰rdena pÂ CO2 cons inne i bladet och
-//		i bladverket. De ‰r viktiga fˆr n‰sta tidssteg.
+//		F√∂ljande ekvationer ber√§knar de slutgiltiga v√§rdena p√• CO2 cons inne i bladet och
+//		i bladverket. De √§r viktiga f√∂r n√§sta tidssteg.
 
 		PCo2I[index] = PCo2y[index][ICConv[index]]+out.Net*P_Surface/(4000*Vmax[index]); // + AssimNY(index, Icconv[index])/(4000*Vmax)*P_surface		
 		PCo2s[index] = PCo2I[index] + out.Net*P_Surface*1.6/GStomata[index];
 
 	
 		if (CanopyCO2_Storage_Sw(CanopyCO2_Storage) == CanopyCO2_Storage_Sw::Dynamic) {
-			Co2b = pCo2Bp / P_Surface;	// The real C_B forecast with the iterated fluxes.   
+			Co2b = pCo2Bp / P_Surface;	// The real C_B forecast with the iterated fluxes.   , from Pascals to mol/mol.
 
 			Co2b = (Co2b + (RespSoil + RespMPlant - out.Net + CO2_A * GAir[index] * 1.E-6) * (T_Step * 86400 / co2cap)) / (1 + T_Step * 86400 / co2cap * GAir[index]);
-			//Denna ekvation ‰r en omskrivning av: cb = cbp + (resp-bruttofoto+ga*(ca-cb))*(tid/kapacitet)
-			//d‰r kvoten tid/kapacitet omvandlar frÂn flˆde till m‰ngd
+			//Denna ekvation √§r en omskrivning av: cb = cbp + (resp-bruttofoto+ga*(ca-cb))*(tid/kapacitet)
+			//d√§r kvoten tid/kapacitet omvandlar fr√•n fl√∂de till m√§ngd
 
-			pCo2Bp = Co2b * P_Surface;		// go back from molC / mol air to Pascals. Denna anv‰nds i n‰sta tidssteg
+			pCo2Bp = Co2b * P_Surface;		// go back from molC / mol air to Pascals. Denna anv√§nds i n√§sta tidssteg
 		}
 		else
 			pCo2Bp = CO2_A * P_Surface*1.E-6;
@@ -3593,15 +3717,90 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 		PCO2_Surface[index]=PCo2s[index]*10.;
 		
 		if(C3Type[index]>0) {	
-			out.Rubisco=P_RubiscolimitedC3(VmaxRubisco[index], PCo2y[index][ICConv[index]], Gammas[index], MMO2V[index])*10e6;
-			out.Light=P_LightLimitedC3(Jmax[index],PCo2y[index][ICConv[index]], Gammas[index])*10e6;
-			out.Sink=P_SinkLimitedC3(Vmax[index])*10e6;
+
+			c4flag = 0.0;
+			out.Rubisco = P_RubiscolimitedC3(VmaxRubisco[index], PCo2y[index][ICConv[index]], Gammas[index], MMO2V[index]) * 1.0e6;
+			out.Light = P_LightLimitedC3(Jmax[index], PCo2y[index][ICConv[index]], Gammas[index]) * 1.0e6;
+			out.Sink = P_SinkLimitedC3(Vmax[index]) * 1.0e6;
+			GCOSm[index] = Alpha_COS * Vmax[index] * GPP_Current.Light[index] * GPP_Current.Water[index]
+				* (1.0 + 5.33 * c4flag) * (P_Surface / Fix::NORM_ATMPRES) *
+				(pAtm->MC_TempCanopy[index] + Fix::ABS_ZERO) / Fix::ABS_ZERO;// *
+			//max(GPP_Current.Light[index],0.001) * max(GPP_Current.Water[index],0.001);
+		 // consider the radiation and water stresses on the COS conductance	
+
 		}
 		else {
-				out.Rubisco=P_RubiscolimitedC4(VmaxRubisco[index])*10e6;
-				out.Light=P_LightLimitedC4(Jmax[index])*10e6;
-				out.Sink=P_SinkLimitedC4_CO2(P_Sink1, PCo2y[index][ICConv[index]])*10e6;
+			c4flag = 1.0;
+			out.Rubisco = P_RubiscolimitedC4(VmaxRubisco[index]) * 1.0e6;
+			out.Light = P_LightLimitedC4(Jmax[index]) * 1.0e6;
+			out.Sink = P_SinkLimitedC4_CO2(P_Sink1, PCo2y[index][ICConv[index]]) * 1.0e6;
+			GCOSm[index] = Alpha_COS * Vmax[index] * GPP_Current.Light[index] * GPP_Current.Water[index]
+				* (1.0 + 5.33 * c4flag) * (P_Surface / Fix::NORM_ATMPRES) *
+				(pAtm->MC_TempCanopy[index] + Fix::ABS_ZERO) / Fix::ABS_ZERO;// *
+			//max(GPP_Current.Light[index],0.001) * max(GPP_Current.Water[index],0.001);
+		// consider the radiation and water stresses on the COS conductance
+			
 		}
+
+		if ((GStomata[index] < 1.0e-15) || (GAir[index] < 1.0e-15)) {
+			// for low conductance conditions
+			out.cos_plant = 0.0;
+			out.cos_rflux = 0.0;
+			out.cos_grnd = 0.0;
+			out.COSFlux = 0.0;
+			PCOS_Boundary = COS_A;
+			PCOS_Surface[index] = COS_A;
+			PCOS_Internal[index] = COS_A;
+			//GtCOS[index] = 0.0;
+		}
+		else {
+			//GCOSm[index] = max(GCOSm[index],1.0e-6); // mol/m2/s
+			//double cos_plant;
+			coscas = PCOS_Boundary; // ppt
+			out.cos_plant = PlantCOSFluxFunc(coscas, GStomata[index], GAir[index], GCOSm[index]); // pmol/m2/s
+
+			// surface temperature of soil
+			T_s = NDrivTemperature[0] + 273.15; // To convert temperature from C to K
+
+			poros = p_Soil_WaterF->M_Saturation[0] / 100.;
+
+			theta_w = NDrivTheta[0] / 100.;
+
+			if (NDrivTheta.size() > 1) {
+				//theta_w = NDrivTheta[0]/100.;   // To convert from % to fraction
+				out.cos_grnd = SoilCOSFluxFunc(T_s, poros, theta_w, P_Surface, coscas); // pmol/m2/s		
+				//...prognostic equation for cosa: follow phosib           
+				coscas = (coscas + T_Step * 86400. / co2cap * ((COS_A * GAir[index] / 1.56) - out.cos_grnd - out.cos_plant))
+					/ (1.0 + (T_Step * 86400. * GAir[index]) / co2cap); // ppt
+				if (coscas < 0.0) {
+					coscas = COS_A;
+				}
+				//...new cos flux
+					//GtCOS[index] = 1./(1.94 / GStomata[index] + 1.56 / GAir[index] + 1.0 / GCOSm[index]); // mol/m2/s
+					//out.cos_plant = GtCOS[index] * COS_A ; // pmol/m2/s
+				if (ASSIMNY[index][ICConv[index]] <= 0)
+					out.cos_rflux = 0.;
+				else
+					out.cos_rflux = (out.cos_plant / (ASSIMY[index][ICConv[index]] * 1.0E6)) * (CO2_A / COS_A); // lru for diagnostic purposes        
+				//...back out concentrations at leaf surface and stomate		
+				PCOS_Boundary = coscas; // ppt		
+				PCOS_Surface[index] = (coscas - out.cos_plant * (1.56 / GBoundary[index])); //ppt		
+				PCOS_Internal[index] = (PCOS_Surface[index] - out.cos_plant * (1.94 / GStomata[index])); //ppt
+				out.COSFlux = out.cos_grnd + out.cos_plant; // pmol/m2/s
+				out.cosflux = GAir[index] / 1.56 * (COS_A - coscas); // pmol/m2/s, for diagnostics
+				//cosprev = coscas;
+			}
+		}
+
+		SIF[index] = SIFFunc(f_leaf, sif_a, sif_b, ASSIMY[index][ICConv[index]], pPlant->LAI[index],
+			RadPlantAdsorbed[index], C3Type[index], Gammas[index], PCo2I[index]);
+		// for diagnostic purposes, based on the linear relationship between SIF and GPP
+		out.sif_gpp = gpp_a * ASSIMY[index][ICConv[index]] * Fix::MOL_C * 86400 + gpp_b;
+
+
+
+
+
 		return out;
 
 }
@@ -3617,7 +3816,7 @@ double NC_Plant_Functions::StomataCO2Func(double PCO2A, double pCo2Bp, double As
    if(CanopyCO2_Storage_Sw(CanopyCO2_Storage) == CanopyCO2_Storage_Sw::Dynamic)
 	CO2_B	= (CO2_B+(RespSoil+RespMPlant-Assim+CO2_A*GA)*(T_Step*86400/co2cap))/(1+T_Step*86000/co2cap*GA) ;
 
-	//Sedan ber‰knas co2A pÂ nytt
+	//Sedan ber√§knas co2A p√• nytt
 
 	P_CO2_B	= CO2_B * P_Surface;
 
@@ -3626,6 +3825,140 @@ double NC_Plant_Functions::StomataCO2Func(double PCO2A, double pCo2Bp, double As
 	return  max(0.1, P_CO2_S - Assim * P_Surface * (1.6/GS + 1.0/(Vmax*4000)));				
 }
 
+double NC_Plant_Functions::SIFFunc(double f_leaf, double sif_a, double sif_b, double assim, double lai,
+	double radnet, double c3flag, double Gamma, double pco2i) {
+	double iphoton, fpar, xSIF, je, xxn, kf, kd, kp, ps_sif, kn, fm, fs;
+	iphoton = 4.55 * f_leaf * radnet / 86400.0; // umol/m2/s
+	fpar = 1. - exp(-0.45 * lai);
+	fpar = max(0.001, fpar);
+
+	if (iphoton <= 0.) return 0.;
+
+	je = assim * (1 - c3flag) + c3flag * max(assim * (pco2i + 2.0 * Gamma) / (pco2i - Gamma), 0.0);
+
+	xxn = 1.0 - je * 1.0e6 / (iphoton * fpar * 0.05);
+	if (xxn < 0.) xxn = 0.;
+	kf = 0.05;
+	kd = 0.95;
+	kp = 4.0;
+
+	double k_fd = kf + kd;
+	ps_sif = kp / (k_fd + kp) * (1 - xxn);
+	kn = (sif_a * xxn - sif_b) * xxn;
+	fm = kf / (k_fd + kn);
+	fs = fm * (1.0 - ps_sif);
+	if (xxn < 0.26) fs = -0.0075 * xxn + 0.0181;
+	xSIF = fs * iphoton * fpar;
+
+	return xSIF;
+}
+
+double NC_Plant_Functions::PlantCOSFluxFunc(double coscas, double GS, double GA, double gcosm) {
+	/**
+ * Calculates the plant COS flux based on the given parameters.
+ *
+ * @param coscas The COS concentration in the atmosphere (ppt).
+ * @param GS The stomatal conductance to water (mol/m2/s).
+ * @param GA The canopy conductance to water (mol/m2/s).
+ * @param gcosm The boundary layer conductance to COS (mol/m2/s).
+ * @return The plant COS flux (pmol/m2/s).
+ */
+	double gtcos, cos_plant;
+	gtcos = 1.0 / (1.94 / GS + 1.56 / GA + 1.0 / gcosm);  // mol/m2/s
+	cos_plant = gtcos * coscas; // pmol/m2/s
+	return cos_plant;
+}
+
+// the code for moss carbon flux calculation
+double NC_Plant_Functions::MossConductFunc(double soilw, double canWat, double fmass, double hmoss, double ponding) {
+	double W_int = 0.3933 + 7.6227 / (1 + exp(-(soilw / 100. - 0.1571)) / 0.018);
+	double W_surf = canWat / fmass;
+	double W_tot = W_int + W_surf;
+	double gtc = -0.195 + 0.134 * W_tot - 0.0256 * W_tot * W_tot + 0.0028 * W_tot * W_tot * W_tot -
+		0.000098 * W_tot * W_tot * W_tot * W_tot + 0.00000168 * W_tot * W_tot * W_tot * W_tot * W_tot; // mol/m2/s
+	return gtc; // mol/m2/s
+}
+
+// the code for soil COS flux
+
+double NC_Plant_Functions::SoilCOSFluxFunc(double T_s, double poros, double theta_w, double pressure, double coscas) {
+	double pKw = 14.0;
+	double pH = 4.5;
+	double Tref = 293;
+	double fca = 32000;
+	double alfa = 4.86; // pmol/m3/s
+	double beta = 0.1011;
+	double COS_prod, COS_grnd;
+	// COS prodcution
+	COS_prod = 1.0e-12 * alfa * exp(beta * (T_s - 273.15)); // mol/m3/s
+
+	double inv_T_s = 1.0 / T_s;
+	double kuncat = 2.15e-5 * exp(-10450.0 * (inv_T_s - 1.0 / Tref)) +
+		12.7 * pow(10, (-pKw + pH)) * exp(-6040.0 * (inv_T_s - 1.0 / Tref)); // s-1
+
+	double D0l25 = 1.94e-9;
+	double Rconst = 8.3145; // J/(mol K)
+	double DHa = 40.0e3; // J/mol
+	double DHd = 200.0e3; // J/mol
+	double DSd = 660.0; // J/(mol K)
+	double zp = 1.0;
+
+	double phi = poros; // porosity
+	double ea = max(0.01, phi - theta_w); // theta_w for soil water content
+
+	// Diffusivity, page 2224 Ogee
+	double D0a = 1.27e-5 * pow(T_s / 298.15, 1.5); // T_s in K
+	double D0lT0 = D0l25 / pow((298.15 / 216.0 - 1.0), 2.0);
+	double D0l = D0lT0 * pow((T_s / 216.0 - 1.0), 2.0);
+
+	// Tortuosities, torttype = "Mol03r"
+	double ta = (0.2 * pow(ea / phi, 2) + 0.004) / phi;
+	double tl = pow(theta_w, 7.0 / 3.0) / pow(phi, 2.0);
+
+	double Deffa = D0a * ta * ea;
+	double Deffl = D0l * tl * theta_w;
+
+	// xCA
+	double xCA = exp(-DHa / Rconst * inv_T_s) / (1.0 + exp(-DHd / Rconst * inv_T_s + DSd / Rconst));
+	double xCAref = exp(-DHa / (Rconst * 293.0)) / (1.0 + exp(-DHd / (Rconst * 293.0) + DSd / Rconst));
+
+	// Kh, Henry's law constant, p 2223 Ogee
+	double Kh = 0.021e-2 * exp(24900.0 * (inv_T_s - 1.0 / 298.15) / Rconst);
+
+	// B, related to Henry's law constant, p 2223 Ogee
+	double B = Kh * Rconst * T_s;
+
+	double D = Deffa + Deffl * B;
+	double mV = Rconst * T_s / pressure; // m3/mol
+	double Ca = coscas * 1.0e-12 / mV; // mol/m3
+
+	double k = fca * kuncat * xCA / xCAref;
+
+	double z1 = sqrt(D / (k * B * theta_w));
+	// Soil COS flux
+	COS_grnd = sqrt(k * B * theta_w * D) * (Ca - (pow(z1, 2) * COS_prod / D) * (1.0 - exp(-zp / z1)));
+
+	return COS_grnd * 1.0e12; // pmol/m2/s
+}
+
+
+double NC_Plant_Functions::StomataCO2FuncMoss(double PCO2A, double pCo2Bp, double Assim, double RespSoil, double RespMPlant, double GB, double GS, double GA, double Vmax, double co2cap) {
+	// Return the value of CO2 at the surface of the leaf
+	double CO2_B, P_CO2_S, CO2_A, P_CO2_B;
+
+	CO2_B = pCo2Bp / P_Surface;	//CO2B is given the value calc in the previous timestep	
+	CO2_A = PCO2A / P_Surface;
+	if (CanopyCO2_Storage_Sw(CanopyCO2_Storage) == CanopyCO2_Storage_Sw::Dynamic)
+		CO2_B = (CO2_B + (RespSoil + RespMPlant - Assim + CO2_A * GA) * (T_Step * 86400 / co2cap)) / (1 + T_Step * 86000 / co2cap * GA);
+
+	//Sedan berÔøΩknas co2A pÔøΩ nytt
+
+	P_CO2_B = CO2_B * P_Surface;
+
+	P_CO2_S = P_CO2_B;
+
+	return  max(0.1, P_CO2_S - Assim * P_Surface * (1.6 / GS + 1.0 / (Vmax * 4000)));
+}
 
 
 

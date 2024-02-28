@@ -927,14 +927,10 @@ void NC_GasFlux::COSGas_Fluxes() {
 		PlantOrgModel* pPlantOrg = (PlantOrgModel*)m_pModelInfo->GetModelPtr("Plant Org Model");
 		NC_Plant* pNCPlant;
 		pNCPlant = &pPlantOrg->m_NC_Plant;
-
 		PlantModel* pPlant = (PlantModel*)m_pModelInfo->GetModelPtr("Plant Model");
 		WaterUptake* p_Plant = &pPlant->m_WaterUptake;
-
 		AtmModel* pAtm = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
 		Irrigation* p_Irrig = &pAtm->m_Irrigation;
-
-
 		if (COS_PlantModel_Sw(COS_PlantModel) == COS_PlantModel_Sw::Experimental) {
 			COS_TotPlantUptake = f_COS_Plant(sum(pNCPlant->AtmNewMobile));
 			COS_Option1 = f_COS_PlantTransp(p_Plant->Transpiration_All);
@@ -949,7 +945,6 @@ void NC_GasFlux::COSGas_Fluxes() {
 			COS_TotPlantUptake = f_COS_Plant(sum(pNCPlant->AtmNewMobile));
 		else
 			COS_TotPlantUptake = f_COS_Plant(p_Plant->Transpiration_All);
-
 
 		if (COS_Model_Sw(COS_Model) == COS_Model_Sw::Plant_Soil) {
 			COS_TotSoilUptake = f_COS_Soil(O_RespRateProfile[_L1]);

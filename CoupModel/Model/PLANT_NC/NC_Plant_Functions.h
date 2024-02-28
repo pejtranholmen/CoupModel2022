@@ -20,6 +20,12 @@ struct Photo{
 	double Rubisco;
 	double Light;
 	double Sink;
+	double COSFlux; // Mousongs addition below
+	double cosflux; // for diagnostics
+	double cos_plant;
+	double cos_rflux;
+	double cos_grnd;
+	double sif_gpp;
 };
 
 
@@ -113,9 +119,10 @@ string P_BioElementName[NUM_BIOELEM];
 // Flow variables;
 vector<double> NPlantAddSupply;
 vector<double> AtmNewMobile;//, CNewMobileLeaf,CNewMobileStem, CNewMobileRoots, CNewMobileCoarseRoots;
-//vector<double> CStemGrain, CLeafGrain, CRootsGrain;
-//vector<double> CStemHarvest, CLeafHarvest, CGrainHarvest, CRootsHarvest;
-//vector<double> COldStemHarvest, COldLeafHarvest, COldRootsHarvest;
+vector<double> COSAtmNewMobile;
+vector<double> COSSoilNewMobile, SIF_GPPreg;
+
+
 vector<double>  CNewMobileFungi;
 //vector<double> CStemAtm, CLeafAtm, CRootsAtm, CGrainAtm;
 vector<double> CStemOldStem, CLeafOldLeaf;
@@ -342,10 +349,21 @@ vector<double> AboveGroundLitterFall_Position4Target;
 vector<double> AlloCoarseRoots;
 ;
 // Farquhar parameters;
-vector<double> C3Type, Vcmax, QEff, RBoundary;
+vector<double> C3Type, Vcmax, QEff, RBoundary, VascularType, Hmoss;
 double P_ATheta, P_BTheta, P_Surface, CO2_A, PCO2_Boundary;
+
+double COS_A, PCOS_Boundary, Alpha_COS; // Mousong 
+
 vector<double> PCO2_Internal, PCO2_Surface ;
+vector<double> PCOS_Internal, PCOS_Surface;
+
 vector<double> PRubOut, PLightOut, PSinkOut;
+vector<double> COSPlantOut, COSSoilOut, LRUOut;
+vector<double> COSAOut, COSSOut, COSIOut, COSFluxOut;
+vector<double> SIF;
+double sif_a, sif_b, f_leaf;
+double gpp_a, gpp_b;
+
 ;
 ;
 // NPP auxiliaries;
@@ -401,6 +419,8 @@ vector<size_t> ResetHarvestToBeDoneDay;
 vector<vector <double>>  EYY, PCo2y, ASSIMY, ASSIMNY;
 vector<double>  PCo2s,  PCO2B, Vmax, FarqRange, Gammas, VmaxRubisco, Jmax;
 vector<double>  PCo2I, GBoundary, GStomata, GAir, Qt, MMO2V;
+
+vector<double>  GCOSm, GtCOS; // Mousong
 ;
 
 vector<bool> Emergence_Done;
@@ -518,6 +538,11 @@ double WoodEatingRateCoefFunction(double time_sincestart);
 GRespons P_Responses(size_t index);
 Photo PhoSib(size_t index);
 double P_PhoSiB(size_t index);
+double COS_PhoSiB(size_t index); // Mousong Func
+double COS_PhoSiB_Soil(size_t index); // M..
+double SIF_PhoSiB(size_t index); //M..
+
+
 double PMinFunc(double P_Rub, double P_light,double  P_Sink, double Atheta, double Btheta);
 double TP_Corr();
 double MMO2(double Qtemp);
@@ -580,6 +605,12 @@ bool KillBelowGroundPlant(size_t index);
 double StomataCO2Func(double PCO2A, double PCO2Bp, double Assim, double RespSoil, double RespMPlant, double GB, double GS, double GA, double Vmax, double co2cap);
 bool CheckFromPhotoFile();
 bool CheckFromGrazingFile();
+// COS functions added by Mousong
+double SoilCOSFluxFunc(double T_s, double poros, double theta_w, double pressure, double coscas);
+double PlantCOSFluxFunc(double coscas, double GS, double GA, double gcosm);
+double MossConductFunc(double soilw, double canWat, double fmass, double hmoss, double ponding);
+double SIFFunc(double f_leaf, double sif_a, double sif_b, double assim, double lai, double radnet, double C3, double Gamma, double pco2i);
+double StomataCO2FuncMoss(double PCO2A, double PCO2Bp, double Assim, double RespSoil, double RespMPlant, double GB, double GS, double GA, double Vmax, double co2cap);
 
 
 bool TerminatingHarvestFunction(size_t i);
