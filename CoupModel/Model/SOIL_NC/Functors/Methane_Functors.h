@@ -212,7 +212,7 @@ public:
 	};   // corrected from ra is scaled to convert MassConsAtm and ConSurface from mg/L to g/m3
 	MethaneBoundaryLayerFlux(double ref_conc, double ResistanceAir, double LogScale) noexcept : atm_conc(ref_conc), ra(ResistanceAir) { //This is the instantiation for dynamics scaling of surface flux
 		atm_conc = ref_conc * Fix::MOL_RATIO_CH4_AIR/Fix::PPM_FRAC; ra /= Fix::SECPERDAY; scalecoef = pow(10., LogScale);
-		//scalecoef = pow(10., LogScale); ra /= Fix::SECPERDAY;
+		f_AirDensity = AirDensityTempFunction();
 	};
 
 	double operator() (double ConcSurface) noexcept {

@@ -152,8 +152,10 @@ bool NC_GasFlux::IniFunctors() {
 		    f_PlantEmissionbyAerenchyma = MethaneEmissionByAerenchyma(MethaneMassConcAtm, AereScale,D_CH4_Aere); 
 			f_OxygenDiffusionbyAerenchyma = OxygenDiffusionByAerenchyma(OxygenMassConcAtm, AereScale,D_O2_Aere); 
 		}
-		
-		f_MethaneDynResBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir, CH4_ResistanceAirLogScale);
+		if (Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux) == Methane_SoilBoundary_Flux_Sw::Fixed_Air_Resistance)
+			f_MethaneBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir, CH4_ResistanceAirLogScale);
+		else
+			f_MethaneDynResBoundaryLayerFlux = MethaneBoundaryLayerFlux(CH4_CONC_Atm, CH4_ResistanceAir, CH4_ResistanceAirLogScale);
 		
 		if (Methane_SoilBoundary_Flux_Sw(Methane_SoilBoundary_Flux) == Methane_SoilBoundary_Flux_Sw::Dynamic_Surface_Pool)
 			f_MethaneResistanceSoilSurface = SurfaceResistanceCH4(CH4_Water_Diff_Coef, CH4_ResistanceAir);
@@ -606,8 +608,6 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 	Soil_HeatPump* pSoilHeat = &p_Soil->m_HeatPump;
 	AtmModel* p_AtmModel = (AtmModel*)m_pModelInfo->GetModelPtr("Atm Model");
 
-
-
 	if (Methane_Model_Sw(Methane_Model) > Methane_Model_Sw::off) {
 		CH4_TotSoilStorage = sum(CH4);
 		CH4_DiffTotStorage = CH4_TotSoilStorage - CH4_InitStorage;
@@ -880,10 +880,14 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 			OutFlowZeroControl(CH4, CH4_Ebullition);
 
 
-			if (Methane_Aerenchyma_Emission_Sw(Methane_Aerenchyma_Emission) > Methane_Aerenchyma_Emission_Sw::off)
+			if (Methane_Aerenchyma_Emission_Sw(Methane_Aerenchyma_Emission) > Methane_Aerenchyma_Emission_Sw::off) {
 				OutFlowZeroControl(CH4, CH4_PlantTransport);
-			else
+				CH4_TotPlantUptake = sum(CH4_PlantTransport);
+			}
+			else {
 				OutFlowZeroControl(CH4, CH4_PlantWaterUptake);
+				CH4_TotPlantUptake = sum(CH4_PlantWaterUptake);
+			}
 
 
 			OutFlowZeroControl(CH4.front(), CH4_SurfaceEmission);
@@ -893,7 +897,9 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 
 			CH4_TotSoilProductionFlux = sum(CH4_Prod);
 			CH4_TotSoilFlux = sum(CH4_Ebullition) + CH4_SurfaceEmission;
-			CH4_TotPlantUptake = sum(CH4_PlantTransport);
+
+			CH4_TotPlantUptake = sum(CH4_PlantWaterUptake);
+
 			CH4_TotSoilOxidation = sum(CH4_OxidationSoilBacteria);
 
 			CH4_TotPlantOxidation = f_MethaneOxidationInPlant(CH4_TotPlantUptake) + sum(CH4_OxidationPlantRoot);
