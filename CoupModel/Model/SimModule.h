@@ -154,6 +154,12 @@ public:
 		if (T * T_Step > X) T = X * 0.5 / T_Step;
 		X -= T * T_Step;
 	}
+	void OutFlowZeroControl(vector<double>& X, vector<double>& T) {
+		for (size_t i = 0; i < T.size(); i++) {
+			if (T[i] * T_Step > X[i]) T[i] = X[i] * 0.5 / T_Step;
+			X[i] -= T[i] * T_Step;
+		}
+	}
 
 	void OutFlow(vector<double> &X, const vector<double> &T) { 
 		for (size_t i = 0; i < X.size(); i++) {

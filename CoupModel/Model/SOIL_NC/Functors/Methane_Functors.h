@@ -7,8 +7,8 @@ enum class Dissolved_OxygenGas_Sw {Implicit, Explicit};
 enum class Methane_Plant_Oxidation_Sw { off, on };
 enum class Methane_Soil_Oxidation_Sw { off, on_orignal, New };
 enum class Methane_Plant_Emission_Sw { off, on };
-enum class Ebullition_Sw {SolubilityBased, PressureBased};
-enum class Methane_SoilBoundary_Flux_Sw{ Fixed_Air_Resistance,Dynamic_Air_Resistance};
+enum class Ebullition_Sw {Off,SolubilityBased, PressureBased};
+enum class Methane_SoilBoundary_Flux_Sw{ Fixed_Air_Resistance,Dynamic_Air_Resistance, Dynamic_Surface_Pool};
 enum class Methane_Aerenchyma_Emission_Sw{ off, on};
 enum class MethaneConvectionSoilFlux_Sw { off, on };
 
