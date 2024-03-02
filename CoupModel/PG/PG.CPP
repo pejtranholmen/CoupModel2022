@@ -1459,8 +1459,8 @@ bool CPG::CalcVarScaling(size_t var_in, size_t var_out, size_t repn)
 			pg.Var.v[(var_rec-1)*pg.Shape.RecordIndexSize+var_out]=MISSING;
 		}
 	}
-	SetVarMin(var_out,vmin, m_ActualSequence);
-	SetVarMax(var_out,vmax, m_ActualSequence);
+	SetVarMin(var_out,vmin, repn);
+	SetVarMax(var_out,vmax, repn);
 	return true;
 }
 

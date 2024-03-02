@@ -167,9 +167,9 @@ BOOL PGCalcActions::OnNewCalculateVar()
 				jump = TRUE;
 			}
 			for (size_t nbuf = 1; nbuf <= pCPG->GetNumBuffers(); nbuf++) {
-				if (pCPG->GetNumRepititions() > 1) pCPG->SetActBuffer(nbuf);
+				if (pCPG->GetNumRepititions() > 1&&nbuf>1) pCPG->SetActBuffer(nbuf);
 				if (expression_type == 1) {
-					if (expression == 1) pCPG->CalcVarScaling(var_in, var_out);
+					if (expression == 1) pCPG->CalcVarScaling(var_in, var_out, irep+1);
 					else if (expression == 2)pCPG->CalcVarMissing(var_in, var_out);
 					else if (expression == 3) pCPG->CalcVarMissing(var_in, var_out);
 					else if (expression == 4) pCPG->CalcVarMissingSubstitute(var_in, var_out, false, nbuf);
