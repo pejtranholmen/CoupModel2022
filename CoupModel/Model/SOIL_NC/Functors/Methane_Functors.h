@@ -220,7 +220,7 @@ public:
 	};
 	double operator() (double ConcSurface, double TempSurface) { // This is the default fixed ra operator
 		double MassConcAtm = atm_conc * f_AirDensity(TempSurface);  // g Methane/m3
-		double flux = (ConcSurface - MassConcAtm) / ra;
+		double flux = (ConcSurface - MassConcAtm) / (ra*scalecoef);
 		if (TempSurface < 0.) // No possible uptake of Methane during freezing conditions
 			return max(0., flux);
 		else
