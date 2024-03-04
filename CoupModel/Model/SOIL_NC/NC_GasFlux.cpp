@@ -677,6 +677,10 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 
 
 		for (size_t i = 0; i < CH4.size(); i++) { // 2nd Loop over all soil layes
+		    if (Methane_Soil_Oxidation_Sw(Methane_Soil_Oxidation) == Methane_Soil_Oxidation_Sw::on_orignal)
+			    CH4_OxidationSoilBacteria[i] = f_MethaneOxidation(CH4[i]) * f_MethaneOxidationRegulationCH4(CH4_Conc_Water[i]) * (1 - An_VolFraction[i]);
+            else
+	            CH4_OxidationSoilBacteria[i] = f_MethaneOxidation(CH4[i]) * f_MethaneOxidationRegulationCH4_O2(CH4_Conc_Water[i], Oxygen_Conc_Water[i]) * (1 - An_VolFraction[i]);
 
 			if (Methane_Plant_Oxidation_Sw(Methane_Plant_Oxidation) > Methane_Plant_Oxidation_Sw::off) {
 				double RespRate = p_NC_Plant->CRootsAtmLayer[i] + p_NC_Plant->CCoarseRootsAtmLayer[i];

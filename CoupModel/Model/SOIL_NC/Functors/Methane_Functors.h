@@ -104,7 +104,8 @@ public:
 			// MASS_CH4_WATER as input is mg/L = or g/m3 
 			// Output unit = g/m3 has the same unit as input unit
 
-		cp = Henry_cp * Fix::PPM_FRAC * Fix::RGAS_L_ATM_K; // To get from PPM to 1 Litre and  dm3   
+		cp = Henry_cp *  Fix::RGAS_L_ATM_K; // To get from PPM to 1 Litre and  dm3   
+		// not necessary to convert the unit anymore, MSWU
 
 	}
 	double operator() (double Mass_CH4_Water, double Temp) noexcept {
