@@ -379,17 +379,17 @@ plotpar.LegendsVec.clear();
 	
 	plotpar.X_Label +=m_volume; ;
 	plotpar.Y_Label = "Boundary Air Concentration (";
-	plotpar.Y_Label += m_volume;
-	//plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::mikro_MASS_LITER_UNIT);
-	//plotpar.Y_Label += ")";
+	//plotpar.Y_Label += m_volume;
+	plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::mikro_MASS_LITER_UNIT);
+	plotpar.Y_Label += ")";
 
 	plotpar.X_Min = 0;
-	plotpar.X_Max = 200;
+	plotpar.X_Max = 20;
 	plotpar.Num_Of_Curves = 3;
 	plotpar.Num_Of_X = 2;
 	plotpar.Num_Of_Opt = 3;
 	plotpar.X_ScalingCoef = 0;
-	plotpar.Y_ScalingCoef = 0.;
+	plotpar.Y_ScalingCoef = 3.;
 	plotpar.X2_Vec = { 0, 10.,20. };
 	plotpar.LegendsVec.clear();
 	lstr = p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT);
