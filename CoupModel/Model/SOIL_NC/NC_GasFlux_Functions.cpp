@@ -480,7 +480,7 @@ plotpar.LegendsVec.clear();
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 	pPs = new Ps(&CH4_ResistanceAirLogScale, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
-		Define(pPs, "CH4 AirResistance LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -2., 2.);  // Changed to allway make use of possible scaling of air resistance
+		Define(pPs, "CH4 AirResistance LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -2., 4.);  // Changed to allway make use of possible scaling of air resistance
 
    pPs = new Ps(&O2_CONC_Atm, SIMPROFILE, OXYGEN, STORAGE, INITB, NORMAL);
 		Define(pPs, "O2 Air Conc", 20.95, UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 100.); 
