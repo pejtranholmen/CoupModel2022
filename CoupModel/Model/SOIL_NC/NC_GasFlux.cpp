@@ -619,43 +619,12 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 				CH4_CONC_AIR[i] = f_MethaneVolatility(CH4_Conc_Water[i], p_NC_Plant->NDrivTemperature[i]);
 			}
 			else {  // Explicit by Mousong considering both Methane and Oxygen 
-				double liqfrac = 1.;
-				double epsilon_ch4 = 0.;
-				double kh_cc_ch4 = 0.;
-				double epsilon_o2 = 0.;
-				double kh_cc_o2 = 0.;
-				//CH4_Conc_tot[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i]; // g/m3-t
 
-				// What is the meaning with not using the same soil temperature vector ????
-				// zero index should be front 
+				CH4_Conc_Water[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100. / f_GasWaterConcCH4(p_NC_Plant->NDrivTemperature[i])); //g/m3-w
+				Oxygen_Conc_Water[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100. / f_GasWaterConcO2(p_NC_Plant->NDrivTemperature[i])); //g/m3-w
 
-				if (i > 0) {
-					kh_cc_ch4 = f_GasWaterConcCH4(p_NC_Plant->NDrivTemperature[i]);
-					kh_cc_o2 = f_GasWaterConcO2(p_NC_Plant->NDrivTemperature[i]);
-				}
-				else {
-					kh_cc_ch4 = f_GasWaterConcCH4(pSoilHeat->Temp.front());
-					kh_cc_o2 = f_GasWaterConcO2(pSoilHeat->Temp.front());
-				}
-
-				CH4_Conc_Water[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100. / kh_cc_ch4); //g/m3-w
-				Oxygen_Conc_Water[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Theta[i] / 100. + Air_Porosity[i] / 100. / kh_cc_o2); //g/m3-w
-
-				if (p_NC_Plant->NDrivTemperature[i] < 0.) { // Note this is fraction of pore space what ha
-					liqfrac = p_Soil_WaterF->Theta[i] / p_Soil_WaterF->M_Saturation[i];
-				}
-				else liqfrac = 1.; 
-
-				if (p_Soil_WaterF->Theta[i] < p_Soil_WaterF->M_Saturation[i]) {
-					epsilon_ch4 = p_Soil_WaterF->M_Saturation[i] / 100. - (1. - kh_cc_ch4) * p_Soil_WaterF->ThetaTotal[i] / 100. * liqfrac;
-					epsilon_o2 = p_Soil_WaterF->M_Saturation[i] / 100. - (1. - kh_cc_o2) * p_Soil_WaterF->ThetaTotal[i] / 100. * liqfrac;
-				}
-				else {
-					epsilon_ch4 = p_Soil_WaterF->M_Saturation[i] / 100. * liqfrac;
-					epsilon_o2 = p_Soil_WaterF->M_Saturation[i] / 100. * liqfrac;
-				}
-				CH4_CONC_AIR[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / epsilon_ch4;
-				O2_CONC_AIR[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / epsilon_o2;
+				CH4_CONC_AIR[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / f_GasWaterConcCH4(p_NC_Plant->NDrivTemperature[i]);
+				O2_CONC_AIR[i] = Oxygen[i] / p_Soil_WaterF->AThicknessLayers[i] / f_GasWaterConcO2(p_NC_Plant->NDrivTemperature[i]);
 			}
 		}
 

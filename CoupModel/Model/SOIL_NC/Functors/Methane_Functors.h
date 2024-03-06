@@ -109,7 +109,7 @@ public:
 
 	}
 	double operator() (double Mass_CH4_Water, double Temp) noexcept {
-		double H = cp * exp(-ctemp * (1 / (Temp + Fix::ABS_ZERO) - 1 / (reftemp + Fix::ABS_ZERO))) * (Temp + Fix::ABS_ZERO);
+		double H = cp * exp(ctemp * (1 / (Temp + Fix::ABS_ZERO) - 1 / (reftemp + Fix::ABS_ZERO))) *(Temp + Fix::ABS_ZERO);
 		return Mass_CH4_Water / H;
 	};
 
@@ -127,7 +127,7 @@ public:
 			// MASS_CH4_WATER as input is mg/L = or g/m3 
 			// Output unit = g/m3 has the same unit as input unit
 		cp = 1. / Henry_cp; // 769 L.atm/mol
-		ctemp = -HenryCoefTemp; // 1700 K
+		ctemp = HenryCoefTemp; // 1700 K
 		//cp	= Henry_cp*Fix::KILO*Fix::RGAS_L_ATM_K ; // To get from PPM to 1 Litre and dm3   
 
 	}
@@ -446,29 +446,29 @@ public:
 			if (snowheight > 0.0) {
 				// snow on surface pool
 				CH4_Resistance_Snow = snowheight / CH4_Water_Diff_Coef; // s/m
-				RaSurf1 = 1.0 / (1.0 / CH4_Resistance_Ponding + 1.0 / CH4_Resistance_Snow + 1.0 / RaSurf); // s/m
+				RaSurf1 = CH4_Resistance_Ponding + CH4_Resistance_Snow + ra; // s/m
 			}
 			else {
-				RaSurf2 = 1.0 / (1.0 / CH4_Resistance_Ponding + 1.0 / RaSurf); // only surface pool, s/m
+				RaSurf2 = CH4_Resistance_Ponding + ra; // only surface pool, s/m
 			}
 		}
 		else {
 			if (snowheight > 0.0) {
 				// snow on surface pool
 				CH4_Resistance_Snow = snowheight / CH4_Water_Diff_Coef; // only snow on surface, s/m
-				RaSurf3 = 1.0 / (1.0 / CH4_Resistance_Snow + 1.0 / RaSurf); // s/m
+				RaSurf3 = CH4_Resistance_Snow + ra; // s/m
 			}
 			else {
-				RaSurf4 = 1.0 / RaSurf; // only bare soil, s/m
+				RaSurf4 = ra; // only bare soil, s/m
 			}
 		}
 
 		double frac1 = min(pondfrac, 1.0 - soilfrac);
-		double frac2 = max(pondfrac - min(pondfrac, 1.0 - soilfrac), 0.0001);
-		double frac3 = max(1.0 - soilfrac - min(pondfrac, 1.0 - soilfrac), 0.0001);
-		double frac4 = max(1.0 - frac1 - frac2 - frac3, 0.0001);
+		double frac2 = max(pondfrac - min(pondfrac, 1.0 - soilfrac), 0.);
+		double frac3 = max(1.0 - soilfrac - min(pondfrac, 1.0 - soilfrac), 0.);
+		double frac4 = max(1.0 - frac1 - frac2 - frac3, 0.);
 
-		return 1./(frac1 /RaSurf1 + frac2 / RaSurf2 + frac3 / RaSurf3 + frac4 / RaSurf4); // s/m
+		return max(frac1 *RaSurf1 + frac2 * RaSurf2 + frac3 * RaSurf3 + frac4 * RaSurf4, 0.0001); // s/m
 	}
 
 private:

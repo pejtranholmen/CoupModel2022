@@ -64,7 +64,7 @@ double CH4_TotPlantUptake, CH4_TotPlantEmission, CH4_TotPlantOxidation, CH4_TotS
 
 double  CH4_PlantOxShape, CH4_LimitWaterUptake, CH4_Air_Diff_Coef;
 vector<double>  CH4_AirSoilFlux,  CH4_CONC_AIR, O2_CONC_AIR;
-double   CH4_HStandard, CH4_HTempSens, O2_HStandard, O2_HTempSens, H_TRef, CH4_WaterPowerCoef, CH4_InitConc, CH4_SurfaceEmission;
+double   CH4_HStandard, CH4_HTempSens,CO2_HStandard, CO2_HTempSens, O2_HStandard, O2_HTempSens, H_TRef, CH4_WaterPowerCoef, CH4_InitConc, CH4_SurfaceEmission;
 ;
 double    CH4_TotSoilFlux, CH4_TotSysFlux, CH4_CONC_Atm, CO2_CONC_Atm;
 double AereScale, D_CH4_Aere, D_O2_Aere;//, LAI_Aere;
