@@ -341,7 +341,7 @@ public:
 		fluxthreshold(CH4_LimitWaterUptake), powercoef(CH4_WaterPowerCoef), plantcoef(CH4_WaterPlantCoef) {	}
 
 	double operator() (double WaterUptakeRate, double Methane_Conc) {
-		return WaterUptakeRate * Methane_Conc * PlantEffFunc(WaterUptakeRate);
+		return WaterUptakeRate/Fix::KILO * Methane_Conc * PlantEffFunc(WaterUptakeRate);
 	}
 	double operator() (double WaterUptakeRate) {
 		return PlantEffFunc(WaterUptakeRate);
@@ -350,10 +350,10 @@ public:
 private:
 	double PlantEffFunc(double UptakeRate) {
 		double out=0.;
-		if (UptakeRate <= fluxthreshold)
+		if (UptakeRate <= fluxthreshold/Fix::KILO)
 			out = 1;
 		else
-			out = pow(fluxthreshold / UptakeRate, powercoef);
+			out = pow(fluxthreshold /Fix::KILO / UptakeRate, powercoef);
 		out *= plantcoef;
 		return out;
 	}

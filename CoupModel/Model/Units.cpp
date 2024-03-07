@@ -43,7 +43,7 @@
 	string str;
 	str = "day";
 	str+=char(178);
-	str += "m6/g";
+	str += "m4/g";
 	str+=char(178);
 	SetUnitMap(UNIT_TYPES::INVERSE_SQUARED_FLUX_PER_VOLUME, str);
 	SetUnitMap(UNIT_TYPES::MASS_RATIO_UNIT, "g/g");

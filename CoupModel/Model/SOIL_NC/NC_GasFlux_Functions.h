@@ -45,7 +45,7 @@ double CH4_ProductionQ10;
 vector<double> RootFrac;
 vector<double> CH4_Ebullition, CH4_PlantWaterUptake, CH4_Conc_Water, Oxygen_Conc_Water, CH4_PlantTransport;
 //vector<double> CH4_Conc_rel, Oxygen_Conc_rel, RootFrac, liqfrac, epsilon_ch4, kh_cc_ch4, epsilon_o2, kh_cc_o2;
-vector<double> CH4_Demand, O2_Demand, CH4_Aere, O2_Aere, O2_Oxidation, OxygenStress, MethaneStress;
+vector<double> CH4_Demand, O2_Demand, CH4_Aere, O2_Aere, Aere_temp, O2_Oxidation, OxygenStress, MethaneStress;
 
 ////Added by Marco
 vector<double> CH4_OxidationSoilBacteria,  CH4_OxidationPlantRoot, MethaneBubbleFunc;

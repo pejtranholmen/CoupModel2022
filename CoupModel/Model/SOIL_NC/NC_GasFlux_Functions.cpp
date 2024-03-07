@@ -287,7 +287,7 @@ plotpar.Y_ScalingCoef = 6;
 		plotpar.LegendsVec.push_back("0 " + lstr);  plotpar.LegendsVec.push_back("10 " + lstr); plotpar.LegendsVec.push_back("20 " + lstr);
 	
 	pPs = new Ps(&CH4_BubbleRateConstant, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
-		Define(pPs, "CH4 BubbleRateConstant", 2.8, "-", "Nitrogen and Carbon >=1|Methane Model>0", 0., 4.);	ps_vec.push_back(pPs);
+		Define(pPs, "CH4 BubbleRateConstant", 2.8, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >=1|Methane Model>0", 0., 4.);	ps_vec.push_back(pPs);
 	pPs= new Ps(&CH4_EbullMax,SIMPROFILE,METHANE, STORAGE,METHANE_TRANSPORT, NORMAL); 
 		Define(pPs, "CH4 EbullThreshold", 20. , UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >=1|Methane Model>0", 0.1, 1E3);	ps_vec.push_back(pPs);
 	
@@ -308,7 +308,7 @@ plotpar.Y_ScalingCoef = 6;
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_REGULATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
 functorprop.FunctorInitOption = string::npos;
 funcname = "Plant Oxidation Regulation by root respiration";
-plotpar.X_Label = "Root Respiration Rate (gC/m3/day)";
+plotpar.X_Label = "Root Respiration Rate (gC/m2/day)";
 plotpar.X_Min = 0;
 plotpar.X_Max = 1.;
 plotpar.Num_Of_Curves = 1;
@@ -317,7 +317,7 @@ plotpar.Y_ScalingCoef = 0;
 plotpar.Y_Label = "Relative Rate (-)";
 plotpar.LegendsVec.clear();
 	pPs = new Ps(&CH4_PlantOxidationRate, SIMPROFILE, METHANE, STORAGE, METHANE_OXIDATION, NORMAL);
-	Define(pPs, "CH4 PlantOxidationRate", 4.2E-05, UNIT_TYPES::MASS_RATIO_UNIT, "Nitrogen and Carbon >=1|Methane Model>0|PlantType>0", 0., 10., 0., 1.E-3); ps_vec.push_back(pPs);
+	Define(pPs, "CH4 PlantOxidationRate", 4.2E-05, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >=1|Methane Model>0|PlantType>0", 0., 10., 0., 1.E-3); ps_vec.push_back(pPs);
 
 
 	
@@ -349,11 +349,11 @@ plotpar.LegendsVec.clear();
 	functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
 		functorprop.FunctorInitOption = string::npos;
 		funcname = "Plant Oxidation Regulation by root respiration";
-		plotpar.X_Label = "Root Respiration Rate (gC/m3/day)";
+		plotpar.X_Label = "Root Respiration Rate (gC/m2/day)";
 		plotpar.X_Min = 0;
 		plotpar.X_Max = 1.;
 		plotpar.Y_ScalingCoef = 3;
-		plotpar.Y_Label = "Methane_Oxidation Rate (mg/m3/day)";
+		plotpar.Y_Label = "Methane_Oxidation Rate (g/m2/day)";
 
 		pPs = new Ps(&CH4_PlantOxShape, SIMPROFILE, METHANE, STORAGE, METHANE_OXIDATION, NORMAL);
 		Define(pPs, "CH4 PlantOxShapeCoef", 34., UNIT_TYPES::INVERSE_SQUARED_FLUX_PER_VOLUME, "Nitrogen and Carbon >=1|Methane Model>0|PlantType>0", 0., 200.);  ps_vec.push_back(pPs);
@@ -442,7 +442,7 @@ plotpar.LegendsVec.clear();
 	pPs= new Ps(&CH4_WaterPowerCoef,SIMPROFILE,METHANE, STORAGE,METHANE_OXIDATION, NORMAL); 
 	    Define(pPs,   "CH4 Water Power Coef",7.,UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >=1|Methane Model>0|PlantType>0",0,10.); ps_vec.push_back(pPs);
 	pPs= new Ps(&CH4_WaterPlantCoef,SIMPROFILE,METHANE, STORAGE,METHANE_OXIDATION, NORMAL); 
-	    Define(pPs,  "CH4 Water Plant Coef",.66, UNIT_TYPES::MASS_RATIO_UNIT,"Nitrogen and Carbon >=1|Methane Model>0|PlantType>0",0.,1.); ps_vec.push_back(pPs);  //Changed default from 66 % to .66	  March 2 2020
+	    Define(pPs,  "CH4 Water Plant Coef",.66, UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >=1|Methane Model>0|PlantType>0",0.,1.); ps_vec.push_back(pPs);  //Changed default from 66 % to .66	  March 2 2020
 
 	pFunc = new Func(TOTPROFILE, METHANE, NOFPROC, METHANE_PRODUCTION, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();

@@ -661,7 +661,7 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 			CH4_Oxidation[i] = CH4_OxidationSoilBacteria[i] + CH4_OxidationPlantRoot[i];
 
 			if (Ebullition_Sw(Ebullition) == Ebullition_Sw::SolubilityBased)
-				CH4_Ebullition[i] = f_Ebullition(CH4_Conc_Water[i], p_Soil_WaterF->WaterStorage[i], p_NC_Plant->NDrivTemperature[i]);
+				CH4_Ebullition[i] = f_Ebullition(CH4_Conc_Water[i], p_Soil_WaterF->WaterStorage[i]/Fix::KILO, p_NC_Plant->NDrivTemperature[i]);
 			else if (Ebullition_Sw(Ebullition) == Ebullition_Sw::PressureBased) {
 				if (p_NC_Plant->NDrivTemperature[i] > 0. && p_Soil_WaterF->Theta[i] >= p_Soil_WaterF->M_Saturation[i]) {
 					double pressure = p_NC_Plant->P_Surface + Fix::DENSW * Fix::GRAVCONST * (p_Soil_WaterF->DepthLayers[i] + p_Soil_WaterF->SatLev);
@@ -685,7 +685,7 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 			if (Methane_Plant_Emission_Sw(Methane_Plant_Emission) > Methane_Plant_Emission_Sw::off) {
 					CH4_PlantWaterUptake[i] = f_PlantEmissionbyWaterUptake(((WaterUptake*)pPlant)->WUptakeRate[i], CH4_Conc_Water[i] / 1000.);
 					if (Methane_Aerenchyma_Emission_Sw(Methane_Aerenchyma_Emission) > Methane_Aerenchyma_Emission_Sw::off) {
-						CH4_Aere.assign(p_Soil_WaterF->NL, 0.);
+						Aere_temp.assign(p_Soil_WaterF->NL, 0.);
 						double* ra = &p_AtmModel->m_Irrigation.RaSoilSurf;
 						double RaSurf = max(0.0001, *ra);
 						for (size_t IP = 0; IP < size_t(((WaterUptake*)pPlant)->NumPlants); IP++) {
@@ -696,14 +696,14 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 							auto RootFrac = out.Dist;
 							if (p_NC_Plant->NDrivTemperature[i] > 0. && p_Soil_WaterF->Theta[i] >= p_Soil_WaterF->M_Saturation[i]) {
 								//CH4_CONC_AIR[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i] / (p_Soil_WaterF->Saturation[i] / 100.) / f_GasWaterConc(p_NC_Plant->NDrivTemperature[i]); //g/m3-g
-								CH4_Aere[i] += f_PlantEmissionbyAerenchyma(CH4_CONC_AIR[i], p_NC_Plant->NDrivTemperature[i],
+								Aere_temp[i] += f_PlantEmissionbyAerenchyma(CH4_CONC_AIR[i], p_NC_Plant->NDrivTemperature[i],
 									RootFrac[i], p_Soil_WaterF->DepthLayers[i], RaSurf, ((WaterUptake*)pPlant)->LAI[IP], NPPyr[IP], Porosity_Tiller[IP],
 									NPP_Ratio[IP], Rob[IP]) * p_Soil_WaterF->AThicknessLayers[i];
 							}
 							else
-								CH4_Aere[i] = 0.;
+								Aere_temp[i] = 0.;
 						}
-						CH4_Aere[i] = max(0., CH4_Aere[i]);
+						CH4_Aere[i] = max(0., Aere_temp[i]);
 						CH4_PlantTransport[i] = CH4_PlantWaterUptake[i] + CH4_Aere[i]; // Note Only used in Aerenchyma option
 					}
 
