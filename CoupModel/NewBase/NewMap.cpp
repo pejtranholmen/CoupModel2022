@@ -6070,14 +6070,14 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 						selected_Multi = false;
 					}
 					nameoutput = pSw->GetName().c_str();
-					size_t sumindex;
+					int sumindex;
 					auto namevar = pSw->GetName();
 					FUtil::trim_space(namevar);
 					if (pSw->Is_Vector()) {
 						lindex = ((OutVector*)pSw)->GetLocalIndex(ii);
-						nameoutput += "(" + FUtil::STD_ItoAscii(ii + 1) + ")";
-						sumindex = ((OutVector*)pSw)->GetSumVarIndex(lindex, 7);
-						namevar += "_" + FUtil::STD_ItoAscii(lindex + 1);
+						nameoutput += "(" + FUtil::STD_ItoAscii(lindex) + ")";
+						sumindex = ((OutVector*)pSw)->GetSumVarIndex(lindex-1, 7);
+						namevar += "_" + FUtil::STD_ItoAscii(lindex);
 					}
 					else {
 						sumindex = ((OutSingle*)pSw)->GetSumVarIndex(7);
@@ -6090,6 +6090,10 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 					}
 					else if (j < out.size() - 1) header.push_back(namevar);
 					else header.push_back(namevar);
+					if (sumindex<0) {
+						sumindex = 6;
+
+					}
 					sumindexvector.push_back(sumindex);
 				}
 
@@ -6107,16 +6111,28 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 					for (int nomulrun = 0; nomulrun < numout; nomulrun++) {
 						allvalues[nomulrun].resize(sumindexvector.size() + 1);
 						int irun;
-						if (AcceptedOnly)
+						if (AcceptedOnly) {
 							irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun);
-						else
+							allvalues[nomulrun][0] = float(irun + 1);
+						}
+						else {
 							irun = nomulrun + 1;
-						allvalues[nomulrun][0] = float(irun + 1);
+							allvalues[nomulrun][0] = float(irun);
+						}
 
 
 						for (size_t var = 0; var < sumindexvector.size(); var++) {
-							float value = m_MStorage.GetSumV(irun, sumindexvector[var] + ivartyp - 6);
-							allvalues[nomulrun][var + 1] = value;
+							int ip = sumindexvector[var] + ivartyp - 6;
+
+							if (irun < nomulrun) {
+								float value = m_MStorage.GetSumV(irun, ip);
+								allvalues[nomulrun][var + 1] = value;
+							}
+							else {
+								float value = m_MStorage.GetSumV(nomulrun, ip);
+								allvalues[nomulrun][var + 1] = value;
+
+							}
 						}
 					}
 					FillSheet(header, allvalues, sheetnames[ivartyp]);
