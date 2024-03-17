@@ -6123,6 +6123,11 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 
 						for (size_t var = 0; var < sumindexvector.size(); var++) {
 							int ip = sumindexvector[var] + ivartyp - 6;
+							if (ip < 0) {
+
+
+								ip = 0;
+							}
 
 							if (irun < nomulrun) {
 								float value = m_MStorage.GetSumV(irun, ip);
