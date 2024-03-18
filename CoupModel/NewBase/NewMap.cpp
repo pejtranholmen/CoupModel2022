@@ -5881,7 +5881,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 				allvalues[allvalues.size() - 1].clear();
 				allvalues.erase(allvalues.begin() + allvalues.size() - 1);
 			}
-			header.push_back("RunNo");
+			header.push_back("RunNo"); header.push_back("Ensemble No");
 			for (size_t j = 0; j < m_Val_Array.size(); j++) {
 				auto test = m_pSimDoc->m_ValidationData.GetValName(j);
 				FUtil::trim_space(test);
@@ -5889,79 +5889,112 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 				if (iv > -1) test += "_" + FUtil::STD_ItoAscii(iv + 1);
 				header.push_back(test);
 			}
-
 			size_t numout;
-			if (AcceptedOnly) {
-				numout = m_pSimDoc->m_MStorage.m_AcceptedRuns[m_MStorage.m_ActualEnsemble].size();
-				numout = m_MStorage.GetNumAccepted();
-			}
-			else
-				numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
-
-			allvalues.resize(numout);
-
-			for (int nomulrun = 0; nomulrun < numout; nomulrun++) {
-				allvalues[nomulrun].resize(m_Val_Array.size() + 1);
-				int irun;
-				if (AcceptedOnly)
-					irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun);
-				else
-					irun = nomulrun;
-
-				allvalues[nomulrun][0] = float(irun + 1);
-				for (size_t var = 0; var < m_Val_Array.size(); var++) {
-					if (i == 6) {
-						int ind_rmse;
-						float rmse, rmse_m, re_2;
-						ind_rmse = (i - 2) * m_Val_Array.size() + var;
-						rmse = m_pSimDoc->m_MStorage.GetValid(irun, ind_rmse);
-						rmse_m = m_pSimDoc->m_ValidationData.GetValRMSE_O(var);
-						if (rmse > MISSING) {
-							if (rmse_m > 0) {
-								re_2 = 1 - (rmse * rmse * m_pSimDoc->m_ValidationData.GetValn(i)) / (rmse_m);
-							}
-							else
-								re_2 = float(MISSING);
-						}
-						else
-							re_2 = MISSING;
-						allvalues[nomulrun][var + 1] = re_2;
-					}
-					else {
-						float value = m_MStorage.GetValid(irun, var + i * m_Val_Array.size());
-						allvalues[nomulrun][var + 1] = value;
+		
+			for (size_t iens = 0; iens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); iens++) {
+				size_t count2 = 0;
+				vector<size_t> number_of_runs_per_ensemble;
+				numout = 0;
+				if (AcceptedOnly) {
+					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
+						size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
+						number_of_runs_per_ensemble.push_back(numruns);
+						numout += numruns;
+						numout++;
 					}
 				}
-			}
+				else
+					numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 
-			switch (i) {
-			case 0:
-				sheetname = "R2" + outname;
-				break;
-			case 1:
-				sheetname = "A0" + outname;
-				break;
-			case 2:
-				sheetname = "A1" + outname;
-				break;
-			case 4:
-				sheetname = "RMSE" + outname;
-				break;
-			case 3:
-				sheetname = "ME" + outname;
-				break;
-			case 5:
-				sheetname = "LogLi" + outname;
-				break;
-			case 6:
-				sheetname = "NME" + outname;
-				break;
-			}
+				allvalues.resize(numout);
+				vector<vector<double>> MeanEnsembleValues;
 
-			FillSheet(header, allvalues, sheetname);
+				MeanEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
+
+				for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
+					m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;
+					MeanEnsembleValues[iens].resize(m_Val_Array.size() + 2);
+
+					for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {
+						allvalues[count2].resize(m_Val_Array.size() + 2);
+						int irun;
+						if (AcceptedOnly)
+							irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun);
+						else
+							irun = nomulrun;
+
+						allvalues[count2][0] = float(irun + 1);
+						allvalues[count2][1] = float(iens + 1);
+						for (size_t var = 0; var < m_Val_Array.size(); var++) {
+							if (i == 6) {
+								int ind_rmse;
+								float rmse, rmse_m, re_2;
+								ind_rmse = (i - 2) * m_Val_Array.size() + var;
+								rmse = m_pSimDoc->m_MStorage.GetValid(irun, ind_rmse);
+								rmse_m = m_pSimDoc->m_ValidationData.GetValRMSE_O(var);
+								if (rmse > MISSING) {
+									if (rmse_m > 0) {
+										re_2 = 1 - (rmse * rmse * m_pSimDoc->m_ValidationData.GetValn(i)) / (rmse_m);
+									}
+									else
+										re_2 = float(MISSING);
+								}
+								else
+									re_2 = MISSING;
+								allvalues[count2][var + 2] = re_2;
+							}
+							else {
+								float value = m_MStorage.GetValid(irun, var + i * m_Val_Array.size());
+								allvalues[count2][var + 2] = value;
+							}
+							MeanEnsembleValues[iens][var + 2] += allvalues[count2][var + 2];
+						}
+						count2++;
+					}
+				}
+
+				for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
+					size_t numvalvalues = m_Val_Array.size();
+					allvalues[count2].resize(numvalvalues + 2);
+					if (AcceptedOnly) {
+						allvalues[count2][0] = 0;
+						allvalues[count2][1] = float(iens + 1);
+						for (size_t var = 0; var < numvalvalues; var++) {
+							auto meanvalue = MeanEnsembleValues[iens][var + 2] / number_of_runs_per_ensemble[iens];
+							allvalues[count2][var + 2] = meanvalue;
+						}
+					}
+					count2++;
+				}
+			}
+				switch (i) {
+				case 0:
+					sheetname = "R2" + outname;
+					break;
+				case 1:
+					sheetname = "A0" + outname;
+					break;
+				case 2:
+					sheetname = "A1" + outname;
+					break;
+				case 4:
+					sheetname = "RMSE" + outname;
+					break;
+				case 3:
+					sheetname = "ME" + outname;
+					break;
+				case 5:
+					sheetname = "LogLi" + outname;
+					break;
+				case 6:
+					sheetname = "NME" + outname;
+					break;
+				}
+
+				FillSheet(header, allvalues, sheetname);
+			}
 
 		}
-	}
 
 
 	vector<string> sheetnames;
@@ -6101,7 +6134,6 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 
 				for (int ivartyp = 0; ivartyp < 6; ivartyp++) {
 					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
-
 						auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 						vector<size_t> number_of_runs_per_ensemble;
 						if (AcceptedOnly) {
@@ -6115,7 +6147,6 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 						}
 						else {
 							number_of_runs_per_ensemble.push_back(numout);
-
 						}
 						allvalues.resize(numout);
 						vector<vector<double>> MeanEnsembleValues;
@@ -6124,37 +6155,21 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 						for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
 							m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;													
 							MeanEnsembleValues[iens].resize(sumindexvector.size() + 2);
-							for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {	
-						
+							for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {						
 								allvalues[count2].resize(sumindexvector.size() + 2);
-
 								int irun;
-
 								if (AcceptedOnly) {
-
-									irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun);
-
-									allvalues[count2][0] = float(irun + 1);
-									allvalues[count2][1] = float(iens + 1);
+									irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun);allvalues[count2][0] = float(irun + 1);	allvalues[count2][1] = float(iens + 1);
 								}
 								else {
-									irun = nomulrun + 1;
-									allvalues[count2][0] = float(irun);
-									allvalues[count2][1] = float(iens + 1);
+									irun = nomulrun + 1;allvalues[count2][0] = float(irun);	allvalues[count2][1] = float(iens + 1);
 								}
-
-
 								for (size_t var = 0; var < sumindexvector.size(); var++) {
 									int ip = sumindexvector[var] + ivartyp - 6;
-									if (ip < 0) {
-										ip = 0;
-									}
-
-
+									if (ip < 0) {ip = 0;}
 									float value = m_MStorage.GetSumV(irun, ip);
 									allvalues[count2][var + 2] = value;
 									MeanEnsembleValues[iens][var + 2] += value;
-
 								}
 								count2++;
 							}
@@ -6185,7 +6200,8 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 		if (choice == 0 || choice == 3) {
 			header.clear();
 			header.push_back("RunNo");
-
+			header.push_back("Ensemble No");
+			//Parameters
 			for (int i = 0; i < m_pSimDoc->m_MultiRun_Array.size(); i++) {
 				for (int ii = 0; ii < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
 					SimB* pPar;
@@ -6200,48 +6216,83 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 				}
 			}
 
-			vector<string> header2 = { "RunNo","Accepted","LogLi","SumLogLi","TotLogLi","MapRunNo","AccTime","n","SSE","AIC","BIC" };
+			vector<string> header2 = { "RunNo","Ensemble No","Accepted","LogLi","SumLogLi","TotLogLi","MapRunNo","AccTime","n","SSE","AIC","BIC" };
 			while (allvalues.size() > 0) {
 				allvalues[allvalues.size() - 1].clear();
 				allvalues.erase(allvalues.begin() + allvalues.size() - 1);
 			}
-
-			auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();;
-			if (AcceptedOnly) {
-				numout = m_pSimDoc->m_MStorage.m_AcceptedRuns[m_MStorage.m_ActualEnsemble].size();
-				numout = m_MStorage.GetNumAccepted();
-			}
-			allvalues.resize(numout);
-			vector< vector<float>> allvalues2;
-			allvalues2.resize(numout);
-
-			for (int nomulrun = 0; nomulrun < numout; nomulrun++) {
-				allvalues[nomulrun].resize(m_pSimDoc->m_MStorage.m_NumMulti - 10 + 1);
-				allvalues2[nomulrun].resize(11);
-
-				int irun;
+			auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
+			{
+				vector<size_t> number_of_runs_per_ensemble;
+				numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 				if (AcceptedOnly) {
-					irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun);
-					allvalues[nomulrun][0] = float(irun);
-					allvalues2[nomulrun][0] = float(irun);
+					numout = 0;
+					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
+						size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
+						number_of_runs_per_ensemble.push_back(numruns);
+						numout += numruns;
+						numout++;
+					}
 				}
-				else {
-					irun = nomulrun;
-					allvalues[nomulrun][0] = float(irun + 1);
-					allvalues2[nomulrun][0] = float(irun + 1);
-				}
+				allvalues.resize(numout);
+				vector<vector<double>> MeanEnsembleValues;
+				vector< vector<float>> allvalues2;
+				allvalues2.resize(numout);
+				MeanEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
+
+				size_t count2 = 0;
+				for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
+					m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;
+					MeanEnsembleValues[iens].resize(m_pSimDoc->m_MStorage.m_NumMulti + 2);
+					for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {
+						allvalues[count2].resize(m_pSimDoc->m_MStorage.m_NumMulti - 10+2 );
+						allvalues2[count2].resize(12);
+
+						int irun;
+						if (AcceptedOnly) {
+							irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun); allvalues[count2][0] = float(irun); allvalues2[count2][0] = float(irun);
+							allvalues[count2][1] = float(iens + 1); allvalues2[count2][1] = float(iens + 1);
+						}
+						else {
+							irun = nomulrun; allvalues[nomulrun][0] = float(irun + 1); allvalues2[nomulrun][0] = float(irun + 1);
+						}
 
 
-				for (int var = 0; var < m_pSimDoc->m_MStorage.m_NumMulti; var++) {
-					float value = m_MStorage.GetMultiP(irun, var);
-					if (var < m_pSimDoc->m_MStorage.m_NumMulti - 10)
-						allvalues[nomulrun][var + 1] = value;
-					else
-						allvalues2[nomulrun][var - m_pSimDoc->m_MStorage.m_NumMulti + 10 + 1] = value;
+						for (int var = 0; var < m_pSimDoc->m_MStorage.m_NumMulti; var++) {
+							float value = m_MStorage.GetMultiP(irun, var);
+							if (var < m_pSimDoc->m_MStorage.m_NumMulti - 10)
+								allvalues[count2][var + 2] = value;
+							else
+								allvalues2[count2][var - m_pSimDoc->m_MStorage.m_NumMulti + 10 + 2] = value;
+							MeanEnsembleValues[iens][var+2]=value;
+						}	
+						count2++;
+					}
+			
 				}
+				for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
+					size_t numparvalues = m_pSimDoc->m_MStorage.m_NumMulti - 10 + 2;
+					size_t numvalvalues = 11;
+					allvalues[count2].resize(numparvalues);
+					allvalues[count2][0] = float(0); allvalues[count2][1] = float(iens + 1);
+					allvalues2[count2].resize(12);
+					allvalues2[count2][0] = float(0); allvalues[count2][1] = float(iens + 1);
+					if (AcceptedOnly) {
+
+						for (size_t var = 0; var < m_pSimDoc->m_MStorage.m_NumMulti; var++) {
+							auto meanvalue = MeanEnsembleValues[iens][var + 2] / number_of_runs_per_ensemble[iens];
+							if (var < m_pSimDoc->m_MStorage.m_NumMulti - 10)
+								allvalues[count2][var + 2] = meanvalue;
+							else
+								allvalues2[count2][var - m_pSimDoc->m_MStorage.m_NumMulti + 10 + 2] = meanvalue;
+						}
+					}
+					count2++;
+				}
+			
+				FillSheet(header, allvalues, "ParValues");
+				FillSheet(header2, allvalues2, "PerformanceSummary");
 			}
-			FillSheet(header, allvalues, "ParValues");
-			FillSheet(header2, allvalues2, "PerformanceSummary");
 		}
 
 
