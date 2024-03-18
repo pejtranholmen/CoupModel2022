@@ -398,7 +398,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 			m_pSimDoc->m_MStorage.SetPriorDistributions();
 		}
 	}
-
+	SetTopRow(m_CurrentTopRow);
 line=-1;
 if (!m_pSimDoc->m_MStorage.Check_Adjust_ActualEnsemble()) {
 
@@ -2563,7 +2563,7 @@ void ValidationCug::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 		OnSheetSetup(isheet);
 	}
 	else if (isheet < 9) {
-
+		m_CurrentTopRow = GetTopRow();
 		auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(row);
 		CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 
@@ -2726,6 +2726,7 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 	m_After="";
 	int prior;
 
+	m_CurrentTopRow = GetTopRow();
 
 	if(ID==1) {
 		if(msg==103) {
@@ -3081,7 +3082,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			int isheet = pCug->GetSheetNumber();
 			pCug->OnSheetSetup(isheet);
 		}
-		else if(item==1085||item==1087) {
+		else if(item==1085||item==1087||item==1088) {
 			bool SV_Variable = false;
 			if (row > m_NumValidVar*(m_SplitPeriods + 1)) {
 				size_t  ivar = row - m_NumValidVar*(m_SplitPeriods + 1) - 2;
@@ -3091,12 +3092,11 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			}
 			else {
 				SV_Variable = false;
-
-
 			}
 
 			size_t Threshold = 200;
-			if (item == 1087) Threshold=10;
+			if (item == 1087) Threshold = 10;
+			else if (item == 1088) Threshold = 3;
 
 			if(isheet==0)
 				ReducebyR2(size_t(row), Threshold, SV_Variable);
@@ -4994,11 +4994,11 @@ void ValidationCug::ReducebyR2(size_t ivar, size_t n_left, bool SV_Variable) {
 	int icount=dist.size();
 	float lastvalid=0.f;
 	StatUtil::SortArray(&dist[0],icount );
-	size_t n_toremove = dist.size() - n_left -1;
+	size_t n_toremove = dist.size() - n_left-1;
 	dist.erase(dist.begin(),dist.begin() + n_toremove);
 	lastvalid = dist[0];
 
-	if (dist.size() > n_left - 2) {
+	if (dist.size() > n_left - 1) {
 			if (!SV_Variable) {
 				if (MeanOfMany) {
 					m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = lastvalid;

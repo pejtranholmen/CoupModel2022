@@ -20,6 +20,7 @@ public:
 	bool m_OnGoingUpdate;
 	Doc *m_pSimDoc;
 	size_t m_CumulatedPerformance;
+	long m_CurrentTopRow;
 
 protected:
 

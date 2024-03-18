@@ -23,6 +23,7 @@ ValidationCugButtons::~ValidationCugButtons()
 int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 {
 	int sheetNumber=GetSheetNumber();
+	m_CurrentTopRow = GetTopRow();
 	EmptyMenu();
 			//****** Populate the Menu 
 	if(section==UG_GRID&&col>1) {
@@ -50,6 +51,8 @@ int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 				AddMenuItem(1085, "Keep the 200 best");
 			if (iaccept > 10)
 				AddMenuItem(1087, "Keep the 10 best");
+
+			AddMenuItem(1088, "Keep only the single best");
 			AddMenuItem(1086, "Reduce to half of current posterior ensemble");
 		}
 
