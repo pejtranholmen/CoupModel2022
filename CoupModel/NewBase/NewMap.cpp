@@ -5805,7 +5805,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 	else
 		return "";
 
-	vector<string> header;
+	vector<string> header, header2;
 	vector< vector<float>>	allvalues;
 	string sheetname;
 	xlnt::workbook wb;
@@ -5833,13 +5833,14 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 
 	auto filein = GetFileName();
 	bool AddToExisting = false;
+	bool AddColNumbers = true;
 	if (FUtil::IsFileExisting(filein)) {
 		wb.load(filein);
 		AddToExisting = true;
 	}
 
 
-	auto FillSheet = [&wb, &AddToExisting](vector<string> header, vector< vector <float>> values, string sheetname) {
+	auto FillSheet = [&wb, &AddToExisting,&AddColNumbers](vector<string> header, vector< vector <float>> values, string sheetname, vector<string> header2, vector<string> header3) {
 		xlnt::worksheet ws;
 		int startcol = 1;
 
@@ -5862,13 +5863,35 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 			}
 			startcol = cols + 1;
 		}
-
-		for (size_t col = 0; col < header.size(); col++) {
-			ws.cell(col + startcol, 1).value(header[col]);
+		size_t rowcount = 1;
+		if (AddColNumbers) {
+			for (size_t col = 0; col < header2.size(); col++) {
+				if (col>0&&col < 2)
+					ws.cell(col + startcol, 1).value("ValVar Index");
+				else if(col==0)
+					ws.cell(col + startcol, 1).value("");
+				else
+					ws.cell(col + startcol, 1).value(col-1);
+			}
+			for (size_t col = 0; col < header3.size(); col++) {
+				ws.cell(col + startcol, 2).value(header3[col]);
+			}
+			for (size_t col = 0; col < header2.size(); col++) {
+				if (col < 2)
+					ws.cell(col + startcol, 3).value(header2[col]);
+				else
+					ws.cell(col + startcol, 3).value(FUtil::AtoFloat(header2[col]));
+			}
+			rowcount = 4;
 		}
+		for (size_t col = 0; col < header.size(); col++) {
+			ws.cell(col + startcol, rowcount).value(header[col]);
+		}
+		rowcount++;
+		
 		for (size_t row = 0; row < values.size(); row++) {
 			for (size_t col = 0; col < values[row].size(); col++) {
-				ws.cell(xlnt::cell_reference(col + startcol, 2 + row)).value(values.at(row).at(col));
+				ws.cell(xlnt::cell_reference(col + startcol, rowcount + row)).value(values.at(row).at(col));
 			}
 		}
 		};
@@ -5876,18 +5899,43 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 		string outname = "_Performance";
 		if (AcceptedOnly) outname = "_Accepted_Performance";
 		for (size_t i = 0; i < 7; i++) {
-			header.clear();
+			header.clear(); header2.clear();
+			vector<string> header3;
 			while (allvalues.size() > 0) {
 				allvalues[allvalues.size() - 1].clear();
 				allvalues.erase(allvalues.begin() + allvalues.size() - 1);
 			}
 			header.push_back("RunNo"); header.push_back("Ensemble No");
+			header2.push_back(" ");
+			header2.push_back("n");
+			header3.push_back("");
+			header3.push_back("Measured Var");
 			for (size_t j = 0; j < m_Val_Array.size(); j++) {
 				auto test = m_pSimDoc->m_ValidationData.GetValName(j);
+				auto npoints = m_pSimDoc->m_Val_Array[j].nNumber;
 				FUtil::trim_space(test);
 				int iv = m_pSimDoc->m_ValidationData.GetValLocalIndex(j);
 				if (iv > -1) test += "_" + FUtil::STD_ItoAscii(iv + 1);
+				auto pgindex = m_pSimDoc->m_Val_Array[j].PG_FilterIndex;
+				string add_text = "_";
+				if (pgindex > 0) {
+					add_text += FUtil::STD_ItoAscii(pgindex) + "_";
+					add_text += FUtil::STD_ItoAscii(m_pSimDoc->m_Val_Array[j].PG_FilterValue);
+					test += add_text;
+				}
+				header2.push_back(FUtil::STD_ItoAscii(npoints));
 				header.push_back(test);
+
+				int ind = m_pSimDoc->m_ValidationData.GetValFileIndex(j);
+				//if(DynamicIndexValFile) ind= m_pSimDoc->m_MStorage.GetMultiP(i, DynamicIndexPos)-1;
+				size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(j);
+				auto pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
+				pValFile->CallDataDescription();
+				test = pValFile->GetDataDescription(ind).c_str();
+
+				header3.push_back(test);
+
+
 			}
 			size_t numout;
 		
@@ -5991,14 +6039,15 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 					break;
 				}
 
-				FillSheet(header, allvalues, sheetname);
+				FillSheet(header, allvalues, sheetname, header2, header3);
 			}
 
 		}
 
 
 	vector<string> sheetnames;
-
+	header2.clear();
+	AddColNumbers = false;
 	if (choice == 0 || choice == 2) {
 		if (IndexOut >= 0) { // Single Variable Outputs
 			auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
@@ -6036,7 +6085,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 				}
 
 			}
-			FillSheet(header, allvalues, "SumVariables");
+			FillSheet(header, allvalues, "SumVariables", header2, header2);
 		}
 		else { // All Outputs
 			vector<SIMB> out;
@@ -6188,7 +6237,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 						}
 
 					}
-					FillSheet(header, allvalues, sheetnames[ivartyp]);
+					FillSheet(header, allvalues, sheetnames[ivartyp], header2, header2);
 
 
 				}
@@ -6289,9 +6338,9 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 					}
 					count2++;
 				}
-			
-				FillSheet(header, allvalues, "ParValues");
-				FillSheet(header2, allvalues2, "PerformanceSummary");
+				vector<string> blank;
+				FillSheet(header, allvalues, "ParValues", blank, blank);
+				FillSheet(header2, allvalues2, "PerformanceSummary", blank, blank);
 			}
 		}
 
