@@ -1378,6 +1378,80 @@ string name;
 	return -1;
 
 }
+bool MR::PreDefined_Criteria_Process() {
+	auto reset = [&]() {
+		m_MStorage.UpdateAcceptedRuns(true, true);
+		MR_ReCalculatePostDist(false);
+		for (int i = 0; i < m_ResidualFileVector.size(); i++) {
+			CResiduals* pRes;
+			pRes = GetValidResidualPointer(i + 1);
+			if (pRes != nullptr) {
+				pRes->ToBeUpdated();
+				pRes->m_MeanDefined = false;
+			}
+		}
+		m_MStorage.EvaluateFile(false);
+	};
+
+
+	auto num=m_MStorage.GetNumberofEnsembles();
+	auto pSw = GetSw("PreDefinedEnsembles");
+	auto pEnsemble = GetP("Ensemble");
+	auto pIndicator = GetP("Performance Indicator");
+	auto pVarIndex = GetP("Var Index");
+	auto pThresholdType = GetP("ThresholdType");
+	auto pThresholdValue = GetP("ThresholdValue");
+
+	if (pSw != nullptr) {
+		reset();
+		auto numens = pSw->GetIntValue();
+		while (num < numens) {
+			if (m_MStorage.AddNewEnsemble(true)) {
+				num = m_MStorage.GetNumberofEnsembles();
+				reset();
+			}
+			else
+				num = numens; // to quit
+		}
+		m_MStorage.m_ActualEnsemble = 0;
+
+		size_t left;
+		for (size_t i = 0; i<pEnsemble->GetSize(); i++) {
+			auto Indicator = size_t(pIndicator->GetValue(i)+0.0001);
+			auto VarIndex = size_t(pVarIndex->GetValue(i) + 0.0001)-1;
+			auto ThresholdType = size_t(pThresholdType->GetValue(i) + 0.0001);
+			auto Threshold = pThresholdValue->GetValue(i);
+			auto ensemble = size_t(pEnsemble->GetValue(i)+0.001);
+			ensemble = max(1, ensemble);
+			m_MStorage.m_ActualEnsemble=ensemble- 1;
+
+			switch (Indicator) {
+				case 0:
+					left=m_MStorage.ReduceCriteria(R2_STAT, VarIndex,ThresholdType, Threshold);
+					break;
+				case 1:
+					left = m_MStorage.ReduceCriteria(AO_STAT, VarIndex, ThresholdType, Threshold);
+					break;
+				case 2:
+					left = m_MStorage.ReduceCriteria(A1_STAT, VarIndex, ThresholdType, Threshold);
+					break;
+				case 3:
+					left = m_MStorage.ReduceCriteria(ABSME_STAT, VarIndex, ThresholdType, Threshold);
+					break;
+				case 4:
+					left = m_MStorage.ReduceCriteria(RMSE_STAT, VarIndex, ThresholdType, Threshold);
+					break;
+				case 5:
+					left = m_MStorage.ReduceCriteria(LOGLI_STAT, VarIndex, ThresholdType, Threshold);
+					break;
+				case 6:
+					left = m_MStorage.ReduceCriteria(NSE_STAT, VarIndex, ThresholdType, Threshold);
+					break;
+			}
+		}
+	}
+	return true;
+};
 string MR::MR_Get_CalibParName(size_t index)
 {
 string name;
@@ -2255,8 +2329,9 @@ void MR::MR_Storage_Close()
 }
 bool MR::MR_Storage_InitEnsembles() {
 
-	m_MStorage.EvaluateFile(false);
-	return m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+	
+	m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+	return m_MStorage.EvaluateFile(false);
 }
 bool MR::MR_Storage_InitEvaluateStat() {
 
@@ -2270,7 +2345,7 @@ bool MR::MR_Storage_InitEvaluateStat() {
 			m_MStorage.ReAssignPerformanceandAcceptanceFromAggregation(n);
 		}
 
-		return m_MStorage.UpdateAcceptedRuns(false, false);
+		return m_MStorage.UpdateAcceptedRuns(false, true);
 
 	}
 	else {
@@ -2279,7 +2354,7 @@ bool MR::MR_Storage_InitEvaluateStat() {
 			size_t n = size_t(pPar->GetValue() + 0.001);
 			m_MStorage.CommonPerformanceFromAggregation(n);
 		}
-		return m_MStorage.UpdateAcceptedRuns(true, false);
+		return m_MStorage.UpdateAcceptedRuns(true, true);
 
 		
 	}

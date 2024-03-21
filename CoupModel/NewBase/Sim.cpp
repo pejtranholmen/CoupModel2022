@@ -280,6 +280,7 @@ p_mainframe = (CMainFrame*)pCoupModel->m_pMainWnd;
 	pRunDoc->SetFinishedSimulation();
 	pRunDoc->UpdateValidationPerformance_SmartFlexVariables();
 	pRunDoc->m_ValidationData.SetPointersToOutputValidationFiles();
+	pRunDoc->PreDefined_Criteria_Process();
 	p_mainframe->UpdatePaneText(0, "Multi Run Completed - Click to continue");
 	return 0;
 

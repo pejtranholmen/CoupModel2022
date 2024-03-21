@@ -203,6 +203,7 @@ public:
 
 	bool LinkedChangeToSwitches(Sw *pSw, size_t option);
 	bool LinkedChangeToDB_Parameters(Par *pPar, size_t option);
+	bool PreDefined_Criteria_Process();
 
 	
 

@@ -114,7 +114,7 @@ bool Technical_Functions::Def()
 		Define(pSw, "CSV File for Smart Change of Parameter Values", 0, "No|MASCUR project", "CalibrationMode>0");
   
 		pSw = new Sw(&UserDefinedCalibrationMode, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
-		Define(pSw, "CalibrationMode", 0, "off|one|two|three|four|five|six|seven|eight|nine|ten|eleven|tvelve|firteen|fourteen|fithteen|sixteen");
+		Define(pSw, "CalibrationMode", 0, "off|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen");
 
 		pSw = new Sw(&Mascur_Soil_Data, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pSw, "Mascur soil info file", 0, "No|MASCUR project", "IGBP LandInfo>0");
@@ -124,6 +124,9 @@ bool Technical_Functions::Def()
 
 		pSw = new Sw(&Nelder_Mead_Objective, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pSw, "Nelder-Mead Objective", 0, "SSE|AIC|BIC", "ValidationMode > 0");
+
+		pSw = new Sw(&PreDefinedEnsembles, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pSw, "PreDefinedEnsembles", 0, "off|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen","ValidationMode > 0");
 
           	    
   //!	CALL F(Group_01, FileDriv7a,"Lateral Water Inflow","GWInflow","LateralInputFile=0|WaterEq > 0|LaterInput=1")
@@ -152,6 +155,9 @@ bool Technical_Functions::Def()
 	NE *pScaling;
 	pScaling= new NE(&NumScaling, 10,1,100,2,100);
 	Define(pScaling,"No Scaling Observed");
+
+
+
 	vector<double> initv;
 	initv.resize(NumScaling);
 	initv.assign(NumScaling,0.);
@@ -176,6 +182,33 @@ bool Technical_Functions::Def()
 
 	pTab= new Tab(&ScalingObsTab, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pTab,"Scaling of Observed Variables","Scaling Observed|Scaling Index|Box Cox power|Box Cox offset","");
+
+	NE* pCriteria;
+		pCriteria = new NE(&NumCriteria, 1, 0, 100, 2, 100);
+		Define(pCriteria, "Number of Criteria");
+
+	pP = new P(&Criterion.Ensemble, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		initv.assign(NumCriteria, 1.);
+		Define(pP, pCriteria, "Ensemble", initv, "-", "PreDefinedEnsembles>0", 0., 16.); CriteriaTab.push_back(pP);
+	pP = new P(&Criterion.Criterion, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		initv.assign(NumCriteria, 0.);
+		Define(pP, pCriteria, "Criterion", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+	pP = new P(&Criterion.IndicatorIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		initv.assign(NumCriteria, 0.);
+		Define(pP, pCriteria, "Performance Indicator", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+	pP = new P(&Criterion.ValVarIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		initv.assign(NumCriteria, 0.);
+		Define(pP, pCriteria, "Var Index", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+	pP = new P(&Criterion.ThresholdType, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		initv.assign(NumCriteria, 0.);
+		Define(pP, pCriteria, "ThresholdType", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+	pP = new P(&Criterion.Threshold, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		initv.assign(NumCriteria, 0.);
+		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 1., 100.); CriteriaTab.push_back(pP);
+
+	pTab = new Tab(&CriteriaTab, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pTab, "Criteria for Ensembles", "", "");
+
 
 	size_t nss=pTab->GetNumOfRow();
 	pP= new P(&Abs_Error ,pScaling, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);

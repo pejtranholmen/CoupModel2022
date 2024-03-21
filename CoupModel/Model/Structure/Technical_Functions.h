@@ -43,6 +43,7 @@ size_t NoSingleRunSimFile;
 size_t CreateFileResiduals;
 size_t SimulationPeriodFromMetFile;
 size_t Nelder_Mead_Objective;
+size_t PreDefinedEnsembles;
 
 // Below from Technical functions
 
@@ -80,7 +81,17 @@ double FRandomSeed, BayesianStepChangeSens, BayesianStepMinimumScaling, MCStepCh
 double AggregateCalibNumber;
 
 vector<double> ObservedScaling, ObservedScalingIndex, BoxCox_p1, BoxCox_p2, Abs_Error, Rel_Error;
-size_t NumScaling;
+size_t NumScaling, NumCriteria;
+struct {
+	vector<double> Ensemble;
+	vector<double> Criterion;
+	vector<double> ValVarIndex;
+	vector<double> IndicatorIndex;
+	vector<double> Threshold;
+	vector<double> ThresholdType;
+} Criterion;
+
+
 
 
 vector<double> IndexParGroups;
@@ -94,7 +105,7 @@ size_t DataBaseCSV;
 
 
 vector<P*> ErrorTab, ScalingObsTab;
-vector<P*> IndexMultiParGroups;
+vector<P*> IndexMultiParGroups, CriteriaTab;
 size_t NumberParGroups, UserDefinedCalibrationMode;
 size_t Mascur_Soil_Data;
 double Filter_Id1, Filter_Id2, Filter_Id3;

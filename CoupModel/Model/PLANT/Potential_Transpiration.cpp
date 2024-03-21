@@ -80,6 +80,13 @@ bool Potential_Transpiration::Def()
 	Define(pPs, "CanDensMax", 0.7, "-", "Roughness = 2|PlantType = 2", 0.1, 0.9);
 	pPs = new Ps(&PAddIndex, SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "PAddIndex", 1., "-", "Roughness = 2|PlantType = 2", 0., 5.);
+
+	functorprop.FuncName = MyFunc::SHAWPERRERIA_DISPLACEMENT; functorprop.Arg = MyArgType::D3;
+	funcname = "Displacement Length - Shaw & Perreria - Single Plant";
+	pFunc = new Func(SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
+	Define(pFunc, functorprop, funcname, ps_vec);
+
+
 	pPs = new Ps(&RoughLMin, SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "RoughLMin", 0.01, "s/m", "Roughness = 2|PlantType = 2", 0.00001, 1.);
 
@@ -92,10 +99,7 @@ bool Potential_Transpiration::Def()
 
 
 
-	functorprop.FuncName = MyFunc::SHAWPERRERIA_DISPLACEMENT; functorprop.Arg = MyArgType::D3;
-	funcname = "Displacement Length - Shaw & Perreria - Single Plant";
-	pFunc = new Func(SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
-	Define(pFunc, functorprop, funcname, ps_vec);
+
 
 	ps_vec.push_back(m_pModelMap->GetPsPointer("RoughLMin"));
 

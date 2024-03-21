@@ -184,8 +184,10 @@ public:
 			}
 		}
 		return "";
-	};;
-	
+	};
+	size_t ReduceCriteria(PERFORMANCE_VAR, size_t VarIndex, size_t ThresholdType, size_t Threshold);
+	void ReduceUpdateStep(PERFORMANCE_VAR);
+	size_t GetNumberofEnsembles() { return m_AcceptedIdString.size(); };
 	vector<size_t> GetEnsemblesToPlot() {
 		vector<size_t> out;
 		for (size_t i = 0; i < m_Valid_TSV.size(); i++) {

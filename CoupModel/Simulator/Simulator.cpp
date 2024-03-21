@@ -438,7 +438,8 @@ bool Simulator::End(bool Multi, bool Final, bool First)
 	if(Multi) {
 		Valid_End(true, Final, First);
 		
-		return Store_Write(true, Final);
+	   auto good=Store_Write(true, Final);
+	   return good;
 	}
 	else {
 		Valid_End();
@@ -457,12 +458,6 @@ bool Simulator::End(bool Multi, bool Final, bool First)
 #endif
       
 	}
-	if(Final) {
-
-
-
-	}
-
 
 }
 
@@ -1241,6 +1236,11 @@ bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
 
 		m_ValPGFile.clear();
 		m_ValTest.clear();
+		if (Multi) { // Position for possible postprossesing
+
+
+
+		}
 	}
 	return true;
 }

@@ -84,10 +84,7 @@ bool SelectedAddEnsembles::AddNewEnsemble(bool KeepPreviousCriteria) {
 		m_AcceptedRuns.push_back(acceptedruns);
 	}
 	else {
-
 		m_AcceptedRuns.push_back(m_AcceptedRuns[m_AcceptedRuns.size() - 1]);
-
-
 	}
 
 	string str="Ensemble (" + FUtil::STD_ItoAscii(m_AcceptedIdString.size()+1)+ ")";

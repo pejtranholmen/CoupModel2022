@@ -308,6 +308,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	QuickSetBackColor(0, -2, m_ColorClick);
 	QuickSetText(0, -1, "Variable Name");
 
+	auto koll=m_pSimDoc->m_MStorage.m_Valid_TSV.size();
 
 	long iaccept = m_pSimDoc->m_MStorage.GetNumAccepted();
 	long iacceptall = m_pSimDoc->m_MStorage.GetNumberOfRuns();
@@ -677,6 +678,11 @@ if (NumLinesSV > 0)
 		criteria = m_pSimDoc->m_MStorage.m_Valid_SV[ActualEnsemble].criteria[index];
 		value = m_pSimDoc->m_MStorage.m_Valid_SV[ActualEnsemble].v[E_SELECT_LOW][index];
 		QuickSetNumber(12, line, value);
+		if (line == 0) {
+			auto koll = value;
+			auto koll2 = criteria;
+
+		}
 		if (criteria == 1 || criteria == 3) QuickSetBackColor(12, line, m_ColorEdit);
 		else QuickSetBackColor(12, line, m_NoColor);
 

@@ -850,6 +850,7 @@ unsigned long MultiStorageData::GetNumBayesAccepted(unsigned long num_burn_in)
 
 float MultiStorageData::GetMinPar(unsigned long ip)
 {
+	if (m_ParMin.size() <= ip) return 1.1E38;
 	if(!IsMinUpdated) {
 		float v=1.1E38f;
 		for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
@@ -859,12 +860,13 @@ float MultiStorageData::GetMinPar(unsigned long ip)
 		m_ParMin[ip]=v;
 		return v;
 	}
-	else
+	else 
 		return m_ParMin[ip];
 
 }
 float MultiStorageData::GetMaxPar(unsigned long ip)
 {
+	if (m_ParMax.size() <= ip) return -1.1E38;
 	if(!IsMinUpdated) {
 		float v=float(MISSING);
 		for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
@@ -1165,20 +1167,12 @@ bool MultiStorageData::CalculateMeanValidValues(bool SV_Variables)
 						m_MeanTSV_All[jx][i] = dsum[jx];
 					else
 						m_MeanTSV_All[jx][i] = dsum[jx] / count;
-
 				}
 				else {
 					m_MeanTSV_All[jx][i] = float(MISSING);
-
-
-
 			}
-
 		}
-
 	}
-
-
 	return	true;
 }
 void MultiStorageData::AllocateMeanValidVar() {
@@ -1694,6 +1688,12 @@ size_t MultiStorageData::Get_And_UpdateTotalNumberofRuns() {
 bool MultiStorageData::UpdateParDist(vector<DistStat> ParDist) {
 	if (ParDist.size() == m_Valid_TSV[m_ActualEnsemble].ParDist.size())
 		m_Valid_TSV[m_ActualEnsemble].ParDist = ParDist;
+	else if (ParDist.size() < m_Valid_TSV[m_ActualEnsemble].ParDist.size()) {
+		for (size_t i = 0; i > ParDist.size(); i++) {
+			m_Valid_TSV[m_ActualEnsemble].ParDist[i] = ParDist[i];
+		}
+
+	}
 	else
 		return false;
 
@@ -1744,4 +1744,97 @@ bool MultiStorageData::GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG)
 		}
 		return false;
 	}
+}
+size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarIndex, size_t ThresholdType, size_t Threshold) {
+	MFC_Util m;
+	m.SetPaneMessage("Wait when posterior ensemble is reduced to " + FUtil::STD_ItoAscii(Threshold) + " runs");
+	vector<float> dist, distout;
+	bool RelativeThreshold{ false };
+	if (ThresholdType > 0) RelativeThreshold = true; // Theshold = reduced percentage
+
+	bool MeanOfMany = false;
+	size_t MaxNum = m_pNewMap->GetNumAll_TSV_ValVariables();
+	int ip = VarIndex + Indicator * MaxNum;;
+
+	if (VarIndex ==MaxNum) MeanOfMany = true;
+	if (MeanOfMany) {
+			dist = m_pNewMap->m_MStorage.m_MeanTSV_Accepted[Indicator];
+	}
+	else {
+			dist = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+	}
+	int icount = dist.size();
+	if (icount <= 1) return icount;
+	if (RelativeThreshold)
+		Threshold=Threshold* icount / 100;
+
+	float lastvalid = 0.f;
+	StatUtil::SortArray(&dist[0], icount);
+	size_t n_toremove = dist.size() - Threshold - 1;
+	if (Indicator == ABSME_STAT) {
+		float meanvaluein, meanvalueout;
+		meanvaluein = StatUtil::mean(dist);
+		size_t npos = 0;
+		for (size_t i = 0; i < Threshold; i++)
+			distout.push_back(dist[i + npos]);
+
+		meanvalueout = StatUtil::mean(distout);
+
+		while (meanvalueout > 0 && npos > 0) {
+			distout.erase(distout.end() - 1);
+			npos--;
+			distout.emplace(distout.begin(), dist[npos]);
+			meanvalueout = StatUtil::mean(distout);
+		}
+		while (meanvalueout < 0 && npos < dist.size() - Threshold - 1) {
+			distout.erase(distout.begin());
+			npos++;
+			distout.push_back(dist[npos + Threshold - 1]);
+			meanvalueout = StatUtil::mean(distout);
+		}
+		dist = distout;
+	}
+	else {
+		dist.erase(dist.begin(), dist.begin() + n_toremove);
+		lastvalid = dist[0];
+	}
+
+	if (dist.size() > Threshold - 1) {
+			if (MeanOfMany) {
+				m_pNewMap->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = lastvalid;
+				m_pNewMap->m_MStorage.SetMeanCriteria(LOGLI_STAT, ABOVE_MIN_CRITERIA);
+			}
+			else {
+				m_pNewMap->m_MStorage.SetValidLow(ip, 0, lastvalid);
+				if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
+					m_pNewMap->m_MStorage.SetCriteria(ip, 1);
+				else
+					m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+			}
+		ReduceUpdateStep(Indicator);
+
+	}
+	return true;
+
+
+
+}
+void MultiStorageData::ReduceUpdateStep(PERFORMANCE_VAR value)
+{
+	m_pNewMap->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
+	m_pNewMap->m_MStorage.UpdateAcceptedRuns(false, false);
+	//m_Changed = TRUE;
+	//m_SavedCriteria2File = false;
+	m_pNewMap->MR_ReCalculatePostDist(false);
+
+	for (int i = 0; i < MAXSIMVAL; i++) {
+		CResiduals* pRes;
+		pRes = m_pNewMap->GetValidResidualPointer(i + 1);
+		if (pRes != nullptr) {
+			pRes->ToBeUpdated();
+			pRes->m_MeanDefined = false;
+		}
+	}
+	//m_Changed = FALSE;
+	//m_Updated = TRUE;
 }

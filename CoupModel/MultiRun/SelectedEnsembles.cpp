@@ -1840,8 +1840,13 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 
 
 	for (unsigned long isplit = 0; isplit <= m_NumSplitPeriod; isplit++) {
-		if (!AcceptedOnly) for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; iv++) MakeStat(iv, isplit, true);
-		for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; iv++) MakeStat(iv, isplit, true);
+		if (AcceptedOnly) for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; iv++) MakeStat(iv, isplit, true);
+		else {
+			for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; iv++) {
+				MakeStat(iv, isplit, false);
+				MakeStat(iv, isplit, true);
+			}
+		}
 	}
 
 }
@@ -1884,8 +1889,10 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 
 
 	}
-
-	m_TotalNumAccepted = m_AcceptedRuns[m_ActualEnsemble].size();
+	if (m_AcceptedRuns.size() > m_ActualEnsemble)
+		m_TotalNumAccepted = m_AcceptedRuns[m_ActualEnsemble].size();
+	else
+		return out;
 
 	if (ind_split == 0) {
 		unsigned long ind, ind_rmse, count;

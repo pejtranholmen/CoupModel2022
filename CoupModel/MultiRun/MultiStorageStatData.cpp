@@ -245,22 +245,23 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 				m_MeanTSV_STAT[SELECT_LOW] = m_EvaluationFile.rFloatArray2(num);
 				m_MeanTSV_STAT[SELECT_HIGH] = m_EvaluationFile.rFloatArray2(num);
 			}
-			num = m_MBinHeader.n_valid / 6 * 13 * 7 * 2;
+			size_t numValdyn2 = m_MBinHeader.n_valid / 6 * 13 * 7 * 2;
 
-			if (m_ValidDynLogLi.size() != num) {
-				m_ValidDynLogLi.resize(num);
-				m_ValidDynResiduals.resize(num);
+			
+			if (m_ValidDynLogLi.size() != numValdyn2) {
+				m_ValidDynLogLi.resize(numValdyn2);
+				m_ValidDynResiduals.resize(numValdyn2);
 			}
 
-			if (num == m_ValidDynLogLi.size() && num != 0) {
+			if (numValdyn2 == m_ValidDynLogLi.size() && num != 0) {
 				m_EvaluationFile.rsize_t(&num);
-				m_ValidDynLogLi = m_EvaluationFile.rFloatArray2(num);
-				m_ValidDynResiduals = m_EvaluationFile.rFloatArray2(num);
+				m_ValidDynLogLi = m_EvaluationFile.rFloatArray2(numValdyn2);
+				m_ValidDynResiduals = m_EvaluationFile.rFloatArray2(numValdyn2);
 			}
 
 			if (!good) return false;
 			m_EvaluationFile.rsize_t(&num);
-			if (num != m_Valid_TSV.size()) m_Valid_TSV.resize(num);
+			if (num != m_Valid_TSV.size()&&num>0) m_Valid_TSV.resize(num);
 
 			for (size_t i = 0; i < m_Valid_TSV.size(); i++) {
 				m_EvaluationFile.rsize_t(&num);
@@ -370,11 +371,11 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 				m_EvaluationFile.wFloatArray2(m_MeanTSV_STAT[SELECT_LOW], num);
 				m_EvaluationFile.wFloatArray2(m_MeanTSV_STAT[SELECT_HIGH], num);
 			}
-			num = m_ValidDynLogLi.size();
-			if (m_ValidDynLogLi.size() == m_MBinHeader.n_valid / 6 * 13 * 7 * 2 && num != 0) {
+			auto numValdyn2 = m_ValidDynLogLi.size();
+			if (m_ValidDynLogLi.size() == numValdyn2 && numValdyn2 != 0) {
 				m_EvaluationFile.wInt(&num);
-				m_EvaluationFile.wFloatArray2(m_ValidDynLogLi, m_MBinHeader.n_valid / 6 * 13 * 7 * 2);
-				m_EvaluationFile.wFloatArray2(m_ValidDynResiduals, m_MBinHeader.n_valid / 6 * 13 * 7 * 2);
+				m_EvaluationFile.wFloatArray2(m_ValidDynLogLi,numValdyn2);
+				m_EvaluationFile.wFloatArray2(m_ValidDynResiduals, numValdyn2);
 			}
 
 
