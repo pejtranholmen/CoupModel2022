@@ -3004,25 +3004,13 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 	CUGCell cell;
 	int isheet=GetSheetNumber();
 
-	 if (item == 1063) {
-			m_pSimDoc->m_MStorage.AddNewEnsemble(false);
-
-			OnSheetSetup(isheet);
-
-	}
-	else if (item == 1064) {
-			m_pSimDoc->m_MStorage.AddNewEnsemble(true);
-			OnSheetSetup(isheet);
-
-	}
-	else if (item == 1061) {
-		// Reset to all Runs
+	auto Reset_All = [&]() {
 		m_pSimDoc->m_MStorage.UpdateAcceptedRuns(true, false);
 		m_Changed = TRUE;
 		m_SavedCriteria2File = false;
 		m_pSimDoc->MR_ReCalculatePostDist(false);
-		for (int i = 0; i<m_pSimDoc->m_ResidualFileVector.size(); i++) {
-			CResiduals *pRes;
+		for (int i = 0; i < m_pSimDoc->m_ResidualFileVector.size(); i++) {
+			CResiduals* pRes;
 			pRes = m_pSimDoc->GetValidResidualPointer(i + 1);
 			if (pRes != nullptr) {
 				pRes->ToBeUpdated();
@@ -3030,6 +3018,24 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			}
 		}
 		m_pSimDoc->m_MStorage.EvaluateFile(false);
+	};
+
+	if (item == 1065) {
+		Reset_All();
+		if(m_pSimDoc->PreDefined_Criteria_Process());
+		OnSheetSetup(isheet);
+	}
+	else if (item == 1063) {
+			m_pSimDoc->m_MStorage.AddNewEnsemble(false);
+			OnSheetSetup(isheet);
+	}
+	else if (item == 1064) {
+			m_pSimDoc->m_MStorage.AddNewEnsemble(true);
+			OnSheetSetup(isheet);
+	}
+	else if (item == 1061) {
+		Reset_All();
+		// Reset to all Runs
 		MyCug *pCug;
 		pCug = MySingle::instance().GetCugPointer();
 		int isheet = pCug->GetSheetNumber();

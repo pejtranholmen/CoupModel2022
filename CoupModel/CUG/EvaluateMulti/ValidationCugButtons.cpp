@@ -162,6 +162,7 @@ int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 	}
 	AddMenuItem(1063, "Add New Ensemble for setting of new criteria");
 	AddMenuItem(1064, "Add New Ensemble for setting of new criteria - Keeping actual criteria in new ensemble");
+	AddMenuItem(1065, "Reset and ReCalculated with predefined criteria");
 
 	return TRUE;
 }

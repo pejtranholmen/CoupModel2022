@@ -3290,6 +3290,15 @@ int MyCug::OnEditStart(int col, long row,CWnd **edit)
 				else if(ParV!=112)
 					return FALSE;
 	}
+	else if (m_pSimDoc->IsFinishedSimulation() && m_pSimDoc->IsMultiSimulation() && isheet == 3) {
+		CUGCell cell;
+		GetCell(col, row, &cell);
+		long ParV = cell.GetParam();
+		if (ParV == 110 || ParV == 111)
+			return TRUE;
+		else if (ParV != 112)
+			return FALSE;
+	}
 	else if(m_pSimDoc->IsFinishedSimulation()&&m_pSimDoc->IsMultiSimulation()&&m_ShowMultiRes&&row>m_pSimDoc->m_MStorage.GetNumAccepted()) 
 		return TRUE;
 	else if((m_pSimDoc->IsFinishedSimulation()&&!m_ShowValidRes&&isheet!=6)||isheet==11) 
@@ -3303,6 +3312,8 @@ int MyCug::OnEditStart(int col, long row,CWnd **edit)
 		return FALSE;
 	}
 	else if(m_pSimDoc->IsFinishedSimulation()&&isheet<=5) 
+	
+
 		return FALSE;
 	else if(!m_pSimDoc->IsFinishedSimulation()&&isheet==5)
 		return FALSE;

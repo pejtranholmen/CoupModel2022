@@ -1583,7 +1583,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 										else
 											readonly=FALSE;
 
-
+	
 										if(pCPt==nullptr) break;
 										if(pCPt->IsEnabled()) {
 											fvalue=pCPt->GetValue(nRow);
@@ -1592,6 +1592,11 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 											DefValue=pCPt->GetOriginalValue(nRow);
 											GetCell(nColValid+1,newline, &cell);			
 											cell.SetParam(2000+nRow);
+											if (view == 2024) {
+												cell.SetParam(110);
+											
+											}
+
 											if(pCPt->GetNumOfHistoryIndex(nRow)>0) {
 												 cell.SetBackColor(m_ColorHistory);
 											}
@@ -1616,6 +1621,14 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 										//pCPt=((Tab*)Sw)->GetCPtPointer(nCol);
 										if(pCPt->IsEnabled()) {
 											fvalue=pCPt->GetOriginalValue(0);
+											auto koll = pCPt->GetViewFunction();
+											if (koll == 2024) {
+												GetCell(nColValid + 1, newline, &cell);
+												int position = 1;
+												cell.SetParam(110);
+												SetCell(nColValid, newline, &cell);
+
+											}
 											GetCell(nColValid+1,newline,&cell);
 											cell.SetNumber(fvalue);
 											cell.SetReadOnly(TRUE);
@@ -1756,6 +1769,14 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 											pDoc=m_pSimDoc->m_Selected_All_Documents[j];
 											pCPt1=m_pSimDoc->GetParTabPointer(pCPt,pDoc);
 											if(pCPt!=nullptr) {
+												auto koll=pCPt->GetViewFunction();
+												if (koll == 2024) {
+													GetCell(nColValid+1+j, newline, &cell);
+													int position = 1;
+													cell.SetParam(110);
+													SetCell(nColValid, newline, &cell);
+
+												}
 												fval1=pCPt1->GetValue(nRow);
 												if(fval1!=fval)
 													QuickSetNumber(nColValid+1+j, newline, fval1);																						

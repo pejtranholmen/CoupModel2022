@@ -1767,11 +1767,12 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 	if (icount <= 1) return icount;
 	if (RelativeThreshold)
 		Threshold=Threshold* icount / 100;
+	if (Threshold <= 0) return icount;
 
-	float lastvalid = 0.f;
+	float last_valid = 0.f, first_valid;
 	StatUtil::SortArray(&dist[0], icount);
 	size_t n_toremove = dist.size() - Threshold - 1;
-	if (Indicator == ABSME_STAT) {
+	if (Indicator == ABSME_STAT||Indicator==A1_STAT) {
 		float meanvaluein, meanvalueout;
 		meanvaluein = StatUtil::mean(dist);
 		size_t npos = 0;
@@ -1780,36 +1781,74 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 		meanvalueout = StatUtil::mean(distout);
 
-		while (meanvalueout > 0 && npos > 0) {
-			distout.erase(distout.end() - 1);
-			npos--;
-			distout.emplace(distout.begin(), dist[npos]);
-			meanvalueout = StatUtil::mean(distout);
-		}
-		while (meanvalueout < 0 && npos < dist.size() - Threshold - 1) {
-			distout.erase(distout.begin());
-			npos++;
-			distout.push_back(dist[npos + Threshold - 1]);
-			meanvalueout = StatUtil::mean(distout);
+		float goal = 0;
+		if (Indicator == A1_STAT) goal = 1;
+
+		while (distout.size() > distout.size() - Threshold - 1) {
+			while (meanvalueout > goal && npos > 0) {
+				distout.erase(distout.end() - 1);
+				npos--;
+				distout.emplace(distout.begin(), dist[npos]);
+				meanvalueout = StatUtil::mean(distout);
+			}
+			while (meanvalueout < goal && npos < dist.size() - Threshold - 1) {
+				distout.erase(distout.begin());
+				npos++;
+				distout.push_back(dist[npos + Threshold - 1]);
+				meanvalueout = StatUtil::mean(distout);
+			}
 		}
 		dist = distout;
+		last_valid = distout.back();
+		first_valid = distout.front();
 	}
 	else {
-		dist.erase(dist.begin(), dist.begin() + n_toremove);
-		lastvalid = dist[0];
+		if (Indicator == R2_STAT|| Indicator == NSE_STAT) {
+			dist.erase(dist.begin(), dist.begin() + n_toremove);
+			last_valid = dist[0];
+		}
+		else if (Indicator == RMSE_STAT) {
+
+
+		}
 	}
 
 	if (dist.size() > Threshold - 1) {
 			if (MeanOfMany) {
-				m_pNewMap->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = lastvalid;
+				m_pNewMap->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = last_valid;
 				m_pNewMap->m_MStorage.SetMeanCriteria(LOGLI_STAT, ABOVE_MIN_CRITERIA);
 			}
 			else {
-				m_pNewMap->m_MStorage.SetValidLow(ip, 0, lastvalid);
-				if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
-					m_pNewMap->m_MStorage.SetCriteria(ip, 1);
-				else
-					m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+				if (Indicator == R2_STAT||Indicator==NSE_STAT||Indicator==LOGLI_STAT) {
+					m_pNewMap->m_MStorage.SetValidLow(ip, 0, last_valid);
+					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
+						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
+					else
+						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+				}
+				else if (Indicator == RMSE_STAT) {
+					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
+					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
+						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
+					else
+						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
+				}
+				else if (Indicator == ABSME_STAT||Indicator==A1_STAT) {
+
+					m_pNewMap->m_MStorage.SetValidLow(ip, 0, first_valid);
+					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
+						m_pNewMap->m_MStorage.SetCriteria(ip, 1);
+					else
+						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+
+					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
+					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
+						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
+					else
+						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+
+
+				}
 			}
 		ReduceUpdateStep(Indicator);
 

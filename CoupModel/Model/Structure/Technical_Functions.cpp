@@ -189,19 +189,19 @@ bool Technical_Functions::Def()
 
 	pP = new P(&Criterion.Ensemble, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 1.);
-		Define(pP, pCriteria, "Ensemble", initv, "-", "PreDefinedEnsembles>0", 0., 16.); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Ensemble", initv, "-", "PreDefinedEnsembles>0", 0., 16., 0., 16.,0,2024,2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.Criterion, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "Criterion", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Criterion", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6.,0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.IndicatorIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "Performance Indicator", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Performance Indicator", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0.,6., 0,2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.ValVarIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "Var Index", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Var Index", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0.,6.,0,2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.ThresholdType, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "ThresholdType", initv, "-", "PreDefinedEnsembles>0", 0., 6.); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "ThresholdType", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.Threshold, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 1., 100.); CriteriaTab.push_back(pP);
