@@ -1634,17 +1634,10 @@ bool MultiStorageData::ReadAcceptedRunInfo() {
 					}
 
 					// Update Criterias
-			/*		for (unsigned long split_ind = 0; split_ind <= m_NumSplitPeriod; split_ind++) {
+					/*for (unsigned long split_ind = 0; split_ind <= m_NumSplitPeriod; split_ind++) {
 						for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
 							SetCriteria(i, 0, split_ind);
-							if (GetValidLow(i, split_ind)>GetMinValidAll(i, split_ind))
-								SetCriteria(i, 1, split_ind);
-							if (GetValidHigh(i, split_ind)<GetMaxValidAll(i, split_ind)) {
-								if (GetCriteria(i, split_ind) == 0)
-									SetCriteria(i, 2, split_ind);
-								else
-									SetCriteria(i, 3, split_ind);
-							}
+
 						}
 					}*/
 
@@ -1862,10 +1855,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
 
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
-					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
-						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
-					else
-						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+					m_pNewMap->m_MStorage.SetCriteria(ip, 3);
 
 
 				}

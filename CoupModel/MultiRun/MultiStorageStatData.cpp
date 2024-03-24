@@ -686,6 +686,23 @@ bool MultiStorageStatData::CompleteProcessingOfInputFiles_MultiStorage() {
 
 	return true;
 }
+bool MultiStorageStatData::Reset_AcceptedRuns(size_t actens)
+{
+	m_Accepted.resize(m_TotalNumberRuns);
+	for (unsigned long i = 0; i < m_TotalNumberRuns; i++)
+		SetAcceptedRunNo(i, true);
+	if (m_AcceptedRuns.size()<=actens) return false;
+
+	m_AcceptedRuns[actens].resize(m_TotalNumberRuns);
+
+	for (unsigned long i = 0; i < m_TotalNumberRuns; i++) {
+		m_Accepted[i] = i;
+		m_AcceptedRuns[actens][i] = i;
+	}
+
+
+	return false;
+}
 void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 {
 	if (SV_Variables) {

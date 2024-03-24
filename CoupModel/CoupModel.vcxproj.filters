@@ -1513,9 +1513,6 @@
     <ClCompile Include="PG\PGBase.cpp">
       <Filter>Source Files\PG</Filter>
     </ClCompile>
-    <ClCompile Include="PG\PG.CPP">
-      <Filter>Source Files\PG</Filter>
-    </ClCompile>
     <ClCompile Include="CUG\ColorPickerCB.cpp">
       <Filter>Source Files\CUG</Filter>
     </ClCompile>
@@ -2511,6 +2508,9 @@
     </ClCompile>
     <ClCompile Include="Model\Structure\Technical_Functions.cpp">
       <Filter>Source Files\Model\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="PG\PG.CPP">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

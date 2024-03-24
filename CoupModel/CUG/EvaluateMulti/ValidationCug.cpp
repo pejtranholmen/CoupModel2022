@@ -3014,7 +3014,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 	};
 
 	if (item == 1065) {
-		Reset_All();
+		//Reset_All();
 		if(m_pSimDoc->PreDefined_Criteria_Process());
 		OnSheetSetup(isheet);
 	}

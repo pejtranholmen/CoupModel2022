@@ -1414,8 +1414,14 @@ bool MR::PreDefined_Criteria_Process() {
 				num = numens; // to quit
 		}
 		m_MStorage.m_ActualEnsemble = 0;
-
 		size_t left;
+		for (size_t i = 0; i < numens; i++) { //Reset Criteria
+			m_MStorage.m_ActualEnsemble = i;
+			m_MStorage.ResetCriteria();
+			m_MStorage.Reset_AcceptedRuns(i);
+			m_MStorage.EvaluateFile(false);
+		}
+		m_MStorage.EvaluateFile(false);
 		for (size_t i = 0; i<pEnsemble->GetSize(); i++) {
 			auto Indicator = size_t(pIndicator->GetValue(i)+0.0001);
 			auto VarIndex = size_t(pVarIndex->GetValue(i) + 0.0001)-1;
@@ -1448,6 +1454,7 @@ bool MR::PreDefined_Criteria_Process() {
 					left = m_MStorage.ReduceCriteria(NSE_STAT, VarIndex, ThresholdType, Threshold);
 					break;
 			}
+
 		}
 	}
 	return true;
