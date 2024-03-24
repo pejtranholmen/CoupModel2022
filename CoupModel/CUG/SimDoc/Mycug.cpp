@@ -3602,9 +3602,16 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 
 				}
 				}
-				else if (ParV>=2000) { // Change of Value within tables
+				else if (ParV>=2000||ParV==110) { // Change of Value within tables
 					int index;
 					index=ParV-2000;
+					if (ParV == 110) { // Special case for Criteria Table
+						GetCell(2, row, &cell);
+						auto str_index = cell.GetStdText();
+						SetCell(2, row, &cell);
+						index = FUtil::AtoInt(str_index)-1;
+
+					}
 					if(m_ParameterTableView==0) {
 						GetCell(col,row-index-1,&cell);
 						Name=cell.GetStdText();

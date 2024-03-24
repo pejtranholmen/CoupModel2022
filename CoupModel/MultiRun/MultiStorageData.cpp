@@ -1771,36 +1771,56 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 	float last_valid = 0.f, first_valid;
 	StatUtil::SortArray(&dist[0], icount);
-	size_t n_toremove = dist.size() - Threshold - 1;
-	if (Indicator == ABSME_STAT||Indicator==A1_STAT) {
+	size_t n_toremove=0;
+	if (dist.size() <= Threshold) n_toremove = 0;
+	else if(Indicator!=ABSME_STAT) n_toremove = dist.size() - Threshold - 1;
+	
+	if (Indicator == ABSME_STAT || Indicator == A1_STAT) {
 		float meanvaluein, meanvalueout;
 		meanvaluein = StatUtil::mean(dist);
 		size_t npos = 0;
-		for (size_t i = 0; i < Threshold; i++)
-			distout.push_back(dist[i + npos]);
-
-		meanvalueout = StatUtil::mean(distout);
-
 		float goal = 0;
 		if (Indicator == A1_STAT) goal = 1;
+		size_t i = 0;
+		while(dist[i] < goal&&i<dist.size()) {
+			i++;
+		};
+		npos = i;
+		distout.push_back(dist[npos]);
+		meanvalueout = StatUtil::mean(distout);
+		size_t nposlow, nposhigh;
+			nposlow=nposhigh= i;
+			bool endlow, endhigh, endloop;
+			endlow = endhigh = false;
+			endloop = false;	
 
-		while (distout.size() > distout.size() - Threshold - 1) {
-			while (meanvalueout > goal && npos > 0) {
-				distout.erase(distout.end() - 1);
-				npos--;
-				distout.emplace(distout.begin(), dist[npos]);
+		while (distout.size()< Threshold&& !endloop) {
+			while (meanvalueout > goal && distout.size()<Threshold) {
+				nposlow--;
+				if (nposlow >= 0)distout.push_back(dist[nposlow]);
+				else endlow = true;
 				meanvalueout = StatUtil::mean(distout);
 			}
-			while (meanvalueout < goal && npos < dist.size() - Threshold - 1) {
-				distout.erase(distout.begin());
-				npos++;
-				distout.push_back(dist[npos + Threshold - 1]);
+			while (meanvalueout < goal &&  distout.size()< Threshold) {
+				nposhigh++;
+				if (nposhigh < dist.size()) distout.push_back(dist[nposhigh]);
+				else endhigh = true;
 				meanvalueout = StatUtil::mean(distout);
 			}
+			if (endlow && endhigh) endloop = true;
 		}
-		dist = distout;
-		last_valid = distout.back();
+		StatUtil::SortArray(&distout[0], distout.size());
+		dist = distout;	
 		first_valid = distout.front();
+		last_valid = distout.back();
+		if (first_valid < last_valid) {
+
+
+		}
+		else {
+
+			
+		}
 	}
 	else {
 		if (Indicator == R2_STAT|| Indicator == NSE_STAT) {
@@ -1822,7 +1842,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 				if (Indicator == R2_STAT||Indicator==NSE_STAT||Indicator==LOGLI_STAT) {
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, last_valid);
 					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
-						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
+						m_pNewMap->m_MStorage.SetCriteria(ip, 1);
 					else
 						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
 				}

@@ -679,7 +679,7 @@ bool MultiStorageStatData::CompleteProcessingOfInputFiles_MultiStorage() {
 	}
 
 	if(m_NumValidVar>0) UpdateMeanValidValues();  // TSV Variables
-	UpdateMeanValidValues(true);  //SV Variables
+	//UpdateMeanValidValues(true);  //SV Variables
 
 	m_pNewMap->m_MStorage.Set_Update_ValidVar();
 	m_pNewMap->MR_ReCalculatePostDist(m_pNewMap->IsBayesianCalibration());
@@ -714,9 +714,9 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 	auto fix= [&](bool all, size_t iv) {
 #ifndef COUPSTD
 		if(all)
-			mfc_util.SetPaneMessage("Estimating Statistics for Mean of all SV  Performance Indicators");
+			mfc_util.SetPaneMessage("Estimating Statistics for Mean of all SV  Performance Indicators - Val Var " + FUtil::STD_ItoAscii(iv));
 		else
-			mfc_util.SetPaneMessage("Estimating Statistics for Mean of all SV  Performance Indicators");
+			mfc_util.SetPaneMessage("Estimating Statistics for Mean of accepted SV  Performance Indicators"+ FUtil::STD_ItoAscii(iv));
 #endif
 		float vmin = 1.1E38f;
 		float vmax = float(MISSING);
@@ -784,9 +784,14 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 		}
 	};
 
-	for (unsigned long iv = 0; iv < 7; fix(false, iv), iv++);
+	for (unsigned long iv = 0; iv < 7; iv++) {
+		fix(false, iv);
+	}
 	
-	for (unsigned long iv = 0; iv < 7; fix(true, iv), iv++);
+	for (unsigned long iv = 0; iv < 7; iv++) {
+		fix(true, iv);
+
+	}
 	
 
 

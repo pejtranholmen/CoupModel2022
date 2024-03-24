@@ -204,7 +204,7 @@ bool Technical_Functions::Def()
 		Define(pP, pCriteria, "ThresholdType", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.Threshold, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 1., 100.); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 10., 100.,10.,100.,0,2024); CriteriaTab.push_back(pP);
 
 	pTab = new Tab(&CriteriaTab, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pTab, "Criteria for Ensembles", "", "");
