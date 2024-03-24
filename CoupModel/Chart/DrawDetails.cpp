@@ -184,6 +184,7 @@ DataSet* DrawDetails::AddDataPlot( int ivar,int TotNumPrior, bool accept_type, P
 			if(p_info.EnsembleType > ENSEMBLE_TYPE::NO &&!m_pProp->m_ReShape.m_SortedSeries)  {
 				if(m_pProp->m_ChartError>0) {
 					m_Layers.pBandLayer = pXY_Chart->addLineLayer();
+					
 
 //ArrayMath(DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints )).add(DoubleArray(m_pProp->viewPortDataSeriesB[ivarBand], m_ChartInfo.NumOfPoints))
 					if(m_pProp->m_ChartError==3) {
@@ -498,14 +499,17 @@ DataSet* DrawDetails::TimeSerieChart( int ivar,int TotNumPrior, bool accept_type
 			if(m_pProp->m_ChartError>0) {
 				m_Layers.pBandLayer = pXY_Chart->addLineLayer();
 				m_Color.box=m_pProp->GetBoxDimmer()+m_Color.ivar;
-								
+				string labelmulti;
+				labelmulti=FUtil::STD_ItoAscii(p_info.EnsembleNo+1);
+				
 	
 //ArrayMath(DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints )).add(DoubleArray(m_pProp->viewPortDataSeriesB[ivarBand], m_ChartInfo.NumOfPoints))
 				if(m_pProp->m_ChartError==2) {
+					labelmulti = "Mean +- StD";
 					m_Layers.pBandLayer->addDataSet(ArrayMath(DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints ))
 						.sub(DoubleArray(m_pProp->viewPortDataSeriesB[ivarBand], m_ChartInfo.NumOfPoints)),m_Color.ivar);	
 					m_Layers.pBandLayer->addDataSet(ArrayMath(DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints ))
-						.add(DoubleArray(m_pProp->viewPortDataSeriesB[ivarBand], m_ChartInfo.NumOfPoints)),m_Color.ivar, "Mean +- StD");	
+						.add(DoubleArray(m_pProp->viewPortDataSeriesB[ivarBand], m_ChartInfo.NumOfPoints)),m_Color.ivar, labelmulti.c_str());
 									
 				}
 				if(m_pProp->m_ChartError==3) {
@@ -516,8 +520,9 @@ DataSet* DrawDetails::TimeSerieChart( int ivar,int TotNumPrior, bool accept_type
 									
 				}
 				else {
+					labelmulti = "";
 					m_Layers.pBandLayer->addDataSet(DoubleArray(m_pProp->viewPortDataSeriesMax[ivarBand],m_ChartInfo.NumOfPoints )
-					,m_Color.ivar, "Simulated (min-max)");	
+					,m_Color.ivar, labelmulti.c_str());	
 					m_Layers.pBandLayer->addDataSet(DoubleArray(m_pProp->viewPortDataSeriesMin[ivarBand],m_ChartInfo.NumOfPoints ),m_Color.ivar);	
 
 

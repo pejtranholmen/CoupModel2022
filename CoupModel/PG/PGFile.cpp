@@ -1206,22 +1206,24 @@ size_t CPGFile::GetPrevBuffer()
 }
 void CPGFile::Reset()
 {
-	if(m_varx_years!=nullptr) delete [] m_varx_years;
-	if(m_varx_months.size()>0) m_varx_months.clear();
-	if(m_varx_days!=nullptr) delete [] m_varx_days;
-	if(m_varx_hour!=nullptr) delete [] m_varx_hour;
-	if(m_varx_minute!=nullptr) delete [] m_varx_minute;
-	if(m_YearIndexStart!=nullptr) delete [] m_YearIndexStart;
-	if(m_YearRecords!=nullptr) delete [] m_YearRecords;
+	if (m_varx_years != nullptr) delete[] m_varx_years;
+	if (m_varx_months.size() > 0) m_varx_months.clear();
+	if (m_varx_days != nullptr) delete[] m_varx_days;
+	if (m_varx_hour != nullptr) delete[] m_varx_hour;
+	if (m_varx_minute != nullptr) delete[] m_varx_minute;
+	if (m_YearIndexStart != nullptr) delete[] m_YearIndexStart;
+	if (m_YearRecords != nullptr) delete[] m_YearRecords;
 
 
 	v_WithinYear.clear();
 	v_WithinDay.clear();
 
-	if(m_str!=nullptr) delete [] m_str;
-	
-	v_accepted.clear();
-	v_all.clear();
+	if (m_str != nullptr) delete[] m_str;
+
+	for (size_t i = 0; i < 4; i++) {
+		v_accepted[i].clear();
+		v_all[i].clear();
+	}
 	pg.Var.v.clear();
 	
 

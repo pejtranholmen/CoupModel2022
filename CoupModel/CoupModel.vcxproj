@@ -862,7 +862,9 @@
     <ClCompile Include="PG\CreatePG.cpp" />
     <ClCompile Include="PG\NewPGVariables.cpp" />
     <ClCompile Include="PG\NoaaCoord.cpp" />
-    <ClCompile Include="PG\PG.CPP" />
+    <ClCompile Include="PG\PG.CPP">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="PG\PGBase.cpp" />
     <ClCompile Include="PG\PGCalc.cpp" />
     <ClCompile Include="PG\PGFile.cpp" />

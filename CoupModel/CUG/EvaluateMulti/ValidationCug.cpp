@@ -1114,7 +1114,7 @@ void ValidationCug::Make_SplitPeriodSheet()
 		else
 			QuickSetBackColor(0, rows + 2 + i, m_NoColor);
 
-		QuickSetText(0, rows + 2+i, m_pSimDoc->m_MStorage.m_AcceptedIdString[i]);
+		QuickSetText(0, rows + 2+i, m_pSimDoc->m_MStorage.m_AcceptedIdString[i], false);
 		QuickSetNumber(1, rows + 2+ i, i+1);
 		QuickSetNumber(2, rows + 2+ i, m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size());
 
@@ -2785,17 +2785,10 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 			m_pSimDoc->m_MStorage.SetToBePlotted(iens, false);
 
 		// ReDraw Chart
-		ChartUtil *pUtil;
-		pUtil=MySingle::instance().GetChartUtilPointer();
-		pUtil->m_FileSave.OnReDraw(true);
-
-
+		//ChartUtil *pUtil;
+		//pUtil=MySingle::instance().GetChartUtilPointer();
+		//pUtil->m_FileSave.OnReDraw(true);
 	}
-
-
-
-
-
 	}
 
 	return TRUE;

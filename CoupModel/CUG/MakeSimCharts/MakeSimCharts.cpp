@@ -961,10 +961,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 							for (size_t i = 0; i<EnsemblesToPlot.size(); i++) {
 								PLOTv plotinfo = m_pPlotInfo->MakeValidationChartInfo(ii, j, ResidualPlot);
 								plotinfo.EnsembleNo = EnsemblesToPlot[i];
-
-
 								if (j > 0 && plotinfo.DataType == DATA_TYPES::MEASURED_VAL) continue;
-
 
 								if (!m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart)) {
 									;//, m_CurrentChartType,string(pSimDoc->GetCurrentSimFile()), ValFileNo, ValFileIndex, mrunno,0,Isubchart, logli)) {
@@ -988,11 +985,15 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 						m_pProp->SetSecondIndepVarType(NO_USE);
 					}
 					m_pSimDoc->m_PrevSheet=5;
+					vector<size_t> mensembles=m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
 					for(int j=0;j<m_NumOpenDoc;j++) {
-						for(int i=0; i<m_pSimDoc->m_SelectOut.size();i++) {
-							PLOTv plotinfo=m_pPlotInfo->MakeOutPutChartInfo(i, j);							
-							if(m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart)==0)
-										return;
+						for (size_t ens=0; ens < mensembles.size(); ens++) {
+							for (int i = 0; i < m_pSimDoc->m_SelectOut.size(); i++) {
+								PLOTv plotinfo = m_pPlotInfo->MakeOutPutChartInfo(i, j);
+								plotinfo.EnsembleNo = mensembles[ens];
+								if (m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart) == 0)
+									return;
+							}
 						}
 					}
 		

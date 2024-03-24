@@ -535,11 +535,10 @@ CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
 							out.Band = true;
 						}
 						else if (p_info.EnsembleType == ENSEMBLE_TYPE::ACCEPTED) {
+							p_info.EnsembleNo;
 							bool multivalid = m_pSimDoc->MR_Storage_Open();
-							if (m_pSimDoc->m_MStorage.m_AcceptedUpdated) out.pPG1->m_UpdatedMultiAccepted = false;
 							if (m_pSimDoc->m_MStorage.m_AcceptedRuns.size()>0) {
-								out.pPG1->EstimateMultiStatistics(false, &m_pSimDoc->m_MStorage.m_AcceptedRuns[0]);
-								m_pSimDoc->m_MStorage.m_AcceptedUpdated = false;
+									out.pPG1->EstimateMultiStatistics(false, &m_pSimDoc->m_MStorage.m_AcceptedRuns[p_info.EnsembleNo], p_info.EnsembleNo);
 							}
 							else {
 								out.pPG1 = nullptr;
@@ -1913,6 +1912,7 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, icurve);
 	PLOTv p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
 	int PGNumVar;
+	auto kollens = p_info.EnsembleNo;
 	int PGindex = p_info.PGFileIndex;
 	PGNumVar = m_pPG_Active->GetNumVariables();
 	auto datatype = m_pSimDoc->m_PlotStorage.GetDataType(j);
@@ -1943,9 +1943,10 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	CResiduals *pResAct = c_info.pRes;
 	int ResRunNoAct = c_info.ResRunNo;
 	if (pg_control.StartIndex <= 0) return;
-
+	kollens = p_info.EnsembleNo;
 
 	if (p_info.EnsembleType>ENSEMBLE_TYPE::NO && pResAct != nullptr) {
+
 		save_ensemble_no = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 		// Set the correct ensemble using number....
 		if (!pResAct->SetNewEnsembleByNumber(p_info.EnsembleNo)) {
@@ -2059,12 +2060,12 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			}
 			else {
 				if (p_info.EnsembleType == ENSEMBLE_TYPE::ALL && !m_ChartInfo.ResidualSource) {
-					SetAllRangeValue(icurve, pg_control, i, PGindex);
-					SetAllRangeBandValue(i_band, pg_control, i, PGindex);
+					SetAllRangeValue(icurve, pg_control, i, PGindex, p_info.EnsembleNo);
+					SetAllRangeBandValue(i_band, pg_control, i, PGindex, p_info.EnsembleNo);
 				}
 				else if (p_info.EnsembleType == ENSEMBLE_TYPE::ACCEPTED && !m_ChartInfo.ResidualSource) {
-					SetAcceptedRangeValue(icurve, pg_control, act_rec, PGindex);
-					SetAcceptedRangeBandValue(i_band, pg_control, act_rec, PGindex);
+					SetAcceptedRangeValue(icurve, pg_control, act_rec, PGindex, p_info.EnsembleNo);
+					SetAcceptedRangeBandValue(i_band, pg_control, act_rec, PGindex, p_info.EnsembleNo);
 				}
 				else {
 					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, act_rec, PGindex);
@@ -2092,12 +2093,12 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 						else {
 
 							if (p_info.EnsembleType == ENSEMBLE_TYPE::ALL) {
-								SetAllRangeValue(icurve, pg_control, i, PGindex);
-								SetAllRangeBandValue(i_band, pg_control, i, PGindex);
+								SetAllRangeValue(icurve, pg_control, i, PGindex, p_info.EnsembleNo);
+								SetAllRangeBandValue(i_band, pg_control, i, PGindex, p_info.EnsembleNo);
 							}
 							else if (p_info.EnsembleType == ENSEMBLE_TYPE::ACCEPTED) {
-								SetAcceptedRangeValue(icurve, pg_control, i, PGindex);
-								SetAcceptedRangeBandValue(i_band, pg_control, i, PGindex);
+								SetAcceptedRangeValue(icurve, pg_control, i, PGindex, p_info.EnsembleNo);
+								SetAcceptedRangeBandValue(i_band, pg_control, i, PGindex, p_info.EnsembleNo);
 							}
 						}
 					}
@@ -2235,27 +2236,29 @@ void LoadDataToChart::SetDataBandValueMissing(size_t i_band, PG_TIMECONTROL pg_c
 	BB_P50[i_band][i] = Chart::NoValue;
 	BB_P90[i_band][i] = Chart::NoValue;
 }
-void LoadDataToChart::SetAllRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex) {
-	AA[icurve][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiMean(PGindex, i + pg_control.StartIndex, true));
+void LoadDataToChart::SetAllRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo) {
+	AA[icurve][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Mean, PGindex, i + pg_control.StartIndex, true));
 }
-void LoadDataToChart::SetAllRangeBandValue(size_t i_band, PG_TIMECONTROL pg_control, size_t i, int PGindex) {
-	BB[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiSD(PGindex, i + pg_control.StartIndex, true));
-	BB_MIN[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiMin(PGindex, i + pg_control.StartIndex, true));
-	BB_MAX[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiMax(PGindex, i + pg_control.StartIndex, true));
-	BB_P10[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiP5(PGindex, i + pg_control.StartIndex, true));
-	BB_P90[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiP95(PGindex, i + pg_control.StartIndex, true));
-	BB_P50[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiP50(PGindex, i + pg_control.StartIndex, true));
+void LoadDataToChart::SetAllRangeBandValue(size_t i_band, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo) {
+	bool all = true;
+	BB[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Std, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_MIN[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Min, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_MAX[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Max, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_P10[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::P5, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_P90[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::P95,PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_P50[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::P50,PGindex, i + pg_control.StartIndex, all, EnsembleNo));
 }
-void LoadDataToChart::SetAcceptedRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex) {
-	AA[icurve][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiMean(PGindex, i + pg_control.StartIndex, false));
+void LoadDataToChart::SetAcceptedRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo) {
+	AA[icurve][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Mean, PGindex, i + pg_control.StartIndex, false, EnsembleNo));
 }
-void LoadDataToChart::SetAcceptedRangeBandValue(size_t i_band, PG_TIMECONTROL pg_control, size_t i, int PGindex) {
-	BB[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiSD(PGindex, i + pg_control.StartIndex, false));
-	BB_MIN[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiMin(PGindex, i + pg_control.StartIndex, false));
-	BB_MAX[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiMax(PGindex, i + pg_control.StartIndex, false));
-	BB_P10[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiP5(PGindex, i + pg_control.StartIndex, false));
-	BB_P90[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiP95(PGindex, i + pg_control.StartIndex, false));
-	BB_P50[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_MultiP50(PGindex, i + pg_control.StartIndex, false));
+void LoadDataToChart::SetAcceptedRangeBandValue(size_t i_band, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo) {
+	bool all = false;
+	BB[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Std, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_MIN[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Min, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_MAX[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::Max, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_P10[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::P5, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_P90[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::P95, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
+	BB_P50[i_band][i + pg_control.YearStartIndex] = double(m_pPG_Active->GetVarValue_Ensemble(DistPos::P50, PGindex, i + pg_control.StartIndex, all, EnsembleNo));
 }
 void LoadDataToChart::SetDataValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex) {
 	double sum;

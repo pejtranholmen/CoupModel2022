@@ -15,6 +15,7 @@
 
 enum COMPARETYPE { SMALLER, SMALLER_EQUAL, EQUAL, GREATER_EQUAL, GREATER };
 enum TIMECALCFUNCTION {NO_USE_FUNC,DAYNUMBERFUNC, MINUTENUMBERFUNC};
+enum class DistPos{Mean,Std, Min, Max, P5, P50, P95};
 
 struct IF_CONDITIONS {
 	COMPARETYPE comp_method;
@@ -158,14 +159,7 @@ public:
 	float	GetVarValue_WithinDayP50(size_t varno, size_t recno, size_t im);
 	float	GetVarValue_WithinDayP95(size_t varno, size_t recno, size_t im);
 
-	float	GetVarValue_MultiMean(size_t varno, size_t recno, bool all=false);
-	float	GetVarValue_MultiSD(size_t varno, size_t recno, bool all=false);
-	float	GetVarValue_MultiMin(size_t varno, size_t recno, bool all=false);
-	float	GetVarValue_MultiMax(size_t varno, size_t recno, bool all=false);
-	float	GetVarValue_MultiP5(size_t varno, size_t recno, bool all=false);
-	float	GetVarValue_MultiP50(size_t varno, size_t recno, bool all=false);
-	float	GetVarValue_MultiP95(size_t varno, size_t recno, bool all=false);
-
+	float	GetVarValue_Ensemble(DistPos, size_t varno, size_t recno, bool all = false, size_t EnsembleNo = 0);
 
 	float	GetVarValue_MinPos(size_t varno, size_t minutv);
 	size_t		GetVarFunction();
@@ -276,11 +270,11 @@ public:
 	bool	EstimateWithinYearStatistics(Doc *pDoc=nullptr);
 	void	EstimateWithinYearClear(size_t rep);
 	bool	EstimateWithinDayStatistics();
-	bool	EstimateMultiStatistics(bool all=false, vector<size_t> *acceptedruns=nullptr);
+	bool	EstimateMultiStatistics(bool all=false, vector<size_t> *acceptedruns=nullptr, size_t EnsembleNo=0);
 	bool	GetReplaceMode();
 
 
-	bool	m_UpdatedMultiAccepted,m_UpdatedMultiAll;
+	vector<bool>	m_UpdatedMultiAccepted,m_UpdatedMultiAll;
 
 protected:
 

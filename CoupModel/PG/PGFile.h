@@ -154,8 +154,8 @@ protected:
 	std::vector <float> v_accepted_mean,v_accepted_min,v_accepted_max,v_accepted_sd;
 	std::vector <float> v_all_mean,v_all_min,v_all_max,v_all_sd;
 
-	std::vector <DistStat> v_accepted;
-	std::vector <DistStat> v_all;
+	std::vector <DistStat> v_accepted[6];
+	std::vector <DistStat> v_all[6];
 	std::vector <DistStat> v_WithinDay;
 	std::vector <DistStat> v_WithinYear;
 

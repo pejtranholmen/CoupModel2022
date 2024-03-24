@@ -138,6 +138,10 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 
 			FUtil::trim(m_Label.st);
 		}
+		else if (p_info.RepitDataType && p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+
+			m_Label.st=m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
+		}
 		break;
 	case DATA_TYPES::SIM_G:
 	case DATA_TYPES::SIM_D:

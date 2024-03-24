@@ -34,7 +34,14 @@ CPG::CPG() {
 	m_NumWithinYear=0;
 	m_withinYearAllocated=0;
 	m_WithinYearForResiduals=false;
-	m_UpdatedMultiAccepted=m_UpdatedMultiAll=false;
+
+
+	m_UpdatedMultiAccepted.resize(4);
+	m_UpdatedMultiAll.resize(4);
+	for (size_t i = 0; i < m_UpdatedMultiAccepted.size(); i++) {
+		m_UpdatedMultiAccepted[i] = m_UpdatedMultiAll[i] = false;
+	}
+	
 	m_ApplyConditionCheck = false;
 }
 CPG::CPG(string filename)
@@ -2931,21 +2938,22 @@ bool CPG::EstimateWithinYearStatistics(Doc *pDoc)
 		return false;
 }
 
-bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns)
+bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t EnsembleNo)
 {
 	if(!pg.Shape.RepetitionMode) return false;
-	if(all&&m_UpdatedMultiAll) return true;
-	if(!all&&m_UpdatedMultiAccepted) return true;
+	if (m_UpdatedMultiAccepted.size() <= EnsembleNo) return false;
+	if(all&&m_UpdatedMultiAll[EnsembleNo]) return true;
+	if(!all&&m_UpdatedMultiAccepted[EnsembleNo]) return true;
 	size_t size;
 	size=pg.Shape.NumVar*pg.Shape.NumRecords;
 
 
 	if(all) {
 
-		v_all.resize(size);
+		v_all[EnsembleNo].resize(size);
 	}
 	else {
-		v_accepted.resize(size);
+		v_accepted[EnsembleNo].resize(size);
 	}
 
 	
@@ -3004,12 +3012,12 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns)
 			if(all) {
 				StatUtil::SortArray(&MDF[n][0],pg.Shape.NumRepetitions );
 				MeanStat(&MDF[n][0], pg.Shape.NumRepetitions, &ncheck, &stat);
-				v_all[n+rec*pg.Shape.NumVar]=stat;
+				v_all[EnsembleNo][n+rec*pg.Shape.NumVar]=stat;
 			}
 			else {
 				StatUtil::SortArray(&MDF[n][0],n_count );
 				MeanStat(&MDF[n][0], n_count, &ncheck, &stat);
-				v_accepted[n+rec*pg.Shape.NumVar]=stat;
+				v_accepted[EnsembleNo][n+rec*pg.Shape.NumVar]=stat;
 			}
 		}
 #ifndef COUPSTD
@@ -3023,9 +3031,9 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns)
 #endif
 	}
 	if(all)
-		m_UpdatedMultiAll=true;
+		m_UpdatedMultiAll[EnsembleNo] = true;
 	else
-		m_UpdatedMultiAccepted=true;
+		m_UpdatedMultiAccepted[EnsembleNo] = true;
 	//CloseFile();
 	//ReOpen();
 	CloseFile();
@@ -3089,70 +3097,36 @@ float CPG::GetVarValue_WithinYearP95(size_t varno, size_t recno, bool res)
 	else
 		return MISSING;
 }
+float CPG::GetVarValue_Ensemble(DistPos distpos, size_t varno, size_t var_rec, bool all, size_t EnsembleNo)
+{
+	if (v_accepted[EnsembleNo].size() > 0 && !all) {
+		switch (distpos) {
+		case DistPos::Mean:return v_accepted[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Mean;
+		case DistPos::Std: return v_accepted[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Std;
+		case DistPos::Min: return v_accepted[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Min;
+		case DistPos::Max: return v_accepted[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Max;
+		case DistPos::P5: return v_accepted[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].P5;
+		case DistPos::P50: return v_accepted[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].P50;
+		case DistPos::P95: return v_accepted[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].P95;
+		};
+	}
+	else if (v_all[EnsembleNo].size() > 0 && all) {
+		switch (distpos) {
+		case DistPos::Mean:return v_all[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Mean;
+		case DistPos::Std: return v_all[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Std;
+		case DistPos::Min: return v_all[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Min;
+		case DistPos::Max: return v_all[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].Max;
+		case DistPos::P5: return v_all[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].P5;
+		case DistPos::P50: return v_all[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].P50;
+		case DistPos::P95: return v_all[EnsembleNo][(var_rec - 1) * pg.Shape.NumVar + varno - 1].P95;
+		};
+	}
+	else
+		return MISSING;
+	return MISSING;
+}
 
-float CPG::GetVarValue_MultiMean(size_t varno, size_t var_rec, bool all)
-{
-	if(v_accepted.size()>0&&!all)
-		return v_accepted[(var_rec-1)*pg.Shape.NumVar+varno-1].Mean;
-	else if(v_all.size()>0&&all)
-		return v_all[(var_rec-1)*pg.Shape.NumVar+varno-1].Mean;
-	else
-		return MISSING;
-}
-float CPG::GetVarValue_MultiSD(size_t varno, size_t var_rec, bool all)
-{
-	if(v_accepted.size()>0&&!all)
-		return v_accepted[(var_rec-1)*pg.Shape.NumVar+varno-1].Std;
-	else if(v_all.size()>0&&all)
-		return v_all[(var_rec-1)*pg.Shape.NumVar+varno-1].Std;
-	else
-		return MISSING;
-}
-float CPG::GetVarValue_MultiMax(size_t varno, size_t var_rec, bool all)
-{
-	if(v_accepted.size()>0&&!all)
-		return v_accepted[(var_rec-1)*pg.Shape.NumVar+varno-1].Max;
-	else if(v_all.size()>0&&all)
-		return v_all[(var_rec-1)*pg.Shape.NumVar+varno-1].Max;
-	else
-		return MISSING;
-}
-float CPG::GetVarValue_MultiMin(size_t varno, size_t var_rec, bool all)
-{
-	if(v_accepted.size()>0&&!all)
-		return v_accepted[(var_rec-1)*pg.Shape.NumVar+varno-1].Min;
-	else if(v_all.size()>0&&all)
-		return v_all[(var_rec-1)*pg.Shape.NumVar+varno-1].Min;
-	else
-		return MISSING;
-}
-float CPG::GetVarValue_MultiP5(size_t varno, size_t var_rec, bool all)
-{
-	if(v_accepted.size()>0&&!all)
-		return v_accepted[(var_rec-1)*pg.Shape.NumVar+varno-1].P5;
-	else if(v_all.size()>0&&all)
-		return v_all[(var_rec-1)*pg.Shape.NumVar+varno-1].P5;
-	else
-		return MISSING;
-}
-float CPG::GetVarValue_MultiP50(size_t varno, size_t var_rec, bool all)
-{
-	if(v_accepted.size()>0&&!all)
-		return v_accepted[(var_rec-1)*pg.Shape.NumVar+varno-1].P50;
-	else if(v_all.size()>0&&all)
-		return v_all[(var_rec-1)*pg.Shape.NumVar+varno-1].P50;
-	else
-		return MISSING;
-}
-float CPG::GetVarValue_MultiP95(size_t varno, size_t var_rec, bool all)
-{
-	if(v_accepted.size()>0&&!all)
-		return v_accepted[(var_rec-1)*pg.Shape.NumVar+varno-1].P95;
-	else if(v_all.size()>0&&all)
-		return v_all[(var_rec-1)*pg.Shape.NumVar+varno-1].P95;
-	else
-		return MISSING;
-}
+
 float CPG::GetVarValue_WithinDayMean(size_t varno, size_t recno, size_t im)
 { 
 	size_t index=(varno-1)*m_NumWithinDay+im*m_numWithinDayTot+recno-1;

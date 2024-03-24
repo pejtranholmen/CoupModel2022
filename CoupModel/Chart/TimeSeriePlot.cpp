@@ -247,7 +247,8 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 			if (validv > .1) AcceptedCandidates.push_back(count);
 			count += incrementstep;
 		}
-		m_pProp->m_MultiSequence = AcceptedCandidates[m_pProp->m_multi_ResidualSequence];
+		if(AcceptedCandidates.size()> m_pProp->m_multi_ResidualSequence)
+			m_pProp->m_MultiSequence = AcceptedCandidates[m_pProp->m_multi_ResidualSequence];
 
 
 		int il=m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber)-1;

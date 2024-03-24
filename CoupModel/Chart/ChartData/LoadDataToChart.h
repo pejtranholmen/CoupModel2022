@@ -126,10 +126,10 @@ class LoadDataToChart :public DistributionCurves
 		void SetMeanDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, size_t i_band, CURVEINFO c_info);
 
 
-		void SetAllRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex);
-		void SetAllRangeBandValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex);
-		void SetAcceptedRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex);
-		void SetAcceptedRangeBandValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex);
+		void SetAllRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo=0);
+		void SetAllRangeBandValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo = 0);
+		void SetAcceptedRangeValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo = 0);
+		void SetAcceptedRangeBandValue(size_t icurve, PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t EnsembleNo = 0);
 
 		void SetDataValue(size_t icurve, PG_TIMECONTROL pg_control, size_t index, int PGindex);
 
