@@ -161,6 +161,39 @@ bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, stri
 	 m_pSimDoc->m_Val_Array.push_back(Node);
 	 return false;
 }
+bool ValidationData::AddGroupValList(size_t index, int valFileIndex, vector<int> group)
+{
+	VALv Node;
+	if (index < m_pSimDoc->m_Val_Array.size()) {
+		return true;
+	}
+	else {
+		m_pSimDoc->m_Val_Array[0].Sum_of_Others = group;
+		Node.ValidationFileIndex = m_pSimDoc->m_Val_Array[group.front()].ValidationFileIndex;
+		Node.Group = m_pSimDoc->m_Val_Array[group.front()].Group;
+		Node.ValidationFileIndex = valFileIndex;
+		Node.Name = "";
+		Node.nNumber = -1;
+		Node.ValidationFileNumber = 1;
+		Node.LogTrans = false;
+		Node.R2 = float(MISSING);
+		Node.A0 = float(MISSING);
+		Node.A1 = float(MISSING);
+		Node.ME = float(MISSING);
+		Node.RMSE = float(MISSING);
+		Node.MeanSim = float(MISSING);
+		Node.MeanVal = float(MISSING);
+		Node.P_Error = float(MISSING);
+		Node.A_Error = float(MISSING);
+		Node.LogLi = 0;
+		Node.Sum_of_Others = group;
+	}
+	m_pSimDoc->m_Val_Array.push_back(Node);
+
+
+
+	return false;
+}
 bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, string group, string name, int localindex)
 {	string Type;
 	SimB* Sw;

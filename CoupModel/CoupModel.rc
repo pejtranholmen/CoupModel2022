@@ -1145,7 +1145,7 @@ BEGIN
     EDITTEXT        IDC_EDIT3,47,79,60,14,ES_AUTOHSCROLL
 END
 
-IDD_ValidationTimeSerieVariables DIALOGEX 0, 0, 621, 399
+IDD_ValidationTimeSerieVariables DIALOGEX 0, 0, 621, 457
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Selection of Validation Variables"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
@@ -1157,8 +1157,8 @@ BEGIN
     DEFPUSHBUTTON   "Add More Variables",IDD_ADD,577,57,41,38,BS_MULTILINE
     LTEXT           "Static",IDC_GRID3,253,15,318,341,SS_SUNKEN
     LTEXT           "Static",IDC_GRID4,7,14,235,341,SS_SUNKEN
-    LTEXT           "Static",IDC_GRID5,255,370,317,26,SS_SUNKEN
-    LTEXT           "Static",IDC_GRID6,7,368,236,26,SS_SUNKEN
+    LTEXT           "Static",IDC_GRID5,255,370,317,78,SS_SUNKEN
+    LTEXT           "Static",IDC_GRID6,7,368,236,82,SS_SUNKEN
     LTEXT           "Selected Validation Variable",IDC_STATIC_Validation7,6,358,94,8
     LTEXT           "Selected Simulated Variable",IDC_STATIC_Simulated2,255,359,105,9
 END
@@ -1763,6 +1763,7 @@ BEGIN
 
     IDD_ValidationTimeSerieVariables, DIALOG
     BEGIN
+        BOTTOMMARGIN, 399
     END
 
     IDD_CREATEPG, DIALOG
@@ -1910,6 +1911,11 @@ BEGIN
 END
 
 IDD_USER_SETUP AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ValidationTimeSerieVariables AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

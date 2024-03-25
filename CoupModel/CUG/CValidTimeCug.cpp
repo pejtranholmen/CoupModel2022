@@ -838,11 +838,15 @@ void CValidTimeCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point
 		GetCell(1,row, &cell);
 		vno=MFC_Util::AtoInt(cell.GetStdText())-int(1);
 		((CValidationVariables*)m_pDlg)->m_ValVarList=vno;
+		if (((CValidationVariables*)m_pDlg)->m_OnlyMeasured&&m_PreviousClick!=row) {
+			((CValidationVariables*)m_pDlg)->m_GroupSelIndex.push_back(vno);
+		}
 		GetCell(2,row, &cell);
 		((CValidationVariables*)m_pDlg)->m_ValDesc=cell.GetStdText();
 		((CValidationVariables*)m_pDlg)->m_ReadyObs=TRUE;
 		m_pRealTimeCug->OnSetup();
-		if(m_PreviousClick>=0) {
+		if (((CValidationVariables*)m_pDlg)->m_OnlyMeasured)
+		if(m_PreviousClick>=0&&!((CValidationVariables*)m_pDlg)->m_OnlyMeasured) {
 			QuickSetBackColor(0,m_PreviousClick , m_ColorHeading);
 			QuickSetBackColor(1,m_PreviousClick, m_ColorHeading);
 			QuickSetBackColor(2,m_PreviousClick, m_ColorHeading);

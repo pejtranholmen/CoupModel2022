@@ -1220,7 +1220,7 @@ void CPGFile::Reset()
 
 	if (m_str != nullptr) delete[] m_str;
 
-	for (size_t i = 0; i < 4; i++) {
+	for (size_t i = 0; i< 6; i++) {
 		v_accepted[i].clear();
 		v_all[i].clear();
 	}

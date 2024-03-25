@@ -26,12 +26,14 @@ static char THIS_FILE[] = __FILE__;
 // CValidationVariables dialog
 
 
-CValidationVariables::CValidationVariables(CCoupModelDoc* pDoc, int ItemSelected, CWnd* pParent /*=nullptr*/)
+CValidationVariables::CValidationVariables(CCoupModelDoc* pDoc, int ItemSelected, bool OnlyMeasured, CWnd* pParent /*=nullptr*/)
 	: CDialog(CValidationVariables::IDD, pParent)
 	, m_SelectedNum(0)
 	, m_Accumulate(FALSE)
 {
 	m_pDoc=pDoc;
+	m_OnlyMeasured = OnlyMeasured;
+
 	/*m_pFile=m_pDoc->ValidationFilePointer();
 	m_NumSelected=m_pFile->GetNumberOfSelectedVal();
 
@@ -49,7 +51,11 @@ CValidationVariables::CValidationVariables(CCoupModelDoc* pDoc, int ItemSelected
    	//{{AFX_DATA_INIT(CValidationVariables)
 //	m_ValVarList = 0;
 //	m_SimVarList = 0;
-	m_SimHeading = "Select Simulated Variables by click below";
+	if (!OnlyMeasured)
+		m_SimHeading = "Select Simulated Variables by click below";
+	else
+		m_SimHeading = "Simulated Variables are from the previous defined combination";
+
 	m_ValHeading = "Select Measured Variables by click below";
 
 	m_FileName = "";
@@ -62,11 +68,14 @@ CValidationVariables::CValidationVariables(CCoupModelDoc* pDoc, int ItemSelected
 
 	//}}AFX_DATA_INIT
 	m_Init=TRUE;
-	m_gridPicker.Init(this, (CCoupModelDoc*)pDoc,TRUE, &m_gridPicker_Sel, FALSE); 
-	m_gridRealPGTime.Init(this, (CCoupModelDoc*)pDoc, FALSE, &m_gridRealPGTime_Sel, FALSE); 
-
-	m_gridPicker_Sel.Init(this, (CCoupModelDoc*)pDoc,TRUE,&m_gridPicker , TRUE); 
-	m_gridRealPGTime_Sel.Init(this, (CCoupModelDoc*)pDoc, FALSE, &m_gridRealPGTime, TRUE); 
+	
+	m_gridRealPGTime.Init(this, (CCoupModelDoc*)pDoc, FALSE, &m_gridRealPGTime_Sel, FALSE);
+	m_gridRealPGTime_Sel.Init(this, (CCoupModelDoc*)pDoc, FALSE, &m_gridRealPGTime, TRUE);
+	if (!OnlyMeasured) {
+		m_gridPicker.Init(this, (CCoupModelDoc*)pDoc, TRUE, &m_gridPicker_Sel, FALSE);
+		m_gridPicker_Sel.Init(this, (CCoupModelDoc*)pDoc, TRUE, &m_gridPicker, TRUE);
+		
+	}
 
    	m_NumberOfSelectedVariables=FUtil::STD_ItoAscii(m_NumSelected);
 	m_FileName=m_pFile->GetStrValue().c_str();
@@ -85,8 +94,6 @@ void CValidationVariables::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_STATIC_Validation, CString(m_ValHeading.c_str()));
 	//}}AFX_DATA_MAP
 }
-
-
 BEGIN_MESSAGE_MAP(CValidationVariables, CDialog)
 	//{{AFX_MSG_MAP(CValidationVariables)
 	//}}AFX_MSG_MAP
@@ -103,8 +110,6 @@ END_MESSAGE_MAP()
 BOOL CValidationVariables::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-
-
 	if(m_ReadySim&&m_ReadyObs){
 			GetDlgItem(IDD_ADD)->ModifyStyle(WS_DISABLED,0);
 			GetDlgItem(IDCANCEL)->ModifyStyle(WS_DISABLED,0);
@@ -115,28 +120,29 @@ BOOL CValidationVariables::OnInitDialog()
 	}
 	GetDlgItem(IDD_ADD)->RedrawWindow();
 	GetDlgItem(IDCANCEL)->RedrawWindow();
-
-	m_WindowText="Combination of Variables from PG-Bin files with Simulated Variables";
-	m_WindowText += ", (";
-	m_WindowText+= MFC_Util::ItoAscii(m_ItemSelected) + _T(") are selected");
-	SetWindowText(m_WindowText);
-
-
-
-	if(m_Init) {
-
-	
-		m_gridPicker.AttachGrid(this, IDC_GRID3);
-		m_gridRealPGTime.AttachGrid(this, IDC_GRID4);
-		m_gridPicker_Sel.AttachGrid(this, IDC_GRID5);
-		m_gridRealPGTime_Sel.AttachGrid(this, IDC_GRID6);
-		m_Init=FALSE;
-
+	if (m_OnlyMeasured) {
+		m_WindowText = "Make a Group of Measured Variables to form a new Validation Variable from previous ";
+		m_WindowText += MFC_Util::ItoAscii(m_ItemSelected) + _T(" Variables");
+	}
+	else {
+		m_WindowText = "Combination of Variables from PG-Bin files with Simulated Variables";
+		m_WindowText += ", (";
+		m_WindowText += MFC_Util::ItoAscii(m_ItemSelected) + _T(") are selected");
 	}
 
+	SetWindowText(m_WindowText);
 
-
+	if(m_Init) {
 	
+		m_gridRealPGTime.AttachGrid(this, IDC_GRID4);
+		m_gridRealPGTime_Sel.AttachGrid(this, IDC_GRID6);
+		if (!m_OnlyMeasured) {
+			m_gridPicker.AttachGrid(this, IDC_GRID3);
+			m_gridPicker_Sel.AttachGrid(this, IDC_GRID5);
+		}
+		m_Init=FALSE;
+	}
+
 	// TODO: Add extra initialization here
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -152,14 +158,21 @@ INT_PTR CValidationVariables::DoModal()
 
 void CValidationVariables::OnApply() 
 {	
-	    CString Name;
-		auto pos1=m_SelName.find("(");
-		auto pos2=m_SelName.find(")");
-		if(pos2>pos1) {
-			string t=m_SelName.substr(pos1+1,pos2-pos1-1);
-			m_SelIndex=FUtil::AtoInt(t)-1;
-			if(m_SelIndex>=0)
-				Name=m_SelName.substr(0,pos1).c_str();
+	if (m_OnlyMeasured) {
+		if (m_GroupSelIndex.size() > 0) {
+			m_pDoc->m_Doc.m_ValidationData.AddGroupValList(m_ItemSelected,m_FileNo, m_GroupSelIndex);
+
+		}
+	}
+	else {
+		CString Name;
+		auto pos1 = m_SelName.find("(");
+		auto pos2 = m_SelName.find(")");
+		if (pos2 > pos1) {
+			string t = m_SelName.substr(pos1 + 1, pos2 - pos1 - 1);
+			m_SelIndex = FUtil::AtoInt(t) - 1;
+			if (m_SelIndex >= 0)
+				Name = m_SelName.substr(0, pos1).c_str();
 			else {
 				Name = m_SelName.c_str();
 				m_SelIndex = -1;
@@ -167,42 +180,48 @@ void CValidationVariables::OnApply()
 
 		}
 		else {
-			Name=m_SelName.c_str();
-			m_SelIndex=-1;
+			Name = m_SelName.c_str();
+			m_SelIndex = -1;
 		}
 
 
-	    m_pDoc->m_Doc.m_ValidationData.AddNewValList(m_ItemSelected,m_FileNo, m_ValVarList,m_SelTypeInt,string(m_SelGroup), CT2A(Name).m_psz, m_SelIndex,m_RelError, m_AbsError, m_Accumulate, m_LogTrans);
-	    m_ValVarList=0;
-		m_SelType="";
-		m_SelGroup="";
-		m_SelName="";
-		m_ReadySim=FALSE;
-		m_ReadyObs=FALSE;
+
+
+		m_pDoc->m_Doc.m_ValidationData.AddNewValList(m_ItemSelected, m_FileNo, m_ValVarList, m_SelTypeInt, string(m_SelGroup), CT2A(Name).m_psz, m_SelIndex, m_RelError, m_AbsError, m_Accumulate, m_LogTrans);
+		m_ValVarList = 0;
+		m_SelType = "";
+		m_SelGroup = "";
+		m_SelName = "";
+		m_ReadySim = FALSE;
+		m_ReadyObs = FALSE;
 		m_gridPicker.OnSetup();
 		m_gridRealPGTime.OnSetup();
 		m_gridPicker_Sel.OnSetup();
 		m_gridRealPGTime_Sel.OnSetup();
-		
-			
-				  
+
+
+
 		CString  Group, Type;
-		Type="Tables";
-		Group="Technical";
-		Name="Scaling of Observed Variables";
-		SimB *Sw;
-		Sw=m_pDoc->GetPtr(Name, Type, Group);
-		m_NumSelected=0;
-		for(int i=0;i<MAXSIMVAL;i++) {
-			m_pFile=m_pDoc->m_Doc.ValidationFilePointer(i+1);
-			m_NumSelected+=m_pFile->GetNumberOfSelectedVal();
+		Type = "Tables";
+		Group = "Technical";
+		Name = "Scaling of Observed Variables";
+		SimB* Sw;
+		Sw = m_pDoc->GetPtr(Name, Type, Group);
+		m_NumSelected = 0;
+		for (int i = 0; i < MAXSIMVAL; i++) {
+			m_pFile = m_pDoc->m_Doc.ValidationFilePointer(i + 1);
+			m_NumSelected += m_pFile->GetNumberOfSelectedVal();
 		}
 	}
+}
 
 void CValidationVariables::OnOK() 
 {
 	if(m_ReadySim&&m_ReadyObs)
 		OnApply();
+	else if(m_OnlyMeasured)
+		OnApply();
+
 
 	CDialog::OnOK();
 }

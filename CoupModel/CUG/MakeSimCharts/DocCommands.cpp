@@ -1442,6 +1442,10 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 				// Select file and enable validation
 				OnAddValFile();
 			}
+			else if (item == 6061) {
+			
+				OnAddTsvVal(true);
+			}
 			else if(item==6010) {
 				//Disable validation
 					for(size_t ifile=0; ifile<MAXSIMVAL;ifile++) {	
@@ -1463,7 +1467,11 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 			}
 			else if(item==6001) {
 				// New Item
-					return OnAddTsvVal();
+					return OnAddTsvVal(false); 
+			}
+			else if (item == 6061) {
+				// New Item
+				return OnAddTsvVal();
 			}
 			else if(item==6002) {
 				GetCell(1,row,&cell);
@@ -2817,30 +2825,29 @@ VALSUMLINK DocCommands::OnAddSvFlexFiles()
 	}
 	return sumlink;
 }
-int DocCommands::OnAddTsvVal()
+int DocCommands::OnAddTsvVal(bool Aggregated)
 {
 	F *pCF;
 	int	NumSelected=m_pSimDoc->GetNumAll_TSV_ValVariables();
 
 
+		CValidationVariables dlg(m_pDoc, NumSelected, Aggregated, this);
+		if (dlg.DoModal() == IDOK) {
+			Tab* pTab = (Tab*)m_pSimDoc->GetPtr(TABLE, "Scaling of Observed Variables");
+			if (pTab != nullptr) {
+				F* pFile;
+				int NumSelected = 0;
+				NumSelected = m_pSimDoc->GetNumAll_TSV_ValVariables();
 
-	CValidationVariables dlg(m_pDoc,NumSelected, this);
-	if(dlg.DoModal()==IDOK) {
-		Tab *pTab=(Tab*)m_pSimDoc->GetPtr(TABLE,"Scaling of Observed Variables");
-		if(pTab!=nullptr) {
-			F *pFile;
-			int NumSelected=0;
-			NumSelected=m_pSimDoc->GetNumAll_TSV_ValVariables();
-
-			int oldnelements=pTab->GetNumOfRow();
-			if (NumSelected!=oldnelements)  {
-	  				pTab->SetNumOfRow(NumSelected);
+				int oldnelements = pTab->GetNumOfRow();
+				if (NumSelected != oldnelements) {
+					pTab->SetNumOfRow(NumSelected);
 					m_pSimDoc->m_ValidationData.UpdateValOutIndex();
+				}
 			}
 		}
-	}
-	SetSheetNumber(6);
-	return 6;
+		SetSheetNumber(6);
+		return 6;
 }
 int DocCommands::OnAddSvVal()
 {

@@ -990,6 +990,7 @@ void GridSimDoc::MakeValidationPriorMenu(int col, int row) {
 					AddMenuItem(6002,t);
 					AddMenuItem(6010,"Disable Time Serie Validation (TSV)");
 					AddMenuItem(6001,"Add New TSV Validation Variable");
+					AddMenuItem(6061, "Add New Grouped TSV validation Variable");
 				}
 				AddMenuItem(6011,"Add New Single Value Validation (SV)");
 				t = FUtil::STD_ItoAscii(m_pSimDoc->m_ValsumFlexFiles.size());

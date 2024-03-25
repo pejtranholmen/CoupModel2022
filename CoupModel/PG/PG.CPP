@@ -36,8 +36,8 @@ CPG::CPG() {
 	m_WithinYearForResiduals=false;
 
 
-	m_UpdatedMultiAccepted.resize(4);
-	m_UpdatedMultiAll.resize(4);
+	m_UpdatedMultiAccepted.resize(6);
+	m_UpdatedMultiAll.resize(6);
 	for (size_t i = 0; i < m_UpdatedMultiAccepted.size(); i++) {
 		m_UpdatedMultiAccepted[i] = m_UpdatedMultiAll[i] = false;
 	}

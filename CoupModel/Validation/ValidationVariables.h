@@ -13,7 +13,7 @@ class CValidationVariables : public CDialog
 {
 // Construction
 public:
-	CValidationVariables(CCoupModelDoc* pDoc,int ItemSelected, CWnd* pParent = nullptr);   // standard constructor
+	CValidationVariables(CCoupModelDoc* pDoc,int ItemSelected, bool OnlyMeasured=false, CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CValidationVariables)
@@ -48,6 +48,7 @@ protected:
 	int m_NumSelected;
 
 
+
 	CValidTimeCug m_gridRealPGTime, m_gridPicker;
 	CValidTimeCug m_gridRealPGTime_Sel, m_gridPicker_Sel;
 	CString m_WindowText;
@@ -75,6 +76,8 @@ public:
 	bool m_Accumulate,m_LogTrans;
 	string  m_SelGroup, m_SelName, m_ValDesc, m_SelType;
 	int m_ItemSelected, m_ValVarList, m_SelIndex, m_FileNo, m_SelTypeInt;
+	vector<int> m_GroupSelIndex;
+	bool m_OnlyMeasured = false;
 	BOOL m_ReadySim, m_ReadyObs;
 
 

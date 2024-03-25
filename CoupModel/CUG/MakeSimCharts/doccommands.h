@@ -42,7 +42,7 @@ public:
 	bool MultiRunPlotCommand(int Col, int row, int item, enum vartype);
 
 	void OnAddValFile();
-	int OnAddTsvVal();
+	int OnAddTsvVal(bool Aggregated=false);
 	int OnAddSvVal();
 	int OnAddSvValFromFile();
 	VALSUMLINK OnAddSvFlexFiles();
