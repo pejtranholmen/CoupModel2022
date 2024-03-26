@@ -8,6 +8,7 @@
 #include "../NewBase/MR.h"
 #include "../ModelTypes/SimB.h"
 #include "../Simulator/ModelInfo.h"
+#include "../Util/StatUtil.h"
 
 
 
@@ -955,7 +956,13 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		}
 		// Check Validation data from document info create ValPGFile vector to store info for validation
 		for(size_t i=0; i<m_ValTest.size(); i++) {
-			switch (m_pSim->m_Val_Array[i].OutputType) {
+			size_t index;
+			if (m_pSim->m_Val_Array[i].Sum_of_Others.size() > 0) {
+				index = m_pSim->m_Val_Array[i].Sum_of_Others[0]-1;
+			}
+			else
+			    index = i;
+			switch (m_pSim->m_Val_Array[index].OutputType) {
 						case 1:	type="State Variables";
 							break;
 						case 2:	type="Flow Variables";
@@ -965,7 +972,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 						 case 4:type="Driving Variables";
 	 						break;
 			}
-			pSimB=m_pSim->GetPtr(type,m_pSim->m_Val_Array[i].Group,m_pSim->m_Val_Array[i].Name);
+			pSimB=m_pSim->GetPtr(type,m_pSim->m_Val_Array[index].Group,m_pSim->m_Val_Array[index].Name);
 			if (pSimB == nullptr) {
 				m_pSim->m_Val_Array[i].Name = FUtil::NameRevision2018(m_pSim->m_Val_Array[i].Name);
 				pSimB = m_pSim->GetPtr(type, m_pSim->m_Val_Array[i].Group, m_pSim->m_Val_Array[i].Name);
@@ -974,10 +981,10 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 				}
 
 			}
-			a.pBase=pSimB; a.TabIndex=m_pSim->m_Val_Array[i].LocalIndex;
+			a.pBase=pSimB; a.TabIndex=m_pSim->m_Val_Array[index].LocalIndex;
 			m_pValVar[i]=a;
-			m_StructureModel.m_Structure.Abs_Error[i]=m_pSim->m_Val_Array[i].A_Error;
-			m_StructureModel.m_Structure.Rel_Error[i]=m_pSim->m_Val_Array[i].P_Error;
+			m_StructureModel.m_Structure.Abs_Error[i]=m_pSim->m_Val_Array[index].A_Error;
+			m_StructureModel.m_Structure.Rel_Error[i]=m_pSim->m_Val_Array[index].P_Error;
 			auto ifile=m_pSim->m_Val_Array[i].ValidationFileNumber;
 
 			F *pF=((NewMap*)m_pSim)->ValidationFilePointer(int(ifile));
@@ -1093,22 +1100,24 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		for (size_t j=0; j<m_ValPGFile[i].val_listindex.size(); j++) {// Check if Mean values should be calculated for Validation Outputs
 			size_t LL;
 			LL=m_ValPGFile[i].val_listindex[j];
-			if(m_pSim->m_Val_Array[LL].Duration>1.) {
-				 auto pos= m_ValPGFile[i].file->GetPos(m_pModelInfo->m_ActMin);
-				 //size_t ActHit= m_ValPGFile[i].file->GetHitPos(m_ActMin-m_ValPGFile[i].HalfDuration,m_ActMin+m_ValPGFile[i].HalfDuration);
+			if (m_pSim->m_Val_Array[LL].Sum_of_Others.size() == 0) {
+				if (m_pSim->m_Val_Array[LL].Duration > 1.) {
+					auto pos = m_ValPGFile[i].file->GetPos(m_pModelInfo->m_ActMin);
+					//size_t ActHit= m_ValPGFile[i].file->GetHitPos(m_ActMin-m_ValPGFile[i].HalfDuration,m_ActMin+m_ValPGFile[i].HalfDuration);
 
-				m_ValPGFile[i].MeanValueOut=true;
-				m_ValPGFile[i].HalfDuration=m_pSim->m_Val_Array[LL].Duration/2;
-				m_ValPGFile[i].PrevPos=pos.first;
-				m_ValPGFile[i].accsimvalues.resize(m_ValPGFile[i].val_listindex.size());
-			}
-			else {
-				m_ValPGFile[i].MeanValueOut=false;
-				m_ValPGFile[i].PrevPos=1;
-				m_ValPGFile[i].accsimvalues.resize(m_ValPGFile[i].val_listindex.size());
-				m_ValPGFile[i].count=0;
-				m_ValPGFile[i].simvalfile->GetPos(m_pModelInfo->m_ActMin);
+					m_ValPGFile[i].MeanValueOut = true;
+					m_ValPGFile[i].HalfDuration = m_pSim->m_Val_Array[LL].Duration / 2;
+					m_ValPGFile[i].PrevPos = pos.first;
+					m_ValPGFile[i].accsimvalues.resize(m_ValPGFile[i].val_listindex.size());
+				}
+				else {
+					m_ValPGFile[i].MeanValueOut = false;
+					m_ValPGFile[i].PrevPos = 1;
+					m_ValPGFile[i].accsimvalues.resize(m_ValPGFile[i].val_listindex.size());
+					m_ValPGFile[i].count = 0;
+					m_ValPGFile[i].simvalfile->GetPos(m_pModelInfo->m_ActMin);
 
+				}
 			}
 
 		}
@@ -1286,11 +1295,61 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 
 
 			}
+			bool ValidNewFile = false;
 			for(size_t j=0; j<m_ValPGFile[i].val_listindex.size(); j++) {
 				size_t LL=m_ValPGFile[i].val_listindex[j];
-				
-				Sim=pPG_Sim->GetVarVector(j+1);
-				Obs=pPG_Obs->GetVarVector(m_ValPGFile[i].varindex[j]+1);
+				auto num_others = m_pSim->m_Val_Array[LL].Sum_of_Others.size();
+				if (num_others > 0) {
+					auto n=pPG_Obs->GetNumVariables();
+					if (LL >= n) {
+						auto m= pPG_Sim->GetNumRecords();
+						auto n = pPG_Sim->GetNumVariables();
+						if (LL >= n) {
+							auto m = pPG_Sim->GetNumRecords();
+							pPG_Sim->SetCompleteRead(true);
+							ValidNewFile = pPG_Sim->ReAllocate(m, LL + 1);
+						}
+
+					}
+					else {
+						ValidNewFile = true;
+					}
+					vector<vector<float>> a, b;
+					a.resize(num_others);
+					b.resize(num_others);
+					Sim = pPG_Sim->GetVarVector(1);
+					vector<DistStat> SimStat, ObsStat;
+					auto size_numtime = Sim.size();
+					SimStat.resize(size_numtime); ObsStat.resize(size_numtime);
+					for (size_t ii = 0; ii < num_others; ii++) {
+						a[ii].resize(size_numtime);
+						b[ii].resize(size_numtime);
+					}
+					for (size_t irec = 0; irec < size_numtime; irec++) {
+						vector<float> suma, sumb;
+						suma.resize(num_others); sumb.resize(num_others);
+						for (size_t iv = 0; iv < num_others; iv++) {
+							int index = m_pSim->m_Val_Array[LL].Sum_of_Others[iv];
+							vector <float> aa = pPG_Sim->GetVarVector(index + 1);
+
+							vector <float> bb = pPG_Obs->GetVarVector(m_ValPGFile[i].varindex[index] + 1);
+							suma[iv] = aa[irec]; sumb[iv] = bb[irec];
+						}
+						size_t ncheck;
+						DistStat stat;
+						MeanStat(&suma[0], num_others, &ncheck, &stat);
+						SimStat[irec] = stat;
+						pPG_Sim->SetVarValue(LL+1, irec + 1, stat.Mean);
+						MeanStat(&sumb[0], num_others, &ncheck, &stat);
+						ObsStat[irec] = stat;
+						Sim[irec] = SimStat[irec].Mean;
+						Obs[irec] = ObsStat[irec].Mean;
+					}
+				}
+				else {
+					Sim = pPG_Sim->GetVarVector(j + 1);
+					Obs = pPG_Obs->GetVarVector(m_ValPGFile[i].varindex[j] + 1);
+				}
 				Residual.resize(Obs.size());
 
 				sim.clear(); obs.clear();
@@ -1356,6 +1415,7 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 
 			//	vector<float> vv=m_ValPGFile[i].pRes->GetResidualVector(0,0);
 				m_ValPGFile[i].file->CloseFile();
+				m_ValPGFile[i].simvalfile->SaveAs(m_ValPGFile[i].simvalfile->GetFileName());
 				m_ValPGFile[i].simvalfile->CloseFile();
 				if(m_ValPGFile[i].pRes!=nullptr) m_ValPGFile[i].pRes->CloseFile();
 			}

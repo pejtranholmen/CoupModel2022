@@ -5028,16 +5028,25 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					sumv = m_pSimDoc->GetValSumStruct(i);
 					int ind=m_pSimDoc->m_ValidationData.GetValFileIndex(i);
 					//if(DynamicIndexValFile) ind= m_pSimDoc->m_MStorage.GetMultiP(i, DynamicIndexPos)-1;
-					size_t FileNo=m_pSimDoc->m_ValidationData.GetValFileNumber(i);
-					auto pValFile=m_pSimDoc->ValidationFilePointer(FileNo);
-					pValFile->CallDataDescription();
-					test=pValFile->GetDataDescription(ind).c_str();
-					GetCell(1,i, &cell);
-					cell.SetCellType(UGCT_CHECKBOX);
-					cell.SetBool(FALSE);
-					cell.SetLabelText(test.c_str());
-					SetCell(1,i,&cell);
-
+					size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(i);
+					if (m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() > 0) {
+						test = "See Id for Pos :";
+						for (size_t i3 = 0; i3 < m_pSimDoc->m_Val_Array[i].Sum_of_Others.size(); i3++) {
+							test += FUtil::STD_ItoAscii(m_pSimDoc->m_Val_Array[i].Sum_of_Others[i3]);
+							if (i3 < m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() - 1) test += ",";
+						}
+						QuickSetText(1, i, test);
+					}
+					else {
+						auto pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
+						pValFile->CallDataDescription();
+						test = pValFile->GetDataDescription(ind).c_str();
+						GetCell(1, i, &cell);
+						cell.SetCellType(UGCT_CHECKBOX);
+						cell.SetBool(FALSE);
+						cell.SetLabelText(test.c_str());
+						SetCell(1, i, &cell);
+					}
 					test=m_pSimDoc->m_ValidationData.GetValGroup(i).c_str();
 					QuickSetText(2,i, test);
 					QuickSetBackColor(2,i,MFC_Util::GetGroupColor(p_ModelInfo->GetGroupCategory(string(test))));
@@ -6212,23 +6221,36 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 			QuickSetText(0, i, test);
 			size_t FileNo=m_pSimDoc->m_ValidationData.GetValFileNumber(i);
 			QuickSetText(1, i,FUtil::STD_ItoAscii(FileNo));
-			auto pValFile=m_pSimDoc->ValidationFilePointer(FileNo);
-			int ind=m_pSimDoc->m_ValidationData.GetValFileIndex(i);
-			QuickSetText(2, i,FUtil::STD_ItoAscii(ind+1));
+			if (m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() > 0) {
+				QuickSetText(2, i, "Various");
+				test = "See Id for Pos :";
+				for (size_t i3 = 0; i3 < m_pSimDoc->m_Val_Array[i].Sum_of_Others.size(); i3++) {
+					test += FUtil::STD_ItoAscii(m_pSimDoc->m_Val_Array[i].Sum_of_Others[i3]);
+					if (i3 < m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() - 1) test += ",";
+				}
 
-			CPG *pPG;
-			BOOL valid;
-			pPG=(CPG*)pValFile->GetPointer();
-			if(pPG==nullptr) {
-				pPG=new CPG;
-				//CPG_Array.Add(pCPG);
-				valid=pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
-				if(valid) pValFile->SetPointer(pPG);
-				pPG->CloseFile();
+
+				QuickSetText(3, i, test);
 			}
-						
-			test=pPG->GetVarName(ind+1).c_str();test+=pPG->GetVarId(ind+1).c_str();
-			QuickSetText(3,i, test);
+			else {
+				auto pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
+				int ind = m_pSimDoc->m_ValidationData.GetValFileIndex(i);
+				QuickSetText(2, i, FUtil::STD_ItoAscii(ind + 1));
+
+				CPG* pPG;
+				BOOL valid;
+				pPG = (CPG*)pValFile->GetPointer();
+				if (pPG == nullptr) {
+					pPG = new CPG;
+					//CPG_Array.Add(pCPG);
+					valid = pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
+					if (valid) pValFile->SetPointer(pPG);
+					pPG->CloseFile();
+				}
+
+				test = pPG->GetVarName(ind + 1).c_str(); test += pPG->GetVarId(ind + 1).c_str();
+				QuickSetText(3, i, test);
+			}
 			test=m_pSimDoc->m_ValidationData.GetValGroup(i).c_str();
 			QuickSetText(4,i, test);
 			QuickSetBackColor(4,i,MFC_Util::GetGroupColor(p_ModelInfo->GetGroupCategory(string(test))));
@@ -6237,66 +6259,81 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 			auto iv=m_pSimDoc->m_ValidationData.GetValLocalIndex(i);
 			if(iv>-1) test+="("+FUtil::STD_ItoAscii(iv+1)+")";
 			QuickSetText(5, i, test);
-						
-			BOOL testV=m_pSimDoc->m_ValidationData.GetVal_AccTestValue(i);
-			GetCell(6,i,&cell);
-			cell.SetCellType(UGCT_CHECKBOX);
-			if(testV)
-				cell.SetBool(TRUE);
-				//QuickSetText(4,i,"x");
-			else
-				cell.SetBool(FALSE);
-				//QuickSetText(4,i,"-");
-			SetCell(6,i,&cell);
 
-			GetCell(7,i,&cell);
-						
-			testV=m_pSimDoc->m_ValidationData.GetValFileLogTrans(i);
-			cell.SetCellType(UGCT_CHECKBOX);
-			if(testV)
-				cell.SetBool(TRUE);
-				//QuickSetText(4,i,"x");
-			else
-				cell.SetBool(FALSE);
-				//QuickSetText(4,i,"-");
-			SetCell(7,i,&cell);
+			if (m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() > 0) {
+				test = "Sum of:";
+				for (size_t i3 = 0; i3 < m_pSimDoc->m_Val_Array[i].Sum_of_Others.size(); i3++) {
+					test += FUtil::STD_ItoAscii(m_pSimDoc->m_Val_Array[i].Sum_of_Others[i3]);
+					if(i3< m_pSimDoc->m_Val_Array[i].Sum_of_Others.size()-1) test += ",";
+				}
+				GetCell(6, i, &cell);
+				cell.SetText(test);
+				cell.SetCellType(UGCELL_STRING_SET);
+				SetCell(6, i, &cell);
 
-
-			GetCell(8,i,&cell);
-			if(m_pSimDoc->m_ValidationData.GetValP_Error(i)<0) {
-				m_pSimDoc->m_ValidationData.SetValErrors(i,0.15f,0.1f);
 			}
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValP_Error(i));
-			SetCell(8,i,&cell);
-			GetCell(9,i,&cell);	
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValA_Error(i));
-			SetCell(9,i,&cell);					
-			GetCell(10,i,&cell);	
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValDuration(i));
-			SetCell(10,i,&cell);
-			if(pObserved!=nullptr)
-				cell.SetNumber(pObserved->GetValue(i));
-			SetCell(11,i,&cell);
+			else {
 
-			GetCell(11, i, &cell);
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValDuration(i));
-			SetCell(11, i, &cell);
+				BOOL testV = m_pSimDoc->m_ValidationData.GetVal_AccTestValue(i);
+				GetCell(6, i, &cell);
+				cell.SetCellType(UGCT_CHECKBOX);
+				if (testV)
+					cell.SetBool(TRUE);
+				//QuickSetText(4,i,"x");
+				else
+					cell.SetBool(FALSE);
+				//QuickSetText(4,i,"-");
+				SetCell(6, i, &cell);
 
-			GetCell(12, i, &cell);
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_FilterIndex(i));
-			SetCell(12, i, &cell);
+				GetCell(7, i, &cell);
 
-			GetCell(14, i, &cell);
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_QualityIndex(i));
-			SetCell(14, i, &cell);
+				testV = m_pSimDoc->m_ValidationData.GetValFileLogTrans(i);
+				cell.SetCellType(UGCT_CHECKBOX);
+				if (testV)
+					cell.SetBool(TRUE);
+				//QuickSetText(4,i,"x");
+				else
+					cell.SetBool(FALSE);
+				//QuickSetText(4,i,"-");
+				SetCell(7, i, &cell);
 
-			GetCell(13, i, &cell);
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_FilterValue(i));
-			SetCell(13, i, &cell);
 
-			GetCell(15, i, &cell);
-			cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_QualityThreshold(i));
-			SetCell(15, i, &cell);
+				GetCell(8, i, &cell);
+				if (m_pSimDoc->m_ValidationData.GetValP_Error(i) < 0) {
+					m_pSimDoc->m_ValidationData.SetValErrors(i, 0.15f, 0.1f);
+				}
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValP_Error(i));
+				SetCell(8, i, &cell);
+				GetCell(9, i, &cell);
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValA_Error(i));
+				SetCell(9, i, &cell);
+				GetCell(10, i, &cell);
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValDuration(i));
+				SetCell(10, i, &cell);
+				if (pObserved != nullptr)
+					cell.SetNumber(pObserved->GetValue(i));
+				SetCell(11, i, &cell);
+
+				GetCell(11, i, &cell);
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValDuration(i));
+				SetCell(11, i, &cell);
+
+				GetCell(12, i, &cell);
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_FilterIndex(i));
+				SetCell(12, i, &cell);
+
+				GetCell(14, i, &cell);
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_QualityIndex(i));
+				SetCell(14, i, &cell);
+
+				GetCell(13, i, &cell);
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_FilterValue(i));
+				SetCell(13, i, &cell);
+
+				GetCell(15, i, &cell);
+				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValPG_QualityThreshold(i));
+				SetCell(15, i, &cell);
+			}
 	
 
 

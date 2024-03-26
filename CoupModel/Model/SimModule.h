@@ -179,8 +179,10 @@ public:
 		X[i - 1] -= T[i - 1] * T_Step; X[i] += T[i - 1] * T_Step; } 
 	};
 
-	void TransFlow(vector<double> &X_out,vector<double> &X_in, const vector<double> &T)
-	{for(size_t i=0; i<X_out.size(); i++) {X_out[i]-=T[i]*T_Step; X_in[i]+=T[i]*T_Step;} };
+	void TransFlow(vector<double>& X_out, vector<double>& X_in, const vector<double>& T)
+	{
+		for (size_t i = 0; i < X_out.size(); i++) { X_out[i] -= T[i] * T_Step; X_in[i] += T[i] * T_Step; }
+	};
 	void TrIntFlow(vector<double> &X_out,vector<double> &X_in, const vector<double> &T)
 	{for(size_t i=1; i<X_out.size(); i++) {X_out[i-1]-=T[i-1]*T_Step; X_in[i]+=T[i-1]*T_Step;} };
 

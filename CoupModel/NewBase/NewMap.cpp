@@ -734,7 +734,7 @@ bool NewMap::Read_Header_FromXmlFile(pugi::xml_node node) {
 bool NewMap::WriteValidationToXmlFile(pugi::xml_node node) {
 	const std::vector<const char*> valTableAtt = { "ValFileIndex", "OutType", "Group", "Name","LocalIndex", "n", "R2","A0", "A1", "ME", "RMSE", "MeanSim",
 "MeanVal","P_Error","A_Error","LogLi","AccTest","ValFileNumber", "LogTrans","ValidationFileResultIndex","Duration",
-"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset","PG_FilterIndex", "PG_FilterValue","PG_QualityIndex", "PG_QualityThreshold" };
+"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset","PG_FilterIndex", "PG_FilterValue","PG_QualityIndex", "PG_QualityThreshold", "Grouped_Index"};
 
 	
 	size_t iv = m_Val_Array.size();
@@ -769,7 +769,15 @@ bool NewMap::WriteValidationToXmlFile(pugi::xml_node node) {
 		conditions.append_attribute(valTableAtt[28]) = vst.PG_FilterValue;
 		conditions.append_attribute(valTableAtt[29]) = vst.PG_QualityIndex;
 		conditions.append_attribute(valTableAtt[30]) = vst.Quality_Threshold;
-
+		conditions.append_attribute(valTableAtt[31]) = vst.Sum_of_Others.size();
+	
+	
+		for (size_t ii = 0; ii < vst.Sum_of_Others.size(); ii++) {	
+			string Index_string = "Grouped_Index_" + FUtil::STD_ItoAscii(ii + 1);
+			auto subrow = conditions.append_child(Index_string.c_str());
+			subrow.append_attribute("value") = vst.Sum_of_Others[ii];
+		}
+	
 		string Resultstring = "Results_" + FUtil::STD_ItoAscii(i + 1);
 
 		auto results = node.append_child(Resultstring.c_str());
@@ -791,9 +799,10 @@ bool NewMap::WriteValidationToXmlFile(pugi::xml_node node) {
 bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 	const std::vector<const char*> valTableAtt = { "ValFileIndex", "OutType", "Group", "Name","LocalIndex", "n", "R2","A0", "A1", "ME", "RMSE", "MeanSim",
 "MeanVal","P_Error","A_Error","LogLi","AccTest","ValFileNumber", "LogTrans","ValidationFileResultIndex","Duration",
-"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset","PG_FilterIndex", "PG_FilterValue","PG_QualityIndex", "PG_QualityThreshold"};
+"Monitoring", "NSE", "P_NewError", "A_NewError", "BoxCox_Power", "BoxCox_Offset","PG_FilterIndex", "PG_FilterValue","PG_QualityIndex", "PG_QualityThreshold","Grouped_Index" };
 	m_Val_Array.clear();
 	VALv vst;
+	int ivalue;
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
 		auto namestring = string(level1.name());
 		
@@ -818,7 +827,14 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 			vst.PG_FilterValue = level1.attribute(valTableAtt[28]).as_int();
 			vst.PG_QualityIndex = level1.attribute(valTableAtt[29]).as_int();
 			vst.Quality_Threshold = level1.attribute(valTableAtt[30]).as_float();
-
+			auto numg = level1.attribute(valTableAtt[31]).as_int();
+			vst.Sum_of_Others.resize(numg);
+			size_t count = 0;
+			for (pugi::xml_node item2 = level1.first_child(); item2; item2 = item2.next_sibling()) {
+				auto value = item2.attribute("value").as_int();
+				vst.Sum_of_Others[count] = value;
+				count++;
+			}
 		}
 		else if (namestring.find("Results") == 0) {
 			vst.nNumber=level1.attribute(valTableAtt[5]).as_uint();
@@ -1554,6 +1570,7 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 		xnode.append_attribute("Group") = group.c_str();
 		xnode.append_attribute("Name") = name.c_str();
 		size_t nn;
+		
 		if (IsVector) {
 			nn = pXT->GetNumberOfFlags();
 			xnode.append_attribute("NumberofValue") = nn;

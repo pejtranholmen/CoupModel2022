@@ -839,7 +839,7 @@ void CValidTimeCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point
 		vno=MFC_Util::AtoInt(cell.GetStdText())-int(1);
 		((CValidationVariables*)m_pDlg)->m_ValVarList=vno;
 		if (((CValidationVariables*)m_pDlg)->m_OnlyMeasured&&m_PreviousClick!=row) {
-			((CValidationVariables*)m_pDlg)->m_GroupSelIndex.push_back(vno);
+			((CValidationVariables*)m_pDlg)->m_GroupSelIndex.push_back(vno+1);
 		}
 		GetCell(2,row, &cell);
 		((CValidationVariables*)m_pDlg)->m_ValDesc=cell.GetStdText();

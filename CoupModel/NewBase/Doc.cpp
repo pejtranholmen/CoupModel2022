@@ -580,11 +580,18 @@ void Doc::UpdateValIndexList()
 		m_ValGroupIndex[i].clear();
 
 
-	for(int i=0;i<iv;i++) {
-		vst=m_Val_Array[i];
-		m_ValTypeIndex[vst.OutputType-1].push_back(i);
-		igroup=p_ModelInfo->GetGroupIndex(vst.Group.c_str());
-		m_ValGroupIndex[igroup].push_back(i);
+	for (int i = 0; i < iv; i++) {
+		vst = m_Val_Array[i];
+		if (vst.Sum_of_Others.size() > 0) {
+			m_ValTypeIndex[0].push_back(i);
+			igroup = p_ModelInfo->GetGroupIndex(vst.Group.c_str());
+			m_ValGroupIndex[igroup].push_back(i);
+		}
+		else {
+			m_ValTypeIndex[vst.OutputType - 1].push_back(i);
+			igroup = p_ModelInfo->GetGroupIndex(vst.Group.c_str());
+			m_ValGroupIndex[igroup].push_back(i);
+		}
 	}
 
 	m_IsValIndexUpdated=true;

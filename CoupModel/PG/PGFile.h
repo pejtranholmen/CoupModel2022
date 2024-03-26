@@ -96,7 +96,7 @@ public:
 	float	GetVarMax(size_t, size_t repit=1);
 	float	GetVarMean(size_t, size_t repit=1);
 
-	bool AdjustSize(size_t irecnumber, size_t varnumber, size_t repit=1);
+	bool    AdjustSize(size_t irecnumber, size_t varnumber, size_t repit=1);
 	void	SetDate(size_t, string);
 
 	bool	SetLongTime(size_t, size_t, bool WithinBuffer=false);

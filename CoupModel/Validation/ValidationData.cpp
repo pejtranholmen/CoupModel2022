@@ -168,11 +168,15 @@ bool ValidationData::AddGroupValList(size_t index, int valFileIndex, vector<int>
 		return true;
 	}
 	else {
-		m_pSimDoc->m_Val_Array[0].Sum_of_Others = group;
+		size_t n=0;
+		for (size_t i = 0; i < m_pSimDoc->m_Val_Array.size(); i++) {
+			if (m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() > 0) n++;
+		}
+
 		Node.ValidationFileIndex = m_pSimDoc->m_Val_Array[group.front()].ValidationFileIndex;
 		Node.Group = m_pSimDoc->m_Val_Array[group.front()].Group;
 		Node.ValidationFileIndex = valFileIndex;
-		Node.Name = "";
+		Node.Name = "Summation_"+FUtil::STD_ItoAscii(n+1);
 		Node.nNumber = -1;
 		Node.ValidationFileNumber = 1;
 		Node.LogTrans = false;
