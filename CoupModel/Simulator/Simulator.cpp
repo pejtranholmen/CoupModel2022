@@ -1271,7 +1271,7 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 		auto nagg = size_t(m_StructureModel.m_Structure.AggregateCalibNumber + 0.01);
 		m_pSim->m_InformCriteria.n_aggregateNumber = nagg;
 	}
-
+	map<int, int> LinkPrevious_Index;
 	
 	for(size_t i=0; i<m_ValPGFile.size(); i++) {
 			if(m_ValPGFile[i].file==nullptr) continue;
@@ -1302,14 +1302,13 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				if (num_others > 0) {
 					auto n=pPG_Obs->GetNumVariables();
 					if (LL >= n) {
-						auto m= pPG_Sim->GetNumRecords();
-						auto n = pPG_Sim->GetNumVariables();
+						/*auto n = pPG_Sim->GetNumVariables();
 						if (LL >= n) {
 							auto m = pPG_Sim->GetNumRecords();
 							pPG_Sim->SetCompleteRead(true);
 							ValidNewFile = pPG_Sim->ReAllocate(m, LL + 1);
 						}
-
+						*/
 					}
 					else {
 						ValidNewFile = true;
@@ -1329,17 +1328,20 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 						vector<float> suma, sumb;
 						suma.resize(num_others); sumb.resize(num_others);
 						for (size_t iv = 0; iv < num_others; iv++) {
-							int index = m_pSim->m_Val_Array[LL].Sum_of_Others[iv];
-							vector <float> aa = pPG_Sim->GetVarVector(index + 1);
-
-							vector <float> bb = pPG_Obs->GetVarVector(m_ValPGFile[i].varindex[index] + 1);
-							suma[iv] = aa[irec]; sumb[iv] = bb[irec];
+							int index;
+							auto see = LinkPrevious_Index.find(m_pSim->m_Val_Array[LL].Sum_of_Others[iv]+i*200) ;
+							if(see != LinkPrevious_Index.end()) {
+								index = see->second;
+								vector <float> aa = pPG_Sim->GetVarVector(index+1);
+								vector <float> bb = pPG_Obs->GetVarVector(m_ValPGFile[i].varindex[index] + 1);
+								suma[iv] = aa[irec]; sumb[iv] = bb[irec];
+							}
 						}
 						size_t ncheck;
 						DistStat stat;
 						MeanStat(&suma[0], num_others, &ncheck, &stat);
 						SimStat[irec] = stat;
-						pPG_Sim->SetVarValue(LL+1, irec + 1, stat.Mean);
+						pPG_Sim->SetVarValue(j+1, irec + 1, stat.Mean); // 
 						MeanStat(&sumb[0], num_others, &ncheck, &stat);
 						ObsStat[irec] = stat;
 						Sim[irec] = SimStat[irec].Mean;
@@ -1349,6 +1351,7 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				else {
 					Sim = pPG_Sim->GetVarVector(j + 1);
 					Obs = pPG_Obs->GetVarVector(m_ValPGFile[i].varindex[j] + 1);
+					LinkPrevious_Index.insert({ int(m_ValPGFile[i].varindex[j]+i*200), int(j) });
 				}
 				Residual.resize(Obs.size());
 

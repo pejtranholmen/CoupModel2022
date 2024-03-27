@@ -94,7 +94,7 @@ public:
 	bool SetValSumVarErrors(size_t,int,float,float, float);
 
 	//bool SetValCoef(size_t, int, float, float, float, float,float, float,float);
-	bool AddGroupValList(size_t, int, vector<int>);
+	bool AddGroupValList(size_t, vector<pair<int,int>>);
 	bool AddValList(size_t, int, int,string, string, int);
 	bool AddValList(size_t, int, int,string, string, int, float, float);
 	bool AddValList(size_t, int, int,string, string, int, float, float, bool);

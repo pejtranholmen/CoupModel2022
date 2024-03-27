@@ -160,7 +160,8 @@ void CValidationVariables::OnApply()
 {	
 	if (m_OnlyMeasured) {
 		if (m_GroupSelIndex.size() > 0) {
-			m_pDoc->m_Doc.m_ValidationData.AddGroupValList(m_ItemSelected,m_FileNo, m_GroupSelIndex);
+
+			m_pDoc->m_Doc.m_ValidationData.AddGroupValList(m_ItemSelected, m_GroupSelIndex);
 
 		}
 	}

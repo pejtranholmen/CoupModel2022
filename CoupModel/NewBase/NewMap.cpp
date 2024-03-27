@@ -6175,7 +6175,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 					if (pSw->Is_Vector()) {
 						lindex = ((OutVector*)pSw)->GetLocalIndex(ii);
 						nameoutput += "(" + FUtil::STD_ItoAscii(lindex) + ")";
-						sumindex = ((OutVector*)pSw)->GetSumVarIndex(lindex - 1, 7);
+						sumindex = ((OutVector*)pSw)->GetSumVarIndex(lindex-1, 7);
 						namevar += "_" + FUtil::STD_ItoAscii(lindex);
 					}
 					else {
@@ -6208,7 +6208,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 								size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
 								number_of_runs_per_ensemble.push_back(numruns);
 								numout += numruns;
-								numout++; 
+								numout++;
 							}
 						}
 						else {
@@ -6219,20 +6219,20 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 						MeanEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
 						size_t count2 = 0;
 						for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
-							m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;													
+							m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;
 							MeanEnsembleValues[iens].resize(sumindexvector.size() + 2);
-							for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {						
+							for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {
 								allvalues[count2].resize(sumindexvector.size() + 2);
 								int irun;
 								if (AcceptedOnly) {
-									irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun);allvalues[count2][0] = float(irun + 1);	allvalues[count2][1] = float(iens + 1);
+									irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun); allvalues[count2][0] = float(irun + 1);	allvalues[count2][1] = float(iens + 1);
 								}
 								else {
-									irun = nomulrun + 1;allvalues[count2][0] = float(irun);	allvalues[count2][1] = float(iens + 1);
+									irun = nomulrun + 1; allvalues[count2][0] = float(irun);	allvalues[count2][1] = float(iens + 1);
 								}
 								for (size_t var = 0; var < sumindexvector.size(); var++) {
 									int ip = sumindexvector[var] + ivartyp - 6;
-									if (ip < 0) {ip = 0;}
+									if (ip < 0) { ip = 0; }
 									float value = m_MStorage.GetSumV(irun, ip);
 									allvalues[count2][var + 2] = value;
 									MeanEnsembleValues[iens][var + 2] += value;
@@ -6244,7 +6244,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 
 						}
 						for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
-							
+
 							allvalues[count2].resize(sumindexvector.size() + 2);
 							allvalues[count2][0] = float(0);
 							allvalues[count2][1] = float(iens + 1);
@@ -6311,7 +6311,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 					m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;
 					MeanEnsembleValues[iens].resize(m_pSimDoc->m_MStorage.m_NumMulti + 2);
 					for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {
-						allvalues[count2].resize(m_pSimDoc->m_MStorage.m_NumMulti - 10+2 );
+						allvalues[count2].resize(m_pSimDoc->m_MStorage.m_NumMulti - 10 + 2);
 						allvalues2[count2].resize(12);
 
 						int irun;
@@ -6330,11 +6330,11 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 								allvalues[count2][var + 2] = value;
 							else
 								allvalues2[count2][var - m_pSimDoc->m_MStorage.m_NumMulti + 10 + 2] = value;
-							MeanEnsembleValues[iens][var+2]=value;
-						}	
+							MeanEnsembleValues[iens][var + 2] = value;
+						}
 						count2++;
 					}
-			
+
 				}
 				for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
 					size_t numparvalues = m_pSimDoc->m_MStorage.m_NumMulti - 10 + 2;
@@ -6366,11 +6366,11 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 
 		wb.save(fileout);
 		return fileout;
+	}
 #else
 	return "";
 #endif
-	};
-}
+};
 string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 
 #ifdef COUPSTD

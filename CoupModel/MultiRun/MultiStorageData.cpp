@@ -1739,8 +1739,11 @@ bool MultiStorageData::GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG)
 	}
 }
 size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarIndex, size_t ThresholdType, size_t Threshold) {
+#ifndef COUPSTD
 	MFC_Util m;
+
 	m.SetPaneMessage("Wait when posterior ensemble is reduced to " + FUtil::STD_ItoAscii(Threshold) + " runs");
+#endif
 	vector<float> dist, distout;
 	bool RelativeThreshold{ false };
 	if (ThresholdType > 0) RelativeThreshold = true; // Theshold = reduced percentage

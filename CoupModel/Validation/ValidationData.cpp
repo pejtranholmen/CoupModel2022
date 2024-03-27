@@ -161,24 +161,32 @@ bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, stri
 	 m_pSimDoc->m_Val_Array.push_back(Node);
 	 return false;
 }
-bool ValidationData::AddGroupValList(size_t index, int valFileIndex, vector<int> group)
+bool ValidationData::AddGroupValList(size_t index,  vector<pair<int,int>> group)
 {
 	VALv Node;
 	if (index < m_pSimDoc->m_Val_Array.size()) {
 		return true;
 	}
 	else {
-		size_t n=0;
-		for (size_t i = 0; i < m_pSimDoc->m_Val_Array.size(); i++) {
-			if (m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() > 0) n++;
-		}
+		size_t n = 0;
+		vector<int> sum_others;
+		size_t valfileNumber;
 
-		Node.ValidationFileIndex = m_pSimDoc->m_Val_Array[group.front()].ValidationFileIndex;
-		Node.Group = m_pSimDoc->m_Val_Array[group.front()].Group;
-		Node.ValidationFileIndex = valFileIndex;
+		for (size_t i = 0; i < group.size(); i++){
+			valfileNumber = group[i].first;
+			sum_others.push_back(group[i].second);
+		};
+			for (size_t i = 0; i < m_pSimDoc->m_Val_Array.size(); i++) {
+				if (m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() > 0) {
+					n++;				
+				}
+			};
+		Node.ValidationFileIndex = m_pSimDoc->m_Val_Array[group[0].second].ValidationFileIndex;
+		Node.Group = m_pSimDoc->m_Val_Array[group[0].second].Group;
+		Node.ValidationFileIndex = 0;
 		Node.Name = "Summation_"+FUtil::STD_ItoAscii(n+1);
 		Node.nNumber = -1;
-		Node.ValidationFileNumber = 1;
+		Node.ValidationFileNumber =  valfileNumber;
 		Node.LogTrans = false;
 		Node.R2 = float(MISSING);
 		Node.A0 = float(MISSING);
@@ -190,7 +198,7 @@ bool ValidationData::AddGroupValList(size_t index, int valFileIndex, vector<int>
 		Node.P_Error = float(MISSING);
 		Node.A_Error = float(MISSING);
 		Node.LogLi = 0;
-		Node.Sum_of_Others = group;
+		Node.Sum_of_Others = sum_others;
 	}
 	m_pSimDoc->m_Val_Array.push_back(Node);
 

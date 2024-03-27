@@ -76,7 +76,7 @@ public:
 	bool m_Accumulate,m_LogTrans;
 	string  m_SelGroup, m_SelName, m_ValDesc, m_SelType;
 	int m_ItemSelected, m_ValVarList, m_SelIndex, m_FileNo, m_SelTypeInt;
-	vector<int> m_GroupSelIndex;
+	vector<pair<int,int>> m_GroupSelIndex;
 	bool m_OnlyMeasured = false;
 	BOOL m_ReadySim, m_ReadyObs;
 

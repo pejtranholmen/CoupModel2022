@@ -1428,7 +1428,7 @@ bool MR::PreDefined_Criteria_Process() {
 			auto ThresholdType = size_t(pThresholdType->GetValue(i) + 0.0001);
 			auto Threshold = pThresholdValue->GetValue(i);
 			auto ensemble = size_t(pEnsemble->GetValue(i)+0.001);
-			ensemble = max(1, ensemble);
+			ensemble = max(size_t(1), ensemble);
 			m_MStorage.m_ActualEnsemble=ensemble- 1;
 
 			switch (Indicator) {
