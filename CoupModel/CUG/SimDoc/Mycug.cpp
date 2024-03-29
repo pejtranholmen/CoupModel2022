@@ -1044,7 +1044,7 @@ void MyCug::OnSetup()
 		AddTab("History", 11);
 		AddTab("Annimation Variables", 12);
 		AddTab("Attached Files", 13);
-		SetTabWidth(800); 
+		SetTabWidth(1000); 
 	
 		//SetSheetNumber(6); 
 		num_sheets=GetNumberSheets();

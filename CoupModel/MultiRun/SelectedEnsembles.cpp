@@ -91,8 +91,14 @@ void SelectedEnsembles::SetAllToAcceptedRuns() {
 		for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 			for (unsigned long i = 0; i < m_NumValid + m_NumExtraValid; i++) {
 				size_t index = i + split*(m_NumValid + m_NumExtraValid);
-				m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][index];
-				m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][index];
+				if (m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][index] == 0 && m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][index] == 0) {
+					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][index]-1.;
+					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][index]+1;
+				}
+				else {
+					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][index];
+					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][index];
+				}
 				m_Valid_TSV[m_ActualEnsemble].criteria[index] = 0;
 			}
 		}
@@ -265,6 +271,10 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 	auto testcond_tsv_mean = [&]() {
 		for (unsigned long i = 0; i<m_TotalNumberRuns; i++) {
 			float fval;
+			for (size_t iper= 0; iper < 6; iper++) {
+				if (m_MeanTSV_All[iper].size() == 0)  return;
+
+			}
 			if (GetAcceptedRunNo(i)) {
 				for (size_t iper = 0; iper < 6; iper++) {
 					fval = m_MeanTSV_All[iper][i];
@@ -1183,6 +1193,11 @@ size_t SelectedEnsembles::FindAcceptedRunsFromFlagInPar() {
 	return m_TotalNumAccepted;
 }
 void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
+
+#ifndef COUPSTD
+	MFC_Util mfc_util;
+	mfc_util.SetPaneMessage("Setting Statistics for Performance Indicators Start");
+#endif
 	IsMinUpdated = false;
 	IsMaxUpdated = false;
 	IsCVUpdated = false;
@@ -1226,7 +1241,7 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 		GetMaxSumValid(i);
 	}
 
-	Update_TSV_VarStat(false);
+	//Update_TSV_VarStat(false);
 	Update_TSV_VarStat(true);
 
 
@@ -1234,6 +1249,10 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 	IsMaxUpdated = true;
 	  //false = update of prior distribution - true =posterior
 	Update_SV_VarStat(true);	//false = update of prior distribution
+#ifndef COUPSTD
+	mfc_util.SetPaneMessage("Setting Statistics for Performance Indicators Complete");
+#endif
+
 
 }
 float SelectedEnsembles::GetMinSumValid(unsigned long ip)
@@ -1639,8 +1658,14 @@ void SelectedEnsembles::Update_SV_VarStat(bool AcceptedOnly) {
 						m_Valid_SV_Mean[m_ActualEnsemble].v[E_PRIOR_MAX + shift_pos][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MAX][jx];
 						m_Valid_SV_Mean[m_ActualEnsemble].v[E_PRIOR_MEAN + shift_pos][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MEAN][jx];
 						m_Valid_SV_Mean[m_ActualEnsemble].v[E_PRIOR_CV + shift_pos][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_CV][jx];
-						m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_LOW][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MIN][jx];
-						m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_HIGH][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MAX][jx];
+						if (m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MIN][jx] < m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MAX][jx]) {
+							m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_LOW][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MIN][jx];
+							m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_HIGH][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MAX][jx];
+						}
+						else {
+							m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_LOW][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MIN][jx]-1;
+							m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_HIGH][jx] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MIN][jx]+1;
+						}
 				}
 				return;
 			}
@@ -1722,6 +1747,14 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 	size_t irun;
 	size_t icount;
 	if (m_NumValid == 0) return;
+#ifndef COUPSTD
+	MFC_Util mfc_util;
+
+	if (AcceptedOnly)
+		mfc_util.SetPaneMessage("Updating Accepted TSV Statistics");
+	else
+		mfc_util.SetPaneMessage("Updating All TSV statistics");
+#endif
 
 	auto MakeStat = [&](size_t ip, size_t ind_split, bool posterior) {
 		vector<float> values;
@@ -1732,6 +1765,10 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 		if (posterior) {
 			shift_pos = 4;
 			num_runs = m_TotalNumAccepted=m_AcceptedRuns[m_ActualEnsemble].size();
+		}
+		else {
+
+
 		}
 		size_t index_trans=string::npos;
 		if (m_Valid_TSV[m_ActualEnsemble].VarTranformed > 0) {

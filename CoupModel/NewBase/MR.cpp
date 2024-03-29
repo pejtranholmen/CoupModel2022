@@ -1457,6 +1457,7 @@ bool MR::PreDefined_Criteria_Process() {
 
 		}
 	}
+	m_MStorage.EvaluateFile(false);
 	return true;
 };
 string MR::MR_Get_CalibParName(size_t index)

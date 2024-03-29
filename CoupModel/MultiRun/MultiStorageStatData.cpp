@@ -22,6 +22,7 @@ MultiStorageStatData::MultiStorageStatData()
 	m_IsStatOpen = false;
 	m_ResetTransformedPerformance = false;
 	m_ActualEnsemble = 0;
+	m_IsStatCompleteRead = false;
 
 }
 
@@ -50,19 +51,61 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 			good=m_EvaluationFile.OpenDocFileIn(filename);
 		else
 			good=m_EvaluationFile.OpenDocFileout(filename);
-		if (!good) return false;
+		if (!good) { 
+			if (reading)
+				mfc_util.MessageBox("Problems when reading from : " + filename);
+			else
+				mfc_util.MessageBox("Problems when writing to : " + filename);
+			return false;
+		}
 		if (m_IsStatOpen) return true;
 		m_IsStatOpen = true;
 	}
-
+	m_IsStatCompleteRead = false;
 
 	if (!ReadWrite_Accepted(reading)) return false;
+#ifndef COUPSTD 
+	if (reading)
+		mfc_util.SetPaneMessage("Reading Accepted Run Completed");
+	else
+		mfc_util.SetPaneMessage("Writing Accepted Runs Completed");
+#endif
 	if (!ReadWrite_MultiPar(reading)) return false;
 	if (!ReadWrite_CoCor(reading)) return false;
+
+
+
 	if (!ReadWrite_Criteria(reading)) return false;
+#ifndef COUPSTD 
+	if (reading)
+		mfc_util.SetPaneMessage("Reading Criteria settings Completed");
+	else
+		mfc_util.SetPaneMessage("Writing Criteria settings Completed");
+#endif
+
 	if (!ReadWrite_OptionalTSV_Valid(reading)) return false;
+#ifndef COUPSTD 
+	if (reading)
+		mfc_util.SetPaneMessage("Reading TSV data Completed");
+	else
+		mfc_util.SetPaneMessage("Writing TSV data Completed");
+#endif
+
+
+
 	if (!ReadWrite_OptionalSUM_Valid(reading)) return false;
+
+#ifndef COUPSTD 
+	if (reading)
+		mfc_util.SetPaneMessage("Reading From Multi Statitics File Completed");
+	else
+		mfc_util.SetPaneMessage("Writing to Multi Statistic File Completed");
+#endif
+
+
+
 	if (reading) {
+		m_IsStatCompleteRead = true;
 		auto pos = m_EvaluationFile.GetCurrentInPosition();
 		auto actpos = m_MultiFile.tellg();
 
@@ -73,8 +116,10 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 	
 
 	}
-	else
+	else {
 		m_EvaluationFile.CloseFileOut();
+	
+	}
 	return true;
 }
 
@@ -282,6 +327,9 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 				m_EvaluationFile.rbool(&m_Valid_TSV[i].tobe_Plotted);
 				m_EvaluationFile.rbool(&m_Valid_TSV[i].is_Updated);
 				m_EvaluationFile.rsize_t(&m_Valid_TSV[i].VarTranformed);
+				IsMinUpdated = true;
+				IsMaxUpdated = true;
+				
 			}
 		}
 		if (m_pNewMap->m_ValSum_Array.size() > 0) {
@@ -621,9 +669,6 @@ bool MultiStorageStatData::ReadWrite_OptionalSUM_Valid(bool reading) {
 			}
 
 		}
-
-
-
 
 
 		return m_EvaluationFile.IsFileOutGood();

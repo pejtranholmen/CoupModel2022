@@ -93,6 +93,7 @@ public:
 	bool SetActual_AcceptedEnsemble();
 	bool Check_Change_PerformanceIndicator_ToActual_Ensemble();
 	bool m_IsStatOpen;
+	bool m_IsStatCompleteRead;
 
 
 protected:

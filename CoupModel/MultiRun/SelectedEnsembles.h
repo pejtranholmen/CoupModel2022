@@ -147,7 +147,7 @@ public:
 
 
 	float GetMaxSumValidAll(unsigned long);
-	bool IsMinUpdated, IsMaxUpdated, IsCVUpdated, IsMeanUpdated, IsCVSumUpdated, IsMeanSumUpdated, IsMeanSumUpdatedAll;
+	bool IsMinUpdated, IsMaxUpdated, IsCV_pUpdated, IsMeanUpdated, IsCVSumUpdated, IsMeanSumUpdated, IsMeanSumUpdatedAll;
 	bool IsCVSumUpdatedAll,IsMinSumUpdatedAll, IsMaxSumUpdatedAll;
 
 	bool SelSumV_Index_Add(unsigned long);

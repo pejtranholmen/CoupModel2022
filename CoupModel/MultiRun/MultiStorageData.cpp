@@ -308,6 +308,12 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 	if (m_NumValidAll == 0&&m_NumSum==0) return true;
 	if (FUtil::IsFileExisting(GetStatFileName())) {
 		if(!m_pNewMap->m_MStorage.EvaluateFile(true)) return false;
+		if (m_pNewMap->m_MStorage.m_IsStatCompleteRead) {
+
+			
+
+		}
+		
 		if(m_pNewMap->MR_Get_TotalNumberofAddedRuns(0) < m_MBinHeader.n_runs) {
 			m_MBinHeader.n_runs = m_pNewMap->MR_Get_TotalNumberofAddedRuns(0);
 		}
@@ -364,14 +370,16 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 		}
 
 	}
+	if (!m_pNewMap->m_MStorage.m_IsStatCompleteRead) {
+		VarValidAllo();
+		if (!FUtil::IsFileExisting(GetStatFileName())) 	m_pNewMap->m_MStorage.SetAllToAcceptedRuns();
+	
 
-	VarValidAllo();
-	if (!FUtil::IsFileExisting(GetStatFileName())) 	m_pNewMap->m_MStorage.SetAllToAcceptedRuns();
+		if (!m_pNewMap->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage()) return false;
 
-	if (!m_pNewMap->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage()) return false;
-
-	if(m_pNewMap->m_MStorage.m_IsStatOpen)
-		m_pNewMap->m_MStorage.SetPriorDistributions();
+		if (m_pNewMap->m_MStorage.m_IsStatOpen)
+			m_pNewMap->m_MStorage.SetPriorDistributions();
+	}
 
 	m_IsOpen=false;
 	m_IsReady=true;
@@ -790,8 +798,10 @@ float MultiStorageData::GetValidHigh(unsigned long ip, unsigned long ind_split)
 {
 	if (m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH].size() <= ip) return MISSING;
 	float v=m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][ip+ind_split*(m_NumValid+m_NumExtraValid)];
-	if(v==-numeric_limits<double>::infinity( ))
-		return MISSING;
+	if (v == -numeric_limits<double>::infinity()) {
+		m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][ip + ind_split * (m_NumValid + m_NumExtraValid)] = 1.1E38;
+		return -MISSING;
+	}
 	else
 		return v;
 }
@@ -799,8 +809,11 @@ float MultiStorageData::GetValidLow(unsigned long ip, unsigned long ind_split)
 {
 	if (m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW].size() <= ip) return MISSING;
 	float v = m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][ip + ind_split*(m_NumValid + m_NumExtraValid)];
-	if (v == -numeric_limits<double>::infinity())
+	if (v == -numeric_limits<double>::infinity()) {
+		m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][ip + ind_split * (m_NumValid + m_NumExtraValid)] = MISSING;
 		return MISSING;
+
+	}
 	else
 		return v;
 }
@@ -1778,11 +1791,16 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		float goal = 0;
 		if (Indicator == A1_STAT) goal = 1;
 		size_t i = 0;
-		while(dist[i] < goal&&i<dist.size()) {
+		while(dist[i] < goal&&i<dist.size()-1) {
 			i++;
 		};
 		npos = i;
-		distout.push_back(dist[npos]);
+		if (i == 0) { //No candidates below goal
+			for(size_t i=0; i<Threshold;i++)	distout.push_back(dist[i]);
+		}
+		else {
+			distout.push_back(dist[npos]);
+		}
 		meanvalueout = StatUtil::mean(distout);
 		size_t nposlow, nposhigh;
 			nposlow=nposhigh= i;
@@ -1790,18 +1808,29 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			endlow = endhigh = false;
 			endloop = false;	
 
-		while (distout.size()< Threshold&& !endloop) {
-			while (meanvalueout > goal && distout.size()<Threshold) {
+		while ((distout.size()< Threshold&& !endloop)) {
+			while (meanvalueout > goal && distout.size()<Threshold&&!endlow) {
 				nposlow--;
 				if (nposlow >= 0)distout.push_back(dist[nposlow]);
 				else endlow = true;
+				if (distout.size() >= Threshold) {
+					endlow = true;
+				}
 				meanvalueout = StatUtil::mean(distout);
+
 			}
-			while (meanvalueout < goal &&  distout.size()< Threshold) {
+			while ((meanvalueout < goal &&  distout.size()< Threshold&&!endhigh)&&!endloop) {
 				nposhigh++;
+				auto prevmeanvalueout = meanvalueout;
 				if (nposhigh < dist.size()) distout.push_back(dist[nposhigh]);
-				else endhigh = true;
+				else {
+					endhigh = true;
+					
+					if(distout.size()<Threshold) 
+						distout.push_back(dist[nposhigh - 1]);
+				}
 				meanvalueout = StatUtil::mean(distout);
+				if (prevmeanvalueout == meanvalueout) endloop = true;
 			}
 			if (endlow && endhigh) endloop = true;
 		}
@@ -1813,19 +1842,20 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 
 		}
-		else {
-
-			
+		else if(first_valid==last_valid) {
+			last_valid = last_valid+abs(last_valid) / 1.E4;
 		}
 	}
 	else {
-		if (Indicator == R2_STAT|| Indicator == NSE_STAT) {
-			dist.erase(dist.begin(), dist.begin() + n_toremove);
-			last_valid = dist[0];
+		if (Indicator == R2_STAT|| Indicator == NSE_STAT||Indicator == LOGLI_STAT) {
+			auto pos=dist.size() - Threshold;
+			if (pos >= 0)
+				last_valid = dist[pos];
+			else
+				last_valid = dist.back() + 0.0001;
 		}
 		else if (Indicator == RMSE_STAT) {
-
-
+			last_valid = dist[Threshold-1];
 		}
 	}
 

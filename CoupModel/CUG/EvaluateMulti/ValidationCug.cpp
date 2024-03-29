@@ -173,7 +173,7 @@ void ValidationCug::OnSetup()
 		AddTab("Loglikelihood statistics", 10);
 		AddTab("Residuals statistics", 11);	
 		AddTab("Ensembles - Split", 12);
-		SetTabWidth(760); 
+		SetTabWidth(1000); 
 
 		SetNumberSheets(13); 
 		OnSheetSetup(0);
@@ -210,10 +210,12 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	SetSheetNumber(SheetNumber);
 	string txt;
+
 	switch (SheetNumber) {
 	case 0:
 		txt = "Coefficients of Determination for the regression line";
-		m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
+		if(!m_pSimDoc->m_MStorage.IsMaxUpdated|| !m_pSimDoc->m_MStorage.IsMinUpdated)
+			m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
 		break;
 	case 1:
 		txt = "Intercept for linear regression line with simulated values as independent variable";
@@ -512,7 +514,7 @@ for(int i=0;i<m_NumValidVar;i++) {
 			else
 				QuickSetText(10, line, "");
 			double rangef;
-			if(allmax-allmin>0&&abs(allmax)<1.E38) {
+			if(allmax-allmin>0&&abs(allmax)<1.E38&&abs(selmin)<0.5e38) {
 				rangef=(selmax-selmin)/(allmax-allmin);
 				QuickSetNumber(11,line,rangef);
 			}
@@ -548,8 +550,12 @@ for(int i=0;i<m_NumValidVar;i++) {
 				GetCell(13,line, &cell);
 				cell.SetParam(split_ind);
 				value=m_pSimDoc->m_MStorage.GetValidHigh(i+index_start, split_ind);
-				
+				if (abs(value) < 0.5E38)
 					cell.SetNumber(value);
+				else
+					cell.SetText("");
+
+
 				//else
 					//cell.SetText("");
 				cell.SetBackColor(m_NoColor);
@@ -588,8 +594,17 @@ if(m_NumValidVar>1) {
 	}
 	selmin = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MIN][pervar]);
 	selmax = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MAX][pervar]);
+	if (selmax <= selmin) m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MAX][pervar] = m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MIN][pervar] + 1;
 	limit_low = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][pervar]);
 	limit_high = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_HIGH][pervar]);
+	if (limit_high <= limit_low) {
+		m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][pervar] = -1000.;
+		m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_HIGH][pervar] = 1000.;
+		limit_low = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][pervar]);
+		limit_high = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_HIGH][pervar]);
+
+	}
+
 
 
 		QuickSetText(0,line,VarText); 
