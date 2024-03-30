@@ -287,9 +287,9 @@ plotpar.Y_ScalingCoef = 6;
 		plotpar.LegendsVec.push_back("0 " + lstr);  plotpar.LegendsVec.push_back("10 " + lstr); plotpar.LegendsVec.push_back("20 " + lstr);
 	
 	pPs = new Ps(&CH4_BubbleRateConstant, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
-		Define(pPs, "CH4 BubbleRateConstant", 2.8, "-", "Nitrogen and Carbon >=1|Methane Model>0", 0., 4.);	ps_vec.push_back(pPs);
+		Define(pPs, "CH4 BubbleRateConstant", 2.8, "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane Ebullition=1", 0., 4.);	ps_vec.push_back(pPs);
 	pPs= new Ps(&CH4_EbullMax,SIMPROFILE,METHANE, STORAGE,METHANE_TRANSPORT, NORMAL); 
-		Define(pPs, "CH4 EbullThreshold", 20. , UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >=1|Methane Model>0", 0.1, 1E3);	ps_vec.push_back(pPs);
+		Define(pPs, "CH4 EbullThreshold", 20. , UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >=1|Methane Model>0|Methane Ebullition=1", 0.1, 1E3);	ps_vec.push_back(pPs);
 	
 	pFunc = new Func(TOTPROFILE, METHANE, NOFPROC, METHANE_OXIDATION, NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
@@ -300,9 +300,9 @@ plotpar.Y_ScalingCoef = 6;
 ;
 
     pPs = new Ps(&BubbleFrac, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
-        Define(pPs, "CH4 Frac in Bubble", 0.57, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 1.E-02, 1.);
+        Define(pPs, "CH4 Frac in Bubble", 0.57, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane Ebullition=2", 1.E-02, 1.);
 	pPs = new Ps(&RatioPressThreshold, SIMPROFILE, METHANE, STORAGE, METHANE_TRANSPORT, NORMAL);
-		Define(pPs, "CH4 Frac in Bubble", 0.15, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 1.E-02, .2);
+		Define(pPs, "CH4 Frac in Bubble", 0.15, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0||Methane Ebullition=2", 1.E-02, .2);
 
 
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_REGULATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
@@ -401,8 +401,7 @@ plotpar.LegendsVec.clear();
 	    Define(pPs,   "CH4 HenryStdCoef_cp",0.0014,"Mol/atm","Nitrogen and Carbon >=1|Methane Model>0",0.001,0.1);	 ps_vec.push_back(pPs);
 	pPs= new Ps(&CH4_HTempSens,SIMPROFILE,METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
 	    Define(pPs,   "CH4 HenryCoefTempSens",-1600.,"K","Nitrogen and Carbon >=1|Methane Model>0",-10000.,10000.);	 ps_vec.push_back(pPs);
-	//pPs = new Ps(&CH4_HConst, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
-	//	Define(pPs, "CH4 HenryConst", 714.29, "L.atm/mol", "Nitrogen and Carbon >=1|Methane Model>0", 10., 1000.);	 ps_vec.push_back(pPs);
+
 	pPs= new Ps(&H_TRef,SIMPROFILE,METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
 	    Define(pPs,   "H_RefTemp",25., UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon >=1|Methane Model>0",-50.,50.); 	 ps_vec.push_back(pPs);
 
@@ -412,9 +411,9 @@ plotpar.LegendsVec.clear();
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 	pPs = new Ps(&O2_HStandard, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
-		Define(pPs, "O2 HenryStdCoef_cp", 0.0013, "Mol/atm", "Nitrogen and Carbon >=1|Methane Model>0", 0.001, 0.1); //	 ps_vec.push_back(pPs);
+		Define(pPs, "O2 HenryStdCoef_cp", 0.0013, "Mol/atm", "Nitrogen and Carbon >=1|Methane Model>0|Dissolved oxygen gas>0", 0.001, 0.1); //	 ps_vec.push_back(pPs);
 	pPs = new Ps(&O2_HTempSens, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
-		Define(pPs, "O2 HenryCoefTempSens", -1500., "K", "Nitrogen and Carbon >=1|Methane Model>0", -10000., 10000.); //	 ps_vec.push_back(pPs);
+		Define(pPs, "O2 HenryCoefTempSens", -1500., "K", "Nitrogen and Carbon >=1|Methane Model>0|Dissolved oxygen gas>0", -10000., 10000.); //	 ps_vec.push_back(pPs);
 		//pPs = new Ps(&O2_HConst, SIMPROFILE, METHANE, STORAGE, SOIL_GAS_EQUILIBRIUM, NORMAL);
 		//	Define(pPs, "O2 HenryConst", 769.23, "L.atm/mol", "Nitrogen and Carbon >=1|Methane Model>0", 10., 1000.);	 ps_vec.push_back(pPs);
 
