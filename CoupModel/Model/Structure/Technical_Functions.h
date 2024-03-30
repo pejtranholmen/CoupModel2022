@@ -89,6 +89,7 @@ struct {
 	vector<double> IndicatorIndex;
 	vector<double> Threshold;
 	vector<double> ThresholdType;
+	vector<double> Transformation;
 } Criterion;
 
 

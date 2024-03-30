@@ -5,6 +5,7 @@
 #include "../Util/ModelUtil.h"
 #include "../SoilData/PlotPF/PFCurve.h"
 #include "./Doc.h"
+#include "../PG/PGCalc.h"
 //#include "../NetCDF/NetCDFTransfer.h"
 //#include "../NetCDF/ncFile.h"
 //#include "../NetCDF/ncDim.h"
@@ -1401,6 +1402,7 @@ bool MR::PreDefined_Criteria_Process() {
 	auto pVarIndex = GetP("Var Index");
 	auto pThresholdType = GetP("ThresholdType");
 	auto pThresholdValue = GetP("ThresholdValue");
+	auto pTransformation = GetP("Transformation");
 
 	if (pSw != nullptr) {
 		reset();
@@ -1419,6 +1421,8 @@ bool MR::PreDefined_Criteria_Process() {
 			m_MStorage.m_ActualEnsemble = i;
 			m_MStorage.ResetCriteria();
 			m_MStorage.Reset_AcceptedRuns(i);
+			auto Transform = size_t(pTransformation->GetValue(i) + 0.0001);
+			EstimateNewTransformedPerformance(Transform);
 			m_MStorage.EvaluateFile(false);
 		}
 		m_MStorage.EvaluateFile(false);
@@ -1428,6 +1432,7 @@ bool MR::PreDefined_Criteria_Process() {
 			auto ThresholdType = size_t(pThresholdType->GetValue(i) + 0.0001);
 			auto Threshold = pThresholdValue->GetValue(i);
 			auto ensemble = size_t(pEnsemble->GetValue(i)+0.001);
+			
 			ensemble = max(size_t(1), ensemble);
 			m_MStorage.m_ActualEnsemble=ensemble- 1;
 
@@ -1459,7 +1464,313 @@ bool MR::PreDefined_Criteria_Process() {
 	}
 	m_MStorage.EvaluateFile(false);
 	return true;
-};
+}
+bool MR::EstimateNewTransformedPerformance(size_t cumulated)
+{
+	F* pValFile;
+	CResiduals* pRes;
+	vector<CResiduals*> ResidualPtr;
+	float accaccsum, accsum;
+	int index, countvar;
+	double mcorr;
+	Sim* pSim;
+
+	pSim = ((Sim*)this);
+
+
+	accaccsum = 0;
+	index = -1;
+	vector<CPG*> PGPtr;
+	vector<size_t> Valid;
+	Valid.resize(MAXSIMVAL);
+	PGPtr.resize(MAXSIMVAL);
+	vector<size_t> ResidualIndex;
+	CPG* pPG;
+	string str = m_pSimDoc->GetMBinFileName();
+	int addedfiles = m_pSimDoc->m_MStorage.GetNumberOfAddedFiles(str);
+
+	ResidualPtr.resize(MAXSIMVAL * (addedfiles + 1));
+	ResidualIndex.resize(MAXSIMVAL);
+#ifndef COUPSTD	
+	CMainFrame* p_mainframe;
+	p_mainframe = MySingle::instance().GetFramePointer();
+
+#endif
+
+
+	for (int i = 0; i < MAXSIMVAL; i++) {
+		pValFile = m_pSimDoc->ValidationFilePointer(i + 1);
+		Valid[i] = 0;
+		ResidualIndex[i] = 0;
+		if (pValFile->GetNumberOfSelectedVal() > 0) {
+			Valid[i] = 1;
+			pPG = ValidationResult_PG_Pointer(i);
+			PGPtr[i] = pPG;
+			if (pPG == nullptr) {
+				string name = m_pSimDoc->GetOutputFileName(i + 1);
+				pPG = new CPG;
+				pPG->Open(name);
+				pPG->CloseFile();
+			}
+			PGPtr[i] = pPG;
+			pPG->ReOpen();
+		}
+	}
+	size_t NumValidVar = m_Val_Array.size();
+	size_t counterr = 0;
+	vector<float> VarValidNewVector;
+	VarValidNewVector.resize( NumValidVar* m_MStorage.GetNumberOfRuns() * 6);
+
+	if (cumulated <= 3) {
+		for (int i = 0; i < NumValidVar; i++) {
+			auto test = FUtil::STD_ItoAscii(i + 1);
+			auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(i);
+			pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
+			auto ind = m_pSimDoc->m_ValidationData.GetValFileIndex(i);
+			CPG* pPG;
+			BOOL valid;
+			pPG = (CPG*)pValFile->GetPointer();
+			pPG->SetCompleteRead(true);
+			pPG->ReOpen();
+			if (pPG == nullptr) {
+				pPG = new CPG;
+				//CPG_Array.Add(pCPG);
+
+				valid = pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
+				if (valid) pValFile->SetPointer(pPG);
+				pPG->CloseFile();
+			}
+			else {
+				pPG->CloseFile();
+				if (pPG->Open(pPG->GetFileName()));
+			}
+			test = pValFile->GetDataDescription(ind).c_str();
+
+
+#ifndef COUPSTD	
+			float scale;
+			scale = float(i) / float(NumValidVar);
+			p_mainframe->UpdateResidualProgress(i + 1, NumValidVar, scale);
+#endif
+
+
+
+			long numrec = pPG->GetNumRecords();
+			long numvar = pPG->GetNumVariables();
+			auto start_min = pPG->GetLongTimeStart();
+			auto end_min = pPG->GetLongTimeEnd();
+
+			if (start_min < 0) {
+				pPG->ReOpen();
+				//pPG->Open(pPG->GetFileName());
+				start_min = pPG->GetLongTimeStart();
+				end_min = pPG->GetLongTimeEnd();
+			}
+			long nrec;
+			accsum = 0;
+			nrec = 0;
+			index++;
+			mcorr = 0.0;
+
+			std::vector <float> meas_v, res_v, sim_v;
+			meas_v.resize(numrec);
+			meas_v = pPG->GetVarVector(ind + 1);
+			//res_v.resize(numrec);
+
+			long irun_int;
+			int ifile;
+			string filename;
+			auto ReadVector = [&]() {
+				ifstream stream;
+				size_t recl, numrec, numv;
+				stream.open(filename, ios::binary | ios::in);
+				if (!stream.is_open()) {
+					stream.clear();
+					stream.open(filename, ios::binary | ios::in);
+					if (!stream.is_open()) {
+						string koll = "Error reading :";
+						koll += filename + '\n';
+						MFC_Util::MessageBox(koll, "Errors Reading Residual File", MB_OK);
+					}
+
+				}
+				stream.read((char*)&numrec, 4);
+				stream.read((char*)&recl, 4);
+				stream.read((char*)&numv, 4);
+				fpos_t newpos = size_t(irun_int) * (recl * numv) + ResidualIndex[FileNo - 1] * recl + recl;
+				newpos = newpos * 4;
+				stream.seekg(newpos, ios::beg);
+				res_v.resize(recl);
+				stream.read((char*)&res_v[0], recl * 4);
+				if (!stream.good()) {
+					string koll = "Error reading :";
+					koll += filename + '\n';
+					MFC_Util::MessageBox(koll, "Errors Reading Residual File", MB_OK);
+
+
+				}
+				stream.close();
+				};
+
+			for (long irun = 0; irun < m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
+#ifndef COUPSTD	
+				if (irun % 1000 == 5) {
+					float scale;
+					scale = float(i) / float(NumValidVar) + irun / m_pSimDoc->m_MStorage.GetNumberOfRuns() * 1. / float(NumValidVar);
+					p_mainframe->UpdateResidualProgress(i + 1, NumValidVar, scale);
+				}
+#endif
+
+
+				ifile = m_pSimDoc->MR_GetAddedFiles(irun);
+				//int index=(addedfiles+1)*i+ifile;
+				//auto pRes=(CResiduals*)ResidualPtr[index];
+				filename = m_pSimDoc->GetXBinFileName(FileNo, ifile);
+				//auto pRes=(CResiduals*)m_pSimDoc->GetResidualPointer(FileNo);
+				//if(ifile>0) pRes=(CResiduals*)m_pSimDoc->GetResidualPointer(FileNo, ifile);
+				if (ifile != 0) {
+					irun_int = m_pSimDoc->MR_GetInternalRunNo(irun);
+				}
+				else {
+					irun_int = irun;
+				}
+
+				ReadVector();
+
+				//res_v=pRes->GetResidualVector(irun_int, ResidualIndex[FileNo-1]);
+				if (numrec != res_v.size() && counterr < 2) {
+					counterr++;
+					//auto maxnum=pRes->GetMaxNumRec();
+					string textrun, textresind, valind, maxnumrec, fileno;
+					//	maxnumrec=FUtil::STD_ItoAscii(maxnum+1);
+					textrun = FUtil::STD_ItoAscii(irun_int + 1);
+					textresind = FUtil::STD_ItoAscii(ResidualIndex[FileNo - 1] + 1);
+					fileno = FUtil::STD_ItoAscii(FileNo);
+					valind = FUtil::STD_ItoAscii(i + 1);
+
+
+					MFC_Util::MessageBox("Trying to read from run no:" + textrun +
+						"\n filename : " + filename + "\nvariable no:" + textresind + "\nValidation var no: " + valind + "File No : " + fileno, "Errors Reading Residual File", MB_OK);
+					continue;
+				}
+				else if (numrec != res_v.size())
+					continue;
+				sim_v.resize(numrec);
+				for (long ii = 0; ii < numrec; ii++)
+					sim_v[ii] = meas_v[ii] - res_v[ii];
+
+				STAT_PERF newperf;
+				double AccSim = 0., AccMeas = 0.;
+				vector<double> sim, obs;
+				//	for(int index_split=0; index_split<SplitPeriods;index_split++) {
+				//		int indexrec=i*(SplitPeriods+1)+index_split;
+						//VALIDATION_mp_POSTPREPARE();
+				sim.clear(); obs.clear();
+				double AccCorrection = 1;
+				if (numrec > 1) {
+					pPG->CheckEquiDistance();
+					if (pPG->IsEquiDistance()) {
+						auto dist = pPG->GetEquiDistance();
+						AccCorrection = 1. / (1440 / dist);
+					}
+				}
+				vector<size_t> resetindex;
+				if (cumulated == 2) resetindex = ((PGCalc*)pPG)->GetYearStartIndex();
+				else if (cumulated == 3) resetindex = ((PGCalc*)pPG)->GetDayStartIndex();
+				size_t first = 0;
+				double AccSimOrg = 0, AccMeasOrg = 0;
+				for (long j = 0; j < numrec; j++) {
+					if (cumulated >= 2 && resetindex.size() > 0) {
+						if (j + 1 == resetindex[first]) {
+							AccSim = 0.0;
+							AccMeas = 0.;
+							first++;
+							first = min(resetindex.size() - 1, first);
+						}
+					}
+					auto meas = meas_v[j];
+					if (abs(meas) < .9E38 && abs(res_v[j]) < 0.9E38) {
+						if (cumulated > 0) {
+							AccSim += sim_v[j] * AccCorrection;
+							AccMeas += meas * AccCorrection;
+							sim.push_back(AccSim);
+							obs.push_back(AccMeas);
+							AccSimOrg += sim_v[j];
+							AccMeasOrg += meas;
+						}
+						else {
+							sim.push_back(sim_v[j]);
+							obs.push_back(meas);
+						}
+					}
+
+				}
+				newperf = StatUtil::Get_StatComp(&sim, &obs);
+				newperf.logli = pSim->m_Simulator.m_pModelStructure->SumLikelihood(size_t(i), &sim, &obs);
+				//auto k=pSim.m_Simulator.m_pModelStructure.SumLikelihood(size_t(i), &sim, &obs);
+				if (cumulated > 0 && sim.size() > 0) {
+					newperf.me = (AccSimOrg - AccMeasOrg) / sim.size();
+				}
+				if (cumulated == 0) m_pSimDoc->m_MStorage.SetNewPerformance(irun, i, newperf);
+				else {
+					size_t NumValid = NumValidVar * 6;
+					VarValidNewVector[i + irun * NumValid] = newperf.r2;
+					VarValidNewVector[i + NumValidVar + irun * NumValid] = newperf.intercept;
+					VarValidNewVector[i + 2 * NumValidVar + irun * NumValid] = newperf.slope;
+					VarValidNewVector[i + 3 * NumValidVar + irun * NumValid] = newperf.me;
+					VarValidNewVector[i + 4 * NumValidVar + irun * NumValid] = newperf.rmse;
+					VarValidNewVector[i + 5 * NumValidVar + irun * NumValid] = newperf.logli;
+				}
+			}
+			ResidualIndex[FileNo - 1]++;
+			pPG->CloseFile();
+		}
+	}
+	else if (cumulated == 4) {
+
+		STAT_PERF oldperf, newperf;
+		size_t IndexDim1;
+		size_t RepinDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+
+		vector<float> VarAcc;
+		for (size_t irun = 0; irun < m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
+
+			IndexDim1 = irun % RepinDim1;
+			if (IndexDim1 == 0) VarAcc.assign(NumValidVar * 6, 0.);
+
+			for (int i = 0; i < NumValidVar * 6; i++) {
+				VarAcc[i] += m_pSimDoc->m_MStorage.GetValid(irun, i);
+				if (IndexDim1 == RepinDim1 - 1) {
+					for (size_t idim1 = 0; idim1 < RepinDim1; idim1++) {
+						VarValidNewVector[(irun / RepinDim1) * NumValidVar * RepinDim1 * 6 + idim1 * NumValidVar * 6 + i] = VarAcc[i] / RepinDim1;
+					}
+				}
+			}
+		}
+	}
+	if (cumulated == 0)
+		m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed = 0;
+	else
+		m_pSimDoc->m_MStorage.SetNewPerformanceVector(cumulated, VarValidNewVector);
+
+
+	m_pSimDoc->m_MStorage.VarValidAllo();
+	m_pSimDoc->m_MStorage.UpdateAcceptedRuns(TRUE);
+	string text;
+	if (cumulated == 0) text = "actual values";
+	else if (cumulated == 1) text = "cumulated values";
+	else if (cumulated == 2) text = "yearly cumulated values";
+	else if (cumulated == 3) text = "daily cumulated values";
+	else if (cumulated == 4) text = "all candidates within first dimension";
+	MFC_Util::MessageBox("Performance indicators estimated based on " + text, "Estimated new performance", MB_OK);
+
+	m_pSimDoc->m_MStorage.EvaluateFile(false); // Saving new indicators in file
+
+	return true;
+
+	return false;
+}
+;
 string MR::MR_Get_CalibParName(size_t index)
 {
 string name;

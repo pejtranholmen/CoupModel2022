@@ -191,6 +191,8 @@ bool Technical_Functions::Def()
 		initv.assign(NumCriteria, 1.);
 		Define(pP, pCriteria, "Ensemble", initv, "-", "PreDefinedEnsembles>0", 0., 16., 0., 16.,0,2024,2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.Criterion, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pP, pCriteria, "Transformation", initv, "-", "PreDefinedEnsembles>0", 0., 4., 0., 4., 0, 2024, 2024); CriteriaTab.push_back(pP);
+	pP = new P(&Criterion.Transformation, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "Criterion", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6.,0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.IndicatorIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
@@ -347,10 +349,6 @@ double Technical_Functions::SumLikelihood(size_t index, double sim, double obs) 
 		else if(abs(obs)>0)	E_Meas=max(Rel_Error[index], 0.15)*abs(obs);
 		else if(abs(sim-obs)>0&&abs(sim)*Rel_Error[index]>Abs_Error[index])		E_Meas=Rel_Error[index]*abs(sim);
 		else E_Meas=Abs_Error[index];
-
-
-
-
 		if(ObservedScaling[size_t(ObservedScalingIndex[index])]!=0)
 			Meas_Corr=obs*pow(10., ObservedScaling[size_t(ObservedScalingIndex[index])]);
 		else
@@ -387,9 +385,7 @@ double Technical_Functions::SumLikelihood(size_t index, double sim, double obs) 
 			out=-Fix::LOG_PI-log(2*E_Meas);
 		else
 			out=log(1-exp(-0.5*pow(ri,2)))-log(pow(ri,2))-Fix::LOG_PI-log(E_Meas);
-
 	}
-
 	return out;
 }
 double Technical_Functions::SumLikelihood(size_t index, vector<double> *psim, vector<double> *pobs) {
