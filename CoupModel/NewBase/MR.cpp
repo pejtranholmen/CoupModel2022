@@ -1432,9 +1432,12 @@ bool MR::PreDefined_Criteria_Process() {
 			auto ThresholdType = size_t(pThresholdType->GetValue(i) + 0.0001);
 			auto Threshold = pThresholdValue->GetValue(i);
 			auto ensemble = size_t(pEnsemble->GetValue(i)+0.001);
+			auto Transform = size_t(pTransformation->GetValue(i) + 0.0001);
+
 			
 			ensemble = max(size_t(1), ensemble);
 			m_MStorage.m_ActualEnsemble=ensemble- 1;
+			m_MStorage.SetActualPerformanceVector_TSV_Variables(Transform);
 
 			switch (Indicator) {
 				case 0:
@@ -1474,6 +1477,9 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 	int index, countvar;
 	double mcorr;
 	Sim* pSim;
+#ifndef COUPSTD 
+	MFC_Util m;
+#endif
 
 	pSim = ((Sim*)this);
 
@@ -1762,13 +1768,10 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 	else if (cumulated == 2) text = "yearly cumulated values";
 	else if (cumulated == 3) text = "daily cumulated values";
 	else if (cumulated == 4) text = "all candidates within first dimension";
-	MFC_Util::MessageBox("Performance indicators estimated based on " + text, "Estimated new performance", MB_OK);
-
-	m_pSimDoc->m_MStorage.EvaluateFile(false); // Saving new indicators in file
-
-	return true;
-
-	return false;
+#ifndef COUPSTD
+	m.SetPaneMessage("Performance indicators estimated based on " + text+ "Estimated new performance");
+#endif
+	return m_pSimDoc->m_MStorage.EvaluateFile(false); // Saving new indicators in file
 }
 ;
 string MR::MR_Get_CalibParName(size_t index)

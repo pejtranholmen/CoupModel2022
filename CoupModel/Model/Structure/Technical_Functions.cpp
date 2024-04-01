@@ -190,6 +190,8 @@ bool Technical_Functions::Def()
 	pP = new P(&Criterion.Ensemble, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 1.);
 		Define(pP, pCriteria, "Ensemble", initv, "-", "PreDefinedEnsembles>0", 0., 16., 0., 16.,0,2024,2024); CriteriaTab.push_back(pP);
+		initv.assign(NumCriteria, 0.);
+
 	pP = new P(&Criterion.Criterion, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pP, pCriteria, "Transformation", initv, "-", "PreDefinedEnsembles>0", 0., 4., 0., 4., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.Transformation, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);

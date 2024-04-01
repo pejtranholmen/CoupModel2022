@@ -1913,7 +1913,7 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 	float v = 1.1E38f;
 	vector<float> out;
 	size_t index_trans = string::npos;
-	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed > 0) {
+	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed >= 0) {
 
 		auto it = MapOfStoredTSV.find(m_Valid_TSV[m_ActualEnsemble].VarTranformed);
 		if (it != MapOfStoredTSV.end())
