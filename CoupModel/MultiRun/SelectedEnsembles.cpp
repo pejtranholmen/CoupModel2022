@@ -170,6 +170,9 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 	auto setall_valid = [&]() {
 		for(size_t i=0; i<6; i++)
 			m_MeanTSV_Accepted[i]=m_MeanTSV_All[i];
+		if (m_TotalNumberRuns != Get_And_UpdateTotalNumberofRuns())
+			m_TotalNumberRuns = Get_And_UpdateTotalNumberofRuns();
+
 		for (unsigned long i = 0; i<m_TotalNumberRuns; i++) {
 			SetAcceptedRunNo(i, true);
 		}
@@ -224,7 +227,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 
 	auto testcond_tsv = [&](size_t iv, size_t isplit) {
 #ifndef COUPSTD
-		mfc_util.SetPaneMessage("Find Posterior ensemble of accepted runs using SV Criteria " + FUtil::STD_ItoAscii(iv + 1) + " (" + FUtil::STD_ItoAscii(size_t(m_NumValid + m_NumExtraValid)) + ")");
+		mfc_util.SetPaneMessage("Find Posterior ensemble of accepted runs using TSV Criteria " + FUtil::STD_ItoAscii(iv + 1) + " (" + FUtil::STD_ItoAscii(size_t(m_NumValid + m_NumExtraValid)) + ")");
 #endif
 		if (GetValidLow(iv, isplit) > GetMinValidAll(iv, isplit) || GetValidHigh(iv, isplit) < GetMaxValidAll(iv, isplit)) {
 			if (isplit == 0) {
@@ -249,7 +252,6 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 			else {
 				float value;
 				if (GetValidHigh(iv, isplit) < m_Valid_TSV[0].v[E_SELECT_HIGH][LOGLI_STAT]) {
-
 					SetValidHigh(iv, isplit, m_Valid_TSV[0].v[E_PRIOR_MAX][LOGLI_STAT]);
 
 
@@ -967,13 +969,14 @@ float SelectedEnsembles::GetCV_Valid(unsigned long ip, unsigned long ind_split)
 					sum += pow((1 - GetValid(irun, ind_rmse)*GetValid(irun, ind_rmse) / rmse_o) - GetMeanValid(ip), 2);
 				//}
 			}
-			if (count > 2 && abs(GetMeanValid(ip))>0) {
+			if (count >= 2 && abs(GetMeanValid(ip))>0) {
 				//m_VarValidCV[ip] = float(sqrt(sum / (count - 1))) / abs(GetMeanValid(ip));
 				m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip] = float(sqrt(sum / (count - 1))) / abs(GetMeanValid(ip));
 
 			}
-			else {
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip] = float(sqrt(sum / (count - 1))) / abs(GetMeanValid(ip));
+			else if(count<2) {
+				m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip] = 0.;
+				//m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip] = float(sqrt(sum / (count - 1))) / abs(GetMeanValid(ip));
 
 				//m_VarValidCV[ip] = float(MISSING);
 			}
@@ -1156,8 +1159,8 @@ float SelectedEnsembles::GetMaxValid(unsigned long ip, unsigned long ind_split)
 					}
 				}
 					//m_VarValidMax[ip]=v;
-					m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][ip]=v;
-					return v;
+				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][ip]=v;
+				return v;
 			}
 			else {
 				for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
@@ -1871,6 +1874,10 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN+shift_pos][index2] = stat.Mean;
 			if (stat.Mean != 0)
 				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV + shift_pos][index2] = stat.Std / stat.Mean;
+			if (!posterior) {
+				m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][index2] = stat.Min;
+				m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][index2] = stat.Max;
+			}
 		}
 	};
 

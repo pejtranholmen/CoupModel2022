@@ -30,8 +30,8 @@ SelectedAddEnsembles::~SelectedAddEnsembles()
 bool SelectedAddEnsembles::SetNewPerformanceVector(size_t cumulatedPerformance, vector<float> VarValidVector) {
 
 
-	if (cumulatedPerformance == 0)
-		return EvaluateFile(true);
+	/**if (cumulatedPerformance == 0)
+		return EvaluateFile(true);*/
 
 	size_t newindex;
 	VARTRANSFORMED vartrans;

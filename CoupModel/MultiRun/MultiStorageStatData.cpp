@@ -52,10 +52,12 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 		else
 			good=m_EvaluationFile.OpenDocFileout(filename);
 		if (!good) { 
+#ifndef COUPSTD
 			if (reading)
 				mfc_util.MessageBox("Problems when reading from : " + filename);
 			else
 				mfc_util.MessageBox("Problems when writing to : " + filename);
+#endif
 			return false;
 		}
 		if (m_IsStatOpen) return true;
@@ -527,23 +529,13 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			for(size_t i = 0; i < num; i++) {
 				if(!m_EvaluationFile.rsize_t(&add.cumvalue)) return false;
 				size_t numvector;
-				if (i == 83) {
-					auto k = 12;
-
-				}
 				if(!m_EvaluationFile.rsize_t(&numvector)) return false;
-				//if (numvector > 100000) return false;
 				add.VarValidVector.resize(numvector);
 				add.VarValidVector=m_EvaluationFile.rFloatArray2(numvector);
-				//if (m_VarValid.size() !=numvector) {
-				//	add.VarValidVector.resize(m_VarValid.size());
-				//	}
 				m_VarValidTransformed.push_back(add);
 				MapOfStoredTSV.insert(pair<size_t,size_t>(add.cumvalue, m_VarValidTransformed.size() - 1));
-
 			}
 			return m_EvaluationFile.IsFileInGood();
-
 		}
 		else {
 			m_EvaluationFile.wInt(&m_CumulatedPerformance);
@@ -778,7 +770,7 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 		if(all)
 			mfc_util.SetPaneMessage("Estimating Statistics for Mean of all SV  Performance Indicators - Val Var " + FUtil::STD_ItoAscii(iv));
 		else
-			mfc_util.SetPaneMessage("Estimating Statistics for Mean of accepted SV  Performance Indicators"+ FUtil::STD_ItoAscii(iv));
+			mfc_util.SetPaneMessage("Estimating Statistics for Mean of accepted TSV  Performance Indicators"+ FUtil::STD_ItoAscii(iv));
 #endif
 		float vmin = 1.1E38f;
 		float vmax = float(MISSING);
@@ -855,7 +847,12 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 
 	}
 	
-
+#ifndef COUPSTD
+	if (SV_Variables)
+		mfc_util.SetPaneMessage("Estimating Statistics for Mean of all SV  Performance Indicators - Completed");
+	else
+		mfc_util.SetPaneMessage("Estimating Statistics for Mean of accepted TSV  Performance Indicators - Completed");
+#endif
 
 
 }

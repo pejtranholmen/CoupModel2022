@@ -260,7 +260,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 				if (LogLiVersion != 3)
 					m_Label.st = "Mean of Residuals, All Simulations";
 				else
-					m_Label.st = "Mean of All Simulations";
+					m_Label.st = "Mean of Accepted - ";
 				if (p_info.EnsembleNo>=0 && p_info.EnsembleNo < m_pSimDoc->m_MStorage.m_AcceptedIdString.size())
 					m_Label.st += m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
 
@@ -340,7 +340,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 			m_Label.ytitle1 = m_pProp->GetSecondIndepString();
 		}
 		break;
-		case DATA_TYPES::SIM_SUMVAR: case 99: case 98:// SumVar Validation variables
+		case DATA_TYPES::SIM_SUMVAR: //case 99: case 98:// SumVar Validation variables
 		
 		nselV = m_pSimDoc->m_ValidationData.GetNumSumVarVariables();
 		if (p_info.Performance_Var==SUM_PERFORMANCE::SUM_OBS) {

@@ -1438,7 +1438,10 @@ bool MR::PreDefined_Criteria_Process() {
 			ensemble = max(size_t(1), ensemble);
 			m_MStorage.m_ActualEnsemble=ensemble- 1;
 			m_MStorage.SetActualPerformanceVector_TSV_Variables(Transform);
-
+			m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
+			if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+				m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+			}
 			switch (Indicator) {
 				case 0:
 					left=m_MStorage.ReduceCriteria(R2_STAT, VarIndex,ThresholdType, Threshold);
@@ -1471,6 +1474,9 @@ bool MR::PreDefined_Criteria_Process() {
 bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 {
 	F* pValFile;
+	
+	/*left = m_MStorage.ReduceCriteria(LOGLI_STAT, VarIndex, ThresholdType, Threshold);*/
+					
 	CResiduals* pRes;
 	vector<CResiduals*> ResidualPtr;
 	float accaccsum, accsum;
@@ -1534,7 +1540,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 			pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
 			auto ind = m_pSimDoc->m_ValidationData.GetValFileIndex(i);
 			CPG* pPG;
-			BOOL valid;
+			bool valid;
 			pPG = (CPG*)pValFile->GetPointer();
 			pPG->SetCompleteRead(true);
 			pPG->ReOpen();
@@ -1556,7 +1562,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 #ifndef COUPSTD	
 			float scale;
 			scale = float(i) / float(NumValidVar);
-			p_mainframe->UpdateResidualProgress(i + 1, NumValidVar, scale);
+			p_mainframe->UpdateResidualProgress(i + 1, NumValidVar, scale, cumulated);
 #endif
 
 
@@ -1596,7 +1602,9 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 					if (!stream.is_open()) {
 						string koll = "Error reading :";
 						koll += filename + '\n';
+#ifndef COUPSTD
 						MFC_Util::MessageBox(koll, "Errors Reading Residual File", MB_OK);
+#endif
 					}
 
 				}
@@ -1611,8 +1619,9 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 				if (!stream.good()) {
 					string koll = "Error reading :";
 					koll += filename + '\n';
+#ifndef COUPSTD
 					MFC_Util::MessageBox(koll, "Errors Reading Residual File", MB_OK);
-
+#endif
 
 				}
 				stream.close();
@@ -1623,7 +1632,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 				if (irun % 1000 == 5) {
 					float scale;
 					scale = float(i) / float(NumValidVar) + irun / m_pSimDoc->m_MStorage.GetNumberOfRuns() * 1. / float(NumValidVar);
-					p_mainframe->UpdateResidualProgress(i + 1, NumValidVar, scale);
+					p_mainframe->UpdateResidualProgress(i + 1, NumValidVar, scale, cumulated);
 				}
 #endif
 
@@ -1654,9 +1663,10 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 					fileno = FUtil::STD_ItoAscii(FileNo);
 					valind = FUtil::STD_ItoAscii(i + 1);
 
-
+#ifndef COUPSTD
 					MFC_Util::MessageBox("Trying to read from run no:" + textrun +
 						"\n filename : " + filename + "\nvariable no:" + textresind + "\nValidation var no: " + valind + "File No : " + fileno, "Errors Reading Residual File", MB_OK);
+#endif
 					continue;
 				}
 				else if (numrec != res_v.size())
@@ -1761,7 +1771,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 
 
 	m_pSimDoc->m_MStorage.VarValidAllo();
-	m_pSimDoc->m_MStorage.UpdateAcceptedRuns(TRUE);
+	m_pSimDoc->m_MStorage.UpdateAcceptedRuns(true);
 	string text;
 	if (cumulated == 0) text = "actual values";
 	else if (cumulated == 1) text = "cumulated values";

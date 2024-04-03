@@ -517,6 +517,20 @@ for(int i=0;i<m_NumValidVar;i++) {
 			if(allmax-allmin>0&&abs(allmax)<1.E38&&abs(selmin)<0.5e38) {
 				rangef=(selmax-selmin)/(allmax-allmin);
 				QuickSetNumber(11,line,rangef);
+				if (rangef == 0) {
+
+					if (m_pSimDoc->m_MStorage.GetValidHigh(i + index_start, 0) > allmax) {
+						value = m_pSimDoc->m_MStorage.GetValidHigh(i + index_start, split_ind);
+						allmax = double(m_pSimDoc->m_MStorage.GetMaxValidAll(i + index_start, split_ind));
+						allmin = double(m_pSimDoc->m_MStorage.GetMinValidAll(i + index_start, split_ind));
+						m_pSimDoc->m_MStorage.SetValidHigh(i + index_start, 0, allmax);
+					
+					}
+					if (m_pSimDoc->m_MStorage.GetValidLow(i + index_start, 0) < allmin) {
+						m_pSimDoc->m_MStorage.SetValidLow(i + index_start,0,allmin);
+
+					}
+				}
 			}
 			else
 				QuickSetNumber(11,line,1.0);

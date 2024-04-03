@@ -600,14 +600,32 @@ void CMainFrame::UpdateLocalWindowText(string text, WINDOW_NAMES wname)
 
 }
 ;
-void CMainFrame::UpdateResidualProgress(int var, int numvar, float relfrac) {
+void CMainFrame::UpdateResidualProgress(int var, int numvar, float relfrac, size_t transform) {
+
+	CString transformtext;
+	transformtext = "";
+	switch (transform) {
+	case 0:
+		transformtext = "Actual values ";
+		break;
+	case 1:
+		transformtext = "Cumulated values ";
+		break;
+	case 2:
+		transformtext = "Year Cumulated values ";
+		break;
+	case 3:
+		transformtext = "Day Cumulated values ";
+		break;
+	}
 
 	CString text;
 	text="Calculating var ";
 	text+=FUtil::STD_ItoAscii(var).c_str();
 	text+="(";
 	text+=FUtil::STD_ItoAscii(numvar).c_str();
-	text+=") ";
+	text += ") for transformation ";
+	text += transformtext;
 	text+=FUtil::STD_FtoAscii(100*relfrac).c_str();
 	text+=" % done";
 

@@ -1780,6 +1780,8 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 	float last_valid = 0.f, first_valid;
 	StatUtil::SortArray(&dist[0], icount);
+	auto min_value = dist.front();
+	auto max_value = dist.back();
 	size_t n_toremove=0;
 	if (dist.size() <= Threshold) n_toremove = 0;
 	else if(Indicator!=ABSME_STAT) n_toremove = dist.size() - Threshold - 1;
@@ -1846,17 +1848,17 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			last_valid = last_valid+abs(last_valid) / 1.E4;
 		}
 	}
-	else {
-		if (Indicator == R2_STAT|| Indicator == NSE_STAT||Indicator == LOGLI_STAT) {
+	else if (Indicator == R2_STAT|| Indicator == NSE_STAT||Indicator == LOGLI_STAT) {
 			auto pos=dist.size() - Threshold;
 			if (pos >= 0)
 				last_valid = dist[pos];
 			else
 				last_valid = dist.back() + 0.0001;
-		}
-		else if (Indicator == RMSE_STAT) {
+		
+	}
+	else if (Indicator == RMSE_STAT) {
 			last_valid = dist[Threshold-1];
-		}
+		
 	}
 
 	if (dist.size() > Threshold - 1) {
@@ -1866,6 +1868,8 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			}
 			else {
 				if (Indicator == R2_STAT||Indicator==NSE_STAT||Indicator==LOGLI_STAT) {
+					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
+					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, last_valid);
 					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
 						m_pNewMap->m_MStorage.SetCriteria(ip, 1);
@@ -1873,6 +1877,9 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
 				}
 				else if (Indicator == RMSE_STAT) {
+					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
+					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
+
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
 					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
 						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
@@ -1880,6 +1887,9 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
 				}
 				else if (Indicator == ABSME_STAT||Indicator==A1_STAT) {
+					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
+					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
+
 
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, first_valid);
 					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
@@ -1895,6 +1905,9 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			}
 		ReduceUpdateStep(Indicator);
 
+	}
+	else {
+		return false;
 	}
 	return true;
 

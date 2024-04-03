@@ -126,7 +126,7 @@ bool Technical_Functions::Def()
 		Define(pSw, "Nelder-Mead Objective", 0, "SSE|AIC|BIC", "ValidationMode > 0");
 
 		pSw = new Sw(&PreDefinedEnsembles, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
-		Define(pSw, "PreDefinedEnsembles", 0, "off|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen","ValidationMode > 0");
+		Define(pSw, "PreDefinedEnsembles", 0, "off|one|two|three|four|five|six","ValidationMode > 0");
 
           	    
   //!	CALL F(Group_01, FileDriv7a,"Lateral Water Inflow","GWInflow","LateralInputFile=0|WaterEq > 0|LaterInput=1")
