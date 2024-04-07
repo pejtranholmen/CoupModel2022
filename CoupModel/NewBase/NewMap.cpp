@@ -3129,12 +3129,14 @@ bool NewMap::Info_Outputs(bool reading)
 			m_NumOutPuts=0;
 		if(type=="Outputs") {
 			for(size_t i=0; i<iv;i++) {
+
 				rSize_t(&iType);
 				rString(&group);
 				if(group=="Driving variables") group="Meteorological Data";
 				if(group=="Soil mineral nitrogen processes") group="Soil mineral N processes";
 		
 				rString(&name);
+
   //              cout << name << "\n";
 				if(m_FileVersionNumberRead<60) {
 					rString(&FlagString);
@@ -3251,17 +3253,19 @@ bool NewMap::Info_Outputs(bool reading)
 						}
 
 						if(nOutputs>0) {
-							rSize_t(&localindex);rFloat(&initial);rFloat(&final);rFloat(&min);
-							rFloat(&max);rFloat(&mean);rFloat(&accumulated);rSize_t(&validFlagIndex);
-							if(m_FileVersionNumberRead>35&&m_FileVersionNumberRead<61)
-								rSize_t(&pgindex);
-							if(m_FileVersionNumberRead>47&&m_FileVersionNumberRead<61)
-								rSize_t(&pgmulindex);
-							if(m_FileVersionNumberRead>59) {
-								rSize_t(&storeflag);
-								if(m_FileVersionNumberRead>60) {
-									if(storeflag>=1) pgindex++;
-									if(storeflag==2) pgmulindex++;
+							for (size_t ik = 0; ik < nOutputs; ik++) {
+								rSize_t(&localindex); rFloat(&initial); rFloat(&final); rFloat(&min);
+								rFloat(&max); rFloat(&mean); rFloat(&accumulated); rSize_t(&validFlagIndex);
+								if (m_FileVersionNumberRead > 35 && m_FileVersionNumberRead < 61)
+									rSize_t(&pgindex);
+								if (m_FileVersionNumberRead > 47 && m_FileVersionNumberRead < 61)
+									rSize_t(&pgmulindex);
+								if (m_FileVersionNumberRead > 59) {
+									rSize_t(&storeflag);
+									if (m_FileVersionNumberRead > 60) {
+										if (storeflag >= 1) pgindex++;
+										if (storeflag == 2) pgmulindex++;
+									}
 								}
 							}
 							
@@ -3288,7 +3292,7 @@ bool NewMap::Info_Outputs(bool reading)
 						out.TabIndex=-1;
 					}
 
-					if(out.pBase!=nullptr&&nOutputs>0) {
+					if(out.pBase!=nullptr&&(nOutputs>0||m_FileVersionNumberRead<61)) {
 						if(iType==1||iType==8) 
 							m_X_Array.push_back(out);
 						else if(iType==2||iType==9)
@@ -3300,6 +3304,9 @@ bool NewMap::Info_Outputs(bool reading)
 					}
 					else {
 						auto koll = out;
+						if (i == 257) {
+							auto koll2 = 2;
+						}
 
 					}
 				}

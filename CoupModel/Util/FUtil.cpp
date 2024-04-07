@@ -557,14 +557,20 @@ string FUtil::NameRevision2018(string name)
 
 			add = name.substr(pos + 5);
 		}
+		if (name.find("Total Roots") != string::npos) return name;
 		name = name.substr(0, pos) + str;
 		if (add.size() > 0) name += add;
 	}
 	if (name.find("CH4 Surface Emission") == 0) return "CH4 surface Emission";
+	if (name.find("CH4 plant diffusion") == 0) return "CH4 plant uptake";
+	if (name.find("CH4 soil emission") == 0) return "CH4 soil air flux";
 	if (name.find("CH4") == 0|| name.find("CO2") == 0) return name;
-	if (name.find("CH4 Surface Emission") == 0) return "CH4 surface Emission";
+
 	if (name.find("CN Ratio") == 0|| name.find("Cloud")==0) return name;
+	if (name.find("CLitter1Decomp") == 0) return "CLitter1Decomp";
+	if (name.find("CanopyFracRad") == 0) return name;
 	else if (name.find("C") == 0 && name.find(" ") != 1 && name.find("COS") != 0 && name.find("Tot") != 1 && name.find("Carbon") != 0) {
+
 		name = "C " + name.substr(1);
 	}
 	return name;
