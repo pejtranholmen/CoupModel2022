@@ -72,6 +72,13 @@ bool NC_Organic::Ini()	{
 	Conc.Litter2.resize(pSoil->NL);
 	Conc.Faeces.resize(pSoil->NL);
 
+
+	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+		Dead_BelowGround[_L1][jj].assign(pSoil->NL,0.);
+		Dead_BelowGround[_L2][jj].assign(pSoil->NL, 0.);
+	}
+
+
 	for (size_t j = 0; j < NUM_ORG_FORMS; j++ ) {
 		O_RespRate[j].resize(pSoil->NL);
 
@@ -379,19 +386,18 @@ auto OutflowFromPlantLitterFalltoSoilLayers = [&]() {
 	};
 
 //Reset all Fluxes to zero
-	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
-		for (size_t j = 0; j < 2; j++)
-			LitterInputToSoilLayers[j][jj].assign(pSoil->NL,0.);
+//	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
+		
 
 // Add contributions of all Plants with all plant components and all plant elements to to vector for two soil litters for all plant elements and soil layers
 	for (size_t i_plant = 0; i_plant < p_Plant->NumPlants; i_plant++) {
-		vector<double> LitterFallToLayers;
+	
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 			for (size_t j_plantcomp = _ROOT; j_plantcomp <= _OLD_COARSE_ROOT; j_plantcomp++) {
-				LitterFallToLayers = GetDepthDistributionofLitterFall(i_plant, j_plantcomp, jj);
+				//LitterFallToLayers = GetDepthDistributionofLitterFall(i_plant, j_plantcomp, jj);
 				if (LitterPools_Sw(LitterPools)== LitterPools_Sw::one) {
 					for (size_t layer = 0; layer < pSoil->NL; layer++) {
-						LitterInputToSoilLayers[_L1][jj][layer] += LitterFallToLayers[layer];
+						LitterInputToSoilLayers[_L1][jj][layer] = 0.1*Dead_BelowGround[_L1][jj][layer];
 					}
 				}
 				else {
@@ -400,17 +406,17 @@ auto OutflowFromPlantLitterFalltoSoilLayers = [&]() {
 					else L2_frac = p_NC_Plant->CoarseRoot_FracLitter2[i_plant];
 
 					for (size_t layer = 0; layer < pSoil->NL; layer++) {
-						LitterInputToSoilLayers[_L1][jj][layer] += LitterFallToLayers[layer] * (1 - L2_frac);
-						LitterInputToSoilLayers[_L2][jj][layer] += LitterFallToLayers[layer] * L2_frac;
+						LitterInputToSoilLayers[_L1][jj][layer] = 0.1*Dead_BelowGround[_L1][jj][layer] * (1 - L2_frac);
+						LitterInputToSoilLayers[_L2][jj][layer] = 0.1*Dead_BelowGround[_L2][jj][layer] * L2_frac;
 					}
 				}
 			}	//Fungi Component below
-			if (FungalGrowth_Sw(p_NC_Plant->FungalGrowth) > FungalGrowth_Sw::off) {
+		/*	if (FungalGrowth_Sw(p_NC_Plant->FungalGrowth) > FungalGrowth_Sw::off) {
 				LitterFallToLayers = GetDepthDistributionofLitterFall(i_plant, _FUNGI, jj);
 				for (size_t layer = 0; layer < pSoil->NL; layer++) {
-					LitterInputToSoilLayers[_L1][jj][layer] += LitterFallToLayers[layer];
+					LitterInputToSoilLayers[_L1][jj][layer] += 0.1 * Dead_L1_BelowGround[layer];
 				}
-			}
+			}*/
 		}
 	}
 
@@ -798,9 +804,16 @@ void NC_Organic::Integ()
 	}
 
 	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-		for (size_t i = _L1; i <= NumberOfLitterPools; i++)
+		for (size_t i = _L1; i <= NumberOfLitterPools; i++) {
 			InFlow(O_State[i][jj], LitterInputToSoilLayers[i][jj]);
+			OutFlow(Dead_BelowGround[i][jj], LitterInputToSoilLayers[i][jj]);
+
+		}
 	}
+
+
+
+	int Count = 10.;
 	/*
 	//!   Flow from roots to Soil Litter 1
 	InFlow(O_State[_L1][_C_], CRootsLitter1	);

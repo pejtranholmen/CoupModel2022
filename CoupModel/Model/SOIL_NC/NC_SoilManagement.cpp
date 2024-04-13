@@ -119,17 +119,18 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 				return out.Dist;
 
 			};
-			//Reset all Fluxes to zero
+			
+			/*Reset all Fluxes to zero
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 				for (size_t j = 0; j < 2; j++)
 					LitterInputToSoilLayers[j][jj].assign(pSoil->NL, 0.);
 			//Do i=1, NumPlant
 			DEPTH_type out;
 			for (size_t i = 0; i < p_Plant->NumPlants; i++) {
-				OK = p_NC_Plant->KillBelowGroundPlant(i);
+				//OK = p_NC_Plant->KillBelowGroundPlant(i);
 				vector<double> LitterFallToLayers;
 
-				for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+				/*for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 					for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) {
 						LitterFallToLayers = GetDepthDistributionofLitterFall(i, j, jj);
 						if (LitterPools_Sw(LitterPools) == LitterPools_Sw::one) {
@@ -145,7 +146,7 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 						}
 					}
 				}
-			}
+			}*/
 		
 		
 		
@@ -161,7 +162,7 @@ WaterUptake* p_Plant=&pPlant->m_WaterUptake;
 SoilModel* p_Soil=(SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 size_t Num;
-	if(Do_Ploughing) {
+	/*if (Do_Ploughing) {
 
 		Soil_Frost* p_Soil=(Soil_Frost*)pSoil;
 		DEPTH_type out;
@@ -188,7 +189,7 @@ size_t Num;
 		MixFrac(&O_State[_H][_C_], Num);
 		MixFrac(&O_State[_MIC][_C_], Num);
 		MixFrac(&O_State[_F][_C_], Num);
-	}
+	}*/
 }
 
 bool NC_SoilManagement::End()

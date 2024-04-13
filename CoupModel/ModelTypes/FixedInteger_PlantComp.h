@@ -1,9 +1,10 @@
 #pragma once
-int const NUM_BIOELEM = 4;
-int const _C_ = 0;
+//int const NUM_BIOELEM = 4;
+enum BIO_ELEM { _C_, _N_, _P_, _TE_, NUM_BIOELEM };
+/*int const _C_ = 0;
 int const _N_ = 1;
 int const  _P_ = 2;
-int const _TE_ = 3;
+int const _TE_ = 3;*/
 int const _NEWMOBILE = 0;
 int const _LEAF = 1;
 int const _STEM = 2;
@@ -32,6 +33,9 @@ int const _STEM_ = 2;
 int const _ROOT_ = 3;
 int const _COARSE_ROOT_ = 4;
 int const _FUNGI_ = 5;
+
+enum PlantComp2{NEWMOBILE, LEAF, STEM, GRAIN, MOBILE, OLD_LEAF, OLD_STEM, ROOT, COARSE_ROOT, OLD_ROOT, OLD_COARSE_ROOT, FUNGI, ABOVEGROUND, BELOWGROUND,TOTAL, DEAD_ABOVEGROUND, DEAD_BELOWGROUND};
+
 
 int const NUM_CARBON_RATIO_AUX = 6;
 
@@ -67,13 +71,15 @@ int const FUNGI_TOT_N = 2;
 int const FUNGI_ORG_N = 3;
 
 int const NUM_ORG_FORMS = 6;
-int const _L1 = 0;
+/*int const _L1 = 0;
 int const _L2 = 1;
 int const _F = 2;
 int const _H = 3;
 int const _MIC = 4;
 int const _DIS = 5;
-int const _ORG_ALL = 6;
+int const _ORG_ALL = 6;*/
+enum SoilOrgFrom {_L1, _L2, _F, _H, _MIC, _DIS, _ORG_All};
+
 int const NUM_ORG_TRANSFORMATION = 21;
 int const L1_HUM = 0;
 int const L2_HUM = 1;

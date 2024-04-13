@@ -14,7 +14,7 @@ class CAlloLeaf_Linear {
 public: CAlloLeaf_Linear(vector<double> AlloLeaf1, vector<double> AlloLeaf2) :
 	a(AlloLeaf1), b(AlloLeaf2) {}
 		double operator() (size_t index, double Mass = 0) {
-			return a[index]+Mass*b[index];
+			return max(0.01, a[index]+Mass*b[index]);
 		}
 private:
 	vector<double> a, b;

@@ -106,6 +106,23 @@ bool NC_Organic_Functions::Def() {
 			Define(pX, pNL, name, initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1"+condition);
 		}
 
+	
+		for (size_t j = _L1; j <= _L2; j++) {
+			string name = Item[jj];
+			condition = "";  // make _H visible
+			if (jj == _P_) condition = "|Phosphorus>0";
+			if (j == _L2) condition += "|LitterPools >0";
+			if (j == _L1)
+				name = "L1 "; 
+			else 
+				name ="L2 ";
+			name += Item[jj] + " Dead Plant Residual";
+			initv.assign(pSoil->NL, 0.);
+			pX = new X(&Dead_BelowGround[j][jj], pNL, SIMPROFILE, elements(jj + CARBON), STORAGE, NON_LIVING, NORMAL);
+			Define(pX, pNL, name, initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1" + condition);
+		}
+
+
 		condition = "";
 		for (size_t j = _L1; j <= _L2; j++) {
 			name = Item[jj];
@@ -116,6 +133,8 @@ bool NC_Organic_Functions::Def() {
 			pXs = new Xs(&SurfaceLitter[j][jj], SOILSURFACE, elements(jj + CARBON), STORAGE, NON_LIVING, NORMAL);
 			Define(pXs, name, 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1"+condition);
 		}
+
+
 
 
 	
@@ -765,7 +784,7 @@ bool NC_Organic_Functions::FunctionDef() {
 	plotpar.Num_Of_X = 1;
 
 	pPs = new Ps(&RateCoefSurf_L1, TOTPROFILE, CARBON, TRANSPORT, NOBPROC, NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "RateCoefSurf L1", .005, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0", 0.1E-6, 1.);
+	Define(pPs, "RateCoefSurf L1", .05, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0", 0.1E-6, 1.);
 	pFunc = new Func(TOTPROFILE, CARBON, TRANSPORT, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();
 
@@ -773,7 +792,7 @@ bool NC_Organic_Functions::FunctionDef() {
 	functorprop.FuncName = MyFunc::LITTER_TRANS_SURFACE_L2; 
 	funcname = "Mixing Rate of Surface Litter2 into uppermost layer";
 	pPs = new Ps(&RateCoefSurf_L2, TOTPROFILE, CARBON, TRANSPORT, NOBPROC,  NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "RateCoefSurf L2", .005, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|LitterPools >0", 0.1E-6, 1.);
+	Define(pPs, "RateCoefSurf L2", .05, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|LitterPools >0", 0.1E-6, 1.);
 	pFunc = new Func(PLANT, CARBON, TRANSPORT, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();
 	

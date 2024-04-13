@@ -43,26 +43,26 @@ bool Additional_BioticVariables_Functions::Def()
 
 
 
-	pXs= new Xs(&AccAboveLitter[_C_],   ACCUMULATOR,CARBON, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->AccAboveLitter[_C_],   ACCUMULATOR,CARBON, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,   "AccAboveLitterCarbon"	   	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs = new Xs(&AccAboveLitter[_N_], ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccAboveLitter[_N_], ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccAboveLitterN", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
-	pXs = new Xs(&AccAboveLitter[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccAboveLitter[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccAboveLitterP", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0");
 		
 		
-	pXs= new Xs(&AccBelowLitter[_C_],  ACCUMULATOR, CARBON, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->AccBelowLitter[_C_],  ACCUMULATOR, CARBON, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,    "AccBelowLitterCarbon"	   	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs= new Xs(&AccBelowLitter[_N_],   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->AccBelowLitter[_N_],   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	    "AccBelowLitterN"	   	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs = new Xs(&AccBelowLitter[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccBelowLitter[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccBelowLitterP", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0");
 	
-	pXs= new Xs(&AccPlantLitter[_N_],   ACCUMULATOR, CARBON, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->AccPlantLitter[_N_],   ACCUMULATOR, CARBON, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,   "AccPlantLitterN"	   	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs= new Xs(&AccPlantLitter[_C_],   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->AccPlantLitter[_C_],   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	    "AccPlantLitterC"	   	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");	
-	pXs = new Xs(&AccPlantLitter[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccPlantLitter[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccPlantLitterP", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0");
 		
 		
@@ -110,11 +110,11 @@ bool Additional_BioticVariables_Functions::Def()
 		Define(pXs, "AccDis_P_Leaching", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
 
 
-	pXs= new Xs(&TotalDiffPlant[_N_],  ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->TotalDiffPlant[_N_],  ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  		"TotalDiffNPlant"		 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs= new Xs(&TotalDiffPlant[_C_],  ACCUMULATOR,CARBON, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->TotalDiffPlant[_C_],  ACCUMULATOR,CARBON, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  		"TotalDiffCPlant"		 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs = new Xs(&TotalDiffPlant[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->TotalDiffPlant[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "TotalDiff_P_Plant", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
 
 	pXs = new Xs(&TotalDiffSoil[_C_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
@@ -213,15 +213,15 @@ bool Additional_BioticVariables_Functions::Def()
  		Define(pTs, 	"Soil Resp (no roots)"	 , 0.,UNIT_TYPES::MASSFLOW_UNIT,"Nitrogen and Carbon > 0");
 	pTs= new Ts(&SoilRespTot, ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
  		Define(pTs, 	"Soil Respiration", 0.,UNIT_TYPES::MASSFLOW_UNIT,"Nitrogen and Carbon > 0");
-	pTs= new Ts(&TotalPhotoSynt, ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
+	pTs= new Ts(&pNCPlant->TotalPhotoSynt, ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
  		Define(pTs, 	"Total PhotoSynt", 0.,UNIT_TYPES::MASSFLOW_UNIT,"Nitrogen and Carbon > 0");
 	pTs= new Ts(&TotalRespiration, ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
  		Define(pTs, 	"Total Respiration", 0.,UNIT_TYPES::MASSFLOW_UNIT,"Nitrogen and Carbon > 0");
-	pXs= new Xs(&AccPhotosyntheses,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->AccPhotosyntheses,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	"AccPhotosyntheses"		 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
 	pXs= new Xs(&AccTotalRespiration,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	"AccTotalRespiration"	 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs= new Xs(&AccPlantRespiration,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->AccPlantRespiration,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	"AccPlantRespiration"	 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
 	pXs= new Xs(&AccSoilRespiration,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	"AccSoilRespiration"	 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");

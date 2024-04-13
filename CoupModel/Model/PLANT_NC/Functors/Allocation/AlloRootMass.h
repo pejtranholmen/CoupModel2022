@@ -165,9 +165,9 @@ LeafResponseToMass(vector<double> AlloLeaf1, vector<double> AlloLeaf2)
 	};
 	double operator() (size_t index, double mass) {
 		if (option == 1)
-			return C1[index] + C2[index] * (mass);
+			return max(0., C1[index] + C2[index] * (mass));
 		else if (option == 2)
-			return  C1[index] * exp(C3[index] * mass);
+			return  max(0., C1[index] * exp(C3[index] * mass));
 		else 
 			return C1[index];
 	};
@@ -267,7 +267,8 @@ public:
 				else
 					combined_response_root = (MassResponse + NResponse + WaterResponse) / 3.;
 			}
-			allo.Roots[index] = combined_response_root *Amount_To_Allocate;
+			allo.Roots[index] = max(0.,combined_response_root *Amount_To_Allocate);
+
 			if (OptionLeaf == 0)
 				combined_response_leaf = f_Leaf_Mass(index, 0.);
 			else if (OptionLeaf == 1)
@@ -278,12 +279,13 @@ public:
 				combined_response_leaf = (NewMobile[index] - allo.Roots[index])*(f_Leaf_Mass(index, Leaf[index] + Stem[index])) / NewMobile[index];
 
 			double FracLeaf = max(0., min(combined_response_leaf, 1 - combined_response_root));
-			allo.Leaf[index] = FracLeaf * Amount_To_Allocate;
+			allo.Leaf[index] = max(0.,FracLeaf * Amount_To_Allocate);
 
 			double FracStem = max(0., min(1 - combined_response_root-FracLeaf,1.));
-			allo.Stem[index]= FracStem*(1-FractionCoarseRoot[index])*Amount_To_Allocate;
-			allo.CoarseRoots[index]= FracStem * FractionCoarseRoot[index]* Amount_To_Allocate;
+			allo.Stem[index]= max(0., FracStem*(1-FractionCoarseRoot[index])*Amount_To_Allocate);
+			allo.CoarseRoots[index]=  max(0., FracStem * FractionCoarseRoot[index]* Amount_To_Allocate);
 		};
+		
 		return allo;
 	};
 private:
@@ -472,6 +474,10 @@ public:
 	vector<double> operator() (size_t P_Comp, size_t P_Elem,vector<double> &GSI, vector<double> &mass, vector<double> &flux) {
 		
 		for (size_t i = 0; i < mass.size(); i++) {
+			if (mass[i] < 0.) {
+
+				mass[i] = 0.;
+			}
 			if (GSI[i] <= 2.00001 || GSI[i]>3) flux[i] = 0;
 			else {
 				if (P_Elem == _C_) {

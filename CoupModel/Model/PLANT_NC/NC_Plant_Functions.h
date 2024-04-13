@@ -91,7 +91,7 @@ CPG m_PG_Zadok;
 vector<double> GrowthStageIndex, SimPlantAge;
 
 
-vector<double> P_State[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];
+vector<double> P_State[NUM_PLANT_COMP][NUM_BIOELEM];
 vector<double> P_Respiration[NUM_PLANT_FUNGI_COMP];
 vector<double> P_LitterFall[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];
 vector<double> P_Harvest[NUM_PLANT_COMP][NUM_BIOELEM];
@@ -99,7 +99,16 @@ vector<double> P_ReAllocation[NUM_REALLOCATION][NUM_BIOELEM];
 AlloNewMobile P_CarbonAlloNewMobile;
 AlloNewMobile P_UptakeNewMobile[NUM_BIOELEM - 1];
 vector<double> P_Uptake[NUM_UPTAKE][NUM_BIOELEM-1];
+
+//Moved from Additional Biotic
+
 double AccHarvest[NUM_BIOELEM];
+double AccAboveLitter[NUM_BIOELEM], AccBelowLitter[NUM_BIOELEM], AccPlantLitter[NUM_BIOELEM];
+double IniPlant[NUM_BIOELEM], TotalDiffPlant[NUM_BIOELEM];
+
+double TotalPhotoSynt;
+double AccPhotosyntheses,   AccPlantRespiration, PlantPhotoSynt, PlantResp ;
+
 
 vector<double> P_State_IniValue[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];  //Parameters
 vector<double> P_State_IniCarbonRatio[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM - 1]; //Parameters
@@ -112,7 +121,7 @@ double P_AllPlants[NUM_SUM_STATES][NUM_BIOELEM];
 double AllFungi[NUM_BIOELEM];
 
 
-pair<size_t, size_t> P_ReLink[NUM_REALLOCATION];
+pair<int, int> P_ReLink[NUM_REALLOCATION];
 string P_StateCompName[NUM_PLANT_FUNGI_COMP];
 string P_BioElementName[NUM_BIOELEM];
 
@@ -409,7 +418,8 @@ vector<double> UptakeDistTotal[NUM_BIOELEM - 1], UptakeFungiDistTotal[NUM_BIOELE
 size_t	Growing, SpringDev, ResetYearShiftDay;
 double ContinStartSum, ContinStopSum;
 ;
-bool DoHarvest, DoFinalHarvest;;
+bool DoHarvest, DoFinalHarvest;
+bool HarvestEstimated;
 ;
 vector<bool> HarvestToBeDone, YearShiftToBeDone, HarvestDoneThisYear;
 vector<size_t> ResetHarvestToBeDoneDay;
@@ -483,6 +493,7 @@ size_t ResetCleaningDay, IndexClean;
 // New Enhanced Litter Fall Because of LAI value;
 ;
 //// Moved from Dyn below;
+bool MoveFromPlantToLitter;
 size_t Layer, OK, JJP;
 double	C_Seed_Avail, NOrgUptake, C_Seed_Added, N_Seed_Added, P_Seed_Added;
 ;

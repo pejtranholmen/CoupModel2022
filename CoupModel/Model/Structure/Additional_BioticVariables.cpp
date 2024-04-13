@@ -43,7 +43,7 @@ bool Additional_BioticVariables::Ini()	{
 			N_IrrigRateLocal = 0.;
 		
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-				TotalDiffPlant[jj] = 0.;
+				pNCPlant->TotalDiffPlant[jj] = 0.;
 				TotalDiffSoil[jj] = 0.;
 				TotalDiffOrgSoil[jj] = 0.;
 				TotalDiffHumus[jj] = 0.;
@@ -53,14 +53,14 @@ bool Additional_BioticVariables::Ini()	{
 				AccMinLeaching[jj] = 0.;
 				AccDisLeaching[jj] = 0.;
 				pNCPlant->AccHarvest[jj] = 0.;
-				AccAboveLitter[jj] = 0.;
-				AccBelowLitter[jj] = 0.;
-				AccPlantLitter[jj] = 0.;
+				pNCPlant->AccAboveLitter[jj] = 0.;
+				pNCPlant->AccBelowLitter[jj] = 0.;
+				pNCPlant->AccPlantLitter[jj] = 0.;
 				AccTotPlantUptake[jj] = 0.;
 			}
-			AccPhotosyntheses	  =0.;
+			pNCPlant->AccPhotosyntheses	  =0.;
 			AccTotalRespiration	  =0.;
-			AccPlantRespiration	  =0.;
+			pNCPlant->AccPlantRespiration	  =0.;
 			AccSoilRespiration	  =0.;
 			AccSoilOrgRespiration =0.;
 			AccCarbonBalance	  =0.;
@@ -83,7 +83,7 @@ bool Additional_BioticVariables::Ini()	{
 				IniSoilLitter1[jj] = pNCSoil->O_State_Profile[_L1][jj];
 				IniSoilLitter2[jj] = pNCSoil->O_State_Profile[_L2][jj];
 
-				IniPlant[jj]= pNCPlant->P_AllPlants[_PLANT_WHOLE][jj];
+				
 				if (jj == 0) { //Carbon
 					IniMinSoil[_C_] = 0.;
 					IniFungi[_C_] = 0.;
@@ -145,15 +145,15 @@ void Additional_BioticVariables::Integ()
 	Irrigation *pIrrig;
 	pIrrig=&pAtm->m_Irrigation;
 
- double	 PlantPhotoSynt, PlantResp, CarbonBalance, TotResp, TotalFixedCarbon;
+ double	  CarbonBalance, TotResp, TotalFixedCarbon;
 
  if (m_pModelStructure->m_NumActPlantElements >= 3) { //Mass balance test for phosphorus
 	 TotalBalanceCheck[_P_] = pNCSoil->AccInflowP - Acc_P_Mineralization + Acc_P_Manure - pNCPlant->AccHarvest[_P_]
-		 - AccMinLeaching[_P_] - AccDisLeaching[_P_] - AccSurfaceRunOffLeaching[_P_] - TotalDiffPlant[_P_]
+		 - AccMinLeaching[_P_] - AccDisLeaching[_P_] - AccSurfaceRunOffLeaching[_P_] - pNCPlant->TotalDiffPlant[_P_]
 		 - TotalDiffSoil[_P_];
 
-	 Plant_BalanceCheck[_P_] = AccTotPlantUptake[_P_] - AccPlantLitter[_P_] - pNCPlant->AccHarvest[_N_] - TotalDiffPlant[_P_];
-	 Soil_BalanceCheck[_P_] = AccPlantLitter[_P_] + pNCSoil->AccInflowP- Acc_P_Mineralization + Acc_P_Manure +
+	 Plant_BalanceCheck[_P_] = AccTotPlantUptake[_P_] - pNCPlant->AccPlantLitter[_P_] - pNCPlant->AccHarvest[_N_] - pNCPlant->TotalDiffPlant[_P_];
+	 Soil_BalanceCheck[_P_] = pNCPlant->AccPlantLitter[_P_] + pNCSoil->AccInflowP- Acc_P_Mineralization + Acc_P_Manure +
 		 - AccTotPlantUptake[_P_] - AccMinLeaching[_P_] - AccSurfaceRunOffLeaching[_P_] - AccDisLeaching[_P_] - TotalDiffSoil[_P_] - pNCSoil->P_Fert;
  }
 
@@ -161,21 +161,19 @@ void Additional_BioticVariables::Integ()
 
 
  for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-	 TotalDiffOrgSoil[jj] = pNCSoil->O_State_TotOrg[jj]-IniOrgSoil[jj];//HH
+	 TotalDiffOrgSoil[jj] = pNCSoil->O_State_TotOrg[jj]+sum(pNCSoil->Dead_BelowGround[_L1][jj])+sum(pNCSoil->Dead_BelowGround[_L2][jj]) - IniOrgSoil[jj];//HH
 	 TotalDiffHumus[jj] = pNCSoil->O_State_Profile[_H][jj]-IniSoilHumus[jj];
-	 TotalDiffLitter1[jj] = pNCSoil->O_State_Profile[_L1][jj] - IniSoilLitter1[jj];
-	 TotalDiffLitter2[jj] = pNCSoil->O_State_Profile[_L2][jj] - IniSoilLitter2[jj];
+	 TotalDiffLitter1[jj] = pNCSoil->O_State_Profile[_L1][jj]+ sum(pNCSoil->Dead_BelowGround[_L1][jj]) - IniSoilLitter1[jj];
+	 TotalDiffLitter2[jj] = pNCSoil->O_State_Profile[_L2][jj]+ sum(pNCSoil->Dead_BelowGround[_L2][jj]) - IniSoilLitter2[jj];
 
 
-	 TotalDiffPlant[jj] = pNCPlant->P_AllPlants[_PLANT_WHOLE][jj]- IniPlant[jj];
+	
 	 if (FungalGrowth_Sw(pNCPlant->FungalGrowth) > FungalGrowth_Sw::off) {
 		 TotalDiff_Fungi[jj] = pNCPlant->P_AllPlants[_FUNGI_][jj] - IniFungi[jj];
 	 }
-	 InFlow(pNCPlant->AccHarvest[jj], pNCPlant->TotHarvest[jj]);
+	 //InFlow(pNCPlant->AccHarvest[jj], pNCPlant->TotHarvest[jj]);
 
-	 InFlow(AccBelowLitter[jj], pNCPlant->TotPlantLitter[jj] - pNCPlant->TotAbovePlantLitter[jj]);
-	 InFlow(AccAboveLitter[jj], pNCPlant->TotAbovePlantLitter[jj]);
-	 InFlow(AccPlantLitter[jj], pNCPlant->TotPlantLitter[jj]);
+
 
 
 	 if (jj == 0) { //Carbon
@@ -185,12 +183,14 @@ void Additional_BioticVariables::Integ()
 	 }
 	 else if (jj == _N_) { //Nitrogen
 		 
-		 TotalDiffOrgSoil[_N_] = pNCSoil->O_State_TotOrg[jj]- IniOrgSoil[jj]; ;
+		 TotalDiffOrgSoil[_N_] = pNCSoil->O_State_TotOrg[jj]+ sum(pNCSoil->Dead_BelowGround[_L1][jj]) + sum(pNCSoil->Dead_BelowGround[_L2][jj]) - IniOrgSoil[jj]; ;
 		 TotalDiffMinSoil[_N_] = pNCSoil->NTotMinN_Soil - IniMinSoil[_N_];
 
 		 InFlow(AccMinLeaching[jj], pNCSoil->NTotMinN_Drainage);
 		 InFlow(AccMinLeaching[jj], pNCSoil->SoilNitrateFlow.back());
 		 InFlow(AccMinLeaching[jj], pNCSoil->SoilAmmoniumFlow.back());
+
+
 
 		 InFlow(AccDeposition, pNCSoil->N_Deposition_NO3);
 		 InFlow(AccDeposition, pNCSoil->N_Deposition_NH4);
@@ -242,12 +242,12 @@ void Additional_BioticVariables::Integ()
 	 if (jj == _P_) {
 		 TotalDiffSoil[jj] = TotalDiffOrgSoil[jj] + TotalDiffMinSoil[jj]+ TotalDiffSolidMineralPhosphorus;
 		 if (FungalGrowth_Sw(pNCPlant->FungalGrowth) > FungalGrowth_Sw::off)    TotalDiffSoil[jj] += TotalDiff_Fungi[jj];
-		 TotalDiff_Eco[jj] = TotalDiffPlant[jj] + TotalDiffSoil[jj];
+		 TotalDiff_Eco[jj] = pNCPlant->TotalDiffPlant[jj] + TotalDiffSoil[jj];
 	 }
 	 else {
 		 TotalDiffSoil[jj] = TotalDiffOrgSoil[jj] + TotalDiffMinSoil[jj];
 		 if (FungalGrowth_Sw(pNCPlant->FungalGrowth) > FungalGrowth_Sw::off) TotalDiffSoil[jj] += TotalDiff_Fungi[jj];
-		 TotalDiff_Eco[jj] = TotalDiffPlant[jj] + TotalDiffSoil[jj];
+		 TotalDiff_Eco[jj] = pNCPlant->TotalDiffPlant[jj] + TotalDiffSoil[jj];
 
 	 }
 	 InFlow(AccDisLeaching[jj], pNCSoil->Dissolved[jj].TotHFlow);
@@ -265,16 +265,16 @@ void Additional_BioticVariables::Integ()
   InFlow(AccNOutput, N_LossesRate);
 
   TotalBalanceCheck[_N_]=AccFertilization+AccManure+AccDeposition+AccNFixation- pNCPlant->AccHarvest[_N_]-AccDenitrification-AccMinLeaching[_N_]
-					   -AccDisLeaching[_N_]-TotalDiffPlant[_N_]-TotalDiffMinSoil[_N_]-TotalDiffOrgSoil[_N_]-pNCSoil->N_Fert 
+					   -AccDisLeaching[_N_]- pNCPlant->TotalDiffPlant[_N_]-TotalDiffMinSoil[_N_]-TotalDiffOrgSoil[_N_]-pNCSoil->N_Fert
 					   - pNCSoil->N_Tot_AnarobicGasStorage+pNCPlant->N_Seed_Added;			   //!N_Tot_NitriMicrobeStorage+
 
-  Plant_BalanceCheck[_N_]=AccTotPlantUptake[_N_]-AccPlantLitter[_N_]- pNCPlant->AccHarvest[_N_]-TotalDiffPlant[_N_]+pNCPlant->N_Seed_Added;
+  Plant_BalanceCheck[_N_]=AccTotPlantUptake[_N_]- pNCPlant->AccPlantLitter[_N_]- pNCPlant->AccHarvest[_N_]- pNCPlant->TotalDiffPlant[_N_]+pNCPlant->N_Seed_Added;
 
-  Soil_BalanceCheck[_N_]=AccPlantLitter[_N_]+AccFertilization+AccManure+AccDeposition-AccTotPlantUptake[_N_]
+  Soil_BalanceCheck[_N_]= pNCPlant->AccPlantLitter[_N_]+AccFertilization+AccManure+AccDeposition-AccTotPlantUptake[_N_]
   - AccMinLeaching[_N_]-AccDisLeaching[_N_] -AccDenitrification-TotalDiffSoil[_N_] -pNCSoil->N_Fert 
   - pNCSoil->N_Tot_AnarobicGasStorage;
 
-  TotalBalanceCheck[_C_]=AccPhotosyntheses-AccTotalRespiration- pNCPlant->AccHarvest[_C_]-TotalDiffPlant[_C_]-TotalDiffOrgSoil[_C_]
+  TotalBalanceCheck[_C_]= pNCPlant->AccPhotosyntheses-AccTotalRespiration- pNCPlant->AccHarvest[_C_]- pNCPlant->TotalDiffPlant[_C_]-TotalDiffOrgSoil[_C_]
 					-AccDisLeaching[_C_]+AccExternalCarbon+pNCPlant->C_Seed_Added;
 
 
@@ -299,29 +299,21 @@ void Additional_BioticVariables::Integ()
   double TotalFungiLitter = sum(pNCPlant->P_LitterFall[_FUNGI][_C_]);
   InFlow(AccFungiLitterFall, TotalFungiLitter);
 
-  PlantPhotoSynt=sum(pNCPlant->AtmNewMobile);
-  TotalPhotoSynt=PlantPhotoSynt;
 
-  InFlow(AccPhotosyntheses, PlantPhotoSynt);
-
-  PlantResp=sum(pNCPlant->P_Respiration[_STEM])+sum(pNCPlant->P_Respiration[_LEAF])+sum(pNCPlant->P_Respiration[_ROOT])+sum(pNCPlant->P_Respiration[_GRAIN]) 
-			+sum(pNCPlant->P_Respiration[_OLD_ROOT])+sum(pNCPlant->P_Respiration[_OLD_LEAF])+sum(pNCPlant->P_Respiration[_OLD_STEM])+sum(pNCPlant->P_Respiration[_COARSE_ROOT])+sum(pNCPlant->P_Respiration[_OLD_COARSE_ROOT]);
-
-  InFlow(AccPlantRespiration, PlantResp);	
   
-  CarbonBalance=PlantPhotoSynt-PlantResp-SoilRespOrg-pNCPlant->TotHarvest[_C_]-pNCSoil->Dissolved[_C_].TotHFlow;
-  Plant_BalanceCheck[_C_]=AccPhotosyntheses-AccPlantLitter[_C_]- pNCPlant->AccHarvest[_C_]-TotalDiffPlant[_C_]+pNCPlant->C_Seed_Added-AccPlantRespiration-AccFungiGrowth;
+  CarbonBalance= pNCPlant->PlantPhotoSynt- pNCPlant->PlantResp-SoilRespOrg-pNCPlant->TotHarvest[_C_]-pNCSoil->Dissolved[_C_].TotHFlow;
+  Plant_BalanceCheck[_C_]= pNCPlant->AccPhotosyntheses- pNCPlant->AccPlantLitter[_C_]- pNCPlant->AccHarvest[_C_]- pNCPlant->TotalDiffPlant[_C_]+pNCPlant->C_Seed_Added- pNCPlant->AccPlantRespiration-AccFungiGrowth;
 
-  Soil_BalanceCheck[_C_] = AccPlantLitter[_C_] + AccExternalCarbon+ AccFungiGrowth -AccFungiRespiration
+  Soil_BalanceCheck[_C_] = pNCPlant->AccPlantLitter[_C_] + AccExternalCarbon+ AccFungiGrowth -AccFungiRespiration
 	  - AccDisLeaching[_C_] - AccSoilOrgRespiration -  TotalDiffOrgSoil[_C_];
 
   
 
-  TotalRespiration=PlantResp+SoilRespOrg+TotalFungiResp;
+  TotalRespiration= pNCPlant->PlantResp+SoilRespOrg+TotalFungiResp;
 
   if(pNCSoil->FaecesPool>0) CarbonBalance+=pNCSoil->C_Manure_Litter+pNCSoil->C_Manure_Faeces;
 
-  TotResp=PlantResp+SoilRespOrg+TotalFungiResp+ pNCPlant->GrazingRespiration+ pNCPlant->WoodEatingRespiration+ pNCPlant->WoodEaterRespFlux;
+  TotResp= pNCPlant->PlantResp+SoilRespOrg+TotalFungiResp+ pNCPlant->GrazingRespiration+ pNCPlant->WoodEatingRespiration+ pNCPlant->WoodEaterRespFlux;
  
   TotAdsRadiation=sum(pNCPlant->RadPlantAdsorbed)/1.E6;
   InFlow(AccTotAdsRadiation,TotAdsRadiation );
@@ -335,10 +327,10 @@ void Additional_BioticVariables::Integ()
   InFlow(AccSoilRespiration, SoilRespTot);
 
   
-  CarbonBalanceRate=PlantPhotoSynt-TotResp;//          !-CTotDisOrgDrainage REMOVED AND mOVED TO CarbonBalance 15/8 2006
+  CarbonBalanceRate= pNCPlant->PlantPhotoSynt-TotResp;//          !-CTotDisOrgDrainage REMOVED AND mOVED TO CarbonBalance 15/8 2006
   CarbonFlux=-CarbonBalanceRate;
 
-  TotalFixedCarbon=AccPhotosyntheses-AccPlantRespiration;
+  TotalFixedCarbon= pNCPlant->AccPhotosyntheses- pNCPlant->AccPlantRespiration;
 
   if(TotalFixedCarbon>0.01) {
 		AccWaterEfficiency=(AccSoilEvapAndTransp-AccSoilEvap)/TotalFixedCarbon;
@@ -356,7 +348,7 @@ void Additional_BioticVariables::Integ()
   GWP_SOIL[0] = SoilRespOrg * Fix::GWP_C_CO2;
   GWP_SOIL[1] = GWP_SOIL[0] +GWP_NEE[1] + GWP_NEE[2];
 
-  GWP_PLANT = (PlantResp-PlantPhotoSynt) * Fix::GWP_C_CO2;
+  GWP_PLANT = (pNCPlant->PlantResp- pNCPlant->PlantPhotoSynt) * Fix::GWP_C_CO2;
 
 
 }

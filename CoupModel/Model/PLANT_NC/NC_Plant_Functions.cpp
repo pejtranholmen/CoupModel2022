@@ -31,7 +31,7 @@ NC_Plant_Functions::NC_Plant_Functions(void)
 
 
 	
-	P_ReLink[0] = pair < size_t, size_t>(_LEAF, _GRAIN);
+	P_ReLink[0] = pair < int, int>(LEAF,GRAIN);
 	P_ReLink[1] = pair < size_t, size_t>(_STEM, _GRAIN);
 	P_ReLink[2] = pair < size_t, size_t>(_ROOT, _GRAIN);
 	P_ReLink[3] = pair < size_t, size_t>(_COARSE_ROOT, _GRAIN);
@@ -3021,9 +3021,6 @@ double NC_Plant_Functions::LogisticGrowthRateFunc(size_t index, double JDay) {
 }
 
 
-
-
-
 double NC_Plant_Functions::CN_RatioLeafFixed(size_t index,double Response) {
 	
 	return CNLeafThres[index]+Response*(CNLeafOpt[index]-CNLeafThres[index]) ;
@@ -3057,11 +3054,6 @@ double NC_Plant_Functions::CAlloMaxFungi(size_t index) {
     return AlloMaxC1[index];
     
 }
-
-
-
-
-
 
 double NC_Plant_Functions::CAlloRootNitrogen(size_t index, double CN_RatioLeaf) {
 	//Integer index
@@ -3211,9 +3203,16 @@ double NC_Plant_Functions::CP_MinCoarseRootsFunc(size_t index) {
   
 
 bool NC_Plant_Functions::KillAboveGroundPlant(size_t index) {
-	for (size_t jj = 0;jj<m_pModelStructure->m_NumActPlantElements; jj++) {
-		for (size_t j = 0; j <= _OLD_STEM; j++) P_LitterFall[j][jj][index] = P_State[j][jj][index] / T_Step;
-		if (jj == _C_) for (size_t j = 0; j <= _OLD_STEM; j++) P_Respiration[j][index] = 0.;
+	for (int element = _C_;element<m_pModelStructure->m_NumActPlantElements; element++) {
+		for (int plantcomp = NEWMOBILE; plantcomp <= _OLD_STEM; ++plantcomp) {
+			if (P_State[plantcomp][element][index] < 0.) {
+				P_State[plantcomp][element][index] = 0.;
+			}
+			else 
+				P_LitterFall[plantcomp][element][index] = P_State[plantcomp][element][index] / T_Step;
+
+		}
+		if (element == _C_) for (size_t j = 0; j <= _OLD_STEM; j++) P_Respiration[j][index] = 0.;
 	}
 
 	//AtmNewMobile[index]=0.;

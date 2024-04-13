@@ -406,7 +406,10 @@ bool NC_Plant::Ini()	{
 				P_AllPlants[_ROOT_ALL][jj] = sum(P_SumPlant[_ROOT_ALL][jj]);
 				P_AllPlants[_PLANT_WHOLE][jj] = sum(P_SumPlant[_PLANT_WHOLE][jj]);
 				P_AllPlants[_LEAF_ALL][jj] = sum(P_SumPlant[_LEAF_ALL][jj]);
+
+				IniPlant[jj] = P_AllPlants[_PLANT_WHOLE][jj];
 			}
+		
 
 			for (size_t i = 0; i < Initial_GSI.size(); i++) {
 				SimPlantAge[i] = InitPlantAge[i];
@@ -424,6 +427,7 @@ bool NC_Plant::Ini()	{
 		C_Seed_Added = 0.;
 		N_Seed_Added = 0.;
 		P_Seed_Added = 0.;
+
 	};
 	auto SetSizeofVariablesandOtherSettings = [&]() {
 		if (FungalGrowth > 0) {
@@ -462,6 +466,33 @@ bool NC_Plant::Ini()	{
 
 		ResetHarvestToBeDoneDay.resize(pPlant->NumPlants, 0);
 
+#ifndef COUPSTD
+		MFC_Util m;
+#endif
+
+		for (size_t i = 0; i < pPlant->NumPlants; i++) {  // To check mass balance att Harvest
+
+			if ((HarvFracRoots[i] + LitterFracRoots[i]) > 1.) {
+				//LitterFracRoots[i] = 1. - HarvFracRoots[i];
+#ifndef COUPSTD
+				//m.MessageBoxReturn("Error for Mass balance at Harvest for Roots", "Harvest+ Litter exceed 1. - LitterFall is adjusted", MB_OK);
+#endif
+
+			}
+			if ((HarvFracLeaf[i] + LitterFracLeaf[i]) > 1.) {
+				//LitterFracLeaf[i] = 1. - HarvFracLeaf[i];
+#ifndef COUPSTD
+				//m.MessageBoxReturn("Error for Mass balance at Harvest for Leaf", "Harvest+ Litter exceed 1. - LitterFall is adjusted", MB_OK);
+#endif
+			}
+			if ((HarvFracStem[i] + LitterFracStem[i]) > 1.) {
+				//LitterFracStem[i] = 1. - HarvFracStem[i];
+#ifndef COUPSTD
+				//m.MessageBoxReturn("Error for Mass balance at Harvest for Stem", "Harvest+ Litter exceed 1. - LitterFall is adjusted", MB_OK);
+#endif
+			}
+
+		}
 
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 			RemainOldLeaf[jj].resize(pPlant->NumPlants, 0);
@@ -484,6 +515,8 @@ bool NC_Plant::Ini()	{
 				DormingSum[i] = 0.;
 			}
 		ResetYearShiftDay = 2;
+
+
 
 		ContinStartSum = 0.;
 		ContinStopSum = 0.;
@@ -1175,7 +1208,12 @@ void NC_Plant::Integ()
 
 
 	auto ReAllocationFlow = [&]() {
+		auto gsi_koll=GrowthStageIndex[0];
 
+		if (gsi_koll > 3.93) {
+			int koll = 2;
+
+		}
 
 		OutFlow(P_State[_NEWMOBILE][_C_], P_CarbonAlloNewMobile.Leaf);
 		if (P_State[_LEAF][_C_][0] > -10.&&P_State[_LEAF][_C_][0] < 1000.) {
@@ -1207,6 +1245,12 @@ void NC_Plant::Integ()
 				if (P_ReAllocation[j][jj][0] > -10. &&P_ReAllocation[j][jj][0] < 1000.) {
 					OutFlow(P_State[P_ReLink[j].first][jj], P_ReAllocation[j][jj]);
 					InFlow(P_State[P_ReLink[j].second][jj], P_ReAllocation[j][jj]);
+					auto koll = P_State[P_ReLink[j].first][jj];
+					if (P_ReLink[j].first == GRAIN&&gsi_koll > 3.93) {
+						auto koll2 = P_State[GRAIN][_C_];
+						auto koll3 = P_State[GRAIN][_N_];				
+					}
+				
 				}
 				else
 					P_ReAllocation[j][jj][0] = 0.;
@@ -1225,6 +1269,8 @@ void NC_Plant::Integ()
 			for (size_t j = MOBILE_LEAF; j < MOBILE_NEWMOBILE; j++) {
 				OutFlow(P_State[P_ReLink[j].first][jj], P_ReAllocation[j][jj]);
 				InFlow(P_State[P_ReLink[j].second][jj], P_ReAllocation[j][jj]);
+				auto koll = P_State[P_ReLink[j].first][jj];
+				auto koll2 = P_State[P_ReLink[j].second][jj];
 			}
 
 
@@ -1251,44 +1297,62 @@ void NC_Plant::Integ()
 
 	};
 
-	auto LitterFallFlow = [&]() {
+	auto LitterFallFlow = [&](bool EnhanceFlux) {
 		// Add for P in surface litter by HH
-		auto InflowToSurfaceLitter = [&](size_t jj_element, size_t i_plant) {
-			double Litter1Fraction;
-			for (size_t j = _LEAF; j <= _OLD_STEM; j++) {
-				switch (j) {
-					case _LEAF:
-					case _OLD_LEAF:
+		auto InflowToSurfaceLitter = [&](int jj_element, int i_plant) {
+			double Litter1Fraction=1;
+
+			for (int plantcomp = NEWMOBILE; plantcomp <= OLD_STEM; ++plantcomp) {
+				switch (plantcomp) {
+					case LEAF:
 						Litter1Fraction = (1. - Leaf_FracLitter2[i_plant]);
 						break;
-					case _STEM:	
-					case _OLD_STEM:
+					case STEM:
+					case OLD_STEM:
 						Litter1Fraction = (1. - Stem_FracLitter2[i_plant]);
 						break;
-					case _GRAIN:
+					case GRAIN:
 						Litter1Fraction = (1. - Grain_FracLitter2[i_plant]);
 						break;
+					case NEWMOBILE:
+					case MOBILE:
+						Litter1Fraction = 1.;
+						break;
 				}
-				if (P_LitterFall[j][jj_element][i_plant] >= 0.&&P_LitterFall[j][jj_element][i_plant] < 100000.) {
-					if (jj_element == _C_) InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
-					else if (jj_element == _N_) InFlow(pNCSoil->SurfaceLitter[_L1][_N_], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
-					else if (jj_element == _P_) InFlow(pNCSoil->SurfaceLitter[_L1][_P_], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
+				bool CollectLitter = true;
+				if (GrowthStageIndex[i_plant]<0.) {
+					int prior = 1;
+					if (HarvestToBeDone[i_plant]) {
+						
 
-					if (Litter1Fraction < 1.) {
-						if (jj_element == _C_) InFlow(pNCSoil->SurfaceLitter[_L2][_C_], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
-						else if (jj_element == _N_) InFlow(pNCSoil->SurfaceLitter[_L2][_N_], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
-						else if (jj_element == _P_) InFlow(pNCSoil->SurfaceLitter[_L2][_P_], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
+					}
+					else {
+						CollectLitter = false;
+						prior = 3;
+
+
 					}
 				}
-				else {
-					P_LitterFall[j][jj_element][i_plant] = 0.;
+				
+				if(CollectLitter) {//if (P_LitterFall[j][jj_element][i_plant] >= 0. && P_LitterFall[j][jj_element][i_plant] < 100000.) {
+					if (jj_element == _C_) InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[plantcomp][jj_element][i_plant] * Litter1Fraction);
+					else if (jj_element == _N_) InFlow(pNCSoil->SurfaceLitter[_L1][_N_], P_LitterFall[plantcomp][jj_element][i_plant] * Litter1Fraction);
+					else if (jj_element == _P_) InFlow(pNCSoil->SurfaceLitter[_L1][_P_], P_LitterFall[plantcomp][jj_element][i_plant] * Litter1Fraction);
+
+					if (Litter1Fraction < 1.) {
+						if (jj_element == _C_) InFlow(pNCSoil->SurfaceLitter[_L2][_C_], P_LitterFall[plantcomp][jj_element][i_plant] * (1 - Litter1Fraction));
+						else if (jj_element == _N_) InFlow(pNCSoil->SurfaceLitter[_L2][_N_], P_LitterFall[plantcomp][jj_element][i_plant] * (1 - Litter1Fraction));
+						else if (jj_element == _P_) InFlow(pNCSoil->SurfaceLitter[_L2][_P_], P_LitterFall[plantcomp][jj_element][i_plant] * (1 - Litter1Fraction));
+					}
 				}
 
 			}
-		};
+			};
 
 		auto InflowAboveGroundComponentsToSoilHorizon = [&](size_t jj_element, size_t i_plant, size_t i_soil_layer) {
 			double Litter1Fraction, LayerFraction;
+
+
 			for (size_t j = _LEAF; j <= _OLD_STEM; j++) {
 				switch (j) {
 				case _LEAF:
@@ -1305,22 +1369,26 @@ void NC_Plant::Integ()
 				}
 
 				if (P_LitterFall[j][jj_element][i_plant] >= 0. && P_LitterFall[j][jj_element][i_plant] < 100000.) {
+					if (HarvestToBeDone[i_plant]) {
 
-					if (jj_element == _C_) InFlow(pNCSoil->O_State[_L1][_C_][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
-					else if (jj_element == _N_) InFlow(pNCSoil->O_State[_L1][_N_][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
-					else if (jj_element == _P_) InFlow(pNCSoil->O_State[_L1][_P_][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
+					}
+					else {
+						if (jj_element == _C_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj_element][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
+						else if (jj_element == _N_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj_element][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
+						else if (jj_element == _P_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj_element][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * Litter1Fraction);
 
-					if (Litter1Fraction < 1.) {
-						if (jj_element == _C_) InFlow(pNCSoil->O_State[_L2][_C_][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
-						else if (jj_element == _N_) InFlow(pNCSoil->O_State[_L2][_N_][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
-						else if (jj_element == _P_) InFlow(pNCSoil->O_State[_L2][_P_][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
+						if (Litter1Fraction < 1.) {
+							if (jj_element == _C_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj_element][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
+							else if (jj_element == _N_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj_element][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
+							else if (jj_element == _P_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj_element][i_soil_layer], P_LitterFall[j][jj_element][i_plant] * (1 - Litter1Fraction));
+						}
 					}
 				}
 				else {
 					P_LitterFall[j][jj_element][i_plant] = 0.;
 				}
 			}
-		};
+			};
 
 		auto mobilepoolLitterFall = [&](size_t jj, size_t i) {
 			if (jj == _C_) {
@@ -1337,28 +1405,35 @@ void NC_Plant::Integ()
 				InFlow(pNCSoil->SurfaceLitter[_L1][_P_], P_LitterFall[_NEWMOBILE][_P_][i]);
 				InFlow(pNCSoil->SurfaceLitter[_L1][_P_], P_LitterFall[_MOBILE][_P_][i]);
 			}
-
 		};
 
-
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+
+			auto kollP_P = sum(P_State[jj]);
+			auto kollLitter_P = sum(P_LitterFall[jj]);
+
+			double orig_tstep = T_Step;
+		//	if (EnhanceFlux) T_Step = 1.;
 			for (size_t j = 0; j < NUM_PLANT_COMP; j++) {
 				OutFlow(P_State[j][jj], P_LitterFall[j][jj]);
+				auto koll3 = P_State[j][jj];
 			};
-			//auto cnleaf = P_State[_OLD_LEAF][_C_][1] / P_State[_OLD_LEAF][_N_][1];
-			//auto cnlitterfall= P_LitterFall[_OLD_LEAF][_C_][1] / P_LitterFall[_OLD_LEAF][_N_][1];
+		//	if (EnhanceFlux) T_Step = orig_tstep;
+
+			auto kollP = sum(P_State[jj]);
+			auto kollLitter = sum(P_LitterFall[jj]);
+			if (kollP > 0. || kollP_P > 0.) {
+				auto Diff = kollP - kollLitter;
+			}
 
 			if (FungalGrowth > 0) OutFlow(P_State[_FUNGI][jj], P_LitterFall[_FUNGI][jj]);
 
-
 			for (size_t indexplant = 0; indexplant < P_LitterFall[_ROOT][_C_].size(); indexplant++) {
-
 				if (pNCSoil->LitterPools > 0) {
 					if (SoilLayerForLitterInput[indexplant] == string::npos)
 						InflowToSurfaceLitter(jj, indexplant);
 					else
 						InflowAboveGroundComponentsToSoilHorizon(jj, indexplant, SoilLayerForLitterInput[indexplant]);
-
 				}
 				else {
 					if (SoilLayerForLitterInput[indexplant] == string::npos)
@@ -1366,20 +1441,46 @@ void NC_Plant::Integ()
 					else
 						InflowAboveGroundComponentsToSoilHorizon(jj, indexplant, SoilLayerForLitterInput[indexplant]);
 				}
-				mobilepoolLitterFall(jj, indexplant);
+				//mobilepoolLitterFall(jj, indexplant);
 			}
-
-
-
-
 		}
 	};
-	auto HarvestFlow = [&]() {
+	auto InflowBelowGroundComponentsToSoilHorizon = [&]() {
+		double Litter1Fraction, LayerFraction;
+		for (size_t i_plant = 0; i_plant < P_LitterFall[_ROOT][_C_].size(); i_plant++) {
+			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+				for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) {
+					Litter1Fraction = 1;
+					if (j == _ROOT || j == _OLD_ROOT) Litter1Fraction = 1. - Root_FracLitter2[i_plant];
+					else Litter1Fraction = 1.- CoarseRoot_FracLitter2[i_plant];
+					DEPTH_type out;
+					out = pPlant->f_WaterUptakeDistribution(1., pPlant->SimRootDepth[i_plant]);
+
+
+					for (size_t i_soil_layer = 0; i_soil_layer < out.NumLay; ++i_soil_layer) {
+						auto frac = out.Dist[i_soil_layer];
+						if (jj == _C_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction*frac);
+						else if (jj == _N_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction*frac);
+						else if (jj == _P_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction*frac);
+
+						if (Litter1Fraction < 1.) {
+							if (jj == _C_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction)*frac);
+							else if (jj == _N_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction)*frac);
+							else if (jj == _P_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction)*frac);
+						}
+					}
+				}
+			}
+		}
+	};
+	auto HarvestFlow = [&](bool EnhanceFlux) {
+		double orig_tstep = T_Step;
+		//if (EnhanceFlux) T_Step = 1.;
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 			for (size_t j = 0; j < NUM_PLANT_COMP; j++) {
 				OutFlow(P_State[j][jj], P_Harvest[j][jj]);
 			};
-
+		//if (EnhanceFlux) T_Step = orig_tstep;
 	};
 
 	auto PlantUptakeFlow = [&]() {
@@ -1399,401 +1500,38 @@ void NC_Plant::Integ()
 		}
 	};
 
+	auto AccFlowsMovedFromAddition = [&]() 
+	{
+			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+				InFlow(AccHarvest[jj], TotHarvest[jj]);
+				InFlow(AccBelowLitter[jj], TotPlantLitter[jj] - TotAbovePlantLitter[jj]);
+				InFlow(AccAboveLitter[jj], TotAbovePlantLitter[jj]);
+				InFlow(AccPlantLitter[jj], TotPlantLitter[jj]);
+
+				TotalDiffPlant[jj] = P_AllPlants[_PLANT_WHOLE][jj] - IniPlant[jj];
+
+				PlantPhotoSynt = sum(AtmNewMobile);
+				TotalPhotoSynt = PlantPhotoSynt;
+
+				InFlow(AccPhotosyntheses, PlantPhotoSynt);
+
+				PlantResp = sum(P_Respiration[_STEM]) + sum(P_Respiration[_LEAF]) + sum(P_Respiration[_ROOT]) + sum(P_Respiration[_GRAIN])
+					+ sum(P_Respiration[_OLD_ROOT]) + sum(P_Respiration[_OLD_LEAF]) + sum(P_Respiration[_OLD_STEM]) + sum(P_Respiration[_COARSE_ROOT]) + sum(P_Respiration[_OLD_COARSE_ROOT]);
+
+				InFlow(AccPlantRespiration, PlantResp);
+
+
+			}
+	};
+
 	ReAllocationFlow();
 	RespirationFlow();
-	LitterFallFlow();
-	HarvestFlow();
+	LitterFallFlow(HarvestEstimated);
+	HarvestFlow(HarvestEstimated);
 	PlantUptakeFlow();
+	InflowBelowGroundComponentsToSoilHorizon();
+	AccFlowsMovedFromAddition();
 }
-
-
-
-
-	/*if (m_pModelStructure->Phosphorus_Model > 0) Phosphorus_Sw = true;
-	Flow_NewMobile(P_State, P_Flux, Phosphorus_Sw);
-	Flow_Root(P_State, P_Flux, Phosphorus_Sw);
-	Flow_Atm(P_State, P_Flux, true);*/
-	
-
-
-	
-	/*OutFlow(P_State[_NEWMOBILE][_C_], P_CarbonAlloNewMobile.Roots);
-	OutFlow(P_State[_NEWMOBILE][_C_], P_CarbonAlloNewMobile.Leaf);
-	OutFlow(P_State[_NEWMOBILE][_C_], P_CarbonAlloNewMobile.Stem);
-	OutFlow(P_State[_NEWMOBILE][_C_], P_CarbonAlloNewMobile.CoarseRoots);*/
-
-
-//	InFlow(&P_State[_NEWMOBILE][_N_], &NPlantFixation);
-/*	OutFlow(P_State[_NEWMOBILE][_N_], P_ReAllocation{NEWMOBILE_ROOT][_N_]);
-	OutFlow(P_State[_NEWMOBILE][_N_], P_ReAllocation[NEWMOBILE_LEAF][_N_]);
-	OutFlow(P_State[_NEWMOBILE][_N_], P_ReAllocation[NEWMOBILE_STEM][_N_]);
-	OutFlow(P_State[_NEWMOBILE][_N_], P_ReAllocation[NEWMOBILE_COARSEROOT][_N_]);*/
-
-//	Root pool
-//	InFlow(P_State[_ROOT][_C_], P_CarbonAlloNewMobile.Roots);
-//	InFlow(P_State[_ROOT][_N_], P_ReAllocation{NEWMOBILE_ROOT][_N_]);
-//	OutFlow(P_State[_ROOT][_C_], P_Respiration[_ROOT]);
-//	OutFlow(P_State[_ROOT][_C_], CRootsLitter);
-//	OutFlow(P_State[_ROOT][_N_], NRootsLitter);
-
-//	if(pPlant->TraceElementUptake) {
-//		 InFlow(pPlant->TE_Roots, pPlant->TE_PlantRootUptake);
-//		 OutFlow(pPlant->TE_Roots, pPlant->TE_RootsLitter);
-//	}
-
-	//if(FungalGrowth>0) {
-			//OutFlow(P_State[_NEWMOBILE][_C_], CNewMobileFungi);
-			//InFlow(P_State[_FUNGI][_C_], CNewMobileFungi);
-  			//OutFlow(P_State[_FUNGI][_C_], CFungiAtm);      
-			//OutFlow(P_State[_FUNGI][_C_], P_LitterFall[_FUNGI][_C_]);
-			//OutFlow(P_State[_FUNGI][_N_], P_LitterFall[_FUNGI][_N_]);
-			
-	//	};
-
-//	Coarse Root pool
-	//InFlow(P_State[_COARSE_ROOT][_C_], P_CarbonAlloNewMobile.CoarseRoots);
-	//InFlow(P_State[_COARSE_ROOT][_N_], P_ReAllocation[NEWMOBILE_COARSEROOT][_N_]);
-	//OutFlow(P_State[_COARSE_ROOT][_C_], P_Respiration[_COARSE_ROOT]);
-	//OutFlow(P_State[_COARSE_ROOT][_C_], CCoarseRootsLitter);
-	//OutFlow(P_State[_COARSE_ROOT][_N_], NCoarseRootsLitter);
-
-
-//	Leaf pool
-/*	InFlow(P_State[_LEAF][_C_], P_CarbonAlloNewMobile.Leaf);
-	InFlow(P_State[_LEAF][_N_], P_ReAllocation[NEWMOBILE_LEAF][_N_]);
-	OutFlow(P_State[_LEAF][_C_], P_Respiration[_LEAF]);
-
-	OutFlow(P_State[_LEAF][_C_], CLeafReturnMobile);
-	OutFlow(P_State[_OLD_LEAF][_C_], COldLeafReturnMobile);
-	
-	InFlow(P_State[_LEAF][_C_], CMobileLeaf);
-	OutFlow(P_State[_MOBILE][_C_], CMobileLeaf);
-	InFlow(P_State[_LEAF][_N_], NMobileLeaf);
-	OutFlow(P_State[_MOBILE][_N_], NMobileLeaf);
-	
-	InFlow(P_State[_MOBILE][_C_], CLeafReturnMobile);
-    InFlow(P_State[_MOBILE][_C_], COldLeafReturnMobile);
-
-	OutFlow(P_State[_LEAF][_N_], NLeafReturnMobile);
-	OutFlow(P_State[_OLD_LEAF][_N_], NOldLeafReturnMobile);
-	
-	InFlow(P_State[_MOBILE][_N_], NLeafReturnMobile);
-    InFlow(P_State[_MOBILE][_N_], NOldLeafReturnMobile);
-//  Leaf Stem Pool reallocation (new June 2007)
-
-    OutFlow(P_State[_LEAF][_C_], CLeafStem);
-    InFlow(P_State[_STEM][_C_], CLeafStem);  
-    
-    OutFlow(P_State[_LEAF][_N_],  NLeafStem);
-    InFlow(P_State[_STEM][_N_],  NLeafStem);  */
-    
-    
-	
-/*	Stem pool
-	InFlow(P_State[_STEM][_C_], P_CarbonAlloNewMobile.Stem);
-	InFlow(P_State[_STEM][_N_], P_ReAllocation[NEWMOBILE_STEM][_N_]);
-	OutFlow(P_State[_STEM][_C_], P_Respiration[_STEM]);
-	
-	
-	
-    if(N_ReAllocation>0) {
-               	InFlow(P_State[_MOBILE][_N_], NOldLeafMobile);
-               	InFlow(P_State[_MOBILE][_N_], NOldRootsMobile);
-     	        InFlow(P_State[_MOBILE][_N_], NOldStemMobile);
-    	        InFlow(P_State[_MOBILE][_N_], NOldCoarseRootsMobile);
-               	
-                InFlow(P_State[_MOBILE][_N_], NLeafMobile);
-               	InFlow(P_State[_MOBILE][_N_], NRootsMobile);
-     	        InFlow(P_State[_MOBILE][_N_], NStemMobile);
-    	        InFlow(P_State[_MOBILE][_N_], NCoarseRootsMobile);
-    	      
-                OutFlow(P_State[_OLD_LEAF][_N_], NOldLeafMobile);
-               	OutFlow(P_State[_OLD_ROOT][_N_], NOldRootsMobile);
-     	        OutFlow(P_State[_OLD_STEM][_N_], NOldStemMobile);
-    	        OutFlow(P_State[_OLD_COARSE_ROOT][_N_], NOldCoarseRootsMobile);
-
-               	OutFlow(P_State[_LEAF][_N_], NLeafMobile);
-               	OutFlow(P_State[_ROOT][_N_], NRootsMobile);
-     	        OutFlow(P_State[_STEM][_N_], NStemMobile);
-    	        OutFlow(P_State[_COARSE_ROOT][_N_], NCoarseRootsMobile);
-
-              	OutFlow(P_State[_MOBILE][_N_], P_ReAllocation[MOBILE_NEWMOBILE]); 
-              	InFlow(P_State[_NEWMOBILE][_N_], P_ReAllocation[MOBILE_NEWMOBILE]);  
-    }	
-
-//	Grain pool reallocation
-	InFlow(P_State[_GRAIN][_C_], P_Flux.Stem_Grain[_C_]);
-	OutFlow(P_State[_STEM][_C_], P_Flux.Stem_Grain[_C_]);
-	InFlow(P_State[_GRAIN][_C_], P_Flux.Leaf_Grain[_C_]);
-	OutFlow(P_State[_LEAF][_C_], P_Flux.Leaf_Grain[_C_]);
-	InFlow(P_State[_GRAIN][_C_], P_Flux.Root_Grain[_C_]);
-	OutFlow(P_State[_ROOT][_C_], P_Flux.Root_Grain[_C_]);
-	OutFlow(P_State[_GRAIN][_C_], P_Respiration[_GRAIN]);
-
-	InFlow(P_State[_GRAIN][_N_], NStemGrain);
-	OutFlow(P_State[_STEM][_N_], NStemGrain);
-	InFlow(P_State[_GRAIN][_N_], NLeafGrain);
-	OutFlow(P_State[_LEAF][_N_], NLeafGrain);
-	InFlow(P_State[_GRAIN][_N_], NRootsGrain);
-	OutFlow(P_State[_ROOT][_N_],NRootsGrain);
-
-//	At Harvest
-	OutFlow(P_State[_GRAIN][_C_]	, P_Harvest.Grain_Harvest[_C_]);
-	OutFlow(P_State[_STEM][_C_]	, P_Harvest.Stem_Harvest[_C_]);
-	OutFlow(P_State[_LEAF][_C_]	, P_Harvest.Leaf_Harvest[_C_]);
-	OutFlow(P_State[_ROOT][_C_]	, P_Harvest.Root_Harvest[_C_]);
-	OutFlow(P_State[_COARSE_ROOT][_C_]	, CCoarseRootsHarvest);
-
-
- 	OutFlow(P_State[_GRAIN][_N_]	, NGrainHarvest);
-	OutFlow(P_State[_STEM][_N_]	, NStemHarvest);
-	OutFlow(P_State[_LEAF][_N_]	, NLeafHarvest);
-	OutFlow(P_State[_ROOT][_N_]	, NRootsHarvest);
-	OutFlow(P_State[_COARSE_ROOT][_N_]	, NCoarseRootsHarvest);
-
-	OutFlow(P_State[_OLD_STEM][_C_]	, P_Harvest.OldStem_Harvest[_C_]);
-	OutFlow(P_State[_OLD_LEAF][_C_]	, P_Harvest.OldLeaf_Harvest[_C_]);
-	OutFlow(P_State[_OLD_ROOT][_C_]	, P_Harvest.OldRoot_Harvest[_C_]);
-	OutFlow(P_State[_OLD_COARSE_ROOT][_C_]	, COldCoarseRootsHarvest);
-	
-	OutFlow(P_State[_OLD_STEM][_N_]	, NOldStemHarvest);
-	OutFlow(P_State[_OLD_LEAF][_N_]	, NOldLeafHarvest);
-	OutFlow(P_State[_OLD_ROOT][_N_]	, NOldRootsHarvest);
-	OutFlow(P_State[_OLD_COARSE_ROOT][_N_]	, NOldCoarseRootsHarvest);
-
-//	if(Grain_Development>0) {
-		OutFlow(P_State[_GRAIN][_C_]	, P_LitterFall[_GRAIN][_C_]);
-	 	OutFlow(P_State[_GRAIN][_N_]	, NGrainSurfaceLitter);
-//	}
-
-//	Stem, &Leaf, &NewMobile and Mobile outflows
-	OutFlow(P_State[_STEM][_C_]	, P_LitterFall[_STEM][_C_]);
-	OutFlow(P_State[_LEAF][_C_]	, P_LitterFall[_LEAF][_C_]);
-	OutFlow(P_State[_NEWMOBILE][_C_]	, P_LitterFall.NewMobile_SurfaceLitter[_C_]);	//LK 010906
-	OutFlow(P_State[_MOBILE][_C_]	, P_LitterFall.Mobile_SurfaceLitter[_C_]);		//LK 020524
-
-	OutFlow(P_State[_STEM][_N_]	, NStemSurfaceLitter);
-	OutFlow(P_State[_LEAF][_N_]	, P_LitterFall[_LEAF][_N_]);
-	OutFlow(P_State[_NEWMOBILE][_N_]	, N_NewMobileSurfaceLitter);	//LK 010906
-	OutFlow(P_State[_MOBILE][_N_]		, NMobileSurfaceLitter);		//LK 020524
-
-//   Perennial Plant, &Surface Litter pool
-//	if(Perennial_PLant==1) {
-		OutFlow(P_State[_OLD_LEAF][_C_], P_LitterFall[_OLD_LEAF][_C_]);
-		OutFlow(P_State[_OLD_LEAF][_N_], P_ReAllocation[_OLD_LEAF][_N_]);
-
-		OutFlow(P_State[_OLD_STEM][_C_], P_LitterFall[_OLD_STEM][_C_]);
-		OutFlow(P_State[_OLD_STEM][_N_], NOldStemSurfaceLitter);
-
-
-		for(size_t i=0; i<P_LitterFall[_OLD_LEAF][_C_].size();i++) {
-			if(pNCSoil->LitterPools>0) {
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_OLD_LEAF][_C_][i]*(1-Leaf_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], P_ReAllocation[_OLD_LEAF][_N_][i]*(1-Leaf_FracLitter2[i]));
-	
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_OLD_STEM][_C_][i]*(1-Stem_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], NOldStemSurfaceLitter[i]*(1-Stem_FracLitter2[i]));
-				
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_LEAF][_C_][i]*(1-Leaf_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], P_LitterFall[_LEAF][_N_][i]*(1-Leaf_FracLitter2[i]));
-	
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_STEM][_C_][i]*(1-Stem_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], NStemSurfaceLitter[i]*(1-Stem_FracLitter2[i]));
-
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_GRAIN][_C_][i]*(1-Grain_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], NGrainSurfaceLitter[i]*(1-Grain_FracLitter2[i]));
-
-				InFlow(pNCSoil->SurfaceLitter[_L2][_C_], P_LitterFall[_OLD_LEAF][_C_][i]*(Leaf_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L2][_N_], P_ReAllocation[_OLD_LEAF][_N_][i]*(Leaf_FracLitter2[i]));
-	
-				InFlow(pNCSoil->SurfaceLitter[_L2][_C_], P_LitterFall[_OLD_STEM][_C_][i]*(Stem_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L2][_N_], NOldStemSurfaceLitter[i]*(Stem_FracLitter2[i]));
-				
-				InFlow(pNCSoil->SurfaceLitter[_L2][_C_], P_LitterFall[_LEAF][_C_][i]*(Leaf_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L2][_N_], P_LitterFall[_LEAF][_N_][i]*(Leaf_FracLitter2[i]));
-	
-				InFlow(pNCSoil->SurfaceLitter[_L2][_C_], P_LitterFall[_STEM][_C_][i]*(Stem_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L2][_N_], NStemSurfaceLitter[i]*(Stem_FracLitter2[i]));
-
- 				InFlow(pNCSoil->SurfaceLitter[_L2][_C_], P_LitterFall[_GRAIN][_C_][i]*(Grain_FracLitter2[i]));
-				InFlow(pNCSoil->SurfaceLitter[_L2][_N_], NGrainSurfaceLitter[i]*(Grain_FracLitter2[i]));
-			}
-			else {
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_OLD_LEAF][_C_][i]);
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], P_ReAllocation[_OLD_LEAF][_N_][i]);
-	
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_OLD_STEM][_C_][i]);
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], NOldStemSurfaceLitter[i]);
-				
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_LEAF][_C_][i]);
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], P_LitterFall[_LEAF][_N_][i]);
-	
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_STEM][_C_][i]);
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], NStemSurfaceLitter[i]);
-
-				InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[_GRAIN][_C_][i]);
-				InFlow(pNCSoil->SurfaceLitter[_L1][_N_], NGrainSurfaceLitter[i]);
-			}
-
-
-			InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall.NewMobile_SurfaceLitter[_C_][i]);	//LK 010906
-			InFlow(pNCSoil->SurfaceLitter[_L1][_N_], N_NewMobileSurfaceLitter[i]);	//LK 010906
-			
-			InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall.Mobile_SurfaceLitter[_C_][i]);	//LK 020524
-			InFlow(pNCSoil->SurfaceLitter[_L1][_N_], NMobileSurfaceLitter[i]);	//LK 020524
-		}
-
-//	Year shift perennial plant
-//	 if(Perennial_Plant==1&&JDayNum==1) {
-		if (m_pModelInfo->JDayNum == 1) {
-			OutFlow(P_State[_STEM][_C_], P_ReAllocation[STEM_OLD_STEM][_C_]);
-			OutFlow(P_State[_LEAF][_C_], P_ReAllocation[LEAF_OLD_LEAF][_C_]);
-			OutFlow(P_State[_ROOT][_C_], P_ReAllocation[ROOT_OLD_ROOT][_C_]);
-			OutFlow(P_State[_COARSE_ROOT][_C_], CCoarseRootsOldRoots);
-
-			InFlow(P_State[_OLD_STEM][_C_], P_ReAllocation[STEM_OLD_STEM][_C_]);
-			InFlow(P_State[_OLD_LEAF][_C_], P_ReAllocation[LEAF_OLD_LEAF][_C_]);
-			InFlow(P_State[_OLD_ROOT][_C_], P_ReAllocation[ROOT_OLD_ROOT][_C_]);
-			InFlow(P_State[_OLD_COARSE_ROOT][_C_], CCoarseRootsOldRoots);
-
-			OutFlow(P_State[_STEM][_N_], P_ReAllocation[STEM_OLD_STEM][_N_]);
-			OutFlow(P_State[_LEAF][_N_], P_ReAllocation[LEAF_OLD_LEAF][_N_]);
-			OutFlow(P_State[_ROOT][_N_], P_ReAllocation[ROOT_OLD_ROOT][_N_]);
-			OutFlow(P_State[_COARSE_ROOT][_N_], P_ReAllocation[COARSE_ROOT_OLD__COARSE_ROOT][_N_]);
-
-			InFlow(P_State[_OLD_STEM][_N_], P_ReAllocation[STEM_OLD_STEM][_N_]);
-			InFlow(P_State[_OLD_LEAF][_N_], P_ReAllocation[LEAF_OLD_LEAF][_N_]);
-			InFlow(P_State[_OLD_ROOT][_N_], P_ReAllocation[ROOT_OLD_ROOT][_N_]);
-			InFlow(P_State[_OLD_COARSE_ROOT][_N_], P_ReAllocation[COARSE_ROOT_OLD__COARSE_ROOT][_N_]);
-		}
-//	 else if(Perennial_Plant==1) {
-		OutFlow(P_State[_OLD_STEM][_C_],	P_Respiration[_OLD_STEM]);
-		OutFlow(P_State[_OLD_LEAF][_C_],	P_Respiration[_OLD_LEAF]);
-		OutFlow(P_State[_OLD_ROOT][_C_], P_Respiration[_OLD_ROOT]);
-		OutFlow(P_State[_OLD_COARSE_ROOT][_C_], P_Respiration[_OLD_COARSE_ROOT]);
-
-		OutFlow(P_State[_OLD_ROOT][_C_], COldRootsLitter);
-		OutFlow(P_State[_OLD_ROOT][_N_], NOldRootsLitter);
-		OutFlow(P_State[_OLD_COARSE_ROOT][_C_], COldCoarseRootsLitter);
-		OutFlow(P_State[_OLD_COARSE_ROOT][_N_], NOldCoarseRootsLitter);
-//	 }
-
-        if(ReAllocationToLeaf==1) {
-        	InFlow(P_State[_LEAF][_N_]	, NRootsLeaf);
-        	InFlow(P_State[_LEAF][_C_]	, CRootsLeaf);
-
-            OutFlow(P_State[_ROOT][_N_] , NRootsLeaf);
-            OutFlow(P_State[_ROOT][_C_] , CRootsLeaf);
-        }
-// Grazing Pool and Fluxes
-		if (Grazing > 0) {
-			// From Plant
-			OutFlow(P_State[_LEAF][_C_], CLeafGrazing);
-			OutFlow(P_State[_LEAF][_N_], NLeafGrazing);
-			OutFlow(P_State[_OLD_LEAF][_C_], COldLeafGrazing);
-			OutFlow(P_State[_OLD_LEAF][_N_],NOldLeafGrazing);
-			OutFlow(P_State[_STEM][_C_], CStemGrazing);
-			OutFlow(P_State[_STEM][_N_], NStemGrazing);
-
-			// to Faeeces pool of uppermost layers
-			InFlow(pNCSoil->O_State[_F][_C_][0], C_GrazingManure);
-			InFlow(pNCSoil->O_State[_F][_N_][0], N_GrazingManure);
-
-			// to Ammonium pool of uppermost layer
-			InFlow(pNCSoil->SoilAmmonium[0], N_GrazingAmmonium);
-
-			// to Grazing Organism
-
-			InFlow(C_GrazingOrganism, C_GrazingGrowth);
-			InFlow(N_GrazingOrganism, N_GrazingGrowth);
-		}
-		// Grazing Pool and Fluxes
-		if (WoodEating > 0) {
-			// From Plant
-			OutFlow(P_State[_OLD_STEM][_C_], COldStemEating);
-			OutFlow(P_State[_OLD_STEM][_N_], NOldStemEating);
-			OutFlow(P_State[_OLD_COARSE_ROOT][_C_], COldCoarseRootEating);
-			OutFlow(P_State[_OLD_COARSE_ROOT][_N_], NOldCoarseRootEating);
-
-
-
-
-			// to Wood Eating Organism
-
-			InFlow(C_WoodEater, C_WoodEaterGrowthFlux);
-			InFlow(N_WoodEater, N_WoodEatingRate);
-
-
-			// From Wood Eating Organism
-			OutFlow(C_WoodEater, WoodEaterRespFlux);
-			OutFlow(C_WoodEater, C_WoodEaterFaecesFlux);
-			OutFlow(N_WoodEater, N_WoodEaterFaecesFlux);
-			OutFlow(N_WoodEater, WoodEaterAmmoniumFlux);
-
-			// From Wood Eating Organism to Faeeces pool of uppermost layers
-			InFlow(pNCSoil->O_State[_F][_C_][0], C_WoodEaterFaecesFlux);
-			InFlow(pNCSoil->O_State[_F][_N_][0], N_WoodEaterFaecesFlux);
-
-			// to Ammonium pool of uppermost layer
-			InFlow(pNCSoil->SoilAmmonium[0], WoodEaterAmmoniumFlux);
-
-
-
-		}
-
-
-
-//	Trace element
-	if(pPlant->TraceElementUptake) {
-		//Leaf
-		 InFlow(pPlant->TE_Leaf	, pPlant->TE_PlantLeafUptake);
-		 //Stem
-		 InFlow(pPlant->TE_Stem, pPlant->TE_PlantStemUptake);
-		 //Grain
-		 OutFlow(pPlant->TE_Leaf	, pPlant->TE_LeafGrain	);
-		 OutFlow(pPlant->TE_Stem	, pPlant->TE_StemGrain	);
-		 OutFlow(pPlant->TE_Roots	, pPlant->TE_RootsGrain	);
-
-  		 InFlow(pPlant->TE_Grain	, pPlant->TE_LeafGrain	);
-		 InFlow(pPlant->TE_Grain	, pPlant->TE_StemGrain	);
-		 InFlow(pPlant->TE_Grain	, pPlant->TE_RootsGrain	);
-
-
-		// LitterFall
-		 OutFlow(pPlant->TE_Leaf	, pPlant->TE_LeafSurfaceLitter	);
-		 OutFlow(pPlant->TE_Stem	, pPlant->TE_StemSurfaceLitter	);
-		 OutFlow(pPlant->TE_Grain	, pPlant->TE_GrainSurfaceLitter	);
-
- 		 OutFlow(pPlant->TE_OldLeaf	, pPlant->TE_OldLeafSurfaceLitter	);
-		 OutFlow(pPlant->TE_OldStem	, pPlant->TE_OldStemSurfaceLitter	);
-		 OutFlow(pPlant->TE_OldRoots	, pPlant->TE_OldRootsLitter	);
-
-
-		 //Do i=1, &NumPlants
-		 for(size_t i=0; i<pPlant->TE_LeafSurfaceLitter.size(); i++) {	
-			InFlow(pPlant->TE_SurfaceLitter, pPlant->TE_LeafSurfaceLitter[i]);
-			InFlow(pPlant->TE_SurfaceLitter, pPlant->TE_StemSurfaceLitter[i]);
-			InFlow(pPlant->TE_SurfaceLitter, pPlant->TE_GrainSurfaceLitter[i]);
-			InFlow(pPlant->TE_SurfaceLitter, pPlant->TE_OldLeafSurfaceLitter[i]);
-			InFlow(pPlant->TE_SurfaceLitter, pPlant->TE_OldStemSurfaceLitter[i]);
-		 }
-		 //Enddo
-
-
-		// Reallocation
-  		 OutFlow(pPlant->TE_Leaf	, pPlant->TE_LeafOldLeaf);
-		 OutFlow(pPlant->TE_Stem	, pPlant->TE_StemOldStem);
-		 OutFlow(pPlant->TE_Roots	, pPlant->TE_RootsOldRoots);
-
- 		 InFlow(pPlant->TE_OldLeaf		, pPlant->TE_LeafOldLeaf );
-		 InFlow(pPlant->TE_OldStem		, pPlant->TE_StemOldStem );
-		 InFlow(pPlant->TE_OldRoots	, pPlant->TE_RootsOldRoots);
-
-	}
-
-		*/
-
-
 
 void NC_Plant::PlantStage_CNRatio_PhysSize() {
 	SnowPack *pMet = (SnowPack*)pPlant->p_Atm;
@@ -2375,11 +2113,12 @@ void NC_Plant::BelowGrandPlantRespiration() {
 void NC_Plant::LitterFall() {
 	auto abovegroundLitterFall = [&](size_t i, double Tsum) {
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-			P_LitterFall[_LEAF][jj][i] = f_LeafLitterFall(true, i, Tsum, m_pModelInfo->JDayNum, pPlant->SimLeafAreaIndex[i], P_State[_LEAF][jj][i]);
-			P_LitterFall[_STEM][jj][i] = f_StemLitterFall(true, i, Tsum, m_pModelInfo->JDayNum, P_State[_STEM][jj][i]);
-			P_LitterFall[_GRAIN][jj][i] = f_GrainLitterFall(i, Tsum, m_pModelInfo->JDayNum, P_State[_GRAIN][jj][i]);
-			if (P_LitterFall[_LEAF][jj][i] > -10.&&P_LitterFall[_LEAF][jj][i] < 1000.) {
 
+			P_LitterFall[_LEAF][jj][i] = f_LeafLitterFall(true, i, Tsum, m_pModelInfo->JDayNum, pPlant->SimLeafAreaIndex[i], max(0.,P_State[_LEAF][jj][i]));
+			P_LitterFall[_STEM][jj][i] = f_StemLitterFall(true, i, Tsum, m_pModelInfo->JDayNum,	max(0., P_State[_STEM][jj][i]));
+			P_LitterFall[_GRAIN][jj][i] = f_GrainLitterFall(i, Tsum, m_pModelInfo->JDayNum,	max(0., P_State[_GRAIN][jj][i]));
+			if (P_LitterFall[_GRAIN][jj][i] < 0.) {
+				auto koll = P_State[_GRAIN][jj][i];
 
 
 			}
@@ -2422,27 +2161,27 @@ void NC_Plant::LitterFall() {
 			}
 		}
 	};
-	 for(size_t i=0; i<P_LitterFall[_LEAF][_C_].size();i++) {
+	 for(size_t iplant=0; iplant<P_LitterFall[_LEAF][_C_].size();iplant++) {
 		 double Tsum;
 		 if (LitterFall_Dynamics_Sw(LitterFall_Dynamics) == LitterFall_Dynamics_Sw::GrowthTempSum)
-			 Tsum = GrowthTempSum[i];
+			 Tsum = GrowthTempSum[iplant];
 		 else if (LitterFall_Dynamics_Sw(LitterFall_Dynamics) == LitterFall_Dynamics_Sw::DormingTempSum)
-			 Tsum = DormingTempSum[i];
+			 Tsum = DormingTempSum[iplant];
 		 else
 			 Tsum = 0.;
-		 abovegroundLitterFall(i, Tsum);
-		 belowgroundLitterFall(i, Tsum);
+		 abovegroundLitterFall(iplant, Tsum);
+		 belowgroundLitterFall(iplant, Tsum);
 	 }
 }
 void NC_Plant::Cleaning_Harvest_Events() {
 	SoilOrgModel* p_Soil=(SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
 	NC_SoilManagement* pNCSoil=&p_Soil->m_NC_SoilOrg;
-
+	
+	HarvestEstimated = false;
 
 	if (m_ICountDay == m_pModelInfo->JDayNum) {
 		m_ICountDay = size_t(m_pModelInfo->JDayNum + 1);
 		m_ResetMade = false;
-
 	}
 	else {
 		if (m_ICountDay >= 365)	m_ICountDay = size_t(1);
@@ -2459,6 +2198,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 
 
 	for(size_t i_plant=0; i_plant<P_ReAllocation[0][0].size();i_plant++) {
+		MoveFromPlantToLitter = false;
 		if(Cleaning>0) {
 		    DoCleaning=false;
 		    if(Cleaning==1) 
@@ -2588,7 +2328,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
                     }
 				}
 		        else {
-				    OK=KillAboveGroundPlant(i_plant);
+					MoveFromPlantToLitter =KillAboveGroundPlant(i_plant);
 				    OK=KillBelowGroundPlant(i_plant);
 				    HarvestToBeDone[i_plant]=true;
 				}
@@ -2599,7 +2339,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		        if(TerminatingHarvest==1) ;
 		        
 		        else {
-				    OK=KillAboveGroundPlant(i_plant);
+					MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
 				    OK=KillBelowGroundPlant(i_plant);
 				    HarvestToBeDone[i_plant]=true;
 				}		
@@ -2617,7 +2357,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		}
 		
 		if (m_pModelInfo->JDayNum == int(pNCSoil->PloughingDay)) {
-			OK = KillAboveGroundPlant(i_plant);
+			MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
 			OK = KillBelowGroundPlant(i_plant);
 		}
 		
@@ -2629,11 +2369,37 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		if(ResetCleaningDay==m_pModelInfo->JDayNum) 
 		    CleaningToBeDone=true;
 		
-		
-
-	}
+		if (MoveFromPlantToLitter) {
+			double Litter1Fraction=1.;
+			for (int element=_C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
+				for (size_t j = _LEAF; j <= _OLD_STEM; j++) {
+					switch (j) {
+					case _LEAF:
+					case _OLD_LEAF:
+						Litter1Fraction = (1. - Leaf_FracLitter2[i_plant]);
+						break;
+					case _STEM:
+					case _OLD_STEM:
+						Litter1Fraction = (1. - Stem_FracLitter2[i_plant]);
+						break;
+					case _GRAIN:
+						Litter1Fraction = (1. - Grain_FracLitter2[i_plant]);
+						break;
+					}
+					
+					if (element == _C_) pNCSoil->SurfaceLitter[_L1][_C_] += P_LitterFall[j][element][i_plant]*Litter1Fraction;
+					else if (element == _N_) pNCSoil->SurfaceLitter[_L1][_N_] += P_LitterFall[j][element][i_plant] * Litter1Fraction;
+					else if (element == _P_) pNCSoil->SurfaceLitter[_L1][_P_] += P_LitterFall[j][element][i_plant] * Litter1Fraction;
+					if (Litter1Fraction < 1.) {
+						if (element == _C_) pNCSoil->SurfaceLitter[_L2][_C_] += P_LitterFall[j][element][i_plant] * (1-Litter1Fraction);
+						else if (element == _N_) pNCSoil->SurfaceLitter[_L2][_N_] += P_LitterFall[j][element][i_plant] * (1-Litter1Fraction);
+						else if (element == _P_) pNCSoil->SurfaceLitter[_L2][_P_] += P_LitterFall[j][element][i_plant] * (1-Litter1Fraction);
+					}
 	
-
+				}
+			}
+		};
+	}
 }
 void NC_Plant::WoodEatingProcess() {
 	SoilOrgModel* p_Soil = (SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
@@ -2890,8 +2656,8 @@ void NC_Plant::At_Harvest(bool WithGrazingEvent) {
 			P_LitterFall[_GRAIN][jj][i] = LitterFrac* (P_State[_GRAIN][jj][i] - (P_State[_GRAIN][jj][i]*HarvestFrac))*1. / T_Step;
 
 			P_LitterFall[_NEWMOBILE][jj][i] = P_State[_NEWMOBILE][jj][i] * 1. / T_Step;
-			if (SimPlantAge[i] >= Max_Plant_LifeTime[i] * 365. - 365 || HarvFracStem[i] == 1 || LitterFracStem[i] == 1.)
-				P_LitterFall[_MOBILE][jj][i] = P_State[_MOBILE][jj][i] * 1. / T_Step;
+			//if (SimPlantAge[i] >= Max_Plant_LifeTime[i] * 365. - 365 || HarvFracStem[i] == 1 || LitterFracStem[i] == 1.||P_LitterFracLeaf[i]>0.2)
+			P_LitterFall[_MOBILE][jj][i] = P_State[_MOBILE][jj][i] * 1. / T_Step;
 		}
 	};
 	auto Reset_ConditionsatHarvest = [&](size_t i) {
@@ -2944,6 +2710,7 @@ void NC_Plant::At_Harvest(bool WithGrazingEvent) {
 					else if (ResetGSI_AtHarvest_Sw(ResetGSI_AtHarvest) == ResetGSI_AtHarvest_Sw::on_at_completegrainharvest && CompleteGrainHarvest)
 						GrowthStageIndex[i] = GSI_PostHarvest[i];
 				}
+				HarvestEstimated = true;
       }
 }
 
@@ -3039,7 +2806,7 @@ void NC_Plant::MobilePool() {
 
         }
 
-		if (Phos_ReAllocation >= 0) {
+		if (Phos_ReAllocation > 0) {
 			P_ReAllocation[OLD_LEAF_MOBILE][_P_][i] = max(0., P_State[_OLD_LEAF][_P_][i] - P_State[_OLD_LEAF][_C_][i] / CP_RatioMinLeaf[i]);
 			P_ReAllocation[OLD_STEM_MOBILE][_P_][i] = max(0., P_State[_OLD_STEM][_P_][i] - P_State[_OLD_STEM][_C_][i] / CP_RatioMinStem[i]);
 			P_ReAllocation[OLD_ROOT_MOBILE][_P_][i] = max(0., P_State[_OLD_ROOT][_P_][i] - P_State[_OLD_ROOT][_C_][i] / CP_RatioMinRoots[i]);
@@ -3706,6 +3473,7 @@ void NC_Plant::Summation_Fluxes() {
 			}
 			
 		}
+
 
 		// AM 200911
 		if (jj >= _N_) 	Tot_PlantUptake[jj - 1] = sum(P_Uptake[PLANT_TOT_N][jj - 1]);

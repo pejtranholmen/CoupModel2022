@@ -17,20 +17,20 @@ class Additional_BioticVariables_Functions : public Additional_Variables
 	double Acc_P_Mineralization;
 
 	double  AccDenitrification, AccMinLeaching[NUM_BIOELEM], AccDisLeaching[NUM_BIOELEM], AccSurfaceRunOffLeaching[NUM_BIOELEM];
-	double TotalDiffPlant[NUM_BIOELEM];
+
 
 	double TotalDiffOrgSoil[NUM_BIOELEM],  TotalDiffHumus[NUM_BIOELEM], TotalDiffLitter1[NUM_BIOELEM],TotalDiffLitter2[NUM_BIOELEM],  TotalDiffSoil[NUM_BIOELEM];
 	double TotalDiffMinSoil[NUM_BIOELEM], TotalDiffSolidMineralPhosphorus, AccCarbonBalance, CarbonBalanceRate, AccNitrogenBalance, NitrogenBalanceRate;
 	double TotalBalanceCheck[NUM_BIOELEM],  CarbonFlux;
     double Plant_BalanceCheck[NUM_BIOELEM], Soil_BalanceCheck[NUM_BIOELEM];
 
-	double SoilRespOrg, SoilRespTot;
-	double AccAboveLitter[NUM_BIOELEM],  AccBelowLitter[NUM_BIOELEM],  AccPlantLitter[NUM_BIOELEM];
-	double TotalPhotoSynt, TotalRespiration;
+	double SoilRespOrg, SoilRespTot, AccSoilRespiration, TotalRespiration, AccTotalRespiration;
+	
+
    double N_SupplyRate, N_LossesRate, AccNInput, AccNOutput, TotalDiff_Eco[NUM_BIOELEM];
    double TotalDiff_Fungi[NUM_BIOELEM];
 //!	Carbon Variables
-	double AccPhotosyntheses, AccTotalRespiration, AccSoilRespiration, AccPlantRespiration;
+
 	double AccFungiRespiration, AccFungiLitterFall, AccFungiGrowth;
 	double AccSoilOrgRespiration, AccTotAdsRadiation, AccTotPlantUptake[NUM_BIOELEM];
 	double AccRadEfficiency, AccWaterEfficiency, AccNitrogenEfficiency, AccPhosphorusEfficiency;
@@ -40,7 +40,7 @@ class Additional_BioticVariables_Functions : public Additional_Variables
 	double InitialStorage_SoilPMinerals;
 
    //double NIniSoil, NIniOrgSoil, NIniMinNSoil, CIniSoil, NIniPlant, CIniPlant;// !Local variables
-   double IniPlant[NUM_BIOELEM], IniSoil[NUM_BIOELEM], IniOrgSoil[NUM_BIOELEM], IniMinSoil[NUM_BIOELEM], 
+   double IniSoil[NUM_BIOELEM], IniOrgSoil[NUM_BIOELEM], IniMinSoil[NUM_BIOELEM], 
 	   IniSoilHumus[NUM_BIOELEM], IniSoilLitter1[NUM_BIOELEM], IniSoilLitter2[NUM_BIOELEM], IniFungi[NUM_BIOELEM];
    double N_IrrigRateLocal;
    //double CIniSoilHumus, NIniSoilHumus;
