@@ -70,7 +70,7 @@ class OutVector :
 		bool	SetAnnimateChart(size_t index, int value, int seq) {if(index>=m_AnnimateVector.size()) return false;m_AnnimateVector[index].ichart=value; m_AnnimateVector[index].sequence=seq;return true;};
 		int		GetAnnimateChart(size_t index) {if(index>=m_AnnimateVector.size()) return -1;return m_AnnimateVector[index].ichart;};
 		int		GetAnnimateSequence(size_t index) {if(index>=m_AnnimateVector.size()) return -1;return m_AnnimateVector[index].sequence;};
-		bool	GetAcceptMeanFlag(size_t index) {return _AcceptMeanFlag[index];};
+		bool	GetAcceptMeanFlag(size_t index) { if (index < _AcceptMeanFlag.size()) return _AcceptMeanFlag[index]; return 0; };
 		void    ReSize(size_t value) {_ptarget->resize(value); 
 		SumList.resize(value);_storeflag.resize(value); 
 		_multi_storeflag.resize(value);

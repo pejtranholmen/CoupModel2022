@@ -868,7 +868,8 @@ void MakeSimCharts::TimeSerieChart(int isheet) {
 	if(isheet==4) {
 		if(m_pSimDoc->m_SelectModelFile.size()>0) {
 			SelectPG selpg=m_pSimDoc->m_SelectModelFile[m_pSimDoc->m_SelectModelFile.size()-1];
-			TimeSerieChartClick(3,selpg.row, 4, selpg.pF);
+			if(selpg.row<20)
+				TimeSerieChartClick(3,selpg.row, 4, selpg.pF);
 
 
 		}

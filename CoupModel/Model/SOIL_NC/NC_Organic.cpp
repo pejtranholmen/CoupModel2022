@@ -390,27 +390,29 @@ auto OutflowFromPlantLitterFalltoSoilLayers = [&]() {
 		
 
 // Add contributions of all Plants with all plant components and all plant elements to to vector for two soil litters for all plant elements and soil layers
-	for (size_t i_plant = 0; i_plant < p_Plant->NumPlants; i_plant++) {
+	//for (size_t i_plant = 0; i_plant < p_Plant->NumPlants; i_plant++) {
 	
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-			for (size_t j_plantcomp = _ROOT; j_plantcomp <= _OLD_COARSE_ROOT; j_plantcomp++) {
-				//LitterFallToLayers = GetDepthDistributionofLitterFall(i_plant, j_plantcomp, jj);
-				if (LitterPools_Sw(LitterPools)== LitterPools_Sw::one) {
+			LitterInputToSoilLayers[_L1][jj].assign(pSoil->NL, 0.);
+			if (LitterPools_Sw(LitterPools) > LitterPools_Sw::one) {
+				LitterInputToSoilLayers[_L2][jj].assign(pSoil->NL, 0.);
+			}
+
+			if (LitterPools_Sw(LitterPools)== LitterPools_Sw::one) {
 					for (size_t layer = 0; layer < pSoil->NL; layer++) {
 						LitterInputToSoilLayers[_L1][jj][layer] = 0.1*Dead_BelowGround[_L1][jj][layer];
 					}
-				}
-				else {
+			}
+			else {
 					double L2_frac;
-					if (j_plantcomp == _ROOT || j_plantcomp == _OLD_ROOT) L2_frac = p_NC_Plant->Root_FracLitter2[i_plant];
-					else L2_frac = p_NC_Plant->CoarseRoot_FracLitter2[i_plant];
-
+					L2_frac = p_NC_Plant->Root_FracLitter2[0];
+					
 					for (size_t layer = 0; layer < pSoil->NL; layer++) {
-						LitterInputToSoilLayers[_L1][jj][layer] = 0.1*Dead_BelowGround[_L1][jj][layer] * (1 - L2_frac);
-						LitterInputToSoilLayers[_L2][jj][layer] = 0.1*Dead_BelowGround[_L2][jj][layer] * L2_frac;
+						LitterInputToSoilLayers[_L1][jj][layer] += 0.1*Dead_BelowGround[_L1][jj][layer] * (1 - L2_frac);
+						LitterInputToSoilLayers[_L2][jj][layer] += 0.1*Dead_BelowGround[_L2][jj][layer] * L2_frac;
 					}
-				}
-			}	//Fungi Component below
+			}
+		//Fungi Component below
 		/*	if (FungalGrowth_Sw(p_NC_Plant->FungalGrowth) > FungalGrowth_Sw::off) {
 				LitterFallToLayers = GetDepthDistributionofLitterFall(i_plant, _FUNGI, jj);
 				for (size_t layer = 0; layer < pSoil->NL; layer++) {
@@ -418,7 +420,7 @@ auto OutflowFromPlantLitterFalltoSoilLayers = [&]() {
 				}
 			}*/
 		}
-	}
+	//}
 
 };
 auto Carbon_RatioSoilOrganics = [&]() {
@@ -807,6 +809,7 @@ void NC_Organic::Integ()
 		for (size_t i = _L1; i <= NumberOfLitterPools; i++) {
 			InFlow(O_State[i][jj], LitterInputToSoilLayers[i][jj]);
 			OutFlow(Dead_BelowGround[i][jj], LitterInputToSoilLayers[i][jj]);
+			Dead_BelowGround_OutFlow[i][jj] = sum(LitterInputToSoilLayers[i][jj]);
 
 		}
 	}

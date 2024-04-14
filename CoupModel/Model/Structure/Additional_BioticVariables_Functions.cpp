@@ -26,6 +26,8 @@ bool Additional_BioticVariables_Functions::Def()
 		Define(pXs,	"AccFertilization",		 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
 	pXs= new Xs(&AccManure,  ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs, "AccNitrogenManure"	   	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
+	pXs = new Xs(&AccMinNDeepPercolation, ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
+		Define(pXs, "AccMinNDeepPercolation", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0|DeepPercolationInput>0");
 	pXs= new Xs(&AccExternalCarbon,  ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  "AccExternalCarbon"	   	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
 
@@ -36,9 +38,9 @@ bool Additional_BioticVariables_Functions::Def()
 	pXs = new Xs(&Acc_P_Weathering, ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "Acc_P_Weathering", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0");
 
-	pXs = new Xs(&AccTotPlantUptake[_N_], ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccTotPlantUptake[_N_], ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccTotNPlantUptake", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0|Growth>1");
-	pXs = new Xs(&AccTotPlantUptake[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccTotPlantUptake[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccTot_P_PlantUptake", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0|Growth>1");
 
 
@@ -49,6 +51,14 @@ bool Additional_BioticVariables_Functions::Def()
 		Define(pXs, "AccAboveLitterN", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
 	pXs = new Xs(&pNCPlant->AccAboveLitter[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccAboveLitterP", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0");
+
+
+	pXs = new Xs(&AccSoilFormation[_C_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
+		Define(pXs, "AccCarbonSoilFormation", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
+	pXs = new Xs(&AccSoilFormation[_N_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
+		Define(pXs, "AccNitrogenSoilFormation", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
+	pXs = new Xs(&AccSoilFormation[_P_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
+		Define(pXs, "Acc_P_SoilFormation", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0|Phosphorus> 0");
 		
 		
 	pXs= new Xs(&pNCPlant->AccBelowLitter[_C_],  ACCUMULATOR, CARBON, STORAGE,NOBPROC, NORMAL);
@@ -91,6 +101,12 @@ bool Additional_BioticVariables_Functions::Def()
 		Define(pXs, "AccCarbonHarvest", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
 	pXs = new Xs(&pNCPlant->AccHarvest[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "Acc_P_Harvest", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
+	pXs = new Xs(&pNCPlant->AccSeedInputs[_N_], ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
+		Define(pXs, "AccNitrogenSeedInputs", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
+	pXs = new Xs(&pNCPlant->AccSeedInputs[_C_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
+		Define(pXs, "AccCarbonSeedInputs", 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
+	pXs = new Xs(&pNCPlant->AccSeedInputs[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+		Define(pXs, "Acc_P_SeedInputs", 0., UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
 
 	pXs= new Xs(&AccDenitrification,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	"AccDenitrification"	, 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
@@ -174,11 +190,11 @@ bool Additional_BioticVariables_Functions::Def()
 	pXs = new Xs(&TotalBalanceCheck[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "PhosphorusBalanceCheck", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
 
-	pXs = new Xs(&Plant_BalanceCheck[_C_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->Plant_BalanceCheck[_C_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "Plant C BalanceCheck", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0");
-	pXs= new Xs(&Plant_BalanceCheck[_N_],   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&pNCPlant->Plant_BalanceCheck[_N_],   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  "Plant N BalanceCheck"	 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs = new Xs(&Plant_BalanceCheck[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->Plant_BalanceCheck[_P_], ACCUMULATOR, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "Plant P BalanceCheck", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0");
 
 	pXs = new Xs(&TotalDiff_Eco[_C_], ACCUMULATOR, CARBON, STORAGE, NOBPROC, NORMAL);
@@ -225,11 +241,11 @@ bool Additional_BioticVariables_Functions::Def()
 		Define(pXs,  	"AccPlantRespiration"	 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
 	pXs= new Xs(&AccSoilRespiration,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	"AccSoilRespiration"	 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");
-	pXs = new Xs(&AccFungiRespiration, ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccFungiRespiration, ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccFungiRespiration", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0|Mycorrhiza Fungal Growth>0");
-	pXs = new Xs(&AccFungiGrowth, ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&pNCPlant->AccFungiGrowth, ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
 	Define(pXs, "AccFungiGrowth", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0|Mycorrhiza Fungal Growth>0");
-		pXs = new Xs(&AccFungiLitterFall, ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
+		pXs = new Xs(&pNCPlant->AccFungiLitterFall, ACCUMULATOR, NITROGEN, STORAGE, NOBPROC, NORMAL);
 		Define(pXs, "AccFungiLitterFall", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon > 0|Mycorrhiza Fungal Growth>0");
 	pXs= new Xs(&AccSoilOrgRespiration,   ACCUMULATOR,NITROGEN, STORAGE,NOBPROC, NORMAL);
 		Define(pXs,  	"AccSoilOrgRespiration"	 , 0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon > 0");

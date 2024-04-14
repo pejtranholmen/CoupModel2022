@@ -56,6 +56,7 @@ bool NC_Mineral::Ini()	{
 //   Allocate for root distribution
 	UptNitrate.resize(pSoil->NL);
 	UptAmmonium.resize(pSoil->NL);
+	NTotMinNDeepPercolation = 0.;
 	
 	if(p_NC_Plant->FungalGrowth>0) {
    // !   Allocate for Fungi distribution
@@ -348,6 +349,8 @@ Use NC_Organic, Only    : NDissolved*/
 	NTotNO3_Drainage=sum(SoilNitrateDrainage);
 	NTotNH4_Drainage=sum(SoilAmmoniumDrainage);
 	NTotMinN_Drainage=NTotNO3_Drainage+NTotNH4_Drainage;
+	if (p_NC_Plant->DeepPercolationInput > 0)
+		NTotMinNDeepPercolation = SoilNitrateFlow.back() + SoilAmmoniumFlow.back();
 	SumDrainage=sum(p_NC_Plant->NDrivDrainage);
 	if(SumDrainage>0) {
 	    NTotNO3Conc_Drainage=1000.*NTotNO3_Drainage/SumDrainage;

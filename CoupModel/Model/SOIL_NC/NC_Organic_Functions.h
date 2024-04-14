@@ -44,6 +44,7 @@ double SurfaceLitter[2][NUM_BIOELEM];
 double SurfaceLitterMixingIntoUppermostlayer[4][NUM_BIOELEM];
 
 vector<double> Dead_BelowGround[2][NUM_BIOELEM-1];
+double Dead_BelowGround_OutFlow[2][NUM_BIOELEM];
 
 
 

@@ -17,12 +17,14 @@ class Additional_BioticVariables_Functions : public Additional_Variables
 	double Acc_P_Mineralization;
 
 	double  AccDenitrification, AccMinLeaching[NUM_BIOELEM], AccDisLeaching[NUM_BIOELEM], AccSurfaceRunOffLeaching[NUM_BIOELEM];
+	double AccMinNDeepPercolation;
+	double AccSoilFormation[NUM_BIOELEM];
 
 
 	double TotalDiffOrgSoil[NUM_BIOELEM],  TotalDiffHumus[NUM_BIOELEM], TotalDiffLitter1[NUM_BIOELEM],TotalDiffLitter2[NUM_BIOELEM],  TotalDiffSoil[NUM_BIOELEM];
 	double TotalDiffMinSoil[NUM_BIOELEM], TotalDiffSolidMineralPhosphorus, AccCarbonBalance, CarbonBalanceRate, AccNitrogenBalance, NitrogenBalanceRate;
 	double TotalBalanceCheck[NUM_BIOELEM],  CarbonFlux;
-    double Plant_BalanceCheck[NUM_BIOELEM], Soil_BalanceCheck[NUM_BIOELEM];
+    double  Soil_BalanceCheck[NUM_BIOELEM];
 
 	double SoilRespOrg, SoilRespTot, AccSoilRespiration, TotalRespiration, AccTotalRespiration;
 	
@@ -31,8 +33,8 @@ class Additional_BioticVariables_Functions : public Additional_Variables
    double TotalDiff_Fungi[NUM_BIOELEM];
 //!	Carbon Variables
 
-	double AccFungiRespiration, AccFungiLitterFall, AccFungiGrowth;
-	double AccSoilOrgRespiration, AccTotAdsRadiation, AccTotPlantUptake[NUM_BIOELEM];
+
+	double AccSoilOrgRespiration, AccTotAdsRadiation;
 	double AccRadEfficiency, AccWaterEfficiency, AccNitrogenEfficiency, AccPhosphorusEfficiency;
 
 	double InitialStorageNPlant, InitialStorageCPlant;  //	! Local variable in module

@@ -3209,7 +3209,7 @@ bool NC_Plant_Functions::KillAboveGroundPlant(size_t index) {
 				P_State[plantcomp][element][index] = 0.;
 			}
 			else 
-				P_LitterFall[plantcomp][element][index] = P_State[plantcomp][element][index] / T_Step;
+				P_LitterFall[plantcomp][element][index] = P_State[plantcomp][element][index] ;
 
 		}
 		if (element == _C_) for (size_t j = 0; j <= _OLD_STEM; j++) P_Respiration[j][index] = 0.;

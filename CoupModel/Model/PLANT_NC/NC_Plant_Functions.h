@@ -99,15 +99,22 @@ vector<double> P_ReAllocation[NUM_REALLOCATION][NUM_BIOELEM];
 AlloNewMobile P_CarbonAlloNewMobile;
 AlloNewMobile P_UptakeNewMobile[NUM_BIOELEM - 1];
 vector<double> P_Uptake[NUM_UPTAKE][NUM_BIOELEM-1];
+double AccFungiRespiration, AccFungiLitterFall, AccFungiGrowth;
+double TotalFungiResp;
 
 //Moved from Additional Biotic
 
 double AccHarvest[NUM_BIOELEM];
 double AccAboveLitter[NUM_BIOELEM], AccBelowLitter[NUM_BIOELEM], AccPlantLitter[NUM_BIOELEM];
 double IniPlant[NUM_BIOELEM], TotalDiffPlant[NUM_BIOELEM];
+double AccTotPlantUptake[NUM_BIOELEM];
+double AccSeedInputs[NUM_BIOELEM];
+double Plant_BalanceCheck[NUM_BIOELEM];
 
 double TotalPhotoSynt;
 double AccPhotosyntheses,   AccPlantRespiration, PlantPhotoSynt, PlantResp ;
+
+vector<bool> RemovedCompAtHarvest;
 
 
 vector<double> P_State_IniValue[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];  //Parameters

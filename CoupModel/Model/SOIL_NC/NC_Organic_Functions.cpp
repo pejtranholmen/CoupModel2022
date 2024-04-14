@@ -121,6 +121,25 @@ bool NC_Organic_Functions::Def() {
 			pX = new X(&Dead_BelowGround[j][jj], pNL, SIMPROFILE, elements(jj + CARBON), STORAGE, NON_LIVING, NORMAL);
 			Define(pX, pNL, name, initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1" + condition);
 		}
+		for (size_t j = _L1; j <= _L2; j++) {
+			string name = Item[jj];
+			condition = "";  // make _H visible
+			if (jj == _P_) condition = "|Phosphorus>0";
+			if (j == _L2) condition += "|LitterPools >0";
+			if (j == _L1)
+				name = "L1 ";
+			else
+				name = "L2 ";
+			name += Item[jj] + " Litter Formation";
+			initv.assign(pSoil->NL, 0.);
+			pGs = new Gs(&Dead_BelowGround_OutFlow[j][jj], TOTPROFILE , elements(jj + CARBON), STORAGE, NON_LIVING, NORMAL);
+			Define(pGs,  name, 0., UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1" + condition);
+		}
+
+
+
+
+
 
 
 		condition = "";

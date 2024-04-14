@@ -31,7 +31,7 @@ double Eff_Microbes;
 vector<double> 	SoilNitrateFlow,SoilNitrateDrainage ,InitNitrateConcZ,InitAmmoniumConcZ;//;
 vector<double> 	SoilAmmoniumDrainage,SoilAmmoniumFlow,  SoilNitrateUptake, SoilAmmoniumUptake; //, SoilAmmoniumUptake;
 vector<double>  	SoilNitrateConc,SoilAmmoniumConc,AmmoniumAdsFrac;
-double 	NTotMinN_Drainage, NTotNO3_Drainage, NTotNH4_Drainage, NTotDenitrification;
+double 	NTotMinN_Drainage, NTotMinNDeepPercolation, NTotNO3_Drainage, NTotNH4_Drainage, NTotDenitrification;
 double   NTotMin_PlantUptake, NTotNO3_PlantUptake, NTotNH4_PlantUptake;
 double 	NTotNitrate, NTotAmmonium, NTotMinN_Soil, NTotNitrification;
 
