@@ -6653,11 +6653,13 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				ws.column_properties("K").width = 25.;
 				ws.column_properties("L").width = 25.;
 			}
+			//iv
 			for (size_t i = 0; i < iv; i++) {
 				Sw* pSw = m_Sw_Array[i];
 				auto group = pSw->GetGroup();
 				auto name_psw = pSw->GetName();
 				size_t iopt = pSw->GetIntValue();
+				if (iopt > 1000) iopt = 0;
 				size_t idef = pSw->GetOriginalIntValue();
 				auto opt = pSw->GetOption(iopt);
 				auto colcat = p_ModelInfo->GetGroupCategoryNo(pSw->GetGroupNo());
@@ -6681,8 +6683,8 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				if (AllItems) {
 					int nopt = pSw->GetNumOptions();
 					for (size_t iopt = 0; iopt < nopt; iopt++) {
-
-						ws.cell(5 + iopt, i + 2).value(pSw->GetOption(iopt));
+						auto opt = pSw->GetOption(iopt);
+						ws.cell(5 + iopt, i + 2).value(opt);
 						ws.cell(5 + iopt, i + 2).fill(getexcel_grey);
 						
 					}
