@@ -848,10 +848,33 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 			vst.LogLi= level1.attribute(valTableAtt[15]).as_float();
 			vst.NSE = level1.attribute(valTableAtt[22]).as_float();
 			m_Val_Array.push_back(vst);
+			size_t koll;
+			if (vst.ValidationFileNumber > 0 && vst.ValidationFileNumber < MAXSIMVAL + 1) {
+
+				m_ValidationData.m_NumberSelectedValidationVar[vst.ValidationFileNumber - 1]++;
+				F* pF = ValidationFilePointer(vst.ValidationFileNumber);
+				if (pF->GetNumberOfSelectedVal() == 0) pF->ResetValNumbers();
+				if (pF->SetValNumber(vst.ValidationFileIndex, size_t(m_Val_Array.size()))) {
+					koll = pF->GetNumberOfSelectedVal();
+				}
+			}
+
 		}
 
+		size_t koll;
+		if (vst.ValidationFileNumber > 0 && vst.ValidationFileNumber < MAXSIMVAL + 1) {
+
+			m_ValidationData.m_NumberSelectedValidationVar[vst.ValidationFileNumber - 1]++;
+			F* pF = ValidationFilePointer(vst.ValidationFileNumber);
+			if (pF->GetNumberOfSelectedVal() == 0) pF->ResetValNumbers();
+			if (pF->SetValNumber(vst.ValidationFileIndex, size_t(m_Val_Array.size()) )) {
+				koll = pF->GetNumberOfSelectedVal();
+			}
+		}
 
 	}
+
+
 
 
 	size_t count_valid_files = 0;

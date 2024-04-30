@@ -36,10 +36,14 @@ public:
 	int		GetValNumber(size_t index) {if(index<m_ValidationNumbers.size())  return m_ValidationNumbers[index]; else return -1;};
 	bool	SetValNumber(size_t index, int value) {if(index<m_ValidationNumbers.size()) { m_ValidationNumbers[index]=value; return true;} return false;}  ;
 	bool	ResetValNumbers();
-	size_t		GetNumberOfSelectedVal() {size_t count=0; for(size_t i=0; i<m_ValidationNumbers.size(); i++) 
-		if(m_ValidationNumbers[i]>0) count++; 
+	size_t		GetNumberOfSelectedVal() {
+		size_t count = 0; 
+		for (size_t i = 0; i < m_ValidationNumbers.size(); i++) {
+			if (m_ValidationNumbers[i] > 0) count++;
+		}
 		if(m_ValidationNumbersSelected>count) return m_ValidationNumbersSelected;
-		return count;};
+		return count;
+	};
 	bool	SetNumberOfSelectedVal(int value) {m_ValidationNumbersSelected=value;  return true;};
 	
 	bool	CallDataDescription();
