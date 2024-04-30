@@ -241,14 +241,16 @@ p_mainframe = (CMainFrame*)pCoupModel->m_pMainWnd;
 #endif
 	pRunDoc->MR_RESET_Bayesian();
 	pRunDoc->MR_ResetDimCounter();
-	pRunDoc->MR_Storage_InitEvaluateStat();
-	pRunDoc->MR_Storage_InitEnsembles();
-	
+	if (pRunDoc->GetNumAll_TSV_ValVariables()> 0) {
+		pRunDoc->MR_Storage_InitEvaluateStat();
+		pRunDoc->MR_Storage_InitEnsembles();
 
-	if(pRunDoc->IsBayesianCalibration()) {
-		pRunDoc->UpdateCoVar();
-		pRunDoc->MR_ReCalculatePostDist();
 
+		if (pRunDoc->IsBayesianCalibration()) {
+			pRunDoc->UpdateCoVar();
+			pRunDoc->MR_ReCalculatePostDist();
+
+		}
 	}
 
 	if(pRunDoc->IsMultiStopped()) {
@@ -278,9 +280,11 @@ p_mainframe = (CMainFrame*)pCoupModel->m_pMainWnd;
 	}
 	pRunDoc->MR_Storage_Close();
 	pRunDoc->SetFinishedSimulation();
-	pRunDoc->UpdateValidationPerformance_SmartFlexVariables();
-	pRunDoc->m_ValidationData.SetPointersToOutputValidationFiles();
-	pRunDoc->PreDefined_Criteria_Process();
+	if (pRunDoc->GetNumAll_TSV_ValVariables() > 0) {
+		pRunDoc->UpdateValidationPerformance_SmartFlexVariables();
+		pRunDoc->m_ValidationData.SetPointersToOutputValidationFiles();
+		pRunDoc->PreDefined_Criteria_Process();
+	}
 	p_mainframe->UpdatePaneText(0, "Multi Run Completed - Click to continue");
 	return 0;
 

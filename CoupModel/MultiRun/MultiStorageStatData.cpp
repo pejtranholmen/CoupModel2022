@@ -40,7 +40,7 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 	MFC_Util mfc_util;
 
 	if(reading)
-		mfc_util.SetPaneMessage("Reading From Multi Statitics File:" + GetStatFileName());
+		mfc_util.SetPaneMessage("Reading From Multi Statistics File:" + GetStatFileName());
 	else
 		mfc_util.SetPaneMessage("Writing to Multi Statistic File:" + GetStatFileName());
 #endif
