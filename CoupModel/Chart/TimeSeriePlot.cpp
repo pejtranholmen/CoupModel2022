@@ -181,6 +181,8 @@ void TimeSeriePlot::DrawTimeSeriePlot(CChartViewer *viewer)
 
 	size_t TotNumPrior;
 	TotNumPrior=GetPrior_UpdateNumberOfVariables();
+	if(TotNumPrior==m_ChartInfo.NumVariables) m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), false);
+
 	
 	UpdateDataDist();
 	CreateViewPortData(TotNumPrior);
@@ -199,7 +201,7 @@ void TimeSeriePlot::DrawTimeSeriePlot(CChartViewer *viewer)
 	}
 	bool DifferentScales=MakeAllMultiCharts(mc, TotNumPrior);
 
-	if (m_pProp->m_ReShape.m_CommonScale&&DifferentScales) {
+	if (m_pProp->m_ReShape.m_CommonScale&&DifferentScales||m_pProp->m_SyncAxis) {
 		SetCommonScaleTo_Y_or_Z_Axis();
 		DifferentScales = MakeAllMultiCharts(mc, TotNumPrior);
 	}

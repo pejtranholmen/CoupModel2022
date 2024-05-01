@@ -28,6 +28,7 @@ ChartProp::ChartProp(void)
 	o.typ = CHART_TYPES::CONTOUR_CHART; o.typtext = "Contour chart";
 	m_ChartTypesOptions.push_back(o);
 	m_multi_ResidualSequence = 0;
+	m_SyncAxis = true;
 }
 
 

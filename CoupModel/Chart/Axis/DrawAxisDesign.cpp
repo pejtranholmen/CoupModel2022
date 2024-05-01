@@ -38,8 +38,7 @@ void DrawAxisDesign::FindandSet_Labels_ForBothXandY_ScatterChart()
 
 		pXY_Chart->yAxis()->setLinearScale(Chart0_Min, Chart0_Max);*/
 
-		/*if(m_pProp->m_ReShape.m_CommonScale)
-		pXY_Chart->yAxis()->syncAxis(pXY_Chart->xAxis());*/
+
 		string newtitle;
 		if (m_pProp->GetFirstIndepIndex() != string::npos && !m_pProp->IsFirstIndepSet()) {
 			newtitle = "Independent Variable :"; newtitle += m_Label.IndepId;
@@ -228,6 +227,13 @@ void DrawAxisDesign::SetCommonScaleTo_Y_or_Z_Axis()
 				m_pProp->SetYLeftmin(m_ichart, m_pProp->m_CommonScaleValues.min);
 				m_pProp->SetYLeftmax(m_ichart, m_pProp->m_CommonScaleValues.max);
 				m_pProp->SetYLeftInterv(m_ichart,m_pProp->m_CommonScaleValues.interv);
+				if (m_pProp->m_ChartType == CHART_TYPES::SCATTER&& m_pProp->m_SyncAxis) {
+					m_pProp->SetXScaleChanged(m_ichart);
+					m_pProp->SetXmin(m_ichart, m_pProp->m_CommonScaleValues.min);
+					m_pProp->SetXmax(m_ichart, m_pProp->m_CommonScaleValues.max);
+					m_pProp->SetXInterv(m_ichart, m_pProp->m_CommonScaleValues.interv);
+
+				}
 			}
 		}
 	}
@@ -250,6 +256,11 @@ bool DrawAxisDesign::CheckIfCommonScaleCanBeSet()
 			if (m_pProp->GetYLeftmin(m_ichart) < min_value)  min_value = m_pProp->GetYLeftmin(m_ichart);
 			if (m_pProp->GetYLeftmax(m_ichart) > max_value) max_value = m_pProp->GetYLeftmax(m_ichart);
 			if (m_pProp->GetYLeftInterv(m_ichart) > interv_value) interv_value = m_pProp->GetYLeftInterv(m_ichart);
+			if (m_pProp->m_ChartType == CHART_TYPES::SCATTER&& m_pProp->m_SyncAxis) {
+				if (m_pProp->GetXmin(m_ichart) < min_value)  min_value = m_pProp->GetXmin(m_ichart);
+				if (m_pProp->GetXmax(m_ichart) > max_value) max_value = m_pProp->GetXmax(m_ichart);
+				if (m_pProp->GetXInterv(m_ichart) > interv_value) interv_value = m_pProp->GetXInterv(m_ichart);
+			}
 		}
 	}
 	for (m_ichart = 0; m_ichart < m_pProp->m_NumMultiChart; m_ichart++) {
@@ -592,7 +603,8 @@ void DrawAxisDesign::YLeft_Axis_SetScaleForChartPropArchive() {
 	auto YaxisTicks = pXY_Chart->yAxis()->getTicks();
 	int n = YaxisTicks.len;
 	if (n >= 2) {
-			m_pProp->SetYLeftmin(m_ichart, YaxisTicks[0]);
+
+		m_pProp->SetYLeftmin(m_ichart, YaxisTicks[0]);
 			m_pProp->SetYLeftmax(m_ichart, YaxisTicks[n - 1]);
 			m_pProp->SetYLeftInterv(m_ichart, YaxisTicks[1] - YaxisTicks[0]);
 	}
@@ -769,7 +781,7 @@ void DrawAxisDesign::X_Axis_SetScaleValueForChartPropArchive() {
 				m_pProp->m_TimeScale.IntervX = (m_pProp->m_TimeScale.MaxX - m_pProp->m_TimeScale.MinX) / 10.;
 		}
 	}
-	else {
+	else if(m_pProp->m_ChartType!=CHART_TYPES::SCATTER) {
 		m_pProp->SetXmin(m_ichart, m_Contour.FirstMin);
 		m_pProp->SetXmax(m_ichart, m_Contour.FirstMax);
 		if (ntic >= 2)	m_Contour.FirstInterval = XaxisTicks[1] - XaxisTicks[0];
@@ -938,8 +950,7 @@ void DrawAxisDesign::TitleAxisLabels() {
 			m_pProp->SetXVariableNumber(m_ichart, xVar);
 			pXY_Chart->yAxis()->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint);
 			pXY_Chart->yAxis()->setLabelFormat("{value|E4.1}");
-			//if(m_pProp->m_ReShape.m_CommonScale) 
-			//	pXY_Chart->yAxis()->syncAxis(pXY_Chart->xAxis());
+			
 			string newtitle = "Independent Variable :"; newtitle += m_Label.IndepId;
 			if (m_pProp->m_MakeChartTitle)
 				pXY_Chart->addTitle(Chart::TopCenter, newtitle.c_str(), "arialbd.ttf", m_pUtil->m_TitleSizePoint);

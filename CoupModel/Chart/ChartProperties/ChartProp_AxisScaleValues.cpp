@@ -56,11 +56,21 @@ else {
 			ResetSerie2(true);
 		}
 		m_XScaleChanged.clear();
+		m_XScaleMin.clear();
+		m_XScaleMax.clear();
+		m_XScaleInterv.clear();
+		m_XScaleSet.clear();
+
+		m_YScaleLeftMin.clear();
+		m_YScaleLeftMax.clear();
+		m_YScaleLeftInterv.clear();
+		m_YScaleLeftSet.clear();
 
 		m_YScaleLeftChanged.clear();
 		m_YScaleLeftSet.clear();
 		m_YScaleRightChanged.clear();
 		m_YScaleRightSet.clear();
+
 		m_YLabel1.clear();
 		m_YLabel2.clear();
 		m_XLabel.clear();
@@ -95,28 +105,16 @@ else {
 
 			float pV=0;
 			m_XScaleMin.push_back(pV);
-
 			m_XScaleMax.push_back(pV);
-
 			m_XScaleInterv.push_back(pV);
-
 			m_ZScaleMin.push_back(pV);
-
 			m_ZScaleMax.push_back(pV);
-
 			m_ZScaleInterv.push_back(pV);
-
-
 			m_YScaleLeftMin.push_back(pV);
-
 			m_YScaleRightMin.push_back(pV);
-
 			m_YScaleRightMax.push_back(pV);
-
 			m_YScaleLeftMax.push_back(pV);
-
 			m_YScaleLeftInterv.push_back(pV);
-
 			m_YScaleRightInterv.push_back(pV);
 		}
 	}

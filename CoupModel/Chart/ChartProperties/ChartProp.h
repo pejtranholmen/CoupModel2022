@@ -141,6 +141,8 @@ public:
 
 	AXIS_SCALE m_CommonScale;
 
+	bool m_SyncAxis;
+
 	
 	size_t m_DayValueRepresentation;
 	size_t m_HourValueRepresentation;
