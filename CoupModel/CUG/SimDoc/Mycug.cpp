@@ -4179,7 +4179,7 @@ if (item==1998) {
     Paste(); 
 	return;
 }
-if ((sheet == 5 || sheet == 6 || sheet == 10) && item > 8003 && item < 8010) {
+if ((sheet == 5 || sheet == 6 || sheet == 10) && item > 8003 && item < 8012) {
 		int ans=ExcelExportCommand(item);
 		if (ans == 0) return;	
 	}

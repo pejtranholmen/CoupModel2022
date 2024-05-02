@@ -8,6 +8,7 @@
 #include "../Chart/PlotDesignInfo/PlotStorage.h"
 #include "../util/pugixml.hpp"
 enum class doc_enabled { ALL, ENABLED, NOT_DEFAULT };
+enum ExportOptions { All, Performance, Outputs, Parameters, ValidValues };
 
 
 class NewMap :public MR{
@@ -61,7 +62,7 @@ public:
 	bool CreateMapSvFlexFile(size_t index=0);
 
 	void  Export_MBinToCSV(bool accepted);
-	string Export_XLSX(bool accepted, size_t choice=0, int IndexOut=-1, string varname="");
+	string Export_XLSX(bool accepted, ExportOptions = ExportOptions::All , int Indexoption = -1, string varname = "");
 
 	bool Info_Header(bool ReadFlag=true);
 	bool Info_Switches(bool ReadFlag=true);

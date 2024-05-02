@@ -21,6 +21,8 @@
 #include "DBDataWnd.h"
 #include ".\EvalMultiWnd.h"
 
+
+
 class CMainFrame : public CMDIFrameWndEx
 {
 	DECLARE_DYNAMIC(CMainFrame)

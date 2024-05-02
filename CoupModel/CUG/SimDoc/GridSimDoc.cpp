@@ -130,6 +130,7 @@ void GridSimDoc::MakeRunInfo_PriorMenu(int col, int row) {
 			AddMenuItem(4001, "Export Accepted MultiRun Results to CSV Text file");
 			AddMenuItem(4002, "Export All MultiRun Results to Excel file");
 			AddMenuItem(4003, "Export Accepted MultiRun Results to Excel file");
+			AddMenuItem(4004, "Export All Simulated & Measured Values to Excel file");
 
 		}
 		if(!m_pSimDoc->IsFinishedSimulation()) 	AddMenuItem(4021, "Read Document Settings from excel file");
@@ -1217,6 +1218,7 @@ void GridSimDoc::MakeChartMenu(int col, int row, int sheet)
 					if (m_pSimDoc->IsMultiSimulation() && (m_pSimDoc->IsOutputBinFileValid())) {
 						AddMenuItem(8006, "Export Performance indicators to excel file for all runs");
 						AddMenuItem(8007, "Export Performance indicators to excel file for accepted runs");
+						AddMenuItem(8011, "Export Simulated & Measured Values to excel file for accepted runs");
 
 					}
 

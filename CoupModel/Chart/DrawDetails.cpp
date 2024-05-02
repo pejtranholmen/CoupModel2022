@@ -725,6 +725,8 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 			
 
 				m_Label.ytitle1=m_Label.test;
+				if(m_Label.ytitle1.find(m_Label.unit)==string::npos) 
+					m_Label.ytitle1 = m_Label.test+ " ("+ m_Label.unit+")";
 				m_Label.unit1=m_Label.unit;
 				if((m_pProp->GetFirstIndepIndex()!=string::npos&&!m_pUtil->m_AutoShiftFirstIndep )||!m_pProp->IsFirstIndepSet()) {
 					m_Label.xtitle=m_pProp->GetFirstIndepString(ivar);

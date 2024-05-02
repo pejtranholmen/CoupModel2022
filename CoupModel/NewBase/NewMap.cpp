@@ -5837,7 +5837,7 @@ void NewMap::Export_MBinToCSV(bool AcceptedOnly)
 	
 };
 
-string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, string varname)
+string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOut, string varname)
 {
 #ifndef COUPSTD
 	string strbase;
@@ -5859,20 +5859,22 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 	wb.remove_sheet(wb.active_sheet());
 
 
-	auto GetFileName = [&strbase, &AcceptedOnly, &choice]() {
+	auto GetFileName = [&strbase, &AcceptedOnly, &option]() {
 		string fileout;
 		string indicator;
 		if (AcceptedOnly) indicator = "_Accepted";
 		else indicator = "_All";
 
-		if (choice == 0)
+		if (option ==ExportOptions::All)
 			fileout = strbase + indicator + ".xlsx";
-		else if (choice == 1)
+		else if (option == ExportOptions::Performance)
 			fileout = strbase + indicator + "_Performance.xlsx";
-		else if (choice == 2)
+		else if (option == ExportOptions::Outputs)
 			fileout = strbase + indicator + "_Outputs.xlsx";
-		else
+		else if (option == ExportOptions::Parameters)
 			fileout = strbase + indicator + "_Par.xlsx";
+		else if (option == ExportOptions::ValidValues)
+			fileout = strbase + indicator + "_ValidValues.xlsx";
 		return fileout;
 
 
@@ -5935,14 +5937,22 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 			ws.cell(col + startcol, rowcount).value(header[col]);
 		}
 		rowcount++;
+		if (header3.size() == values.size()) {
+			startcol = 2;
+			for (size_t row = 0; row < values.size(); row++) {
+				ws.cell(1, row+rowcount).value(header3[row]);
+			}
+		}
+
 		
 		for (size_t row = 0; row < values.size(); row++) {
 			for (size_t col = 0; col < values[row].size(); col++) {
-				ws.cell(xlnt::cell_reference(col + startcol, rowcount + row)).value(values.at(row).at(col));
+				if(values[row][0]>-1.1E36&&startcol==2)
+					ws.cell(xlnt::cell_reference(col + startcol, rowcount + row)).value(values.at(row).at(col));
 			}
 		}
-		};
-	if (choice == 0 || choice == 1) {
+	};
+	if (option == ExportOptions::All || option== ExportOptions::Performance) {
 		string outname = "_Performance";
 		if (AcceptedOnly) outname = "_Accepted_Performance";
 		for (size_t i = 0; i < 7; i++) {
@@ -6095,7 +6105,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 	vector<string> sheetnames;
 	header2.clear();
 	AddColNumbers = false;
-	if (choice == 0 || choice == 2) {
+	if (option == ExportOptions::All || option == ExportOptions::Performance) {
 		if (IndexOut >= 0) { // Single Variable Outputs
 			auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 			if (AcceptedOnly) {
@@ -6205,7 +6215,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 					if (pSw->Is_Vector()) {
 						lindex = ((OutVector*)pSw)->GetLocalIndex(ii);
 						nameoutput += "(" + FUtil::STD_ItoAscii(lindex) + ")";
-						sumindex = ((OutVector*)pSw)->GetSumVarIndex(lindex-1, 7);
+						sumindex = ((OutVector*)pSw)->GetSumVarIndex(lindex - 1, 7);
 						namevar += "_" + FUtil::STD_ItoAscii(lindex);
 					}
 					else {
@@ -6285,15 +6295,11 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 
 					}
 					FillSheet(header, allvalues, sheetnames[ivartyp], header2, header2);
-
-
 				}
-
 			}
-
 		}
-
-		if (choice == 0 || choice == 3) {
+	}
+	if (option == ExportOptions::All || option==ExportOptions::Parameters) {
 			header.clear();
 			header.push_back("RunNo");
 			header.push_back("Ensemble No");
@@ -6391,16 +6397,119 @@ string NewMap::Export_XLSX(bool AcceptedOnly, size_t choice, int IndexOut, strin
 			}
 		}
 
+	if (option == ExportOptions::All || option == ExportOptions::ValidValues) {
+		header.clear();
+		header.push_back("Date");
+		header.push_back("Measured");
+		header2.clear();
 
-		auto fileout = GetFileName();
+		auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
+		vector<size_t> number_of_runs_per_ensemble;
+		vector<size_t> AllAccepted;
+		vector<size_t> ActualEnsemble;
+		if (AcceptedOnly) {
+			numout = 0;
+			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
+				size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
+				number_of_runs_per_ensemble.push_back(numruns);
+				auto ens_string = m_pSimDoc->m_MStorage.m_AcceptedIdString[i];
+				for (size_t j = 0; j < numruns; j++) {
+					size_t numrun = m_pSimDoc->m_MStorage.m_AcceptedRuns[i][j];
+					string txt = FUtil::STD_ItoAscii(i+1) + "-" + FUtil::STD_ItoAscii(j + 1)+":"+ FUtil::STD_ItoAscii(numrun);
+					header.push_back(txt);
+					
+					AllAccepted.push_back(numrun);
+					ActualEnsemble.push_back(i);
+					header2.push_back(FUtil::STD_ItoAscii(numrun));
+				}
+				numout += numruns;
+				numout++;
+			}
+			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
+				string txt = FUtil::STD_ItoAscii(i + 1) + "- Mean";
+				header.push_back(txt);
+				numout++;
+			}
+			numout--;
+		}
 
-		wb.save(fileout);
-		return fileout;
+
+		auto NumSheets = m_pSimDoc->GetNumAll_TSV_ValVariables();
+
+		for (size_t s = 0; s < NumSheets-2; s++) {
+
+			vector<vector<double>> MeanEnsembleValues;
+			size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(s);
+			F* pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
+			CPG* pPG=pValFile->GetPointer();
+			pValFile->CheckFileNameAndAssignNameToPGClass();
+			pPG->SetCompleteRead(true);
+			pPG->ReOpen();
+			auto numrec=pPG->GetNumRecords();
+			allvalues.resize(numrec + 2);
+			vector<string> header3;
+			header3.resize(numrec + 2);
+
+			size_t ifile;
+			CResiduals* pRes;
+			size_t irun_int;
+			vector<float> AcceptedResiduals;
+			pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
+
+			for (size_t rec = 0; rec < numrec; rec++) {
+				allvalues[rec].resize(numout);
+			}
+
+			for (size_t rec = 0; rec < numrec; rec++) {
+				header3[rec] = pPG->GetDate(rec + 1);
+				//allvalues[rec][0]= pPG->GetLongTime(rec+1);
+				allvalues[rec][0] = pPG->GetVarValue(s + 1, rec + 1);
+				size_t count = 0;
+				vector<float> ens_mean;
+				for (size_t ens = 0; ens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); ens++) {
+					vector<float> meanv;
+					meanv.resize(m_pSimDoc->m_MStorage.m_AcceptedRuns[ens].size());
+					for (size_t runno = 0; runno < m_pSimDoc->m_MStorage.m_AcceptedRuns[ens].size(); runno++) {
+						auto run_to_read = m_pSimDoc->m_MStorage.m_AcceptedRuns[ens][runno];
+						AcceptedResiduals = pRes->GetResidualVector(run_to_read, s);
+						allvalues[rec][count + 1] = allvalues[rec][0] - AcceptedResiduals[rec];
+						meanv[runno] = allvalues[rec][count + 1];
+						count++;
+					}
+					DistStat stat;
+
+					size_t ncheck;
+					size_t num = meanv.size();
+					MeanStat(&meanv[0], num, &ncheck, &stat);
+					ens_mean.push_back(stat.Mean);
+				}	
+				for (size_t ens = 0; ens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); ens++) {
+				
+	
+					allvalues[rec][count + 1] = ens_mean[ens];
+					count++;
+				}
+
+			}
+
+			vector<string> blank;
+			auto sheetname = m_pSimDoc->m_ValidationData.GetValName(s);
+			int iv = m_pSimDoc->m_ValidationData.GetValLocalIndex(s);
+			if (iv > -1) sheetname +=  "(" + FUtil::STD_ItoAscii(iv + 1) + ")";
+			FillSheet(header, allvalues, sheetname, blank, header3);
+			
+		}
 	}
-#else
-	return "";
+
+
+	auto fileout = GetFileName();
+
+	wb.save(fileout);
+	return fileout;
 #endif
-};
+	return "";
+}
+
 string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 
 #ifdef COUPSTD

@@ -931,13 +931,9 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 							irun_int = m_pNewMap->MR_GetInternalRunNo(irun);
 							run_to_read = irun_int;
 							if (m_ScalingNumVarWithDim1 > 1) run_to_read = (irun_int / m_ScalingNumVarWithDim1)*m_ScalingNumVarWithDim1 + ii % m_ScalingNumVarWithDim1;
-
 							AcceptedResiduals[i] = pRes->GetResidualVector(run_to_read, var_to_read);
-
 						}
 					}
-
-
 
 					for (size_t index = 0; index < m_RecL; index++) {
 						if (index % 200 == 0) {

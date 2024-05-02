@@ -111,27 +111,27 @@ SIMB P_DB;
 		else if (item == 4004 || item == 4005) {
 			string outfile;
 			if (item == 4004)
-				outfile = m_pSimDoc->Export_XLSX(false,1);
+				outfile = m_pSimDoc->Export_XLSX(false,ExportOptions::Performance);
 			else
-				outfile = m_pSimDoc->Export_XLSX(true, 1);
+				outfile = m_pSimDoc->Export_XLSX(true, ExportOptions::Performance);
 			string message = "Data Exported to file : " + outfile;
 			MFC_Util::MessageBox(message);
 		}
 		else if (item == 4006 || item == 4007) {
 			string outfile;
 			if (item == 4006)
-				outfile = m_pSimDoc->Export_XLSX(false, 2);
+				outfile = m_pSimDoc->Export_XLSX(false, ExportOptions::Outputs);
 			else
-				outfile = m_pSimDoc->Export_XLSX(true, 2);
+				outfile = m_pSimDoc->Export_XLSX(true, ExportOptions::Outputs);
 			string message = "Data Exported to file : " + outfile;
 			MFC_Util::MessageBox(message);
 		}
 		else if (item == 4008 || item == 4009) {
 			string outfile;
 			if (item == 4008)
-				outfile = m_pSimDoc->Export_XLSX(false, 3);
+				outfile = m_pSimDoc->Export_XLSX(false, ExportOptions::Parameters);
 			else
-				outfile = m_pSimDoc->Export_XLSX(true, 3);
+				outfile = m_pSimDoc->Export_XLSX(true, ExportOptions::Parameters);
 			string message = "Data Exported to file : " + outfile;
 			MFC_Util::MessageBox(message);
 		}
@@ -1313,9 +1313,9 @@ int DocCommands::OutPutVarCommand(int col, int row, int item) {
 	else if (m_pSimDoc->IsFinishedSimulation() && (item == 4004 || item == 4005)) {
 		string outfile;
 		if (item == 4004)
-			outfile = m_pSimDoc->Export_XLSX(false, 2);
+			outfile = m_pSimDoc->Export_XLSX(false, ExportOptions::Outputs);
 		else
-			outfile = m_pSimDoc->Export_XLSX(true, 2);
+			outfile = m_pSimDoc->Export_XLSX(true, ExportOptions::Outputs);
 		string message = "Data Exported to file : " + outfile;
 		MFC_Util::MessageBox(message);
 	}
@@ -1520,9 +1520,9 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 		if (m_pSimDoc->IsFinishedSimulation() && (item == 4006 || item == 4007)) {
 			string outfile;
 			if (item == 4006)
-				outfile = m_pSimDoc->Export_XLSX(false, 1);
+				outfile = m_pSimDoc->Export_XLSX(false, ExportOptions::Performance);
 			else
-				outfile = m_pSimDoc->Export_XLSX(true, 1);
+				outfile = m_pSimDoc->Export_XLSX(true, ExportOptions::Performance);
 			string message = "Data Exported to file : " + outfile;
 			MFC_Util::MessageBox(message);
 		}
@@ -2708,28 +2708,29 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 	return false;
 }
 int DocCommands::ExcelExportCommand(int item, int Index, string varname) {
-	int outfileopt=1;
-	if (item == 8014|| item == 8015) outfileopt = 2;
-	else if (item >= 8008) outfileopt = 3;
-	else if (item <= 8005) outfileopt = 2;
+	ExportOptions opt=ExportOptions::Performance;
+	if (item == 8014|| item == 8015) opt = ExportOptions::Outputs;
+	else if (item >= 8008&&item< 8010) opt = ExportOptions::Parameters;
+	else if (item == 8011)  opt = ExportOptions::ValidValues;
+	else if (item <= 8005) opt = ExportOptions::Outputs;
 	
 
 	if (m_pSimDoc->IsFinishedSimulation()) {
 		if (Index < 0) {
 			string outfile;
 			if (item % 2 == 0)
-				outfile = m_pSimDoc->Export_XLSX(false, outfileopt);
+				outfile = m_pSimDoc->Export_XLSX(false, opt);
 			else
-				outfile = m_pSimDoc->Export_XLSX(true, outfileopt);
+				outfile = m_pSimDoc->Export_XLSX(true, opt);
 			string message = "Data Exported to file : " + outfile;
 			MFC_Util::MessageBox(message);
 		}
 		else {
 			string outfile;
 			if (item % 2 == 0)
-				outfile = m_pSimDoc->Export_XLSX(false, outfileopt, Index, varname);
+				outfile = m_pSimDoc->Export_XLSX(false, opt, Index, varname);
 			else
-				outfile = m_pSimDoc->Export_XLSX(true, outfileopt, Index, varname);
+				outfile = m_pSimDoc->Export_XLSX(true, opt, Index, varname);
 			string message = "Data Exported to file : " + outfile;
 			MFC_Util::MessageBox(message);
 
