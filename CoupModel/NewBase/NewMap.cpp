@@ -5853,14 +5853,16 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		return "";
 
 	vector<string> header, header2;
-	vector< vector<float>>	allvalues;
+	vector< vector<float>>	allvalues, clean_allvalues;
 	string sheetname;
 	xlnt::workbook wb;
 	wb.remove_sheet(wb.active_sheet());
 
+	string filein, fileout;
 
-	auto GetFileName = [&strbase, &AcceptedOnly, &option]() {
-		string fileout;
+
+	auto GetFileName = [&AcceptedOnly, &option,&fileout](string strbase) {
+
 		string indicator;
 		if (AcceptedOnly) indicator = "_Accepted";
 		else indicator = "_All";
@@ -5876,18 +5878,87 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		else if (option == ExportOptions::ValidValues)
 			fileout = strbase + indicator + "_ValidValues.xlsx";
 		return fileout;
+	};
 
+	filein = GetFileName(strbase);
 
-		};
-
-	auto filein = GetFileName();
 	bool AddToExisting = false;
 	bool AddColNumbers = true;
-	if (FUtil::IsFileExisting(filein)) {
-		wb.load(filein);
-		AddToExisting = true;
-	}
 
+	size_t count=1;
+	if (FUtil::IsFileExisting(filein)) {
+		auto pos = filein.find(".xlsx");
+		if (pos != string::npos) {
+				fileout = filein.substr(0,pos) + "(" + FUtil::STD_ItoAscii(count) + ")"+".xlsx";
+		}
+		while (FUtil::IsFileExisting(fileout)) {
+			auto numpos1 = fileout.rfind("(");
+			auto numpos2 = fileout.rfind(")");
+			if (numpos1 != string::npos) {
+				string txt;
+				txt = fileout.substr(numpos1+1, numpos2 - numpos1-1);
+				int newnum = FUtil::AtoInt(txt);
+				fileout = fileout.substr(0, numpos1+1) + FUtil::STD_ItoAscii(newnum + 1)+").xlsx";
+			}
+
+		}
+		
+	}
+	else
+		fileout = filein;
+
+
+
+
+
+
+	auto FillInfoSheet = [&wb, &option](vector<string> headers, string fileout) {
+		xlnt::worksheet ws;
+
+		int startcol = 1; int startrow = 1;
+		string txt;
+		ws = wb.create_sheet();
+		ws.title("Readme info");
+		ws.cell(startcol, startrow).value("This Workbook is created from CoupModel with output from a MultiRun simulation");
+		txt = "Original File Name is " + fileout;
+		ws.cell(1, 2).value(txt);
+		txt = "Different sheets includes details on: Performance, Output, Parameters or timeseries of Simulated versus Measured Variables";
+		ws.cell(1, 3).value(txt);
+		
+		if (option == ExportOptions::Performance) {
+			txt = "This Workbook is about the performance";
+			ws.cell(1, 5).value(txt);
+		}
+		else if (option == ExportOptions::Outputs) {
+			txt = "This Workbook is about Statistics from Outputs";
+			ws.cell(1, 5).value(txt);
+		
+		}
+		else if (option == ExportOptions::Parameters) {
+			txt = "This Workbook is about the parameters";
+			ws.cell(1, 5).value(txt);
+
+		}	
+		else if (option == ExportOptions::ValidValues) {
+			txt = "This workbook is with all measured values and corresponding simulated for Accepted candidates";
+			ws.cell(1, 5).value(txt);
+			txt = "The different sheets corresponds to the list of Validation Variables and with Names that are the number combined with the name of the simulations variable ";
+			ws.cell(1, 5).value(txt);
+			txt = "This header line of each sheet includes a column with the date for and the measured Variable";
+			ws.cell(1, 6).value(txt);
+			txt = "The header line includes optional simulated values identified by X-Y:Z, where X is the ensemble Number and Y is the number of the candidate within the ensemble and Z is the Run Number.";
+			ws.cell(1, 7).value(txt);
+			txt = "Finally the header line includes mean value of the accepted candidates of the ensemble denoted as X-Mean";
+			ws.cell(1, 8).value(txt);
+			txt = "Note that the Simulated Variable can be identified both with the sequence number in the list of simulated Validation variables (Prior the name)";
+			ws.cell(1, 9).value(txt);
+			txt = "and a FilerIndicator to select a specific value from the Validation variable if a Filter has been applied (after the name) ";
+			ws.cell(1, 10).value(txt);
+		}
+	};
+
+	vector<string> test;
+	FillInfoSheet(test, fileout);
 
 	auto FillSheet = [&wb, &AddToExisting,&AddColNumbers](vector<string> header, vector< vector <float>> values, string sheetname, vector<string> header2, vector<string> header3) {
 		xlnt::worksheet ws;
@@ -6100,8 +6171,6 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			}
 
 		}
-
-
 	vector<string> sheetnames;
 	header2.clear();
 	AddColNumbers = false;
@@ -6403,12 +6472,15 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		header.push_back("Measured");
 		header2.clear();
 
-		auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
+
+
+
+		size_t num_col = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 		vector<size_t> number_of_runs_per_ensemble;
 		vector<size_t> AllAccepted;
 		vector<size_t> ActualEnsemble;
 		if (AcceptedOnly) {
-			numout = 0;
+			num_col = 1;
 			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
 				size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
 				number_of_runs_per_ensemble.push_back(numruns);
@@ -6421,22 +6493,24 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					AllAccepted.push_back(numrun);
 					ActualEnsemble.push_back(i);
 					header2.push_back(FUtil::STD_ItoAscii(numrun));
+					num_col++;
 				}
-				numout += numruns;
-				numout++;
+
 			}
 			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
 				string txt = FUtil::STD_ItoAscii(i + 1) + "- Mean";
 				header.push_back(txt);
-				numout++;
+				num_col++;
 			}
 
 		}
+		
 
 
 		auto NumSheets = m_pSimDoc->GetNumAll_TSV_ValVariables();
+		vector<string> header3;
 
-		for (size_t s = 0; s < NumSheets-10; s++) {
+		for (size_t s = 0; s < NumSheets; s++) {
 
 			vector<vector<double>> MeanEnsembleValues;
 			size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(s);
@@ -6447,7 +6521,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			pPG->ReOpen();
 			auto numrec=pPG->GetNumRecords();
 			allvalues.resize(numrec + 2);
-			vector<string> header3;
+
 			header3.resize(numrec + 2);
 
 			size_t ifile;
@@ -6455,11 +6529,15 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			size_t irun_int;
 			vector<float> AcceptedResiduals;
 			pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
+			vector<bool> keep_lines;
+			keep_lines.resize(numrec + 2);
+			clean_allvalues.clear();
 
 			for (size_t rec = 0; rec < numrec; rec++) {
-				allvalues[rec].resize(numout);
+				allvalues[rec].resize(num_col);
+				keep_lines[rec] = true;
 			}
-
+			string FilterIndicator{""};
 			for (size_t rec = 0; rec < numrec; rec++) {
 				header3[rec] = pPG->GetDate(rec + 1);
 				//allvalues[rec][0]= pPG->GetLongTime(rec+1);
@@ -6470,9 +6548,12 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					auto valueread= pPG->GetVarValue(filterindex, rec + 1);
 					if (int(valueread + 0.001) == filtervalue) {
 						allvalues[rec][0] = pPG->GetVarValue(ind + 1, rec + 1);
+						FilterIndicator = FUtil::STD_ItoAscii(filtervalue);
 					}
-					else
+					else {
 						allvalues[rec][0] = MISSING;
+						keep_lines[rec] = false;
+					}
 
 				}
 				else {
@@ -6487,6 +6568,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					for (size_t runno = 0; runno < m_pSimDoc->m_MStorage.m_AcceptedRuns[ens].size(); runno++) {
 						auto run_to_read = m_pSimDoc->m_MStorage.m_AcceptedRuns[ens][runno];
 						AcceptedResiduals = pRes->GetResidualVector(run_to_read, s);
+						if (AcceptedResiduals[rec] < -1.E37) keep_lines[rec] = false;
 						allvalues[rec][count + 1] = allvalues[rec][0] - AcceptedResiduals[rec];
 						meanv[runno] = allvalues[rec][count + 1];
 						count++;
@@ -6499,25 +6581,34 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					ens_mean.push_back(stat.Mean);
 				}	
 				for (size_t ens = 0; ens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); ens++) {
-				
-	
 					allvalues[rec][count + 1] = ens_mean[ens];
 					count++;
 				}
 
 			}
+			vector<string> clean_dates;
+			for (size_t i = 0; i < numrec+1; i++) {
+				if (keep_lines[i]) {
+					vector<float> v = allvalues[i];
+					//for (size_t j = 0; j < v.size(); j++)
+					  clean_allvalues.push_back(v);
+					  clean_dates.push_back(header3[i]);
+				}
+			}
+			
 
 			vector<string> blank;
 			auto sheetname = FUtil::STD_ItoAscii(s+1)+" "+m_pSimDoc->m_ValidationData.GetValName(s);
 			int iv = m_pSimDoc->m_ValidationData.GetValLocalIndex(s);
 			if (iv > -1) sheetname +=  "(" + FUtil::STD_ItoAscii(iv + 1) + ")";
-			FillSheet(header, allvalues, sheetname, blank, header3);
+			if (FilterIndicator.size() > 0) sheetname += "_" + FilterIndicator;
+			if(clean_allvalues.size()>0) FillSheet(header, clean_allvalues, sheetname, blank, clean_dates);
 			
 		}
 	}
 
 
-	auto fileout = GetFileName();
+	//fileout = GetFileName(strbase);
 
 	wb.save(fileout);
 	return fileout;
