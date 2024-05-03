@@ -6430,13 +6430,13 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 				header.push_back(txt);
 				numout++;
 			}
-			numout--;
+
 		}
 
 
 		auto NumSheets = m_pSimDoc->GetNumAll_TSV_ValVariables();
 
-		for (size_t s = 0; s < NumSheets-2; s++) {
+		for (size_t s = 0; s < NumSheets-10; s++) {
 
 			vector<vector<double>> MeanEnsembleValues;
 			size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(s);
@@ -6463,7 +6463,22 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			for (size_t rec = 0; rec < numrec; rec++) {
 				header3[rec] = pPG->GetDate(rec + 1);
 				//allvalues[rec][0]= pPG->GetLongTime(rec+1);
-				allvalues[rec][0] = pPG->GetVarValue(s + 1, rec + 1);
+				int ind= m_pSimDoc->m_ValidationData.GetValFileIndex(s);
+				int filterindex=m_pSimDoc->m_ValidationData.GetValPG_FilterIndex(s);
+				int filtervalue= m_pSimDoc->m_ValidationData.GetValPG_FilterValue(s);
+				if (filterindex > 0) {
+					auto valueread= pPG->GetVarValue(filterindex, rec + 1);
+					if (int(valueread + 0.001) == filtervalue) {
+						allvalues[rec][0] = pPG->GetVarValue(ind + 1, rec + 1);
+					}
+					else
+						allvalues[rec][0] = MISSING;
+
+				}
+				else {
+					allvalues[rec][0] = pPG->GetVarValue(ind + 1, rec + 1);
+				}
+
 				size_t count = 0;
 				vector<float> ens_mean;
 				for (size_t ens = 0; ens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); ens++) {
@@ -6493,7 +6508,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			}
 
 			vector<string> blank;
-			auto sheetname = m_pSimDoc->m_ValidationData.GetValName(s);
+			auto sheetname = FUtil::STD_ItoAscii(s+1)+" "+m_pSimDoc->m_ValidationData.GetValName(s);
 			int iv = m_pSimDoc->m_ValidationData.GetValLocalIndex(s);
 			if (iv > -1) sheetname +=  "(" + FUtil::STD_ItoAscii(iv + 1) + ")";
 			FillSheet(header, allvalues, sheetname, blank, header3);

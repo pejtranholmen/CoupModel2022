@@ -355,6 +355,7 @@ void SnowPack::Flux()
 					CR=a.CR;
 				}
 				Snow_On_RadImpact(HSnow);
+				snow_endstep();
 				return;
 
 
@@ -363,7 +364,7 @@ void SnowPack::Flux()
 	}  //! WTotSnow
 
 
-     snow_endstep();
+	snow_endstep();
 
 
 }
@@ -447,7 +448,7 @@ void SnowPack::snow_endstep()
 	reset_snow=true;
 
 	f_BareSoilCover_Snow(HSnow);
-	HSnow=0;
+	//HSnow=0;
 
 	Snow_Increase=WTotSnow-Snow_Prev;
 
@@ -467,6 +468,17 @@ void SnowPack::snow_endstep()
 	  FracBare = f_BareSoilCover_Snow(HSnow);
 
   }
+
+  if (SnowPloughing) {
+	  if (WTotSnow > PloughSnowMass) {
+		  SnowExport = WTotSnow * PloughEffSnow / T_Step;
+		  WTotSnow = WTotSnow - SnowExport * T_Step;
+	  }
+	  else
+		  SnowExport = 0.;
+  }
+
+
 
 }
 //subroutine new_density(fice,snowrate,rainrate,dens_i,dens_l,dens_w,tprecip,prcp)
