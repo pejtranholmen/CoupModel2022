@@ -394,10 +394,13 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		}
 	}
 #ifndef COUPSTD	
-	CFileScanner ScanMeanProg(nullptr);
+	/*CFileScanner ScanMeanProg(nullptr);
 	ScanMeanProg.m_Info = "Scanning criterias";
 	ScanMeanProg.Create(IDD_PROGRESS, nullptr);
-	ScanMeanProg.ShowWindow(SW_SHOW);
+	ScanMeanProg.ShowWindow(SW_SHOW);*/
+#endif
+#ifndef COUPSTD
+	mfc_util.SetPaneMessage("Update Accepted Runs");
 #endif
 
 	m_TotalNumAccepted = FindAcceptedRunsFromFlagInPar();

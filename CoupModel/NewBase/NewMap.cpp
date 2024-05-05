@@ -861,7 +861,7 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 
 		}
 
-		size_t koll;
+		/*size_t koll;
 		if (vst.ValidationFileNumber > 0 && vst.ValidationFileNumber < MAXSIMVAL + 1) {
 
 			m_ValidationData.m_NumberSelectedValidationVar[vst.ValidationFileNumber - 1]++;
@@ -870,7 +870,7 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 			if (pF->SetValNumber(vst.ValidationFileIndex, size_t(m_Val_Array.size()) )) {
 				koll = pF->GetNumberOfSelectedVal();
 			}
-		}
+		}*/
 
 	}
 
@@ -5852,6 +5852,8 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 	else
 		return "";
 
+	MFC_Util m;
+	m.SetPaneMessage("Creating excel file....");
 	vector<string> header, header2;
 	vector< vector<float>>	allvalues, clean_allvalues;
 	string sheetname;
@@ -5908,10 +5910,6 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		fileout = filein;
 
 
-
-
-
-
 	auto FillInfoSheet = [&wb, &option](vector<string> headers, string fileout) {
 		xlnt::worksheet ws;
 
@@ -5919,9 +5917,14 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		string txt;
 		ws = wb.create_sheet();
 		ws.title("Readme info");
+		ws.column_properties("A").width = 200.;
+		for(size_t i=0;i<12;i++)
+		ws.row_properties(1+i).height = 30.;
+
 		ws.cell(startcol, startrow).value("This Workbook is created from CoupModel with output from a MultiRun simulation");
 		txt = "Original File Name is " + fileout;
 		ws.cell(1, 2).value(txt);
+		ws.cell(1, 2).fill(getexcel_changed);
 		txt = "Different sheets includes details on: Performance, Output, Parameters or timeseries of Simulated versus Measured Variables";
 		ws.cell(1, 3).value(txt);
 		
@@ -5942,23 +5945,176 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		else if (option == ExportOptions::ValidValues) {
 			txt = "This workbook is with all measured values and corresponding simulated for Accepted candidates";
 			ws.cell(1, 5).value(txt);
+			ws.cell(1, 5).fill(getexcel_yellow);
 			txt = "The different sheets corresponds to the list of Validation Variables and with Names that are the number combined with the name of the simulations variable ";
-			ws.cell(1, 5).value(txt);
+			ws.cell(1, 6).value("One Sheet called: Criteria Used include the setting for criteria for selection of accepted candidates to the ensembles");
+			
 			txt = "This header line of each sheet includes a column with the date for and the measured Variable";
-			ws.cell(1, 6).value(txt);
-			txt = "The header line includes optional simulated values identified by X-Y:Z, where X is the ensemble Number and Y is the number of the candidate within the ensemble and Z is the Run Number.";
-			ws.cell(1, 7).value(txt);
-			txt = "Finally the header line includes mean value of the accepted candidates of the ensemble denoted as X-Mean";
 			ws.cell(1, 8).value(txt);
-			txt = "Note that the Simulated Variable can be identified both with the sequence number in the list of simulated Validation variables (Prior the name)";
+			txt = "Note that The header line includes optional simulated values identified by X-Y:Z, where X is the ensemble Number and Y is the number of the candidate within the ensemble and Z is the Run Number.";
 			ws.cell(1, 9).value(txt);
-			txt = "and a FilerIndicator to select a specific value from the Validation variable if a Filter has been applied (after the name) ";
+			ws.cell(1, 9).fill(getexcel_yellow);
+			txt = "Finally the header line includes mean value of the accepted candidates of the ensemble denoted as X-Mean";
 			ws.cell(1, 10).value(txt);
+			txt = "Note that the Simulated Variable can be identified both with the sequence number in the list of simulated Validation variables (Prior the name)";
+			ws.cell(1, 11).value(txt);
+			txt = "and a FilterIndicator to select a specific value from the Validation variable if a Filter has been applied (after the name) ";
+			ws.cell(1, 12).value(txt);
+
+
+
 		}
 	};
 
+	auto FillCriteriaSheet = [&]() {
+		xlnt::worksheet ws;
+		ws = wb.create_sheet();
+		ws.title("Criteria Used");
+
+		ws.cell(1, 1).value("Criteria for Ensemble Table");
+		ws.cell(1, 1).fill(getexcel_yellow);
+		ws.merge_cells("A1:H1");
+		ws.column_properties("C").width = 30.;
+		ws.column_properties("D").width = 30.;
+		ws.column_properties("E").width = 30.;
+		ws.column_properties("F").width = 30.;
+		ws.column_properties("G").width = 30.;
+		ws.column_properties("H").width = 30.;
+
+		Tab* pTab=static_cast<Tab*>(GetPtr(simtype::TABLE, "Criteria for Ensembles"));
+		size_t icount = 3;
+		xlnt::alignment center;
+		center.horizontal(xlnt::horizontal_alignment::center);
+		if (pTab != nullptr) {
+		
+			auto ncol = pTab->GetNumOfCol();
+			auto nrow = pTab->GetNumOfRow();
+			ws.cell(1, 2).value("Index");
+			for (size_t icol = 0; icol < ncol; icol++) {
+				string title = pTab->GetTitle(icol);
+				ws.cell(2+icol, 2).value(title);
+				ws.cell(2 + icol, 2).alignment(center);
+			}
+			for (size_t irow = 0; irow < nrow; irow++) {
+				ws.cell(1, 3 + irow).value(irow + 1);
+				for (size_t icol = 0; icol < ncol; icol++) {
+					P* pP=pTab->GetP_Pointer(icol);
+					double value = pP->GetValue(irow);
+					ws.cell(2 + icol, 3 + irow).value(value);
+					ws.cell(2 + icol, 3 + irow).alignment(center);
+				}
+			}
+			icount += nrow + 1;
+			ws.cell(1, icount).value("Explanations to the number are:");
+			icount++;
+			ws.cell(3, icount).value("0 - No Transformation");
+			ws.cell(3 , icount).alignment(center);
+			ws.cell(3, icount+1).value("1 - Cumulated"); ws.cell(3, icount+1).alignment(center);
+			ws.cell(3, icount + 2).value("2 - YearCumulated"); ws.cell(3, icount + 3).value("3 - DayCumulated");
+			ws.cell(3, icount + 2).alignment(center); ws.cell(3, icount + 3).alignment(center);
+			ws.cell(4, icount).value("0 - No specific action"); ws.cell(4, icount + 0).alignment(center);
+			ws.cell(5, icount).value("0 - R2");
+			ws.cell(5, icount+1).value("1 - Intercept");
+			ws.cell(5, icount+2).value("2 - Slope");
+			ws.cell(5, icount+3).value("3 - Mean Error");
+			ws.cell(5, icount+4).value("4 - RMSE");
+			ws.cell(5, icount+5).value("5 - LogLikelihood");
+			ws.cell(5, icount +6).value("6 - NSE R2");
+			for(size_t j=0;j<7;j++) ws.cell(5, icount + j).alignment(center);
+			ws.cell(7, icount).value("0 - ThresholdValue in number");
+			ws.cell(7, icount + 1).value("1 - ThresholdValue % of Prior");
+			for (size_t j = 0; j < 2; j++) ws.cell(7, icount + j).alignment(center);
+			icount = icount + 7;
+
+		}
+
+		icount++;
+		ws.cell(1, icount).value("Results as obtained specific values");
+		string mm = "A" + FUtil::STD_ItoAscii(icount) + ":H" + FUtil::STD_ItoAscii(icount);
+		ws.merge_cells(mm);
+		ws.cell(1, icount).fill(getexcel_yellow);
+
+		icount++;
+		for (size_t j = 0; j < 9; j++) ws.cell(1+j, icount).alignment(center);
+		ws.cell(1, icount).value("#");
+		ws.cell(2, icount).value("Ensemble");
+		ws.cell(3, icount).value("Var Index");
+		ws.cell(4, icount).value("Var Name");
+		ws.cell(5, icount).value("Criteria Indicator");
+		ws.cell(6, icount).value("Min");
+		ws.cell(7, icount).value("Max");
+		ws.cell(8, icount).value("n Candidates");
+		icount++;
+		
+		auto NumValidVar = GetNumAll_TSV_ValVariables();
+		string PerformanceVar;
+		size_t listnum = 1;
+
+			for (size_t iens = 0; iens < m_MStorage.m_AcceptedRuns.size(); iens++) {
+				m_MStorage.m_ActualEnsemble = iens;
+				for (int var = 0; var < 7; var++) {
+					switch (var) {
+					case 0:	PerformanceVar = "R2"; break;
+					case 1:	PerformanceVar = "Intercept"; break;
+					case 2:	PerformanceVar = "Slope"; break;
+					case 3:	PerformanceVar = "ME";	break;
+					case 4: PerformanceVar = "RMSE"; break;
+					case 5:	PerformanceVar = "LogLi"; break;
+					case 6:	PerformanceVar = "NSE R2"; break;
+					}
+				for (int i = 0; i < NumValidVar; i++) {
+					auto index = i + var * NumValidVar;
+					auto criteria = m_MStorage.GetCriteria(index);
+					if (criteria > 0) {
+						auto FileNo = m_ValidationData.GetValFileNumber(i);
+						auto pValFile = ValidationFilePointer(FileNo);
+						auto ind = m_ValidationData.GetValFileIndex(i);
+						CPG* pPG;
+						BOOL valid;
+						pPG = (CPG*)pValFile->GetPointer();
+						if (pPG == nullptr) {
+							pPG = new CPG;
+							//CPG_Array.Add(pCPG);
+							valid = pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
+							if (valid) pValFile->SetPointer(pPG);
+							pPG->CloseFile();
+						}
+						string test = pValFile->GetDataDescription(ind);
+						for (size_t j = 0; j < 8; j++) ws.cell(1 + j, icount).alignment(center);
+
+						ws.cell(1, icount).value(listnum); listnum++;
+						ws.cell(2, icount).value( iens + 1);
+
+						ws.cell(3, icount).value(i + 1);
+						
+						ws.cell(4, icount).value(test);
+						test = PerformanceVar;
+						if (m_pSimDoc->m_MStorage.m_Valid_TSV[iens].VarTranformed != 0) {
+							test += " - ";
+							test += m_pSimDoc->m_MStorage.GetTransformationIndicator(iens);
+						}
+						ws.cell(5, icount).value(test);
+						if (criteria == 1)
+							ws.cell(6, icount).value(m_MStorage.GetValidLow(index));
+						else if (criteria == 2)
+							ws.cell(7, icount).value(m_MStorage.GetValidHigh(index));
+						else if (criteria == 3) {
+							ws.cell(6, icount).value(m_MStorage.GetValidLow(index));
+							ws.cell(7, icount).value(m_MStorage.GetValidHigh(index));
+						}
+						ws.cell(8, icount).value(m_MStorage.m_AcceptedRuns[iens].size());
+						icount++;
+					}
+				}
+			}
+		}
+
+	};
+
 	vector<string> test;
-	FillInfoSheet(test, fileout);
+
+	FillInfoSheet(test, filein);
+	FillCriteriaSheet();
 
 	auto FillSheet = [&wb, &AddToExisting,&AddColNumbers](vector<string> header, vector< vector <float>> values, string sheetname, vector<string> header2, vector<string> header3) {
 		xlnt::worksheet ws;
@@ -6510,7 +6666,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		auto NumSheets = m_pSimDoc->GetNumAll_TSV_ValVariables();
 		vector<string> header3;
 
-		for (size_t s = 0; s < NumSheets; s++) {
+		for (size_t s = 0; s < NumSheets-1; s++) {
 
 			vector<vector<double>> MeanEnsembleValues;
 			size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(s);
@@ -6602,11 +6758,12 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			int iv = m_pSimDoc->m_ValidationData.GetValLocalIndex(s);
 			if (iv > -1) sheetname +=  "(" + FUtil::STD_ItoAscii(iv + 1) + ")";
 			if (FilterIndicator.size() > 0) sheetname += "_" + FilterIndicator;
+			m.SetPaneMessage("Creating excel sheet "+ sheetname);
 			if(clean_allvalues.size()>0) FillSheet(header, clean_allvalues, sheetname, blank, clean_dates);
 			
 		}
 	}
-
+	m.SetPaneMessage("Creating excel file completed ");
 
 	//fileout = GetFileName(strbase);
 

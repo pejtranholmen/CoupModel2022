@@ -92,11 +92,12 @@ bool LoadDataToChart::LoadTimeSerieData()
 
 	}
 
-	MFC_Util m;
+
 	size_t nbands = m_pSimDoc->m_PlotStorage.GetNumVarBands(m_pProp->m_ChartNumber);
 	AllocateNumberOfBands(nbands + 1);
 	size_t i_band = 0;
 	for (size_t icurve = 0; icurve<ncurves; icurve++) {
+		MFC_Util m;
 		m.SetPaneMessage("Loading data to Chart " + FUtil::STD_ItoAscii(icurve + 1) + "(" + FUtil::STD_ItoAscii(ncurves)+")");
 		size_t j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, icurve);
 		p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);

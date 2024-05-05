@@ -286,6 +286,7 @@ void ChartCugSheets::OnUpdate()
 				int NumTSV=0;
 				for(int i=0;i<MAXSIMVAL;i++) {
 					auto pValFile=m_pSimDoc->ValidationFilePointer(i+1);
+					if(pValFile!=nullptr)
 					NumTSV+=pValFile->GetNumberOfSelectedVal();
 				}
 				Make_Sheet3_RealTime(NumTSV);	

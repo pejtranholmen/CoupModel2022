@@ -223,7 +223,7 @@ void DrawAxisDesign::SetCommonScaleTo_Y_or_Z_Axis()
 		}
 		else {
 			if (!m_pProp->isLeftYScaleChanged(m_ichart)) {
-				m_pProp->SetLeftYScaleChanged(m_ichart);
+				// m_pProp->SetLeftYScaleChanged(m_ichart);
 				m_pProp->SetYLeftmin(m_ichart, m_pProp->m_CommonScaleValues.min);
 				m_pProp->SetYLeftmax(m_ichart, m_pProp->m_CommonScaleValues.max);
 				m_pProp->SetYLeftInterv(m_ichart,m_pProp->m_CommonScaleValues.interv);
@@ -308,12 +308,12 @@ void DrawAxisDesign::X_Axis_Scale() {
 			m_Layers.pErrLayer->setDataWidth(2);
 		}
 
-		/*else if (!m_pProp->isXScaleChanged(m_ichart)) {
+		else if (!m_pProp->isXScaleChanged(m_ichart)) {
 		pXY_Chart->layout();
 
 		m_pProp->m_CommonScale.LeftMin = pXY_Chart->yAxis()->getMinValue();
 		m_pProp->m_CommonScale.LeftMax = pXY_Chart->yAxis()->getMaxValue();
-		}*/
+		}
 	}
 	else if ((m_pProp->m_ChartType ==CHART_TYPES::FREQUENCE || m_pProp->m_ChartType ==CHART_TYPES::CUM_FREQUENCE) && (m_ChartInfo.DataType == 7|| m_ChartInfo.DataType == 8)) {
 		//pXY_Chart->xAxis()->setLogScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX);
@@ -596,6 +596,9 @@ void DrawAxisDesign::YLeft_Axis_SetFormatScale() {
 
 	if (!m_pProp->isLeftYScaleChanged(m_ichart) && !m_pProp->m_ReShape.m_CommonScale && m_pProp->m_ChartType != CHART_TYPES::CUM_FREQUENCE && m_pProp->m_ChartType != CHART_TYPES::CONTOUR_CHART)
 		pXY_Chart->yAxis()->setAutoScale(0.05, 0.05, 0.2);
+	else if (m_pProp->m_ReShape.m_CommonScale) {
+		pXY_Chart->yAxis()->setLinearScale(m_pProp->m_CommonScaleValues.min, m_pProp->m_CommonScaleValues.max, m_pProp->m_CommonScaleValues.interv);
+	}
 
 
 }
@@ -603,10 +606,12 @@ void DrawAxisDesign::YLeft_Axis_SetScaleForChartPropArchive() {
 	auto YaxisTicks = pXY_Chart->yAxis()->getTicks();
 	int n = YaxisTicks.len;
 	if (n >= 2) {
+		auto ymax = YaxisTicks[n - 1];
+		auto yinterv = YaxisTicks[1] - YaxisTicks[0];
 
 		m_pProp->SetYLeftmin(m_ichart, YaxisTicks[0]);
-			m_pProp->SetYLeftmax(m_ichart, YaxisTicks[n - 1]);
-			m_pProp->SetYLeftInterv(m_ichart, YaxisTicks[1] - YaxisTicks[0]);
+			m_pProp->SetYLeftmax(m_ichart, ymax);
+			m_pProp->SetYLeftInterv(m_ichart, yinterv);
 	}
 }
 void DrawAxisDesign::YRight_Axis_SetScaleForChartPropArchive() {
