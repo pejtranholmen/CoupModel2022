@@ -1381,7 +1381,7 @@ string name;
 }
 bool MR::PreDefined_Criteria_Process() {
 	auto reset = [&]() {
-		m_MStorage.UpdateAcceptedRuns(true, true);
+		if(m_MStorage.m_Valid_TSV.size()>0) m_MStorage.UpdateAcceptedRuns(true, true);
 		MR_ReCalculatePostDist(false);
 		for (int i = 0; i < m_ResidualFileVector.size(); i++) {
 			CResiduals* pRes;

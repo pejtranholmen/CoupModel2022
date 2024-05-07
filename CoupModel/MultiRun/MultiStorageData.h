@@ -170,7 +170,7 @@ public:
 	bool ReadAcceptedRunInfo();
 	size_t Get_And_UpdateTotalNumberofRuns();
 	void SetToBePlotted(size_t i, bool value=true) { if (m_Valid_TSV.size() > i) m_Valid_TSV[i].tobe_Plotted = value; };
-	bool IsToBePlotted(size_t i) { return m_Valid_TSV[i].tobe_Plotted; };
+	bool IsToBePlotted(size_t i) { if (m_Valid_TSV.size() <= i) return false; return m_Valid_TSV[i].tobe_Plotted; };
 	bool UpdateParDist(vector<DistStat> ParDist);
 	DistStat GetParDist(size_t index, size_t ensemble = string::npos);
 	bool  GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG);

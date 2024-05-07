@@ -301,14 +301,14 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 			}
 
 			if (numValdyn2 == m_ValidDynLogLi.size() && num != 0) {
-				m_EvaluationFile.rsize_t(&num);
+				m_EvaluationFile.rsize_t(&numValdyn2);
 				m_ValidDynLogLi = m_EvaluationFile.rFloatArray2(numValdyn2);
 				m_ValidDynResiduals = m_EvaluationFile.rFloatArray2(numValdyn2);
 			}
 
 			if (!good) return false;
-			m_EvaluationFile.rsize_t(&num);
-			if (num != m_Valid_TSV.size()&&num>0) m_Valid_TSV.resize(num);
+			good=m_EvaluationFile.rsize_t(&num);
+			if (num != m_Valid_TSV.size()&&good) m_Valid_TSV.resize(num);
 
 			for (size_t i = 0; i < m_Valid_TSV.size(); i++) {
 				m_EvaluationFile.rsize_t(&num);
@@ -423,7 +423,7 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 			}
 			auto numValdyn2 = m_ValidDynLogLi.size();
 			if (m_ValidDynLogLi.size() == numValdyn2 && numValdyn2 != 0) {
-				m_EvaluationFile.wInt(&num);
+				m_EvaluationFile.wInt(&numValdyn2);
 				m_EvaluationFile.wFloatArray2(m_ValidDynLogLi,numValdyn2);
 				m_EvaluationFile.wFloatArray2(m_ValidDynResiduals, numValdyn2);
 			}

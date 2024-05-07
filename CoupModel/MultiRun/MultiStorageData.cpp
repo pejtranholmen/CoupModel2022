@@ -796,6 +796,7 @@ bool MultiStorageData::GetAcceptedRunNo(unsigned long index)
 
 float MultiStorageData::GetValidHigh(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if (m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH].size() <= ip) return MISSING;
 	float v=m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][ip+ind_split*(m_NumValid+m_NumExtraValid)];
 	if (v == -numeric_limits<double>::infinity()) {
@@ -807,6 +808,7 @@ float MultiStorageData::GetValidHigh(unsigned long ip, unsigned long ind_split)
 }
 float MultiStorageData::GetValidLow(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if (m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW].size() <= ip) return MISSING;
 	float v = m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][ip + ind_split*(m_NumValid + m_NumExtraValid)];
 	if (v == -numeric_limits<double>::infinity()) {
@@ -1692,6 +1694,7 @@ size_t MultiStorageData::Get_And_UpdateTotalNumberofRuns() {
 	return m_TotalNumberRuns;
 }
 bool MultiStorageData::UpdateParDist(vector<DistStat> ParDist) {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return false;
 	if (ParDist.size() == m_Valid_TSV[m_ActualEnsemble].ParDist.size())
 		m_Valid_TSV[m_ActualEnsemble].ParDist = ParDist;
 	else if (ParDist.size() < m_Valid_TSV[m_ActualEnsemble].ParDist.size()) {

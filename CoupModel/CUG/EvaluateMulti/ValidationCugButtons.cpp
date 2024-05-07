@@ -20,30 +20,30 @@ ValidationCugButtons::~ValidationCugButtons()
 /////////////////////////////////////////////////////////////////////////////
 //	return UG_SUCCESS to allow the menu to appear
 //	return 1 to not allow the menu to appear
-int ValidationCugButtons::OnMenuStart(int col,long row,int section)
+int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 {
-	int sheetNumber=GetSheetNumber();
+	int sheetNumber = GetSheetNumber();
 	m_CurrentTopRow = GetTopRow();
 	EmptyMenu();
-			//****** Populate the Menu 
-	if(section==UG_GRID&&col>1) {
-		
-			AddMenuItem(1000, "Cut"); 
-			AddMenuItem(2000, "Copy"); 
-			AddMenuItem(3000, "Paste"); 
+	//****** Populate the Menu 
+	if (section == UG_GRID && col > 1) {
+
+		AddMenuItem(1000, "Cut");
+		AddMenuItem(2000, "Copy");
+		AddMenuItem(3000, "Paste");
 	}
-	if(section==UG_GRID&&col>9&&sheetNumber==3) {
-		int pos=sheetNumber*m_pSimDoc->GetNumAll_TSV_ValVariables();
-		auto value=m_pSimDoc->m_MStorage.GetMeanValid(row+pos, 0);
-		if(value<0)
-			AddMenuItem(1075,"Remove Smallest of posterior candidates until reaching zero shift of mean values");
+	if (section == UG_GRID && col > 9 && sheetNumber == 3) {
+		int pos = sheetNumber * m_pSimDoc->GetNumAll_TSV_ValVariables();
+		auto value = m_pSimDoc->m_MStorage.GetMeanValid(row + pos, 0);
+		if (value < 0)
+			AddMenuItem(1075, "Remove Smallest of posterior candidates until reaching zero shift of mean values");
 		else
-			AddMenuItem(1075,"Remove Largest of posterior candidates until reaching zero shift of mean values");
+			AddMenuItem(1075, "Remove Largest of posterior candidates until reaching zero shift of mean values");
 
 
 	}
-	if(section==UG_GRID&&col>9&&sheetNumber==0) {
-		long iaccept=m_pSimDoc->m_MStorage.GetNumAccepted();
+	if (section == UG_GRID && col > 9 && sheetNumber == 0) {
+		long iaccept = m_pSimDoc->m_MStorage.GetNumAccepted();
 		if (iaccept > 0) {
 			if (m_pSimDoc->m_MStorage.m_AcceptedRuns.size() > m_pSimDoc->m_MStorage.m_ActualEnsemble)
 				iaccept = m_pSimDoc->m_MStorage.m_AcceptedRuns[m_pSimDoc->m_MStorage.m_ActualEnsemble].size();
@@ -57,25 +57,25 @@ int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 		}
 
 	}
-	else if(section==UG_GRID&&col>9&&sheetNumber>=2&&sheetNumber<=6) {
-		long iaccept=m_pSimDoc->m_MStorage.GetNumAccepted();
+	else if (section == UG_GRID && col > 9 && sheetNumber >= 2 && sheetNumber <= 6) {
+		long iaccept = m_pSimDoc->m_MStorage.GetNumAccepted();
 		iaccept = m_pSimDoc->m_MStorage.m_AcceptedRuns[m_pSimDoc->m_MStorage.m_ActualEnsemble].size();
-		if(iaccept>200) 
-			AddMenuItem(1085,"Keep the 200 best");
+		if (iaccept > 200)
+			AddMenuItem(1085, "Keep the 200 best");
 		if (iaccept > 10)
 			AddMenuItem(1087, "Keep the 10 best");
-		AddMenuItem(1086,"Reduce to half of current posterior ensemble");
+		AddMenuItem(1086, "Reduce to half of current posterior ensemble");
 
 	}
-	if(section==UG_CORNERBUTTON	) {
-		if(sheetNumber>=10) {
-			if(m_SelectedTimeShow!=0) AddMenuItem(3010,"View Individual runs - one by one");
-			if(m_SelectedTimeShow!=1) AddMenuItem(3011,"View Individual runs - Accepted in same list");
-			if(m_SelectedTimeShow!=2) AddMenuItem(3012,"View Individual runs - All in same list");
-			if(m_SelectedTimeShow!=3) AddMenuItem(3013,"View Mean of All Accepted runs - Single Indicator at a time");
-			if(m_SelectedTimeShow!=4) AddMenuItem(3014,"View Mean of All Accepted runs - All Indicators in same list");
-			if(m_SelectedTimeShow!=5) AddMenuItem(3015,"View Mean of All runs - Single Indicator at a time");
-			if(m_SelectedTimeShow!=6) AddMenuItem(3016,"View Mean of All runs - All Indicators in same list");
+	if (section == UG_CORNERBUTTON) {
+		if (sheetNumber >= 10) {
+			if (m_SelectedTimeShow != 0) AddMenuItem(3010, "View Individual runs - one by one");
+			if (m_SelectedTimeShow != 1) AddMenuItem(3011, "View Individual runs - Accepted in same list");
+			if (m_SelectedTimeShow != 2) AddMenuItem(3012, "View Individual runs - All in same list");
+			if (m_SelectedTimeShow != 3) AddMenuItem(3013, "View Mean of All Accepted runs - Single Indicator at a time");
+			if (m_SelectedTimeShow != 4) AddMenuItem(3014, "View Mean of All Accepted runs - All Indicators in same list");
+			if (m_SelectedTimeShow != 5) AddMenuItem(3015, "View Mean of All runs - Single Indicator at a time");
+			if (m_SelectedTimeShow != 6) AddMenuItem(3016, "View Mean of All runs - All Indicators in same list");
 
 		}
 		return TRUE;
@@ -83,9 +83,10 @@ int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 
 
 	}
-	if(section==UG_TOPHEADING&&!m_OnGoingUpdate) {
+	if (section == UG_TOPHEADING && !m_OnGoingUpdate) {
+		if(m_pSimDoc->m_MStorage.m_Valid_TSV.size()> m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 		m_CumulatedPerformance = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed; //GetTransformationIndicator(m_pSimDoc->m_MStorage.m_ActualEnsemble);
-
+	
 		if(m_CumulatedPerformance!=0)
 			AddMenuItem(4010,"Estimate performance indicators using actual values");
 		if(m_CumulatedPerformance!=1)
@@ -96,6 +97,7 @@ int ValidationCugButtons::OnMenuStart(int col,long row,int section)
 			AddMenuItem(4022,"Estimate performance indicators using day cumulated values");
 		if (m_CumulatedPerformance != 4)
 			AddMenuItem(4023, "Estimate performance with mean of Dimension 1 ");
+		}
 	}
 
 	if (m_pSimDoc == nullptr) return false;

@@ -648,6 +648,7 @@ float SelectedEnsembles::GetMaxValidPar(unsigned long ip)
 }
 float SelectedEnsembles::GetMinValidAll(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN].size()==0) return 0.;
 	if (m_NumValid == 0) return MISSING;
 	//if (!IsMinUpdated) {
@@ -701,6 +702,7 @@ float SelectedEnsembles::GetMinValidAll(unsigned long ip, unsigned long ind_spli
 }
 unsigned long SelectedEnsembles::GetMeanCriteria(unsigned long index)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].meancriteria.size()<=index) return false;
 	return m_Valid_TSV[m_ActualEnsemble].meancriteria[index];
 }
@@ -735,6 +737,7 @@ void SelectedEnsembles::ResetMeanSumCriteria()
 }
 unsigned long SelectedEnsembles::GetCriteria(unsigned long index, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return false;
 	size_t max = m_Valid_TSV[m_ActualEnsemble].criteria.size();
 	if(max<=index) return false;
 	return  m_Valid_TSV[m_ActualEnsemble].criteria[index+ind_split*(m_NumValid+m_NumExtraValid)];
@@ -772,6 +775,7 @@ void SelectedEnsembles::ResetSumCriteria()
 }
 float SelectedEnsembles::GetMaxValidAll(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 		if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX].size()<=ip) return 0.;
 		if (m_NumValid == 0) return MISSING;
 		if(!IsMaxUpdated) {
@@ -818,6 +822,7 @@ float SelectedEnsembles::GetMaxValidAll(unsigned long ip, unsigned long ind_spli
 }
 float SelectedEnsembles::GetMeanValidAll(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN].size()<=ip) return 0.;
 	unsigned long count=0;
 	if(!IsMeanUpdated) {
@@ -881,6 +886,7 @@ float SelectedEnsembles::GetMeanValid(unsigned long ip, unsigned long ind_split)
 {
 	//if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN].size()<=ip) return 0.;
 	//if(!IsMeanUpdated) {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 		float v=1.1E38f;
 		double sum=0.;
 		if(ind_split==0) {
@@ -945,6 +951,7 @@ float SelectedEnsembles::GetMeanValid(unsigned long ip, unsigned long ind_split)
 }
 float SelectedEnsembles::GetCV_Valid(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV].size() <=ip) return 0.;
 	if (m_NumValid == 0) return MISSING;
 	if (!IsCVUpdated) {
@@ -1014,6 +1021,7 @@ float SelectedEnsembles::GetCV_Valid(unsigned long ip, unsigned long ind_split)
 }
 float SelectedEnsembles::GetCV_ValidAll(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV].size() <=ip) return 0.;
 	if (m_NumValid == 0) return MISSING;
 	if(!IsCVUpdated) {
@@ -1070,6 +1078,7 @@ float SelectedEnsembles::GetCV_ValidAll(unsigned long ip, unsigned long ind_spli
 }
 float SelectedEnsembles::GetMinValid(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_MIN].size()<=ip) return 0.;
 	//if(!IsMinUpdated) {
 		float fval;
@@ -1134,6 +1143,7 @@ float SelectedEnsembles::GetMinValid(unsigned long ip, unsigned long ind_split)
 }
 float SelectedEnsembles::GetMaxValid(unsigned long ip, unsigned long ind_split)
 {
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 		if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX].size()<=ip) return 0.;
 		//if (m_NumValid == 0) return MISSING;
 		//if(!IsMaxUpdated) {
@@ -2016,7 +2026,7 @@ bool SelectedEnsembles::AttachNewFiles() {
 		mbinstream.open(filenames[i], ios::binary | ios::in);
 		header = ReadStartDataFromAttachedFiles(&mbinstream, i);
 		if (header.n_param == m_MBinHeader.n_param&&header.n_sumvalid == m_MBinHeader.n_sumvalid&&
-			header.n_valid == m_MBinHeader.n_valid&&header.n_sumvar == m_MBinHeader.n_sumvar) {
+			/*header.n_valid == m_MBinHeader.n_valid &&*/ header.n_sumvar == m_MBinHeader.n_sumvar) {
 			m_AddedFiles.push_back(filenames[i]);
 			if (m_AddedFirstRunNo.size() > 0)
 				run_no = m_AddedFirstRunNo[m_AddedFirstRunNo.size() - 1] +

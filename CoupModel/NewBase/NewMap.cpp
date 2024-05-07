@@ -5853,7 +5853,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		return "";
 
 	MFC_Util m;
-	m.SetPaneMessage("Creating excel file....");
+	m.SetPaneMessage("Extraction of data for an excel file started....");
 	vector<string> header, header2;
 	vector< vector<float>>	allvalues, clean_allvalues;
 	string sheetname;
@@ -5929,18 +5929,21 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		ws.cell(1, 3).value(txt);
 		
 		if (option == ExportOptions::Performance) {
-			txt = "This Workbook is about the performance";
-			ws.cell(1, 5).value(txt);
+			ws.cell(1, 5).value("This Workbook include info on the performance and the resulting values for all output variables");
+			ws.cell(1, 6).value("7 different sheet are named after the performance indicator");
+			ws.cell(1, 8).value("The Output Variables  have different sheets for Category of variable and for the specific statistics of the Variables in the sheet");
+			ws.cell(1, 9).value("Categories are: State Variables denoted with as X, Fluxes denoted by T, Auxiliaries denoted by G and Drivers denoted by D");
+			ws.cell(1, 10).value("Statistical Indicators are: Initial- Ini, Final - Final, Minimum - Min, Maximum - Max, Mean - Mean and Accumulated - Acc ");
+			ws.cell(1, 11).value("The variables are denoted similar as for variables in the CoupModel");
 		}
 		else if (option == ExportOptions::Outputs) {
-			txt = "This Workbook is about Statistics from Outputs";
-			ws.cell(1, 5).value(txt);
 		
 		}
 		else if (option == ExportOptions::Parameters) {
-			txt = "This Workbook is about the parameters";
-			ws.cell(1, 5).value(txt);
-
+			ws.cell(1, 2).value("This Workbook includes the parameters in the MultiRun Tab of the CoupModel documents");
+			ws.cell(1, 3).value("A criteria used sheet gives the details of the ensembles and the various candidats");
+			ws.cell(1, 3).value("The ParValues sheet show all parameter values and include also lines for some simple statistics of the ensemble");
+			ws.cell(1, 4).value("The Performance Summary is showing some technical information about different runs and a global indicator for the performance for all variables");
 		}	
 		else if (option == ExportOptions::ValidValues) {
 			txt = "This workbook is with all measured values and corresponding simulated for Accepted candidates";
@@ -6115,8 +6118,9 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 
 	FillInfoSheet(test, filein);
 	FillCriteriaSheet();
+	vector<string> vert_header;
 
-	auto FillSheet = [&wb, &AddToExisting,&AddColNumbers](vector<string> header, vector< vector <float>> values, string sheetname, vector<string> header2, vector<string> header3) {
+	auto FillSheet = [&wb, &AddToExisting,&AddColNumbers,&vert_header](vector<string> header, vector< vector <float>> values, string sheetname, vector<string> header2, vector<string> header3) {
 		xlnt::worksheet ws;
 		int startcol = 1;
 
@@ -6170,11 +6174,19 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 				ws.cell(1, row+rowcount).value(header3[row]);
 			}
 		}
+		size_t col_backstep = 0;
+		if (vert_header.size() == values.size()) {
+			startcol = 1;
+			col_backstep=1;
+			for (size_t row = 0; row < values.size(); row++) {
+				ws.cell(1, row + rowcount).value(vert_header[row]);
+			}
+		}
 
 		
 		for (size_t row = 0; row < values.size(); row++) {
-			for (size_t col = 0; col < values[row].size(); col++) {
-				if(values[row][0]>-1.1E36&&startcol==2)
+			for (size_t col = col_backstep; col < values[row].size(); col++) {
+				if(values[row][0]>-1.1E36&&(startcol==2||startcol==1))
 					ws.cell(xlnt::cell_reference(col + startcol, rowcount + row)).value(values.at(row).at(col));
 			}
 		}
@@ -6239,6 +6251,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 
 				allvalues.resize(numout);
+				vert_header.resize(numout);
 				vector<vector<double>> MeanEnsembleValues;
 
 				MeanEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
@@ -6256,6 +6269,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 							irun = nomulrun;
 
 						allvalues[count2][0] = float(irun + 1);
+						vert_header[count2] = FUtil::STD_ItoAscii(irun + 1);
 						allvalues[count2][1] = float(iens + 1);
 						for (size_t var = 0; var < m_Val_Array.size(); var++) {
 							if (i == 6) {
@@ -6290,6 +6304,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					allvalues[count2].resize(numvalvalues + 2);
 					if (AcceptedOnly) {
 						allvalues[count2][0] = 0;
+						vert_header[count2] = "Mean";
 						allvalues[count2][1] = float(iens + 1);
 						for (size_t var = 0; var < numvalvalues; var++) {
 							auto meanvalue = MeanEnsembleValues[iens][var + 2] / number_of_runs_per_ensemble[iens];
@@ -6557,21 +6572,32 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
 						size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
 						number_of_runs_per_ensemble.push_back(numruns);
-						numout += numruns;
+						numout += (numruns+5);
 						numout++;
 					}
 				}
 				allvalues.resize(numout);
-				vector<vector<double>> MeanEnsembleValues;
+				vector<vector<DistStat>> StatVectorEnsembleValues;
 				vector< vector<float>> allvalues2;
 				allvalues2.resize(numout);
-				MeanEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
+				StatVectorEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
+				vert_header.resize(numout);
+
 
 				size_t count2 = 0;
 				for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
+					vector<vector<float>> Candidates;
+					DistStat stat;
+					Candidates.resize(m_pSimDoc->m_MStorage.m_NumMulti);
+					for (int var = 0; var < m_pSimDoc->m_MStorage.m_NumMulti; var++) {
+						Candidates[var].resize(number_of_runs_per_ensemble[iens]);
+						StatVectorEnsembleValues[iens].resize(m_pSimDoc->m_MStorage.m_NumMulti + 2);
+					}
 					m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;
-					MeanEnsembleValues[iens].resize(m_pSimDoc->m_MStorage.m_NumMulti + 2);
+					
+	
 					for (int nomulrun = 0; nomulrun < number_of_runs_per_ensemble[iens]; nomulrun++) {
+						
 						allvalues[count2].resize(m_pSimDoc->m_MStorage.m_NumMulti - 10 + 2);
 						allvalues2[count2].resize(12);
 
@@ -6579,9 +6605,10 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 						if (AcceptedOnly) {
 							irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun); allvalues[count2][0] = float(irun); allvalues2[count2][0] = float(irun);
 							allvalues[count2][1] = float(iens + 1); allvalues2[count2][1] = float(iens + 1);
+							vert_header[count2] = FUtil::STD_ItoAscii(irun);
 						}
 						else {
-							irun = nomulrun; allvalues[nomulrun][0] = float(irun + 1); allvalues2[nomulrun][0] = float(irun + 1);
+							irun = nomulrun; allvalues[nomulrun][0] = float(irun + 1); allvalues2[nomulrun][0] = float(irun + 1); 
 						}
 
 
@@ -6591,30 +6618,47 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 								allvalues[count2][var + 2] = value;
 							else
 								allvalues2[count2][var - m_pSimDoc->m_MStorage.m_NumMulti + 10 + 2] = value;
-							MeanEnsembleValues[iens][var + 2] = value;
+							Candidates[var][nomulrun] = value;
 						}
+						
+
 						count2++;
+					}
+					size_t ncheck;
+					for (int var = 0; var < m_pSimDoc->m_MStorage.m_NumMulti; var++) {
+						MeanStat(&Candidates[var][0], number_of_runs_per_ensemble[iens], &ncheck, &stat);
+						StatVectorEnsembleValues[iens][var] = stat;
 					}
 
 				}
-				for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
-					size_t numparvalues = m_pSimDoc->m_MStorage.m_NumMulti - 10 + 2;
-					size_t numvalvalues = 11;
-					allvalues[count2].resize(numparvalues);
-					allvalues[count2][0] = float(0); allvalues[count2][1] = float(iens + 1);
-					allvalues2[count2].resize(12);
-					allvalues2[count2][0] = float(0); allvalues[count2][1] = float(iens + 1);
-					if (AcceptedOnly) {
+				for (size_t statind = 0; statind < 5; statind++) {
+					for (size_t iens = 0; iens < number_of_runs_per_ensemble.size(); iens++) {
+						size_t numparvalues = m_pSimDoc->m_MStorage.m_NumMulti - 10 + 2;
+						size_t numvalvalues = 11;
+						allvalues[count2].resize(numparvalues);
+						allvalues[count2][1] = float(iens + 1);
+						allvalues2[count2].resize(12);
+						allvalues2[count2][1] = float(iens + 1);
+						if (AcceptedOnly) {
+							float statvalue;
 
-						for (size_t var = 0; var < m_pSimDoc->m_MStorage.m_NumMulti; var++) {
-							auto meanvalue = MeanEnsembleValues[iens][var + 2] / number_of_runs_per_ensemble[iens];
-							if (var < m_pSimDoc->m_MStorage.m_NumMulti - 10)
-								allvalues[count2][var + 2] = meanvalue;
-							else
-								allvalues2[count2][var - m_pSimDoc->m_MStorage.m_NumMulti + 10 + 2] = meanvalue;
+							for (size_t var = 0; var < m_pSimDoc->m_MStorage.m_NumMulti; var++) {
+								switch (statind) {
+									case 0: statvalue = StatVectorEnsembleValues[iens][var].Mean; vert_header[count2] = "Mean"; break;
+									case 1: statvalue = StatVectorEnsembleValues[iens][var].Std; vert_header[count2] = "Std"; break;
+									case 2: statvalue = StatVectorEnsembleValues[iens][var].Min; vert_header[count2] = "Min"; break;
+									case 3: statvalue = StatVectorEnsembleValues[iens][var].P50; vert_header[count2] = "Median"; break;
+									case 4: statvalue = StatVectorEnsembleValues[iens][var].Max; vert_header[count2] = "Max"; break;
+								 } 
+
+								if (var < m_pSimDoc->m_MStorage.m_NumMulti - 10)
+									allvalues[count2][var + 2] = statvalue;
+								else
+									allvalues2[count2][var - m_pSimDoc->m_MStorage.m_NumMulti + 10 + 2] = statvalue;
+							}
 						}
+						count2++;
 					}
-					count2++;
 				}
 				vector<string> blank;
 				FillSheet(header, allvalues, "ParValues", blank, blank);
@@ -6723,9 +6767,12 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 					meanv.resize(m_pSimDoc->m_MStorage.m_AcceptedRuns[ens].size());
 					for (size_t runno = 0; runno < m_pSimDoc->m_MStorage.m_AcceptedRuns[ens].size(); runno++) {
 						auto run_to_read = m_pSimDoc->m_MStorage.m_AcceptedRuns[ens][runno];
-						AcceptedResiduals = pRes->GetResidualVector(run_to_read, s);
-						if (AcceptedResiduals[rec] < -1.E37) keep_lines[rec] = false;
-						allvalues[rec][count + 1] = allvalues[rec][0] - AcceptedResiduals[rec];
+						int ifile = m_pSimDoc->MR_GetAddedFiles(run_to_read);
+						pRes = m_pSimDoc->GetValidResidualPointer(FileNo,ifile);
+						auto internal_no = m_pSimDoc->MR_GetInternalRunNo(run_to_read);
+						auto resvalue = pRes->GetResiduals(internal_no, s, rec);
+						if (resvalue < -1.E37) keep_lines[rec] = false;
+						allvalues[rec][count + 1] = allvalues[rec][0] - resvalue;
 						meanv[runno] = allvalues[rec][count + 1];
 						count++;
 					}
@@ -6763,11 +6810,12 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			
 		}
 	}
-	m.SetPaneMessage("Creating excel file completed ");
+	m.SetPaneMessage("Excel data completed - File will be created");
 
 	//fileout = GetFileName(strbase);
 
 	wb.save(fileout);
+
 	return fileout;
 #endif
 	return "";
