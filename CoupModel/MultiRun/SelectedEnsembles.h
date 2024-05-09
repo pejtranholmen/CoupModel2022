@@ -32,12 +32,14 @@ public:
 	float GetValidSum(unsigned long, unsigned long);
 	void  SetValidSum(unsigned long, unsigned long, float value);
 	float GetValidSumAll(unsigned long, unsigned long);
-	void  SetValidLow(unsigned long, unsigned long split, float);
-	void  SetValidHigh(unsigned long, unsigned long split, float);
+	size_t  SetValidLow(unsigned long, unsigned long split, float);
+	size_t  SetValidHigh(unsigned long, unsigned long split, float);
 	float GetValidSumLow(unsigned long);
 	float GetValidSumHigh(unsigned long);
 	void  SetValidSumLow(unsigned long, float);
 	void  SetValidSumHigh(unsigned long, float);
+	size_t SetCriteriaHistory(size_t value, PERFORMANCE_VAR perfv);
+	size_t UpdateHistory(CRITERIA_STATE c, size_t VarIndex, float value, float extravalue=MISSING);
 	
 	unsigned long  UpdateAccepted(unsigned long, unsigned long);
 
@@ -160,18 +162,18 @@ public:
 	string GetNameBaseFile();
 	unsigned long GetAdd_MultiPGFileIndex(unsigned long simRunNo);
 	unsigned long GetNumberOfRuns() { return m_TotalNumberRuns; };
-	unsigned long GetCriteria(unsigned long, unsigned long split=0);
-	bool SetCriteria(unsigned long,unsigned long value, unsigned long split=0);
+	CRITERIA_STATE GetCriteria(unsigned long, unsigned long split=0);
+	bool SetCriteria(unsigned long,CRITERIA_STATE value, unsigned long split=0);
 	void ResetCriteria();
-	unsigned long GetMeanCriteria(unsigned long);
-	bool SetMeanCriteria(unsigned long, unsigned long value);
+	CRITERIA_STATE GetMeanCriteria(unsigned long);
+	bool SetMeanCriteria(unsigned long, CRITERIA_STATE value);
 	void ResetMeanCriteria();
 	void ResetMeanSumCriteria();
 	unsigned long GetSumCriteria(unsigned long);
-	bool SetSumCriteria(unsigned long, unsigned long value);
+	bool SetSumCriteria(unsigned long, CRITERIA_STATE value);
 	void ResetSumCriteria();
-	unsigned long GetMeanSumCriteria(unsigned long);
-	bool SetMeanSumCriteria(unsigned long, unsigned long value);
+	CRITERIA_STATE GetMeanSumCriteria(unsigned long);
+	bool SetMeanSumCriteria(unsigned long, CRITERIA_STATE value);
 
 	unsigned long GetNumSplitPeriods();
 	vector<float> GetPost_TSV_ValidPerformanceIndicatorVector(unsigned long, unsigned long split = 0);

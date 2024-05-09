@@ -99,12 +99,12 @@ void SelectedEnsembles::SetAllToAcceptedRuns() {
 					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][index];
 					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][index] = m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][index];
 				}
-				m_Valid_TSV[m_ActualEnsemble].criteria[index] = 0;
+				m_Valid_TSV[m_ActualEnsemble].criteria[index] = CRITERIA_STATE::NO_SET;
 			}
 		}
 
 		for (unsigned long i = 0; i < m_Valid_TSV[m_ActualEnsemble].meancriteria.size(); i++)
-			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = 0;
+			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::NO_SET;
 	}
 
 
@@ -130,7 +130,7 @@ void SelectedEnsembles::SetAllToAcceptedRuns() {
 
 				m_Valid_SV[m_ActualEnsemble].v[E_SELECT_LOW][index] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MIN][index];
 				m_Valid_SV[m_ActualEnsemble].v[E_SELECT_HIGH][index] = m_Valid_SV[m_ActualEnsemble].v[E_PRIOR_MAX][index];
-				m_Valid_SV[m_ActualEnsemble].criteria[index] = 0;
+				m_Valid_SV[m_ActualEnsemble].criteria[index] = CRITERIA_STATE::NO_SET;
 			}
 			m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_LOW][jx] = m_Valid_SV_Mean[m_ActualEnsemble].v[E_PRIOR_MIN][jx];
 			m_Valid_SV_Mean[m_ActualEnsemble].v[E_SELECT_HIGH][jx] = m_Valid_SV_Mean[m_ActualEnsemble].v[E_PRIOR_MAX][jx];
@@ -144,7 +144,7 @@ void SelectedEnsembles::SetAllToAcceptedRuns() {
 
 
 
-			m_Valid_SV_Mean[m_ActualEnsemble].criteria[jx] = 0;
+			m_Valid_SV_Mean[m_ActualEnsemble].criteria[jx] = CRITERIA_STATE::NO_SET;
 
 		}
 	//}
@@ -442,21 +442,52 @@ bool SelectedEnsembles::Check_Adjust_ActualEnsemble()
 
 
 
-void SelectedEnsembles::SetValidHigh(unsigned long ip,unsigned long ind_split, float value)
+size_t SelectedEnsembles::SetValidHigh(unsigned long ip,unsigned long ind_split, float value)
 {
-	m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][ip + ind_split*(m_NumValid + m_NumExtraValid)] = value;
+	size_t VarIndex = ip + ind_split * (m_NumValid + m_NumExtraValid);
+	m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][VarIndex] = value;
+	return UpdateHistory(CRITERIA_STATE::BELOW_MAX, VarIndex, value);
 	
 }
-void SelectedEnsembles::SetValidLow(unsigned long ip, unsigned long ind_split, float value)
+size_t SelectedEnsembles::SetValidLow(unsigned long ip, unsigned long ind_split, float value)
 {
-	m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][ip + ind_split*(m_NumValid + m_NumExtraValid)] = value;
+	size_t VarIndex = ip + ind_split * (m_NumValid + m_NumExtraValid);
+	m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][VarIndex] = value;
+	return UpdateHistory(CRITERIA_STATE::ABOVE_MIN, VarIndex, value);
+
 }
 
+size_t SelectedEnsembles::UpdateHistory(CRITERIA_STATE c,  size_t VarIndex, float value, float extravalue)
+{
+	DefinedCriteria def = m_Valid_TSV[m_ActualEnsemble].History.back();
+	def.criteria = c;
+	if(def.criteria==CRITERIA_STATE::ABOVE_MIN)
+		def.minvalue = value;
+	else if(def.criteria == CRITERIA_STATE::BELOW_MAX)
+		def.maxvalue = value;
+	else if (def.criteria == CRITERIA_STATE::ABOVE_AND_BELOW) {
+		def.minvalue = value; def.maxvalue = extravalue;
+	}
+
+	def.VarIndex = VarIndex;
+	size_t no = m_Valid_TSV[m_ActualEnsemble].History.size();
+	m_Valid_TSV[m_ActualEnsemble].History[no - 1] = def;
+	return m_Valid_TSV[m_ActualEnsemble].History.size();
+}
 
 void SelectedEnsembles::SetValidSumHigh(unsigned long ip, float value)
 {
 	if(m_Valid_SV[m_ActualEnsemble].v[E_SELECT_HIGH].size()>ip)
 	m_Valid_SV[m_ActualEnsemble].v[E_SELECT_HIGH][ip] = value;
+}
+size_t SelectedEnsembles::SetCriteriaHistory(size_t value, PERFORMANCE_VAR perfvar)
+{
+	DefinedCriteria def;
+	def.n_post=value;
+	def.stat_indicator = perfvar;
+	m_Valid_TSV[m_ActualEnsemble].History.push_back(def);
+
+	return m_Valid_TSV[m_ActualEnsemble].History.size();
 }
 void SelectedEnsembles::SetValidSumLow(unsigned long ip, float value)
 {
@@ -700,25 +731,25 @@ float SelectedEnsembles::GetMinValidAll(unsigned long ip, unsigned long ind_spli
 
 
 }
-unsigned long SelectedEnsembles::GetMeanCriteria(unsigned long index)
+CRITERIA_STATE SelectedEnsembles::GetMeanCriteria(unsigned long index)
 {
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-	if(m_Valid_TSV[m_ActualEnsemble].meancriteria.size()<=index) return false;
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return CRITERIA_STATE::NO_SET;
+	if(m_Valid_TSV[m_ActualEnsemble].meancriteria.size()<=index) return CRITERIA_STATE::NO_SET;
 	return m_Valid_TSV[m_ActualEnsemble].meancriteria[index];
 }
-unsigned long SelectedEnsembles::GetMeanSumCriteria(unsigned long index)
+CRITERIA_STATE SelectedEnsembles::GetMeanSumCriteria(unsigned long index)
 {
-	if(m_Valid_SV[m_ActualEnsemble].meancriteria.size()<=index) return false;
+	if(m_Valid_SV[m_ActualEnsemble].meancriteria.size()<=index) return CRITERIA_STATE::NO_SET;
 	return m_Valid_SV[m_ActualEnsemble].meancriteria[index];
 }	
-bool SelectedEnsembles::SetMeanCriteria(unsigned long index, unsigned long value)
+bool SelectedEnsembles::SetMeanCriteria(unsigned long index, CRITERIA_STATE value)
 {
 	if (m_Valid_TSV.size() == 0) return false;
 	if(m_Valid_TSV[m_ActualEnsemble].meancriteria.size()<=index||index>=7) return false;
 	m_Valid_TSV[m_ActualEnsemble].meancriteria[index] = value;
 	return true;
 }
-bool SelectedEnsembles::SetMeanSumCriteria(unsigned long index, unsigned long value)
+bool SelectedEnsembles::SetMeanSumCriteria(unsigned long index, CRITERIA_STATE value)
 {
 	if (m_Valid_SV.size() == 0) return false;
 	if(m_Valid_SV[m_ActualEnsemble].meancriteria.size()<=index||index>=7) return false;
@@ -728,21 +759,20 @@ bool SelectedEnsembles::SetMeanSumCriteria(unsigned long index, unsigned long va
 void SelectedEnsembles::ResetMeanCriteria()
 {
      for(unsigned long i=0;i<7;i++)
-		 m_Valid_TSV[m_ActualEnsemble].meancriteria[i]=0;
+		 m_Valid_TSV[m_ActualEnsemble].meancriteria[i]= CRITERIA_STATE::NO_SET;
 }
 void SelectedEnsembles::ResetMeanSumCriteria()
 {
      for(unsigned long i=0;i<3;i++)
-		 m_Valid_SV[m_ActualEnsemble].meancriteria[i]=0;
+		 m_Valid_SV[m_ActualEnsemble].meancriteria[i]= CRITERIA_STATE::NO_SET;
 }
-unsigned long SelectedEnsembles::GetCriteria(unsigned long index, unsigned long ind_split)
+CRITERIA_STATE SelectedEnsembles::GetCriteria(unsigned long index, unsigned long ind_split)
 {
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return false;
-	size_t max = m_Valid_TSV[m_ActualEnsemble].criteria.size();
-	if(max<=index) return false;
+	if (m_Valid_TSV.size() <= m_ActualEnsemble) return CRITERIA_STATE::NO_SET;
+	if(index >= m_Valid_TSV[m_ActualEnsemble].criteria.size()) return CRITERIA_STATE::NO_SET;
 	return  m_Valid_TSV[m_ActualEnsemble].criteria[index+ind_split*(m_NumValid+m_NumExtraValid)];
 }
-bool SelectedEnsembles::SetCriteria(unsigned long index, unsigned long value, unsigned long ind_split)
+bool SelectedEnsembles::SetCriteria(unsigned long index, CRITERIA_STATE value, unsigned long ind_split)
 {
 	if(m_Valid_TSV[m_ActualEnsemble].criteria.size() <=index||index>(m_NumValid+m_NumExtraValid)) return false;
 	m_Valid_TSV[m_ActualEnsemble].criteria[index+ind_split*(m_NumValid+m_NumExtraValid)]=value;
@@ -750,15 +780,16 @@ bool SelectedEnsembles::SetCriteria(unsigned long index, unsigned long value, un
 }
 void SelectedEnsembles::ResetCriteria()
 {
-     for(unsigned long i=0;i<(m_NumValid+m_NumExtraValid)*(m_NumSplitPeriod+1);i++)
-		 m_Valid_TSV[m_ActualEnsemble].criteria[i]=0;
+	for (unsigned long i = 0; i < (m_NumValid + m_NumExtraValid) * (m_NumSplitPeriod + 1); i++)
+		m_Valid_TSV[m_ActualEnsemble].criteria[i] = CRITERIA_STATE::NO_SET;
+	m_Valid_TSV[m_ActualEnsemble].History.clear();
 }
 unsigned long SelectedEnsembles::GetSumCriteria(unsigned long index)
 {
 	if(m_Valid_SV[m_ActualEnsemble].criteria.size()<=index) return false;
 	return m_Valid_SV[m_ActualEnsemble].criteria[index];
 }
-bool SelectedEnsembles::SetSumCriteria(unsigned long index, unsigned long value)
+bool SelectedEnsembles::SetSumCriteria(unsigned long index, CRITERIA_STATE value)
 {
 	if(m_Valid_SV[m_ActualEnsemble].criteria.size()<=index) return false;
 	m_Valid_SV[m_ActualEnsemble].criteria[index]=value;
@@ -767,10 +798,10 @@ bool SelectedEnsembles::SetSumCriteria(unsigned long index, unsigned long value)
 void SelectedEnsembles::ResetSumCriteria()
 {
      for(unsigned long i=0;i<m_NumSumValid;i++)
-		 m_Valid_SV[m_ActualEnsemble].criteria[i]=0;
+		 m_Valid_SV[m_ActualEnsemble].criteria[i]= CRITERIA_STATE::NO_SET;
 	if( m_Valid_SV_Mean[m_ActualEnsemble].criteria.size() > 0) {
 		 for (size_t i = 0; i < 7; i++)
-			 m_Valid_SV_Mean[m_ActualEnsemble].criteria[i] = 0;
+			 m_Valid_SV_Mean[m_ActualEnsemble].criteria[i] = CRITERIA_STATE::NO_SET;
 	 }
 }
 float SelectedEnsembles::GetMaxValidAll(unsigned long ip, unsigned long ind_split)
@@ -2075,7 +2106,7 @@ for (size_t i = 0; i < 7; i++) {
 }
 
 	for (size_t i = 0;i<7; i++) {
-		m_Valid_TSV[m_ActualEnsemble].criteria[i]= NO_CRITERIA;
+		m_Valid_TSV[m_ActualEnsemble].criteria[i]= CRITERIA_STATE::NO_SET;
 		bool MinCrit, MaxCrit;
 		MinCrit = MaxCrit = false;
 
@@ -2083,11 +2114,11 @@ for (size_t i = 0; i < 7; i++) {
 		if (m_MeanTSV_STAT[SELECT_HIGH][i] < m_MeanTSV_STAT[PRIOR_MAX][i]) MaxCrit = true;
 
 		if (MinCrit&&MaxCrit)
-			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = ABOVE_AND_BELOW_CRITERIA;
+			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::ABOVE_AND_BELOW;
 		else if (MinCrit)
-			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = ABOVE_MIN_CRITERIA;
+			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::ABOVE_MIN;
 		else if (MaxCrit)
-			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = BELOW_MAX_CRITERIA;
+			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::BELOW_MAX;
 
 	}
 	
@@ -2103,7 +2134,7 @@ void SelectedEnsembles::SetValid_SUM_Criteria() {
 	}
 
 	for (size_t i = 0; i<7; i++) {
-		m_Valid_SV[m_ActualEnsemble].meancriteria[i] = NO_CRITERIA;
+		m_Valid_SV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::NO_SET;
 		bool MinCrit, MaxCrit;
 		MinCrit = MaxCrit = false;
 
@@ -2111,11 +2142,11 @@ void SelectedEnsembles::SetValid_SUM_Criteria() {
 		if (m_MeanSV_STAT[SELECT_HIGH][i] < m_MeanSV_STAT[PRIOR_MAX][i]) MaxCrit = true;
 
 		if (MinCrit&&MaxCrit)
-			m_Valid_SV[m_ActualEnsemble].meancriteria[i] = ABOVE_AND_BELOW_CRITERIA;
+			m_Valid_SV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::ABOVE_AND_BELOW;
 		else if (MinCrit)
-			m_Valid_SV[m_ActualEnsemble].meancriteria[i] = ABOVE_MIN_CRITERIA;
+			m_Valid_SV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::ABOVE_MIN;
 		else if (MaxCrit)
-			m_Valid_SV[m_ActualEnsemble].meancriteria[i] = BELOW_MAX_CRITERIA;
+			m_Valid_SV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::BELOW_MAX;
 
 	}
 

@@ -11,20 +11,29 @@ struct MBIN_FILE_HEADER {
 	bool streamgood;
 };
 enum STAT_ENSEMBLE { E_PRIOR_MIN, E_PRIOR_MAX, E_PRIOR_CV, E_PRIOR_MEAN, E_POST_MIN, E_POST_MAX, E_POST_CV, E_POST_MEAN, E_SELECT_LOW, E_SELECT_HIGH };
-enum CRITERIA_STATE {NO_CRITERIA, ABOVE_MIN_CRITERIA, BELOW_MAX_CRITERIA, ABOVE_AND_BELOW_CRITERIA};
+enum CRITERIA_STATE {NO_SET, ABOVE_MIN, BELOW_MAX, ABOVE_AND_BELOW};
+enum PERFORMANCE_VAR { R2_STAT, AO_STAT, A1_STAT, ABSME_STAT, RMSE_STAT, LOGLI_STAT, NSE_STAT };
+struct DefinedCriteria {
+	CRITERIA_STATE criteria;
+	PERFORMANCE_VAR stat_indicator;
+	float minvalue, maxvalue;
+	size_t n_post;
+	size_t VarIndex;
+};
 struct VALIDENSEMBLE {
 	vector<float> v[10];
-	vector<size_t> criteria;
-	vector<size_t> meancriteria;
+	vector<CRITERIA_STATE> criteria;
+	vector<CRITERIA_STATE> meancriteria;
 	vector<DistStat> ParDist;
 	vector<float> copar;
+	vector<DefinedCriteria> History;
 	bool tobe_Plotted;
 	bool is_Updated;
 	bool is_Copar_Updated;
 	size_t VarTranformed{ 0 };
 	vector<float> MeanPerFomanceIndicators[7];
 };
-enum PERFORMANCE_VAR {R2_STAT, AO_STAT, A1_STAT,ABSME_STAT, RMSE_STAT, LOGLI_STAT, NSE_STAT };
+
 enum STAT_OF_PERFORMANCE {PRIOR_MIN, PRIOR_MAX, POST_MIN, POST_MAX, SELECT_LOW, SELECT_HIGH};
 
 struct VARTRANSFORMED {

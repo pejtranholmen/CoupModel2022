@@ -195,6 +195,7 @@ void MyCug::SetDocument(CCoupModelDoc *pDoc)
 	m_pDoc=pDoc;
 	m_pSimDoc=&pDoc->m_Doc;
 	m_DocumentDefined=TRUE;
+
 	m_pFrame=MySingle::instance().GetFramePointer();
 	m_pFrame->m_wndPF.m_PFgrid.m_pDoc=m_pSimDoc;
 	m_pFrame->m_wndSoilData.m_SoilDataGrid.m_pDoc=m_pSimDoc;

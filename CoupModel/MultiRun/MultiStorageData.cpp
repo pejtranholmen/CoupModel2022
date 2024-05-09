@@ -1867,27 +1867,28 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 	if (dist.size() > Threshold - 1) {
 			if (MeanOfMany) {
 				m_pNewMap->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = last_valid;
-				m_pNewMap->m_MStorage.SetMeanCriteria(LOGLI_STAT, ABOVE_MIN_CRITERIA);
+				m_pNewMap->m_MStorage.SetMeanCriteria(LOGLI_STAT, CRITERIA_STATE::ABOVE_MIN);
 			}
 			else {
+				m_pNewMap->m_MStorage.SetCriteriaHistory(dist.size()-n_toremove, Indicator);
 				if (Indicator == R2_STAT||Indicator==NSE_STAT||Indicator==LOGLI_STAT) {
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, last_valid);
-					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
-						m_pNewMap->m_MStorage.SetCriteria(ip, 1);
+					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == CRITERIA_STATE::NO_SET)
+						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_MIN);
 					else
-						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_AND_BELOW);
 				}
 				else if (Indicator == RMSE_STAT) {
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
 
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
-					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
-						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
+					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == CRITERIA_STATE::NO_SET)
+						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::BELOW_MAX);
 					else
-						m_pNewMap->m_MStorage.SetCriteria(ip, 2);
+						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::BELOW_MAX);
 				}
 				else if (Indicator == ABSME_STAT||Indicator==A1_STAT) {
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
@@ -1895,13 +1896,13 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, first_valid);
-					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == 0)
-						m_pNewMap->m_MStorage.SetCriteria(ip, 1);
+					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == CRITERIA_STATE::NO_SET)
+						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_MIN);
 					else
-						m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_AND_BELOW);
 
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
-					m_pNewMap->m_MStorage.SetCriteria(ip, 3);
+					m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_AND_BELOW);
 
 
 				}

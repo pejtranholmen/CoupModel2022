@@ -6052,65 +6052,62 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		auto NumValidVar = GetNumAll_TSV_ValVariables();
 		string PerformanceVar;
 		size_t listnum = 1;
+		int MeanCriteria;
 
-			for (size_t iens = 0; iens < m_MStorage.m_AcceptedRuns.size(); iens++) {
-				m_MStorage.m_ActualEnsemble = iens;
-				for (int var = 0; var < 7; var++) {
-					switch (var) {
-					case 0:	PerformanceVar = "R2"; break;
-					case 1:	PerformanceVar = "Intercept"; break;
-					case 2:	PerformanceVar = "Slope"; break;
-					case 3:	PerformanceVar = "ME";	break;
-					case 4: PerformanceVar = "RMSE"; break;
-					case 5:	PerformanceVar = "LogLi"; break;
-					case 6:	PerformanceVar = "NSE R2"; break;
+		for (size_t iens = 0; iens < m_MStorage.m_AcceptedRuns.size(); iens++) {
+				for (size_t histindex = 0; histindex < m_pSimDoc->m_MStorage.m_Valid_TSV[iens].History.size(); histindex++) {
+					DefinedCriteria def = m_pSimDoc->m_MStorage.m_Valid_TSV[iens].History[histindex];
+					size_t local_var_in_list = def.VarIndex % m_pSimDoc->m_Val_Array.size();
+					auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(local_var_in_list);
+					auto pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
+
+					if (def.VarIndex == m_pSimDoc->m_Val_Array.size()) MeanCriteria = m_pSimDoc->m_MStorage.GetMeanCriteria(def.VarIndex);
+					switch (def.stat_indicator) {
+					case PERFORMANCE_VAR::R2_STAT: PerformanceVar = "R2"; break;
+					case PERFORMANCE_VAR::AO_STAT: PerformanceVar = "Intercept"; break;
+					case PERFORMANCE_VAR::A1_STAT: PerformanceVar = "Slope"; break;
+					case PERFORMANCE_VAR::ABSME_STAT: PerformanceVar = "Mean Error"; break;
+					case PERFORMANCE_VAR::RMSE_STAT: PerformanceVar = "RMSE"; break;
+					case PERFORMANCE_VAR::LOGLI_STAT: PerformanceVar = "Log Like"; break;
+					case PERFORMANCE_VAR::NSE_STAT: PerformanceVar = "NSE"; break;
+					};
+					CPG* pPG;
+					BOOL valid;
+					pPG = (CPG*)pValFile->GetPointer();
+					if (pPG == nullptr) {
+						pPG = new CPG;
+						valid = pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
+						if (valid) pValFile->SetPointer(pPG);
+						pPG->CloseFile();
 					}
-				for (int i = 0; i < NumValidVar; i++) {
-					auto index = i + var * NumValidVar;
-					auto criteria = m_MStorage.GetCriteria(index);
-					if (criteria > 0) {
-						auto FileNo = m_ValidationData.GetValFileNumber(i);
-						auto pValFile = ValidationFilePointer(FileNo);
-						auto ind = m_ValidationData.GetValFileIndex(i);
-						CPG* pPG;
-						BOOL valid;
-						pPG = (CPG*)pValFile->GetPointer();
-						if (pPG == nullptr) {
-							pPG = new CPG;
-							//CPG_Array.Add(pCPG);
-							valid = pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
-							if (valid) pValFile->SetPointer(pPG);
-							pPG->CloseFile();
-						}
-						string test = pValFile->GetDataDescription(ind);
-						for (size_t j = 0; j < 8; j++) ws.cell(1 + j, icount).alignment(center);
+					int ind = m_pSimDoc->m_ValidationData.GetValFileIndex(local_var_in_list);
+					string test = pValFile->GetDataDescription(ind).c_str();
+					for (size_t j = 0; j < 8; j++) ws.cell(1 + j, icount).alignment(center);
 
-						ws.cell(1, icount).value(listnum); listnum++;
-						ws.cell(2, icount).value( iens + 1);
+					ws.cell(1, icount).value(listnum); listnum++;
+					ws.cell(2, icount).value(iens + 1);
 
-						ws.cell(3, icount).value(i + 1);
-						
-						ws.cell(4, icount).value(test);
-						test = PerformanceVar;
-						if (m_pSimDoc->m_MStorage.m_Valid_TSV[iens].VarTranformed != 0) {
-							test += " - ";
-							test += m_pSimDoc->m_MStorage.GetTransformationIndicator(iens);
-						}
-						ws.cell(5, icount).value(test);
-						if (criteria == 1)
-							ws.cell(6, icount).value(m_MStorage.GetValidLow(index));
-						else if (criteria == 2)
-							ws.cell(7, icount).value(m_MStorage.GetValidHigh(index));
-						else if (criteria == 3) {
-							ws.cell(6, icount).value(m_MStorage.GetValidLow(index));
-							ws.cell(7, icount).value(m_MStorage.GetValidHigh(index));
-						}
-						ws.cell(8, icount).value(m_MStorage.m_AcceptedRuns[iens].size());
-						icount++;
+					ws.cell(3, icount).value(local_var_in_list + 1);
+
+					ws.cell(4, icount).value(test);
+					test = PerformanceVar;
+					if (m_pSimDoc->m_MStorage.m_Valid_TSV[iens].VarTranformed != 0) {
+						test += " - ";
+						test += m_pSimDoc->m_MStorage.GetTransformationIndicator(iens);
 					}
+					ws.cell(5, icount).value(test);
+					if (def.criteria == ABOVE_MIN)
+						ws.cell(6, icount).value(def.minvalue);
+					else if (def.criteria == BELOW_MAX)
+						ws.cell(7, icount).value(def.maxvalue);
+					else if (def.criteria == ABOVE_AND_BELOW) {
+						ws.cell(6, icount).value(def.minvalue);
+						ws.cell(7, icount).value(def.maxvalue);
+					}
+					ws.cell(8, icount).value(def.n_post);
+					icount++;
 				}
 			}
-		}
 
 	};
 
@@ -6143,6 +6140,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			}
 			startcol = cols + 1;
 		}
+		ws.column_properties("A").width = 16.;
 		size_t rowcount = 1;
 		if (AddColNumbers) {
 			for (size_t col = 0; col < header2.size(); col++) {
@@ -6710,7 +6708,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		auto NumSheets = m_pSimDoc->GetNumAll_TSV_ValVariables();
 		vector<string> header3;
 
-		for (size_t s = 0; s < NumSheets-1; s++) {
+		for (size_t s = 0; s < NumSheets; s++) {
 
 			vector<vector<double>> MeanEnsembleValues;
 			size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(s);
