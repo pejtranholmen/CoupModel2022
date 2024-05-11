@@ -196,8 +196,8 @@ bool Technical_Functions::Def()
 		Define(pP, pCriteria, "Transformation", initv, "-", "PreDefinedEnsembles>0", 0., 4., 0., 4., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.Transformation, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "Criterion", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6.,0, 2024, 2024); CriteriaTab.push_back(pP);
-	pP = new P(&Criterion.IndicatorIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pP, pCriteria, "ZeroAdjustment", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6.,0, 2024, 2024); CriteriaTab.push_back(pP);
+	pP = new P(&Criterion.ZeroAdjustment, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "Performance Indicator", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0.,6., 0,2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.ValVarIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);

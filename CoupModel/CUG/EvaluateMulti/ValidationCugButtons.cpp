@@ -154,10 +154,14 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 			}
 		}
 		if(ifile<0) {
-			AddMenuItem(1061,"Reset the list of Accepted Runs to all Runs");
+			AddMenuItem(1061,"Reset the list of Accepted Runs for actual ensemble to all Runs");
+			if (m_pSimDoc->m_MStorage.m_AcceptedRuns.size() > 1) 
+				AddMenuItem(1071, "Reset the list of Accepted Runs for all ensembles to all Runs");
 		}
 		else if(m_pSimDoc->MR_XBin_IsOpen(ifile)) {
-				AddMenuItem(1061,"Reset the list of Accepted Runs to all Runs");
+				AddMenuItem(1061,"Reset the list of Accepted Runs for actual ensemble to all Runs");
+				if (m_pSimDoc->m_MStorage.m_AcceptedRuns.size() > 1) 
+					AddMenuItem(1071, "Reset the list of Accepted Runs for all ensembles to all Runs");
 				if(!m_SavedCriteria2File) AddMenuItem(1062,"Save the set Criteria and Accepted Runs to file");
 		}
 		

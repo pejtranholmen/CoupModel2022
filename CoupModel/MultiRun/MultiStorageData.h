@@ -12,7 +12,7 @@ struct MBIN_FILE_HEADER {
 };
 enum STAT_ENSEMBLE { E_PRIOR_MIN, E_PRIOR_MAX, E_PRIOR_CV, E_PRIOR_MEAN, E_POST_MIN, E_POST_MAX, E_POST_CV, E_POST_MEAN, E_SELECT_LOW, E_SELECT_HIGH };
 enum CRITERIA_STATE {NO_SET, ABOVE_MIN, BELOW_MAX, ABOVE_AND_BELOW};
-enum PERFORMANCE_VAR { R2_STAT, AO_STAT, A1_STAT, ABSME_STAT, RMSE_STAT, LOGLI_STAT, NSE_STAT };
+enum PERFORMANCE_VAR { R2_STAT, AO_STAT, A1_STAT, ABSME_STAT, RMSE_STAT, LOGLI_STAT, NSE_STAT, ZERO_ADJUST };
 struct DefinedCriteria {
 	CRITERIA_STATE criteria;
 	PERFORMANCE_VAR stat_indicator;
@@ -194,7 +194,7 @@ public:
 		}
 		return "";
 	};
-	size_t ReduceCriteria(PERFORMANCE_VAR, size_t VarIndex, size_t ThresholdType, size_t Threshold);
+	size_t ReduceCriteria(PERFORMANCE_VAR, size_t VarIndex=0, size_t ThresholdType=0, size_t Threshold=0);
 	void ReduceUpdateStep(PERFORMANCE_VAR);
 	size_t GetNumberofEnsembles() { return m_AcceptedIdString.size(); };
 	vector<size_t> GetEnsemblesToPlot() {

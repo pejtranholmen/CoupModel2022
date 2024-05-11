@@ -1766,123 +1766,152 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 	bool MeanOfMany = false;
 	size_t MaxNum = m_pNewMap->GetNumAll_TSV_ValVariables();
-	int ip = VarIndex + Indicator * MaxNum;;
+	int ip;
+	if (Indicator == ZERO_ADJUST) {
+		ip = VarIndex+ABSME_STAT;
+		Threshold = 10000;
+	}
+	else
+		ip = VarIndex + Indicator * MaxNum;;
 
-	if (VarIndex ==MaxNum) MeanOfMany = true;
+	if (VarIndex == MaxNum) MeanOfMany = true;
 	if (MeanOfMany) {
-			dist = m_pNewMap->m_MStorage.m_MeanTSV_Accepted[Indicator];
+		dist = m_pNewMap->m_MStorage.m_MeanTSV_Accepted[Indicator];
 	}
 	else {
-			dist = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		dist = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
 	}
 	int icount = dist.size();
 	if (icount <= 1) return icount;
 	if (RelativeThreshold)
-		Threshold=Threshold* icount / 100;
+		Threshold = Threshold * icount / 100;
 	if (Threshold <= 0) return icount;
 
 	float last_valid = 0.f, first_valid;
 	StatUtil::SortArray(&dist[0], icount);
-	auto min_value = dist.front();
-	auto max_value = dist.back();
-	size_t n_toremove=0;
-	if (dist.size() <= Threshold) n_toremove = 0;
-	else if(Indicator!=ABSME_STAT) n_toremove = dist.size() - Threshold - 1;
-	
-	if (Indicator == ABSME_STAT || Indicator == A1_STAT) {
-		float meanvaluein, meanvalueout;
-		meanvaluein = StatUtil::mean(dist);
-		size_t npos = 0;
-		float goal = 0;
-		if (Indicator == A1_STAT) goal = 1;
-		size_t i = 0;
-		while(dist[i] < goal&&i<dist.size()-1) {
-			i++;
-		};
-		npos = i;
-		if (i == 0) { //No candidates below goal
-			for(size_t i=0; i<Threshold;i++)	distout.push_back(dist[i]);
-		}
-		else {
-			distout.push_back(dist[npos]);
-		}
-		meanvalueout = StatUtil::mean(distout);
-		size_t nposlow, nposhigh;
-			nposlow=nposhigh= i;
+		auto min_value = dist.front();
+		auto max_value = dist.back();
+		size_t n_toremove = 0;
+		if (dist.size() <= Threshold) n_toremove = 0;
+		else if (Indicator != ABSME_STAT) n_toremove = dist.size() - Threshold - 1;
+
+		if (Indicator == ABSME_STAT || Indicator == A1_STAT) {
+			float meanvaluein, meanvalueout;
+			meanvaluein = StatUtil::mean(dist);
+			size_t npos = 0;
+			float goal = 0;
+			if (Indicator == A1_STAT) goal = 1;
+			size_t i = 0;
+			while (dist[i] < goal && i < dist.size() - 1) {
+				i++;
+			};
+			npos = i;
+			if (i == 0) { //No candidates below goal
+				for (size_t i = 0; i < Threshold; i++)	distout.push_back(dist[i]);
+			}
+			else {
+				distout.push_back(dist[npos]);
+			}
+			meanvalueout = StatUtil::mean(distout);
+			size_t nposlow, nposhigh;
+			nposlow = nposhigh = i;
 			bool endlow, endhigh, endloop;
 			endlow = endhigh = false;
-			endloop = false;	
+			endloop = false;
 
-		while ((distout.size()< Threshold&& !endloop)) {
-			while (meanvalueout > goal && distout.size()<Threshold&&!endlow) {
-				nposlow--;
-				if (nposlow >= 0)distout.push_back(dist[nposlow]);
-				else endlow = true;
-				if (distout.size() >= Threshold) {
-					endlow = true;
+			while ((distout.size() < Threshold && !endloop)) {
+				while (meanvalueout > goal && distout.size() < Threshold && !endlow&&nposlow>0) {
+					nposlow--;
+					if (nposlow >= 0)distout.push_back(dist[nposlow]);
+					else endlow = true;
+					if (distout.size() >= Threshold) {
+						endlow = true;
+					}
+					meanvalueout = StatUtil::mean(distout);
+
 				}
-				meanvalueout = StatUtil::mean(distout);
+				while ((meanvalueout < goal && distout.size() < Threshold && !endhigh) && !endloop) {
+					nposhigh++;
+					auto prevmeanvalueout = meanvalueout;
+					if (nposhigh < dist.size()) distout.push_back(dist[nposhigh]);
+					else {
+						endhigh = true;
+
+						if (distout.size() < Threshold)
+							distout.push_back(dist[nposhigh - 1]);
+					}
+					meanvalueout = StatUtil::mean(distout);
+					if (prevmeanvalueout == meanvalueout) endloop = true;
+				}
+				if (endlow && endhigh) endloop = true;
+			}
+			StatUtil::SortArray(&distout[0], distout.size());
+			dist = distout;
+			first_valid = distout.front();
+			last_valid = distout.back();
+			if (first_valid < last_valid) {
+
 
 			}
-			while ((meanvalueout < goal &&  distout.size()< Threshold&&!endhigh)&&!endloop) {
-				nposhigh++;
-				auto prevmeanvalueout = meanvalueout;
-				if (nposhigh < dist.size()) distout.push_back(dist[nposhigh]);
-				else {
-					endhigh = true;
-					
-					if(distout.size()<Threshold) 
-						distout.push_back(dist[nposhigh - 1]);
-				}
-				meanvalueout = StatUtil::mean(distout);
-				if (prevmeanvalueout == meanvalueout) endloop = true;
+			else if (first_valid == last_valid) {
+				last_valid = last_valid + abs(last_valid) / 1.E4;
 			}
-			if (endlow && endhigh) endloop = true;
 		}
-		StatUtil::SortArray(&distout[0], distout.size());
-		dist = distout;	
-		first_valid = distout.front();
-		last_valid = distout.back();
-		if (first_valid < last_valid) {
-
-
-		}
-		else if(first_valid==last_valid) {
-			last_valid = last_valid+abs(last_valid) / 1.E4;
-		}
-	}
-	else if (Indicator == R2_STAT|| Indicator == NSE_STAT||Indicator == LOGLI_STAT) {
-			auto pos=dist.size() - Threshold;
+		else if (Indicator == R2_STAT || Indicator == NSE_STAT || Indicator == LOGLI_STAT) {
+			auto pos = dist.size() - Threshold;
 			if (pos >= 0)
 				last_valid = dist[pos];
 			else
 				last_valid = dist.back() + 0.0001;
-		
-	}
-	else if (Indicator == RMSE_STAT) {
-			last_valid = dist[Threshold-1];
-		
-	}
 
-	if (dist.size() > Threshold - 1) {
+		}
+		else if (Indicator == RMSE_STAT) {
+			last_valid = dist[Threshold - 1];
+
+		}
+		else if (Indicator == ZERO_ADJUST) {
+			float meanvalue;
+			meanvalue = StatUtil::mean(dist);
+			if (meanvalue > 0) {
+				while (meanvalue > 0 && dist.size() > 3) {
+					dist.erase(dist.end() - 1);
+					meanvalue = StatUtil::mean(dist);
+				}
+			}
+			else {
+				while (meanvalue < 0 && dist.size()>3) {
+					dist.erase(dist.begin());
+					meanvalue = StatUtil::mean(dist);
+				}
+			}
+			Indicator = ABSME_STAT;
+			first_valid = dist.front();
+			last_valid = dist.back();
+			Threshold = 1;
+			n_toremove = 0;
+
+		}
+
+
+		if (dist.size() > Threshold - 1) {
 			if (MeanOfMany) {
 				m_pNewMap->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = last_valid;
 				m_pNewMap->m_MStorage.SetMeanCriteria(LOGLI_STAT, CRITERIA_STATE::ABOVE_MIN);
 			}
 			else {
-				m_pNewMap->m_MStorage.SetCriteriaHistory(dist.size()-n_toremove, Indicator);
-				if (Indicator == R2_STAT||Indicator==NSE_STAT||Indicator==LOGLI_STAT) {
-					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
-					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
+				m_pNewMap->m_MStorage.SetCriteriaHistory(dist.size() - n_toremove, Indicator);
+				if (Indicator == R2_STAT || Indicator == NSE_STAT || Indicator == LOGLI_STAT) {
+					//	m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
+					//	m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, last_valid);
 					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == CRITERIA_STATE::NO_SET)
 						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_MIN);
 					else
-						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_AND_BELOW);
+						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_MIN);
 				}
 				else if (Indicator == RMSE_STAT) {
-					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
-					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
+					//m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
+					//m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
 
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
 					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == CRITERIA_STATE::NO_SET)
@@ -1890,7 +1919,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 					else
 						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::BELOW_MAX);
 				}
-				else if (Indicator == ABSME_STAT||Indicator==A1_STAT) {
+				else if (Indicator == ABSME_STAT || Indicator == A1_STAT) {
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
 
@@ -1903,19 +1932,21 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, last_valid);
 					m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_AND_BELOW);
-
+				}
+				else if (Indicator == ZERO_ADJUST) {
+					m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
+					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
+					m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_AND_BELOW);
 
 				}
 			}
-		ReduceUpdateStep(Indicator);
+			ReduceUpdateStep(Indicator);
 
-	}
-	else {
-		return false;
-	}
+		}
+		else {
+			return false;
+		}
 	return true;
-
-
 
 }
 void MultiStorageData::ReduceUpdateStep(PERFORMANCE_VAR value)

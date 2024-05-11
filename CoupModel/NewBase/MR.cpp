@@ -1401,7 +1401,9 @@ bool MR::PreDefined_Criteria_Process() {
 	auto num=m_MStorage.GetNumberofEnsembles();
 	auto pSw = GetSw("PreDefinedEnsembles");
 	auto pEnsemble = GetP("Ensemble");
+	auto pZeroAdjust = GetP("ZeroAdjustment");
 	auto pIndicator = GetP("Performance Indicator");
+	auto pCriterion = GetP("Criterion");
 	auto pVarIndex = GetP("Var Index");
 	auto pThresholdType = GetP("ThresholdType");
 	auto pThresholdValue = GetP("ThresholdValue");
@@ -1431,6 +1433,7 @@ bool MR::PreDefined_Criteria_Process() {
 		m_MStorage.EvaluateFile(false);
 		for (size_t i = 0; i<pEnsemble->GetSize(); i++) {
 			auto Indicator = size_t(pIndicator->GetValue(i)+0.0001);
+			auto ZeroAdjust = size_t(pZeroAdjust->GetValue(i) + 0.001);
 			auto VarIndex = size_t(pVarIndex->GetValue(i) + 0.0001)-1;
 			auto ThresholdType = size_t(pThresholdType->GetValue(i) + 0.0001);
 			auto Threshold = pThresholdValue->GetValue(i);
@@ -1468,6 +1471,8 @@ bool MR::PreDefined_Criteria_Process() {
 					left = m_MStorage.ReduceCriteria(NSE_STAT, VarIndex, ThresholdType, Threshold);
 					break;
 			}
+			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
+
 
 		}
 	}

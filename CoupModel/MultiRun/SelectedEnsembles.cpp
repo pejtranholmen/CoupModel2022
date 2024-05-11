@@ -390,6 +390,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 			IsMaxUpdated=false;
 		}
 		else {
+			m_Valid_TSV[m_ActualEnsemble].History.clear();
 			SetAllToAcceptedRuns();		
 		}
 	}
@@ -1243,7 +1244,8 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 
 #ifndef COUPSTD
 	MFC_Util mfc_util;
-	mfc_util.SetPaneMessage("Setting Statistics for Performance Indicators Start");
+	string txt = FUtil::STD_ItoAscii(m_ActualEnsemble+1);
+	mfc_util.SetPaneMessage("Setting Statistics - Performance Indicators start for ensemble no :"+ txt);
 #endif
 	IsMinUpdated = false;
 	IsMaxUpdated = false;
@@ -2164,6 +2166,7 @@ bool SelectedEnsembles::ResetAndReOpenFile()
 	m_pNewMap->m_Are_MeanValues_SV_VariablesEstimated = false;
 	m_pNewMap->CalculateSumMeanValidValues_SV_Variables();
 	m_SV_StatMemory.AllRuns = false;
+	m_ActualEnsemble = 0;
 	Update_SV_VarStat(false);
 	Update_TSV_VarStat(false);
 	UpdateAcceptedRuns(true, false);

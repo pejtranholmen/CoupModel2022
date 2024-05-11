@@ -933,7 +933,10 @@ void ValidationCug::Make_CriteriaSheet()
 						test += m_pSimDoc->m_MStorage.GetTransformationIndicator(iens);
 					}
 					QuickSetText(4, icount, test);
+					if (def.stat_indicator == ABSME_STAT || def.stat_indicator == A1_STAT) {
+						def.criteria = ABOVE_AND_BELOW;
 
+					}
 					switch (def.criteria) {
 						case ABOVE_MIN:	QuickSetNumber(5, icount, def.minvalue);break;
 						case BELOW_MAX:	QuickSetNumber(6, icount, def.maxvalue); break;
@@ -3072,6 +3075,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 				pRes->m_MeanDefined = false;
 			}
 		}
+
 		m_pSimDoc->m_MStorage.EvaluateFile(false);
 	};
 
@@ -3088,9 +3092,20 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			m_pSimDoc->m_MStorage.AddNewEnsemble(true);
 			OnSheetSetup(isheet);
 	}
-	else if (item == 1061) {
-		Reset_All();
-		// Reset to all Runs
+	else if (item == 1061||item==1071) {
+
+		if (item == 1071) {
+			auto saveens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+			for (size_t iens = 0; iens < m_pSimDoc->m_MStorage.m_AcceptedRuns.size(); iens++) {
+				m_pSimDoc->m_MStorage.m_ActualEnsemble = iens;
+				Reset_All();
+			}
+			m_pSimDoc->m_MStorage.m_ActualEnsemble = saveens;
+		}
+		else 
+			Reset_All();
+
+		
 		MyCug *pCug;
 		pCug = MySingle::instance().GetCugPointer();
 		int isheet = pCug->GetSheetNumber();
@@ -4984,7 +4999,7 @@ void ValidationCug::FixZeroShiftOfPostMean(size_t ivar) {
 		}
 	}
 	if(dist.size()>2) {
-
+		m_pSimDoc->m_MStorage.SetCriteriaHistory(dist.size() - dist.size()/2, A1_STAT);
 			/*			m_pSimDoc->m_MStorage.SetValidLow(iv+index_start, ind_split, value);
 				if(m_pSimDoc->m_MStorage.GetCriteria(iv+index_start, ind_split)==0)
 					m_pSimDoc->m_MStorage.SetCriteria(iv+index_start, 1, ind_split);*/
@@ -5191,6 +5206,7 @@ void ValidationCug::ReducebyNSE(size_t ivar, size_t n_left, bool SV_Variable) {
 		}
 	if(dist.size()>n_left-2) {
 		if (!SV_Variable) {
+			m_pSimDoc->m_MStorage.SetCriteriaHistory(dist.size() - n_left, NSE_STAT);
 			if (MeanOfMany) {
 				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][NSE_STAT] = lastvalid;
 				m_pSimDoc->m_MStorage.SetMeanCriteria(NSE_STAT, CRITERIA_STATE::ABOVE_MIN);
@@ -5255,6 +5271,7 @@ void ValidationCug::ReducebyLogLi(size_t ivar, size_t n_left, bool SV_Variable) 
 
 	if(dist.size()>n_left-2) {
 		if (!SV_Variable) {
+			m_pSimDoc->m_MStorage.SetCriteriaHistory(dist.size() - n_left, LOGLI_STAT);
 			if (MeanOfMany) {
 				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = lastvalid;
 				m_pSimDoc->m_MStorage.SetMeanCriteria(LOGLI_STAT,CRITERIA_STATE::ABOVE_MIN);
@@ -5296,6 +5313,7 @@ void ValidationCug::ReducebyMeanInterval(size_t ivar, size_t n_left, bool SV_Var
 	vector<float> distin, distout;
 
 	if (!SV_Variable) {
+
 		if (MeanOfMany) {
 			distin = m_pSimDoc->m_MStorage.m_MeanTSV_Accepted[ABSME_STAT];
 		}
@@ -5337,6 +5355,7 @@ void ValidationCug::ReducebyMeanInterval(size_t ivar, size_t n_left, bool SV_Var
 
 
 	if(distout.size()>n_left-2) {
+		m_pSimDoc->m_MStorage.SetCriteriaHistory(distout.size(), ABSME_STAT);
 		if (!SV_Variable) {
 			if (MeanOfMany) {
 				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][A1_STAT] = distout[0];
@@ -5344,6 +5363,7 @@ void ValidationCug::ReducebyMeanInterval(size_t ivar, size_t n_left, bool SV_Var
 				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_HIGH][A1_STAT] = distout[distout.size() - 1];
 			}
 			else {
+
 				m_pSimDoc->m_MStorage.SetValidLow(ip, 0, distout[0]);
 				if (m_pSimDoc->m_MStorage.GetCriteria(ip, 0) == 0)
 					m_pSimDoc->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_MIN);
@@ -5428,6 +5448,7 @@ void ValidationCug::ReducebySlopeInterval(size_t ivar, size_t n_left, bool SV_Va
 
 
 	if(distout.size()>n_left-2) {
+		m_pSimDoc->m_MStorage.SetCriteriaHistory(distout.size()-n_left, ABSME_STAT);
 		if (!SV_Variable) {
 			if (MeanOfMany) {
 				m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][A1_STAT] = distout[0];

@@ -86,7 +86,7 @@ struct {
 	vector<double> Ensemble;
 	vector<double> Criterion;
 	vector<double> ValVarIndex;
-	vector<double> IndicatorIndex;
+	vector<double> ZeroAdjustment;
 	vector<double> Threshold;
 	vector<double> ThresholdType;
 	vector<double> Transformation;
