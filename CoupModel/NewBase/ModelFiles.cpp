@@ -246,7 +246,7 @@ bool ModelFiles::ResidualFile_AddFile(size_t num) {
 		numadd = 1;
 	vector<CResiduals*> addvector;
 
-	for (size_t i = 0; i <= num; i++ ) {
+	for (size_t i = 0; i < num; i++ ) {
 
 		addvector.clear();
 		for (size_t ii = 0; ii < numadd; ii++) {
@@ -288,8 +288,8 @@ bool ModelFiles::ResidualFile_SetNumAttachedFiles(size_t num) {
 //Reset to no attached files
 	bool needupdate = false;
 	for (size_t i = 0; i < m_ResidualFileVector.size(); i++) {
-		if (m_ResidualFileVector[i].size() != num+1) needupdate = true;
-		while (m_ResidualFileVector[i].size()>1&&needupdate) {
+		if (m_ResidualFileVector[i].size() != num + 1) needupdate = true;
+		while (m_ResidualFileVector[i].size()>0&&needupdate) {
 			delete m_ResidualFileVector[i][m_ResidualFileVector[i].size() - 1];
 			m_ResidualFileVector[i].erase(m_ResidualFileVector[i].begin()+ m_ResidualFileVector[i].size() - 1);
 		}

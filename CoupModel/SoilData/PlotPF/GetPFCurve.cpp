@@ -231,8 +231,11 @@ bool GetPFCurve::SaveRecord(bool New)
 bool GetPFCurve::InitSaveRecord(size_t numprofile)
 {
 	if (m_RwNewHeader.IsFileInGood() || m_RwNewHeader.IsFileOutGood()) {
-		m_RwNewHeader.wInt(&m_PF_FileVersion);
-		m_RwNewHeader.wInt(&numprofile);
+		unsigned int k = static_cast<unsigned int>(m_PF_FileVersion);
+		unsigned int n = static_cast<unsigned int>(numprofile);
+
+		m_RwNewHeader.wInt(&k);
+		m_RwNewHeader.wInt(&n);
 		return true;
 	}
 	if(!m_NewHeaderFile.good()) return false;

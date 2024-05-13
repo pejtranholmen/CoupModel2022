@@ -1506,8 +1506,8 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 	PGPtr.resize(MAXSIMVAL);
 	vector<size_t> ResidualIndex;
 	CPG* pPG;
-	string str = m_pSimDoc->GetMBinFileName();
-	int addedfiles = m_pSimDoc->m_MStorage.GetNumberOfAddedFiles(str);
+	string str = GetMBinFileName();
+	int addedfiles = m_MStorage.GetNumberOfAddedFiles(str);
 
 	ResidualPtr.resize(MAXSIMVAL * (addedfiles + 1));
 	ResidualIndex.resize(MAXSIMVAL);
@@ -1519,7 +1519,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 
 
 	for (int i = 0; i < MAXSIMVAL; i++) {
-		pValFile = m_pSimDoc->ValidationFilePointer(i + 1);
+		pValFile = ValidationFilePointer(i + 1);
 		Valid[i] = 0;
 		ResidualIndex[i] = 0;
 		if (pValFile->GetNumberOfSelectedVal() > 0) {
@@ -1544,9 +1544,9 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 	if (cumulated <= 3) {
 		for (int i = 0; i < NumValidVar; i++) {
 			auto test = FUtil::STD_ItoAscii(i + 1);
-			auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(i);
-			pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
-			auto ind = m_pSimDoc->m_ValidationData.GetValFileIndex(i);
+			auto FileNo = m_ValidationData.GetValFileNumber(i);
+			pValFile = ValidationFilePointer(FileNo);
+			auto ind = m_ValidationData.GetValFileIndex(i);
 			CPG* pPG;
 			bool valid;
 			pPG = (CPG*)pValFile->GetPointer();
@@ -1773,13 +1773,13 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 		}
 	}
 	if (cumulated == 0)
-		m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed = 0;
+		m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed = 0;
 	else
-		m_pSimDoc->m_MStorage.SetNewPerformanceVector(cumulated, VarValidNewVector);
+		m_MStorage.SetNewPerformanceVector(cumulated, VarValidNewVector);
 
 
-	m_pSimDoc->m_MStorage.VarValidAllo();
-	m_pSimDoc->m_MStorage.UpdateAcceptedRuns(true);
+	m_MStorage.VarValidAllo();
+	m_MStorage.UpdateAcceptedRuns(true);
 	string text;
 	if (cumulated == 0) text = "actual values";
 	else if (cumulated == 1) text = "cumulated values";
@@ -1789,7 +1789,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 #ifndef COUPSTD
 	m.SetPaneMessage("Performance indicators estimated based on " + text+ "Estimated new performance");
 #endif
-	return m_pSimDoc->m_MStorage.EvaluateFile(false); // Saving new indicators in file
+	return m_MStorage.EvaluateFile(false); // Saving new indicators in file
 }
 ;
 string MR::MR_Get_CalibParName(size_t index)

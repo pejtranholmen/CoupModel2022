@@ -591,7 +591,11 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 
 				auto pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "ValidationMode"));
 				m_NumValidFiles = pSw->GetIntValue();
-				ResidualFile_AddFile(m_NumValidFiles);
+				ResidualFile_Reset();
+				if (ResidualFile_AddFile(m_NumValidFiles)) {
+
+				}
+				;
 			}
 
 
@@ -2298,6 +2302,7 @@ string NewMap::GetParentDocFile(string xmlfile) {
 
 bool NewMap::ReadXmlDocFile(string xmlfile) {
 	pugi::xml_document doc;
+	auto koll = m_ResidualFileVector.size();
 	auto result = doc.load_file(xmlfile.c_str());
 	auto root = doc.root();
 	auto child = root.first_child().first_child();
@@ -2353,7 +2358,7 @@ bool NewMap::ReadXmlDocFile(string xmlfile) {
 
 
 	}
-
+	
 	m_xmlFileToUse = true;
 	return true;
 
@@ -2679,6 +2684,7 @@ bool NewMap::Info_Switches(bool reading)
 
 			pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "ValidationMode"));
 			m_NumValidFiles = pSw->GetIntValue();
+			ResidualFile_Reset();
 			ResidualFile_AddFile(m_NumValidFiles);
 		}
 
@@ -6016,6 +6022,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			ws.cell(3, icount + 2).value("2 - YearCumulated"); ws.cell(3, icount + 3).value("3 - DayCumulated");
 			ws.cell(3, icount + 2).alignment(center); ws.cell(3, icount + 3).alignment(center);
 			ws.cell(4, icount).value("0 - No specific action"); ws.cell(4, icount + 0).alignment(center);
+			ws.cell(4, icount+1).value("1 - Adjust towards zero"); ws.cell(4, icount + 1).alignment(center);
 			ws.cell(5, icount).value("0 - R2");
 			ws.cell(5, icount+1).value("1 - Intercept");
 			ws.cell(5, icount+2).value("2 - Slope");

@@ -148,6 +148,15 @@ bool ReadWriteTypes::rsize_t(size_t *iv)
 	*iv=i;
 	return m_DocFileIn.good();
 }
+
+bool ReadWriteTypes::ruint(unsigned int* iv)
+{
+	unsigned int i;
+	m_DocFileIn.read((char*)(&i), 4);
+	*iv = i;
+	return m_DocFileIn.good();
+}
+
 bool ReadWriteTypes::SetGetPosition(size_t *iv)
 {  
 	m_DocFileIn.seekg(*iv ,ios::beg);
@@ -279,7 +288,7 @@ bool ReadWriteTypes::wInt(int *iv)
 	
 	return true;
 }
-bool ReadWriteTypes::wInt(size_t *iv)
+bool ReadWriteTypes::wInt(unsigned int *iv)
 {   
 
 	m_DocFileOut.write((char*)(&*iv) ,4);
@@ -288,15 +297,17 @@ bool ReadWriteTypes::wInt(size_t *iv)
 	else
 		return false;
 }
-//bool ReadWriteTypes::wInt(unsigned long *iv)
-//{
-//
-//    m_DocFileOut.write((char*)(&*iv), 4);
-//    if (m_DocFileOut.good())
-//        return true;
-//    else
-//        return false;
-//}
+#ifdef COUPSTD
+bool ReadWriteTypes::wSize_t(size_t *iv)
+{
+	unsigned int k = *iv;
+    m_DocFileOut.write((char*)(&k), 4);
+    if (m_DocFileOut.good())
+        return true;
+    else
+        return false;
+}
+#endif
 bool ReadWriteTypes::wPosition()
 {   
 	auto pos=m_DocFileOut.tellp();

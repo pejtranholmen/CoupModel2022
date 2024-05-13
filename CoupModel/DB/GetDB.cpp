@@ -189,7 +189,8 @@ bool GetDB::WriteHeaderFile(size_t index) {
 			 string key=GetKeyString(head.IdUser, head.IdNum);
 			 auto valid=m_ValidNewHeader[index].insert(pair<string, DB_NewHeader>(key, headnew));
 			 if (valid.second) {
-				 m_Rw.wInt(&head.Type);
+				 auto itype = static_cast<unsigned int>(head.Type);
+				 m_Rw.wInt(&itype);
 				 m_Rw.wString(&head.Name);
 				 m_Rw.wString(&head.SiteName);
 				 m_Rw.wString(&head.Latitude);
@@ -200,7 +201,9 @@ bool GetDB::WriteHeaderFile(size_t index) {
 				 m_Rw.wString(&head.Details);
 				 koll = m_Rw.m_DocFileOut.tellp();
 				 m_Rw.wString(&head.IdUser);
-				 m_Rw.wInt(&head.IdNum);
+				 auto inum = static_cast<unsigned int>(head.IdNum);
+
+				 m_Rw.wInt(&inum);
 				 m_Rw.wString(&headnew.ModelVersion);
 				 m_Rw.wString(&headnew.CreateDate);
 				 m_Rw.wString(&headnew.ModifiedDate);
@@ -395,13 +398,13 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 		if (line.find("Start")==0) {
 			m_Rw.wString( &line);
 			getline(stream, line);
-			iread = FUtil:: AtoInt(line);
+			unsigned int iread = FUtil:: AtoInt(line);
 			m_Rw.wInt(&iread);
 		}
 		else if (line.find("Switches")==0) {
 			m_Rw.wString(&line);
 			getline(stream, line);
-			iread = FUtil::AtoInt(line);
+			unsigned int iread = FUtil::AtoInt(line);
 			m_Rw.wInt(&iread);
 			for (size_t i = 0; i < iread; i++) {
 				getline(stream, line);
@@ -432,9 +435,9 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 		else if (line.find("Parameters")==0) {
 			m_Rw.wString(&line);
 			getline(stream, line);
-			iread = FUtil::AtoInt(line);
+			unsigned int iread = FUtil::AtoInt(line);
 			m_Rw.wInt(&iread);
-			for (size_t i = 0; i < iread; i++) {
+			for (unsigned int i = 0; i < iread; i++) {
 				getline(stream, line);
 				type = line.substr(0, line.find(delim));
 				line = line.substr(line.find(delim) + 1);
@@ -457,9 +460,9 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 		else if (line.find("Tables")==0) {
 			m_Rw.wString(&line);
 			getline(stream, line);
-			iread = FUtil::AtoInt(line);
+			unsigned int iread = FUtil::AtoInt(line);
 			m_Rw.wInt(&iread);
-			for (size_t i = 0; i < iread; i++) {
+			for (unsigned int i = 0; i < iread; i++) {
 				getline(stream, line);
 				type = line.substr(0, line.find(delim));
 				line = line.substr(line.find(delim) + 1);
@@ -511,9 +514,9 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 		else if (line.find("Files")==0) {
 			m_Rw.wString(&line);
 			getline(stream, line);
-			iread = FUtil::AtoInt(line);
+			unsigned int iread = FUtil::AtoInt(line);
 			m_Rw.wInt(&iread);
-			for (size_t i = 0; i < iread; i++) {
+			for (unsigned int i = 0; i < iread; i++) {
 				getline(stream, line);
 				type = line.substr(0, line.find(delim));
 				line = line.substr(line.find(delim) + 1);

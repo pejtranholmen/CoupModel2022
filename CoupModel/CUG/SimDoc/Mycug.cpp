@@ -1047,6 +1047,9 @@ void MyCug::OnSetup()
 		AddTab("Attached Files", 13);
 		SetTabWidth(1000); 
 	
+
+	
+
 		//SetSheetNumber(6); 
 		num_sheets=GetNumberSheets();
 		if(num_sheets!=14)

@@ -179,7 +179,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 	};
 
 	size_t index_trans = string::npos;
-	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed > 0) {
+	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed != string::npos) {
 
 		auto it = MapOfStoredTSV.find(m_Valid_TSV[m_ActualEnsemble].VarTranformed);
 		if (it != MapOfStoredTSV.end())

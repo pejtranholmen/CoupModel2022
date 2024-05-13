@@ -322,7 +322,7 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 		line += FUtil::STD_ItoAscii(key % 100) + '\n';
 		fileout.write((char*)&line[0], line.size());
 	};
-	auto WriteIntItem = [&](string item, size_t &value) {
+	auto WriteIntItem = [&](string item, size_t value) {
 		if (Export) {
 			line = item + ';';
 			line += FUtil::STD_ItoAscii(int(value)) + '\n';
@@ -557,8 +557,8 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 	WriteFloatItem("Lower_Clay", header.Lower_Clay);
 	WriteFloatItem("Lower_Sand", header.Lower_Sand);
 	WriteFloatItem("Lower_Org", header.Lower_Org);
-	WriteIntItem("Year", header.Year);
-	WriteIntItem("NumLayers", header.NumLayers);
+	WriteIntItem("Year", size_t(header.Year));
+	WriteIntItem("NumLayers", size_t(header.NumLayers));
 	WriteItem("Created By", header.CreatedBy);
 	WriteItem("Date Created", header.CreateDate);
 	

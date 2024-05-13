@@ -172,11 +172,11 @@ bool PFStorage::ReadWrite_NewHeaderLine(bool read)
 		m_RwNewHeader.rFloat(&m_ActProfile.Lower_Clay);
 		m_RwNewHeader.rFloat(&m_ActProfile.Lower_Sand);
 		m_RwNewHeader.rFloat(&m_ActProfile.Lower_Org);
-		m_RwNewHeader.rsize_t(&m_ActProfile.NumLayers);
-		m_RwNewHeader.rsize_t(&m_ActProfile.LowDepth);
-		m_RwNewHeader.rsize_t(&m_ActProfile.Year);
-		m_RwNewHeader.rsize_t(&m_ActProfile.RecLayers);
-		m_RwNewHeader.rsize_t(&m_ActProfile.RecHeader);
+		m_RwNewHeader.ruint(&m_ActProfile.NumLayers);
+		m_RwNewHeader.ruint(&m_ActProfile.LowDepth);
+		m_RwNewHeader.ruint(&m_ActProfile.Year);
+		m_RwNewHeader.ruint(&m_ActProfile.RecLayers);
+		m_RwNewHeader.ruint(&m_ActProfile.RecHeader);
 
 		m_RwNewHeader.rString(&m_ActProfile.CreateDate);
 		m_RwNewHeader.rString(&m_ActProfile.CreatedBy);
@@ -185,7 +185,7 @@ bool PFStorage::ReadWrite_NewHeaderLine(bool read)
 		return m_RwNewHeader.IsFileInGood();
 	}
 	else {
-		m_RwNewHeader.wInt(&m_ActProfile.KeyProf);
+		m_RwNewHeader.wSize_t(&m_ActProfile.KeyProf);
 		m_RwNewHeader.wString(&m_ActProfile.Name);
 		m_RwNewHeader.wString(&m_ActProfile.Country);
 		m_RwNewHeader.wString(&m_ActProfile.County);

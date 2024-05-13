@@ -202,7 +202,7 @@ bool ResidualsBase::ReadWrite_Header(bool reading) {
 			//	m_Ensembles.clear();
 			m_EnsembleResFile.rsize_t(&num);
 
-			m_EnsembleResFile.wInt(&num);
+			m_EnsembleResFile.wSize_t(&num);
 			bool match = false;
 			for (size_t i = 0; i < num; i++) {
 				string name;
@@ -335,7 +335,7 @@ bool ResidualsBase::ReadWrite_Header(bool reading) {
 				}
 				size_t num1 = 0;
 				if (!m_EnsembleResFile.SetPutPosition(&num1)) return false;
-				if (!m_EnsembleResFile.wInt(&num)) return false;
+				if (!m_EnsembleResFile.wSize_t(&num)) return false;
 			}
 
 			if (m_EnsembleResFile.IsFileOutGood() && m_EnsembleResFile.IsFileInGood())
@@ -346,7 +346,7 @@ bool ResidualsBase::ReadWrite_Header(bool reading) {
 		else {
 			// New single file.
 			size_t num = 1;
-			m_EnsembleResFile.wInt(&num);
+			m_EnsembleResFile.wSize_t(&num);
 			if (m_EnsembleName.size() == 0) m_EnsembleName = "Ensemble (1)";
 			m_EnsembleResFile.wString(&m_EnsembleName);
 
@@ -498,9 +498,9 @@ bool ResidualsBase::Residuals_ReadWrite_Header(bool reading) {
 		}
 	}
 	else {
-		if (!m_ResidualFile.wInt(&m_NumRec)) return false;
-		if (!m_ResidualFile.wInt(&m_RecL)) return false;
-		if (!m_ResidualFile.wInt(&m_NumVar)) return false;
+		if (!m_ResidualFile.wSize_t(&m_NumRec)) return false;
+		if (!m_ResidualFile.wSize_t(&m_RecL)) return false;
+		if (!m_ResidualFile.wSize_t(&m_NumVar)) return false;
 	}
 	return true;
 }

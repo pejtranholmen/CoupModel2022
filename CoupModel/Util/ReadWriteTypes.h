@@ -11,8 +11,11 @@ public:
 	bool IsFileOutGood()  {return m_DocFileOut.good();};
 	bool SetGetPosition(size_t iv);
 	bool wInt(int *iv);
-	bool wInt(size_t *iv);
-//    bool wInt(unsigned long *iv);
+	bool wSize_t(size_t *iv);
+	bool wInt(unsigned int *iv);
+#ifdef COUPSTD
+    //bool wInt(size_t *iv);
+#endif
 	bool wPosition();
 	bool SetGetPosition(size_t *pos);
 	bool SetPutPosition(size_t *pos);
@@ -27,10 +30,14 @@ public:
 	bool rString(std::string *str);
 	bool rInt(int *iv);
 	bool rsize_t(size_t *iv);
+#ifdef COUPSTD
+	//bool rsize_t(unsigned int* iv);
+#endif
 	bool ruLong(unsigned long *iv);
 	bool rBOOL(bool *iv);
 	bool rbool(bool *iv);
 	bool rLong(long *iv);
+	bool ruint(unsigned int* iv);
 	bool rFloat(float *f);
 	bool rDouble(double *f);
 	bool rTime(time_t *time);

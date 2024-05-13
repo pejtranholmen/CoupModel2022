@@ -41,10 +41,12 @@ public:
 		for (size_t i = 0; i < m_ValidationNumbers.size(); i++) {
 			if (m_ValidationNumbers[i] > 0) count++;
 		}
-		if(m_ValidationNumbersSelected>count) return m_ValidationNumbersSelected;
+		//if(m_ValidationNumbersSelected>count) return m_ValidationNumbersSelected;
 		return count;
 	};
-	bool	SetNumberOfSelectedVal(int value) {m_ValidationNumbersSelected=value;  return true;};
+	bool	SetNumberOfSelectedVal(int value) {
+		m_ValidationNumbersSelected=value;  return true;
+	};
 	
 	bool	CallDataDescription();
 

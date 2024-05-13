@@ -295,6 +295,7 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 	bool check;
 	check = true;
 
+	auto koll=m_pNewMap->m_ResidualFileVector.size();
 	if (FUtil::check_if_empty_file(&m_MultiFile, filename)) return false;
 
 	m_MBinHeader = ReadStartData();

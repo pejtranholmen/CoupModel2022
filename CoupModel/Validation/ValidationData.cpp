@@ -1400,10 +1400,10 @@ size_t ValidationData::GetNumberSelectedTSV_Val()
 	for(int ii=0;ii<MAXSIMVAL;ii++) {
 		count+=m_pSimDoc->ValidationFilePointer(ii+1)->GetNumberOfSelectedVal();
 	}
-	size_t count2=m_pSimDoc->GetNumAll_TSV_ValVariables();
+	/*size_t count2 = m_pSimDoc->GetNumAll_TSV_ValVariables();
 	if(count<count2)
 		return count2;
-	else
+	else*/
 		return count;
 }
 

@@ -17,11 +17,11 @@ struct NEWHEADER
 	float Lower_Clay;
 	float Lower_Sand;
 	float Lower_Org;
-	size_t NumLayers;
-	size_t LowDepth;
-	size_t Year;
-	size_t RecLayers;
-	size_t RecHeader;
+	unsigned int NumLayers;
+	unsigned int LowDepth;
+	unsigned int Year;
+	unsigned int RecLayers;
+	unsigned int RecHeader;
 	std::string CreateDate;
 	std::string CreatedBy;
 	std::string ModifiedBy;
