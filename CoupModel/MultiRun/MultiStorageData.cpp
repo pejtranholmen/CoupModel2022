@@ -1769,7 +1769,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 	size_t MaxNum = m_pNewMap->GetNumAll_TSV_ValVariables();
 	int ip;
 	if (Indicator == ZERO_ADJUST) {
-		ip = VarIndex+ABSME_STAT;
+		ip = VarIndex+ABSME_STAT*MaxNum;
 		Threshold = 10000;
 	}
 	else

@@ -1412,6 +1412,7 @@ bool MR::PreDefined_Criteria_Process() {
 	if (pSw != nullptr) {
 		reset();
 		auto numens = pSw->GetIntValue();
+
 		while (num < numens) {
 			if (m_MStorage.AddNewEnsemble(true)) {
 				num = m_MStorage.GetNumberofEnsembles();
@@ -1472,8 +1473,6 @@ bool MR::PreDefined_Criteria_Process() {
 					break;
 			}
 			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
-
-
 		}
 	}
 	m_MStorage.EvaluateFile(false);

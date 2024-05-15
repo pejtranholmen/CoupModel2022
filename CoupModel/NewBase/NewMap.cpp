@@ -5943,7 +5943,10 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			ws.cell(1, 11).value("The variables are denoted similar as for variables in the CoupModel");
 		}
 		else if (option == ExportOptions::Outputs) {
-		
+			ws.cell(1, 5).value("The Output Variables  have different sheets for Category of variable and for the specific statistics of the Variables in the sheet");
+			ws.cell(1, 6).value("Categories are: State Variables denoted with as X, Fluxes denoted by T, Auxiliaries denoted by G and Drivers denoted by D");
+			ws.cell(1, 7).value("Statistical Indicators are: Initial- Ini, Final - Final, Minimum - Min, Maximum - Max, Mean - Mean and Accumulated - Acc ");
+			ws.cell(1, 8).value("The variables are denoted similar as for variables in the CoupModel");
 		}
 		else if (option == ExportOptions::Parameters) {
 			ws.cell(1, 2).value("This Workbook includes the parameters in the MultiRun Tab of the CoupModel documents");
@@ -6350,7 +6353,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 	vector<string> sheetnames;
 	header2.clear();
 	AddColNumbers = false;
-	if (option == ExportOptions::All || option == ExportOptions::Performance) {
+	if (option == ExportOptions::All || option == ExportOptions::Performance||option == Outputs) {
 		if (IndexOut >= 0) { // Single Variable Outputs
 			auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 			if (AcceptedOnly) {
@@ -6780,6 +6783,8 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 						allvalues[rec][count + 1] = allvalues[rec][0] - resvalue;
 						meanv[runno] = allvalues[rec][count + 1];
 						count++;
+						auto txt=FUtil::STD_ItoAscii(count) + ":" + FUtil::STD_ItoAscii(runno) + FUtil::STD_ItoAscii(ens);
+						m.SetPaneMessage(txt);
 					}
 					DistStat stat;
 

@@ -297,7 +297,7 @@ bool ReadWriteTypes::wInt(unsigned int *iv)
 	else
 		return false;
 }
-#ifdef COUPSTD
+
 bool ReadWriteTypes::wSize_t(size_t *iv)
 {
 	unsigned int k = *iv;
@@ -307,7 +307,7 @@ bool ReadWriteTypes::wSize_t(size_t *iv)
     else
         return false;
 }
-#endif
+
 bool ReadWriteTypes::wPosition()
 {   
 	auto pos=m_DocFileOut.tellp();

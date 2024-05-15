@@ -249,7 +249,7 @@ bool ModelFiles::ResidualFile_AddFile(size_t num) {
 	for (size_t i = 0; i < num; i++ ) {
 
 		addvector.clear();
-		for (size_t ii = 0; ii < numadd; ii++) {
+		for (size_t ii = 0; ii <= numadd; ii++) {
 			CResiduals * pRes = new CResiduals;
 			pRes->InitDoc(((NewMap*)this),init+1+ i);
 			addvector.push_back(pRes);
@@ -297,7 +297,7 @@ bool ModelFiles::ResidualFile_SetNumAttachedFiles(size_t num) {
 //add new files
 	if (needupdate) {
 		for (size_t i = 0; i < m_ResidualFileVector.size(); i++) {
-			for (size_t ii = 0; ii < num; ii++) {
+			for (size_t ii = 0; ii <= num; ii++) {
 				CResiduals *pRes = new CResiduals;
 				pRes->InitDoc(((NewMap*)this), i + 1);
 				m_ResidualFileVector[i].push_back(pRes);
