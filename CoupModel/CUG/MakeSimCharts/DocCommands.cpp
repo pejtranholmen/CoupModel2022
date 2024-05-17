@@ -1606,7 +1606,7 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 				else if(item==1050) {
 					GetCell(1,row,&cell);
 					long num=int(cell.GetNumber());
-					m_pSimDoc->OpenSimDocument(num);
+					m_pSimDoc->OpenSimDocument(num, false);
 				}
 			
 				if(item>=5001&&item<=5004) {
@@ -1719,10 +1719,11 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 		else if(m_pSimDoc->IsMultiSimulation()&&m_ShowValidRes) {
 
 			if(item==1050) {
-				GetCell(1,row,&cell);
+				GetCell(2,row,&cell);
 				long num=int(cell.GetNumber());
-				m_pSimDoc->OpenSimDocument(num);
+				m_pSimDoc->OpenSimDocument(num, false);
 			}
+
 			else if(item>=1060&&item<=1061) {
 					if(item==1061)
 						m_pSimDoc->m_MStorage.UpdateAcceptedRuns(TRUE);
@@ -2010,13 +2011,55 @@ int DocCommands::MultiRunCommand(int col, int row, int item) {
 
 	}
 	else if(item==1050) {
-		GetCell(1,row,&cell);
+
+		GetCell(2,row,&cell);
 		long num=int(cell.GetNumber());
 		FUtil::WriteProfileInt("SimulationRunNo", num);
 
 
 		m_pSimDoc->OpenSimDocument(num, true);
 	}
+	else if (item == 1055||item == 1056) {
+		m_pSimDoc->m_ParToUpdate.clear();
+		GetCell(0, row, &cell);
+		auto iens = cell.GetIntNumber();
+		auto GetSIMB = [&](int row) {
+
+			GetCell(1, row, &cell);
+			string parname = cell.GetStdText();
+			SIMB_VALUE p1;
+			pair<string, size_t> a = FUtil::GetIndexAndName(parname);
+			parname = a.first;
+			p1.TabIndex = a.second;
+			SimB* pSimB = m_pSimDoc->GetPtrByName(parname);
+			p1.pBase = pSimB;
+
+			GetCell(3, row, &cell);
+			auto value = cell.GetNumber();
+			p1.newvalue = value;
+			return p1;
+		};
+		SIMB_VALUE p = GetSIMB(row);
+		m_pSimDoc->m_ParToUpdate.push_back(p);
+		if (item == 1056) {
+			size_t count = 1;
+			GetCell(0, row+count, &cell);
+			auto newiens = cell.GetIntNumber();
+			while (newiens == iens) {
+				p = GetSIMB(row + count);
+				m_pSimDoc->m_ParToUpdate.push_back(p);
+				count++;
+				GetCell(0, row + count, &cell);
+				newiens = cell.GetIntNumber();
+			}
+		}
+
+		auto num = MFC_Util::GetProfileIntNo("SimulationRunNo", 100)+1;
+		m_pSimDoc->m_DocFile2.m_Comments = "With mean value of Ensemble "+FUtil::STD_ItoAscii(iens)+ " from RunNo :" + FUtil::STD_ItoAscii(m_pSimDoc->m_DocFile.m_SimulationRunNo);
+		m_pSimDoc->OpenSimDocument(num, true);
+		
+	}
+
 	else if(item==1015||item==1025||item==1016) {
 	// Change from GLUE to Bayes
 		long NumLines;

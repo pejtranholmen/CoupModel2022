@@ -85,6 +85,11 @@ class CommonModelInfo;
 struct SIMB {SimB* pBase=nullptr;
 	size_t TabIndex=string::npos;
 };
+struct SIMB_VALUE {
+	SimB* pBase = nullptr;
+	size_t TabIndex = string::npos;
+	double newvalue= MISSING;
+};
 struct MR_PAR{
 	int Dimension=0;
 	double Min=0.;

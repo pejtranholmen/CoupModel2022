@@ -443,6 +443,22 @@ void FUtil::SetDelimChar(char delim)
 { 
 	delimchar = delim; 
 }
+pair<string, size_t> FUtil::GetIndexAndName(string str) {
+	pair<string, size_t> out;
+	auto pos=str.find("(");
+	out.second = string::npos;
+	if (pos != string::npos) {
+		out.first = str.substr(0, pos);
+		auto pos2 = str.find(")");
+		if (pos2 != string::npos && pos2 > pos) {
+			string txt = str.substr(pos+1, pos2 - pos-1);
+			out.second = FUtil::AtoInt(txt);
+		}
+	}
+	else
+		out.first = str;
+	return out;
+}
 
 string FUtil::FileNameOnly(string urlname)
 {

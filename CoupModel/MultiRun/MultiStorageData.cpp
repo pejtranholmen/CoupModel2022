@@ -1694,13 +1694,14 @@ size_t MultiStorageData::Get_And_UpdateTotalNumberofRuns() {
 	}
 	return m_TotalNumberRuns;
 }
-bool MultiStorageData::UpdateParDist(vector<DistStat> ParDist) {
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return false;
-	if (ParDist.size() == m_Valid_TSV[m_ActualEnsemble].ParDist.size())
-		m_Valid_TSV[m_ActualEnsemble].ParDist = ParDist;
-	else if (ParDist.size() < m_Valid_TSV[m_ActualEnsemble].ParDist.size()) {
-		for (size_t i = 0; i > ParDist.size(); i++) {
-			m_Valid_TSV[m_ActualEnsemble].ParDist[i] = ParDist[i];
+bool MultiStorageData::UpdateParDist(vector<DistStat> ParDist, size_t ensemble_index) {
+	if (ensemble_index == string::npos) ensemble_index = m_ActualEnsemble;
+	if (m_Valid_TSV.size() <= ensemble_index) return false;
+	if (ParDist.size() == m_Valid_TSV[ensemble_index].ParDist.size())
+		m_Valid_TSV[ensemble_index].ParDist = ParDist;
+	else if (ParDist.size() < m_Valid_TSV[ensemble_index].ParDist.size()) {
+		for (size_t i = 0; i <ParDist.size(); i++) {
+			m_Valid_TSV[ensemble_index].ParDist[i] = ParDist[i];
 		}
 
 	}

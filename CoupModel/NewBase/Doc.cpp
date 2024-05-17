@@ -345,8 +345,8 @@ bool Doc::OpenSimDocument(long RunNo, bool NoMulti)
 		string str;
 		str="Do you want to create a new Sim file (";
 		str+=Num;
-		str+=") to Rerun simulation";
-		if(MFC_Util::MessageBoxReturn(str,"No Sim File  found",MB_YESNO|MB_ICONEXCLAMATION)==IDYES) {
+		str+=")";
+		if(MFC_Util::MessageBoxReturn(str,"No Sim File  found",MB_YESNO)==IDYES) {
 
 			auto rpos=pzPathName.rfind('_');
 			if(NoMulti) {
@@ -363,33 +363,44 @@ bool Doc::OpenSimDocument(long RunNo, bool NoMulti)
 			PreviousRunNo=m_DocFile.m_SimulationRunNo;
 			
 			m_NoUpdateRunNo=true;
-			if(MR_UpdateValuesFromMBin(RunNo)) {
+			CCoupModelApp* pApp;
+			pApp = (CCoupModelApp*)AfxGetApp();
+			if (m_ParToUpdate.size() > 0) {
+				if (MR_UpdateValuesFromEnsembles()) {
+					m_DocFileName = newPathName;
+					m_DocFile.m_SimulationRunNo = RunNo;
+					
+					if (WriteDocFile()) {
+						SetFinishedSimulation();
+						m_Protect = true;
+						MR_UpdateValuesFromEnsembles();
+						m_DocFile.m_SimulationRunNo = PreviousRunNo;
+					}
+					pApp->m_pDocTemplate->OpenDocumentFile(CString(newPathName.c_str()));
+				}
+				m_ParToUpdate.clear();
+			}
+			else if(MR_UpdateValuesFromMBin(RunNo)) {
 					//SaveFileName
-					m_DocFileName=newPathName;	
-					m_DocFile.m_SimulationRunNo=RunNo;
+				m_DocFileName = newPathName;
+				m_DocFile.m_SimulationRunNo = RunNo;
 					if (WriteDocFile()) {
 						SetFinishedSimulation();
 						m_Protect=true;
 						MR_UpdateValuesFromMBin(PreviousRunNo);
-						m_DocFile.m_SimulationRunNo=PreviousRunNo;
+						
 					}
-					CCoupModelApp* pApp;
-					pApp = (CCoupModelApp*)AfxGetApp();
+
 
 					pApp->m_pDocTemplate->OpenDocumentFile(CString(newPathName.c_str()));
 				//OnOpenDocument(newPathName);
 				}					
 			}
-
-		
-			else
-				return false;
+		else
+			return false;
 		}
 #endif	
 	return true;
-
-
-
 }
 void Doc::LockMultiStorageFile()
 {
@@ -423,7 +434,6 @@ int Doc::GetMonitor2View()
 }
 void Doc::SetDefaultAnnimationSelection()
 {
-
 		std::list<Annim> ::iterator i;
 		Annim anode;
 		SimB *	pSimB;

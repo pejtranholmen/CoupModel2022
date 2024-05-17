@@ -27,21 +27,19 @@ public:
 	~MR();
 	vector<size_t> m_ExtraMonitor;
 	vector<float> m_PBayesMean,m_PBayesCovar, m_PBayesCocor, m_PValues;
-	vector<DistStat> m_AcceptedParDist, m_AcceptedValDist;
+	vector< DistStat> m_AcceptedParDist, m_AcceptedValDist;
 	DistStat GetPostDist(size_t index, size_t ensemble=string::npos) {
 		if (ensemble == string::npos) {
-			if (index < m_AcceptedParDist.size())
+			return m_MStorage.GetParDist(index, m_MStorage.m_ActualEnsemble);
+			/*if (index < m_AcceptedParDist.size())
 				return m_AcceptedParDist[index];
 			else {
 				DistStat a = m_DistDefault; return a;
-			}
+			}*/
+			return m_DistDefault;
 		}
 		else {
-
 			return m_MStorage.GetParDist(index, ensemble);
-
-
-
 		}
 
 	
@@ -152,7 +150,7 @@ public:
 	void GetProfileFromPlotPF(bool Add=true);
 	void GetProfileFromPlotPF(bool Add, bool Message=true);
 	void GetProfileFromPlotPF(string);
-	void MR_ReCalculatePostDist(bool BayesMeanMethod=true);
+	void MR_ReCalculatePostDist(bool BayesMeanMethod=true, size_t ensemble=string::npos);
 	void MR_INIT_Bayesian_Nelder_Mead();
 	void MR_CHECK_Bayesian(bool UpdateExt=false);
 	void MR_CheckCalibMethod();
@@ -199,6 +197,7 @@ public:
 	void SetMC_Step(double step) {mc_step=step*m_BayesianStepSize;};
 
 	bool	MR_UpdateValuesFromMBin(size_t runno);
+	bool    MR_UpdateValuesFromEnsembles();
 	bool	m_NoUpdateRunNo;
 
 	bool LinkedChangeToSwitches(Sw *pSw, size_t option);
@@ -206,7 +205,7 @@ public:
 	bool PreDefined_Criteria_Process();
 	bool EstimateNewTransformedPerformance(size_t cumulated);
 
-	
+	vector<SIMB_VALUE> m_ParToUpdate;
 
 
 protected:

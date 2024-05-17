@@ -946,6 +946,23 @@ bool MR::MR_UpdateValuesFromMBin(size_t runno)
 	}	 
 	return true;
 }
+bool MR::MR_UpdateValuesFromEnsembles() {
+
+	for (size_t i = 0; i < m_ParToUpdate.size(); i++) {
+		auto koll = m_ParToUpdate[i];
+		if (koll.TabIndex == string::npos) {
+			((Ps*)koll.pBase)->SetValue(koll.newvalue);
+			m_DocFile.m_TimeModified = time(nullptr);
+			History_Add(koll.pBase, -1, time(nullptr), koll.newvalue);
+		}
+		else {
+			((P*)koll.pBase)->SetValue(koll.TabIndex - 1, koll.newvalue);
+			m_DocFile.m_TimeModified = time(nullptr);
+			History_Add(koll.pBase, koll.TabIndex-1, time(nullptr), koll.newvalue);
+		}
+	}
+	return true;
+}
 void MR::MR_UpdateValues()
 {
 #ifndef COUPSTD
@@ -3112,36 +3129,41 @@ void MR::Set_ReReadMStorageFile()
 {
 	m_ReReadMStorageFile=true;
 }
-void MR::MR_ReCalculatePostDist(bool BayesMeanMethod)
+void MR::MR_ReCalculatePostDist(bool BayesMeanMethod, size_t ensemble_index)
 {
 	size_t naccepted=m_MStorage.GetNumAccepted();
+	if (ensemble_index == string::npos) ensemble_index = m_MStorage.m_ActualEnsemble;
+
+	naccepted = m_MStorage.m_AcceptedRuns[ensemble_index].size();
 	if(naccepted==0) return;
+
 	m_AcceptedParDist.resize(MR_Get_NumNotTablePar());
 	for(size_t i=0;i<MR_Get_NumNotTablePar();i++) {
 		auto ipar = MR_GetNoTableParIndex(i);
 		vector<float> values;
-		values.resize(size_t(m_MStorage.GetNumberOfRuns()));
+		values.resize(naccepted);
 		size_t icount=0;
 		for(size_t ii=0;ii<naccepted;ii++) {
-				size_t irun=m_MStorage.Get_AcceptedRuns(ii);
-				if(irun>GetNumBurnIn()&&BayesMeanMethod) {
-					if(icount==0) icount=GetNumBurnIn();
-					size_t irun_next;
-					if(ii>=naccepted-1)
-						irun_next=m_MStorage.GetNumberOfRuns();
-					else
-						irun_next=m_MStorage.Get_AcceptedRuns(ii+1);
-					auto fval=m_MStorage.GetMultiP(irun,ipar);
-					while(icount<irun_next) {
-						values[icount-GetNumBurnIn()]=fval;
-						icount++;
-					}
+			auto irun_no = m_MStorage.m_AcceptedRuns[ensemble_index][ii];
+			if (BayesMeanMethod) {
+				if (icount == 0) icount = GetNumBurnIn();
+				size_t irun_next;
+				if (ii >= naccepted - 1)
+					irun_next = m_MStorage.GetNumberOfRuns();
+				else
+					irun_next = m_MStorage.Get_AcceptedRuns(ii + 1);
+				auto fval = m_MStorage.GetMultiP(irun_no, ipar);
+				while (icount < irun_next) {
+					values[icount - GetNumBurnIn()] = fval;
+					icount++;
+
 				}
-				else if(!BayesMeanMethod) {
-					double fval=m_MStorage.GetMultiP(irun,ipar);
+			}
+			else if(!BayesMeanMethod) {
+					double fval=m_MStorage.GetMultiP(irun_no,ipar);
 					values[icount]=fval;
 					icount++;
-				}
+			}
 		}
 		if(GetNumBurnIn()>=icount&&BayesMeanMethod)  {
 			m_AcceptedParDist[i]=m_DistDefault;
@@ -3158,7 +3180,7 @@ void MR::MR_ReCalculatePostDist(bool BayesMeanMethod)
 	}
 			
 // Store the result in m_Valid_TSV.ParDist
-	m_MStorage.UpdateParDist(m_AcceptedParDist);
+	m_MStorage.UpdateParDist(m_AcceptedParDist, ensemble_index);
 
 }
 

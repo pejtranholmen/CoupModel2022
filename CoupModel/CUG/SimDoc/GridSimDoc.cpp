@@ -578,11 +578,27 @@ int GridSimDoc::OnMenuStart(int col,long row,int section)
 				 break;
 		case 10:
 			if (m_pSimDoc->IsMultiSimulation() && m_pSimDoc->IsFinishedSimulation() && m_ShowMultiRes) {
-				if (col == 1) {
-					GetCell(1, row, &cell);
+				if (col == 2) {
+					GetCell(2, row, &cell);
 					string txt = cell.GetStdText();
 
 					AddMenuItem(1050, "Open Sim Document: " + txt);
+
+				}
+				else if (col == 1||col==0||col==2) {
+					GetCell(0, row, &cell);
+					if (cell.GetParam() >= 1000) {
+						string txt = FUtil::STD_ItoAscii(size_t(cell.GetParam() - 999));
+						AddMenuItem(1055, "Open a new sim Document with Mean Value of the specific Calibrated Parameter for Ensemble : " + txt);
+						if(m_pSimDoc->MR_Get_NumBayesPar()>1) 
+							AddMenuItem(1056, "Open a new sim Document with Mean Value of All Calibrated Parameter for Ensemble : " + txt);
+					}
+					GetCell(2, row, &cell);
+					if (cell.GetParam() >= 1000) {
+
+					}
+
+
 
 				}
 			}

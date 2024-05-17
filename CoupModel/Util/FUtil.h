@@ -104,6 +104,7 @@ public:
 	static float GetNormalValue(float value, float minvalue, float maxvalue);
 	static string GetWindowUser();
 	static string GetCurrentDateTime();
+	static pair<string, size_t> GetIndexAndName(string str);
 
 	static rgb_color Get_RGB(float value);
 	static bool IsValidNumber(string str);

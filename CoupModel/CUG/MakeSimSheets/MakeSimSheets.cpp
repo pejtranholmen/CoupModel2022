@@ -6393,10 +6393,22 @@ void MakeSimSheets::Multi_Post_CompleteList_Header() {
 		SetColWidth(5,80);
 		SetColWidth(6,80);
 							
-		auto NumLines=m_pSimDoc->m_MStorage.GetNumAccepted();
+		//auto NumLines=m_pSimDoc->m_MStorage.GetNumAccepted();
+		size_t NumLines = 0;
+		for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
+			size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
+			NumLines += numruns+5;
+		}
+		
+		
+		
+		
+		
+		
+		
 		int ncol;
 		if(m_pSimDoc->m_DocFile.m_FileVersionNumber>40)
-			ncol=m_pSimDoc->MR_Get_NumTotalPar()+10;
+			ncol=m_pSimDoc->MR_Get_NumTotalPar()+11;	//Changed from 10 to 11
 		else
 			ncol=m_pSimDoc->MR_Get_NumTotalPar()+5;
 
@@ -6410,9 +6422,9 @@ void MakeSimSheets::Multi_Post_CompleteList_Header() {
 		for(int i=0;i<ncol;i++)
 				SetColWidth(2+i,80);
 
-	
-		QuickSetText(0,-1,"Multi #");
-		QuickSetText(1,-1,"Run #");
+		QuickSetText(0,-1, "Ensemble #");
+		QuickSetText(1,-1,"Multi #");
+		QuickSetText(2,-1,"Run #");
 	
 }
 void MakeSimSheets::Multi_Post_CompleteList() {
@@ -6422,9 +6434,10 @@ CString str;
 			auto ncol=GetNumberCols();
 			auto RunNo=m_pSimDoc->m_DocFile.m_SimulationRunNo-m_pSimDoc->MR_Get_ActualRunNumber();
 
-			int ind=0;
+			int ind=1;
 			int nTabIndex;
 			SimB* pPar;
+			vector<string> pnames;
 			for(int i=0;i<m_pSimDoc->MR_GetNumberOfDimensions();i++){
 					for(int ii=0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
 						pPar=m_pSimDoc->MR_Get_pPar(i+1,ii+1);
@@ -6433,6 +6446,7 @@ CString str;
 						if(nTabIndex>=0)				
 							namep+="("+FUtil::STD_ItoAscii(nTabIndex+1)+")";
 						ind++;
+						pnames.push_back(namep);
 						QuickSetText(1+ind,-1,namep);
 					}
 			}
@@ -6449,142 +6463,178 @@ CString str;
 			ind++;	QuickSetText(ind,-1,"BIC");
 		
 			int ncount=m_pSimDoc->MR_Get_NumBayesPar();
-			for(int ii=0;ii<NumLines;ii++) {
-				auto irun=m_pSimDoc->m_MStorage.Get_AcceptedRuns(ii);
-				if (irun == string::npos) irun = ii;
-				GetCell(0,ii, &cell);
-				str.Format(_T("%u"),irun+1);
-				cell.SetText(str);
-				cell.SetReadOnly(TRUE);
-				SetCell(0,ii,&cell);
-				//QuickSetNumber(0,ii,double(ii+1));
-				if(!m_pSimDoc->IsBayesianCalibration())
-					auto irun_no=m_pSimDoc->m_MStorage.GetMultiRunNo(ii)-1;
-				QuickSetNumber(1,ii,irun+1+RunNo);
+			int ii_count = 0;
+			for (size_t iens = 0; iens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); iens++) {
+				size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens].size();
+				for (int irun = 0; irun < numruns; irun++) {
 
-				for(int i=0; i<m_pSimDoc->m_MStorage.m_NumMulti;i++) {
-						GetCell(2+i,ii,&cell);
+					GetCell(0, ii_count, &cell);
+					str.Format(_T("%u"), iens + 1);
+					cell.SetText(str);
+					cell.SetReadOnly(TRUE);
+					SetCell(0, ii_count, &cell);
 
-						cell.SetNumber(double(m_pSimDoc->m_MStorage.GetMultiP(irun,i)));
-						SetCell(2+i,ii,&cell);
+					auto irun_no = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][irun];
+					if (irun == string::npos) irun_no = ii_count;
+					GetCell(1, ii_count, &cell);
+					str.Format(_T("%u"), irun_no + 1);
+					cell.SetText(str);
+					cell.SetReadOnly(TRUE);
+					SetCell(1, ii_count, &cell);
+					//QuickSetNumber(0,ii,double(ii+1));
+					//if (!m_pSimDoc->IsBayesianCalibration())
+					//	auto irun_no = m_pSimDoc->m_MStorage.GetMultiRunNo(ii_count) - 1;
+					QuickSetNumber(2, ii_count, irun_no + 1 + RunNo);
+
+					for (int i = 0; i < m_pSimDoc->m_MStorage.m_NumMulti; i++) {
+						GetCell(3 + i, ii_count, &cell);
+
+						cell.SetNumber(double(m_pSimDoc->m_MStorage.GetMultiP(irun_no, i)));
+						SetCell(3 + i, ii_count, &cell);
+
+					}
+					ii_count++;
+				}
+			}
+
+
+
+
+			JoinCells(0,ii_count,4,ii_count);
+			QuickSetText(0, ii_count,"Accepted Ensemble");
+			ii_count++;
+
+			ii_count++;
+			for (size_t iens = 0; iens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); iens++) {
+			
+
+				m_pSimDoc->MR_ReCalculatePostDist(false, iens);
+				int imethod;
+				for (int i = 0; i < pnames.size(); i++) { 
+					GetCell(0, ii_count, &cell);
+					str.Format(_T("%u"), iens + 1);
+					cell.SetText(str);
+					cell.SetParam(1000 + iens);
+					cell.SetReadOnly(TRUE);
+					SetCell(0, ii_count, &cell);
+					
+					// Number of parameters
+					GetCell(1, ii_count, &cell);
+					cell.SetText(pnames[i]);
+					cell.SetParam(1000 + iens);
+					cell.SetReadOnly(TRUE);
+					SetCell(1, ii_count, &cell);
+
+					QuickSetText(1,ii_count, pnames[i]);
+					JoinCells(1, ii_count, 2, ii_count);
+				
+					for (int ii = 0; ii < 6; ii++) {
+							if (iens == 0&&i==0)	{
+								switch (ii) {
+								case 0: str = "Mean";	break; case 1: str = "St.D"; break;
+								case 2: str = "CV";	break; case 3: str = "Min";	break; case 4: str = "Max"; break;
+								case 5: str = "n"; break;
+								}
+								QuickSetText(3 + ii, ii_count-1, str);
+								JoinCells(3 + ii, ii_count-1, 2, ii_count-1);
+						}
+
+
+						DistStat dist = m_pSimDoc->GetPostDist(i, iens);
+						float v, vmean;
+						switch (ii) {
+						case 0:
+							imethod = m_pSimDoc->MR_Get_BayesMethod(i);
+							if (imethod == 11 && m_pSimDoc->m_MStorage.m_Lock)
+								v = dist.Mean;//exp(double(m_pSimDoc->MR_Get_BayesMean(i)));
+							else
+								v = dist.Mean;//m_pSimDoc->MR_Get_BayesMean(i);
+							break;
+						case 1:
+							imethod = m_pSimDoc->MR_Get_BayesMethod(i);
+							if (imethod == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+								v = dist.Std;//exp(sqrt(m_pSimDoc->MR_Get_BayesCoCor(i,i)));
+							}
+							else {
+								v = dist.Std;//sqrt(m_pSimDoc->MR_Get_BayesCoCor(i,i));
+							}
+							break;
+						case 2:
+							imethod = m_pSimDoc->MR_Get_BayesMethod(i);
+							if (imethod == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+								vmean = exp(double(m_pSimDoc->MR_Get_BayesMean(i)));
+								v = exp(double(m_pSimDoc->MR_Get_BayesMean(i) - m_pSimDoc->MR_Get_BayesCoCor(i, i)));
+								v = (vmean - v) / vmean;
+								if (abs(vmean) > 0) v = dist.Std / abs(dist.Mean);// v=sqrt(v)/abs(vmean);
+							}
+							else {
+								vmean = m_pSimDoc->MR_Get_BayesMean(i);
+								v = m_pSimDoc->MR_Get_BayesCoCor(i, i);
+								if (abs(dist.Mean) > 0) v = dist.Std / abs(dist.Mean);
+							}
+
+							break;
+						case 3: v = dist.Min;//m_pSimDoc->m_MStorage.GetMinValidPar(i);
+							break;
+						case 4: v = dist.Max;//m_pSimDoc->m_MStorage.GetMaxValidPar(i);
+							break;
+						case 5: v = dist.NumData;//m_pSimDoc->m_MStorage.GetMaxValidPar(i);
+							break;
+						}
+						//auto noparindex = m_pSimDoc->MR_GetNoTableParIndex(i);
+						GetCell(3+ii , ii_count, &cell);
+						cell.SetNumber(double(v));
+						SetCell(3+ii, ii_count, &cell);
+						if(ii==5) ii_count++;
+						//QuickSetNumber(2+i,ii,double(m_pSimDoc->m_MStorage.GetMultiP(ii,i))); 
+						// 	
+					}
 	
 				}
-			}
-			JoinCells(2+m_pSimDoc->MR_Get_NumBayesPar(),NumLines,ncol+1,NumLines+4);
-			QuickSetText(2+m_pSimDoc->MR_Get_NumBayesPar(), NumLines,"Accepted Ensemble");
-			for(int ii=0;ii<5;ii++) {
-				switch(ii) {
-					case 0: str="Mean";
-						break;
-					case 1: str="St.D";
-						break;
-					case 2: str="CV";
-						break;
-					case 3: str="Min";
-						break;
-					case 4: str="Max";
-						break;
-				}
+				if (m_pSimDoc->IsBayesianCalibration()) {
+					JoinCells(2 + m_pSimDoc->MR_Get_NumBayesPar(), NumLines + 5, 4 + m_pSimDoc->MR_Get_NumBayesPar(), NumLines + 5);
+					QuickSetText(2 + m_pSimDoc->MR_Get_NumBayesPar(), NumLines + 5, "Length of Burn in Period");
+					QuickSetNumber(5 + m_pSimDoc->MR_Get_NumBayesPar(), NumLines + 5, m_pSimDoc->GetNumBurnIn());
+					QuickSetNumber(-1, NumLines + 5, 1000); // Indicator of BurnInperiod 
+					JoinCells(5 + m_pSimDoc->MR_Get_NumBayesPar(), NumLines + 5, ncol + 1, NumLines + 5);
+					JoinCells(2 + m_pSimDoc->MR_Get_NumBayesPar(), NumLines + 6, ncol + 1, NumLines + 13);
+					QuickSetText(2 + m_pSimDoc->MR_Get_NumBayesPar(), NumLines + 6, "Bayesian Ensemble");
 
-				QuickSetText(0,NumLines+ii, str);
-				JoinCells(0,NumLines+ii,1,NumLines+ii);
-				int imethod;
-				//Check if mean value is calculated
-				if(!m_pSimDoc->m_MStorage.m_Lock&&ncount>0) {
-					if(!m_pSimDoc->m_MStorage.IsCoCorValidSet()) 
-						m_pSimDoc->UpdateCoVar();
-				}
 
-				for(int i=0; i<ncol-10;i++) {
-					DistStat dist=m_pSimDoc->GetPostDist(i);
-					float v, vmean;
-					switch(ii) {
-					case 0:
-						imethod=m_pSimDoc->MR_Get_BayesMethod(i);	
-						if(imethod==11&&m_pSimDoc->m_MStorage.m_Lock)
-							v=dist.Mean;//exp(double(m_pSimDoc->MR_Get_BayesMean(i)));
-						else
-							v=dist.Mean;//m_pSimDoc->MR_Get_BayesMean(i);
-						break;
-					case 1: 
-						imethod=m_pSimDoc->MR_Get_BayesMethod(i);
-						if(imethod==11&&m_pSimDoc->m_MStorage.m_Lock) {
-							v=dist.Std;//exp(sqrt(m_pSimDoc->MR_Get_BayesCoCor(i,i)));
-						}
-						else {
-							v=dist.Std;//sqrt(m_pSimDoc->MR_Get_BayesCoCor(i,i));
-						}
-						break;
-					case 2: 
-						imethod=m_pSimDoc->MR_Get_BayesMethod(i);
-						if(imethod==11&&m_pSimDoc->m_MStorage.m_Lock) {
-							vmean=exp(double(m_pSimDoc->MR_Get_BayesMean(i)));
-							v=exp(double(m_pSimDoc->MR_Get_BayesMean(i)-m_pSimDoc->MR_Get_BayesCoCor(i,i)));
-							v=(vmean-v)/vmean;
-							if(abs(vmean)>0) v=dist.Std/abs(dist.Mean);// v=sqrt(v)/abs(vmean);
-						}
-						else {
-							vmean=m_pSimDoc->MR_Get_BayesMean(i);
-							v=m_pSimDoc->MR_Get_BayesCoCor(i,i);
-							if(abs(dist.Mean)>0) v=dist.Std/abs(dist.Mean);
-						}
-						
-						break;
-					case 3: v=dist.Min;//m_pSimDoc->m_MStorage.GetMinValidPar(i);
-						break;
-					case 4: v=dist.Max;//m_pSimDoc->m_MStorage.GetMaxValidPar(i);
-						break;
-					}
-					auto noparindex = m_pSimDoc->MR_GetNoTableParIndex(i);
-					GetCell(2+noparindex,ii+NumLines,&cell);
-					cell.SetNumber(double(v));
-					SetCell(2+noparindex,ii+NumLines,&cell);
-						//QuickSetNumber(2+i,ii,double(m_pSimDoc->m_MStorage.GetMultiP(ii,i))); 	
-				}
-			}
-			if(m_pSimDoc->IsBayesianCalibration()) {
-				JoinCells(2+m_pSimDoc->MR_Get_NumBayesPar(),NumLines+5,4+m_pSimDoc->MR_Get_NumBayesPar(),NumLines+5);
-				QuickSetText(2+m_pSimDoc->MR_Get_NumBayesPar(), NumLines+5,"Length of Burn in Period");
-				QuickSetNumber(5+m_pSimDoc->MR_Get_NumBayesPar(), NumLines+5,m_pSimDoc->GetNumBurnIn());
-				QuickSetNumber(-1, NumLines+5, 1000); // Indicator of BurnInperiod 
-				JoinCells(5+m_pSimDoc->MR_Get_NumBayesPar(),NumLines+5,ncol+1, NumLines+5);
-				JoinCells(2+m_pSimDoc->MR_Get_NumBayesPar(),NumLines+6,ncol+1,NumLines+13);
-				QuickSetText(2+m_pSimDoc->MR_Get_NumBayesPar(), NumLines+6,"Bayesian Ensemble");
-				
-				
-				for(size_t i=0;i<m_pSimDoc->MR_Get_NumBayesPar();i++) {
-					DistStat dist;
-					dist=m_pSimDoc->GetPostDist(i);
-					if(i==0) {
-						for(int ii=0;ii<9;ii++) {
-							switch(ii) {
-								case 0: str="Mean";	break;
-								case 1: str="St.D";	break;
-								case 2: str="CV";	break;
-								case 3: str="Min";	break;
-								case 4: str="Max";	break;
-								case 5: str="P 5";	break;
-								case 6: str="P 50";	break;
-								case 7: str="P 95";	break;
-								case 8: str="n";	break;
+					for (size_t i = 0; i < m_pSimDoc->MR_Get_NumBayesPar(); i++) {
+						DistStat dist;
+						dist = m_pSimDoc->GetPostDist(i, iens);
+						if (i == 0) {
+							for (int ii = 0; ii < 9; ii++) {
+								switch (ii) {
+								case 0: str = "Mean";	break;
+								case 1: str = "St.D";	break;
+								case 2: str = "CV";	break;
+								case 3: str = "Min";	break;
+								case 4: str = "Max";	break;
+								case 5: str = "P 5";	break;
+								case 6: str = "P 50";	break;
+								case 7: str = "P 95";	break;
+								case 8: str = "n";	break;
+								}
+								QuickSetText(0, NumLines + ii + 5, str);
+								JoinCells(0, NumLines + ii + 5, 1, NumLines + ii + 5);
 							}
-							QuickSetText(0,NumLines+ii+5, str);
-							JoinCells(0,NumLines+ii+5,1,NumLines+ii+5);
 						}
+
+						// Display the result of the statistics dist
+						QuickSetNumber(i + 2, NumLines + 0 + 5, dist.Mean);
+						QuickSetNumber(i + 2, NumLines + 1 + 5, dist.Std);
+						if (dist.Mean != 0) QuickSetNumber(i + 2, NumLines + 2 + 5, dist.Std / dist.Mean);
+						QuickSetNumber(i + 2, NumLines + 3 + 5, dist.Min);
+						QuickSetNumber(i + 2, NumLines + 4 + 5, dist.Max);
+						QuickSetNumber(i + 2, NumLines + 5 + 5, dist.P5);
+						QuickSetNumber(i + 2, NumLines + 6 + 5, dist.P50);
+						QuickSetNumber(i + 2, NumLines + 7 + 5, dist.P95);
+						QuickSetNumber(i + 2, NumLines + 8 + 5, dist.NumData);
 					}
 
-							// Display the result of the statistics dist
-					QuickSetNumber(i+2, NumLines+0+5,dist.Mean);
-					QuickSetNumber(i+2, NumLines+1+5,dist.Std);
-					if(dist.Mean!=0) QuickSetNumber(i+2, NumLines+2+5,dist.Std/dist.Mean);
-					QuickSetNumber(i+2, NumLines+3+5,dist.Min);
-					QuickSetNumber(i+2, NumLines+4+5,dist.Max);
-					QuickSetNumber(i+2, NumLines+5+5,dist.P5);
-					QuickSetNumber(i+2, NumLines+6+5,dist.P50);
-					QuickSetNumber(i+2, NumLines+7+5,dist.P95);
-					QuickSetNumber(i+2, NumLines+8+5,dist.NumData);
 				}
-
 			}
 	
 }
