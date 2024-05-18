@@ -1859,6 +1859,13 @@ void MyCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point,int pro
 		usheet=MultiRunClick(col, row);
 		if(usheet>=0) OnSheetSetup(usheet);
 	}
+	else if (isheet == 10 && updn && col == 7) {
+		usheet = MultiRunClick(col, row);
+		if (usheet >= 0) OnSheetSetup(usheet);
+
+
+
+	}
 	else if(isheet==12&&updn) {
 		// Change toggle Outputs on/off
 		usheet=AnnimateClick(col, row);
@@ -5305,7 +5312,9 @@ int MyCug::OnHint(int col,long row,int section,CString *str)
 				}
 				else if(ParV==1000) 
 					str->Format(_T("Click on yellow name fields to view/hide variables in file"));
-				else 
+				else if(col==2) str->SetString(_T("Right Click to see options for plotting parameter values"));
+				else if (col == 7) str->SetString(_T("Right Click to see options for Ensembles "));
+				else  
 					str->SetString(_T("Right Click to view options for PG-files"));
 	
 				return TRUE;

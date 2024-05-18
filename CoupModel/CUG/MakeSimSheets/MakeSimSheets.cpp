@@ -6775,9 +6775,15 @@ void MakeSimSheets::Multi_Post_NormalList() {
 	SetColWidth(1, 150);
 	SetColWidth(2, 150);
 	SetColWidth(3, 200);
-	for (int in = 4; in < 8; in++)
+	for (int in = 4; in < 7; in++)
 		SetColWidth(in, 0);
-	for (int in = 8; in < NumberOfCols; in++)
+	for (int in = 7; in < 9; in++)
+		SetColWidth(in, 60);
+
+	if (m_pSimDoc->m_MStorage.m_Valid_TSV.size() == 1) SetColWidth(7, 0);
+
+
+	for (int in = 9; in < NumberOfCols; in++)
 		SetColWidth(in, 100);
 
 
@@ -6792,8 +6798,8 @@ void MakeSimSheets::Multi_Post_NormalList() {
 	QuickSetText(4, -1, "Min");
 	QuickSetText(5, -1, "Max");
 	QuickSetText(6, -1, "Start");
-	QuickSetText(7, -1, "Dep");
-	QuickSetText(8, -1, "n Accepted");
+	QuickSetText(7, -1, "Ensemble");
+	QuickSetText(8, -1, "n ");
 	QuickSetText(9, -1, "Prior Mean");
 	QuickSetText(10, -1, "Post Mean");
 	QuickSetText(11, -1, "Post St.D");
@@ -6853,7 +6859,12 @@ void MakeSimSheets::Multi_Post_NormalList() {
 			if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 4) {
 				icount_bayes++;
 				ParameterCalib = true;
-				dist = m_pSimDoc->GetPostDist(icount_bayes);
+				dist = m_pSimDoc->GetPostDist(icount_bayes, m_pSimDoc->m_MStorage.m_ActualEnsemble);
+				if (dist.NumData == 0 && dist.Min == dist.Max) {
+					m_pSimDoc->MR_ReCalculatePostDist(false, m_pSimDoc->m_MStorage.m_ActualEnsemble);
+					dist = m_pSimDoc->GetPostDist(icount_bayes, m_pSimDoc->m_MStorage.m_ActualEnsemble);
+
+				}
 			}
 			else
 				ParameterCalib = false;
@@ -6985,7 +6996,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetStart(i + 1, ii + 1));
 				}
 				else if (ifn == 7) {
-					if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 6 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9) {
+					/*if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 6 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9) {
 						SimB *pPar, *pParDep;
 						size_t index, indexdep;
 						index = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
@@ -7009,8 +7020,16 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						}
 
 					}
-					else
-						test = "-";
+					else*/
+					test = MFC_Util::ItoAscii(m_pSimDoc->m_MStorage.m_ActualEnsemble+1);
+					if (m_pSimDoc->m_MStorage.m_Valid_TSV.size() > 1) {
+						scale_color = m_ColorClick;
+						if (m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].tobe_Plotted)
+							test += " included";
+						else
+							test += " excluded";
+					}
+					//	test = "-";
 
 				}
 				else if (ifn == 8) {
@@ -7132,10 +7151,13 @@ void MakeSimSheets::Multi_Post_NormalList() {
 							cell.SetLabelText(test);
 							cell.SetBool(FALSE);
 						}
+						else if (ifn == 7) {
+							cell.SetReadOnly(TRUE);
+							cell.SetText(test);
+						}
 						else {
 							cell.SetReadOnly(TRUE);
 							cell.SetText(test);
-
 
 						}
 					}

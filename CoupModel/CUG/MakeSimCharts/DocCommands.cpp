@@ -2747,7 +2747,15 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 		}
 		return true;
 	}
+	else if (item == 8050) {
+		if (m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].tobe_Plotted)
+			m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].tobe_Plotted = false;
+		else
+			m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].tobe_Plotted = true;
 
+
+
+	}
 	return false;
 }
 int DocCommands::ExcelExportCommand(int item, int Index, string varname) {

@@ -1398,7 +1398,9 @@ void GridSimDoc::MakeChartMenu(int col, int row, int sheet)
 					}
 					else {
 						nsel=m_pSimDoc->m_SelectMultiPar.size();
-						if (m_pSimDoc->IsMultiSimulation() && (m_pSimDoc->IsOutputBinFileValid())) {
+						bool NoParExport = false;
+						if (col == 2 || col == 7) NoParExport=true;
+						if (m_pSimDoc->IsMultiSimulation() && (m_pSimDoc->IsOutputBinFileValid())&&!NoParExport) {
 							AddMenuItem(8008, "Export Parameter values to excel file for all runs");
 							AddMenuItem(8009, "Export Parameter values to excel file for accepted runs");
 
@@ -1462,6 +1464,15 @@ void GridSimDoc::MakeChartMenu(int col, int row, int sheet)
 							}
 							else AddMenuItem(5051, "Add Constrain based on " + name + " parameter");
 
+						}
+						else if (col == 7) {
+							if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 1) {
+								string  ens = FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_ActualEnsemble + 1);
+								if (m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].tobe_Plotted)
+									AddMenuItem(8050, "Exclude " +ens+ " Ensemble from Plotting");
+								else
+									AddMenuItem(8050, "Include " +ens+ " Ensemble to Plotting");
+							}
 						}
 
 

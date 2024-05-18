@@ -1295,7 +1295,18 @@ int DocClick::MultiRunClick(int col, int row) {
 	else if(col==2&&m_pSimDoc->IsFinishedSimulation()) return MultiParPlotClick(col, row);
 	else if(col==3&&!m_pSimDoc->IsFinishedSimulation()&&!m_ShowMultiRes) return MultiRunPreparation(col, row);
 	else if(col==4&&!m_pSimDoc->IsFinishedSimulation()) return MultiRunPreparation(col, row);
-	return 10;
+	else if (col == 7 && m_pSimDoc->IsFinishedSimulation()) {
+		if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 1) {
+			m_pSimDoc->m_MStorage.m_ActualEnsemble++;
+			m_pSimDoc->m_MStorage.m_ActualEnsemble = m_pSimDoc->m_MStorage.m_ActualEnsemble % m_pSimDoc->m_MStorage.m_AcceptedIdString.size();
+			m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
+			if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+				m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+			}
+		}
+		return 10;
+	}
+	return -1;
 }
 int DocClick::AnnimateClick(int col, int row) {
 	CUGCell cell, cell1;
