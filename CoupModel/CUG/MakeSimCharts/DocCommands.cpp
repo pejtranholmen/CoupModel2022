@@ -2390,6 +2390,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 	if(var==SUMVAR) {
 		sheet=5;
 		simb=GetMultiSumPointer(row);
+		if (simb.pBase==nullptr) return false;
 		Index=GetMultiSumIndex(simb, col);	
 
 	}

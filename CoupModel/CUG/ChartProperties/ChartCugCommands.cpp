@@ -983,16 +983,21 @@ bool ChartCugCommands::MakePGFileFromDataInCurrentChart()
 				m_PGExtra.SetVarUnit(i*6+m_NumVarSelected+1+jj,var.c_str());
 		}
 
+		auto maxvar = m_extra_xy_variables + m_NumVarSelected+m_NumVarBandSelected*6;
+		if(maxvar<m_PGExtra.GetNumVariables()) 	m_PGExtra.AdjustSize(m_PGExtra.GetNumRecords(), maxvar);
+		m_PGExtra.ReCalculateMinMax();
+
 
 		if(m_PGExtra.SaveAs(CT2A(pszFileName).m_psz, true)) {
 			m_ToSavePGStruc=false;
 			m_CreatePG=false;
 		}
 		m_PGExtra.CloseFile();
-		string str = "PG file created:";
+		string str = "PG file created:\n";
 		str+=CT2A(pszFileName).m_psz;
 		str += "\nDo you want to Open the new file in new Window ?";
-		if (MFC_Util::MessageBoxReturn(str, "File Created ", MB_YESNO)) {
+		auto yes = MFC_Util::MessageBoxReturn(str, "File Created ", MB_YESNO);
+		if (yes==6) {
 			CPG *pPG = new CPG;
 			pPG->Open(CT2A(pszFileName).m_psz);
 			if (pPG->IsOpen()) {
