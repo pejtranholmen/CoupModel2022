@@ -160,7 +160,7 @@ void CChartViewer::OnMouseMove(UINT	nFlags,	CPoint point)
 			{
 				// Mouse is	not	actually on	hanlder	hot	spot - use default tool	tip	text and reset
 				// the clickable flag.
-				m_ToolTip.UpdateTipText(m_defaultToolTip, this);
+				//m_ToolTip.UpdateTipText(m_defaultToolTip, this);
 				m_isClickable =	false;
 			}
 			else
@@ -172,7 +172,7 @@ void CChartViewer::OnMouseMove(UINT	nFlags,	CPoint point)
 
 				// Use the title attribute as the tool tip.	Note that ChartDirector	uses UTF8, 
 				// while MFC uses TCHAR, so	we use the utility UTF8toTCHAR for conversion.
-				m_ToolTip.UpdateTipText(UTF8toTCHAR(m_hotSpotTester->getValue("title")), this);
+				//m_ToolTip.UpdateTipText(UTF8toTCHAR(m_hotSpotTester->getValue("title")), this);
 			}
 		}
 	}

@@ -797,6 +797,7 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 	size_t i_band=0;
 	int ivar=m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber);
 
+
 	m_DataSets.clear();
 	m_Label.ytitle2 = "";
 	m_Label.ytitle1 = "";

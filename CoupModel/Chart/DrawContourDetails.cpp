@@ -110,7 +110,7 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 					else
 						c->yAxis()->setLinearScale(double(vmin), double(vmax), fint);
 			}
-			else if(m_pProp->IsSecondIndepSet()&&m_Contour.ScaleContourChart) {
+			else if(m_pProp->IsSecondIndepSet()&&m_Contour.ScaleContourChart&&ich>0) {
 					vmin=m_pProp->GetYLeftmin(0);
 					vmax=m_pProp->GetYLeftmax(0);
 					fint=m_pProp->GetYLeftInterv(0);
@@ -223,25 +223,31 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 					m_pColorAxis[ich]->setLevels(32);
 				}
 
-				
-				DoubleArray XaxisTicks;
-				XaxisTicks = c->xAxis()->getTicks();
+				if (ich == 0) {
+					DoubleArray XaxisTicks;
+					XaxisTicks = c->xAxis()->getTicks();
 
-				ntic = XaxisTicks.len;
-				if (ntic >= 2) {
-					auto xtickvalue = XaxisTicks[1] - XaxisTicks[0];
-					m_pProp->SetXInterv(ich, xtickvalue);
+					ntic = XaxisTicks.len;
+					if (ntic >= 2) {
+						auto xtickvalue = XaxisTicks[1] - XaxisTicks[0];
+						m_pProp->SetXInterv(ich, xtickvalue);
+					}
+					auto xminvalue = c->xAxis()->getMinValue();
+					auto xmaxvalue = c->xAxis()->getMaxValue();
+					m_pProp->SetXmin(ich, xminvalue);
+					m_pProp->SetXmax(ich, xmaxvalue);
 				}
-				auto xminvalue = c->xAxis()->getMinValue();
-				auto xmaxvalue = c->xAxis()->getMaxValue();
-				m_pProp->SetXmin(ich, xminvalue);
-				m_pProp->SetXmax(ich, xmaxvalue);
+				else {
+					auto xminvalue = m_pProp->GetXmin(0);
+					auto xmaxvalue = m_pProp->GetXmax(0);
+					auto xintvalue = m_pProp->GetXInterv(0);
+				}
 
 			  
 
 			}
 			else  {
-				zminvalue=m_Contour.SecondMin;
+			/*	zminvalue = m_Contour.SecondMin;   
 				zmaxvalue=m_Contour.SecondMax;
 				ztickvalue=(zmaxvalue-zminvalue)/11;
 				m_pProp->SetZmin(ich, zminvalue);
@@ -250,7 +256,7 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 				m_pColorAxis[ich]->setLinearScale(zminvalue, zmaxvalue, ztickvalue);
 				m_pColorAxis[ich]->setColorGradient(false);
 				m_pColorAxis[ich]->setLevels(32);
-				m_pColorAxis[ich]->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint);
+				m_pColorAxis[ich]->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint);*/
 
 				//cAxis->setAxisPos(20,0,0);
 			}
