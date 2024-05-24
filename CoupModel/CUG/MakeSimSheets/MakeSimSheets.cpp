@@ -6397,12 +6397,9 @@ void MakeSimSheets::Multi_Post_CompleteList_Header() {
 		size_t NumLines = 0;
 		for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
 			size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
-			NumLines += numruns+5;
+			NumLines += numruns+ m_pSimDoc->MR_Get_NumNotTablePar()+2;
 		}
-		
-		
-		
-		
+	
 		
 		
 		
@@ -6442,11 +6439,13 @@ CString str;
 					for(int ii=0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
 						pPar=m_pSimDoc->MR_Get_pPar(i+1,ii+1);
 						nTabIndex=m_pSimDoc->MR_GetTabIndex(i+1,ii+1);
+
 						string namep=pPar->GetName();
 						if(nTabIndex>=0)				
 							namep+="("+FUtil::STD_ItoAscii(nTabIndex+1)+")";
 						ind++;
-						pnames.push_back(namep);
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 4) 	pnames.push_back(namep);
+						
 						QuickSetText(1+ind,-1,namep);
 					}
 			}

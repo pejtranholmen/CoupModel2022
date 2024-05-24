@@ -267,6 +267,11 @@ bool ExtraLinkedInformation::SetFileDescriptionFromScannedFile()
 					pg.Des.addinfo[index_out].StationName = m_CurrentFileInfo.StatName;
 					pg.Des.base.Id[index_out] = m_CurrentFileInfo.StatNo;
 				}
+				else if (m_format == OPEN_METEO) {
+					pg.Des.addinfo[index_out].Lat = m_CurrentFileInfo.dec_cord.y;
+					pg.Des.addinfo[index_out].Long = m_CurrentFileInfo.dec_cord.x;
+					pg.Des.addinfo[index_out].Alt = m_CurrentFileInfo.dec_cord.z;
+				}
 				count++;
 			}
 			});

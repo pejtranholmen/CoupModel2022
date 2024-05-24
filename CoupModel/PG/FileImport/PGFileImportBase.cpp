@@ -1511,7 +1511,6 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 		size_t Countgaps = 0;
 		bool TimeSetComplete;
 
-
 		auto GetLineFromStream = [&]() {
 				line.clear();
 				line.resize(40000);
@@ -1521,7 +1520,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 				size_t koll = line.size();
 				ich = line.find('\0');
 				line.resize(ich);
-				if (ich <= 0) {
+				if (ich == string::npos) {
 					if (istream.good()) {
 						line.clear();
 						line.resize(40000);
@@ -1601,6 +1600,31 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 		size_t next_validLine = 0;
 		bool skipline;
 		size_t ValidMapAdjust = ActualIndexId * input.LinkedSites[ActualIndexId].Records;
+		if (m_format == OPEN_METEO) {
+			auto nvar = 0;
+			for (size_t i = 0; i < input.Des.base.Unit.size(); i++) {
+				if (input.ValidVariables[i]) {
+
+					if (input.Des.base.Unit[i].find("W") != string::npos) {
+						To_Convert.push_back(pair<size_t, double>(nvar, 86400.));
+						pg.Des.base.Unit[nvar] = "J/m2/day";
+					}
+					else if (input.Des.base.Unit[i].find("k") != string::npos) {
+						To_Convert.push_back(pair<size_t, double>(nvar, .27778));
+						pg.Des.base.Unit[nvar] = "m/s";
+					}
+					else if (input.Des.base.Unit[i].find("mm") != string::npos) {
+						To_Convert.push_back(pair<size_t, double>(nvar, 24.));
+						pg.Des.base.Unit[nvar] = "mm/day";
+					}
+
+
+					nvar++;
+				}
+
+			}
+		}
+
 
 		auto itmap = m_CheckedTimeMap.begin();
 			while(istream.good()&&CountLine<LastLinetoRead) {
@@ -1608,7 +1632,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 				size_t next_validLine = (*itmap).first+ ValidMapAdjust;
 				if (next_validLine < CountLine+1) {
 
-					if (ActualIndexId == 0 && m_format == SMHI_OPENDATA)
+					if (ActualIndexId == 0 &&( m_format == SMHI_OPENDATA||m_format== OPEN_METEO))
 						m_HeadingRead = true;
 					else if (ActualIndexId == 0&&m_format!=STANDARD)
 						CheckReadOfHeading();
@@ -1761,7 +1785,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 						if (m_format == STANDARD|| m_format ==SMHI_OPENDATA) {
 							if (CountLine == next_validLine && !skipline) {
 								SetPGTimeVar_Minut_To_PG_Var();
-								AdjustValuesToNewUnits();
+								AdjustValuesToNewUnits(To_Convert);
 								WriteCompleteRecord();
 								nrec++;
 							}
@@ -1771,7 +1795,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 							) {
 							nrec++;
 							SetPGTimeVar_Minut_To_PG_Var();
-							AdjustValuesToNewUnits();
+							AdjustValuesToNewUnits(To_Convert);
 							WriteCompleteRecord();
 						}
 
@@ -1791,7 +1815,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 					}
 					itmap++;
 				}
-				else LastLinetoRead++;
+				//else LastLinetoRead++;
 
 		}
 	return true;
@@ -2119,8 +2143,8 @@ bool PGFileImportBase::SetDefinedTime(size_t nrec1)
 {
 	auto it = m_CheckedTimeMap.find(nrec1);
 	if (it != m_CheckedTimeMap.end()) {
-
 		m_CurrentMin = (*it).second;
+		if (m_format == OPEN_METEO) m_CurrentMin -= 30;
 		return true;
 	}
 	else {
@@ -2175,12 +2199,12 @@ void PGFileImportBase::SetValidVariable(size_t index, string varstr) {
 
 }
 void PGFileImportBase::SetMissingVariable(size_t index) {
-pg.Var.vv[index]=MISSING;
+	pg.Var.vv[index]=MISSING;
 
 }
 
 
-void PGFileImportBase::AdjustValuesToNewUnits() {
+void PGFileImportBase::AdjustValuesToNewUnits(vector<pair<size_t, double>> To_conv) {
 
 	if(m_format==SWISS) {
 		if(pg.Var.vv[5]<=-99) pg.Var.vv[5]=MISSING;
@@ -2254,6 +2278,13 @@ void PGFileImportBase::AdjustValuesToNewUnits() {
 	else if	(m_format == SILO) {
 		pg.Var.vv[1] *= 1.E6;
 		pg.Var.vv[5] *= 100.;
+	}
+	else if (m_format == OPEN_METEO) {
+		for (size_t i = 0; i < To_conv.size(); i++) {
+			pg.Var.vv[To_conv[i].first+1] *= To_conv[i].second;
+		}
+		
+
 
 	}
 }

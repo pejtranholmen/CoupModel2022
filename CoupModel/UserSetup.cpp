@@ -75,8 +75,7 @@ void CUserSetup::DoDataExchange(CDataExchange* pDX)
 
 	//{{AFX_DATA_MAP(CUserSetup)
 
-	DDX_Radio(pDX, IDC_RADIO1, m_UserLevel);
-	DDX_Radio(pDX, IDC_RADIO4, m_SimulationPriority);
+
 
 	//DDX_Text(pDX, IDC_USER_PATH, CString(m_UserDirectory.c_str()));
 	//DDV_MaxChars(pDX, CString(m_UserDirectory.c_str()), 150);
@@ -177,7 +176,7 @@ BOOL CUserSetup::OnInitDialog()
 	m_ContinuousHelp=MFC_Util::GetProfileIntNo( "ContinuousHelp", m_ContinuousHelp);
 	m_ErrorSignal=MFC_Util::GetProfileIntNo( "ErrorSignal", m_ErrorSignal);
 	m_ResidualPlot=MFC_Util::GetProfileIntNo( "ResidualPlot", m_ResidualPlot);
-   	m_UserLevel=1;
+   	m_UserLevel=3;
     m_UserLevel=MFC_Util::GetProfileIntNo( "UserLevel", m_UserLevel);
 	m_ChartError=1;
     m_ChartError=MFC_Util::GetProfileIntNo( "ChartError", m_ChartError);
@@ -195,7 +194,7 @@ BOOL CUserSetup::OnInitDialog()
     m_DetailedPlantAnnimation=MFC_Util::GetProfileIntNo( "DetailedPlantAnnimation", m_DetailedPlantAnnimation);
     m_ViewScaleFont=3;
 	m_ViewScaleFont=MFC_Util::GetProfileIntNo( "Font-ViewScale", m_ViewScaleFont);
-	m_SimulationPriority=1;
+	m_SimulationPriority=3;
     m_SimulationPriority=MFC_Util::GetProfileIntNo( "SimulationPriority", m_SimulationPriority);
 
     

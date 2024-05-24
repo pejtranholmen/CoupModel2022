@@ -3133,7 +3133,7 @@ void MR::MR_ReCalculatePostDist(bool BayesMeanMethod, size_t ensemble_index)
 {
 	size_t naccepted=m_MStorage.GetNumAccepted();
 	if (ensemble_index == string::npos) ensemble_index = m_MStorage.m_ActualEnsemble;
-
+	if (m_MStorage.m_AcceptedRuns.size() == 0) return;
 	naccepted = m_MStorage.m_AcceptedRuns[ensemble_index].size();
 	if(naccepted==0) return;
 

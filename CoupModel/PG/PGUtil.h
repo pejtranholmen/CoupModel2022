@@ -4,7 +4,8 @@
 #define BASE   1721424L  
 #endif
 //* Jan 1, AD 1 
-enum formats { STANDARD, SEPARATED_YMDHM, SEPARATED_YMD, YMD_HM, NOAA, SMHI, SWISS, SEPARATED_YMDH, CZECH, CZECH_COL_TRANS, MONTH_COL_TRANS, PROFOUND, IDSCAN, UNDEFINEDFORMAT, SMHI_OPENDATA, SILO, SITES };
+enum formats { STANDARD, SEPARATED_YMDHM, SEPARATED_YMD, YMD_HM, NOAA, SMHI, SWISS, SEPARATED_YMDH, CZECH, CZECH_COL_TRANS, MONTH_COL_TRANS, PROFOUND, IDSCAN,  SMHI_OPENDATA, SILO, SITES, OPEN_METEO, UNDEFINEDFORMAT,
+};
 enum dateformats { YMDHM, YMD, DMY_SLASH, PGMIN };
 
 class GlobalInfo;
@@ -44,7 +45,7 @@ struct FILEINFO
 	size_t SkipAfterVar;
 	size_t TotRec;
 	size_t RedNumVar;
-	size_t DateColumn;
+	size_t DateColumn=string::npos;
 	size_t YearColumn;
 	size_t MonthColumn;
 	size_t DayNumberColumn;

@@ -60,7 +60,7 @@ protected:
 	bool ReadingVariableValues(FILEINFO, size_t ActualId=0);
 	size_t GetReadBufferSize(FILEINFO);
 	bool WriteMissingRegularTime();
-	void AdjustValuesToNewUnits();
+	void AdjustValuesToNewUnits(vector<pair<size_t, double>> To_conv);
 
 
 
@@ -87,7 +87,7 @@ protected:
 	size_t GetStartMinute();
 	fstream m_FileText;
 
-
+	vector<pair<size_t, double> > To_Convert;
 	
 	size_t m_newstartpos;
 	size_t m_totsizeInputFile;

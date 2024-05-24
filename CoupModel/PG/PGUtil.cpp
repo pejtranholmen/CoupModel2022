@@ -1091,6 +1091,7 @@ bool PGUtil::CheckForPossiblePGDateString(string str)
 		if (str[count] > 47 && str[count] < 58) valid = true;
 		count++;
 	}
+	if (str.find(".") != string::npos) return false;
 	if (!valid) return false;
 
 	IPGTID koll;

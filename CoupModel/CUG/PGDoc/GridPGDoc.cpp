@@ -4336,7 +4336,7 @@ void GridPGDoc::DefineButtonInfos()
 	i.NormalState = true;
 	i.Col_start = 3;
 	i.Col_end = 3;
-	i.VectorNames.resize(13);
+	i.VectorNames.resize(18);
 
 	i.VectorNames[STANDARD] = "Standard";
 	i.VectorNames[1] = "All 5 Time Indicators separated (YMDHM)";
@@ -4350,7 +4350,12 @@ void GridPGDoc::DefineButtonInfos()
 	i.VectorNames[9] = "Czech Column based";
 	i.VectorNames[10] = "Month Column based";
 	i.VectorNames[11] = "PROFOUND";
-	i.VectorNames[12] = "No Time Identified";
+	i.VectorNames[12] = "ID_Scan";
+	i.VectorNames[13] = "SMHI_OpenData";
+	i.VectorNames[14] = "SILO";
+	i.VectorNames[15] = "SITES";
+	i.VectorNames[16] = "OPEN METEO";
+	i.VectorNames[17] = "Undefined";
 
 	i.TextOptional = "No Variables Identified";
 	i.Row = 1;

@@ -74,7 +74,7 @@ bool PGFileImport::ImportFromFile(string filename, bool AddFromFile, size_t iFor
 
 	Input=GetFileInfo(Input,0);
 	m_time_red=0;
-	if (Input.NumHeads == 0 ||m_format==STANDARD|| m_format == SEPARATED_YMDHM || m_format == YMD_HM || m_format == SWISS || m_format == CZECH_COL_TRANS || m_format == MONTH_COL_TRANS || m_format == PROFOUND)
+	if (Input.NumHeads == 0 ||m_format==STANDARD|| m_format == SEPARATED_YMDHM || m_format == YMD_HM || m_format == SWISS || m_format == CZECH_COL_TRANS || m_format == MONTH_COL_TRANS || m_format == PROFOUND || m_format == OPEN_METEO)
 		m_time_red = 0;
 	else
 		m_time_red=1;
@@ -256,6 +256,11 @@ FILEINFO PGFileImport::ScanningInputFile(string filename){
 			if (m_filename.find("smhi-opendata") != string::npos) {
 				out.IdentifiedFormat = SMHI_OPENDATA;
 
+
+			}
+			else if (m_filename.find("open-meteo-") != string::npos) {
+				out.IdentifiedFormat = OPEN_METEO;
+				m_format = OPEN_METEO;
 
 			}
 			out.InputfileName = m_filename;
@@ -500,7 +505,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		bool FluxSelect = false;
 		bool SoilSelect = false;
 		bool DateTimeIdentified = false;
-	m_ProFoundOption = 0;
+		m_ProFoundOption = 0;
 		out.HourColumn = out.TimeColumn = out.MinuteColumn = out.DayColumn = out.DayNumberColumn = out.MonthColumn = out.YearColumn = out.DateColumn = string::npos;
 		if (m_format == STANDARD) {
 			out.DateColumn = 1;
@@ -517,7 +522,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				if (out.FirstValidHeads[i] == "Variable Names:") out.CopyMode = true;
 				DateTimeIdentified = true;
 			}
-			else if (out.FirstValidHeads[i] == "timestamp" || out.FirstValidHeads[i] == "TIMESTAMP"||out.FirstValidHeads[i] == "Representativt dygn") {
+			else if (out.FirstValidHeads[i] == "timestamp" || out.FirstValidHeads[i] == "TIMESTAMP"|| out.FirstValidHeads[i] == "TimeStamp" || out.FirstValidHeads[i] == "Representativt dygn") {
 				out.ValidVariables.push_back(false);
 				out.DateColumn = out.ValidVariables.size();
 				DateTimeIdentified = true;
@@ -811,6 +816,29 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			if (nrec == SMHI_HeadLineNo && nvar >= SMHI_TidPosStart && varstr!=""&&varstr!="Tidsutsnitt:") out.FirstValidHeads.push_back(varstr);
 
 		}
+		else if (m_format == OPEN_METEO) {
+			out.DateColumn = 1;
+			m_format = OPEN_METEO;
+			//string txt=out.InputfileName.find("open-meteo")
+			if (nrec == 1) {
+				nhead = 4;
+
+			}
+			else if (nrec == 2) {
+				switch (nvar) {
+					case 1:	out.dec_cord.y = FUtil::AtoFloat(varstr); break;
+					case 2:	out.dec_cord.x = FUtil::AtoFloat(varstr); break;
+					case 3:	out.dec_cord.z = FUtil::AtoFloat(varstr); break;
+
+				}
+			}
+			else if (nrec == 4) {
+				out.FirstValidHeads.push_back(varstr);
+				nhead = 4;
+			}
+			return;
+			
+		}
 		else {
 			if (varstr.find("SITES STATION:") != string::npos) {
 				out.StatName = varstr.substr(15);
@@ -844,15 +872,15 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 			}
 			else if (nrec <= 14){
-				if (varstr.find("Date") != string::npos || varstr.find("DATE") != string::npos || varstr.find("TIMESTAMP") != string::npos) {
+				if ((varstr.find("Date") != string::npos || varstr.find("DATE") != string::npos || varstr.find("TIMESTAMP") != string::npos || varstr.find("TimeStamp") != string::npos)&&out.DateColumn==string::npos) {
 					nhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
-				else if (((varstr.find("DATE") != string::npos || varstr.find("Date") != string::npos) || varstr.find("date") != string::npos)) {
+				else if (((varstr.find("DATE") != string::npos || varstr.find("Date") != string::npos) || varstr.find("date") != string::npos)&&out.DateColumn==string::npos) {
 					nhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
-				else if ((varstr.find("ISOD") == 0 || varstr.find("date") == 0 || varstr.find("DATUM") == 0)) {
+				else if (((varstr.find("ISOD") == 0 || varstr.find("date") == 0 || varstr.find("DATUM") == 0))&& out.DateColumn == string::npos) {
 					nhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
@@ -948,6 +976,55 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			out.MaxVar=out.FirstValidHeads.size();
 	//		out.MaxVar = 3;
+		}
+		else if (m_format == OPEN_METEO) {
+				//out.StatName=
+			int koll = 1;
+			if (nrec == 4) {
+				if (nvar == 1) {
+					auto time_pos = varstr.find("time");
+					out.Des.base.Name.push_back("Date");
+					out.Des.base.Unit.push_back("-");
+				}
+				else {
+					enum VarId {TEMP, REL, PREC, WIND, SHORT, NONE };
+					auto var = VarId::NONE;
+					auto unitpos_st = varstr.find("(")+1;
+					auto unitpos_end = varstr.find(")")+1;
+					auto pos_st = varstr.find("_");
+					auto pos_end = varstr.rfind("_");
+					auto temp_pos = varstr.find("temperature_"); if (temp_pos != string::npos) var = VarId::TEMP;
+					auto hum_pos = varstr.find("relative_humidity"); if (hum_pos != string::npos) var = VarId::REL;
+					auto prec_pos = varstr.find("precipitation"); if (prec_pos != string::npos) var = VarId::PREC;
+					auto wind_pos = varstr.find("wind_speed"); if (wind_pos != string::npos) var = VarId::WIND;
+					auto short_pos = varstr.find("shortwave_radiation"); if (short_pos != string::npos) var = VarId::SHORT;
+					switch (var) {
+						case VarId::TEMP:
+							out.Des.base.Name.push_back("Temperature");
+							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end-unitpos_st-1));
+							break;
+						case VarId::REL:
+							out.Des.base.Name.push_back("Humidity");
+							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							break;
+						case VarId::PREC:
+							out.Des.base.Name.push_back("Precipitation");
+							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							break;
+						case VarId::WIND:
+							out.Des.base.Name.push_back("Wind Speed");
+							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							break;
+						case VarId::SHORT:
+							out.Des.base.Name.push_back("Global Radiation");
+							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							break;
+
+
+					}
+				}
+				
+			}
 		}
 		else if (m_format == SILO) {
 
@@ -1118,51 +1195,14 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 	};
 	auto CheckAndSetDateFormats = [&]() {
-		if (out.DateColumn == nvar) {
-			if (varstr.find("/") > 0 && varstr.find("/") < 3 && varstr.rfind("/") > varstr.find("/")) {
-				out.IdentifiedDateFormat = DMY_SLASH;
-				out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
-			}
-			else if (varstr.find("\\") == 2 && varstr.rfind("\\") == 5) {
-				out.IdentifiedDateFormat = DMY_SLASH;
-				out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
-			}
-			else if (varstr.find('-') < varstr.rfind('-') && varstr.find('-') >= 3 && varstr.size() < 12) {
-				out.IdentifiedDateFormat = YMD;
-				out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
-			}
-			else if (varstr.find('-') == string::npos) {
-				out.IdentifiedDateFormat = PGMIN;
-				out.IdentifiedStartMin = AtoInt(varstr);
-				out.PG_MinColumn = 1;
-			}
-			else {
-				out.IdentifiedDateFormat = YMDHM;
-				out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
+		if (m_format == OPEN_METEO) {
+			out.DateColumn = 1;
 
-			}
-		}
-		else if (out.TimeColumn == nvar - 1|| out.TimeColumn == nvar) {
-			size_t minut;
-			minut = out.IdentifiedStartMin - 720;
-			string datum = PGUtil::STD_StringDatum(minut);
-			datum = datum.substr(0, 11) + varstr;
-			out.IdentifiedStartMin = PGUtil::MinutConv(datum);
-			m_CurrentFileInfo.TimeColumn = out.TimeColumn;
-			m_CurrentFileInfo.HourColumn = out.HourColumn;
-		}
-		else if (out.YearColumn == nvar) {
 
 		}
-		else if (out.DayNumberColumn == nvar) {
-			
-
-		}
-
-		else if (nvar == 2&& m_format !=SMHI_OPENDATA) {
-			if (PGUtil::CheckForPossiblePGDateString(varstr)) {
-				out.DateColumn = nvar - 1;
-				if (varstr.find("/") == 2 && varstr.rfind("/") == 5) {
+		else {
+			if (out.DateColumn == nvar) {
+				if (varstr.find("/") > 0 && varstr.find("/") < 3 && varstr.rfind("/") > varstr.find("/")) {
 					out.IdentifiedDateFormat = DMY_SLASH;
 					out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
 				}
@@ -1174,31 +1214,75 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					out.IdentifiedDateFormat = YMD;
 					out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
 				}
+				else if (varstr.find('-') == string::npos) {
+					out.IdentifiedDateFormat = PGMIN;
+					out.IdentifiedStartMin = AtoInt(varstr);
+					out.PG_MinColumn = 1;
+				}
 				else {
 					out.IdentifiedDateFormat = YMDHM;
 					out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
+
 				}
-				m_CurrentFileInfo.DateColumn = out.DateColumn;
-				m_CurrentFileInfo.IdentifiedDateFormat = out.IdentifiedDateFormat;
-				m_CurrentFileInfo.IdentifiedStartMin = out.IdentifiedStartMin;
 			}
-			else
-				return ;
-		}
-		else if (nvar == 1 && m_format == STANDARD) {
-			out.IdentifiedDateFormat = YMDHM;
-			out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
-			out.DateColumn = 1;
+			else if (out.TimeColumn == nvar - 1 || out.TimeColumn == nvar) {
+				size_t minut;
+				minut = out.IdentifiedStartMin - 720;
+				string datum = PGUtil::STD_StringDatum(minut);
+				datum = datum.substr(0, 11) + varstr;
+				out.IdentifiedStartMin = PGUtil::MinutConv(datum);
+				m_CurrentFileInfo.TimeColumn = out.TimeColumn;
+				m_CurrentFileInfo.HourColumn = out.HourColumn;
+			}
+			else if (out.YearColumn == nvar) {
 
-		}
-		else if (nvar == 1) {
-			auto koll = AtoInt(varstr);
-			if (koll > 100000) {
-				out.PG_MinColumn = 1;
+			}
+			else if (out.DayNumberColumn == nvar) {
+
+
 			}
 
+			else if (nvar == 2 && m_format != SMHI_OPENDATA) {
+				if (PGUtil::CheckForPossiblePGDateString(varstr)) {
+					out.DateColumn = nvar - 1;
+					if (varstr.find("/") == 2 && varstr.rfind("/") == 5) {
+						out.IdentifiedDateFormat = DMY_SLASH;
+						out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
+					}
+					else if (varstr.find("\\") == 2 && varstr.rfind("\\") == 5) {
+						out.IdentifiedDateFormat = DMY_SLASH;
+						out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
+					}
+					else if (varstr.find('-') < varstr.rfind('-') && varstr.find('-') >= 3 && varstr.size() < 12) {
+						out.IdentifiedDateFormat = YMD;
+						out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
+					}
+					else {
+						out.IdentifiedDateFormat = YMDHM;
+						out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
+					}
+					m_CurrentFileInfo.DateColumn = out.DateColumn;
+					m_CurrentFileInfo.IdentifiedDateFormat = out.IdentifiedDateFormat;
+					m_CurrentFileInfo.IdentifiedStartMin = out.IdentifiedStartMin;
+				}
+				else
+					return;
+			}
+			else if (nvar == 1 && m_format == STANDARD) {
+				out.IdentifiedDateFormat = YMDHM;
+				out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
+				out.DateColumn = 1;
+
+			}
+			else if (nvar == 1) {
+				auto koll = AtoInt(varstr);
+				if (koll > 100000) {
+					out.PG_MinColumn = 1;
+				}
 
 
+
+			}
 		}
 		m_CurrentFileInfo.DateColumn = out.DateColumn;
 		m_CurrentFileInfo.HourColumn = out.HourColumn;
@@ -1428,7 +1512,8 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 
 
 	auto SetOutputVariablesAndSetFormat = [&]() {
-		if(out.IdentifiedFormat==SMHI_OPENDATA) return;
+		if (out.IdentifiedFormat == SMHI_OPENDATA) return;
+		else if (out.IdentifiedFormat == OPEN_METEO) return;
 		if (IsTimeIdentified) {
 			out.IdentifiedFormat = STANDARD;
 			if (out.DateColumn != string::npos) out.IdentifiedFormat = STANDARD;
