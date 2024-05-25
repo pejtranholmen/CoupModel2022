@@ -2144,7 +2144,6 @@ bool PGFileImportBase::SetDefinedTime(size_t nrec1)
 	auto it = m_CheckedTimeMap.find(nrec1);
 	if (it != m_CheckedTimeMap.end()) {
 		m_CurrentMin = (*it).second;
-		if (m_format == OPEN_METEO) m_CurrentMin -= 30;
 		return true;
 	}
 	else {

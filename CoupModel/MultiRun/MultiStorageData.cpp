@@ -320,13 +320,16 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 		}
 	}
 	if (m_pNewMap != nullptr) {
-		if (m_NumValid != m_pNewMap->m_Val_Array.size() * 6)
+		if (m_NumValid != m_pNewMap->m_Val_Array.size() * 6) {
 			m_NumValid = m_pNewMap->m_Val_Array.size() * 6;
+			m_NumExtraValid = m_NumValid / 6;
+			m_NumValidAll = m_NumValid + m_NumExtraValid;
+		}
 	}
 
 	
-		GetNumberOfTotalRunsWithAttachedFiles();
-		AllocateSpaceFromBaseVariables();
+		m_TotalNumberRuns=GetNumberOfTotalRunsWithAttachedFiles();
+		AllocateSpaceFromBaseVariables(m_NumValidAll);
 #ifndef COUPSTD
 		MFC_Util mfcutil;
 		mfcutil.SetPaneMessage(" Reading from MBin File:" + filename);
@@ -1139,11 +1142,11 @@ void MultiStorageData::VarValidAllo()
 
 }
 
-bool MultiStorageData::AllocateSpaceFromBaseVariables( ) {
+bool MultiStorageData::AllocateSpaceFromBaseVariables(size_t NumValid) {
 
 	m_VarMulti.resize(m_TotalNumberRuns*m_MBinHeader.n_param);
 	m_VarSum.resize(m_TotalNumberRuns*m_MBinHeader.n_sumvar);
-	m_VarValid.resize(m_TotalNumberRuns*(m_MBinHeader.n_valid + m_NumExtraValid));
+	m_VarValid.resize(m_TotalNumberRuns*(NumValid));
 	m_VarValidSum.resize(m_TotalNumberRuns*m_MBinHeader.n_sumvalid);
 	return true;
 }

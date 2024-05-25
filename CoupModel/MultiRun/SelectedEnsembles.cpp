@@ -460,19 +460,22 @@ size_t SelectedEnsembles::SetValidLow(unsigned long ip, unsigned long ind_split,
 
 size_t SelectedEnsembles::UpdateHistory(CRITERIA_STATE c,  size_t VarIndex, float value, float extravalue)
 {
-	DefinedCriteria def = m_Valid_TSV[m_ActualEnsemble].History.back();
-	def.criteria = c;
-	if(def.criteria==CRITERIA_STATE::ABOVE_MIN)
-		def.minvalue = value;
-	else if(def.criteria == CRITERIA_STATE::BELOW_MAX)
-		def.maxvalue = value;
-	else if (def.criteria == CRITERIA_STATE::ABOVE_AND_BELOW) {
-		def.minvalue = value; def.maxvalue = extravalue;
-	}
+	DefinedCriteria def;
+	if (m_Valid_TSV[m_ActualEnsemble].History.size() > 0) {
+		def = m_Valid_TSV[m_ActualEnsemble].History.back();
+		def.criteria = c;
+		if (def.criteria == CRITERIA_STATE::ABOVE_MIN)
+			def.minvalue = value;
+		else if (def.criteria == CRITERIA_STATE::BELOW_MAX)
+			def.maxvalue = value;
+		else if (def.criteria == CRITERIA_STATE::ABOVE_AND_BELOW) {
+			def.minvalue = value; def.maxvalue = extravalue;
+		}
 
-	def.VarIndex = VarIndex;
-	size_t no = m_Valid_TSV[m_ActualEnsemble].History.size();
-	m_Valid_TSV[m_ActualEnsemble].History[no - 1] = def;
+		def.VarIndex = VarIndex;
+		size_t no = m_Valid_TSV[m_ActualEnsemble].History.size();
+		m_Valid_TSV[m_ActualEnsemble].History[no - 1] = def;
+	}
 	return m_Valid_TSV[m_ActualEnsemble].History.size();
 }
 

@@ -1449,6 +1449,7 @@ bool MR::PreDefined_Criteria_Process() {
 			m_MStorage.EvaluateFile(false);
 		}
 		m_MStorage.EvaluateFile(false);
+		if (numens == 0) return true;
 		for (size_t i = 0; i<pEnsemble->GetSize(); i++) {
 			auto Indicator = size_t(pIndicator->GetValue(i)+0.0001);
 			auto ZeroAdjust = size_t(pZeroAdjust->GetValue(i) + 0.001);
@@ -2473,11 +2474,11 @@ void MR::MR_Storage_Init()
 	 			ipos_sim = pzPathName.size();
 	}
 	m_DocFile2.m_Multi_MBin_File=pzPathName.substr(0,ipos_sim)+".MBin";
-	auto ncountval=m_ValidationData.GetNumberSelectedTSV_Val();
+
 	m_ValidationData.SetNumberSelectedTSV_Val();
 	m_MStorage.Init(this);
 	m_MStorage.InitData(m_DocFile2.m_Multi_MBin_File.c_str(), MR_Get_TotalNumberofRuns(),MR_Get_NumTotalPar(),
-		ncountval, m_ValidationData.GetNumSumVarVariables(), GetNumOutPuts(), this) ;
+		m_Val_Array.size(), m_ValidationData.GetNumSumVarVariables(), GetNumOutPuts(), this);
 	m_MStorage.SaveBase();
 	m_MStorage.Close();
 }

@@ -244,7 +244,7 @@ bool ExtraLinkedInformation::SetFileDescriptionFromScannedFile()
 
 			}
 			else
-				extrastepId = "C_"+FUtil::STD_ItoAscii(m_countf+1);
+				extrastepId = "";
 			size_t index_out;
 			if (pg.Shape.NumRepetitions > m_countf && pg.Des.base.Name.size() >= m_countf * m_NewVarIndexSelected.size())
 				index_out = count + m_countf * m_NewVarIndexSelected.size();

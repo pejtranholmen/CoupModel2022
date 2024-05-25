@@ -173,7 +173,7 @@ public:
 	void SetNewPerformance(unsigned long irun, unsigned long ivar, STAT_PERF stat);
 	unsigned long GetNumSplitPeriods();
 	void VarValidAllo();
-	bool AllocateSpaceFromBaseVariables();
+	bool AllocateSpaceFromBaseVariables( size_t numVal);
 	bool SaveSplitData(unsigned long ind_val);
 	bool OpenAndCheckIfSplitPeriod();
 	bool ReadAcceptedRunInfo();

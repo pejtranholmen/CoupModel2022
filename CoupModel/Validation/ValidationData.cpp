@@ -1395,16 +1395,8 @@ size_t ValidationData::GetNumberSelectedTSV_Val()
 {
 	if(m_look) 
 		return m_TotalNumberSelected;
-	size_t count=0;
-	if(m_pSimDoc->ValidationFilePointer(1)==nullptr) return 0;
-	for(int ii=0;ii<MAXSIMVAL;ii++) {
-		count+=m_pSimDoc->ValidationFilePointer(ii+1)->GetNumberOfSelectedVal();
-	}
-	/*size_t count2 = m_pSimDoc->GetNumAll_TSV_ValVariables();
-	if(count<count2)
-		return count2;
-	else*/
-		return count;
+	return m_pSimDoc->m_Val_Array.size();
+	
 }
 
 /*

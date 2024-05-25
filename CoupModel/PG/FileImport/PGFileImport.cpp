@@ -985,6 +985,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					auto time_pos = varstr.find("time");
 					out.Des.base.Name.push_back("Date");
 					out.Des.base.Unit.push_back("-");
+					out.Des.base.Id.push_back("Open Meteo");
 				}
 				else {
 					enum VarId {TEMP, REL, PREC, WIND, SHORT, NONE };
@@ -1002,22 +1003,27 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 						case VarId::TEMP:
 							out.Des.base.Name.push_back("Temperature");
 							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end-unitpos_st-1));
+							out.Des.base.Id.push_back(varstr.substr(pos_end + 1, 2));
 							break;
 						case VarId::REL:
 							out.Des.base.Name.push_back("Humidity");
 							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							out.Des.base.Id.push_back(varstr.substr(pos_end + 1, 2));
 							break;
 						case VarId::PREC:
 							out.Des.base.Name.push_back("Precipitation");
 							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							out.Des.base.Id.push_back("Open Meteo");
 							break;
 						case VarId::WIND:
 							out.Des.base.Name.push_back("Wind Speed");
 							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							out.Des.base.Id.push_back(varstr.substr(pos_end + 1, 3));
 							break;
 						case VarId::SHORT:
 							out.Des.base.Name.push_back("Global Radiation");
 							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							out.Des.base.Id.push_back("Open Meteo");
 							break;
 
 
