@@ -1363,7 +1363,12 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 			}
 
 		}
+		/*else if (m_format == SITES) {
 
+		//	SetVarName(jj, varstr, m_countf + 1);
+		//	SetVarUnit(jj, unitstr, m_countf + 1);
+
+		}*/
 		else {
 			size_t npos;
 			if (m_ndelim != string::npos) 

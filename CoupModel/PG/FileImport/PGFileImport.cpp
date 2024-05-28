@@ -238,8 +238,9 @@ FILEINFO PGFileImport::ScanningInputFile(string filename){
 			}
 			if (filename.find("smhi-opendata") == 0) {
 				out.IdentifiedFormat = SMHI_OPENDATA;
-
-
+			}
+			else if (filename.find("Perrenial") != string::npos) {
+				out.IdentifiedFormat = SITES;
 			}
 		}
 		else {
@@ -255,8 +256,9 @@ FILEINFO PGFileImport::ScanningInputFile(string filename){
 			}
 			if (m_filename.find("smhi-opendata") != string::npos) {
 				out.IdentifiedFormat = SMHI_OPENDATA;
-
-
+			}
+			else if (m_filename.find("Perennial") != string::npos) {
+				out.IdentifiedFormat = SITES;
 			}
 			else if (m_filename.find("open-meteo-") != string::npos) {
 				out.IdentifiedFormat = OPEN_METEO;
@@ -299,7 +301,7 @@ FILEINFO PGFileImport::CheckFixedNOOAFormat(FILEINFO out)
 		m_CurrentFile.RecStart = 2;
 		m_CurrentFile.NumRec = 0;
 	}
-	else if (out.IdentifiedFormat == SMHI_OPENDATA) {
+	else if (out.IdentifiedFormat == SMHI_OPENDATA|| out.IdentifiedFormat == SITES) {
 		m_format = out.IdentifiedFormat;
 
 
@@ -624,6 +626,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 	auto CountHeads = [&]() {
 	
 		if (m_format == SITES) {
+			if (varstr.find("\"") != string::npos) varstr = varstr.substr(1, varstr.size() - 2);
 			
 			if (nhead == string::npos) {
 
@@ -717,16 +720,31 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					}
 				}
 			}
-			else if (nrec == nhead && nrec > 0) {
-				if (nvar == 1) out.FirstValidHeads.clear();
-				out.FirstValidHeads.push_back(varstr);
-				if (varstr == "TIMESTAMP")	out.DateColumn = nvar;
-				out.MaxVar = nvar;
-			}
 			else if (nrec == 0) nhead = string::npos;
-			else if (varstr.find("SITES STATION:") == 0) {
-				out.StatName = varstr.substr(15);
-				nhead = string::npos;
+			else if (nrec==4) {
+				out.IdFromHead.push_back(varstr);
+				return;
+				
+			}
+			else if (nrec == 1) {
+				nhead = 4;
+				if (varstr == "TIMESTAMP" || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
+				out.FirstValidHeads.push_back(varstr);
+				return;
+			}
+			else if (nrec == 2) {
+				if (nvar == 1) out.FirstValidHeads.clear();
+			
+				if (varstr.find("TIMESTAMP")!=string::npos || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
+
+				out.FirstValidHeads.push_back(varstr);
+				return;
+			}
+			else if (nrec == 3) {
+				if (nvar == 1) out.UnitsFromHead.clear();
+				
+				out.UnitsFromHead.push_back(varstr);
+				return;
 			}
 			else if (nrec > nhead) return;
 			return;
@@ -976,6 +994,10 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			out.MaxVar=out.FirstValidHeads.size();
 	//		out.MaxVar = 3;
+		}
+		else if (m_format == SITES) {
+
+
 		}
 		else if (m_format == OPEN_METEO) {
 				//out.StatName=
@@ -1520,6 +1542,7 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 	auto SetOutputVariablesAndSetFormat = [&]() {
 		if (out.IdentifiedFormat == SMHI_OPENDATA) return;
 		else if (out.IdentifiedFormat == OPEN_METEO) return;
+		else if (out.IdentifiedFormat == SITES) return;
 		if (IsTimeIdentified) {
 			out.IdentifiedFormat = STANDARD;
 			if (out.DateColumn != string::npos) out.IdentifiedFormat = STANDARD;
@@ -1999,7 +2022,12 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 			pos = str.find('_', pos+1);
 		};
 		if (Units_Instead) {
-			if (str.rfind('_') != string::npos) {
+			if (m_CurrentFileInfo.IdentifiedFormat == SITES) {
+				to_use = m_CurrentFileInfo.UnitsFromHead[count];
+				to_Id = m_CurrentFileInfo.IdFromHead[count];
+
+			}
+			else if (str.rfind('_') != string::npos) {
 				to_use = str.substr(str.rfind('_') + 1);
 				auto pos = to_use.find("??");
 				if (pos != string::npos) {
@@ -2032,7 +2060,12 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 				to_use = "";
 		}
 		else {
-			if (posv.size() > 2) {
+			if (m_CurrentFileInfo.IdentifiedFormat == SITES) {
+				to_use = str;
+				to_Id = m_CurrentFileInfo.IdFromHead[count];
+
+			}
+			else if (posv.size() > 2) {
 				to_Id = str.substr(posv[0], posv.back() - posv[0]);
 				size_t l;
 				l = to_Id.find('_');
@@ -2066,7 +2099,12 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 		}
 		else {
 			if (!Clean_Instead) {
-				if (posv.size() > 2) {
+				if (m_CurrentFileInfo.IdentifiedFormat == SITES) {
+					m_CurrentFileInfo.Des.base.Name[count] = to_use;
+					m_CurrentFileInfo.Des.base.Id[count] = to_Id;
+
+				}
+				else if (posv.size() > 2) {
 					m_CurrentFileInfo.Des.base.Id[count] = to_Id;
 					m_CurrentFileInfo.Des.base.Name[count] = to_use;
 					m_CurrentFileInfo.Des.base.Pos[count] = to_pos;

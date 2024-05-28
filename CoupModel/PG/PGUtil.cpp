@@ -124,6 +124,10 @@ string PGUtil::DateConv(dateformats d, string instr)
 		if (phyf1 <= 2 && phyf2>2) {
 			instr = "20" + instr;
 		}
+		else if (phyf1 == 5 && phyf2 == 8) {
+			outstr=instr.substr(1, 16);
+			return outstr;
+		}
 
 
 		if (p1!=string::npos) {

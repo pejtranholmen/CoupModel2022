@@ -1209,6 +1209,7 @@ void MultiStorageData::AllocateMeanValidVar() {
 		for (size_t i = 0; i < 7; i++) {
 			m_MeanTSV_All[i].resize(m_TotalNumberRuns);
 			m_MeanSV_All[i].resize(m_TotalNumberRuns);
+
 		}
 
 		
