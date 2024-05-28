@@ -1637,7 +1637,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 				size_t next_validLine = (*itmap).first+ ValidMapAdjust;
 				if (next_validLine < CountLine+1) {
 
-					if (ActualIndexId == 0 &&( m_format == SMHI_OPENDATA||m_format== OPEN_METEO))
+					if (ActualIndexId == 0 &&( m_format == SMHI_OPENDATA||m_format== OPEN_METEO||m_format==SITES))
 						m_HeadingRead = true;
 					else if (ActualIndexId == 0&&m_format!=STANDARD)
 						CheckReadOfHeading();
