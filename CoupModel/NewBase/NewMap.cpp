@@ -6353,7 +6353,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 	vector<string> sheetnames;
 	header2.clear();
 	AddColNumbers = false;
-	if (option == ExportOptions::All || option == ExportOptions::Performance||option == Outputs) {
+	if (option == ExportOptions::All ||option == Outputs) {
 		if (IndexOut >= 0) { // Single Variable Outputs
 			auto numout = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
 			if (AcceptedOnly) {

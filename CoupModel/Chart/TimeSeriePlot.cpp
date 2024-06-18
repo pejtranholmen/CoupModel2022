@@ -177,11 +177,11 @@ void TimeSeriePlot::DrawTimeSeriePlot(CChartViewer *viewer)
 	
 	if(m_ChartInfo.NumVariables<=0) return;
 
-	m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), true);
+	//m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), true);
 
 	size_t TotNumPrior;
 	TotNumPrior=GetPrior_UpdateNumberOfVariables();
-	if(TotNumPrior==m_ChartInfo.NumVariables) m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), false);
+	//if(TotNumPrior==m_ChartInfo.NumVariables) m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), false);
 
 	
 	UpdateDataDist();

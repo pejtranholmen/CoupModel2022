@@ -728,13 +728,14 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			else if (nrec == 1) {
 				nhead = 4;
+				for (auto& c : varstr) c = toupper(c);
 				if (varstr == "TIMESTAMP" || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
 				out.FirstValidHeads.push_back(varstr);
 				return;
 			}
 			else if (nrec == 2) {
 				if (nvar == 1) out.FirstValidHeads.clear();
-			
+				for (auto& c : varstr) c = toupper(c);
 				if (varstr.find("TIMESTAMP")!=string::npos || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
 
 				out.FirstValidHeads.push_back(varstr);
@@ -2023,8 +2024,8 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 		};
 		if (Units_Instead) {
 			if (m_CurrentFileInfo.IdentifiedFormat == SITES) {
-				to_use = m_CurrentFileInfo.UnitsFromHead[count];
-				to_Id = m_CurrentFileInfo.IdFromHead[count];
+				if (m_CurrentFileInfo.UnitsFromHead.size() > count) to_use = m_CurrentFileInfo.UnitsFromHead[count];
+				if(m_CurrentFileInfo.IdFromHead.size()>count)   to_Id = m_CurrentFileInfo.IdFromHead[count];
 
 			}
 			else if (str.rfind('_') != string::npos) {
@@ -2062,7 +2063,7 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 		else {
 			if (m_CurrentFileInfo.IdentifiedFormat == SITES) {
 				to_use = str;
-				to_Id = m_CurrentFileInfo.IdFromHead[count];
+				if(m_CurrentFileInfo.IdFromHead.size()>count)	to_Id = m_CurrentFileInfo.IdFromHead[count];
 
 			}
 			else if (posv.size() > 2) {

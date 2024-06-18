@@ -845,6 +845,7 @@ bool MakeSimCharts::CreateZoomPlotWindow(bool multi, string FileName)
 				//good=m_pZoom->InitMultiRunPlot(m_pDoc, m_CurrentChart, m_pProp->m_ChartType);
 			}
 			else {
+				m_pProp->Reset_Selected_Or_All_BasicVector(1, m_pProp->GetNumOfChartsOnSceen(), false);
 				good=pChart->m_TimeSeriePlot.InitData(m_pSimDoc, m_CurrentChart, string(FileName));
 				//good=m_pZoom->InitData(m_pDoc, m_CurrentChart, m_pProp->m_ChartType,FileName);
 

@@ -1,12 +1,12 @@
 #pragma once
 #include "SimBConst.h"
+
 #ifndef MISSING
 #define MISSING -1.1E38f
 #define NUM_SERIES 200
 #define NUM_BAND 16
 #define NUM_TIME 50
 #endif
-#include <vector>
 #include <vector>
 #include <string>
 #include <map>
@@ -16,6 +16,40 @@
 #include <algorithm>
 #include <memory>
 #include <functional>
+
+struct OUTPUT_SUMMARY_RESULTS
+{
+	double Initial;
+	double Min;
+	double Max;
+	double Acc;
+	double AccTotal;
+	bool YBin;
+	bool NC_Type;
+};
+struct VALID_TEST_RESULTS
+{
+	size_t count;
+	size_t duration;
+	size_t nc_shift;
+	double acc_sim;
+	size_t acc_sim_count;
+	double acc_sim_prior;
+	size_t acc_sim_prior_count;
+	bool hitdone;
+	bool delayed_hit;
+	bool postmean;
+	bool lastrecord;
+	bool lasthit;
+	bool firsthit;
+	size_t nextrecord;
+	unsigned int minute_post;
+	unsigned int minute_post2;
+	unsigned int minute_prior;
+	double value_post;
+	double value_prior;
+};
+
 
 
 using namespace std;
@@ -32,7 +66,7 @@ enum vartype { NO_USE, DATEAXIS, MULTIRUN_NUM, PGVAR, SUMVAR, VALVAR, PARVAR, PG
 enum class CHART_TYPES { SCATTER, TIME_SERIE, FREQUENCE, CUM_FREQUENCE, CONTOUR_CHART };
 enum class TimeResolution { WITHIN_DAY, DAILY_MEAN, HOURLY, TEN_MIN };
 enum class SIMB_COMP{NOVALUE, LE, LT, GE, GT, EQ, NEQ, ON, OFF};
-enum class HIST_INFO {RUN_INFO, DATA_BASE_INFO, SWITCH_INFO, PARSINGLE_INFO, PARTABLE_INFO,NUMBER_ELEMENTS, MODELFILE_INFO};
+enum class HIST_INFO {RUN_INFO, DATA_BASE_INFO, SWITCH_INFO, PARSINGLE_INFO, PARTABLE_INFO,NUMBER_ELEMENTS, MODELFILE_INFO, OUTPUT_SINGLE, OUTPUT_VECTOR};
 struct OUTPUT {size_t LocalIndex; float Initial; float Final; float Min; float Max; float Mean; float Accumulated; size_t ValidFlagIndex; float OptInitial; size_t PgFileIndex; size_t PgMultiFileIndex;int StoreFlag;}	;
 static vector<string> simType_StringId = { "Ps","X","T","G","D","Sw","F", "Ps", "Xs","Ts", "Gs", "Ds", "P", "Table","DB","Func","CSV" };
 static vector<string> Sw_StringOptions = { "O1","O2","O3", "O4", "O5", "O6", "O7", "O8","O9","O10","O11", "O12", "O13", "O14", "O15", "O16" , "O17", "O18" };
@@ -146,7 +180,7 @@ struct Condition {
 	int		value;
 };
 
-struct definitions {enum datatype data; enum elements elem; enum fysprocess fproc; enum bioprocess bproc; enum userlevel ulev;};
+struct definitions {enum datatype data; enum elements elem; enum fysprocess fproc; enum bioprocess bproc; enum userlevel ulev;; enum class UNIT_TYPES unittype;};
 
 class SimB
 	{
@@ -230,6 +264,7 @@ class SimB
 
 		string GetDepName(size_t) const;
 		virtual string GetUnit() const {return _unit;};		
+		UNIT_TYPES GetUnitType() const { return _def.unittype; };
 		string GetDepUnit(size_t) const;	   			// Get name of dependent variables 
 		string GetGroup();
 		string GetProcessName() const;

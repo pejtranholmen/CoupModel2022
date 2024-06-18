@@ -176,7 +176,7 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 				p_mainframe->m_wndFileView.FillFileView();
 				p_mainframe->m_wndPG.m_PGgrid.SetDocument(nullptr);
 				p_mainframe->m_wndPG.m_PGgrid.m_PGFileImport.m_ExtraFileScanning = false;
-				p_mainframe->m_wndPG.m_PGgrid.m_PGFileImport.m_format = OPEN_METEO;
+				p_mainframe->m_wndPG.m_PGgrid.m_PGFileImport.m_format = STANDARD;
 				p_mainframe->m_wndPG.m_PGgrid.m_PGFileImport.m_ScanningMade = false;
 				p_mainframe->m_wndPG.m_PGgrid.m_PGFileImport.OpenInputFile(file);
 				p_mainframe->m_wndPG.m_PGgrid.m_PGFileImport.m_ScanningMade = true;
@@ -198,11 +198,7 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 						CPG *pPG = new CPG;
 						pPG->Open(newfile[0]);
 						if (pPG->IsOpen()) {
-							//	m_Doc.m_PlotStorage.m_PGFileArray.push_back(pPG);
 
-
-
-							//	m_Doc.m_PlotStorage.m_PGFileArrayShow.push_back(0);
 							PGFile	Fil;
 							Fil.pFile = pPG;
 							Fil.Visible = false;

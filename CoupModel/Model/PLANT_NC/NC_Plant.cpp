@@ -714,8 +714,8 @@ bool NC_Plant::Ini()	{
 			}
 			else {
 #ifndef COUPSTD
-				MFC_Util::MessageBox(" Note that No parameters are defined to change Harvest characteristics! ");
-#else				
+				if(m_pModelInfo->ActualNoMulRun==1) 	MFC_Util::MessageBox(" Note that No parameters are defined to change Harvest characteristics! ");
+#else			
 				cout << "No parameters defined to change harvest characteristics " << endl;
 #endif
 

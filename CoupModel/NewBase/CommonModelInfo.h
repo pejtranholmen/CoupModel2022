@@ -51,8 +51,8 @@ public:
 	bool GetCommandLineMode() {return m_CommandInfo;};
 	bool IsRunning() {return m_RunInfo.Running;};
 	void SetRunning(bool value) {m_RunInfo.Running=value;};
-	bool IsMultiRunning() {return m_RunInfo.MultiRunning;};
-	void SetMultiRunning(bool value) {m_RunInfo.MultiRunning=value;};
+	bool IsMultiRunning() {	return m_RunInfo.MultiRunning;	};
+	void SetMultiRunning(bool value) {	m_RunInfo.MultiRunning=value;};
 	bool IsStartMode() {return m_RunInfo.StartMode;};
 	void SetStartMode(bool value) {m_RunInfo.StartMode=value;};
 	bool IsReady() {return m_RunInfo.ReadyToSimulate;};
