@@ -2151,14 +2151,6 @@ void NC_Plant::LitterFall() {
 			P_LitterFall[_LEAF][jj][i] = f_LeafLitterFall(true, i, Tsum, m_pModelInfo->JDayNum, pPlant->SimLeafAreaIndex[i], max(0.,P_State[_LEAF][jj][i]));
 			P_LitterFall[_STEM][jj][i] = f_StemLitterFall(true, i, Tsum, m_pModelInfo->JDayNum,	max(0., P_State[_STEM][jj][i]));
 			P_LitterFall[_GRAIN][jj][i] = f_GrainLitterFall(i, Tsum, m_pModelInfo->JDayNum,	max(0., P_State[_GRAIN][jj][i]));
-			if (P_LitterFall[_GRAIN][jj][i] < 0.) {
-				auto koll = P_State[_GRAIN][jj][i];
-
-
-			}
-			else
-				P_LitterFall[_LEAF][jj][i] = 0.;
-
 
 			if (Max_Plant_LifeTime[i] > 1.) {
 				P_LitterFall[_OLD_LEAF][jj][i] = f_LeafLitterFall(false, i, Tsum, m_pModelInfo->JDayNum, pPlant->SimLeafAreaIndex[i], max(0., P_State[_OLD_LEAF][jj][i] - RemainOldLeaf[jj][i]));
