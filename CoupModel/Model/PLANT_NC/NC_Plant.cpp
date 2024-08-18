@@ -1785,7 +1785,7 @@ auto Growth_Stage = [&](size_t index) {
 				out = 4;
 			}
 		}
-		else if (Harvest_Day == 5) {
+		else if (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::In_Year_Table) {
 			if ((int(m_pModelInfo->JDayNum) == int(m_HarvestDays[m_CountStartYear])) && (m_pModelInfo->JYearNum == int(m_StartYears[m_CountStartYear]) || m_YearTest)) {
 				out = 4.;
 			}
