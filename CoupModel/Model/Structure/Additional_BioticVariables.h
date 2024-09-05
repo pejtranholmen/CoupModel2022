@@ -13,4 +13,6 @@ class Additional_BioticVariables : public Additional_BioticVariables_Functions
 		void Integ();
 		bool End();
 
+		double diff_koll;
+
 };

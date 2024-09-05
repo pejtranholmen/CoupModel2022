@@ -153,8 +153,15 @@ bool NC_Organic_Functions::Def() {
 			Define(pXs, name, 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1"+condition);
 		}
 
-
-
+		for (size_t j = _L1; j <= _L2; j++) {
+			name = Item[jj];
+			condition = "";
+			if (jj == _P_) condition = "|Phosphorus>0";
+			if (j == _L2) condition += "|LitterPools >0";
+			name += " RootLitter " + Comp[j];
+			pXs = new Xs(&RootLitter[j][jj], SIMPROFILE, elements(jj + CARBON), STORAGE, NON_LIVING, NORMAL);
+			Define(pXs, name, 0., UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1" + condition);
+		}
 
 	
 		for (size_t j = _L1; j <= _L2; j++) {
@@ -180,28 +187,6 @@ bool NC_Organic_Functions::Def() {
 		}
 	}
 
-
-// Input N  and C Flow Variables
-
-//	pTs= new Ts(&SurfaceLitterMixingIntoUppermostlayer[_H][_N_]	,  SOILSURFACE,NITROGEN, TRANSPORT,NOBPROC, NORMAL);
-//		Define(pTs , "NSurfaceL Humus", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes >0");
-
-
-//	pTs= new Ts(&SurfaceLitterMixingIntoUppermostlayer[_H][_C_],  SOILSURFACE,CARBON, TRANSPORT,NOBPROC, NORMAL);
-//		Define(pTs , "CSurfaceL Humus", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes >0");
-
-
-	/*	pT= new T(&LitterInputToSoilLayers[_L1][_N_],pNL,SIMPROFILE,CARBON, TRANSPORT,LITTERFALL, NORMAL);
-	Define(pT, pNL  , "CFungiLitter1",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0");
-		pT= new T(&LitterInputToSoilLayers[_L1][_N_],pNL,SIMPROFILE,CARBON, TRANSPORT,LITTERFALL, NORMAL);
-	Define(pT, pNL  , "CFungiLitter2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|LitterPools > 0|Mycorrhiza Fungal Growth>0")	;
-
-		pT= new T(&LitterInputToSoilLayers[_F][_N_],pNL,SIMPROFILE,CARBON, TRANSPORT,LITTERFALL, NORMAL);
-	Define(pT, pNL  , "NFungiLitter1",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0");
-		pT= new T(&LitterInputToSoilLayers[_F][_N_],pNL,SIMPROFILE,CARBON, TRANSPORT,LITTERFALL, NORMAL);
-	Define(pT, pNL  , "NFungiLitter2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|LitterPools > 0|Mycorrhiza Fungal Growth>0")	;
-;*/
-// MF;
 
 	for (size_t jj = 0; jj < NUM_BIOELEM-1; jj++) {
 		string name = Item[jj];
@@ -407,7 +392,7 @@ for (size_t jj = 0; jj < NUM_BIOELEM-1; jj++) {
 	pGs = new Gs(&Humusformation[jj], TOTPROFILE, elements(CARBON+jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);
 	Define(pGs, name, 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1"+condition);
 	name = Item[jj] + "TotRootLitter";
-	pGs = new Gs(&LitterInputProfile[_C_], TOTPROFILE, elements(CARBON + jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);
+	pGs = new Gs(&LitterInputProfile[jj], TOTPROFILE, elements(CARBON + jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);
 	Define(pGs, name, 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1"+condition);
 	name = Item[jj] + "TotDisOrgDrainage";
 	pGs = new Gs(&Dissolved[jj].TotHFlow, TOTPROFILE, elements(CARBON + jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);

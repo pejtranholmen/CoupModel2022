@@ -204,13 +204,15 @@ bool NC_Organic::Ini()	{
 
 //// Total Summary
 	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-		O_State_TotOrg[jj] = O_State_Profile[_L1][jj] + O_State_Profile[_H][jj] + O_State_Profile[_DIS][jj] + SurfaceLitter[_L1][jj];
+		RootLitter[_L1][jj] = sum(Dead_BelowGround[_L1][jj]);
+		O_State_TotOrg[jj] = O_State_Profile[_L1][jj] + O_State_Profile[_H][jj] + O_State_Profile[_DIS][jj] + SurfaceLitter[_L1][jj]+ RootLitter[_L1][jj];
 
 		if (FungalGrowth_Sw(p_NC_Plant->FungalGrowth) > FungalGrowth_Sw::off) 
 			O_State_TotOrg[jj] +=sum(p_NC_Plant->P_State[_FUNGI][jj]);
 		if (LitterPools_Sw(LitterPools) > LitterPools_Sw::one) {
+			RootLitter[_L2][jj] = sum(Dead_BelowGround[_L2][jj]);
 			O_State_Profile[_L2][jj] = sum(O_State[_L2][jj]);
-			O_State_TotOrg[jj] += O_State_Profile[_L2][jj] + SurfaceLitter[_L2][jj];
+			O_State_TotOrg[jj] += O_State_Profile[_L2][jj] + SurfaceLitter[_L2][jj]+RootLitter[_L2][jj];
 		}
 		if (FaecesPool_Sw(FaecesPool) > FaecesPool_Sw::no) {
 			O_State_Profile[_F][jj] = sum(O_State[_F][jj]);
@@ -404,21 +406,13 @@ auto OutflowFromPlantLitterFalltoSoilLayers = [&]() {
 					}
 			}
 			else {
-					double L2_frac;
-					L2_frac = p_NC_Plant->Root_FracLitter2[0];
 					
 					for (size_t layer = 0; layer < pSoil->NL; layer++) {
-						LitterInputToSoilLayers[_L1][jj][layer] += 0.1*Dead_BelowGround[_L1][jj][layer] * (1 - L2_frac);
-						LitterInputToSoilLayers[_L2][jj][layer] += 0.1*Dead_BelowGround[_L2][jj][layer] * L2_frac;
+						LitterInputToSoilLayers[_L1][jj][layer] += 0.1*Dead_BelowGround[_L1][jj][layer] ;
+						LitterInputToSoilLayers[_L2][jj][layer] += 0.1*Dead_BelowGround[_L2][jj][layer];
 					}
 			}
-		//Fungi Component below
-		/*	if (FungalGrowth_Sw(p_NC_Plant->FungalGrowth) > FungalGrowth_Sw::off) {
-				LitterFallToLayers = GetDepthDistributionofLitterFall(i_plant, _FUNGI, jj);
-				for (size_t layer = 0; layer < pSoil->NL; layer++) {
-					LitterInputToSoilLayers[_L1][jj][layer] += 0.1 * Dead_L1_BelowGround[layer];
-				}
-			}*/
+
 		}
 	//}
 
@@ -650,7 +644,10 @@ auto AbioticResponseOnDecomposition = [&]() {
 
 	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 		Humusformation[jj] = 0.;
-		O_State_TotOrg[jj] = SurfaceLitter[_L1][jj]+ SurfaceLitter[_L2][jj];
+		RootLitter[_L1][jj] = sum(Dead_BelowGround[_L1][jj]);
+		RootLitter[_L2][jj] = sum(Dead_BelowGround[_L2][jj]);
+
+		O_State_TotOrg[jj] = SurfaceLitter[_L1][jj]+ SurfaceLitter[_L2][jj]+ RootLitter[_L1][jj]+ RootLitter[_L2][jj];
 
 		if (Microbes > 0) {
 			CTotSoilRespRate = O_RespRateProfile[_MIC];

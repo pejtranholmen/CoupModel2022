@@ -3209,7 +3209,7 @@ bool NC_Plant_Functions::KillAboveGroundPlant(size_t index) {
 				P_State[plantcomp][element][index] = 0.;
 			}
 			else 
-				P_LitterFall[plantcomp][element][index] = P_State[plantcomp][element][index] ;
+				P_LitterFall[plantcomp][element][index] = P_State[plantcomp][element][index];
 
 		}
 		if (element == _C_) for (size_t j = 0; j <= _OLD_STEM; j++) P_Respiration[j][index] = 0.;
@@ -3218,14 +3218,20 @@ bool NC_Plant_Functions::KillAboveGroundPlant(size_t index) {
 	//AtmNewMobile[index]=0.;
 	if(P_State[_GRAIN][_C_][index]>0.||P_State[_STEM][_C_][index]>0.||P_State[_LEAF][_C_][index]>0.) 
 		return true;
-	else
+	else {
+		for (int element = _C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
+			for (int plantcomp = NEWMOBILE; plantcomp <= _OLD_STEM; ++plantcomp) {
+				P_State[plantcomp][element][index] = 0.;
+			}
+		}
 		return false;
+	}
 }
 
 
 bool NC_Plant_Functions::KillBelowGroundPlant(size_t index)	{
 	for (size_t jj = 0; jj< m_pModelStructure->m_NumActPlantElements; jj++) {
-		for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_LitterFall[j][jj][index] = P_State[j][jj][index] / T_Step;
+		for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_LitterFall[j][jj][index] = P_State[j][jj][index] ;
 		if (jj == _C_) for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_Respiration[j][index] = 0.;
 	}
 	GrowthStageIndex[index]=Min_GSI[index];
@@ -3233,8 +3239,15 @@ bool NC_Plant_Functions::KillBelowGroundPlant(size_t index)	{
 
 	if(P_State[_ROOT][_C_][index]>0.||P_State[_OLD_ROOT][_C_][index]>0.) 
 		return true;
-	else
+	else {
+		for (int element = _C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
+			for (int plantcomp = _ROOT; plantcomp <= _OLD_COARSE_ROOT; ++plantcomp) {
+				P_State[plantcomp][element][index] = 0.;
+			}
+		}
 		return false;
+
+	}
 }
 
 

@@ -39,7 +39,7 @@ vector<double>  CTOTQ;
 
 
 
-double SurfaceLitter[2][NUM_BIOELEM];
+double SurfaceLitter[2][NUM_BIOELEM], RootLitter[2][NUM_BIOELEM];
 
 double SurfaceLitterMixingIntoUppermostlayer[4][NUM_BIOELEM];
 

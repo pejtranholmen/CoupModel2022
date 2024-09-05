@@ -108,12 +108,18 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 	else if(int(m_pModelInfo->JDayNum)==int(PloughingDay)&&PloughingDay>0) {
   			Do_Ploughing=true;
 	}
-	else
-			Do_Ploughing=false;
+	else {
+		Do_Ploughing = false;
+		//Reset all Fluxes to zero
+		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
+			for (size_t j = 0; j < 2; j++)
+				LitterInputToSoilLayers[j][jj].assign(pSoil->NL, 0.);
+
+	}
 
 	if (Do_Ploughing) {
 		
-			auto GetDepthDistributionofLitterFall = [&](size_t i, size_t PlantComp, size_t PlantElement) {
+	/*		auto GetDepthDistributionofLitterFall = [&](size_t i, size_t PlantComp, size_t PlantElement) {
 				DEPTH_type out;
 				out = p_Plant->f_WaterUptakeDistribution(p_NC_Plant->P_LitterFall[PlantComp][PlantElement][i], p_Plant->SimRootDepth[i]);
 				return out.Dist;
@@ -148,7 +154,7 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 				}
 			}
 		
-		
+		*/
 		
 		
 		}

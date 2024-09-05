@@ -426,7 +426,7 @@ size_t	Growing, SpringDev, ResetYearShiftDay;
 double ContinStartSum, ContinStopSum;
 ;
 bool DoHarvest, DoFinalHarvest;
-bool HarvestEstimated;
+bool HarvestPloughingMade;
 ;
 vector<bool> HarvestToBeDone, YearShiftToBeDone, HarvestDoneThisYear;
 vector<size_t> ResetHarvestToBeDoneDay;

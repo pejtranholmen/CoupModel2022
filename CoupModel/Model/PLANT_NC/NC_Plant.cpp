@@ -1415,13 +1415,26 @@ void NC_Plant::Integ()
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 			for (int plantcomp = NEWMOBILE; plantcomp <= FUNGI; ++plantcomp) {
 				for (size_t indexplant = 0; indexplant < P_LitterFall[_ROOT][_C_].size(); indexplant++) {
-					if (!RemovedCompAtHarvest[indexplant])
+					if (P_LitterFall[plantcomp][jj][indexplant] > P_State[plantcomp][jj][indexplant] && jj == 1) {
+						int koll = 2;
+
+					}
+					if (!RemovedCompAtHarvest[indexplant]) {
+
+						if (P_LitterFall[plantcomp][jj][indexplant] > P_State[plantcomp][jj][indexplant] && jj == 1) {
+							int koll = 2;
+
+						}
 						OutFlow(P_State[plantcomp][jj][indexplant], P_LitterFall[plantcomp][jj][indexplant]);
+						if (P_State[ROOT][jj][indexplant] < 0.) {
+							int i = 1;
+						}
+					}
 				}
 			}
 		}
 
-		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {		
+		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 			for (size_t indexplant = 0; indexplant < P_LitterFall[_ROOT][_C_].size(); indexplant++) {
 				if(!RemovedCompAtHarvest[indexplant])
 					if (pNCSoil->LitterPools > 0) {
@@ -1438,29 +1451,33 @@ void NC_Plant::Integ()
 					}
 			}			
 		}
+		
 	};
 	auto InflowBelowGroundComponentsToSoilHorizon = [&]() {
 		double Litter1Fraction, LayerFraction;
+		
 		for (size_t i_plant = 0; i_plant < P_LitterFall[_ROOT][_C_].size(); i_plant++) {
-			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-				for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) {
-					Litter1Fraction = 1;
-					if (j == _ROOT || j == _OLD_ROOT) Litter1Fraction = 1. - Root_FracLitter2[i_plant];
-					else Litter1Fraction = 1.- CoarseRoot_FracLitter2[i_plant];
-					DEPTH_type out;
-					out = pPlant->f_WaterUptakeDistribution(1., pPlant->SimRootDepth[i_plant]);
+			if (!RemovedCompAtHarvest[i_plant]) {
+				for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+					for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) {
+						Litter1Fraction = 1;
+						if (j == _ROOT || j == _OLD_ROOT) Litter1Fraction = 1. - Root_FracLitter2[i_plant];
+						else Litter1Fraction = 1. - CoarseRoot_FracLitter2[i_plant];
+						DEPTH_type out;
+						out = pPlant->f_WaterUptakeDistribution(1., pPlant->SimRootDepth[i_plant]);
 
 
-					for (size_t i_soil_layer = 0; i_soil_layer < out.NumLay; ++i_soil_layer) {
-						auto frac = out.Dist[i_soil_layer];
-						if (jj == _C_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction*frac);
-						else if (jj == _N_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction*frac);
-						else if (jj == _P_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction*frac);
+						for (size_t i_soil_layer = 0; i_soil_layer < out.NumLay; ++i_soil_layer) {
+							auto frac = out.Dist[i_soil_layer];
+							if (jj == _C_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction * frac);
+							else if (jj == _N_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction * frac);
+							else if (jj == _P_) InFlow(pNCSoil->Dead_BelowGround[_L1][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * Litter1Fraction * frac);
 
-						if (Litter1Fraction < 1.) {
-							if (jj == _C_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction)*frac);
-							else if (jj == _N_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction)*frac);
-							else if (jj == _P_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction)*frac);
+							if (Litter1Fraction < 1.) {
+								if (jj == _C_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction) * frac);
+								else if (jj == _N_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction) * frac);
+								else if (jj == _P_) InFlow(pNCSoil->Dead_BelowGround[_L2][jj][i_soil_layer], P_LitterFall[j][jj][i_plant] * (1 - Litter1Fraction) * frac);
+							}
 						}
 					}
 				}
@@ -1560,11 +1577,11 @@ void NC_Plant::Integ()
 	
 	ReAllocationFlow();
 	RespirationFlow();
-	LitterFallFlow(HarvestEstimated);
-	HarvestFlow(HarvestEstimated);
+	LitterFallFlow(HarvestPloughingMade);
+	HarvestFlow(HarvestPloughingMade);
 	PlantUptakeFlow();
 	InflowBelowGroundComponentsToSoilHorizon();
-	AccFlowsMovedFromAddition(HarvestEstimated);
+	AccFlowsMovedFromAddition(HarvestPloughingMade);
 }
 
 void NC_Plant::PlantStage_CNRatio_PhysSize() {
@@ -2203,7 +2220,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 	SoilOrgModel* p_Soil=(SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
 	NC_SoilManagement* pNCSoil=&p_Soil->m_NC_SoilOrg;
 	
-	HarvestEstimated = false;
+	HarvestPloughingMade = false;
 
 	if (m_ICountDay == m_pModelInfo->JDayNum) {
 		m_ICountDay = size_t(m_pModelInfo->JDayNum + 1);
@@ -2387,6 +2404,8 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		if (m_pModelInfo->JDayNum == int(pNCSoil->PloughingDay)) {
 			MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
 			OK = KillBelowGroundPlant(i_plant);
+			HarvestPloughingMade = true;
+
 		}
 		
 		if(HarvestDayNo[i_plant]==m_pModelInfo->JDayNum+1&&HarvestToBeDone[i_plant]==false) 
@@ -2439,9 +2458,15 @@ void NC_Plant::Cleaning_Harvest_Events() {
 						pNCSoil->Dead_BelowGround[_L1][element][i_soil_layer] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction * frac;
 						pNCSoil->Dead_BelowGround[_L2][element][i_soil_layer] += P_LitterFall[plantcomp][element][i_plant] * (1-Litter1Fraction) * frac;
 					}
-					P_State[plantcomp][element][i_plant] -= remove;
+					if (remove > P_State[plantcomp][element][i_plant]&&element==1) {
+						P_State[plantcomp][element][i_plant] -= remove;
+					}
+					else
+						P_State[plantcomp][element][i_plant] -= remove;
 				}
+				MoveFromPlantToLitter = false;
 			}
+
 		};
 	}
 }
@@ -2754,7 +2779,7 @@ void NC_Plant::At_Harvest(bool WithGrazingEvent) {
 					else if (ResetGSI_AtHarvest_Sw(ResetGSI_AtHarvest) == ResetGSI_AtHarvest_Sw::on_at_completegrainharvest && CompleteGrainHarvest)
 						GrowthStageIndex[i] = GSI_PostHarvest[i];
 				}
-				HarvestEstimated = true;
+				HarvestPloughingMade = true;
       }
 }
 
