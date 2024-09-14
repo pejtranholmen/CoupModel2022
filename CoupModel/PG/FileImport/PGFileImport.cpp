@@ -2256,7 +2256,7 @@ FILEINFO PGFileImport::GetFileInfo(FILEINFO input, size_t ActualIndexId) {
 		m_CollectedFile = false;
 		
 		for (size_t i = 0; i < input.LinkedSites.size(); i++) {
-			m_CurrentFile.NumRec = input.LinkedSites[i].Records - input.NumHeads;
+			m_CurrentFile.NumRec = input.LinkedSites[i].Records;// -input.NumHeads;
 			m_ImportedFileVector.push_back(m_CurrentFile);
 		}
 		if (input.LinkedSites.size()>0)

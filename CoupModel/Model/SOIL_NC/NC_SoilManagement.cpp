@@ -118,7 +118,7 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 	}
 
 	if (Do_Ploughing) {
-		
+	/* Killing of plant moved to NC_PLant section April 2024*/
 	/*		auto GetDepthDistributionofLitterFall = [&](size_t i, size_t PlantComp, size_t PlantElement) {
 				DEPTH_type out;
 				out = p_Plant->f_WaterUptakeDistribution(p_NC_Plant->P_LitterFall[PlantComp][PlantElement][i], p_Plant->SimRootDepth[i]);
@@ -168,7 +168,7 @@ WaterUptake* p_Plant=&pPlant->m_WaterUptake;
 SoilModel* p_Soil=(SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 size_t Num;
-	/*if (Do_Ploughing) {
+	if (Do_Ploughing) {
 
 		Soil_Frost* p_Soil=(Soil_Frost*)pSoil;
 		DEPTH_type out;
@@ -195,7 +195,7 @@ size_t Num;
 		MixFrac(&O_State[_H][_C_], Num);
 		MixFrac(&O_State[_MIC][_C_], Num);
 		MixFrac(&O_State[_F][_C_], Num);
-	}*/
+	}
 }
 
 bool NC_SoilManagement::End()
