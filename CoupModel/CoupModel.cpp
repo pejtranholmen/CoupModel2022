@@ -479,8 +479,8 @@ void CCoupModelApp::OnFileNew()
 	//strNewFileName=UserDirectory;
 	//CStdioFile NewFileDlg;
 	CString pszFileName ;
-	LPCTSTR lpszDefExt=_T("Sim"), lpszFilter;
-	lpszFilter = _T("Sim File (*.sim)|*.Sim||");
+	LPCTSTR lpszDefExt=_T("Xml"), lpszFilter;
+	lpszFilter = _T("Xml File (*.xml)|*.Xml||");
  	CFileDialog	NewFileDlg(TRUE,lpszDefExt,pszFileName, OFN_NOCHANGEDIR,lpszFilter);
 	
 	NewFileDlg.m_ofn.lpstrFile=&tbuffer[0];
@@ -503,18 +503,18 @@ void CCoupModelApp::OnFileNew()
     
 
 
-	int iposext=NewPathName.Find(_T(".Sim"));
+	int iposext=NewPathName.Find(_T(".Xml"));
 	CString Num;
 	Num.Format(_T("%05u"),SimulationRunNo);
 	if (iposext==-1) {
-		NewPathName+=_T("_")+Num+_T(".Sim");			
+		NewPathName+=_T("_")+Num+_T(".xml");			
 	}
 	else if(NewPathName.Mid(iposext-4,1)=="_") {
 		NewPathName=NewPathName.Mid(0,NewPathName.GetLength()-4);
-		NewPathName+=_T("_")+Num+_T(".Sim");
+		NewPathName+=_T("_")+Num+_T(".xml");
 	}
 	else {
-		NewPathName=NewPathName.Mid(0,iposext)+_T("_")+Num+_T(".Sim");
+		NewPathName=NewPathName.Mid(0,iposext)+_T("_")+Num+_T(".xml");
 	}
 
 

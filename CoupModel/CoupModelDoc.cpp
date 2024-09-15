@@ -273,6 +273,8 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 		Fil.DocType=m_Doc.m_DocumentType;
 		Fil.Running=false;
 		Fil.pSimDoc=&m_Doc;
+		MySingle::instance().GetCugPointer()->SetDocument(this);
+
 		MySingle::instance().GetSimArchivePointer()->AddSimDoc(Fil);
 
 	/*	PVOID OldValue = nullptr;
@@ -538,7 +540,7 @@ BOOL CCoupModelDoc::OnNewDocument() {
 	m_Doc.m_DocFile.m_SimulationRunNo=1;
 	m_Doc.m_DocFile.m_SimulationRunNo=MFC_Util::GetProfileIntNo("SimulationRunNo", m_Doc.m_DocFile.m_SimulationRunNo);
 
-	int iposext=pzPathName.Find(_T(".Sim"));
+	int iposext=pzPathName.Find(_T(".Xml"));
 	int iposst=pzPathName.Find(_T("CoupModel1"));
 	if(iposst==0)
 		pzPathName="SimpleSim";

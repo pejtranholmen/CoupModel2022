@@ -6958,7 +6958,7 @@ void MyCug::CreateNewDocFromCurrentDoc(bool ChildDocument, bool KeepParentDoc)
 					iposext=pzPathName.rfind('_');
 
 
-					//if (!m_pSimDoc->CDocument::OnSaveDocument(pzPathName)) return;
+				//	if (!m_pDoc->CDocument::OnSaveDocument(CString(pzPathName.c_str()))) return;
 
   					int PreviousRunNo=m_pSimDoc->m_DocFile.m_SimulationRunNo;
 					m_pSimDoc->m_DocFile.m_SimulationRunNo=MFC_Util::GetProfileIntNo( "SimulationRunNo", m_pSimDoc->m_DocFile.m_SimulationRunNo);

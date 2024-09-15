@@ -115,31 +115,28 @@ string ModelFiles::GetOutputFileName(size_t ValidIndex, bool LastFile, bool Mult
 		NewNumInFile = true;
 		numstr = test.substr(iposext+1, 4); NewNumInFile = true;
 	}
-	if (!IsMultiSimulation()&&numstr.size()>2) {
-		str = numstr;
-	}
-	else if (IsMultiSimulation() && LastFile&&ValidIndex == 0) {
-		size_t in = m_DocFile.m_SimulationRunNo - actRunNo + MR_Get_TotalNumberofRuns();
-		if (in<0) in += 99999;
-		str = FUtil::STD_ItoAscii(in);
-	}
-	else if (ValidIndex == 0 && IsMultiSimulation() && MultiModeFile&&MultiIndex>0) {
-		int in = m_MStorage.GetFirstRunNoAddedRuns(MultiIndex - 1);
-		str = FUtil::STD_ItoAscii(in);
-	}
-	else if (ValidIndex>0 && IsMultiSimulation() && (ValidationFilePointer(ValidIndex)->m_Exist) || MultiModeFile || MeanPGType>0) {
-		str = numstr;
-	}
+
+
+	if (IsMultiSimulation()) {
+		if (LastFile && ValidIndex == 0) {
+			size_t in = m_DocFile.m_SimulationRunNo - actRunNo + MR_Get_TotalNumberofRuns();
+			if (in < 0) in += 99999;
+			str = FUtil::STD_ItoAscii(in);
+		}
+		else if (ValidIndex == 0 && MultiModeFile && MultiIndex > 0) {
+			int in = m_MStorage.GetFirstRunNoAddedRuns(MultiIndex - 1);
+			str = FUtil::STD_ItoAscii(in);
+		}
+		else if (ValidIndex > 0 && (ValidationFilePointer(ValidIndex)->m_Exist) || MultiModeFile || MeanPGType > 0) 
+			str = numstr;
+		}
 	else
 		str = FUtil::ItoNumAscii(m_DocFile.m_SimulationRunNo);
-
 
 	stdbinfilename = "COUP_" + str + ".Bin";
 
 	FirstTry = true;
 	SecondTry = true;
-
-	//	if(FUtil::IsFileExisting(
 
 	if (ValidIndex>0) {
 		filename = dir + "V" + FUtil::STD_ItoAscii(ValidIndex) + "_" + stdbinfilename;
@@ -158,9 +155,11 @@ string ModelFiles::GetOutputFileName(size_t ValidIndex, bool LastFile, bool Mult
 		while (filename.rfind("_0") != string::npos&&!FUtil::IsFileExisting(filename)) {
 			filename.replace(filename.rfind("_0"), 2, "_", 1);
 		}
-		
 	}
-	if (ValidIndex == 0 && FUtil::IsFileExisting(filename)) SetOutputFileNameToOutputFile(filename);
+
+	if (ValidIndex == 0 && FUtil::IsFileExisting(filename)) {
+		SetOutputFileNameToOutputFile(filename);
+	}
     
     cout <<"final file name: " << filename << endl;
 	return filename;

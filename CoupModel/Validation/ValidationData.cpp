@@ -1537,7 +1537,7 @@ int ValidationData::GetSumVarIndex(int outtype, SimB *pBase, int TabIndex, int O
 	return Index;
 }
 void ValidationData::SetPointersToOutputValidationFiles() {
-
+	if (m_pSimDoc == nullptr) return;
 	for(size_t i=0;i<MAXSIMVAL;i++) {
 		//if(ValidationFilePointer(i+1)->m_Exist) {
 			F* pF=m_pSimDoc->ValidationFilePointer(i+1);

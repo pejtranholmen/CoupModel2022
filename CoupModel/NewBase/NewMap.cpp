@@ -2089,10 +2089,7 @@ bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 				}
 				m_ChildDocument = true;
 			}
-			else {
-				Init_BlankDocument();
-			}
-			
+		
 			
 			if (ReadXmlDocFile(xmlfile)) {
 #ifndef COUPSTD
