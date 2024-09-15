@@ -2065,15 +2065,14 @@ bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 
 	
 		if (FUtil::IsFileExisting(xmlfile)) {
-
 			vector<string> parents;
-
-
 			auto ParentFileName = GetParentDocFile(xmlfile);
 			while (FUtil::IsFileExisting(ParentFileName)) {
 				parents.push_back(ParentFileName);
 				ParentFileName = GetParentDocFile(ParentFileName);
 			}
+			m_ValidationData.Init(this);
+			m_MStorage.Init(this);
 			if (parents.size()>0) {
 				m_ValidationData.Init(this);
 				m_MStorage.Init(this);
