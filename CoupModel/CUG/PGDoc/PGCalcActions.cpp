@@ -21,6 +21,11 @@ void PGCalcActions::Make_PG_Calc(bool newvar, bool allrep, size_t SeqNo, size_t 
 	int prevnum;
 	string str;
 	MFC_Util m;
+
+	if (!m_pPG->GetCompleteRead()) {
+		m_pPG->m_WriteEnabled = false;
+		m_pPG->MakeFileToEnableWriting(true);
+	}
 	if (m_pPG->GetNumToBeCalc() <= 0) {
 		m_pPG->SetCalcVar(SeqNo);
 		if (!newvar) {
@@ -137,10 +142,7 @@ BOOL PGCalcActions::OnNewCalculateVar()
 	long m_NumRecords = m_row;
 	expression = pCPG->GetVarFunction();
 	var = pCPG->GetCalcVarNew();
-	if (!pCPG->GetCompleteRead()) {
-		pCPG->m_WriteEnabled = false;
-		pCPG->MakeFileToEnableWriting(true);
-	}
+
 	auto WriteResultofActualBuftoFile = [&](int irep, int nbuf) {
 		if (!pCPG->GetCompleteRead()) {
 			if (pCPG->GetNumRepititions()>1)
@@ -237,6 +239,14 @@ BOOL PGCalcActions::OnNewCalculateVar()
 
 	if (!pCPG->GetCompleteRead())
 		pCPG->CloseFile();
-	m.SetPaneMessage("Calculation of with Transformations Completed - Results are saved in actual file");
+
+	if (pCPG->WritePGFile()) {
+		m.SetPaneMessage("Calculation of with Transformations Completed - Results are saved in actual file");
+		m_Changed_Data = false;
+		m_Changed_Description = false;
+	}
+	else
+		m.SetPaneMessage("Failed to save file");
+
 	return TRUE;
 }
