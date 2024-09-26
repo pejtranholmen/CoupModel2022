@@ -2348,6 +2348,15 @@ bool GridPGDoc::Make_ReShape_Prior() {
 	SetNumberCols(6);
 	SetPGFileColumns(6, -1, true);
 	SetNumberRows(1);
+
+	CPG* pCPG;
+	m_IndexSource = m_pPGArchive->GetIndex(m_pDoc);
+	if (m_pPGArchive->GetNumPGFile() <= m_IndexSource) return false;
+
+	pCPG = (CPG*)m_pPGArchive->GetPGFile(m_IndexSource);
+	m_pGSource = pCPG;
+
+
 	
 	SetCellClickButton(m_ResetListAddButton);
 	SetCellClickButton(m_CreateNewAddButton);
