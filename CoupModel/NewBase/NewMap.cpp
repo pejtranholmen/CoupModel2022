@@ -6609,7 +6609,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 						if (AcceptedOnly) {
 							irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun); allvalues[count2][0] = float(irun); allvalues2[count2][0] = float(irun);
 							allvalues[count2][1] = float(iens + 1); allvalues2[count2][1] = float(iens + 1);
-							vert_header[count2] = FUtil::STD_ItoAscii(irun);
+							vert_header[count2] = FUtil::STD_ItoAscii(irun+1); // Changed from irun to irun+1 after notice from David N
 						}
 						else {
 							irun = nomulrun; allvalues[nomulrun][0] = float(irun + 1); allvalues2[nomulrun][0] = float(irun + 1); 

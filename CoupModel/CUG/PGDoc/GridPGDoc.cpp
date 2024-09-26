@@ -2341,6 +2341,24 @@ bool GridPGDoc::Make_Merge_Prior() {
 	RedrawAll();
 	return true;
 }
+bool GridPGDoc::Make_ReShape_Prior() {
+	CUGCell cell;
+	SetLocalWindowText("Reshaping Current file");
+	SetNewCleanSheetWithNumber(8);
+	SetNumberCols(6);
+	SetPGFileColumns(6, -1, true);
+	SetNumberRows(1);
+	
+	SetCellClickButton(m_ResetListAddButton);
+	SetCellClickButton(m_CreateNewAddButton);
+	SetCellClickButton(m_QuitButton);
+
+	
+	//SetPGFileColumnsInfoButton(m_NewOutputPGFileButton);
+	RedrawAll();
+	return true;
+
+}
 bool GridPGDoc::Make_Add_Post() {
 	CUGCell cell;
 	SetNewCleanSheetWithNumber(8);
@@ -4468,6 +4486,7 @@ void GridPGDoc::DefineListButtonInfos()
 	m_NewFileOptions.VectorNames.push_back("Adding previous Files to each other (same variables - new records)");
 	m_NewFileOptions.VectorNames.push_back("Mixing previous Files to each other (new variables)");
 	m_NewFileOptions.VectorNames.push_back("Merging similar PG files to a new aggregated file (= with Repetitions)");
+	m_NewFileOptions.VectorNames.push_back("ReShape current PG file to repeated time with fever variables");
 	SetClickButtonMap(m_NewFileOptions);
 	
 	m_AddFileList.Type = LISTBUTTON;

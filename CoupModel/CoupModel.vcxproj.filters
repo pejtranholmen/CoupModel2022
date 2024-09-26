@@ -1475,6 +1475,9 @@
     <ClInclude Include="Model\Structure\Functors\Numerical_Functors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PG\NewReShaped.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoupModel.cpp">
@@ -2512,6 +2515,9 @@
     <ClCompile Include="PG\PG.CPP">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PG\NewReShaped.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CoupModel.rc">
@@ -2540,9 +2546,5 @@
     <Image Include="res\info.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="..\..\..\Users\pej\Documents\CoupModel\Samples\Growth\Grostat_141238 - Copy.xml" />
-    <Xml Include="..\..\..\Users\pej\Documents\CoupModel\Samples\Growth\Grostat_141238.xml" />
   </ItemGroup>
 </Project>

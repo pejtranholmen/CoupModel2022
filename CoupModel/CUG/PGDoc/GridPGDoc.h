@@ -60,6 +60,7 @@ protected:
 
 	bool Make_New_PGFiles();
 	bool Make_Merge_Prior();
+	bool Make_ReShape_Prior();
 	bool Make_Add_Prior();
 	bool Make_Add_Post();
 	bool Make_Mix_Prior();

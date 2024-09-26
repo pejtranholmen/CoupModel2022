@@ -317,14 +317,15 @@ bool PGButtonEvents::ImportListButtons(int ParV, int index, int col)
 
 	if (m_NewFileOptions.Param == ParV) {
 
-		if (index == 1) {	Make_NewGrid_Prior();	}
-		else if (index == 2) {	Make_ImportFromCSV_File_Prior();}
-		else if (index == 3) {	
+		if (index == 1) { Make_NewGrid_Prior(); }
+		else if (index == 2) { Make_ImportFromCSV_File_Prior(); }
+		else if (index == 3) {
 			//m_AddMix_Actions.AddPGFiles();		
 			Make_Add_Prior();
 		}
-		else if (index == 4) {	Make_Mix_Prior();}
-		else if (index == 5) {	Make_Merge_Prior();	}
+		else if (index == 4) { Make_Mix_Prior(); }
+		else if (index == 5) { Make_Merge_Prior(); }
+		else if (index == 6) Make_ReShape_Prior();
 	}
 	else if (ParV == m_ImportedFiles.Param) {
 		if (index >= 1 && m_ImportedFiles.VectorNames.size() >= index) {
