@@ -2356,11 +2356,12 @@ bool GridPGDoc::Make_ReShape_Prior() {
 	pCPG = (CPG*)m_pPGArchive->GetPGFile(m_IndexSource);
 	m_pGSource = pCPG;
 
+	m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, 1);
 
 	
-	SetCellClickButton(m_ResetListAddButton);
-	SetCellClickButton(m_CreateNewAddButton);
-	SetCellClickButton(m_QuitButton);
+	//SetCellClickButton(m_ResetListAddButton);
+	//SetCellClickButton(m_CreateNewAddButton);
+	//SetCellClickButton(m_QuitButton);
 
 	
 	//SetPGFileColumnsInfoButton(m_NewOutputPGFileButton);

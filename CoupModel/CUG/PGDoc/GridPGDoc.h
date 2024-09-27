@@ -16,6 +16,7 @@ class PGFileArchive;
 #include "..\..\PG\ChangePeriod.h"
 #include "..\..\PG\ChangeToNewResolution.h"
 #include "..\..\PG\NewAddMixPGFiles.h"
+#include "..\..\PG\NewReShaped.h"
 
 class GridPGDoc :
 	public PEJUGCtrl, public PGMaps
@@ -126,6 +127,7 @@ protected:
 	ChangeToNewResolution m_ChangeResolution;
 
 	NewAddMixPGFiles m_AddMix_Actions;
+	NewReShaped m_ReShaped_Actions;
 
 	bool	m_DestFileSet[7];
 	bool	m_SpatialSourceFileReady;
