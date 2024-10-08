@@ -91,7 +91,7 @@ CPG m_PG_Zadok;
 vector<double> GrowthStageIndex, SimPlantAge;
 
 
-vector<double> P_State[NUM_PLANT_COMP][NUM_BIOELEM];
+vector<double> P_State[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM]; // Changed to Num_plant_fungi_com Okt 2024
 vector<double> P_Respiration[NUM_PLANT_FUNGI_COMP];
 vector<double> P_LitterFall[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];
 vector<double> P_Harvest[NUM_PLANT_COMP][NUM_BIOELEM];
