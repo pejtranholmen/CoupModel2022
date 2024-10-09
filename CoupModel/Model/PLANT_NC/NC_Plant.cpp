@@ -1164,7 +1164,12 @@ void NC_Plant::Flux()
 {
 
 	if(Growth==0) return;
-	PlantStage_CNRatio_PhysSize();
+	SoilOrgModel* p_Soil = (SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
+	NC_SoilManagement* pNCSoil = &p_Soil->m_NC_SoilOrg;
+
+	if (m_pModelInfo->JDayNum != int(pNCSoil->PloughingDay)) {
+		PlantStage_CNRatio_PhysSize();
+	}
 	Light_And_PhotoSynthesis();
 
     
@@ -1178,7 +1183,14 @@ void NC_Plant::Flux()
 	AllocationAndReAllocation_DuringGrowth();
 	AboveGroundPlantRespiration();
 	BelowGrandPlantRespiration();
-	LitterFall();
+	if (m_pModelInfo->JDayNum != int(pNCSoil->PloughingDay)) {
+		LitterFall();
+	}
+	else {
+		int action = 1;
+
+	}
+	
 	MobilePool();
 
 
@@ -2220,6 +2232,8 @@ void NC_Plant::Cleaning_Harvest_Events() {
 	SoilOrgModel* p_Soil=(SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
 	NC_SoilManagement* pNCSoil=&p_Soil->m_NC_SoilOrg;
 	
+	
+
 	HarvestPloughingMade = false;
 
 	if (m_ICountDay == m_pModelInfo->JDayNum) {
@@ -2236,20 +2250,19 @@ void NC_Plant::Cleaning_Harvest_Events() {
 			m_ResetMade = true;
 		}
 		return;
-
+		// Actions only once per day. return with no action if called more then once
 	}
 
 
 	for(size_t i_plant=0; i_plant<P_ReAllocation[0][0].size();i_plant++) {
 		MoveFromPlantToLitter = false;
 		RemovedCompAtHarvest[i_plant] = false;
-		if(Cleaning>0) {
+		if(Cleaning_Sw(Cleaning)> Cleaning_Sw::off) {
 		    DoCleaning=false;
-		    if(Cleaning==1) 
+		    if(Cleaning_Sw(Cleaning)==Cleaning_Sw::All_Years) 
 		        YearToClean=true;
 		    else {
 		        YearToClean=false;
-		       // Do jj=1, Num_CleaningYears
 				for(size_t jj=0; jj<CleaningYears.size();jj++) {
 		            if(int(CleaningYears[jj])==int(SimPlantYearAge[i_plant]))
 		                YearToClean=true;	            
@@ -2266,6 +2279,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 				}       
 		    }	
 		}
+
 		if(Harvest_Day_Sw(Harvest_Day)==Harvest_Day_Sw::Fixed_Multiple_Days) {
 		    DoHarvest=false;
             DoFinalHarvest=false;
@@ -2356,9 +2370,9 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		    ResetHarvestToBeDoneDay[i_plant]=min(int(m_pModelInfo->JDayNum+1),365);
             HarvestDoneThisYear[i_plant]=true;
 			if(Grazing_Sw(Grazing)==Grazing_Sw::off) 		    
-				At_Harvest(false);
+				SplitofPlant_At_Harvest(false);
 		    else if(HarvestToBeDone[i_plant]&& Grazing_Sw(Grazing) == Grazing_Sw::Continous)  // When Grazing equal 2 14 May 2007   		
-    			At_Harvest(true);
+    			SplitofPlant_At_Harvest(true);
 			MoveFromPlantToLitter = true;
     		   
 	////// For Grazing = 2 above		
@@ -2393,7 +2407,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 				GrowingSum[i_plant]=0.;
 		}
 		else if(DoCleaning&&CleaningToBeDone&&IndexClean==i_plant) 
-			At_Cleaning();
+			LitterFall_At_Cleaning();
 		else {
 			for (size_t j = _LEAF; j <= _OLD_COARSE_ROOT; j++)
 				for (size_t jj = 0; jj<m_pModelStructure->m_NumActPlantElements; jj++)
@@ -2419,18 +2433,18 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		if (MoveFromPlantToLitter) {
 			RemovedCompAtHarvest[i_plant] = true;
 			for (int element=_C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
-				for (size_t plantcomp = _LEAF; plantcomp <= _OLD_STEM; plantcomp++) {
+				for (size_t plantcomp = LEAF; plantcomp <= OLD_STEM; plantcomp++) {
 					double Litter1Fraction = 1.;
 					switch (plantcomp) {
-					case _LEAF:
-					case _OLD_LEAF:
+					case LEAF:
+					case OLD_LEAF:
 						Litter1Fraction = (1. - Leaf_FracLitter2[i_plant]);
 						break;
-					case _STEM:
-					case _OLD_STEM:
+					case STEM:
+					case OLD_STEM:
 						Litter1Fraction = (1. - Stem_FracLitter2[i_plant]);
 						break;
-					case _GRAIN:
+					case GRAIN:
 						Litter1Fraction = (1. - Grain_FracLitter2[i_plant]);
 						break;
 					}
@@ -2653,7 +2667,7 @@ void NC_Plant::Seedling_Management_Events() {
 		}
 	}
 }
-void NC_Plant::At_Harvest(bool WithGrazingEvent) {
+void NC_Plant::SplitofPlant_At_Harvest(bool WithGrazingEvent) {
 	bool CompleteGrainHarvest = false;
 	auto All_HarvestComp = [&](size_t i, bool PriorFinal) {
 		double HarvestFrac;
@@ -2784,7 +2798,7 @@ void NC_Plant::At_Harvest(bool WithGrazingEvent) {
 }
 
 
-void NC_Plant::At_Cleaning() {
+void NC_Plant::LitterFall_At_Cleaning() {
 	for (size_t i = 0; i < P_Harvest[_GRAIN][_C_].size(); i++) {
 		for (size_t j = 0; j < m_pModelStructure->m_NumActPlantElements; j++) {
 			for (size_t jj = 0; jj < NUM_PLANT_COMP; jj++) {

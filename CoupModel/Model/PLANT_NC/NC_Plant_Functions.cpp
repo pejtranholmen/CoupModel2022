@@ -3227,8 +3227,6 @@ bool NC_Plant_Functions::KillAboveGroundPlant(size_t index) {
 		return false;
 	}
 }
-
-
 bool NC_Plant_Functions::KillBelowGroundPlant(size_t index)	{
 	for (size_t jj = 0; jj< m_pModelStructure->m_NumActPlantElements; jj++) {
 		for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_LitterFall[j][jj][index] = P_State[j][jj][index] ;

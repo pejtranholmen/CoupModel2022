@@ -25,8 +25,8 @@ class NC_Plant : public NC_Plant_Functions
 		void Grazing_Events();
 		void WoodEatingProcess();
 		void Seedling_Management_Events();
-		void At_Harvest(bool WithGrazingRelatedEvent=false);
-		void At_Cleaning();
+		void SplitofPlant_At_Harvest(bool WithGrazingRelatedEvent=false);
+		void LitterFall_At_Cleaning();
 
 		void MineralOrganic_Uptake();
 		void At_YearShifting();
