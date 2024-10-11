@@ -3206,7 +3206,7 @@ bool NC_Plant_Functions::KillAboveGroundPlant(size_t index) {
 	for (int element = _C_;element<m_pModelStructure->m_NumActPlantElements; element++) {
 		for (int plantcomp = NEWMOBILE; plantcomp <= _OLD_STEM; ++plantcomp) {
 			if (P_State[plantcomp][element][index] < 0.) {
-				P_State[plantcomp][element][index] = 0.;
+		//		P_State[plantcomp][element][index] = 0.;
 			}
 			else 
 				P_LitterFall[plantcomp][element][index] = P_State[plantcomp][element][index];
@@ -3216,40 +3216,97 @@ bool NC_Plant_Functions::KillAboveGroundPlant(size_t index) {
 	}
 
 	//AtmNewMobile[index]=0.;
-	if(P_State[_GRAIN][_C_][index]>0.||P_State[_STEM][_C_][index]>0.||P_State[_LEAF][_C_][index]>0.) 
+	if (P_State[_GRAIN][_C_][index]>0. || P_State[_STEM][_C_][index]>0. || P_State[_LEAF][_C_][index]>0.)
 		return true;
 	else {
 		for (int element = _C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
 			for (int plantcomp = NEWMOBILE; plantcomp <= _OLD_STEM; ++plantcomp) {
-				P_State[plantcomp][element][index] = 0.;
+	//			P_State[plantcomp][element][index] = 0.;
 			}
 		}
 		return false;
 	}
 }
-bool NC_Plant_Functions::KillBelowGroundPlant(size_t index)	{
+bool NC_Plant_Functions::KillBelowGroundPlant(size_t index_plant)	{
 	for (size_t jj = 0; jj< m_pModelStructure->m_NumActPlantElements; jj++) {
-		for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_LitterFall[j][jj][index] = P_State[j][jj][index] ;
-		if (jj == _C_) for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_Respiration[j][index] = 0.;
+		for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_LitterFall[j][jj][index_plant] = P_State[j][jj][index_plant] ;
+		if (jj == _C_) for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++) P_Respiration[j][index_plant] = 0.;
 	}
-	GrowthStageIndex[index]=Min_GSI[index];
-	SimPlantAge[index]=0.;
+	GrowthStageIndex[index_plant]=Min_GSI[index_plant];
+	SimPlantAge[index_plant]=0.;
 
-	if(P_State[_ROOT][_C_][index]>0.||P_State[_OLD_ROOT][_C_][index]>0.) 
+	if(P_State[_ROOT][_C_][index_plant]>0.||P_State[_OLD_ROOT][_C_][index_plant]>0.) 
 		return true;
 	else {
 		for (int element = _C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
 			for (int plantcomp = _ROOT; plantcomp <= _OLD_COARSE_ROOT; ++plantcomp) {
-				P_State[plantcomp][element][index] = 0.;
+	//			P_State[plantcomp][element][index_plant] = 0.;
 			}
 		}
 		return false;
-
 	}
 }
+bool NC_Plant_Functions::MoveLitterFromPlant(NC_SoilManagement* pNCSoil, size_t i_plant) {
 
+	for (int element = _C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
+		for (size_t plantcomp = NEWMOBILE; plantcomp <= OLD_STEM; plantcomp++) {
+			double Litter1Fraction = 1.;
+			switch (plantcomp) {
+			case LEAF:
+			case OLD_LEAF:
+			case NEWMOBILE:
+			case MOBILE:
 
+				Litter1Fraction = (1. - Leaf_FracLitter2[i_plant]);
+				break;
+			case STEM:
+			case OLD_STEM:
+				Litter1Fraction = (1. - Stem_FracLitter2[i_plant]);
+				break;
+			case GRAIN:
+				Litter1Fraction = (1. - Grain_FracLitter2[i_plant]);
+				break;
+			}
+			auto remove = P_LitterFall[plantcomp][element][i_plant];
+			if (element == _C_) pNCSoil->SurfaceLitter[_L1][_C_] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction;
+			else if (element == _N_) pNCSoil->SurfaceLitter[_L1][_N_] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction;
+			else if (element == _P_) pNCSoil->SurfaceLitter[_L1][_P_] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction;
+			if (Litter1Fraction < 1.) {
+				if (element == _C_) pNCSoil->SurfaceLitter[_L2][_C_] += P_LitterFall[plantcomp][element][i_plant] * (1 - Litter1Fraction);
+				else if (element == _N_) pNCSoil->SurfaceLitter[_L2][_N_] += P_LitterFall[plantcomp][element][i_plant] * (1 - Litter1Fraction);
+				else if (element == _P_) pNCSoil->SurfaceLitter[_L2][_P_] += P_LitterFall[plantcomp][element][i_plant] * (1 - Litter1Fraction);
+			}
+			P_State[plantcomp][element][i_plant] -= remove;
+		}
+		for (int plantcomp = ROOT; plantcomp <= OLD_COARSE_ROOT; ++plantcomp) {
+			double Litter1Fraction = 1;
+			if (plantcomp == _ROOT || plantcomp == _OLD_ROOT) Litter1Fraction = 1. - Root_FracLitter2[i_plant];
+			else Litter1Fraction = 1. - CoarseRoot_FracLitter2[i_plant];
+			DEPTH_type out;
+			out = pPlant->f_WaterUptakeDistribution(1., pPlant->SimRootDepth[i_plant]);
 
+			auto remove = P_LitterFall[plantcomp][element][i_plant];
+			double check = 0.;
+			for (size_t i_soil_layer = 0; i_soil_layer < out.NumLay; ++i_soil_layer) {
+				auto frac = out.Dist[i_soil_layer];
+				check += frac;
+				pNCSoil->Dead_BelowGround[_L1][element][i_soil_layer] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction * frac;
+				pNCSoil->Dead_BelowGround[_L2][element][i_soil_layer] += P_LitterFall[plantcomp][element][i_plant] * (1 - Litter1Fraction) * frac;
+			}
+			if (check > 1.00001) {
+				auto koll = check;
+
+			}
+			if (remove > P_State[plantcomp][element][i_plant] && element == 1) {
+				P_State[plantcomp][element][i_plant] -= remove;
+			}
+			else
+				P_State[plantcomp][element][i_plant] -= remove;
+		}
+
+	}
+	return false;
+}
 
 // Farquhar
 GRespons NC_Plant_Functions::P_Responses(size_t index) {

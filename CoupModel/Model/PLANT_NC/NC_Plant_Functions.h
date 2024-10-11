@@ -7,7 +7,7 @@
 #include "../../PG/PGUtil.h"
 #include "./Functors/NC_Plant_Functors.h"
 
-
+class NC_SoilManagement;
 class ZadokOutCreateFile;
 struct GRespons{
 	double Temp;
@@ -617,8 +617,10 @@ double FungiLitterCoefFunc(double Tsum, size_t index);
 double RootLitterCoefFunc(double Tsum,size_t index);
 double CoarseRootLitterCoefFuncL(size_t index);
 double CoarseRootLitterCoefFunc(double Tsum, size_t index);
+
 bool KillAboveGroundPlant(size_t index);
 bool KillBelowGroundPlant(size_t index);
+bool MoveLitterFromPlant(NC_SoilManagement* pNCSoil, size_t indexplant);
 
 double StomataCO2Func(double PCO2A, double PCO2Bp, double Assim, double RespSoil, double RespMPlant, double GB, double GS, double GA, double Vmax, double co2cap);
 bool CheckFromPhotoFile();

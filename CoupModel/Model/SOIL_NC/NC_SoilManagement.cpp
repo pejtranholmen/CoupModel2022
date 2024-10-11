@@ -87,6 +87,7 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 	Do_Cultivating=false;
 
 	if (SurfaceCultivation_Sw(SurfaceCultivation) == SurfaceCultivation_Sw::PG_File_Specified) {
+		if(ISurfaceCultCount<ISurfaceCultDates.size())
 		if (m_pModelInfo->m_ActMin >= ISurfaceCultDates[ISurfaceCultCount]) {
 			Do_Cultivating = true;
 			ISurfaceCultCount++;
@@ -98,12 +99,13 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 	
 
 	if (Deep_Ploughing_Sw(Ploughing) == Deep_Ploughing_Sw::PG_File_Specified) {
-		if (m_pModelInfo->m_ActMin >= IPloughingDates[IPloughingCount]) {
-			IPloughingCount++;
-			Do_Ploughing = true;
-		}
-		else
-			Do_Ploughing = false;
+		if(IPloughingCount<IPloughingDates.size())
+			if (m_pModelInfo->m_ActMin >= IPloughingDates[IPloughingCount]) {
+				IPloughingCount++;
+				Do_Ploughing = true;
+			}
+			else
+				Do_Ploughing = false;
 	}
 	else if(int(m_pModelInfo->JDayNum)==int(PloughingDay)&&PloughingDay>0) {
   			Do_Ploughing=true;

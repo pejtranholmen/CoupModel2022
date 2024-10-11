@@ -242,12 +242,13 @@ void NC_ExternalInputs::Flux()
 		  else if (N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::Year_Based_Table_1_app) 
 			  N_Fert_App = f_N_YearStageFertilization(double(m_pModelInfo->JYearNum), m_pModelInfo->JDayNum);	
 		  else if (N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::PG_File_AppDatesOnly) {
-			  if (m_pModelInfo->m_ActMin >= IFertDates[IFertDatesCount]) {			  	  
-				  N_Fert_App = FertAppValues[IFertDatesCount] / T_Step;
-				  IFertDatesCount++;
-			  }
-			  else
-				  N_Fert_App = 0.;
+			  if(IFertDatesCount<IFertDates.size())
+				  if (m_pModelInfo->m_ActMin >= IFertDates[IFertDatesCount]) {			  	  
+					  N_Fert_App = FertAppValues[IFertDatesCount] / T_Step;
+					  IFertDatesCount++;
+				  }
+				  else
+					  N_Fert_App = 0.;
 		  }
 	
 		N_Fert_NO3=N_Fert*N_FertDiss_k*(1-N_Fert_NH4_Frac);

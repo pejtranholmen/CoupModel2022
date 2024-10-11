@@ -1340,20 +1340,10 @@ void NC_Plant::Integ()
 				}
 				bool CollectLitter = true;
 				if (GrowthStageIndex[i_plant] < 0.) {
-					int prior = 1;
-					if (HarvestToBeDone[i_plant]) {
-
-
-					}
-					else {
-						CollectLitter = false;
-						prior = 3;
-
-
-					}
+					if (!HarvestToBeDone[i_plant]) 	CollectLitter = false;
 				}
 
-				if (CollectLitter) {//if (P_LitterFall[j][jj_element][i_plant] >= 0. && P_LitterFall[j][jj_element][i_plant] < 100000.) {
+				if (CollectLitter) {
 					if (jj_element == _C_) InFlow(pNCSoil->SurfaceLitter[_L1][_C_], P_LitterFall[plantcomp][jj_element][i_plant] * Litter1Fraction);
 					else if (jj_element == _N_) InFlow(pNCSoil->SurfaceLitter[_L1][_N_], P_LitterFall[plantcomp][jj_element][i_plant] * Litter1Fraction);
 					else if (jj_element == _P_) InFlow(pNCSoil->SurfaceLitter[_L1][_P_], P_LitterFall[plantcomp][jj_element][i_plant] * Litter1Fraction);
@@ -1366,7 +1356,7 @@ void NC_Plant::Integ()
 				}
 
 			}
-			};
+		};
 
 		auto InflowAboveGroundComponentsToSoilHorizon = [&](size_t jj_element, size_t i_plant, size_t i_soil_layer) {
 			double Litter1Fraction, LayerFraction;
@@ -1424,23 +1414,12 @@ void NC_Plant::Integ()
 				InFlow(pNCSoil->SurfaceLitter[_L1][_P_], P_LitterFall[_MOBILE][_P_][i]);
 			}
 			};
+		
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 			for (int plantcomp = NEWMOBILE; plantcomp <= FUNGI; ++plantcomp) {
 				for (size_t indexplant = 0; indexplant < P_LitterFall[_ROOT][_C_].size(); indexplant++) {
-					if (P_LitterFall[plantcomp][jj][indexplant] > P_State[plantcomp][jj][indexplant] && jj == 1) {
-						int koll = 2;
-
-					}
 					if (!RemovedCompAtHarvest[indexplant]) {
-
-						if (P_LitterFall[plantcomp][jj][indexplant] > P_State[plantcomp][jj][indexplant] && jj == 1) {
-							int koll = 2;
-
-						}
 						OutFlow(P_State[plantcomp][jj][indexplant], P_LitterFall[plantcomp][jj][indexplant]);
-						if (P_State[ROOT][jj][indexplant] < 0.) {
-							int i = 1;
-						}
 					}
 				}
 			}
@@ -1529,19 +1508,13 @@ void NC_Plant::Integ()
 
 
 
+			InFlow(AccTotPlantUptake[_N_], Tot_PlantUptake[_N_ - 1]);
+			if(m_pModelStructure->m_NumActPlantElements>_N_)	InFlow(AccTotPlantUptake[_P_], Tot_PlantUptake[_P_ - 1]);
+
+
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-				if (jj == _C_) {
-					Plant_BalanceCheck[_C_] = AccPhotosyntheses - AccPlantLitter[_C_] - AccHarvest[_C_] - TotalDiffPlant[_C_] + AccSeedInputs[_C_] - AccPlantRespiration - AccFungiGrowth;
-				}
-				else if (jj == _N_) {
-					Plant_BalanceCheck[jj] = AccTotPlantUptake[jj] - AccPlantLitter[jj] - AccHarvest[jj] - TotalDiffPlant[jj] + AccSeedInputs[jj];
-					InFlow(AccTotPlantUptake[_N_], Tot_PlantUptake[_N_ - 1]);
-				}
-				else if (jj == _P_) {
-					Plant_BalanceCheck[_P_] = AccTotPlantUptake[_P_] - AccPlantLitter[_P_] - AccHarvest[_P_] - AccSeedInputs[_P_]- TotalDiffPlant[_P_];
-					InFlow(AccTotPlantUptake[_P_], Tot_PlantUptake[_P_ - 1]);
-				}
-				InFlow(AccHarvest[jj], TotHarvest[jj]);
+
+
 				if (EnhanceFlux) T_Step = 1.;
 				InFlow(AccBelowLitter[jj], TotPlantLitter[jj] - TotAbovePlantLitter[jj]);
 				InFlow(AccAboveLitter[jj], TotAbovePlantLitter[jj]);
@@ -1558,6 +1531,19 @@ void NC_Plant::Integ()
 					TotalDiffPlant[jj] = P_AllPlants[_PLANT_WHOLE][jj] - IniPlant[jj];
 
 				}
+				if (jj == _C_) {
+					Plant_BalanceCheck[_C_] = AccPhotosyntheses - AccPlantLitter[_C_] - AccHarvest[_C_] - TotalDiffPlant[_C_] + AccSeedInputs[_C_] - AccPlantRespiration - AccFungiGrowth;
+				}
+				else if (jj == _N_) {
+					Plant_BalanceCheck[jj] = AccTotPlantUptake[jj] - AccPlantLitter[jj] - AccHarvest[jj] - TotalDiffPlant[jj] + AccSeedInputs[jj];
+					
+				}
+				else if (jj == _P_) {
+					Plant_BalanceCheck[_P_] = AccTotPlantUptake[_P_] - AccPlantLitter[_P_] - AccHarvest[_P_] - AccSeedInputs[_P_] - TotalDiffPlant[_P_];
+
+				}
+
+				InFlow(AccHarvest[jj], TotHarvest[jj]);
 			}
 			T_Step = origtstep;
 
@@ -1587,32 +1573,48 @@ void NC_Plant::Integ()
 
 	};
 	
+	HarvestPloughingMade = false;
 	ReAllocationFlow();
 	RespirationFlow();
 	LitterFallFlow(HarvestPloughingMade);
 	HarvestFlow(HarvestPloughingMade);
 	PlantUptakeFlow();
 	InflowBelowGroundComponentsToSoilHorizon();
+
 	AccFlowsMovedFromAddition(HarvestPloughingMade);
 }
 
 void NC_Plant::PlantStage_CNRatio_PhysSize() {
-	SnowPack *pMet = (SnowPack*)pPlant->p_Atm;
+	SnowPack* pMet = (SnowPack*)pPlant->p_Atm;
 	pMet->f_daylength(m_pModelInfo->JDayNum);
-	
-	AtmNewMobile.assign(pPlant->NumPlants,0.);
 
-  //  P_Harvest[_GRAIN][_C_].assign(pPlant->NumPlants,0.);
+	AtmNewMobile.assign(pPlant->NumPlants, 0.);
 
-	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-		for (size_t j = 0; j < NUM_PLANT_COMP; j++) {
+	//  P_Harvest[_GRAIN][_C_].assign(pPlant->NumPlants,0.);
+	//if (m_ICountDay != m_pModelInfo->JDayNum + 1) {
+	bool NextDay = false;
+	if (m_ICountDay == m_pModelInfo->JDayNum) NextDay = true;
+	if (m_pModelInfo->JDayNum == 246) {
+
+		int startcheck = 1;
+		auto koll = T_Step;
+
+	}
+
+
+
+
+		for (size_t j_element = 0; j_element < m_pModelStructure->m_NumActPlantElements; j_element++) {
+		for (size_t j_plantcomp = 0; j_plantcomp < NUM_PLANT_COMP; j_plantcomp++) {
 			for (size_t iplant = 0; iplant < pPlant->NumPlants; iplant++) {
-					P_LitterFall[j][jj][iplant] = 0.;
-					P_Harvest[j][jj][iplant] = 0.;
+				if (NextDay) RemovedCompAtHarvest[iplant] = false;
+				if(!RemovedCompAtHarvest[iplant]) P_LitterFall[j_plantcomp][j_element][iplant] = 0.;
+				P_Harvest[j_plantcomp][j_element][iplant] = 0.;
 			}
 		}
-		for (size_t j = 0; j < NUM_REALLOCATION; j++) P_ReAllocation[j][jj].assign(pPlant->NumPlants, 0.);
-	}
+		for (size_t j = 0; j < NUM_REALLOCATION; j++) P_ReAllocation[j][j_element].assign(pPlant->NumPlants, 0.);
+		}
+	//}
 
 
 	
@@ -1696,6 +1698,7 @@ auto Growth_Stage = [&](size_t index) {
 			}
 		}
 		else if (Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::PG_File_specified) {
+			if(ISowingCount<ISowingDates.size())
 			if (m_pModelInfo->m_ActMin >= ISowingDates[ISowingCount]) {
 				m_LatestSowingDay = m_pModelInfo->JDayNum;
 				auto year=PGUtil::YearFunction(m_pModelInfo->JDayNum);
@@ -1751,6 +1754,7 @@ auto Growth_Stage = [&](size_t index) {
 			}
 		}
 		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::PG_File_specified) {
+			if(IEmergenceCount<IEmergenceDates.size())
 			if (m_pModelInfo->m_ActMin >= IEmergenceDates[IEmergenceCount]) {
 				out = 1.;
 				Emergence_Done[index] = false;
@@ -2224,15 +2228,15 @@ void NC_Plant::LitterFall() {
 			 Tsum = DormingTempSum[iplant];
 		 else
 			 Tsum = 0.;
-		 abovegroundLitterFall(iplant, Tsum);
-		 belowgroundLitterFall(iplant, Tsum);
+		 if (!RemovedCompAtHarvest[iplant]) {
+			 abovegroundLitterFall(iplant, Tsum);
+			 belowgroundLitterFall(iplant, Tsum);
+		 }
 	 }
 }
 void NC_Plant::Cleaning_Harvest_Events() {
-	SoilOrgModel* p_Soil=(SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
-	NC_SoilManagement* pNCSoil=&p_Soil->m_NC_SoilOrg;
-	
-	
+	SoilOrgModel* p_Soil = (SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
+	NC_SoilManagement* pNCSoil = &p_Soil->m_NC_SoilOrg;
 
 	HarvestPloughingMade = false;
 
@@ -2242,6 +2246,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 	}
 	else {
 		if (m_ICountDay >= 365)	m_ICountDay = size_t(1);
+
 		if (!m_ResetMade) {
 			for (size_t i_plant = 0; i_plant < P_ReAllocation[0][0].size(); i_plant++)
 				for (size_t j = _LEAF; j <= _OLD_COARSE_ROOT; j++)
@@ -2254,234 +2259,187 @@ void NC_Plant::Cleaning_Harvest_Events() {
 	}
 
 
-	for(size_t i_plant=0; i_plant<P_ReAllocation[0][0].size();i_plant++) {
+	for (size_t i_plant = 0; i_plant < P_ReAllocation[0][0].size(); i_plant++) {
 		MoveFromPlantToLitter = false;
 		RemovedCompAtHarvest[i_plant] = false;
-		if(Cleaning_Sw(Cleaning)> Cleaning_Sw::off) {
-		    DoCleaning=false;
-		    if(Cleaning_Sw(Cleaning)==Cleaning_Sw::All_Years) 
-		        YearToClean=true;
-		    else {
-		        YearToClean=false;
-				for(size_t jj=0; jj<CleaningYears.size();jj++) {
-		            if(int(CleaningYears[jj])==int(SimPlantYearAge[i_plant]))
-		                YearToClean=true;	            
-				}
-		    }
-		    if(YearToClean) {
-		      //  Do JJP=1, Num_CleaningDays
-				for(size_t jjp=0; jjp<CleaningDays.size(); jjp++) {
-					if(int(CleaningDays[jjp])==m_pModelInfo->JDayNum&&CleaningPlantIndex[jjp]-1==i_plant) {
-		                DoCleaning=true;
-		                IndexClean=i_plant;
-		                ResetCleaningDay=size_t(m_pModelInfo->JDayNum+1);
-		            }
-				}       
-		    }	
-		}
-
-		if(Harvest_Day_Sw(Harvest_Day)==Harvest_Day_Sw::Fixed_Multiple_Days) {
-		    DoHarvest=false;
-            DoFinalHarvest=false;
-		    HarvestDayNo[i_plant]=-1;
-		    for(size_t jjp=0; jjp<SimPlantYearAge.size(); jjp++) { //Do JJP=1, NumPlants
-				for(size_t jj=0; jj<HarvestYears.size(); jj++) {   //Do jj=1, Num_HarvestYears		
-					if(PlantsToHarvest==0&&int(SimPlantYearAge[jjp])==int(HarvestYears[jj])) {
-						DoHarvest=true;
-						if(Harvest_Type_Years[jj]>0.5) 	DoFinalHarvest = true;
-					}
-					else if(size_t(HarvestYearPlantIndex[jj]+0.01)==i_plant&&jjp==i_plant&&int(SimPlantYearAge[jjp])==int(HarvestYears[jj])) {
-						DoHarvest=true  ;
-						if (Harvest_Type_Years[jj] > 0.5) 	DoFinalHarvest = true;
-						if(jj==HarvestYears.size()-1  ) DoFinalHarvest=true;
-    				}
+		if (Cleaning_Sw(Cleaning) > Cleaning_Sw::off) {
+			DoCleaning = false;
+			if (Cleaning_Sw(Cleaning) == Cleaning_Sw::All_Years)
+				YearToClean = true;
+			else {
+				YearToClean = false;
+				for (size_t jj = 0; jj < CleaningYears.size(); jj++) {
+					if (int(CleaningYears[jj]) == int(SimPlantYearAge[i_plant]))
+						YearToClean = true;
 				}
 			}
-		    //EndDo
-		    if(DoHarvest) {
-				 // Do jj=1, Num_HarvestDays  
-				  for(size_t jj=0; jj<HarvestDays.size();jj++) {	
-						if(PlantsToHarvest==0&&m_pModelInfo->JDayNum==int(HarvestDays[jj])) {
-							HarvestDayNo[i_plant]=m_pModelInfo->JDayNum; 
-						}
-						else if(size_t(HarvestDayPlantIndex[jj]+0.01)==i_plant&&m_pModelInfo->JDayNum==int(HarvestDays[jj])) {
-							HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;
-						}
-						if (Harvest_Type_Days[jj] > 0.5&&DoFinalHarvest) 	DoFinalHarvest = true;
-						else  DoFinalHarvest = false;
+			if (YearToClean) {
+				//  Do JJP=1, Num_CleaningDays
+				for (size_t jjp = 0; jjp < CleaningDays.size(); jjp++) {
+					if (int(CleaningDays[jjp]) == m_pModelInfo->JDayNum && CleaningPlantIndex[jjp] - 1 == i_plant) {
+						DoCleaning = true;
+						IndexClean = i_plant;
+						ResetCleaningDay = size_t(m_pModelInfo->JDayNum + 1);
 					}
-   		    } 
-   		    if(HarvestDayNo[i_plant]>0) HarvestToBeDone[i_plant]=true;  
+				}
+			}
 		}
-   		else if(Harvest_Day_Sw(Harvest_Day)==Harvest_Day_Sw::Estimated_GSI) {
-   		    HarvestDayNo[i_plant]=0;
-   		    if(GrowthStageIndex[i_plant]>=4)
-                HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;		   		      		    
-   		}
-   		else if(Harvest_Day_Sw(Harvest_Day)==Harvest_Day_Sw::Estimated_LAI&&SimPlantYearAge.front()<(Max_Plant_LifeTime.front()-10)) {
-   		    HarvestDayNo[i_plant]=-1;
-           // if(SimPlantYearAge.front()+8>PreviousThinningYear) {       		
-   		        if(pPlant->SimLeafAreaIndex[i_plant]>=HarvestLAIValue[i_plant]){
-   		            HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;
-                    //PreviousThinningYear=size_t(SimPlantYearAge.front());
-   		        }  		        
-   		    //}
+
+		if (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::Fixed_Multiple_Days) {
+			DoHarvest = false;
+			DoFinalHarvest = false;
+			HarvestDayNo[i_plant] = -1;
+			for (size_t jjp = 0; jjp < SimPlantYearAge.size(); jjp++) { //Do JJP=1, NumPlants
+				for (size_t jj = 0; jj < HarvestYears.size(); jj++) {   //Do jj=1, Num_HarvestYears		
+					if (PlantsToHarvest == 0 && int(SimPlantYearAge[jjp]) == int(HarvestYears[jj])) {
+						DoHarvest = true;
+						if (Harvest_Type_Years[jj] > 0.5) 	DoFinalHarvest = true;
+					}
+					else if (size_t(HarvestYearPlantIndex[jj] + 0.01) == i_plant && jjp == i_plant && int(SimPlantYearAge[jjp]) == int(HarvestYears[jj])) {
+						DoHarvest = true;
+						if (Harvest_Type_Years[jj] > 0.5) 	DoFinalHarvest = true;
+						if (jj == HarvestYears.size() - 1) DoFinalHarvest = true;
+					}
+				}
+			}
+			//EndDo
+			if (DoHarvest) {
+				// Do jj=1, Num_HarvestDays  
+				for (size_t jj = 0; jj < HarvestDays.size(); jj++) {
+					if (PlantsToHarvest == 0 && m_pModelInfo->JDayNum == int(HarvestDays[jj])) {
+						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+					}
+					else if (size_t(HarvestDayPlantIndex[jj] + 0.01) == i_plant && m_pModelInfo->JDayNum == int(HarvestDays[jj])) {
+						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+					}
+					if (Harvest_Type_Days[jj] > 0.5 && DoFinalHarvest) 	DoFinalHarvest = true;
+					else  DoFinalHarvest = false;
+				}
+			}
+			if (HarvestDayNo[i_plant] > 0) HarvestToBeDone[i_plant] = true;
 		}
-   		else if(Harvest_Day_Sw(Harvest_Day)==Harvest_Day_Sw::PG_File_specified&&ICountHarvest<NumValidHarvest) {
-   		    DoHarvest=false;
-   		    if(m_pModelInfo->m_ActMin>=IHarvestDates[ICountHarvest]) {
-   		        HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;
+		else if (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::Estimated_GSI) {
+			HarvestDayNo[i_plant] = 0;
+			if (GrowthStageIndex[i_plant] >= 4)
+				HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+		}
+		else if (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::Estimated_LAI && SimPlantYearAge.front() < (Max_Plant_LifeTime.front() - 10)) {
+			HarvestDayNo[i_plant] = -1;
+			// if(SimPlantYearAge.front()+8>PreviousThinningYear) {       		
+			if (pPlant->SimLeafAreaIndex[i_plant] >= HarvestLAIValue[i_plant]) {
+				HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+				//PreviousThinningYear=size_t(SimPlantYearAge.front());
+			}
+			//}
+		}
+		else if (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::PG_File_specified && ICountHarvest < NumValidHarvest) {
+			DoHarvest = false;
+			if(ICountHarvest< IHarvestDates.size())
+				if (m_pModelInfo->m_ActMin >= IHarvestDates[ICountHarvest]) {
+					HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
 					if (ChangeParAtHarvestDate.size() > 0) {
 						size_t count_plant = 0;
-						
+
 						for (SIMB p : ChangeParAtHarvestDate) {
 							if (p.TabIndex == string::npos) static_cast<Ps*>(p.pBase)->SetValue(ChangeParAtHarvestValues[ICountHarvest][count_plant]);
-							else if(i_plant+1==p.TabIndex) static_cast<P*>(p.pBase)->SetValue(i_plant, ChangeParAtHarvestValues[ICountHarvest][count_plant]);
+							else if (i_plant + 1 == p.TabIndex) static_cast<P*>(p.pBase)->SetValue(i_plant, ChangeParAtHarvestValues[ICountHarvest][count_plant]);
 							count_plant++;
 						}
 					}
-   		        ICountHarvest++;
-   		        DoHarvest=true;
+					ICountHarvest++;
+					DoHarvest = true;
+				}
+			else
+				HarvestDayNo[i_plant] = -1;
+
+			if (DoHarvest) {
+				//  Do jj=1, Num_HarvestDays  
+				for (size_t jj = 0; jj < HarvestDays.size(); jj++) {
+					if (PlantsToHarvest == 0 && m_pModelInfo->JDayNum == int(HarvestDays[jj]))
+						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+					else if (HarvestDayPlantIndex[jj] == i_plant && m_pModelInfo->JDayNum == int(HarvestDays[jj]))
+						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+				}
+				//EndDo
 			}
-   		    else
-   		        HarvestDayNo[i_plant]=-1;
-   		    
-		    if(DoHarvest) {
-		        //  Do jj=1, Num_HarvestDays  
-				for(size_t jj=0; jj<HarvestDays.size();jj++) {
-		            if(PlantsToHarvest==0&&m_pModelInfo->JDayNum==int(HarvestDays[jj])) 
-		                HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;
-		            else if(HarvestDayPlantIndex[jj]==i_plant&&m_pModelInfo->JDayNum==int(HarvestDays[jj])) 
-                        HarvestDayNo[i_plant]=m_pModelInfo->JDayNum;  		                
-		         }
-		          //EndDo
-   		    }    		    
-   		    
-   		    
+
+
 		}
-   		else if(Harvest_Day_Sw(Harvest_Day)!=Harvest_Day_Sw::Fixed_Single) 
-   		     HarvestDayNo[i_plant]=-1;
-		
+		else if (Harvest_Day_Sw(Harvest_Day) != Harvest_Day_Sw::Fixed_Single)
+			HarvestDayNo[i_plant] = -1;
+
 		// At Harvest
-		if(((GrowthStageIndex[i_plant]==4&&(Harvest_Day_Sw(Harvest_Day)==Harvest_Day_Sw::Estimated_GSI||
-			Harvest_Day_Sw(Harvest_Day)==Harvest_Day_Sw::In_Year_Table))||
-			(HarvestDayNo[i_plant]==m_pModelInfo->JDayNum&&Harvest_Day_Sw(Harvest_Day) != Harvest_Day_Sw::Estimated_GSI &&
-				Harvest_Day_Sw(Harvest_Day) != Harvest_Day_Sw::In_Year_Table))&&HarvestToBeDone[i_plant]) {		// Harvest day, LK 020827 Updated bugs and added harvest from old
-		    ResetHarvestToBeDoneDay[i_plant]=min(int(m_pModelInfo->JDayNum+1),365);
-            HarvestDoneThisYear[i_plant]=true;
-			if(Grazing_Sw(Grazing)==Grazing_Sw::off) 		    
+		if (((GrowthStageIndex[i_plant] == 4 && (Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::Estimated_GSI ||
+			Harvest_Day_Sw(Harvest_Day) == Harvest_Day_Sw::In_Year_Table)) ||
+			(HarvestDayNo[i_plant] == m_pModelInfo->JDayNum && Harvest_Day_Sw(Harvest_Day) != Harvest_Day_Sw::Estimated_GSI &&
+				Harvest_Day_Sw(Harvest_Day) != Harvest_Day_Sw::In_Year_Table)) && HarvestToBeDone[i_plant]) {		// Harvest day, LK 020827 Updated bugs and added harvest from old
+			ResetHarvestToBeDoneDay[i_plant] = min(int(m_pModelInfo->JDayNum + 1), 365);
+			HarvestDoneThisYear[i_plant] = true;
+			if (Grazing_Sw(Grazing) == Grazing_Sw::off)
 				SplitofPlant_At_Harvest(false);
-		    else if(HarvestToBeDone[i_plant]&& Grazing_Sw(Grazing) == Grazing_Sw::Continous)  // When Grazing equal 2 14 May 2007   		
-    			SplitofPlant_At_Harvest(true);
+			else if (HarvestToBeDone[i_plant] && Grazing_Sw(Grazing) == Grazing_Sw::Continous)  // When Grazing equal 2 14 May 2007   		
+				SplitofPlant_At_Harvest(true);
 			MoveFromPlantToLitter = true;
-    		   
-	////// For Grazing = 2 above		
-		
-		}    
-		else if(SimPlantAge[i_plant]>=Max_Plant_LifeTime[i_plant]*365.-150.&&m_pModelInfo->JDayNum==1&&pAtm->Latitude>0.){
-		        if(TerminatingHarvest==1) {
-		            if(i_plant==1) {
-                        OK=TerminatingHarvestFunction(i_plant);
-                        HarvestToBeDone[i_plant]=false	;
-						SimPlantAge.front()=0;
-                    }
-				}
-		        else {
-					MoveFromPlantToLitter =KillAboveGroundPlant(i_plant);
-				    OK=KillBelowGroundPlant(i_plant);
-				    HarvestToBeDone[i_plant]=true;
-				}
 
-				GrowingSum[i_plant]=0.;
-		}
-		else if(SimPlantAge[i_plant]>=Max_Plant_LifeTime[i_plant]*365.-150.&&m_pModelInfo->JDayNum==180&&pAtm->Latitude<=0.){
-		        if(TerminatingHarvest==1) ;
-		        
-		        else {
-					MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
-				    OK=KillBelowGroundPlant(i_plant);
-				    HarvestToBeDone[i_plant]=true;
-				}		
+			////// For Grazing = 2 above		
 
-				HarvestToBeDone[i_plant]=true;
-				GrowingSum[i_plant]=0.;
 		}
-		else if(DoCleaning&&CleaningToBeDone&&IndexClean==i_plant) 
+		else if (SimPlantAge[i_plant] >= Max_Plant_LifeTime[i_plant] * 365. - 150. && m_pModelInfo->JDayNum == 1 && pAtm->Latitude > 0.) {
+			if (TerminatingHarvest == 1) {
+				if (i_plant == 1) {
+					OK = TerminatingHarvestFunction(i_plant);
+					HarvestToBeDone[i_plant] = false;
+					SimPlantAge.front() = 0;
+				}
+			}
+			else {
+				MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
+				OK = KillBelowGroundPlant(i_plant);
+				HarvestToBeDone[i_plant] = true;
+			}
+
+			GrowingSum[i_plant] = 0.;
+		}
+		else if (SimPlantAge[i_plant] >= Max_Plant_LifeTime[i_plant] * 365. - 150. && m_pModelInfo->JDayNum == 180 && pAtm->Latitude <= 0.) {
+			if (TerminatingHarvest == 1);
+
+			else {
+				MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
+				OK = KillBelowGroundPlant(i_plant);
+				HarvestToBeDone[i_plant] = true;
+			}
+
+			HarvestToBeDone[i_plant] = true;
+			GrowingSum[i_plant] = 0.;
+		}
+		else if (DoCleaning && CleaningToBeDone && IndexClean == i_plant)
 			LitterFall_At_Cleaning();
 		else {
 			for (size_t j = _LEAF; j <= _OLD_COARSE_ROOT; j++)
-				for (size_t jj = 0; jj<m_pModelStructure->m_NumActPlantElements; jj++)
+				for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 					P_Harvest[j][jj][i_plant] = 0;
-	
+
 		}
-		
+
 		if (m_pModelInfo->JDayNum == int(pNCSoil->PloughingDay)) {
 			MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
 			OK = KillBelowGroundPlant(i_plant);
 			HarvestPloughingMade = true;
 
 		}
-		
-		if(HarvestDayNo[i_plant]==m_pModelInfo->JDayNum+1&&HarvestToBeDone[i_plant]==false) 
-			HarvestToBeDone[i_plant]=true;
-		else if(ResetHarvestToBeDoneDay[i_plant]==m_pModelInfo->JDayNum&&HarvestToBeDone[i_plant]==false) {
-		    HarvestToBeDone[i_plant]=true	;
+
+		if (HarvestDayNo[i_plant] == m_pModelInfo->JDayNum + 1 && HarvestToBeDone[i_plant] == false)
+			HarvestToBeDone[i_plant] = true;
+		else if (ResetHarvestToBeDoneDay[i_plant] == m_pModelInfo->JDayNum && HarvestToBeDone[i_plant] == false) {
+			HarvestToBeDone[i_plant] = true;
 		}
-		if(ResetCleaningDay==m_pModelInfo->JDayNum) 
-		    CleaningToBeDone=true;
-		
+		if (ResetCleaningDay == m_pModelInfo->JDayNum)
+			CleaningToBeDone = true;
+
 		if (MoveFromPlantToLitter) {
 			RemovedCompAtHarvest[i_plant] = true;
-			for (int element=_C_; element < m_pModelStructure->m_NumActPlantElements; element++) {
-				for (size_t plantcomp = LEAF; plantcomp <= OLD_STEM; plantcomp++) {
-					double Litter1Fraction = 1.;
-					switch (plantcomp) {
-					case LEAF:
-					case OLD_LEAF:
-						Litter1Fraction = (1. - Leaf_FracLitter2[i_plant]);
-						break;
-					case STEM:
-					case OLD_STEM:
-						Litter1Fraction = (1. - Stem_FracLitter2[i_plant]);
-						break;
-					case GRAIN:
-						Litter1Fraction = (1. - Grain_FracLitter2[i_plant]);
-						break;
-					}
-					auto remove = P_LitterFall[plantcomp][element][i_plant];
-					if (element == _C_) pNCSoil->SurfaceLitter[_L1][_C_] += P_LitterFall[plantcomp][element][i_plant]*Litter1Fraction;
-					else if (element == _N_) pNCSoil->SurfaceLitter[_L1][_N_] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction ;
-					else if (element == _P_) pNCSoil->SurfaceLitter[_L1][_P_] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction ;
-					if (Litter1Fraction < 1.) {
-						if (element == _C_) pNCSoil->SurfaceLitter[_L2][_C_] += P_LitterFall[plantcomp][element][i_plant] * (1-Litter1Fraction) ;
-						else if (element == _N_) pNCSoil->SurfaceLitter[_L2][_N_] += P_LitterFall[plantcomp][element][i_plant] * (1-Litter1Fraction) ;
-						else if (element == _P_) pNCSoil->SurfaceLitter[_L2][_P_] += P_LitterFall[plantcomp][element][i_plant] * (1-Litter1Fraction) ;
-					}
-					P_State[plantcomp][element][i_plant] -= remove;
-				}
-				for (int plantcomp  = ROOT; plantcomp <= OLD_COARSE_ROOT; ++plantcomp) {
-					double Litter1Fraction = 1;
-					if (plantcomp == _ROOT || plantcomp == _OLD_ROOT) Litter1Fraction = 1. - Root_FracLitter2[i_plant];
-					else Litter1Fraction = 1. - CoarseRoot_FracLitter2[i_plant];
-					DEPTH_type out;
-					out = pPlant->f_WaterUptakeDistribution(1., pPlant->SimRootDepth[i_plant]);
-
-					auto remove = P_LitterFall[plantcomp][element][i_plant];
-					for (size_t i_soil_layer = 0; i_soil_layer < out.NumLay; ++i_soil_layer) {
-						auto frac = out.Dist[i_soil_layer];
-						pNCSoil->Dead_BelowGround[_L1][element][i_soil_layer] += P_LitterFall[plantcomp][element][i_plant] * Litter1Fraction * frac;
-						pNCSoil->Dead_BelowGround[_L2][element][i_soil_layer] += P_LitterFall[plantcomp][element][i_plant] * (1-Litter1Fraction) * frac;
-					}
-					if (remove > P_State[plantcomp][element][i_plant]&&element==1) {
-						P_State[plantcomp][element][i_plant] -= remove;
-					}
-					else
-						P_State[plantcomp][element][i_plant] -= remove;
-				}
-				MoveFromPlantToLitter = false;
-			}
-
-		};
+			MoveFromPlantToLitter = MoveLitterFromPlant(pNCSoil, i_plant);
+		}
 	}
 }
 void NC_Plant::WoodEatingProcess() {
@@ -3500,10 +3458,10 @@ void NC_Plant::Summation_Fluxes() {
 		for (size_t i = 0; i < P_State[_STEM][_C_].size(); i++) {
 
 			// Auxiliary Variables
-			P_SumPlant[_ROOT_ALL][jj][i] = P_State[_ROOT][jj][i] + P_State[_OLD_ROOT][jj][i] + P_State[_COARSE_ROOT][jj][i] + P_State[_OLD_COARSE_ROOT][jj][i];
-			P_SumPlant[_LEAF_ALL][jj][i] = P_State[_OLD_LEAF][jj][i] + P_State[_LEAF][jj][i];
-			P_SumPlant[_PLANT_WHOLE][jj][i] = P_State[_GRAIN][jj][i] + P_State[_LEAF][jj][i] + P_State[_STEM][jj][i] + P_State[_OLD_LEAF][jj][i] +
-				P_State[_OLD_STEM][jj][i] + P_SumPlant[_ROOT_ALL][jj][i] +P_State[_NEWMOBILE][jj][i] + P_State[_MOBILE][jj][i];
+			P_SumPlant[_ROOT_ALL][jj][i] = P_State[ROOT][jj][i] + P_State[OLD_ROOT][jj][i] + P_State[COARSE_ROOT][jj][i] + P_State[OLD_COARSE_ROOT][jj][i];
+			P_SumPlant[_LEAF_ALL][jj][i] = P_State[OLD_LEAF][jj][i] + P_State[LEAF][jj][i];
+			P_SumPlant[_PLANT_WHOLE][jj][i] = P_State[GRAIN][jj][i] + P_State[LEAF][jj][i] + P_State[STEM][jj][i] + P_State[OLD_LEAF][jj][i] +
+				P_State[OLD_STEM][jj][i] + P_SumPlant[_ROOT_ALL][jj][i] +P_State[NEWMOBILE][jj][i] + P_State[MOBILE][jj][i];
 			P_SumPlant[_ABOVE_GROUND][jj][i] = P_SumPlant[_PLANT_WHOLE][jj][i] - P_SumPlant[_ROOT_ALL][jj][i];
 
 
