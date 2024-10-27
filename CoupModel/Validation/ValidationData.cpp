@@ -969,9 +969,8 @@ bool ValidationData::SetValFileLogTrans(size_t index, bool value)
 }
 bool ValidationData::GetValFileLogTrans(size_t index)
 {
-
 	if(index<m_pSimDoc->m_Val_Array.size()) {
-		m_pSimDoc->m_Val_Array[index].LogTrans;
+		return m_pSimDoc->m_Val_Array[index].LogTrans;
 	}
 	return false;
 }

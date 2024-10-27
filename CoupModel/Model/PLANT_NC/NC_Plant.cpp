@@ -1226,12 +1226,7 @@ void NC_Plant::Integ()
 
 
 	auto ReAllocationFlow = [&]() {
-		auto gsi_koll=GrowthStageIndex[0];
 
-		if (gsi_koll > 3.93) {
-			int koll = 2;
-
-		}
 
 		OutFlow(P_State[_NEWMOBILE][_C_], P_CarbonAlloNewMobile.Leaf);
 		if (P_State[_LEAF][_C_][0] > -10.&&P_State[_LEAF][_C_][0] < 1000.) {
@@ -1263,11 +1258,6 @@ void NC_Plant::Integ()
 				if (P_ReAllocation[j][jj][0] > -10. &&P_ReAllocation[j][jj][0] < 1000.) {
 					OutFlow(P_State[P_ReLink[j].first][jj], P_ReAllocation[j][jj]);
 					InFlow(P_State[P_ReLink[j].second][jj], P_ReAllocation[j][jj]);
-					auto koll = P_State[P_ReLink[j].first][jj];
-					if (P_ReLink[j].first == GRAIN&&gsi_koll > 3.93) {
-						auto koll2 = P_State[GRAIN][_C_];
-						auto koll3 = P_State[GRAIN][_N_];				
-					}
 				
 				}
 				else
@@ -1315,7 +1305,7 @@ void NC_Plant::Integ()
 
 	};
 
-	auto LitterFallFlow = [&](bool EnhanceFlux) {
+	auto LitterFallFlow = [&]() {
 		// Add for P in surface litter by HH
 		auto InflowToSurfaceLitter = [&](int jj_element, int i_plant) {
 			double Litter1Fraction = 1;
@@ -1475,14 +1465,11 @@ void NC_Plant::Integ()
 			}
 		}
 	};
-	auto HarvestFlow = [&](bool EnhanceFlux) {
-	
-		//if (EnhanceFlux) T_Step = 1.;
+	auto HarvestFlow = [&]() {
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 			for (size_t j = 0; j < NUM_PLANT_COMP; j++) {
 				OutFlow(P_State[j][jj], P_Harvest[j][jj]);
 			};
-		//if (EnhanceFlux) T_Step = orig_tstep;
 	};
 
 	auto PlantUptakeFlow = [&]() {
@@ -1502,11 +1489,8 @@ void NC_Plant::Integ()
 		}
 	};
 
-	auto AccFlowsMovedFromAddition = [&](bool EnhanceFlux) 
+	auto AccFlowsMovedFromAddition = [&]() 
 	{
-			auto origtstep = T_Step;
-
-
 
 			InFlow(AccTotPlantUptake[_N_], Tot_PlantUptake[_N_ - 1]);
 			if(m_pModelStructure->m_NumActPlantElements>_N_)	InFlow(AccTotPlantUptake[_P_], Tot_PlantUptake[_P_ - 1]);
@@ -1514,12 +1498,10 @@ void NC_Plant::Integ()
 
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 
-
-				if (EnhanceFlux) T_Step = 1.;
 				InFlow(AccBelowLitter[jj], TotPlantLitter[jj] - TotAbovePlantLitter[jj]);
 				InFlow(AccAboveLitter[jj], TotAbovePlantLitter[jj]);
 				InFlow(AccPlantLitter[jj], TotPlantLitter[jj]);
-				T_Step = origtstep;
+
 				if (jj == _C_) {
 					TotalDiffPlant[jj] = P_AllPlants[_PLANT_WHOLE][jj]  - IniPlant[jj];
 				}
@@ -1542,14 +1524,12 @@ void NC_Plant::Integ()
 					Plant_BalanceCheck[_P_] = AccTotPlantUptake[_P_] - AccPlantLitter[_P_] - AccHarvest[_P_] - AccSeedInputs[_P_] - TotalDiffPlant[_P_];
 
 				}
-
 				InFlow(AccHarvest[jj], TotHarvest[jj]);
 			}
-			T_Step = origtstep;
 
 			PlantPhotoSynt = sum(AtmNewMobile);
 			TotalPhotoSynt = PlantPhotoSynt;
-			
+		
 
 
 			double TotalFungiGrowth = sum(P_ReAllocation[NEWMOBILE_FUNGI][_C_]);
@@ -1573,15 +1553,15 @@ void NC_Plant::Integ()
 
 	};
 	
-	HarvestPloughingMade = false;
+
 	ReAllocationFlow();
 	RespirationFlow();
-	LitterFallFlow(HarvestPloughingMade);
-	HarvestFlow(HarvestPloughingMade);
+	LitterFallFlow();
+	HarvestFlow();
 	PlantUptakeFlow();
 	InflowBelowGroundComponentsToSoilHorizon();
 
-	AccFlowsMovedFromAddition(HarvestPloughingMade);
+	AccFlowsMovedFromAddition();
 }
 
 void NC_Plant::PlantStage_CNRatio_PhysSize() {

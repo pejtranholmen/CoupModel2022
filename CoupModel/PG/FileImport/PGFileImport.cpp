@@ -619,16 +619,18 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		
 
 	};
-    enum class ReadVar  {StatNamn, ParNamn, Period, DatumStart, No};
-	auto ReadStatus = ReadVar::No;
+
 	size_t Valid_Line = 0;
 	bool datestring = false;
-	auto CountHeads = [&]() {
-	
-		if (m_format == SITES) {
+	auto CountHeads = [&out, &col_info_rec, &SiteId_Index, &SMHI_HeadLineNo, &SMHI_ParLineNo, &SMHI_TidPosStart, &SMHI_PeriodLineNo, &SMHI_StatLineNo, &UnitsHeaderFind, &Valid_Line](formats format, string varstr, size_t nrec, size_t nvar ) {
+		size_t numhead=string::npos;
+		//if (nrec < 5) numhead = nrec - 1;
+		enum class ReadVar { StatNamn, ParNamn, Period, DatumStart, No };
+		auto ReadStatus = ReadVar::No;
+		if (format == SITES) {
 			if (varstr.find("\"") != string::npos) varstr = varstr.substr(1, varstr.size() - 2);
 			
-			if (nhead == string::npos) {
+			if (numhead == string::npos) {
 
 				if (varstr.find("LATITUDE:") == 0) {
 					out.dec_cord.y = FUtil::AtoFloat(varstr.substr(10));
@@ -645,7 +647,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					out.dec_cord.z = FUtil::AtoFloat(varstr.substr(10));
 				}
 				else if (varstr.find("####") == 0) {
-					nhead = nrec + 1;
+					numhead = nrec + 1;
 				}
 				else if (varstr.find("PARAMETER AND COLUMN INFO") == 0) {
 					col_info_rec = nrec + 1;
@@ -720,18 +722,18 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					}
 				}
 			}
-			else if (nrec == 0) nhead = string::npos;
+			else if (nrec == 0) numhead = string::npos;
 			else if (nrec==4) {
 				out.IdFromHead.push_back(varstr);
-				return;
+				return numhead;
 				
 			}
 			else if (nrec == 1) {
-				nhead = 4;
+				numhead = 4;
 				for (auto& c : varstr) c = toupper(c);
 				if (varstr == "TIMESTAMP" || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
 				out.FirstValidHeads.push_back(varstr);
-				return;
+				return numhead;
 			}
 			else if (nrec == 2) {
 				if (nvar == 1) out.FirstValidHeads.clear();
@@ -739,19 +741,19 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				if (varstr.find("TIMESTAMP")!=string::npos || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
 
 				out.FirstValidHeads.push_back(varstr);
-				return;
+				return nrec;
 			}
 			else if (nrec == 3) {
 				if (nvar == 1) out.UnitsFromHead.clear();
 				
 				out.UnitsFromHead.push_back(varstr);
-				return;
+				return nrec;
 			}
-			else if (nrec > nhead) return;
-			return;
+			
+			return numhead;
 
 		}
-		else if (m_format == SMHI_OPENDATA) {
+		else if (format == SMHI_OPENDATA) {
 			if (varstr == "Stationsnamn") {
 				ReadStatus = ReadVar::StatNamn;
 				Valid_Line = nrec+1;
@@ -762,7 +764,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				ReadStatus = ReadVar::ParNamn;
 				Valid_Line = nrec + 1;
 				SMHI_ParLineNo = nrec + 1;
-				nhead = nrec;
+				numhead = nrec;
 			}
 			else if (varstr == "Frn Datum Tid (UTC)") {
 				ReadStatus = ReadVar::DatumStart;
@@ -771,18 +773,18 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				SMHI_TidPosStart = 3;
 				out.DateColumn = nvar+2;
 				out.SkipBeforeVar = 2;
-				m_CurrentFileInfo.DateColumn = out.DateColumn;
+				//m_CurrentFileInfo.DateColumn = out.DateColumn;
 				out.HourColumn = string::npos;
 				out.TimeColumn = string::npos;
-				m_CurrentFileInfo.IdentifiedDateFormat = YMD;
-				nhead = nrec;
+				//m_CurrentFileInfo.IdentifiedDateFormat = YMD;
+				numhead = nrec;
 			}
 			else if (varstr == "Datum") {
 				ReadStatus = ReadVar::DatumStart;
 				Valid_Line = nrec + 1;
 				SMHI_HeadLineNo = nrec;
 				SMHI_TidPosStart = 1;
-				nhead = nrec;
+				numhead = nrec;
 				out.DateColumn = nvar;
 			}
 			else if (varstr == "Tid (UTC)") {
@@ -835,12 +837,12 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			if (nrec == SMHI_HeadLineNo && nvar >= SMHI_TidPosStart && varstr!=""&&varstr!="Tidsutsnitt:") out.FirstValidHeads.push_back(varstr);
 
 		}
-		else if (m_format == OPEN_METEO) {
+		else if (format == OPEN_METEO) {
 			out.DateColumn = 1;
-			m_format = OPEN_METEO;
+			
 			//string txt=out.InputfileName.find("open-meteo")
 			if (nrec == 1) {
-				nhead = 4;
+				numhead = 4;
 
 			}
 			else if (nrec == 2) {
@@ -853,37 +855,38 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			else if (nrec == 4) {
 				out.FirstValidHeads.push_back(varstr);
-				nhead = 4;
+				numhead = 4;
 			}
-			return;
+			return numhead;
 			
 		}
 		else {
 			if (varstr.find("SITES STATION:") != string::npos) {
 				out.StatName = varstr.substr(15);
-				m_format = SITES;
-				nhead = string::npos;
-				return;
+				format = SITES;
+				numhead = string::npos;
+				return numhead;
 			}
 			else if (varstr.find("TITLE:") != string::npos && nrec==1) {
-				nhead = string::npos;
-				return;
+				numhead = string::npos;
+				return numhead;
 			}
-			if (nrec < 14 && varstr == "NaN") return;
-			if (nrec == 2) {
+			if (nrec < 14 && varstr == "NaN") return numhead;
+			if (nrec >= 2&&nrec<14&&nvar==1) {
 				auto datestring=PGUtil::CheckForPossiblePGDateString(varstr);
-				if (datestring) return;
+				if (datestring) return string::npos;
 			}
 
-			if (nrec <= 9 && varstr.find("Variable ") != string::npos||m_format==STANDARD) {
-				nhead = min(9, nrec);
+			if (nrec <= 9 && varstr.find("Variable") != string::npos||(format==STANDARD||format==PROFOUND)) {
+				numhead = min(9, nrec);
 				out.DateColumn = 1;
-				m_format = STANDARD;
-				if (nrec == 1 && varstr != "Variable Names:") 	out.FirstValidHeads.push_back(varstr);
+				if (nrec == 1 && varstr.find("Variable Name")==string::npos) {
+					out.FirstValidHeads.push_back(varstr);
+				}
 				out.SkipBeforeVar = 1;
 			}
-			else if (nrec < SMHI_HeadLineNo && m_format == SMHI_OPENDATA) {
-				nhead = nrec;
+			else if (nrec < SMHI_HeadLineNo && format == SMHI_OPENDATA) {
+				numhead = nrec;
 				if (nrec >= 10 && varstr == "Datum") SMHI_HeadLineNo = nrec;
 				if (nrec >= 10 && varstr.find("Datum Tid") != string::npos) SMHI_HeadLineNo = nrec;
 
@@ -892,81 +895,81 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			else if (nrec <= 14){
 				if ((varstr.find("Date") != string::npos || varstr.find("DATE") != string::npos || varstr.find("TIMESTAMP") != string::npos || varstr.find("TimeStamp") != string::npos)&&out.DateColumn==string::npos) {
-					nhead = nrec;
+					numhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
 				else if (((varstr.find("DATE") != string::npos || varstr.find("Date") != string::npos) || varstr.find("date") != string::npos)&&out.DateColumn==string::npos) {
-					nhead = nrec;
+					numhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
 				else if (((varstr.find("ISOD") == 0 || varstr.find("date") == 0 || varstr.find("DATUM") == 0))&& out.DateColumn == string::npos) {
-					nhead = nrec;
+					numhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
 				else if ((varstr.find("year") == 0 || varstr.find("Year") == 0)) {
-					nhead = nrec;
+					numhead = nrec;
 					out.YearColumn = out.FirstValidHeads.size() + 1;
 				}
 				else if ((varstr.find("Dayno") == 0 || varstr.find("dayno") == 0)) {
-					nhead = nrec;
+					numhead = nrec;
 					out.DayNumberColumn = out.FirstValidHeads.size() + 1;
 					//m_format = STANDARD;
 				}
 				else if ((varstr.find("julian") == 0 || varstr.find("Julian") == 0)) {
-					nhead = nrec;
+					numhead = nrec;
 					out.DayNumberColumn = out.FirstValidHeads.size() + 1;
 					//m_format = STANDARD;
 				}
 				else if ((varstr.find("hour") == 0 || varstr.find("Hour") == 0)) {
-					nhead = nrec;
+					numhead = nrec;
 					out.HourColumn = out.FirstValidHeads.size() + 1;
 				}
 				else if ((varstr.find("time") == 0 || varstr.find("Time") == 0) || varstr.find("TIME") == 0) {
-					nhead = nrec;
+					numhead = nrec;
 					out.TimeColumn = out.FirstValidHeads.size() + 1;
 				}
-				else if (varstr.find("mon") && m_format == SEPARATED_YMDH)
-					nhead = nrec;
+				else if (varstr.find("mon") && format == SEPARATED_YMDH)
+					numhead = nrec;
 				else if (varstr.find("date") == 0)
-					nhead = nrec;
+					numhead = nrec;
 				else if (varstr.find("DATUM") == 0)
-					nhead = nrec;
+					numhead = nrec;
 				else if (varstr.find("code") == 0)
-					nhead = nrec;
+					numhead = nrec;
 
 			}
-			else if (nrec == 1 && varstr.find("mon") == 0 && m_format != SEPARATED_YMDHM)
+			else if (nrec == 1 && varstr.find("mon") == 0 && format != SEPARATED_YMDHM)
 			{
-				nhead = nrec;
+				numhead = nrec;
 			} // Swiss climate file
 
 			else if (nrec <= 15 && varstr.find("TE") == 0) {
-				if (nrec == 6 && nhead == 1) { m_format = SMHI; nhead = 5; };
+				if (nrec == 6 && numhead == 1) { format = SMHI; numhead = 5; };
 			}
 			else if (varstr.find("TIME") == 0 || varstr.find("Time") == 0 || varstr.find("Tid") == 0 || varstr.find("time") == 0) {
 				out.TimeColumn = out.FirstValidHeads.size() + 1;
-				nhead = nrec;
+				numhead = nrec;
 			}
-			else if (nrec <= 15 && size_t(varstr[0]) >= 64 && size_t(varstr[0]) < 96 && nhead == 0) {
+			else if (nrec <= 15 && size_t(varstr[0]) >= 64 && size_t(varstr[0]) < 96 && numhead == 0) {
 				size_t ival = size_t(varstr[0]);
-				nhead = nrec;
+				numhead = nrec;
 			}
 			else if (varstr == "site_id") {
 				SiteId_Index = out.FirstValidHeads.size();
-				nhead = nrec;
+				numhead = nrec;
 			}
 			
 			
-			if (nrec == nhead + 1 && !FUtil::IsValidNumber(varstr) && nvar < 2) {
+			if (nrec == numhead + 1 && !FUtil::IsValidNumber(varstr) && nvar < 2) {
 				if (varstr == "dd/mm/yyyy") UnitsHeaderFind = true;
-				nhead = nrec;
+				numhead = nrec;
 			}
 	
 			if (UnitsHeaderFind&& nrec==2)	 out.UnitsFromHead.push_back(varstr);
-			else if (nhead != 0 && nrec ==nhead  && m_format != SMHI_OPENDATA&&m_format!=STANDARD) 	out.FirstValidHeads.push_back(varstr);
-			else if (m_format == SMHI_OPENDATA && nrec == SMHI_HeadLineNo&& nvar>= SMHI_TidPosStart &&varstr!=""&&varstr!="Tidsutsnitt:") out.FirstValidHeads.push_back(varstr);
+			else if (numhead != 0 && nrec ==numhead  && format != SMHI_OPENDATA&&format!=STANDARD) 	out.FirstValidHeads.push_back(varstr);
+			else if (format == SMHI_OPENDATA && nrec == SMHI_HeadLineNo&& nvar>= SMHI_TidPosStart &&varstr!=""&&varstr!="Tidsutsnitt:") out.FirstValidHeads.push_back(varstr);
 		}
-
+		return numhead;
 	};
 	size_t DescriptionType = 0;
 	AddInfo ainfo;
@@ -1064,7 +1067,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Names:") != string::npos) {
 			DescriptionType = 0;
 		}
-		else if (nrec <= 10 && nvar == 1 && (varstr.find("Variable Units:") != string::npos|| varstr.find("dd")!=string::npos)) {
+		else if (nrec <= 10 && nvar == 1 && (varstr.find("Variable Unit") != string::npos|| varstr.find("dd")!=string::npos)) {
 			DescriptionType = 1;
 			if(varstr.find("dd") != string::npos&& out.Des.base.Unit.size()==0) 	out.Des.base.Unit.push_back(varstr);
 		}
@@ -1089,15 +1092,18 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Long:") != string::npos) {
 			DescriptionType = 8;
 		}
-		else if (nrec >= 1 && nrec<9&&nrec == nhead && nvar == 1) {
+		else if (nrec >= 1 && nrec<9&&nrec == nhead ) {
 			DescriptionType = nrec - 1;
-			out.Des.base.Name.push_back(varstr);
-			if (DescriptionType == 1) out.Des.base.Unit.push_back("");
-			else if (DescriptionType == 2) out.Des.base.Id.push_back("");
-			else if (DescriptionType == 3) out.Des.base.Pos.push_back("");
+			if (varstr.find("Variable") == string::npos) {
+				if (DescriptionType == 0) out.Des.base.Name.push_back(varstr);
+				else if (DescriptionType == 1) out.Des.base.Unit.push_back(varstr);
+				else if (DescriptionType == 2) out.Des.base.Id.push_back(varstr);
+				else if (DescriptionType == 3) out.Des.base.Pos.push_back(varstr);
+			}
 
 		}
 		else if ((nvar > 1&&out.Des.base.Name.size()<nvar)|| (DescriptionType>0&&DescriptionType<9)) {
+			
 			switch (DescriptionType) {
 			case 0:
 				out.Des.base.Name.push_back(varstr);
@@ -1328,7 +1334,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 	if (m_AddFromFile)	m_nprevrec = GetNumRecords();
 
 	size_t ich;
-
+	bool FirstDataHit = false;
 
 	while (pos2<m_totsizeInputFile||string_buf.size()>0) {
 		string_buf += GetStringFromStream();
@@ -1363,6 +1369,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		size_t npos = 0;
 		
 		NextLine = GetNextLine(ich);
+
 		while (NextLine.first.size() > 0) {
 
 			string line = NextLine.first;
@@ -1379,8 +1386,19 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 			while (line.size() > 0) {
 				varstr = GetVarString(npos);
-				CountHeads();
-				if(nhead!= string::npos) SetDescription();
+				if (nvar == 1 && nrec == 1) {
+					if (varstr.find("Variable Name")!=string::npos) m_format = STANDARD;
+
+				}
+
+				size_t num = CountHeads(m_format, varstr, nrec, nvar);
+				if (num < 10&&num!=string::npos&&!FirstDataHit) {
+					nhead = num;
+					SetDescription();
+				}
+				if (nrec > 1 && num == string::npos) {
+					FirstDataHit = true;
+				}
 
 				if (m_format != IDSCAN&&nhead!=string::npos) {
 					if (nrec == nhead + 1&&!ValidTime) {

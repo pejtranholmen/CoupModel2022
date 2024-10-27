@@ -1786,7 +1786,7 @@ void MyCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point,int pro
 
 
 	}
-	else if(isheet==6&&updn&&col>6&&!m_ShowValidRes&&!m_ShowValidCoVarRes) {  // Validation Variables
+	else if(isheet==6&&updn&&col>7&&!m_ShowValidRes&&!m_ShowValidCoVarRes) {  // Validation Variables
 			usheet=ValidationVarClick(col, row);
 			if(usheet>=0) OnSheetSetup(usheet);
 	}

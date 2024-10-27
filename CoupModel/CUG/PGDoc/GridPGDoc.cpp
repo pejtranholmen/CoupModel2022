@@ -2355,8 +2355,59 @@ bool GridPGDoc::Make_ReShape_Prior() {
 
 	pCPG = (CPG*)m_pPGArchive->GetPGFile(m_IndexSource);
 	m_pGSource = pCPG;
+	auto irec = pCPG->GetNumRecords();
+	auto ivar = pCPG->GetNumVariables();
+	auto count_names = 0;
 
-	m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, 1);
+	vector<string> unique_names;
+	vector<size_t> num_repof_names;
+	vector<vector<size_t>> VarNamePos;
+
+
+	for (auto i = 0; i < ivar; i++) {
+		string name = pCPG->GetVarName(i + 1);
+		bool exist = false;
+		for (auto ii = 0; ii < unique_names.size(); ii++) {
+			if (name == unique_names[ii]) {
+				exist = true;
+				num_repof_names[ii]++;
+			}
+		}
+		if (!exist) {
+			unique_names.push_back(name);
+			num_repof_names.push_back(1);
+			vector<size_t> k;
+			VarNamePos.push_back(k);
+		}
+	}
+
+	// HOW many variables with unique names
+	for (auto i = 0; i < ivar; i++) {
+		string name = pCPG->GetVarName(i + 1);
+		for (auto ii = 0; ii < unique_names.size(); ii++) {
+			if (name == unique_names[ii]) {
+				VarNamePos[ii].push_back(i + 1);
+				continue;
+			}
+		}
+	}
+	string idkod;
+	bool treatmentkod = false;
+	bool specialtreatmentkod = false;
+	bool parcelNo = false;
+	for (auto i = 0; i < unique_names.size(); i++) {
+		for (auto j = 0; j < VarNamePos[i].size(); j++) {
+			idkod = pCPG->GetVarId(VarNamePos[i][j]);
+			if (m_ReShaped_Actions.GetTreatment(idkod) != 0) treatmentkod = true;
+			if (m_ReShaped_Actions.GetSpecTreatment(idkod) != 0) specialtreatmentkod = true;
+			if (m_ReShaped_Actions.GetParcell(idkod) != 0) parcelNo = true;
+		}
+	}
+
+
+
+
+	m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, unique_names, num_repof_names, VarNamePos, treatmentkod, specialtreatmentkod, parcelNo);
 
 	
 	//SetCellClickButton(m_ResetListAddButton);
