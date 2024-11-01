@@ -58,6 +58,7 @@ protected:
 	void SetPGFileColumns(size_t NumCol, long Row=-1, bool OutPutName=false, int NumTopHeads=2);
 	void SetPGFileColumnsInfo(CPG *pPG, int col_start=0, int NumCol=5, long row=0, bool OnlyStruc = false, bool WithFileName=false, long Param=0);
 	void SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos=0 , int NumCol=4);
+	void SetCodeTranslateInfo(CLICK_BUTTON, vector<pair<string, int>>&, vector<string> unique_names, vector<size_t> num_of_names, map<int,size_t> hit_map, map<int,size_t> parc_hit_map);
 
 
 	size_t GetUniqueMenuNumber();
@@ -86,7 +87,7 @@ protected:
 	HINTLIST m_NoUse;
 
 	COLORREF m_ColorClick, m_ColorInfo;
-	COLORREF m_COLHEAD;
+	COLORREF m_COLHEAD, m_ColorHeading;
 
 	CWinApp *m_pApp;
 	map<int, string> m_HintMap;

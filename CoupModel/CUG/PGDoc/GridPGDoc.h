@@ -61,7 +61,7 @@ protected:
 
 	bool Make_New_PGFiles();
 	bool Make_Merge_Prior();
-	bool Make_ReShape_Prior();
+	bool Make_ReShape_Prior(bool Update = false);
 	bool Make_Add_Prior();
 	bool Make_Add_Post();
 	bool Make_Mix_Prior();
@@ -204,6 +204,12 @@ protected:
 	CLICK_BUTTON m_NewOutputPGFileButton;
 	CLICK_BUTTON m_QuitButton;
 	CLICK_BUTTON m_AddFileList;
+	
+
+	// Reshape Buttons
+	CLICK_BUTTON m_TranslationListButton;
+	CLICK_BUTTON m_CreateNewReshapeButton;
+	CLICK_BUTTON m_UpdateReshapeButton;
 
 	//Mix
 	CLICK_BUTTON m_MixMorePGFilesButton;

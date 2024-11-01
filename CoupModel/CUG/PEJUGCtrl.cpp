@@ -11,6 +11,7 @@ PEJUGCtrl::PEJUGCtrl()
 	m_ColorClick = RGB(240, 240, 50);
 	m_ColorInfo = RGB(173, 255, 47);
 	m_COLHEAD = RGB(240, 240, 240);
+	m_ColorHeading = RGB(230, 230, 230);
 	m_UniqueNumber = 12000;
 	m_callCount = 0;
 	m_pMainFrame= MySingle::instance().GetFramePointer();
@@ -197,7 +198,7 @@ void PEJUGCtrl::SetPGFileColumnsInfo(CPG *pPG, int col_start,int NumCol, long ro
 		ParEdit = 0;
 
 	}
-
+	pPG->GetAllFileInfo(pPG->GetFileName());
 	GetCellIndirect(col_start, row, &cell); cell.SetNumber(pPG->GetNumRecords()); cell.SetParam(ParEdit); SetCell(col_start, row, &cell);
 	GetCellIndirect(col_start+1, row, &cell); cell.SetNumber(pPG->GetNumVariables()); cell.SetParam(ParEdit); SetCell(col_start+1, row, &cell);
 	GetCellIndirect(col_start+2, row, &cell); cell.SetNumber(pPG->GetNumRepititions()); cell.SetParam(ParEdit); SetCell(col_start+2, row, &cell);
@@ -217,8 +218,8 @@ void PEJUGCtrl::SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos,
 	CUGCell cell;
 	GetCellIndirect(button.Col_start, button.Row, &cell);
 	cell.SetParam(button.Param);
-	if (button.pPG != nullptr) cell.SetText(button.pPG->GetFileName());
 	cell.SetBackColor(m_ColorClick);
+	cell.SetText(button.Text);
 	SetCell(button.Col_start, button.Row, &cell);
 	auto ParEdit = m_DoubleClickEdit.param;
 	bool ReadOnly = false;
@@ -244,6 +245,89 @@ void PEJUGCtrl::SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos,
 		GetCellIndirect(6, button.Row, &cell); cell.SetNumber(button.pPG->GetNormalTimeInterval()); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(6, button.Row, &cell);
 
 	}
+
+
+}
+
+void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, vector<pair<string, int>> &translate_code,vector<string> Parcell_stop, vector<size_t> Parcell_Add, map<int,size_t> hits_map, map<int, size_t> parc_hit_map)
+{
+	CUGCell cell;
+	button.Row++;
+	GetCellIndirect(button.Col_start+1, button.Row, &cell);
+	cell.SetParam(button.Param);
+	cell.SetText("Translation codes");
+	SetCell(button.Col_start, button.Row, &cell);
+	
+	
+	auto num_rows=translate_code.size();
+	auto ParEdit = m_DoubleClickEdit.param;
+	bool ReadOnly = false;
+	JoinCells(0, button.Row, 2, button.Row);
+	
+	GetCellIndirect(button.Col_start + 0, button.Row, &cell);
+	cell.SetBackColor(m_ColorHeading);
+	cell.SetText("Translation codes"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start, button.Row, &cell);
+	JoinCells(4, button.Row, 6, button.Row);
+	GetCellIndirect(button.Col_start + 4, button.Row, &cell);
+	cell.SetBackColor(m_ColorHeading); SetCell(button.Col_start+4, button.Row, &cell);
+	JoinCells(0, button.Row + 1, 0, button.Row + 10);
+	GetCellIndirect(button.Col_start + 0, button.Row+1, &cell);
+	cell.SetBackColor(m_ColorHeading); SetCell(button.Col_start + 0, button.Row+1, &cell);
+
+
+
+	GetCellIndirect(button.Col_start + 3, button.Row, &cell); cell.SetNumber(translate_code.size()); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 3, button.Row, &cell);
+	ReadOnly = true;
+	GetCellIndirect(button.Col_start +1, button.Row+1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Treatment id"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start+1, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start + 1, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Treatment No"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 2, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start + 1, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Hits"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 3, button.Row + 1, &cell);
+
+	GetCellIndirect(button.Col_start + 4, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No stop"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start + 5, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No Increment"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, button.Row + 1, &cell);
+
+	GetCellIndirect(button.Col_start + 4, button.Row + 4, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No identified"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row + 4, &cell);
+	GetCellIndirect(button.Col_start + 5, button.Row + 4, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No Hits"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, button.Row + 4, &cell);
+
+
+
+
+	ReadOnly = false;
+	COLORREF no_color = RGB(255, 255, 255), changed_color = RGB(255, 200, 200);
+	for (size_t i = 0; i < translate_code.size(); ++i) {
+		auto row = button.Row + 2 + i;
+		GetCellIndirect(button.Col_start + 1, row, &cell); cell.SetBackColor(m_ColorClick);
+		cell.SetText(translate_code[i].first); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 1, row, &cell);
+		GetCellIndirect(button.Col_start + 1, row, &cell); cell.SetNumber(translate_code[i].second); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 2, row, &cell);
+		auto inum = hits_map[translate_code[i].second];
+		
+
+		GetCellIndirect(button.Col_start + 3, row, &cell);
+		if (inum > 0) cell.SetBackColor(changed_color); else cell.SetBackColor(no_color);
+		cell.SetNumber(inum); cell.SetParam(ParEdit); cell.SetReadOnly(true); SetCell(button.Col_start + 3, row, &cell);
+
+	}
+	for (size_t i = 0; i < Parcell_stop.size(); i++) {
+		auto row = button.Row + 2 + i;
+		GetCellIndirect(button.Col_start + 4, row, &cell); cell.SetBackColor(m_ColorClick);
+		cell.SetText(Parcell_stop[i]); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, row, &cell);
+		if (i == 1) {
+			GetCellIndirect(button.Col_start + 5, row, &cell); cell.SetNumber(Parcell_Add[0]); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, row, &cell);
+		}
+
+
+	}
+	size_t count = 0;
+	for (auto it = parc_hit_map.begin(); it != parc_hit_map.end(); it++) {
+		auto row = button.Row + 5 + count;
+		GetCellIndirect(button.Col_start + 4, row, &cell); cell.SetBackColor(changed_color);
+		cell.SetNumber(it->first); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, row, &cell);
+		GetCellIndirect(button.Col_start + 5, row, &cell); cell.SetBackColor(changed_color);
+		cell.SetNumber(it->second); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, row, &cell);
+		count++;
+
+	}
+
+
 
 
 }

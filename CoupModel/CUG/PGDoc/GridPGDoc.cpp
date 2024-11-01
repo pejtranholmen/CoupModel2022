@@ -2240,6 +2240,12 @@ bool GridPGDoc::Make_New_PGFiles() {
 	
 
 	if (m_AddMix_Actions.m_pPGADD_Out != nullptr) 	return Make_Add_Prior();
+	else if (m_AddMix_Actions.m_pPGReshape_Out!=nullptr) {
+		//AddPGFile(m_ReShaped_Actions.m_DestFileName);
+		return Make_ReShape_Prior(true);
+
+
+	}
 	else if (m_AddMix_Actions.m_pPGMix_Out != nullptr) return	Make_Mix_Prior();
 	else if (m_AddMix_Actions.m_pPGMerge_Out != nullptr) return	Make_Merge_Prior();
 	else if (m_pPGNewGrid != nullptr) return	Make_NewGrid_Prior();
@@ -2341,14 +2347,23 @@ bool GridPGDoc::Make_Merge_Prior() {
 	RedrawAll();
 	return true;
 }
-bool GridPGDoc::Make_ReShape_Prior() {
+bool GridPGDoc::Make_ReShape_Prior(bool update) {
 	CUGCell cell;
-	SetLocalWindowText("Reshaping Current file");
-	SetNewCleanSheetWithNumber(8);
-	SetNumberCols(6);
-	SetPGFileColumns(6, -1, true);
-	SetNumberRows(1);
 
+	SetLocalWindowText("Reshaping Current file");
+	if(!update) SetNewCleanSheetWithNumber(8);
+	SetNumberCols(7);
+	SetPGFileColumns(6, -1, false);
+	SetNumberRows(6+ m_ReShaped_Actions.treatment_convert.size());
+
+	SetPGFileColumns(6, 1, true);
+	//if (m_AddMix_Actions.m_pPGReshape_Out != nullptr) return false;
+
+	SetCellClickButton(m_CreateNewReshapeButton);
+	SetCellClickButton(m_QuitButton);
+	SetCellClickButton(m_UpdateReshapeButton);
+
+	//SetCellClickButton(m_TranslationListButton);
 	CPG* pCPG;
 	m_IndexSource = m_pPGArchive->GetIndex(m_pDoc);
 	if (m_pPGArchive->GetNumPGFile() <= m_IndexSource) return false;
@@ -2395,26 +2410,46 @@ bool GridPGDoc::Make_ReShape_Prior() {
 	bool treatmentkod = false;
 	bool specialtreatmentkod = false;
 	bool parcelNo = false;
+	map<int, size_t> hits_map,  parc_hit_map;
+
 	for (auto i = 0; i < unique_names.size(); i++) {
+
 		for (auto j = 0; j < VarNamePos[i].size(); j++) {
 			idkod = pCPG->GetVarId(VarNamePos[i][j]);
-			if (m_ReShaped_Actions.GetTreatment(idkod) != 0) treatmentkod = true;
-			if (m_ReShaped_Actions.GetSpecTreatment(idkod) != 0) specialtreatmentkod = true;
-			if (m_ReShaped_Actions.GetParcell(idkod) != 0) parcelNo = true;
+			auto ikodhit = m_ReShaped_Actions.GetTreatment(idkod);
+			hits_map[ikodhit]++;
+			ikodhit = m_ReShaped_Actions.GetParcell(idkod);
+			if (ikodhit > 0) parc_hit_map[ikodhit]++;			
 		}
 	}
 
-
-
-
-	m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, unique_names, num_repof_names, VarNamePos, treatmentkod, specialtreatmentkod, parcelNo);
+	
 
 	
-	//SetCellClickButton(m_ResetListAddButton);
-	//SetCellClickButton(m_CreateNewAddButton);
-	//SetCellClickButton(m_QuitButton);
+	for (auto i = 0; i < unique_names.size(); i++) {
 
-	
+		for (auto j = 0; j < VarNamePos[i].size(); j++) {
+			idkod = pCPG->GetVarId(VarNamePos[i][j]);
+			auto ikodhit = m_ReShaped_Actions.GetTreatment(idkod);
+			if (m_ReShaped_Actions.GetTreatment(idkod) != 0) {
+				treatmentkod = true;
+				if (m_ReShaped_Actions.GetSpecTreatment(idkod) != 0) specialtreatmentkod = true;
+				if (m_ReShaped_Actions.GetParcell(idkod) != 0) parcelNo = true;
+			}
+		}
+	}
+
+	SetCodeTranslateInfo(m_TranslationListButton, m_ReShaped_Actions.treatment_convert, m_ReShaped_Actions.Parcell_Stop, m_ReShaped_Actions.Parcell_Add, hits_map, parc_hit_map);
+
+
+	m_AddMix_Actions.m_pPGReshape_Out = m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, unique_names, num_repof_names, VarNamePos, treatmentkod, specialtreatmentkod, parcelNo);
+		
+
+	SetPGFileColumnsInfo(m_pGSource, 0, 6, 0, false, true);
+	if (m_AddMix_Actions.m_pPGReshape_Out != nullptr) {
+		m_AddMix_Actions.m_pPGReshape_Out->ReOpen();
+		SetPGFileColumnsInfo(m_AddMix_Actions.m_pPGReshape_Out, 0, 6, 2, false, true);
+	}
 	//SetPGFileColumnsInfoButton(m_NewOutputPGFileButton);
 	RedrawAll();
 	return true;
@@ -4547,7 +4582,7 @@ void GridPGDoc::DefineListButtonInfos()
 	m_NewFileOptions.VectorNames.push_back("Adding previous Files to each other (same variables - new records)");
 	m_NewFileOptions.VectorNames.push_back("Mixing previous Files to each other (new variables)");
 	m_NewFileOptions.VectorNames.push_back("Merging similar PG files to a new aggregated file (= with Repetitions)");
-	m_NewFileOptions.VectorNames.push_back("ReShape current PG file to repeated time with fever variables");
+	m_NewFileOptions.VectorNames.push_back("ReShape current PG file to repeated time with fewer variables");
 	SetClickButtonMap(m_NewFileOptions);
 	
 	m_AddFileList.Type = LISTBUTTON;
@@ -4592,6 +4627,8 @@ void GridPGDoc::DefineClickButtonInfos()
 	b.Row = -2;
 	SetClickButtonMap(b);
 
+
+
 	b.Text = "Add More PG Files";
 	b.Col_start = 0;
 	b.HintText = "Click to Add Addition Files to List";
@@ -4600,6 +4637,22 @@ void GridPGDoc::DefineClickButtonInfos()
 	b.Row = -2;
 	b.Param = GetUniqueMenuNumber();
 	m_AddMorePGFilesButton = b; 	SetClickButtonMap(b);
+
+	b.Text = "Translation codes";
+	b.HintText = "Change Translation codes in list below";
+	b.Col_start = 0;
+	b.Col_end = 1;
+	b.Row = 2;
+	b.Param = GetUniqueMenuNumber();
+	m_TranslationListButton = b; 	SetClickButtonMap(b);
+
+	b.Text = "Update Translation";
+	b.HintText = "Click Update Translation after change of Translation codes";
+	b.Col_start = 1;
+	b.Col_end = 2;
+	b.Row = -2;
+	b.Param = GetUniqueMenuNumber();
+	m_UpdateReshapeButton = b; 	SetClickButtonMap(b);
 
 
 
@@ -4655,6 +4708,16 @@ void GridPGDoc::DefineClickButtonInfos()
 	b.Col_start = 3; b.Col_end = 4; b.Param = GetUniqueMenuNumber();
 	m_CreateNewAddButton=b;
 	SetClickButtonMap(b);
+
+	b.Text = "Create New File";
+	b.Row = -2;
+	b.HintText = ClickAdd + b.Text;
+	b.Col_start = 3; b.Col_end = 4; b.Param = GetUniqueMenuNumber();
+	m_CreateNewReshapeButton = b;
+	SetClickButtonMap(b);
+
+
+
 
 	b.Param = GetUniqueMenuNumber();
 	m_CreateNewMixButton = b;

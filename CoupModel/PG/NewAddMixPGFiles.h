@@ -11,7 +11,7 @@ public:
 	NewAddMixPGFiles();
 	~NewAddMixPGFiles();
 	void AddPGFiles();
-	CPG* AddFileToNewPGFile();
+	CPG* AddFileToNewPGFile(bool ReshapeFile = false);
 	CPG* MixFileToNewPGFile();
 	CPG* MergeFileToNewPGFile();
 	bool DeleteFiles();
@@ -26,6 +26,7 @@ public:
 	vector<int>  m_AddScalingCoefVector;
 
 	CPG* m_pPGADD_Out, *m_pPGMix_Out, *m_pPGMerge_Out;
+	CPG* m_pPGReshape_Out;
 	bool m_Interpolate;
 	PGSIZE m_OutSize;
 };

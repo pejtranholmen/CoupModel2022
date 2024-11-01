@@ -7,6 +7,7 @@ NewAddMixPGFiles::NewAddMixPGFiles(void) {
 	m_pPGMix_Out = nullptr;
 	m_pPGADD_Out = nullptr;
 	m_pPGMerge_Out = nullptr;
+	m_pPGReshape_Out = nullptr;
 }
 NewAddMixPGFiles::~NewAddMixPGFiles(void) {
 	while (m_PGPointerVector.size() > 0) {
@@ -16,6 +17,7 @@ NewAddMixPGFiles::~NewAddMixPGFiles(void) {
 	if (m_pPGADD_Out = nullptr) delete m_pPGADD_Out;
 	if (m_pPGMix_Out = nullptr) delete m_pPGMix_Out;
 	if (m_pPGMerge_Out = nullptr) delete m_pPGMerge_Out;
+	if (m_pPGReshape_Out = nullptr) delete m_pPGReshape_Out;
 }
 void NewAddMixPGFiles::AddPGFiles() {
 	vector<string> binnames;
@@ -31,7 +33,7 @@ void NewAddMixPGFiles::AddPGFiles() {
 	}
 	if(m_PGPointerVector.size()>0) SetOutPutFileFormat();
 }
-CPG * NewAddMixPGFiles::AddFileToNewPGFile() {
+CPG * NewAddMixPGFiles::AddFileToNewPGFile(bool Reshape) {
 	CPG* pPG = m_pPGADD_Out;
 	long numvar, numrec;
 	numrec = 0;

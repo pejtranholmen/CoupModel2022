@@ -53,6 +53,22 @@ bool PGEditCells::AllEditCells(int col, long row, string txt)
 
 
 		}
+		else if (ParV == 12000&&col==1&&row>=5) {
+			
+			m_ReShaped_Actions.treatment_convert[row-5].first = txt;
+			return true;
+		}
+		else if (ParV == 12000 && col == 2 && row >= 5) {
+
+			m_ReShaped_Actions.treatment_convert[row - 5].second = FUtil::AtoInt(txt);
+			return true;
+		}
+		else if (ParV == 12000 && col == 3 && row == 3) {
+			int value = FUtil::AtoInt(txt);
+			m_ReShaped_Actions.treatment_convert.resize(value);
+			Make_ReShape_Prior(1);
+			return true;
+		}
 		else if (ParV == m_AddScalingCoefHint.param) {
 			int value = FUtil::AtoInt(txt);
 			if(m_AddMix_Actions.m_AddScalingCoefVector.size()>row)

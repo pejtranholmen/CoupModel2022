@@ -70,8 +70,7 @@ void PGButtonEvents::DataSheetButtons(int ParV)
 
 void PGButtonEvents::ImportSheetButtons(int ParV, int col)
 {
-	
-	if (m_ScanFileButton.Param == ParV) {
+	 if (m_ScanFileButton.Param == ParV) {
 		m_PGFileImport.m_ExtraFileScanning = false;
 		m_PGFileImport.m_ScanningMade = false;
 		m_PGFileImport.m_format = PROFOUND;
@@ -268,6 +267,25 @@ void PGButtonEvents::ImportSheetButtons(int ParV, int col)
 			OnSheetSetup(0);
 		}
 
+
+	}
+	else if (m_CreateNewReshapeButton.Param == ParV) {
+		if (m_AddMix_Actions.m_pPGReshape_Out != nullptr) {
+			string filename = m_AddMix_Actions.m_pPGReshape_Out->GetFileName();
+			delete m_AddMix_Actions.m_pPGReshape_Out;
+			m_AddMix_Actions.m_pPGReshape_Out = nullptr;
+			AddPGFile(filename);
+			OnSheetSetup(0);
+		}
+		else {
+			MFC_Util m;
+			m.MessageBox("Failed to create new file: ");
+			Make_Add_Prior();
+			return;
+		}
+	}
+	else if (m_UpdateReshapeButton.Param == ParV) {
+		Make_ReShape_Prior(true);
 
 	}
 	else if (m_CreateNewMixButton.Param == ParV) {

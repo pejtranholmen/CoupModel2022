@@ -6175,9 +6175,18 @@ size_t MakeSimSheets::Val_Prior_Header() {
 		SetColWidth(3,220);
 		SetColWidth(4,150);
 		SetColWidth(5,150);
-		SetColWidth(6,100);
-		SetColWidth(7,100);
-		SetColWidth(11,150);
+		SetColWidth(6,80);
+		SetColWidth(7,80);
+		SetColWidth(8, 50);
+		SetColWidth(9, 50);
+		SetColWidth(10,50);
+		SetColWidth(9, 50);
+		SetColWidth(11, 50);
+		SetColWidth(12, 110);
+		SetColWidth(13, 110);
+		SetColWidth(14, 110);
+		SetColWidth(15, 110);
+
 		QuickSetText(0,-1, "#");
 		QuickSetText(1,-1, "File");
 		QuickSetText(2,-1, "Pos");
@@ -6314,8 +6323,8 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 					cell.SetNumber(pObserved->GetValue(i));
 				SetCell(11, i, &cell);
 
-				GetCell(11, i, &cell);
-				cell.SetNumber(m_pSimDoc->m_ValidationData.GetValDuration(i));
+				//GetCell(11, i, &cell);
+				//cell.SetNumber(m_pSimDoc->m_ValidationData.GetValDuration(i));
 				SetCell(11, i, &cell);
 
 				GetCell(12, i, &cell);

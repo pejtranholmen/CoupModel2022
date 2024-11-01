@@ -5,13 +5,25 @@
 
 NewReShaped::NewReShaped()
 {
+	treatment_convert.push_back(pair<string, int>("C", 1));
+	treatment_convert.push_back(pair<string, int>("F", 2));
+	treatment_convert.push_back(pair<string, int>("I", 3));
+	treatment_convert.push_back(pair<string, int>("IL", 4));
+	treatment_convert.push_back(pair<string, int>("AN", 5));
+	treatment_convert.push_back(pair<string, int>("G(F-Mg)", 12));
+	treatment_convert.push_back(pair<string, int>("G(F-P)", 12));
+	treatment_convert.push_back(pair<string, int>("GC", 11));
+	treatment_convert.push_back(pair<string, int>("Pond", 20));
+
+	Parcell_Stop.push_back("A");
+	Parcell_Stop.push_back("B");
+	Parcell_Add.push_back(17);
 }
 
 NewReShaped::~NewReShaped()
 {
 }
-
-bool NewReShaped::CreateNewReShapedFile(CPG* pPG,  vector<string> unique_names, vector<size_t> num_repof_names, vector<vector<size_t>> VarNamePos, bool treatment, bool specialtreatment, bool parcelNo)
+ CPG* NewReShaped::CreateNewReShapedFile(CPG* pPG,  vector<string> unique_names, vector<size_t> num_repof_names, vector<vector<size_t>> VarNamePos, bool treatment, bool specialtreatment, bool parcelNo)
 {
 	CPG* pPG_Dest;
 	pPG_Dest = new CPG;
@@ -41,7 +53,8 @@ bool NewReShaped::CreateNewReShapedFile(CPG* pPG,  vector<string> unique_names, 
 	pPG_Dest->SetCompleteRead(true);
 	auto newidvar = 0;
 	if (treatment) newidvar++; if (specialtreatment) newidvar++; if (parcelNo) newidvar++;
-	pPG_Dest->ReAllocate(TotalRecords, unique_names.size() + newidvar);
+	pPG_Dest->CreateNewFile(unique_names.size() + newidvar, TotalRecords);
+	//pPG_Dest->ReAllocate(TotalRecords, );
 	auto counter1 = 0;	
 	string idkod;
 	
@@ -92,32 +105,27 @@ bool NewReShaped::CreateNewReShapedFile(CPG* pPG,  vector<string> unique_names, 
 		if (parcelNo) {
 			pPG_Dest->SetVarName(unique_names.size() + newidvar, "ParcNo");
 		}
-
 	}
-
+	pPG_Dest->ReCalculateMinMax();
 	pPG_Dest->WritePGFile();
-	pPG_Dest->CloseFile();
-	delete pPG_Dest;
 
-	return false;
+	
+	pPG_Dest->CloseFile();
+	pPG_Dest->ReOpen();
+
+	
+	return pPG_Dest;
 }
 
 int NewReShaped::GetTreatment(string idkod) {
 
 int IBeh = 0;
-
-
-if (idkod.find("AN") == 0) IBeh = 5;
-if (idkod.find("C") == 0) IBeh = 1;
-if (idkod.find("F") == 0) IBeh = 2;
-if (idkod.find("I") == 0) IBeh = 3;
-if (idkod.find("IL") == 0) IBeh = 4;
-if (IBeh == 0) {
-	if (idkod.find("G(F-Mg)") == 0) IBeh = 12;
-	if (idkod.find("G(F-P)") == 0) IBeh = 12;
-	if (idkod.find("GC") == 0) IBeh = 11;
-	if (idkod.find("Pond") == 0) IBeh = 20;
+for (size_t i = 0; i < treatment_convert.size(); i++) {
+	if (idkod.find(treatment_convert[i].first) == 0) IBeh = treatment_convert[i].second;
 }
+
+
+
 
 	return IBeh;
 }
@@ -156,13 +164,13 @@ int NewReShaped::GetParcell(string idkod)
 
 	int IRuta;
 	IRuta = 0;
-	auto IposA = idkod.find("A");
+	auto IposA = idkod.find(Parcell_Stop[0]);
 	if(IposA == string::npos) {
-		auto IposB = idkod.find("B");
+		auto IposB = idkod.find(Parcell_Stop[1]);
 		if (IposB == 1) IRuta = FUtil::AtoInt(idkod.substr(0, 1));
 		else if (IposB == 2) IRuta = FUtil::AtoInt(idkod.substr(0, 2));
 		else if (IposB==string::npos) return 0;
-		IRuta += 17;
+		IRuta += Parcell_Add[0];
 	}
 	else {
 		if (IposA == 1) IRuta = FUtil::AtoInt(idkod.substr(0, 1));
