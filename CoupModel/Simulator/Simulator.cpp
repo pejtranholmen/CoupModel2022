@@ -1357,8 +1357,17 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 
 				sim.clear(); obs.clear();
 
+
 				auto FilterPGIndex = m_pSim->m_Val_Array[LL].PG_FilterIndex;
 				auto FilterTestValue = m_pSim->m_Val_Array[LL].PG_FilterValue;
+
+
+				if (m_StructureModel.m_Structure.UseFilterParameters_Validation) {
+					FilterPGIndex = m_StructureModel.m_Structure.FilterVarIndex[LL];
+					FilterTestValue = m_StructureModel.m_Structure.FilterVarValue[LL];
+				}
+
+
 				if (FilterPGIndex > 0) 	Filter_Values = pPG_Obs->GetVarVector(size_t(FilterPGIndex));
 
 				auto QualityPGIndex = m_pSim->m_Val_Array[LL].PG_QualityIndex;

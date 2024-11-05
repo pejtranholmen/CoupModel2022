@@ -44,6 +44,7 @@ size_t CreateFileResiduals;
 size_t SimulationPeriodFromMetFile;
 size_t Nelder_Mead_Objective;
 size_t PreDefinedEnsembles;
+size_t UseFilterParameters_Validation;
 
 // Below from Technical functions
 
@@ -105,8 +106,9 @@ ifstream m_MultiParStream[5];
 size_t DataBaseCSV;
 
 
-vector<P*> ErrorTab, ScalingObsTab;
+vector<P*> ErrorTab, ScalingObsTab, FilterIndexTab;
 vector<P*> IndexMultiParGroups, CriteriaTab;
+vector<double> FilterVarIndex, FilterVarValue;
 size_t NumberParGroups, UserDefinedCalibrationMode;
 size_t Mascur_Soil_Data;
 double Filter_Id1, Filter_Id2, Filter_Id3;

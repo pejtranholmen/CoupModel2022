@@ -4652,18 +4652,18 @@ void GridPGDoc::DefineClickButtonInfos()
 	b.Col_end = 2;
 	b.Row = -2;
 	b.Param = GetUniqueMenuNumber();
+
 	m_UpdateReshapeButton = b; 	SetClickButtonMap(b);
-
-
-
-
+	b.Text ="Add Files";
 	b.HintText = "Click to Add Addition Files to the Mixed";
 	b.Param = GetUniqueMenuNumber();
 
 	m_MixMorePGFilesButton = b; 	SetClickButtonMap(b);
 	b.Param = GetUniqueMenuNumber();
 	b.HintText = "Click to Add Addition Files to the List";
+
 	m_MergeMorePGFilesButton = b; 	SetClickButtonMap(b);
+
 	b.Param = GetUniqueMenuNumber();
 	b.Text = "Interpolate";
 	b.TextOptional = "No interpolation";

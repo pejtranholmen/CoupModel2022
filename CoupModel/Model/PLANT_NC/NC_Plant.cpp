@@ -2275,7 +2275,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 						DoHarvest = true;
 						if (Harvest_Type_Years[jj] > 0.5) 	DoFinalHarvest = true;
 					}
-					else if (size_t(HarvestYearPlantIndex[jj] + 0.01) == i_plant && jjp == i_plant && int(SimPlantYearAge[jjp]) == int(HarvestYears[jj])) {
+					else if (size_t(HarvestYearPlantIndex[jj] + 0.01) == i_plant+1 && jjp == i_plant && int(SimPlantYearAge[jjp]) == int(HarvestYears[jj])) {
 						DoHarvest = true;
 						if (Harvest_Type_Years[jj] > 0.5) 	DoFinalHarvest = true;
 						if (jj == HarvestYears.size() - 1) DoFinalHarvest = true;
@@ -2289,7 +2289,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 					if (PlantsToHarvest == 0 && m_pModelInfo->JDayNum == int(HarvestDays[jj])) {
 						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
 					}
-					else if (size_t(HarvestDayPlantIndex[jj] + 0.01) == i_plant && m_pModelInfo->JDayNum == int(HarvestDays[jj])) {
+					else if (size_t(HarvestDayPlantIndex[jj] + 0.01) == i_plant+1 && m_pModelInfo->JDayNum == int(HarvestDays[jj])) {
 						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
 					}
 					if (Harvest_Type_Days[jj] > 0.5 && DoFinalHarvest) 	DoFinalHarvest = true;

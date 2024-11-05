@@ -139,11 +139,32 @@ bool NC_ExternalInputs::Ini()	{
 
 	if (N_Fertilization_Sw(N_Fertilization) == N_Fertilization_Sw::PG_File_AppDatesOnly) {
 		m_PG_Manure.Open(m_PG_Manure.GetFileName());
+		if (FertilizationIndexFileName == 2) {
+//
+			Additional_Variables* p_AdditionalVar;
+			StructureModel* pStructureModel = (StructureModel*)m_pModelInfo->GetModelPtr("Structure Model");
+			p_AdditionalVar = &pStructureModel->m_Additional;
+
+			if (p_AdditionalVar->Multi_PGFile_ID_Selector == 0)
+				m_PG_Manure.SetRepititionSequence(m_pModelInfo->ActualNoMulRun);
+			else if (p_AdditionalVar->Multi_PGFile_ID_Selector == 1) {
+				size_t repno = size_t(p_AdditionalVar->SeqNo_MetFile + 0.2);
+				m_PG_Manure.SetRepititionSequence(repno, false);
+			}
+			else if (p_AdditionalVar->Multi_PGFile_ID_Selector == 2) {
+				long repid = long(p_AdditionalVar->IDNo_MetFile + 0.2);
+				m_PG_Manure.SetRepititionIdNo(repid);
+			}
+			
+
+		}
+
 		auto num = m_PG_Manure.GetNumRecords();
 		IFertDates.resize(num);
 		FertAppValues = m_PG_Manure.GetVarVector(1);
 		for (size_t i = 0; i < num; i++) {
 			IFertDates[i] = m_PG_Manure.GetLongTime(i + 1);			
+			if (FertAppValues[i] < 0.) FertAppValues[i] = 0.;
 		}
 		for (int i = num - 1; i >= 0; i--)
 			if (m_pModelInfo->m_ActMin < IFertDates[i]) IFertDatesCount = i;

@@ -128,6 +128,9 @@ bool Technical_Functions::Def()
 		pSw = new Sw(&PreDefinedEnsembles, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pSw, "PreDefinedEnsembles", 0, "off|one|two|three|four|five|six","ValidationMode > 0");
 
+		pSw = new Sw(&UseFilterParameters_Validation, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pSw, "UseFilterParameters", 0, "off|on","ValidationMode > 0");
+
           	    
   //!	CALL F(Group_01, FileDriv7a,"Lateral Water Inflow","GWInflow","LateralInputFile=0|WaterEq > 0|LaterInput=1")
   Ps *pPs;
@@ -182,6 +185,19 @@ bool Technical_Functions::Def()
 
 	pTab= new Tab(&ScalingObsTab, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pTab,"Scaling of Observed Variables","Scaling Observed|Scaling Index|Box Cox power|Box Cox offset","");
+
+		initv.assign(NumScaling, 0.);
+	pP = new P(&FilterVarIndex, pScaling, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pP, pScaling, "Filter Var Index", initv, "-", "ValidationMode>0", -0.5, 0.5);
+		FilterIndexTab.push_back(pP);
+		initv.assign(NumScaling, 1.);
+		pP = new P(&FilterVarValue, pScaling, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pP, pScaling, "Filter Var Value", initv, "-", "ValidationMode>0", -0.5, 0.5);
+		FilterIndexTab.push_back(pP);
+
+	pTab = new Tab(&FilterIndexTab, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		Define(pTab, "Filter Index and Values for Validation", "Scaling Observed|Scaling Index|Box Cox power|Box Cox offset", "UseFilterParameters>0");
+
 
 	NE* pCriteria;
 		pCriteria = new NE(&NumCriteria, 1, 0, 100, 2, 100);
