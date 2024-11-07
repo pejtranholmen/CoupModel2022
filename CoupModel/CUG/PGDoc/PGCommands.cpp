@@ -262,15 +262,29 @@ if (sheet < 9) {
 		return;
 
 	}
-	else if (item == 7001) {
+	else if (item == 7001||item == 7002) {
 		int i = 0; //Modify PG file options
 		CPG	*pCPG = (CPG*)m_pPGArchive->GetPGFile(m_IndexSource);
 		if (pCPG != nullptr) {
 			pCPG->ReOpen();
-			if (pCPG->ReCalculateMinMax());
+			string newname = pCPG->GetFileName();
+			if (item == 7002) {
+				auto irecmiss = pCPG->RemoveMissingRecords();
+				
+				string nn;
+				nn = FUtil::STD_ItoAscii(irecmiss);
+				MFC_Util::MessageBox(nn + " Records are removed from file: " + newname);
+				pCPG->SaveAs(newname);
+				pCPG->CheckMissingNumbers();
+
+			}
 			else {
-				pCPG->ReOpen();
-				pCPG->ReCalculateMinMax();
+				if (pCPG->ReCalculateMinMax());
+				else {
+					pCPG->ReOpen();
+					pCPG->ReCalculateMinMax();
+				}
+				pCPG->SaveAs(newname);
 			}
 		}
 

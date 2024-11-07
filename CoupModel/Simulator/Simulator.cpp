@@ -821,22 +821,48 @@ void Simulator::Store_Outputs(bool MultiFlag, size_t num_timescaling)
 	}
 	AccPeriod=0;
 }
-bool Simulator::Valid_Check_Precise(size_t i) {
+bool Simulator::Valid_Check_Precise(size_t i, bool Filter) {
 
 	CPG *pPG=m_ValPGFile[i].simvalfile;
-	bool changepos=pPG->Check_Update_ActHit(0, m_pModelInfo->m_ActMin);
 
+
+	CPG* pPG_Obs=m_ValPGFile[i].file;
+
+	if (!pPG_Obs->IsOpen())	pPG_Obs->ReOpen();
+
+
+	bool changepos = pPG->Check_Update_ActHit(0, m_pModelInfo->m_ActMin);
 	if(changepos) {
 		for (size_t j = 0; j < m_ValPGFile[i].varindex.size(); j++) {
 			size_t LL = m_ValPGFile[i].val_listindex[j];
 			m_ValPGFile[i].simvalues[j] = float(GetSimValValue(LL));
+
+
+
+
 			if (m_StructureModel.m_Structure.PressureHeadSign == 0 && m_ShiftPointer != nullptr)
 				if (m_pValVar[LL].pBase == m_ShiftPointer) m_ValPGFile[i].simvalues[j] *= -1;
 
 			size_t ist = (pPG->GetPrevHitPos(j) - 1)*(m_ValPGFile[i].varindex.size() + 1);
+			size_t koll = pPG->GetPrevHitPos(j);
 			if (ist >= m_ValPGFile[i].FirstValidRecord)
 				pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
 			m_ValPGFile[i].ActPos = pPG->GetPrevHitPos(j) + 1;
+			
+			size_t currentmin = pPG->GetLongTime(m_ValPGFile[i].ActPos-1);
+			size_t prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos-2);
+			size_t count = 2;
+			size_t step = m_ValPGFile[i].varindex.size()+1;
+			while (currentmin == prevmin) {
+				ist =ist -step;
+				count++;
+				pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
+				if(m_ValPGFile[i].ActPos>count)
+					prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - count);
+				else
+					prevmin = currentmin / 2;
+			}
+
 		}
 	}
 	return true;
@@ -1020,10 +1046,6 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 
 	if (m_ValPGFile.size() > 0&&m_ValPGFile[0].varindex.size() > 0&& m_StructureModel.m_Structure.IndexForValid==1) {
 		m_ValPGFile[0].varindex[0] = size_t(m_StructureModel.m_Structure.Val_Index-1);
-
-
-
-
 	}
 
 
@@ -1063,6 +1085,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			m_ValPGFile[i].simvalfile= new CPG();
 			m_ValPGFile[i].simvalfile->SetCompleteRead(true);
 			auto rec=m_ValPGFile[i].file->GetNumRecords();
+			// Add Filter Variables
 			m_ValPGFile[i].simvalfile->CreateNewFile(m_ValPGFile[i].varindex.size(),rec,1);
 			unsigned int min_min;
 			for (size_t j = 0; j < rec; j++) {
@@ -1366,7 +1389,6 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 					FilterPGIndex = m_StructureModel.m_Structure.FilterVarIndex[LL];
 					FilterTestValue = m_StructureModel.m_Structure.FilterVarValue[LL];
 				}
-
 
 				if (FilterPGIndex > 0) 	Filter_Values = pPG_Obs->GetVarVector(size_t(FilterPGIndex));
 

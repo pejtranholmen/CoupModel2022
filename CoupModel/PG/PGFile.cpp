@@ -772,6 +772,8 @@ size_t CPGFile::RemoveMissingRecords()
 	size_t iremoved=pg.Shape.NumRecords-irec;
 	pg.Shape.NumRecords=irec;
 
+	pg.Shape.TotalNumberOfRecords = irec* pg.Shape.NumRepetitions;
+
 	for(size_t i=0;i<pg.Shape.NumRecords;i++) {
 		pg.Var.v[i*pg.Shape.RecordIndexSize]=vbuf[i*pg.Shape.RecordIndexSize];
 			for(size_t ii=0;ii<pg.Shape.NumVar;ii++) {

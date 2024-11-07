@@ -3387,7 +3387,11 @@ void GridPGDoc::MakePGModifyMenu(int col, int row, int varindex) {
 		if (pPG != nullptr) {
 			if (col == 5 || col == 6)
 				AddMenuItem(7001, "ReCalculate the Min and Max values");
+			else if (col == 7) {
+				if(pPG->CheckMissingNumbers()) 
+				AddMenuItem(7002, "Remove Records if all variables are Missing");
 
+			}
 
 
 		}

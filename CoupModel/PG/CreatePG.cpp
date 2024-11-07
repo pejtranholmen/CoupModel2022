@@ -758,23 +758,6 @@ void CCreatePG::OnBnClickedSave()
 					MFC_Util::MessageBox("PG Bin File: " + str + " \nSaved with \n" + nn + " records\n" + nvar + " Variables");
 
 
-					/*if(!pCPG->WriteNewPGFileAs(string(newfilename), true)){
-						  pCPG->CloseFile();
-						  pCPG->ReOpen();
-						  pCPG->WriteNewPGFileAs(string(newfilename), true);
-					};*/
-
-
-					/* if(pCPG->Open(string(newfilename))) {
-						   m_NumVariables=pCPG->GetNumVariables();
-						   m_NumRecords=pCPG->GetNumRecords();
-						   m_gridDes.OnUpdate(6,m_NumVariables,FALSE);
-						   m_gridDes.SetpCUG(&m_gridData);
-						   m_gridData.OnUpdate(m_NumVariables+1, pCPG->GetCurrentRecords(),TRUE);
-						   m_gridDes.OnReadFileToGrid(pCPG);
-						   m_gridData.OnReadFileToGrid(pCPG);
-					 };*/
-
 				}
 				str = pCPG->GetFileName().c_str();
 				nvar = FUtil::STD_ItoAscii(pCPG->GetNumVariables());

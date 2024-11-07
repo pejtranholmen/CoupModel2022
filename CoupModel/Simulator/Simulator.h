@@ -71,7 +71,7 @@ class Simulator
 		bool Store_Write(bool MultiFlag=false, bool Final=false);
 		
 		bool Valid_Check();
-		bool Valid_Check_Precise(size_t i);
+		bool Valid_Check_Precise(size_t i, bool Filter=false);
 		bool Valid_Check_Interval(size_t i);
 		bool Valid_Ini(bool Multi=false, bool First=true);
 		bool Valid_End(bool Multi=false, bool Final=false, bool First=false);
