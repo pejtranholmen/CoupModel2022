@@ -682,9 +682,10 @@ function<PlantSoilLayers(PlantComp, vector<vector<double>> &DistPlantSoil, vecto
 function<PlantSoilLayers(PlantComp, vector<vector<double>> &DistPlantSoil, vector<double> &Mass, vector<double> &Photo, vector<double> &Temp)> f_PlantPhotoBelowGroundRespiration;
 function<double(PlantComp, size_t)> f_SaltImpactOnGrowthRespiration;
 function<double(size_t, size_t)> f_NuptRespiration;
-function<double(size_t, double, double)> f_Sowing, f_Emergence, f_GrainFill;
-function<double(size_t, double, double, double)> f_EmergenceWithMoistControl;
-function<double(size_t, double, double, double)> f_GrainStart;
+function<double(bool, size_t, double, double, double)> f_EmergenceWithMoistControl_Reset, f_GrainStartWithReset;
+function<double(bool, size_t, double, double)> f_GrainFillWithReset, f_EmergenceWithReset, f_SowingWithReset;
+
+
 function<double(size_t, double, double)> f_Harvest; 
 function<double(size_t, double, double, double, double &DormSum, size_t &SpringDev)> f_DormingAndGrowthTempSum;
 function<double(double)> f_Zadok;

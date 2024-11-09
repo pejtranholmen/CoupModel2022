@@ -63,6 +63,29 @@ public: PlantTempSum(vector<double> T_Thres, vector<double> T_Sum) :
 	double operator() (size_t index, double CurrentTSum) {
 		return SumFraction(index, CurrentTSum);
 	}
+	double operator() (bool reset,size_t index, double Temp, double Theta, double T_Step) {
+		if (reset) {
+			Sum[index] = 0.;
+			return 0.;
+		}
+		Sum[index] += max(0., Temp - T_Thres[index]) * T_Step * f_EmergenceMoistResponse(Theta);
+		return SumFraction(index, Sum[index]);
+	}
+	double operator() (bool reset, size_t index, double Temp, double T_Step) {
+		if (reset) {
+			Sum[index] = 0.;
+			return 0.;
+		}
+		Sum[index] += max(0., Temp - T_Thres[index]) * T_Step;
+		return SumFraction(index, Sum[index]);
+	}
+	double operator() (bool reset, size_t index, double CurrentTSum) {
+		if (reset) {
+			Sum[index] = 0.;
+			return 0.;
+		}
+		return SumFraction(index, CurrentTSum);
+	}
 
 private:
 	double SumFraction(size_t index, double CurrentTSum) {
@@ -111,6 +134,11 @@ double operator ()(size_t index, double DayLength, double Temp, double T_Step) {
 			Sum[index]+=DayLengthScaling(index, DayLength)*TempScaling(index, Temp)*T_Step * GrainCommonStep[index];
 			return min(1., max(0., Sum[index] ));
 	}
+double operator ()(bool reset, size_t index, double DayLength, double Temp, double T_Step) {
+	if (reset) Sum[index] = 0.;
+	Sum[index] += DayLengthScaling(index, DayLength) * TempScaling(index, Temp) * T_Step * GrainCommonStep[index];
+	return min(1., max(0., Sum[index]));
+}
 	double operator ()(size_t index, double DayLength) {return DayLengthScaling(index, DayLength);	};
 	double operator ()(size_t index, double Temp, double T_Step) {	return TempScaling(index, Temp); };
 private:

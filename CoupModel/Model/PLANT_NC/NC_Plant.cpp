@@ -751,11 +751,11 @@ bool NC_Plant::Ini()	{
 	};
 	auto SetManagementFunctors = [&]() {
 
-		f_Sowing = PlantTempSum(T_Thres_Sowing, T_Sum_Sowing);
-		f_Emergence = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
-		f_EmergenceWithMoistControl = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
-		f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
-		f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
+		f_SowingWithReset = PlantTempSum(T_Thres_Sowing, T_Sum_Sowing);
+		f_EmergenceWithReset = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
+		f_EmergenceWithMoistControl_Reset = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
+		f_GrainStartWithReset = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+		f_GrainFillWithReset = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
 		f_Harvest = PlantTempSum(T_Thres_Ripening, T_Sum_Ripening);
 		f_DormingAndGrowthTempSum = GrowingSumF(T_Thres_Emerg, T_Thres_Dormancy, pAtm->Latitude, T_Sum_Initial);
 
@@ -1120,11 +1120,10 @@ bool NC_Plant::IniFunctors() {
 
 	auto SetManagementFunctors = [&]() {
 
-		f_Sowing = PlantTempSum(T_Thres_Sowing, T_Sum_Sowing);
-		f_Emergence = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
-		f_EmergenceWithMoistControl = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
-		f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
-		f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
+		f_SowingWithReset = PlantTempSum(T_Thres_Sowing, T_Sum_Sowing);
+		f_EmergenceWithReset = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
+		f_EmergenceWithMoistControl_Reset = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
+		f_GrainStartWithReset = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
 		f_Harvest = PlantTempSum(T_Thres_Ripening, T_Sum_Ripening);
 		if (!f_DormingAndGrowthTempSum) {
 			f_DormingAndGrowthTempSum = GrowingSumF(T_Thres_Emerg, T_Thres_Dormancy, pAtm->Latitude, T_Sum_Initial);
@@ -1143,9 +1142,9 @@ bool NC_Plant::IniFunctors() {
 	SetRootUptakeFunctors();
 	SetManagementFunctors();
 
-	f_Emergence = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
-	f_EmergenceWithMoistControl = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
-	f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
+	f_EmergenceWithReset = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
+	f_EmergenceWithMoistControl_Reset = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
+	f_GrainFillWithReset = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
 	f_Harvest = PlantTempSum(T_Thres_Ripening, T_Sum_Ripening);
 	return true;
 }
@@ -1671,9 +1670,9 @@ auto Growth_Stage = [&](size_t index) {
 			}
 		}
 		else if (Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::Temperature_Sum) {
-			out = -1 + f_Sowing(index, NDrivTAir, T_Step);
+			out = -1 + f_SowingWithReset(false, index, NDrivTAir, T_Step);
 			if (out >= 0.) {
-				f_Sowing = PlantTempSum(T_Thres_Sowing, T_Sum_Sowing); //SowingSum[index]=0.;
+				f_SowingWithReset(true, index, NDrivTAir, T_Step);
 				m_LatestSowingDay = m_pModelInfo->JDayNum;
 			}
 		}
@@ -1694,9 +1693,7 @@ auto Growth_Stage = [&](size_t index) {
 			if (f_emergence(m_pModelInfo->JYearNum, m_pModelInfo->JDayNum)) {
 				out = 1;
 				Emergence_Done[index] = false;
-				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
-
-
+				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
 		else if (EmergenceDayNo[index] > 0 && Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Fixed_dayNo) {
@@ -1704,14 +1701,14 @@ auto Growth_Stage = [&](size_t index) {
 				out = 1.;
 				Emergence_Done[index] = false;
 				GrowingStage[index] = 1.;
-				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
-
+				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
 		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Multiple_DayNo) {
 			if ((int(m_pModelInfo->JDayNum) == int(m_EmergenceDays[m_CountStartYear])) && (m_pModelInfo->JYearNum == int(m_StartYears[m_CountStartYear]) || m_YearTest)) {
 				out = 1.;
-				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
+
 
 				m_YearTest = true;
 				Emergence_Done[index] = false;
@@ -1740,17 +1737,18 @@ auto Growth_Stage = [&](size_t index) {
 				Emergence_Done[index] = false;
 				auto year = PGUtil::YearFunction(m_pModelInfo->JDayNum);
 				GrowingStage[index] = 1.;
-				IEmergenceCount++;
-				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+				if (GrowingStage.size() == index + 1) {
+					IEmergenceCount++;
+				}
+				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
 		else if ((Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Temperature_Sum|| Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on )&&DormingStartDayNum[index]<1.) {
-			out = max(0., Min_GSI[index]) + f_EmergenceWithMoistControl(index, NDrivTAir, NDrivTheta[0], T_Step);
+			out = max(0., Min_GSI[index]) + f_EmergenceWithMoistControl_Reset(false,  index, NDrivTAir, NDrivTheta[0], T_Step);
 			if (out >= 1.) {
-				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
-
-				f_Emergence = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg);
-				f_EmergenceWithMoistControl = PlantTempSum(T_Thres_Emerg, T_Sum_Emerg, p_Soil_WaterF->M_Wilting[0], MoistureRangeEmergence);
+				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
+				f_EmergenceWithReset(true, index, NDrivTAir, T_Step) ;
+				f_EmergenceWithMoistControl_Reset(true, index, NDrivTAir, NDrivTheta[0], T_Step);
 				Emergence_Done[index] = true;
 				SpringDevDayNum[index] = m_pModelInfo->JDayNum;
 				GrowingStage[index] = 1.;
@@ -1771,10 +1769,10 @@ auto Growth_Stage = [&](size_t index) {
 			GrowingStage[index] = 0.;
 		}
 		else {
-			out = 1. + f_GrainStart(index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
-			if (out >= 2) {
+			out = 1. + f_GrainStartWithReset(false, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
+			if (out >= 2&&Max_GSI[index]>2) {
 				Emergence_Done[index] = false;
-				f_GrainStart = GrainStart(GrainSI_Step, GrainSI_StepDay, GrainSI_ThresDay, GrainSI_StepTemp, GrainSI_ThresTemp);
+				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
 	}
@@ -1786,9 +1784,9 @@ auto Growth_Stage = [&](size_t index) {
 			GrowingStage[index] = 0.;
 		}
 		else {
-			out = 2. + f_GrainFill(index, NDrivTAir, T_Step);
+			out = 2. + f_GrainFillWithReset(false, index, NDrivTAir, T_Step);
 			if (out >= 3) {
-				f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
+				f_GrainFillWithReset(true, index, NDrivTAir, T_Step); //PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
 			}
 		}
 	}
@@ -1839,6 +1837,7 @@ auto EmergenceAndRelatedUpdates = [&](size_t i) {
 		P_State[_ROOT][_C_][i] = 0.;
 		P_State[_OLD_ROOT][_C_][i] = 0.;
 		AddSeed = false;
+		Emergence_Done[i] = true;
 	}
 	else {
 		C_Seed_Avail = C_Seed[i];
@@ -2360,7 +2359,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 			else if (HarvestToBeDone[i_plant] && Grazing_Sw(Grazing) == Grazing_Sw::Continous)  // When Grazing equal 2 14 May 2007   		
 				SplitofPlant_At_Harvest(true);
 			MoveFromPlantToLitter = true;
-
+			GrowthStageIndex[i_plant] = Min_GSI[i_plant];
 			////// For Grazing = 2 above		
 
 		}
@@ -2419,6 +2418,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		if (MoveFromPlantToLitter) {
 			RemovedCompAtHarvest[i_plant] = true;
 			MoveFromPlantToLitter = MoveLitterFromPlant(pNCSoil, i_plant);
+
 		}
 	}
 }
@@ -3266,10 +3266,7 @@ void NC_Plant::At_YearShifting() {//year shift for P added by HH
 
 		DormingTempSum[i] = 0.;
 		Emergence_Done[i] = false;
-		f_GrainFill = PlantTempSum(T_Thres_GrainFill, T_Sum_GrainFill);
-
-
-
+		f_GrainFillWithReset(true, i, NDrivTAir, T_Step);
 
 	};
 
