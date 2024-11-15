@@ -190,10 +190,16 @@ public:
 				case 1:	return "Cumulated";
 				case 2:	return "Year Cumulated";
 				case 3: return "Day Cumulated";
+				case 4: return "Mean Dimension 1";
+			}
+			if (m_Valid_TSV[i].VarTranformed > 4) {
+				string txt = "Index "+FUtil::STD_ItoAscii(m_Valid_TSV[i].VarTranformed - 4)+" of 1st dimension";
+				return txt;
 			}
 		}
 		return "";
 	};
+
 	size_t ReduceCriteria(PERFORMANCE_VAR, size_t VarIndex=0, size_t ThresholdType=0, size_t Threshold=0);
 	void ReduceUpdateStep(PERFORMANCE_VAR);
 	size_t GetNumberofEnsembles() { return m_AcceptedIdString.size(); };

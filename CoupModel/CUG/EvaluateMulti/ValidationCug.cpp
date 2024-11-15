@@ -31,7 +31,9 @@ UINT UpdateValidationVar( LPVOID pParam )
 {
     ValidationCug* pObject = (ValidationCug*)pParam;
 	pObject->m_OnGoingUpdate = true;
-	pObject->EstimateNewPerformance(pObject->m_CumulatedPerformance);
+	//pObject->EstimateNewPerformance(pObject->m_CumulatedPerformance);
+	pObject->m_pSimDoc->EstimateNewTransformedPerformance(pObject->m_CumulatedPerformance);
+
 	pObject->m_pSimDoc->m_MStorage.UpdateAcceptedRuns(true, false);
 	pObject->NewPerformanceReady();
 	pObject->m_pSimDoc->MR_ReCalculatePostDist(false);
@@ -296,11 +298,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	m_CumulatedPerformance = m_pSimDoc->m_MStorage.m_CumulatedPerformance;
 
-	if (m_CumulatedPerformance == 1) QuickSetText(0, -2, "Cumulated performance");
-	else if (m_CumulatedPerformance == 0) QuickSetText(0, -2, "Normal performance Representation");
-	else if (m_CumulatedPerformance == 2) QuickSetText(0, -2, "Year Cumulated performance");
-	else if (m_CumulatedPerformance == 3) QuickSetText(0, -2, "Day Cumulated performance");
-	else if (m_CumulatedPerformance == 4) QuickSetText(0, -2, "Aggregated to Mean of Dim1");
+	auto ikoll = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+	auto tests = m_pSimDoc->m_MStorage.m_Valid_TSV[ikoll].VarTranformed;
 
 	QuickSetText(0,-2, m_pSimDoc->m_MStorage.GetTransformationIndicator(m_pSimDoc->m_MStorage.m_ActualEnsemble));
 
@@ -2800,7 +2799,7 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 	m_CurrentTopRow = GetTopRow();
 
 	if(ID==1) {
-		if(msg==103) {
+		if(msg==103||msg==100) {
 			GetCell(col,row, &cell);
 			m_After=cell.GetStdText();
 			optionlist = cell.GetStdLabelText();
@@ -3289,10 +3288,14 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 
 		}
 		else if (item == 4023) {
-		m_CumulatedPerformance = 4;
-		m_SavedCriteria2File = false;
-		AfxBeginThread(UpdateValidationVar, this);
-
+			m_CumulatedPerformance = 4;
+			m_SavedCriteria2File = false;
+			AfxBeginThread(UpdateValidationVar, this);
+		}
+		else if (item >= 4024) {
+			m_CumulatedPerformance = item-4024+5;
+			m_SavedCriteria2File = false;
+			AfxBeginThread(UpdateValidationVar, this);
 		}
 		else if(item==4001) {
 			EraseAllSelected(); 
@@ -3367,6 +3370,11 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			m_SavedCriteria2File = false;
 			AfxBeginThread(UpdateValidationVar, this);
 
+		}
+		else if (item >= 4024) {
+			m_CumulatedPerformance = item - 4024 + 5;
+			m_SavedCriteria2File = false;
+			AfxBeginThread(UpdateValidationVar, this);
 		}
 		else if(item==1062) {
 			m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, true);
@@ -4571,6 +4579,23 @@ bool ValidationCug::EstimateNewPerformance(size_t cumulated) {
 			}
 		}
 	}
+	else if (cumulated >= 5) {
+
+		STAT_PERF oldperf, newperf;
+		size_t IndexDim1;
+		size_t RepinDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+		size_t acc_index;
+		vector<float> Oldvalue;
+		Oldvalue.assign(m_NumValidVar * 6 * m_pSimDoc->m_MStorage.GetNumberOfRuns(), 0.);
+		for (size_t irun = 0; irun < m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
+			IndexDim1 = irun % RepinDim1;
+			acc_index = irun/RepinDim1;
+			for (int i = 0; i < m_NumValidVar * 6; i++) {
+				Oldvalue[irun*m_NumValidVar*6+i]= m_pSimDoc->m_MStorage.GetValid(irun , i);
+				VarValidNewVector[irun*m_NumValidVar*6 + i] = m_pSimDoc->m_MStorage.GetValid(acc_index * RepinDim1 + cumulated - 5, i);
+			}
+		}
+	}
 	if (cumulated == 0)
 		m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed = 0;
 	else
@@ -4585,6 +4610,10 @@ bool ValidationCug::EstimateNewPerformance(size_t cumulated) {
 	else if(cumulated==2) text="yearly cumulated values";
 	else if(cumulated==3) text="daily cumulated values";
 	else if (cumulated == 4) text = "all candidates within first dimension";
+	else if (cumulated >= 5) {
+		text = "Only index ";
+		text+= FUtil::STD_ItoAscii(cumulated-4);
+	}
 	MFC_Util::MessageBox("Performance indicators estimated based on "+text,"Estimated new performance", MB_OK);
 
 

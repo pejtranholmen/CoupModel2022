@@ -89,6 +89,7 @@ public:
 	bool CompleteProcessingOfInputFiles_MultiStorage();
 	bool Reset_AcceptedRuns(size_t ensemble);
 	bool SetActualPerformanceVector_TSV_Variables(size_t ActualPerformance=string::npos);
+	size_t GetActualTransformation(size_t EnsembleNo);
 
 	bool SetActual_AcceptedEnsemble();
 	bool Check_Change_PerformanceIndicator_ToActual_Ensemble();

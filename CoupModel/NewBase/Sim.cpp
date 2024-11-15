@@ -242,8 +242,8 @@ p_mainframe = (CMainFrame*)pCoupModel->m_pMainWnd;
 	pRunDoc->MR_RESET_Bayesian();
 	pRunDoc->MR_ResetDimCounter();
 	if (pRunDoc->GetNumAll_TSV_ValVariables()> 0) {
-		pRunDoc->MR_Storage_InitEvaluateStat();
-		pRunDoc->MR_Storage_InitEnsembles();
+		pRunDoc->MR_Storage_InitEvaluateStat(); // May aggregate Performance if Aggregate Calib Number
+		pRunDoc->MR_Storage_InitEnsembles(); // May process and create a number of ensembles
 
 
 		if (pRunDoc->IsBayesianCalibration()) {

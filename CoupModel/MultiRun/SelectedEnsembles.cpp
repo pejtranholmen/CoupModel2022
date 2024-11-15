@@ -2009,9 +2009,9 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 				else
 					fval = GetValid(irun, ip);
 			}
-			else if (rmse_o != 0) {
+			else if (rmse_o != 0&& ip!=string::npos) {
 				float vtest;
-				if (index_trans != string::npos) {
+				if (index_trans != string::npos&&ind_rmse!=string::npos) {
 					size_t indextsv = ind_rmse + irun*m_NumValid;
 					vtest = 1- m_VarValidTransformed[index_trans].VarValidVector[indextsv];
 				}

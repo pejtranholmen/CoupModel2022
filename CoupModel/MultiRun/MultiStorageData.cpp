@@ -1781,6 +1781,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		ip = VarIndex + Indicator * MaxNum;;
 
 	if (VarIndex == MaxNum) MeanOfMany = true;
+	if (ip == string::npos) return false;
 	if (MeanOfMany) {
 		dist = m_pNewMap->m_MStorage.m_MeanTSV_Accepted[Indicator];
 	}

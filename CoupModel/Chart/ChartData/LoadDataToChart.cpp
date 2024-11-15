@@ -1419,7 +1419,9 @@ void LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 	if (p_info.DataType == DATA_TYPES::SIM_PERFORMANCE) {
 
 		if (p_info.EnsembleNo >= 0) {
-			pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(p_info.EnsembleNo);
+
+			//pDocAct->m_MStorage.m_ActualEnsemble = p_info.EnsembleNo;
+			pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
 		}
 		if (p_info.Index / NumValidVar == 6 && p_info.PGSection == 0) {
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = 1. - pDocAct->m_MStorage.GetValid(i, ind_rmse)*pDocAct->m_MStorage.GetValid(i, ind_rmse) / rmse_o;

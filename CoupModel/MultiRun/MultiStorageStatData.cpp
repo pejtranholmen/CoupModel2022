@@ -601,7 +601,7 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			m_EvaluationFile.rsize_t(&m_CumulatedPerformance);
 			size_t num;
 			//m_VarValidTransformed.resize(0);
-			if (m_CumulatedPerformance > 10) return false;
+			if (m_CumulatedPerformance > 100) return false;
 			if(!m_EvaluationFile.rsize_t(&num)) return false;
 			VARTRANSFORMED add;
 			for(size_t i = 0; i < num; i++) {
@@ -936,19 +936,19 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 }
 
 
-bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t ActualPerformanceNo) {
+bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t ActualCumulatedPerformance) {
 	size_t newindex;
 	if (MapOfStoredTSV.empty()) 
 		return false;
 	else {
 		
-		if (ActualPerformanceNo != string::npos) {
-			auto it = MapOfStoredTSV.find(ActualPerformanceNo);
+		if (ActualCumulatedPerformance != string::npos) {
+			auto it = MapOfStoredTSV.find(ActualCumulatedPerformance);
 			if (it != MapOfStoredTSV.end()) 
 				newindex = (*it).second;
 			else
 				return false;
-			m_CumulatedPerformance = ActualPerformanceNo;
+			m_CumulatedPerformance = ActualCumulatedPerformance;
 		}
 		else {
 			auto it = MapOfStoredTSV.find(m_CumulatedPerformance);
@@ -968,6 +968,14 @@ bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t Actua
 		return false; //Keep m_VarValid as the original values
 
 	return true;
+}
+size_t MultiStorageStatData::GetActualTransformation(size_t EnsembleNo)
+{
+	if (m_Valid_TSV.size() > EnsembleNo) {
+		return m_Valid_TSV[EnsembleNo].VarTranformed;
+	}
+	else
+		return 0;
 }
 bool MultiStorageStatData::SetActual_AcceptedEnsemble() {
 

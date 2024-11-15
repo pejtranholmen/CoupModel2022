@@ -226,6 +226,11 @@ bool Technical_Functions::Def()
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 10., 100.,10.,100.,0,2024); CriteriaTab.push_back(pP);
 
+	Define(pP, pCriteria, "MultiRun Par Index", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
+		pP = new P(&Criterion.MultiParIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	Define(pP, pCriteria, "MultiRun Par Value", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
+		pP = new P(&Criterion.MultiParValue, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+
 	pTab = new Tab(&CriteriaTab, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pTab, "Criteria for Ensembles", "", "");
 

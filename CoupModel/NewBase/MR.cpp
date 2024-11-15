@@ -1462,10 +1462,11 @@ bool MR::PreDefined_Criteria_Process() {
 			
 			ensemble = max(size_t(1), ensemble);
 			m_MStorage.m_ActualEnsemble=ensemble- 1;
+
 			m_MStorage.SetActualPerformanceVector_TSV_Variables(Transform);
-			m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
-			if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
-				m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+			m_MStorage.SetActual_AcceptedEnsemble();
+			if (m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+				m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
 			}
 			switch (Indicator) {
 				case 0:
@@ -1544,7 +1545,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 			pPG = ValidationResult_PG_Pointer(i);
 			PGPtr[i] = pPG;
 			if (pPG == nullptr) {
-				string name = m_pSimDoc->GetOutputFileName(i + 1);
+				string name = GetOutputFileName(i + 1);
 				pPG = new CPG;
 				pPG->Open(name);
 				pPG->CloseFile();
@@ -1652,24 +1653,24 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 				stream.close();
 				};
 
-			for (long irun = 0; irun < m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
+			for (long irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
 #ifndef COUPSTD	
 				if (irun % 1000 == 5) {
 					float scale;
-					scale = float(i) / float(NumValidVar) + irun / m_pSimDoc->m_MStorage.GetNumberOfRuns() * 1. / float(NumValidVar);
+					scale = float(i) / float(NumValidVar) + irun / m_MStorage.GetNumberOfRuns() * 1. / float(NumValidVar);
 					p_mainframe->UpdateResidualProgress(i + 1, NumValidVar, scale, cumulated);
 				}
 #endif
 
 
-				ifile = m_pSimDoc->MR_GetAddedFiles(irun);
+				ifile = MR_GetAddedFiles(irun);
 				//int index=(addedfiles+1)*i+ifile;
 				//auto pRes=(CResiduals*)ResidualPtr[index];
-				filename = m_pSimDoc->GetXBinFileName(FileNo, ifile);
+				filename = GetXBinFileName(FileNo, ifile);
 				//auto pRes=(CResiduals*)m_pSimDoc->GetResidualPointer(FileNo);
 				//if(ifile>0) pRes=(CResiduals*)m_pSimDoc->GetResidualPointer(FileNo, ifile);
 				if (ifile != 0) {
-					irun_int = m_pSimDoc->MR_GetInternalRunNo(irun);
+					irun_int = MR_GetInternalRunNo(irun);
 				}
 				else {
 					irun_int = irun;
@@ -1752,7 +1753,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 				if (cumulated > 0 && sim.size() > 0) {
 					newperf.me = (AccSimOrg - AccMeasOrg) / sim.size();
 				}
-				if (cumulated == 0) m_pSimDoc->m_MStorage.SetNewPerformance(irun, i, newperf);
+				if (cumulated == 0) m_MStorage.SetNewPerformance(irun, i, newperf);
 				else {
 					size_t NumValid = NumValidVar * 6;
 					VarValidNewVector[i + irun * NumValid] = newperf.r2;
@@ -1771,26 +1772,54 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 
 		STAT_PERF oldperf, newperf;
 		size_t IndexDim1;
-		size_t RepinDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+		size_t RepinDim1 = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 
-		vector<float> VarAcc;
-		for (size_t irun = 0; irun < m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
+		if (m_MStorage.SetActualPerformanceVector_TSV_Variables(0)) {
+			vector<float> VarAcc;
+			for (size_t irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
 
-			IndexDim1 = irun % RepinDim1;
-			if (IndexDim1 == 0) VarAcc.assign(NumValidVar * 6, 0.);
+				IndexDim1 = irun % RepinDim1;
+				if (IndexDim1 == 0) VarAcc.assign(NumValidVar * 6, 0.);
 
-			for (int i = 0; i < NumValidVar * 6; i++) {
-				VarAcc[i] += m_pSimDoc->m_MStorage.GetValid(irun, i);
-				if (IndexDim1 == RepinDim1 - 1) {
-					for (size_t idim1 = 0; idim1 < RepinDim1; idim1++) {
-						VarValidNewVector[(irun / RepinDim1) * NumValidVar * RepinDim1 * 6 + idim1 * NumValidVar * 6 + i] = VarAcc[i] / RepinDim1;
+				for (int i = 0; i < NumValidVar * 6; i++) {
+					VarAcc[i] += m_MStorage.GetValid(irun, i);
+					if (IndexDim1 == RepinDim1 - 1) {
+						for (size_t idim1 = 0; idim1 < RepinDim1; idim1++) {
+							VarValidNewVector[(irun / RepinDim1) * NumValidVar * RepinDim1 * 6 + idim1 * NumValidVar * 6 + i] = VarAcc[i] / RepinDim1;
+						}
 					}
 				}
 			}
+			m_MStorage.m_CumulatedPerformance = cumulated;
 		}
+		else
+			return false;
 	}
+	else if (cumulated >= 5) {
+
+		STAT_PERF oldperf, newperf;
+		size_t IndexDim1;
+		size_t RepinDim1 = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+		size_t acc_index;
+		vector<float> Oldvalue;
+		Oldvalue.assign(NumValidVar * 6 * m_MStorage.GetNumberOfRuns(), 0.);
+		if (m_MStorage.SetActualPerformanceVector_TSV_Variables(0)) {
+			for (size_t irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
+				IndexDim1 = irun % RepinDim1;
+				acc_index = irun / RepinDim1;
+				for (int i = 0; i < NumValidVar * 6; i++) {
+					Oldvalue[irun * NumValidVar * 6 + i] = m_MStorage.GetValid(irun, i);
+					VarValidNewVector[irun * NumValidVar * 6 + i] = m_MStorage.GetValid(acc_index * RepinDim1 + cumulated - 5, i);
+				}
+			}
+			m_MStorage.m_CumulatedPerformance = cumulated;
+		}
+		else
+			return false;
+	}
+
 	if (cumulated == 0)
-		m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed = 0;
+		m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].VarTranformed = 0;
 	else
 		m_MStorage.SetNewPerformanceVector(cumulated, VarValidNewVector);
 
@@ -1803,6 +1832,10 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated)
 	else if (cumulated == 2) text = "yearly cumulated values";
 	else if (cumulated == 3) text = "daily cumulated values";
 	else if (cumulated == 4) text = "all candidates within first dimension";
+	else if (cumulated >= 5) {
+		text = "Only index ";
+		text += FUtil::STD_ItoAscii(cumulated - 4);
+	}
 #ifndef COUPSTD
 	m.SetPaneMessage("Performance indicators estimated based on " + text+ "Estimated new performance");
 #endif

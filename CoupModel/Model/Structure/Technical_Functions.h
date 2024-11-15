@@ -91,6 +91,8 @@ struct {
 	vector<double> Threshold;
 	vector<double> ThresholdType;
 	vector<double> Transformation;
+	vector<double> MultiParIndex;
+	vector<double> MultiParValue;
 } Criterion;
 
 

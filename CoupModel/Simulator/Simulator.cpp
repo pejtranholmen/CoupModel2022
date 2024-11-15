@@ -848,19 +848,20 @@ bool Simulator::Valid_Check_Precise(size_t i, bool Filter) {
 			if (ist >= m_ValPGFile[i].FirstValidRecord)
 				pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
 			m_ValPGFile[i].ActPos = pPG->GetPrevHitPos(j) + 1;
-			
-			size_t currentmin = pPG->GetLongTime(m_ValPGFile[i].ActPos-1);
-			size_t prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos-2);
-			size_t count = 2;
-			size_t step = m_ValPGFile[i].varindex.size()+1;
-			while (currentmin == prevmin) {
-				ist =ist -step;
-				count++;
-				pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
-				if(m_ValPGFile[i].ActPos>count)
-					prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - count);
-				else
-					prevmin = currentmin / 2;
+			if (m_ValPGFile[i].ActPos > 3) {
+				size_t currentmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - 1);
+				size_t prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - 2);
+				size_t count = 2;
+				size_t step = m_ValPGFile[i].varindex.size() + 1;
+				while (currentmin == prevmin) {
+					ist = ist - step;
+					count++;
+					pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
+					if (m_ValPGFile[i].ActPos > count)
+						prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - count);
+					else
+						prevmin = currentmin / 2;
+				}
 			}
 
 		}

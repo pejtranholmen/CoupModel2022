@@ -98,6 +98,24 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 		if (m_CumulatedPerformance != 4)
 			AddMenuItem(4023, "Estimate performance with mean of Dimension 1 ");
 		}
+		if (m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension > 1) {
+			size_t next_index=0;
+			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_Valid_TSV.size(); i++) {
+				if (m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed > 4) {
+					if(m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed - 4> next_index) next_index= m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed - 4;
+
+				}
+				if (next_index >= m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension) {
+					next_index = string::npos;
+					break;
+				}
+
+			}
+			if(next_index!=string::npos) 
+				AddMenuItem(4024+int(next_index), "Assign performance based on single index within Dimension 1 ");
+
+		}
+		
 	}
 
 	if (m_pSimDoc == nullptr) return false;
