@@ -19,7 +19,7 @@ public:
 
 	bool m_OnGoingUpdate;
 	Doc *m_pSimDoc;
-	size_t m_CumulatedPerformance;
+	size_t m_Transformation{0}, m_Dim1_Index{0};
 	long m_CurrentTopRow;
 
 protected:

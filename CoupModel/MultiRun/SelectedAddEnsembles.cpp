@@ -27,7 +27,7 @@ SelectedAddEnsembles::~SelectedAddEnsembles()
 
 
 }
-bool SelectedAddEnsembles::SetNewPerformanceVector(size_t cumulatedPerformance, vector<float> VarValidVector) {
+bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vector<float> VarValidVector) {
 
 
 	/**if (cumulatedPerformance == 0)
@@ -42,7 +42,7 @@ bool SelectedAddEnsembles::SetNewPerformanceVector(size_t cumulatedPerformance, 
 		addnew = true;
 	}
 	else {
-		auto it = MapOfStoredTSV.find(cumulatedPerformance);
+		auto it = MapOfStoredTSV.find(transformed_index);
 		if (it != MapOfStoredTSV.end()) {
 			newindex = (*it).second;
 		}
@@ -51,17 +51,17 @@ bool SelectedAddEnsembles::SetNewPerformanceVector(size_t cumulatedPerformance, 
 			addnew = true;
 		}
 	}
-	vartrans.cumvalue = cumulatedPerformance;
+	vartrans.Transformed_index = transformed_index;
 	vartrans.VarValidVector = VarValidVector;
 	if (addnew) {
 		m_VarValidTransformed.push_back(vartrans);
-		MapOfStoredTSV.insert(pair<size_t, size_t>(cumulatedPerformance, m_VarValidTransformed.size() - 1));
+		MapOfStoredTSV.insert(pair<size_t, size_t>(transformed_index, m_VarValidTransformed.size() - 1));
 	}
 	else {
 		m_VarValidTransformed[newindex] = vartrans;
 	}
-	if (cumulatedPerformance != 0)
-		m_CumulatedPerformance = cumulatedPerformance;
+	if (transformed_index != 0)
+		m_CumulatedPerformance = transformed_index;
 	else {
 		m_ResetTransformedPerformance=true;
 		EvaluateFile(true);
@@ -69,10 +69,10 @@ bool SelectedAddEnsembles::SetNewPerformanceVector(size_t cumulatedPerformance, 
 		m_ResetTransformedPerformance = false;
 	}
 	m_Valid_TSV[m_ActualEnsemble].VarTranformed = m_CumulatedPerformance;
+	if (transformed_index >= 10)
+		m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index = transformed_index % 10;
 
 	return CompleteProcessingOfInputFiles_MultiStorage();
-	
-
 }
 bool SelectedAddEnsembles::AddNewEnsemble(bool KeepPreviousCriteria) {
 

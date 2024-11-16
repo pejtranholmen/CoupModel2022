@@ -203,7 +203,7 @@ public:
 	bool LinkedChangeToSwitches(Sw *pSw, size_t option);
 	bool LinkedChangeToDB_Parameters(Par *pPar, size_t option);
 	bool PreDefined_Criteria_Process();
-	bool EstimateNewTransformedPerformance(size_t cumulated);
+	bool EstimateNewTransformedPerformance(size_t cumulated, size_t dim1Index=string::npos);
 
 	vector<SIMB_VALUE> m_ParToUpdate;
 

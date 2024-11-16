@@ -85,17 +85,17 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 	}
 	if (section == UG_TOPHEADING && !m_OnGoingUpdate) {
 		if(m_pSimDoc->m_MStorage.m_Valid_TSV.size()> m_pSimDoc->m_MStorage.m_ActualEnsemble) {
-		m_CumulatedPerformance = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed; //GetTransformationIndicator(m_pSimDoc->m_MStorage.m_ActualEnsemble);
+		m_Transformation = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed; //GetTransformationIndicator(m_pSimDoc->m_MStorage.m_ActualEnsemble);
 	
-		if(m_CumulatedPerformance!=0)
-			AddMenuItem(4010,"Estimate performance indicators using actual values");
-		if(m_CumulatedPerformance!=1)
+		if(m_Transformation!=0)
+			AddMenuItem(4019,"Estimate performance indicators using actual values");
+		if(m_Transformation!=1)
 			AddMenuItem(4020,"Estimate performance indicators using cumulated values");
-		if(m_CumulatedPerformance!=2)
+		if(m_Transformation !=2)
 			AddMenuItem(4021,"Estimate performance indicators using year cumulated values");
-		if(m_CumulatedPerformance!=3)
+		if(m_Transformation !=3)
 			AddMenuItem(4022,"Estimate performance indicators using day cumulated values");
-		if (m_CumulatedPerformance != 4)
+		if (m_Transformation != 4)
 			AddMenuItem(4023, "Estimate performance with mean of Dimension 1 ");
 		}
 		if (m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension > 1) {

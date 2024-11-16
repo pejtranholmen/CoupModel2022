@@ -187,7 +187,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 
 		if (m_VarValidTransformed.size() == 0)
 			index_trans = string::npos;
-		else if (m_VarValidTransformed[index_trans].cumvalue != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
+		else if (m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
 			index_trans = string::npos;
 
 
@@ -1832,7 +1832,7 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 			if (m_VarValidTransformed.size() == 0)
 				index_trans = string::npos;
 			else if (index_trans < m_VarValidTransformed.size()) {
-				if(m_VarValidTransformed[index_trans].cumvalue != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
+				if(m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
 				index_trans = string::npos;
 			}
 
@@ -1977,7 +1977,7 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 
 		if (m_VarValidTransformed.size() == 0)
 			index_trans = string::npos;
-		else if (m_VarValidTransformed[index_trans].cumvalue != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
+		else if (m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
 			index_trans = string::npos;
 
 

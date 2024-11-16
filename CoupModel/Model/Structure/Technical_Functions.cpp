@@ -126,7 +126,7 @@ bool Technical_Functions::Def()
 		Define(pSw, "Nelder-Mead Objective", 0, "SSE|AIC|BIC", "ValidationMode > 0");
 
 		pSw = new Sw(&PreDefinedEnsembles, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
-		Define(pSw, "PreDefinedEnsembles", 0, "off|one|two|three|four|five|six","ValidationMode > 0");
+		Define(pSw, "PreDefinedEnsembles", 0, "off|on","ValidationMode > 0");
 
 		pSw = new Sw(&UseFilterParameters_Validation, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pSw, "UseFilterParameters", 0, "off|on","ValidationMode > 0");
@@ -222,14 +222,15 @@ bool Technical_Functions::Def()
 	pP = new P(&Criterion.ThresholdType, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "ThresholdType", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
+
 	pP = new P(&Criterion.Threshold, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
-		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 10., 100.,10.,100.,0,2024); CriteriaTab.push_back(pP);
 
-	Define(pP, pCriteria, "MultiRun Par Index", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
-		pP = new P(&Criterion.MultiParIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
-	Define(pP, pCriteria, "MultiRun Par Value", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
-		pP = new P(&Criterion.MultiParValue, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pP = new P(&Criterion.MultiParIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);	
+	Define(pP, pCriteria, "MR Dim1 Index", initv, "-", "PreDefinedEnsembles>0", 0., 100., 0., 10., 0, 2024, 2024); CriteriaTab.push_back(pP);
+	
+	//Define(pP, pCriteria, "MultiRun Par Value", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
+	//	pP = new P(&Criterion.MultiParValue, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 
 	pTab = new Tab(&CriteriaTab, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
 		Define(pTab, "Criteria for Ensembles", "", "");

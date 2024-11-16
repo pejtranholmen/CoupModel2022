@@ -87,7 +87,6 @@ bool	MakeMultiPlot(int sheet, int col, int row);
 MultiVAL	GetMultiValStruct(int, int, int, bool *Add, int Indep);
 BOOL	TimeSeriePlotClick(int isheet, int col,  int row, long mrunno, BOOL Add=TRUE);
 BOOL	DefineNewSubPeriod();
-bool	EstimateNewPerformance(size_t cumulated=0);
 void    NewPerformanceReady() { m_Changed = true; m_SavedCriteria2File = false; };
 vector<int> m_FilterCase;
 

@@ -30,14 +30,16 @@ struct VALIDENSEMBLE {
 	bool tobe_Plotted;
 	bool is_Updated;
 	bool is_Copar_Updated;
-	size_t VarTranformed{ 0 };
+	size_t VarTranformed{0};
+	size_t Dim1_Par_Index{0};
 	vector<float> MeanPerFomanceIndicators[7];
 };
 
 enum STAT_OF_PERFORMANCE {PRIOR_MIN, PRIOR_MAX, POST_MIN, POST_MAX, SELECT_LOW, SELECT_HIGH};
 
 struct VARTRANSFORMED {
-	size_t cumvalue;
+	size_t Transformed_index{0};
+	size_t Dim1_index{0};
 	vector<float> VarValidVector;
 };
 struct STAT_PERF;
@@ -184,20 +186,20 @@ public:
 	DistStat GetParDist(size_t index, size_t ensemble = string::npos);
 	bool  GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG);
 	string GetTransformationIndicator(size_t i) {
+		string txt;
 		if (m_Valid_TSV.size() > i) {
-			switch (m_Valid_TSV[i].VarTranformed) {
-				case 0:	return "Normal";
-				case 1:	return "Cumulated";
-				case 2:	return "Year Cumulated";
-				case 3: return "Day Cumulated";
-				case 4: return "Mean Dimension 1";
+			switch (m_Valid_TSV[i].VarTranformed%10) {
+				case 0:	txt = "Normal"; break;
+				case 1:	txt = "Cumulated"; break;
+				case 2:	txt = "Year Cumulated"; break;
+				case 3: txt = "Day Cumulated"; break;
+				case 4: txt = "Mean Dimension 1"; break;
 			}
 			if (m_Valid_TSV[i].VarTranformed > 4) {
-				string txt = "Index "+FUtil::STD_ItoAscii(m_Valid_TSV[i].VarTranformed - 4)+" of 1st dimension";
-				return txt;
+				txt+= " - Index "+FUtil::STD_ItoAscii(m_Valid_TSV[i].Dim1_Par_Index)+" of 1st dimension";
 			}
 		}
-		return "";
+		return txt;
 	};
 
 	size_t ReduceCriteria(PERFORMANCE_VAR, size_t VarIndex=0, size_t ThresholdType=0, size_t Threshold=0);

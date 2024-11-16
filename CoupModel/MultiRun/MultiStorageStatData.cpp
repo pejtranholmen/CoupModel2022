@@ -605,13 +605,13 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			if(!m_EvaluationFile.rsize_t(&num)) return false;
 			VARTRANSFORMED add;
 			for(size_t i = 0; i < num; i++) {
-				if(!m_EvaluationFile.rsize_t(&add.cumvalue)) return false;
+				if(!m_EvaluationFile.rsize_t(&add.Transformed_index)) return false;
 				size_t numvector;
 				if(!m_EvaluationFile.rsize_t(&numvector)) return false;
 				add.VarValidVector.resize(numvector);
 				add.VarValidVector=m_EvaluationFile.rFloatArray2(numvector);
 				m_VarValidTransformed.push_back(add);
-				MapOfStoredTSV.insert(pair<size_t,size_t>(add.cumvalue, m_VarValidTransformed.size() - 1));
+				MapOfStoredTSV.insert(pair<size_t,size_t>(add.Transformed_index, m_VarValidTransformed.size() - 1));
 			}
 			return m_EvaluationFile.IsFileInGood();
 		}
@@ -623,16 +623,16 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			if (num == 0 && m_CumulatedPerformance == 0&& m_VarValid.size()>0) {
 				//Original Performance indicators to archive
 				VARTRANSFORMED vartrans;
-				vartrans.cumvalue = 0;
+				vartrans.Transformed_index = 0;
 				vartrans.VarValidVector = m_VarValid;
 				m_VarValidTransformed.push_back(vartrans);
-				MapOfStoredTSV.insert(pair<size_t, size_t>(vartrans.cumvalue, 0));
+				MapOfStoredTSV.insert(pair<size_t, size_t>(vartrans.Transformed_index, 0));
 			}
 //         Check if VarValidVector has same size as m_VarValid
 
 			for (size_t i = 0; i < m_VarValidTransformed.size(); i++) {
-				m_EvaluationFile.wSize_t(&m_VarValidTransformed[i].cumvalue);
-				if (m_VarValid.size() != m_VarValidTransformed[i].VarValidVector.size()&& m_VarValidTransformed[i].cumvalue==0) {
+				m_EvaluationFile.wSize_t(&m_VarValidTransformed[i].Transformed_index);
+				if (m_VarValid.size() != m_VarValidTransformed[i].VarValidVector.size()&& m_VarValidTransformed[i].Transformed_index==0) {
 					m_VarValidTransformed[i].VarValidVector.resize(m_VarValid.size());
 
 					m_VarValidTransformed[i].VarValidVector = m_VarValid;
