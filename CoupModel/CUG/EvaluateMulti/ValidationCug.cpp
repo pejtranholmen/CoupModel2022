@@ -3074,6 +3074,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 	if (item == 1065) {
 		//Reset_All();
 		if(m_pSimDoc->PreDefined_Criteria_Process());
+
 		OnSheetSetup(isheet);
 	}
 	else if (item == 1063) {
@@ -3184,6 +3185,14 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 				ReducebyLogLi(size_t(row), Threshold, SV_Variable);
 			else if(isheet==6)
 				ReducebyNSE(size_t(row), Threshold, SV_Variable);
+
+			for (int i = 0; i < 6; i++)
+				Make_MainSheets(i);
+			Make_CriteriaSheet();
+			Make_OptionSheet();
+			OnSheetSetup(isheet);
+			SetSheetNumber(isheet);
+
 			m_pSimDoc->m_MStorage.EvaluateFile(false);
 			MyCug *pCug;
 			pCug = MySingle::instance().GetCugPointer();
@@ -5131,27 +5140,7 @@ void ValidationCug::ReducebySlopeInterval(size_t ivar, size_t n_left, bool SV_Va
 
 void ValidationCug::ReduceUpdateStep(PERFORMANCE_VAR value)
 {
-	m_pSimDoc->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-	m_pSimDoc->m_MStorage.UpdateAcceptedRuns(false, false);
-	m_Changed = TRUE;
-	m_SavedCriteria2File = false;
-	m_pSimDoc->MR_ReCalculatePostDist(false);
+	m_pSimDoc->m_MStorage.ReduceUpdateStep(value);
 
-	for (int i = 0; i < MAXSIMVAL; i++) {
-		CResiduals* pRes;
-		pRes = m_pSimDoc->GetValidResidualPointer(i + 1);
-		if (pRes != nullptr) {
-			pRes->ToBeUpdated();
-			pRes->m_MeanDefined = false;
-		}
-	}
-	m_Changed = FALSE;
-	m_Updated = TRUE;
 
-	for (int i = 0; i < 6; i++)
-		Make_MainSheets(i);
-	Make_CriteriaSheet();
-	Make_OptionSheet();
-	OnSheetSetup(value);
-	SetSheetNumber(value);
 }

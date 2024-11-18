@@ -28,7 +28,8 @@ ModelBase::ModelBase() {
 	//m_DocFile.m_FileVersionNumber=67;
 	//m_DocFile.m_FileVersionNumber = 68;	  // new from Dec 2019
 	//m_DocFile.m_FileVersionNumber = 69;	  // new from Jan 2020
-	m_DocFile.m_FileVersionNumber = 70;	  // new from April 2023
+	//m_DocFile.m_FileVersionNumber = 70;	  // new from April 2023
+	m_DocFile.m_FileVersionNumber = 71;	  // new from Nov 2024
 	m_FileVersionNumberRead=0;
 	m_DocFile.m_SimulationRunNo=1;
 	m_DocFile.m_FinishedSimulation=false;

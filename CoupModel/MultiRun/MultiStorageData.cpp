@@ -39,22 +39,22 @@ MultiStorageData::MultiStorageData()
 	m_CumulatedPerformance=0;
 	m_AcceptedRuns.resize(0);
 	
-	m_MeanSV_STAT.resize(6); // First Dim STAT of Performance
-	m_MeanTSV_STAT.resize(6);
-	m_VarTSV_Mean.resize(6);
-	m_VarSV_Mean.resize(6);
+	m_MeanSV_STAT.resize(NUM_STAT); // First Dim STAT of Performance
+	m_MeanTSV_STAT.resize(NUM_STAT);
+	m_VarTSV_Mean.resize(NUM_STAT);
+	m_VarSV_Mean.resize(NUM_STAT);
 	for (size_t i = 0; i < m_MeanSV_STAT.size(); i++) {
-		m_MeanSV_STAT[i].resize(7); // Second Dim type of Performance
-		m_MeanTSV_STAT[i].resize(7);
+		m_MeanSV_STAT[i].resize(NUM_STAT); // Second Dim type of Performance
+		m_MeanTSV_STAT[i].resize(NUM_STAT);
 	
-		m_VarTSV_Mean[i].resize(7);
-		m_VarSV_Mean[i].resize(7);
+		m_VarTSV_Mean[i].resize(NUM_STAT);
+		m_VarSV_Mean[i].resize(NUM_STAT);
 	}
 
 
-	m_MeanTSV_All.resize(7);
-	m_MeanTSV_Accepted.resize(7);
-	m_MeanSV_All.resize(7);
+	m_MeanTSV_All.resize(NUM_STAT);
+	m_MeanTSV_Accepted.resize(NUM_STAT);
+	m_MeanSV_All.resize(NUM_STAT);
 	
 
 
@@ -243,13 +243,15 @@ void MultiStorageData::SetPerformance(unsigned long irun,  unsigned long ind_spl
 void MultiStorageData::SetNewPerformance(unsigned long irun, unsigned long ivar,  STAT_PERF newperf)
 {
 	//m_VarValid[irun*m_NumValid]=
-	unsigned long ival=m_NumValid/6;
-	AddValid(irun,ivar,newperf.r2);
-	AddValid(irun,ival+ivar,newperf.intercept);
-	AddValid(irun,2*ival+ivar,newperf.slope);
-	AddValid(irun,3*ival+ivar,newperf.me);
-	AddValid(irun,4*ival+ivar,newperf.rmse);
-	AddValid(irun,5*ival+ivar,newperf.logli);;
+	unsigned long ival=(m_NumValid+m_NumExtraValid)/7;
+
+	AddValid(irun,ivar*ival,newperf.r2);
+	AddValid(irun,ivar*ival+1,newperf.intercept);
+	AddValid(irun,2+ivar*ival,newperf.slope);
+	AddValid(irun,3+ivar*ival,newperf.me);
+	AddValid(irun,4+ivar*ival,newperf.rmse);
+	AddValid(irun,5+ivar*ival,newperf.logli);
+	AddValid(irun,6+ivar*ival, newperf.nse);
 
 }
 bool MultiStorageData::SaveSplitData(unsigned long index)
@@ -301,7 +303,12 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 	m_MBinHeader = ReadStartData();
 	m_NumValid = m_MBinHeader.n_valid;
 	m_NumSumValid = m_MBinHeader.n_sumvalid;
-	m_NumExtraValid = m_MBinHeader.n_valid / 6;
+	if (!m_New7_Stat) 	m_NumExtraValid = m_MBinHeader.n_valid / 6;
+	else {
+		m_NumExtraValid = 0;
+		m_ValidStatBase = m_MBinHeader.n_validStatBase;
+	}
+
 	m_NumMulti = m_MBinHeader.n_param;
 	m_NumSum = m_MBinHeader.n_sumvar;
 	unsigned long m_InitRuns = m_TotalNumberRuns = m_MBinHeader.n_runs;
@@ -320,9 +327,9 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 		}
 	}
 	if (m_pNewMap != nullptr) {
-		if (m_NumValid != m_pNewMap->m_Val_Array.size() * 6) {
-			m_NumValid = m_pNewMap->m_Val_Array.size() * 6;
-			m_NumExtraValid = m_NumValid / 6;
+		if (m_NumValid != m_pNewMap->m_Val_Array.size() * m_ValidStatBase) {
+			m_NumValid = m_pNewMap->m_Val_Array.size() * m_ValidStatBase;
+			m_NumExtraValid = 0;
 			m_NumValidAll = m_NumValid + m_NumExtraValid;
 		}
 	}
@@ -474,11 +481,14 @@ bool MultiStorageData::SaveRecord(unsigned long irec)
 		}
 	}
 	std::streampos lOffset = 20;
+	if(m_New7_Stat) 
 	std::streampos pos, lActual;
 
+	if (m_New7_Stat)
+		lOffset = irec * m_NumMulti * 4 + 24;
+	else
+		lOffset=irec*m_NumMulti*4+20;
 
-	
-    lOffset=irec*m_NumMulti*4+20;
 	m_MultiFile.seekp( lOffset, ios::cur );
 	m_MultiFile.write((char*)&m_VarMulti[irec*m_NumMulti],4*m_NumMulti);
 	
@@ -519,6 +529,7 @@ bool MultiStorageData::SaveBase(bool update)
 	m_MultiFile.write((char*)&m_NumValid,4);
 	m_MultiFile.write((char*)&m_NumSumValid,4);
 	m_MultiFile.write((char*)&m_NumSum,4);
+	m_MultiFile.write((char*)&m_ValidStatBase, 4);
 	pos=m_MultiFile.tellp();
 	unsigned long RelPscan=25;
 
@@ -556,6 +567,8 @@ bool MultiStorageData::SaveTempFile()
 	m_MultiFile.write((char*)&m_NumValid,4);
 	m_MultiFile.write((char*)&m_NumSumValid,4);
 	m_MultiFile.write((char*)&m_NumSum,4);
+	if(m_New7_Stat) m_MultiFile.write((char*)&m_ValidStatBase, 4);
+
 	m_MultiFile.write((char*)&m_VarMulti[0],4*m_NumMulti*m_TotalNumberRuns);
 	m_MultiFile.write((char*)&m_VarValid[0],4*m_NumValid*m_TotalNumberRuns);
 	m_MultiFile.write((char*)&m_VarValidSum[0],4*m_NumSumValid*m_TotalNumberRuns);
@@ -579,7 +592,7 @@ bool MultiStorageData::InitData(string filename, unsigned long numrec, unsigned 
 {
 	m_TotalNumberRuns=numrec;
 	m_NumMulti=nump+10; // Changed NumMulti from +5 to +10 Variables March 17
-	m_NumValid=numv*6;
+	m_NumValid=numv*m_ValidStatBase;
 	m_NumSumValid=numvsum*3;
 	m_NumSum=numsum*6;
 	m_pNewMap=pMap;
@@ -598,8 +611,8 @@ bool MultiStorageData::InitData(string filename, unsigned long numrec, unsigned 
 		m_MultiFile.open(m_FileName,ios::binary|ios::out );
 	};
 	m_MultiFile.close();
-	m_NumExtraValid = m_NumValid / 6;
-	m_NumValidAll = m_NumValid + m_NumExtraValid;
+	m_NumExtraValid = 0;
+	m_NumValidAll = m_NumValid;
 	if(m_VarMulti.size()==0) {
 		m_VarMulti.assign(m_NumMulti*m_TotalNumberRuns,0.);
 		m_VarSum.assign(m_NumSum*m_TotalNumberRuns,0.);
@@ -653,8 +666,7 @@ bool MultiStorageData::AddMultiP(unsigned long rec, unsigned long index, float f
 }
 bool MultiStorageData::AddValid(unsigned long rec, unsigned long index, float fv)
 {
-	if(m_CumulatedPerformance==0)
-		m_VarValid[index+m_NumValid*rec]= fv;
+		m_VarValid[index+(m_NumValid+m_NumExtraValid)*rec]= fv;
 
 	return true;
 }
@@ -734,9 +746,9 @@ float MultiStorageData::GetValid(unsigned long rec, unsigned long ip, size_t i_c
 	if (m_CyclicNumber > 1&&i_cycle!=string::npos) {
 		rec=(rec/(m_CyclicNumber))*m_CyclicNumber;				// removed i_cycle
 	}
-	auto index=ip+m_NumValid*rec;
+	auto index=ip+(m_NumValid+m_NumExtraValid)*rec;
 	if(index>=m_TotalNumberRuns*(m_NumValid+m_NumExtraValid)) return MISSING;
-	float v=m_VarValid[ip+m_NumValid*rec];
+	float v=m_VarValid[index];
 	if(v==-numeric_limits<double>::infinity( ))
 		return MISSING;
 	else
@@ -1431,12 +1443,21 @@ MBIN_FILE_HEADER MultiStorageData::ReadStartData() {
 	unsigned long m_InitRuns = m_TotalNumberRuns;
 
 	std::streampos actpos;
-	char *pf;
-	pf = new char[20];
+	char* pf;
+	pf = new char[24];
 	m_MultiFile.seekg(0, ios::beg);
 	actpos = m_MultiFile.tellg();
 	out.streamgood = m_MultiFile.good();
-	m_MultiFile.read(pf, 20);
+	if (m_pNewMap->m_FileVersionNumberRead > 70) {
+		m_New7_Stat = true;
+		m_MultiFile.read(pf, 24);
+	}
+	else {
+		m_New7_Stat = false;
+		out.n_validStatBase = 6;
+		m_MultiFile.read(pf, 20);
+	}
+
 	actpos = m_MultiFile.tellg();
 	auto nbyte = m_MultiFile.gcount();
 	out.streamgood = m_MultiFile.good();
@@ -1446,6 +1467,8 @@ MBIN_FILE_HEADER MultiStorageData::ReadStartData() {
 	out.n_valid = *(unsigned long*)(pf + 8);
 	out.n_sumvalid = *(unsigned long*)(pf + 12);
 	out.n_sumvar = *(unsigned long*)(pf + 16);
+	if (m_New7_Stat)
+		out.n_validStatBase = *(unsigned long*)(pf + 20);
 
 
 	delete[]pf;
@@ -1459,11 +1482,22 @@ MBIN_FILE_HEADER MultiStorageData::ReadStartDataFromAttachedFiles(fstream *File,
 
 	std::streampos actpos;
 	char *pf;
-	pf = new char[20];
+
+	
+	pf = new char[24];
 	File->seekg(0, ios::beg);
 	actpos = File->tellg();
 	out.streamgood = File->good();
-	File->read(pf, 20);
+	if (m_pNewMap->m_FileVersionNumberRead > 70) {
+		m_New7_Stat = true;
+		File->read(pf, 24);
+	}
+	else {
+		m_New7_Stat = false;
+		out.n_validStatBase = 6;
+	}
+	
+
 	actpos = File->tellg();
 	auto nbyte = File->gcount();
 	out.streamgood = File->good();
@@ -1474,6 +1508,8 @@ MBIN_FILE_HEADER MultiStorageData::ReadStartDataFromAttachedFiles(fstream *File,
 	out.n_valid = *(unsigned long*)(pf + 8);
 	out.n_sumvalid = *(unsigned long*)(pf + 12);
 	out.n_sumvar = *(unsigned long*)(pf + 16);
+	if(m_New7_Stat)
+	out.n_validStatBase= *(unsigned long*)(pf + 20);
 
 
 	delete[]pf;
@@ -1495,9 +1531,11 @@ bool MultiStorageData::OpenAndCheckIfSplitPeriod() {
 				m_SplitPeriodFile.read((char*)&m_NumSplitPeriod, 4);
 			else
 				m_NumSplitPeriod = 0;
-
-
-			unsigned long ival = m_NumValid / 6;
+			unsigned long ival;
+			if(m_New7_Stat)
+				ival = m_NumValid / 7;
+			else
+				ival = m_NumValid / 6;
 
 
 			m_SplitRec = (m_NumValid + 2 * m_NumValid / 6 + m_NumExtraValid) / ival;
@@ -1799,7 +1837,8 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		auto min_value = dist.front();
 		auto max_value = dist.back();
 		size_t n_toremove = 0;
-		if (dist.size() <= Threshold) n_toremove = 0;
+		if (dist.size() <= Threshold) {
+			n_toremove = 0; Threshold = 1;}
 		else if (Indicator != ABSME_STAT) n_toremove = dist.size() - Threshold - 1;
 
 		if (Indicator == ABSME_STAT || Indicator == A1_STAT) {
@@ -1972,6 +2011,7 @@ void MultiStorageData::ReduceUpdateStep(PERFORMANCE_VAR value)
 			pRes->m_MeanDefined = false;
 		}
 	}
+	m_pNewMap->m_MStorage.EvaluateFile(false);
 	//m_Changed = FALSE;
 	//m_Updated = TRUE;
 }

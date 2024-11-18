@@ -51,7 +51,9 @@ STAT_PERF StatUtil::Get_StatComp(vector<double> *psim, vector<double> *pobs)
 		out.sse = me2_acc;
 	}
 	else {
-		out.n=0;
+		out.n = 0;
+		out.intercept = out.slope = out.r2 = out.nse = out.rmse = out.logli = MISSING;
+		out.me = MISSING;
 
 
 	}

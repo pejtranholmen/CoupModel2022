@@ -1843,7 +1843,7 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 			float rmse_o, vtest;
 
 
-			if (ip >= m_NumValid) {
+			if (ip >= m_NumValid+m_NumExtraValid) {
 				ind = ip - m_NumValid;
 				ind_rmse = 4 * m_NumValid / 6 + ind;
 				rmse_o = m_pNewMap->m_ValidationData.GetValRMSE_O(ind) / m_pNewMap->m_ValidationData.GetValn(ind);
@@ -1852,7 +1852,7 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 			for (unsigned long i = 0; i < num_runs; i++) {
 				if(posterior) irun= Get_AcceptedRuns(i);
 				else irun = i;
-				if (ip < m_NumValid) {
+				if (ip < m_NumValid + m_NumExtraValid) {
 						if(index_trans!=string::npos) {
 							size_t indextsv = ip + irun*m_NumValid;
 							candidate = m_VarValidTransformed[index_trans].VarValidVector[indextsv];
@@ -1988,38 +1988,15 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 		return out;
 
 	if (ind_split == 0) {
-		unsigned long ind, ind_rmse, count;
-		float rmse_o;
-		if (ip >= m_NumValid) {
-			ind = ip - m_NumValid;
-			ind_rmse = 4 * m_NumValid / 6 + ind;
-			rmse_o = m_pNewMap->m_ValidationData.GetValRMSE_O(ind) / m_pNewMap->m_ValidationData.GetValn(ind);
-		}
+
 		float fval;
-		count = 0;
+		size_t count = 0;
 		for (unsigned long i = 0; i < m_TotalNumAccepted; i++) {
 			unsigned long irun = Get_AcceptedRuns(i);
 
 			fval = MISSING;
-			if (ip < m_NumValid) {
-				if (index_trans != string::npos) {
-					size_t indextsv = ip + irun*m_NumValid;
-					fval = m_VarValidTransformed[index_trans].VarValidVector[indextsv];
-				}
-				else
-					fval = GetValid(irun, ip);
-			}
-			else if (rmse_o != 0&& ip!=string::npos) {
-				float vtest;
-				if (index_trans != string::npos&&ind_rmse!=string::npos) {
-					size_t indextsv = ind_rmse + irun*m_NumValid;
-					vtest = 1- m_VarValidTransformed[index_trans].VarValidVector[indextsv];
-				}
-				else
-					vtest = 1. - GetValid(irun, ind_rmse)*GetValid(irun, ind_rmse) / rmse_o;
-				if (vtest > MISSING&&vtest < 1.00001)
-					fval = float(vtest);
-			}
+			fval = GetValid(irun, ip);
+
 			if (fval > MISSING)
 				out.push_back(fval);
 		}

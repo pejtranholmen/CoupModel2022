@@ -1,5 +1,6 @@
 #pragma once
 #include "../ModelTypes/NewModelType.h"
+const size_t NUM_STAT{7};
 class MR;
 struct STAT_PERF;
 struct MBIN_FILE_HEADER {
@@ -8,6 +9,7 @@ struct MBIN_FILE_HEADER {
 	unsigned long n_valid;
 	unsigned long n_sumvalid;
 	unsigned long n_sumvar;
+	unsigned long n_validStatBase;
 	bool streamgood;
 };
 enum STAT_ENSEMBLE { E_PRIOR_MIN, E_PRIOR_MAX, E_PRIOR_CV, E_PRIOR_MEAN, E_POST_MIN, E_POST_MAX, E_POST_CV, E_POST_MEAN, E_SELECT_LOW, E_SELECT_HIGH };
@@ -227,6 +229,7 @@ public:
 public:
 	bool m_SplitFileOpen;
 	bool m_Lock;
+	bool m_New7_Stat;
 	vector< vector<size_t> > m_AcceptedRuns;
 	vector<string> m_AcceptedIdString;
 
@@ -252,6 +255,7 @@ public:
 	size_t m_ActualEnsemble;
 	unsigned long m_NumSum, m_NumValid, m_NumSumValid, m_TotalNumAccepted, m_TotalNumBayesAccepted;
 	unsigned long m_TotalNumberRuns;
+	unsigned long m_ValidStatBase{ 7 };
 
 	vector<VALIDENSEMBLE> m_Valid_TSV, m_Valid_SV;
 	vector<VALIDENSEMBLE> m_Valid_TSV_Mean, m_Valid_SV_Mean;
