@@ -132,6 +132,7 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 		else {
 			out.DataType=DATA_TYPES::SIM_VAL;
 			out.EnsembleType = ENSEMBLE_TYPE::NO;
+
 			/*int counter = 0;
 			float validv = 0;
 			int count = -1;
@@ -147,11 +148,7 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 				out.index_cycle = m_pSimDoc->m_MStorage.GetCyclicNumber();
 				out.Residual_RunNo = (m_pProp->m_MultiSequence-1)*out.index_cycle - 1;
 			} */
-
-
 		}
-		out.PG_FilterVarIndex = out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
-		out.PG_FilterVarValue = out.pSimDoc->m_Val_Array[out.Index].PG_FilterValue;
 	}
 	else if(out.ValFileNo>=0&&m_pSimDoc->m_SelectValTime[i].col==1) {
 		F *pF=out.pSimDoc->ValidationFilePointer(out.ValFileNo);
@@ -174,8 +171,39 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 		out.DataType=DATA_TYPES::MEASURED_VAL;
 		if (out.pPG->GetNumRepititions() > 1) out.RepitDataType = true;
 		out.pPG_MeasValFile = out.pPG;
-		out.PG_FilterVarIndex= out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
-		out.PG_FilterVarValue = out.pSimDoc->m_Val_Array[out.Index].PG_FilterValue;
+
+		
+
+	}
+			
+	if (out.pSimDoc->IsMultiSimulation()) {
+		auto pSw = out.pSimDoc->GetSw("UseFilterParameters");
+		auto pSw2 = out.pSimDoc->GetSw("PreDefinedEnsembles");
+		if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
+			auto ensemble_no = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+			auto Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[ensemble_no].Dim1_Par_Index;
+			if (Dim1Value > 0) {
+				out.PG_FilterVarValue = Dim1Value;
+				for (int i1 = 0; i1 < out.pSimDoc->m_MultiRun_Array.size(); i1++) {
+					for (int i2 = 0; i2 < out.pSimDoc->MR_Get_NumberOfParametersWithinDim(i1 + 1); i2++) {
+						auto test = out.pSimDoc->MR_GetParName(i1 + 1, i2 + 1);
+						if (test == "Filter Var Value") {
+							auto indexmulti = i2 + 1;
+							auto test_value_sim = size_t(out.pSimDoc->m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
+							out.PG_FilterVarValue = test_value_sim;
+							break;
+						}
+					}
+				}
+				out.PG_FilterVarIndex = out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
+			}
+			else
+				out.PG_FilterVarIndex = 0;
+		}
+		else if (pSw->GetIntValue() > 0) {
+			out.PG_FilterVarIndex = out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
+			out.PG_FilterVarValue = out.pSimDoc->m_Val_Array[out.Index].PG_FilterValue;
+		}
 	}
 
 	

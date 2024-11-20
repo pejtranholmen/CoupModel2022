@@ -1519,9 +1519,9 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 	Sim* pSim;
 #ifndef COUPSTD 
 	MFC_Util m;
-	const size_t Num_Stat_Perf{ 7 };
+	
 #endif
-
+	const size_t Num_Stat_Perf{ 7 };
 	pSim = ((Sim*)this);
 
 	size_t transformed_index;
@@ -1923,8 +1923,8 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			acc_index = irun / RepinDim1;
 			for (int ivar = 0; ivar < NumValidVar; ivar++) {
 				for (int istat = 0; istat < Num_Stat_Perf; istat++) {
-					auto index1 = irun * NumValidVar * Num_Stat_Perf + istat+ivar*NumValidVar;
-					auto index2 = (acc_index * RepinDim1 + dim1_index - 1) * NumValidVar * Num_Stat_Perf+ivar*NumValidVar;
+					auto index1 = irun * NumValidVar * Num_Stat_Perf + istat+ivar*Num_Stat_Perf;
+					auto index2 = (acc_index * RepinDim1 + dim1_index - 1) * NumValidVar * Num_Stat_Perf+istat+ivar*Num_Stat_Perf;
 					VarValidNewVector[index1] = previous_values[index2];
 				}
 			}
@@ -2768,7 +2768,7 @@ void MR::MR_Storage_Add()
 
 	// Validation Value
 
-	/*
+	indexp = 0;
 	for (size_t i6 = 0; i6 < 7; ++i6) {
 		for (size_t i = 0; i < m_ValidationData.GetNumberSelectedTSV_Val(); i++) {
 			if (i6 == 0) m_MStorage.AddValid(irec, indexp, m_ValidationData.GetValR2(i));
@@ -2777,19 +2777,19 @@ void MR::MR_Storage_Add()
 			else if (i6 == 3)	m_MStorage.AddValid(irec, indexp, m_ValidationData.GetValME(i));
 			else if (i6 == 4)  m_MStorage.AddValid(irec, indexp, m_ValidationData.GetValRMSE(i));
 			else if (i6 == 5)	m_MStorage.AddValid(irec, indexp, float(m_ValidationData.GetValLogLi(i)));
+			else if (i6 == 6)	m_MStorage.AddValid(irec, indexp, float(m_ValidationData.GetValNSE(i)));
 			indexp++;
 		}
-	}*/
-	size_t count = 0;
-	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) {
-		m_MStorage.AddValid(irec, count, m_Val_Array[ival].R2); count++;
-		m_MStorage.AddValid(irec, count, m_Val_Array[ival].A0); count++;
-		m_MStorage.AddValid(irec, count, m_Val_Array[ival].A1); count++;
-		m_MStorage.AddValid(irec, count, m_Val_Array[ival].ME); count++;
-		m_MStorage.AddValid(irec, count, m_Val_Array[ival].RMSE); count++;
-		m_MStorage.AddValid(irec, count, m_Val_Array[ival].LogLi); count++;
-		m_MStorage.AddValid(irec, count, m_Val_Array[ival].NSE); count++;
 	}
+	/*size_t count = indexp;
+	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) { m_MStorage.AddValid(irec, count, m_Val_Array[ival].R2);  count +=m_Val_Array.size();}; count = 1;
+	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) {m_MStorage.AddValid(irec, count, m_Val_Array[ival].A0); count += m_Val_Array.size();}; count = 2;
+	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) { m_MStorage.AddValid(irec, count, m_Val_Array[ival].A1); count += m_Val_Array.size();	}; count = 3;
+	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) { m_MStorage.AddValid(irec, count, m_Val_Array[ival].ME); count += m_Val_Array.size();	}; count = 4;
+	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) { m_MStorage.AddValid(irec, count, m_Val_Array[ival].RMSE); count += m_Val_Array.size();}; count = 5;
+	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) { m_MStorage.AddValid(irec, count, m_Val_Array[ival].LogLi); count += m_Val_Array.size();}; count = 6;
+	for (size_t ival = 0; ival < m_Val_Array.size(); ival++) { m_MStorage.AddValid(irec, count, m_Val_Array[ival].NSE); count += m_Val_Array.size();};
+	*/
 
 	 indexp = 0;
 	
@@ -2860,7 +2860,7 @@ bool MR::MR_Storage_InitEvaluateStat() {
 	Ps* pPar = GetPsPointer("Aggregate Calib Number");
 	
 
-	if (m_IsMakingBayesianCalib) {
+ 	if (m_IsMakingBayesianCalib) {
 	
 		if (pPar != nullptr) {
 			size_t n = size_t(pPar->GetValue() + 0.001);

@@ -2697,6 +2697,14 @@ void ValidationCug::OnCB_LClicked(int updn,RECT *rect,POINT *point,BOOL processe
 				}
 			}
 			OnSheetSetup(isheet);
+
+			MyCug* pCug;
+			pCug = MySingle::instance().GetCugPointer();
+			int isheet = pCug->GetSheetNumber();
+			if (isheet == 6 || isheet == 10)
+				pCug->OnSheetSetup(isheet);
+			else
+				pCug->OnSheetSetup(6);
 		}
 	}
 }

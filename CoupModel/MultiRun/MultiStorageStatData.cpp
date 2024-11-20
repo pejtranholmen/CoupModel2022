@@ -463,7 +463,7 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 				m_EvaluationFile.wFloatArray2(m_MeanTSV_STAT[SELECT_HIGH], num);
 			}
 			unsigned int numValdyn2 = m_ValidDynLogLi.size();
-			size_t koll = m_NumValid / 6 * 13 * 7 * 2;
+			size_t koll = m_NumValid/m_ValidStatBase  * 13 * 7 * 2;
 			if (koll == numValdyn2) {
 
 				auto kol2 = 2;

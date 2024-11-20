@@ -36,6 +36,7 @@ bool NC_SoilManagement::Ini()	{
 		m_PG_Deep_Ploughing.Open(m_PG_Deep_Ploughing.GetFileName());
 		auto num = m_PG_Deep_Ploughing.GetNumRecords();
 		IPloughingDates.resize(num);
+		IPloughingCount = 0;
 		for (size_t i = 0; i < num; i++)
 			IPloughingDates[i] = m_PG_Deep_Ploughing.GetLongTime(i + 1);
 		for (int i = num - 1; i >= 0; i--)
@@ -64,7 +65,19 @@ bool NC_SoilManagement::IniFunctors() {
 	//Use NC_Drivings, Only	:	NDrivTheta
 	NC_GasFlux::IniFunctors();
 
+	if (Deep_Ploughing_Sw(Ploughing) == Deep_Ploughing_Sw::PG_File_Specified) {
+		m_PG_Deep_Ploughing.Open(m_PG_Deep_Ploughing.GetFileName());
+		auto num = m_PG_Deep_Ploughing.GetNumRecords();
+		IPloughingDates.resize(num);
+		IPloughingCount = 0;
+		for (size_t i = 0; i < num; i++)
+			IPloughingDates[i] = m_PG_Deep_Ploughing.GetLongTime(i + 1);
+		for (int i = num - 1; i >= 0; i--)
+			if (m_pModelInfo->m_ActMin < IPloughingDates[i]) IPloughingCount = i;
 
+		PloughingDay = PGUtil::DayNumFunction(IPloughingDates[IPloughingCount]);
+		m_PG_Deep_Ploughing.CloseFile();
+	}
 
 	return true;
 }
@@ -92,9 +105,8 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 		if(ISurfaceCultCount<ISurfaceCultDates.size())
 		if (m_pModelInfo->m_ActMin >= ISurfaceCultDates[ISurfaceCultCount]-2000) {
 			Do_Cultivating = true;
+			SurfaceCultDay = int(PGUtil::DayNumFunction(ISurfaceCultDates[IPloughingCount])); 
 			ISurfaceCultCount++;
-			SurfaceCultDay= m_pModelInfo->JDayNum;
-
 		}
 	}
 	else if(int(m_pModelInfo->JDayNum)>0&&(int(m_pModelInfo->JDayNum)==int(SurfaceCultDay)||int(m_pModelInfo->JDayNum)==int(PloughingDay))) {
@@ -104,10 +116,11 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 
 	if (Deep_Ploughing_Sw(Ploughing) == Deep_Ploughing_Sw::PG_File_Specified) {
 		if(IPloughingCount<IPloughingDates.size())
-			if (m_pModelInfo->m_ActMin >= IPloughingDates[IPloughingCount]-2000) {
-				IPloughingCount++;
+			if (m_pModelInfo->m_ActMin >= IPloughingDates[IPloughingCount]-3000) {
 				Do_Ploughing = true;
-				PloughingDay = m_pModelInfo->JDayNum;
+				PloughingDay = int(PGUtil::DayNumFunction(IPloughingDates[IPloughingCount]));
+				IPloughingCount++;
+				
 			}
 			else
 				Do_Ploughing = false;

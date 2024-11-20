@@ -29,7 +29,7 @@ struct VALIDENSEMBLE {
 	vector<DistStat> ParDist;
 	vector<float> copar;
 	vector<DefinedCriteria> History;
-	bool tobe_Plotted;
+	bool tobe_Plotted{ true };
 	bool is_Updated;
 	bool is_Copar_Updated;
 	size_t VarTranformed{0};

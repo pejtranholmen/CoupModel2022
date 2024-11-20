@@ -163,9 +163,9 @@ void MultiStorageData::AlloSplitPerformance(unsigned long splitperiods)
 {
 	m_NumSplitPeriod=splitperiods;
 
-	unsigned long ival=m_NumValid/6;
+	unsigned long ival=m_NumValid/m_ValidStatBase;
 	if(ival==0) return;  // No Validation Variables in MultiStorageData File
-	m_SplitRec=(m_NumValid+2*m_NumValid/6+m_NumExtraValid)/ival;
+	m_SplitRec=(m_NumValid+2*m_NumValid/m_ValidStatBase)/ival;
 	if (m_pNewMap->m_MultiFileSplitMode)
 		m_SplitRecRuns = m_TotalNumberRuns * m_SplitRec;
 	else
@@ -225,7 +225,7 @@ void MultiStorageData::AlloSplitPerformance(unsigned long splitperiods)
 }
 void MultiStorageData::SetPerformance(unsigned long irun,  unsigned long ind_split, STAT_PERF split)
 {
-	unsigned long ival=m_NumValid/6;
+	unsigned long ival=m_NumValid/m_ValidStatBase;
 	unsigned long j=(unsigned long)(m_SplitRec)*ind_split+(unsigned long)(m_SplitRec)*m_NumSplitPeriod*irun;
 
 	m_VarSplit[j]=split.r2;//VALIDATION_mp_REG_R2;
@@ -243,15 +243,16 @@ void MultiStorageData::SetPerformance(unsigned long irun,  unsigned long ind_spl
 void MultiStorageData::SetNewPerformance(unsigned long irun, unsigned long ivar,  STAT_PERF newperf)
 {
 	//m_VarValid[irun*m_NumValid]=
-	unsigned long ival=(m_NumValid+m_NumExtraValid)/7;
+	size_t ival = m_NumValid / m_ValidStatBase;
+	unsigned long index=ivar%ival*m_ValidStatBase;
 
-	AddValid(irun,ivar*ival,newperf.r2);
-	AddValid(irun,ivar*ival+1,newperf.intercept);
-	AddValid(irun,2+ivar*ival,newperf.slope);
-	AddValid(irun,3+ivar*ival,newperf.me);
-	AddValid(irun,4+ivar*ival,newperf.rmse);
-	AddValid(irun,5+ivar*ival,newperf.logli);
-	AddValid(irun,6+ivar*ival, newperf.nse);
+	AddValid(irun,index,newperf.r2);
+	AddValid(irun,1+index,newperf.intercept);
+	AddValid(irun,2+index,newperf.slope);
+	AddValid(irun,3+index,newperf.me);
+	AddValid(irun,4+index,newperf.rmse);
+	AddValid(irun,5+index,newperf.logli);
+	AddValid(irun,6+index, newperf.nse);
 
 }
 bool MultiStorageData::SaveSplitData(unsigned long index)
@@ -1169,7 +1170,7 @@ bool MultiStorageData::CalculateMeanValidValues(bool SV_Variables)
 		
 	}
 	if (m_NumValidVar == 0) return false;
-	unsigned long NumValidVar = m_NumValid / 6;
+	unsigned long NumValidVar = m_NumValid / 7;
 	float dsum[7];
 	unsigned long count;
 	float fvalue;
@@ -1208,17 +1209,17 @@ bool MultiStorageData::CalculateMeanValidValues(bool SV_Variables)
 }
 void MultiStorageData::AllocateMeanValidVar() {
 
-	if (m_NumValid == 6) {
-		m_NumValidVar = m_NumValid / 6;
+	if (m_NumValid == 7) {
+		m_NumValidVar = m_NumValid/m_ValidStatBase ;
 		m_ValidDynLogLi.resize(m_NumValidVar * 13 * 7 * 2);
 		m_ValidDynResiduals.resize(m_NumValidVar * 13 * 7 * 2);
 	}
 	else if (m_NumValid > 6) {
-		m_NumValidVar = m_NumValid / 6;
+		m_NumValidVar = m_NumValid/m_ValidStatBase ;
 		//m_VarTSV_Mean
 	//	m_Valid_TSV_Mean.v[E_PRIOR_MIN].resize(m_TotalNumberRuns);
 
-		for (size_t i = 0; i < 7; i++) {
+		for (size_t i = 0; i < m_MeanTSV_All.size(); i++) {
 			m_MeanTSV_All[i].resize(m_TotalNumberRuns);
 			m_MeanSV_All[i].resize(m_TotalNumberRuns);
 
@@ -1535,10 +1536,10 @@ bool MultiStorageData::OpenAndCheckIfSplitPeriod() {
 			if(m_New7_Stat)
 				ival = m_NumValid / 7;
 			else
-				ival = m_NumValid / 6;
+				ival = m_NumValid/m_ValidStatBase ;
 
 
-			m_SplitRec = (m_NumValid + 2 * m_NumValid / 6 + m_NumExtraValid) / ival;
+			m_SplitRec = (m_NumValid + 2 * m_NumValid/m_ValidStatBase  + m_NumExtraValid) / ival;
 			//m_SplitRecRuns = m_TotalNumberRuns*m_SplitRec*m_NumSplitPeriod;
 
 			if (m_pNewMap->MR_CheckIndexForFile_RepMode()&& m_NumSplitPeriod>0)

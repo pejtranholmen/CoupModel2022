@@ -1656,6 +1656,7 @@ auto Growth_Stage = [&](size_t index) {
 				out = 0.;
 				GrowingSum[index] = 0.;
 				m_LatestSowingDay = m_pModelInfo->JDayNum;
+				Emergence_Done[index]= false;
 			}
 		}
 		else if (Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::Multiple_DayNo) {
@@ -1674,14 +1675,18 @@ auto Growth_Stage = [&](size_t index) {
 			if (out >= 0.) {
 				f_SowingWithReset(true, index, NDrivTAir, T_Step);
 				m_LatestSowingDay = m_pModelInfo->JDayNum;
+				Emergence_Done[index] = false;
+
 			}
 		}
 		else if (Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::PG_File_specified) {
 			if(ISowingCount<ISowingDates.size())
 			if (m_pModelInfo->m_ActMin >= ISowingDates[ISowingCount]) {
 				m_LatestSowingDay = m_pModelInfo->JDayNum;
+				auto day = PGUtil::DayNumFunction(ISowingDates[ISowingCount]);
+				auto day2 = PGUtil::DayNumFunction(m_pModelInfo->m_ActMin);
 				auto year=PGUtil::YearFunction(m_pModelInfo->JDayNum);
-				ISowingCount++;
+				if (GrowingStage.size() == index + 1) ISowingCount++;
 				GrowingSum[index] = 0.;
 				Emergence_Done[index] = false;
 				out = 0.;
@@ -1735,7 +1740,8 @@ auto Growth_Stage = [&](size_t index) {
 			if (m_pModelInfo->m_ActMin >= IEmergenceDates[IEmergenceCount]) {
 				out = 1.;
 				Emergence_Done[index] = false;
-				auto year = PGUtil::YearFunction(m_pModelInfo->JDayNum);
+				auto year = PGUtil::YearFunction(m_pModelInfo->m_ActMin);
+				auto day = PGUtil::DayNumFunction(m_pModelInfo->m_ActMin);
 				GrowingStage[index] = 1.;
 				if (GrowingStage.size() == index + 1) {
 					IEmergenceCount++;
@@ -1749,7 +1755,7 @@ auto Growth_Stage = [&](size_t index) {
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 				f_EmergenceWithReset(true, index, NDrivTAir, T_Step) ;
 				f_EmergenceWithMoistControl_Reset(true, index, NDrivTAir, NDrivTheta[0], T_Step);
-				Emergence_Done[index] = true;
+				Emergence_Done[index] = false;
 				SpringDevDayNum[index] = m_pModelInfo->JDayNum;
 				GrowingStage[index] = 1.;
 			}
@@ -1832,7 +1838,7 @@ auto EmergenceAndRelatedUpdates = [&](size_t i) {
 	bool AddSeed = true;
 	double N_added, P_added;
 
-	if (P_State[_ROOT][_C_][i] + P_State[_OLD_ROOT][_C_][i] > 0.1) {
+	if (P_State[_ROOT][_C_][i] + P_State[_OLD_ROOT][_C_][i] > 10.) {
 		C_Seed_Avail = P_State[_ROOT][_C_][i] + P_State[_OLD_ROOT][_C_][i];
 		P_State[_ROOT][_C_][i] = 0.;
 		P_State[_OLD_ROOT][_C_][i] = 0.;
@@ -2233,7 +2239,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 						P_Harvest[j][jj][i_plant] = 0;
 			m_ResetMade = true;
 		}
-		return;
+	    return;
 		// Actions only once per day. return with no action if called more then once
 	}
 
@@ -3285,8 +3291,8 @@ void NC_Plant::At_YearShifting() {//year shift for P added by HH
 				RemainOldLeaf[jj][iplant] = max(0., (P_State[_OLD_LEAF][jj][iplant]) * (1. - 1. / max(1., (Max_Leaf_Lifetime[iplant] - 1.))));
 				RemainOldLeaf[jj][iplant] = P_State[_OLD_LEAF][jj][iplant] + P_ReAllocation[LEAF_OLD_LEAF][jj][iplant];
 			}
-			if (Winter_Regulation == 1)
-				GrowthStageIndex[iplant] = Min_GSI[iplant];
+			//if (Winter_Regulation == 1)
+	//			GrowthStageIndex[iplant] = Min_GSI[iplant];
 
 			yearshift = true;
 			YearShiftToBeDone[iplant] = false;
