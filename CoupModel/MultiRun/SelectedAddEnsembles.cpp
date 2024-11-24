@@ -52,6 +52,8 @@ bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vec
 		}
 	}
 	vartrans.Transformed_index = transformed_index;
+	if (transformed_index >= 10)
+		vartrans.Dim1_index = transformed_index /10;
 	vartrans.VarValidVector = VarValidVector;
 	if (addnew) {
 		m_VarValidTransformed.push_back(vartrans);
@@ -70,7 +72,7 @@ bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vec
 	}
 	m_Valid_TSV[m_ActualEnsemble].VarTranformed = m_CumulatedPerformance;
 	if (transformed_index >= 10)
-		m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index = transformed_index % 10;
+		m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index = transformed_index / 10;
 
 	return CompleteProcessingOfInputFiles_MultiStorage();
 }
@@ -87,7 +89,7 @@ bool SelectedAddEnsembles::AddNewEnsemble(bool KeepPreviousCriteria) {
 		m_AcceptedRuns.push_back(m_AcceptedRuns[m_AcceptedRuns.size() - 1]);
 	}
 
-	string str="Ensemble (" + FUtil::STD_ItoAscii(m_AcceptedIdString.size()+1)+ ")";
+	string str="E(" + FUtil::STD_ItoAscii(m_AcceptedIdString.size()+1)+ ")";
 	m_AcceptedIdString.push_back(str);
 		
 	m_ActualEnsemble = m_AcceptedIdString.size() - 1;

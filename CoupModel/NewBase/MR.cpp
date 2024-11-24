@@ -1910,7 +1910,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 		size_t acc_index;
 		auto previous_values = VarValidNewVector;
 
-		m_MStorage.SetActualPerformanceVector_TSV_Variables(0);
+		m_MStorage.SetActualPerformanceVector_TSV_Variables(0, dim1_index);
 
 		if (cumulated == 0) {
 			for (size_t irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
@@ -1930,7 +1930,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			}
 		}
 		m_MStorage.m_CumulatedPerformance = dim1_index*10+cumulated;
-
+		
 	}
 	
 

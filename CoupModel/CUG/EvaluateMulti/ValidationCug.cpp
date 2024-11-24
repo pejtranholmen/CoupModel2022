@@ -256,6 +256,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	for (int i = 0; i < cols; i++) {
 		if (m_Data || i > 3)
 			SetColDefault(i, &cell);
+		if (i == 1) SetColWidth(i, 90);
 	}
 	SetMultiSelectMode ( TRUE );
 
@@ -288,10 +289,10 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	SetTH_RowHeight(-2, 25);
 	SetTH_RowHeight(-1, 25);
 
-	SetColWidth(-1, 100);
+	SetColWidth(-1, 60);
+	SetColWidth(1, 100);
 	SetColWidth(0, 200);
-	for (int i = 1; i < 3; i++)
-		SetColWidth(i, 40);
+	SetColWidth(2, 40);
 	for (int i = 3; i < cols; i++)
 		SetColWidth(i, 62);
 
@@ -319,7 +320,57 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	QuickSetText(7, -2, "Distribution Post Selection n=" + FUtil::STD_ItoAscii(iaccept));
 	if (iaccept != iacceptall) QuickSetBackColor(5, -2, m_ColorEdit);
 	QuickSetText(12, -2, "Limits for Selection");
-	QuickSetText(1, -2, "Sub\nPeriod");
+
+	
+	
+	if (m_Distribution_As_Independent) {
+		GetCell(1, -2, &cell);
+		cell.SetBackColor(m_ColorClick);
+		if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) txt = "serie";
+		else if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) txt = "frequence";
+		else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) txt = "cummulated";
+		cell.SetText(txt);
+		SetCell(1, -2, &cell);
+		QuickSetText(1, GetNumberRows()-1, ""); QuickSetText(5, GetNumberRows() - 1, "");
+	}
+	else {
+	/*	auto NoRow = GetNumberRows();
+		GetCell(1, NoRow, &cell);
+		cell.SetCellType(UGCT_DROPLIST);
+
+		string optionlist = "Run No";
+		optionlist += '\n';
+
+		SimB* pPar;
+		int nTabIndex;
+		string namep;
+		for (size_t i = 1; i < m_pSimDoc->MR_GetNumberOfDimensions(); i++) {
+			for (size_t ii = 0; ii < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
+				pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
+				nTabIndex = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
+				namep = pPar->GetName().c_str();
+				if (nTabIndex >= 0)
+					namep += "(" + FUtil::STD_ItoAscii(nTabIndex + 1) + ")";
+				namep += '\n';
+				optionlist += namep;
+			}
+		}
+		enum vartype var = m_pProp->GetFirstIndepVarType();
+		//enum vartype var2 = m_pProp->GetSecondIndepVarType();
+		m_pProp->SetFirstIndepVarType(PARVAR);
+		//m_pProp->SetSecondIndepVarType(PARVAR);
+		string selected_str = FUtil::GetOptionString(optionlist, m_pProp->GetFirstIndepIndex() + 1);
+		cell.SetText(selected_str.c_str());
+		cell.SetLabelText(optionlist.c_str());
+		QuickSetText(1, -2, selected_str);
+		cell.SetParam(100);
+		
+		SetCell(1,NoRow, &cell);*/
+	}
+	
+	//QuickSetText(1, -2, "select");
+	
+	QuickSetText(1, -1, "Plot");
 	QuickSetText(2, -2, "n");
 	QuickSetText(3, -1, "Mean");
 	QuickSetText(4, -1, "CV");
@@ -333,7 +384,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	QuickSetText(12, -1, "Low");
 	QuickSetText(13, -1, "High");
 	//JoinCells(0,-2,0,-1);
-	JoinCells(1, -2, 1, -1);
+	//JoinCells(1, -2, 1, -1);
 	JoinCells(2, -2, 2, -1);
 	JoinCells(3, -2, 6, -2);
 	JoinCells(7, -2, 11, -2);
@@ -617,7 +668,7 @@ if(m_NumValidVar>1) {
 
 
 
-		QuickSetText(0,line,VarText); 
+		QuickSetText(7,line,VarText); 
 
 		QuickSetNumber(9,line,selmin); 
 		QuickSetNumber(10,line,selmax); 
@@ -634,7 +685,68 @@ if(m_NumValidVar>1) {
 		if(criteria==2||criteria==3) QuickSetBackColor(13,line, m_ColorEdit);
 	}
 
-	JoinCells(0,line,8,line);
+	//JoinCells(6,line,7,line);
+
+	if (!m_Distribution_As_Independent) {
+		for(size_t i=0; i<8;i++) UnJoinCells(i, line);
+		QuickSetText(0, line, "First Indep Par");
+		//JoinCells(7, line, 8, line);
+		//JoinCells(1, line, 2, line);
+		JoinCells(3, line, 4, line); QuickSetText(3, line, "Second Index Par");
+		//JoinCells(5, line, 6, line);
+		auto NoRow = GetNumberRows();
+		NoRow=NoRow - 1;
+
+		GetCell(1, line, &cell);
+		cell.SetCellType(UGCT_DROPLIST);
+
+		string optionlist ;
+
+		SimB* pPar;
+		int nTabIndex;
+		string namep;
+
+		//exclude first dimension if more than one
+
+		size_t num_in_firstdim = 0;
+		size_t dimstart = 0;
+		if (m_pSimDoc->MR_GetNumberOfDimensions() > 1) {
+			dimstart = 1;
+			num_in_firstdim=m_pSimDoc->MR_Get_NumberOfParametersWithinDim(1);
+		}
+
+		for (size_t i = dimstart; i < m_pSimDoc->MR_GetNumberOfDimensions(); i++) {
+			for (size_t ii = 0; ii < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
+				pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
+				nTabIndex = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
+				namep = pPar->GetName().c_str();
+				if (nTabIndex >= 0)
+					namep += "(" + FUtil::STD_ItoAscii(nTabIndex + 1) + ")";
+				namep += '\n';
+				optionlist += namep;
+			}
+		}
+		enum vartype var = m_pProp->GetFirstIndepVarType();
+
+
+		int index_sel = 0;
+		index_sel = m_pProp->GetFirstIndepIndex() + 1;
+		if (m_pProp->GetFirstIndepIndex() >= num_in_firstdim)
+			index_sel -= num_in_firstdim;
+
+		string selected_str = FUtil::GetOptionString(optionlist, index_sel);
+		cell.SetText(selected_str.c_str());
+		cell.SetLabelText(optionlist.c_str());
+		cell.SetParam(100);
+		cell.SetBackColor(m_ColorClick);
+
+		SetCell(1, line, &cell);
+		//QuickSetText(0, line, "koll");
+	}
+
+
+
+
 }
 if (NumLinesSV > 0)
 {
@@ -772,7 +884,7 @@ if (NumLinesSV > 0)
 				else QuickSetBackColor(13, line, m_NoColor);
 			}
 
-			JoinCells(0, line, 2, line);
+			//JoinCells(0, line, 2, line);
 		}
 	}
 
@@ -2504,26 +2616,29 @@ void ValidationCug::OnSelectionChanged(int startCol,long startRow,int endCol,lon
 void ValidationCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point,int processed)
 {
 	int isheet=GetSheetNumber();
-	if(col==1&&updn) MultiPlotClick(isheet, col, row, true);
+	CUGCell cell;
 
-	//CUGCell cell;
-	/*
-	if(!m_Data) {
-		if(col==0&&updn) {
-			GetCell(0,i,&cell);
-			cell.SetCellType(UGCT_CHECKBOX);	
-			bool testV=pCPG->GetToBeSaved(i);
-			if(testV) {
-				cell.SetBool(FALSE);
-				pCPG->SetToBeSaved(i,FALSE);
+	if (col == 1 && updn) {
+		if (row < GetNumberRows()) {
+			if (m_Distribution_As_Independent) {
+				m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE;
+				m_pProp->SetFirstIndepSet(PARVAR, false);
+				MultiPlotClick(isheet, col, row, true);
 			}
 			else {
-				cell.SetBool(TRUE);	P
-				pCPG->SetToBeSaved(i,TRUE);
+
+				m_pProp->SetFirstIndepVarType(PARVAR);
+				m_pProp->m_ChartType = CHART_TYPES::SCATTER;
+				m_pProp->ResetXScale(string::npos);
+				m_pProp->SetFirstIndepSet(PARVAR, true);
+				MultiPlotClick(isheet, col, row, true);
 			}
-			SetCell(0,i,&cell);
+			
+			
 		}
-	}*/
+	}
+
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2567,7 +2682,64 @@ void ValidationCug::OnMouseMove(int col,long row,POINT *point,UINT nFlags,BOOL p
 //		'updn'  TRUE if the button is down FALSE if the button just when up
 void ValidationCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL processed)
 {
-	int isheet=GetSheetNumber();
+	int isheet = GetSheetNumber();
+	CUGCell cell;
+	if (updn && row == -2 && col == 1) {
+		if (m_Distribution_As_Independent) {
+			m_pProp->SetFirstIndepSet(PARVAR, false);
+			if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
+			else if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->m_ChartType = CHART_TYPES::FREQUENCE;
+			else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
+			else if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
+			if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->SetFirstIndepVarType(NO_USE);
+
+		}
+		else {
+			/*if (col == 1) {
+				GetCell(col, row, &cell);
+				auto m_After = cell.GetStdText();
+				auto optionlist = cell.GetStdLabelText();
+				auto test = FUtil::GetOptionIndex(optionlist, m_After);
+				m_pProp->SetFirstIndepIndex(PARVAR, FUtil::GetOptionIndex(optionlist, m_After));
+
+
+
+
+
+
+
+				m_Indep_Par_Index==test;
+				//m_Indep_Par_Index = m_Indep_Par_Index % 10; //Change to correct upper limit
+				m_pProp->SetFirstIndepVarType(PARVAR);
+				m_pProp->m_ChartType = CHART_TYPES::SCATTER;
+				m_pProp->ResetXScale(string::npos);
+				m_pProp->SetFirstIndepIndex(PARVAR, m_Indep_Par_Index);
+				m_pProp->SetFirstIndepString(PARVAR, "kool");
+				m_pProp->SetFirstIndepSet(PARVAR, true);
+
+
+
+
+
+
+
+
+
+
+
+			}*/
+		}
+		OnSheetSetup(isheet);
+
+
+		MyCug* pCug;
+		pCug = MySingle::instance().GetCugPointer();
+		int isheet = pCug->GetSheetNumber();
+		if (isheet == 6 || isheet == 10)
+			pCug->OnSheetSetup(isheet);
+		else
+			pCug->OnSheetSetup(6);
+	}
 
 	if ( updn &&col==0&&isheet>=9)
 	{
@@ -2575,6 +2747,7 @@ void ValidationCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 		OnSheetSetup(isheet);
 		//SelectRange ( col, 0, col, GetNumberRows()-1 );
 	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2796,16 +2969,37 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 	string m_After, optionlist;
 	m_After="";
 	int prior;
+	int sheetNumber = GetSheetNumber();
 
-	m_CurrentTopRow = GetTopRow();
+	//m_CurrentTopRow = GetTopRow();
 
 	if(ID==1) {
 		if(msg==103||msg==100) {
 			GetCell(col,row, &cell);
+			auto koll=cell.GetCellType();
+			auto koll2 = cell.GetParam();
 			m_After=cell.GetStdText();
 			optionlist = cell.GetStdLabelText();
+			auto optionlist2 = cell.GetLabelText();
 		}
-		if(row==m_NumLines+1) {
+		if (col == 1&&msg==103&&sheetNumber==0) {
+			auto test = FUtil::GetOptionIndex(optionlist, m_After);
+			auto row_of_par = test;
+			size_t mr_par_index{ 0 };
+			if (m_pSimDoc->MR_GetNumberOfDimensions() > 1) {
+				mr_par_index+=m_pSimDoc->MR_Get_NumberOfParametersWithinDim(1);
+			}
+			mr_par_index +=test-1 ;
+
+			m_pProp->SetFirstIndepIndex(PARVAR, mr_par_index);
+			m_pProp->SetFirstIndepString(PARVAR, m_After);
+			m_pProp->SetFirstIndepVarType(PARVAR);
+
+			MultiPlotClick(sheetNumber, col, row_of_par, false);
+			OnSheetSetup(0);
+
+		}
+		else if(row==m_NumLines+1) {
 			prior=m_pSw1->GetIntValue();
 			if(m_After!="") {
 				m_pSw1->SetStrValue(m_After);
@@ -2841,7 +3035,7 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 	}
 	else if (ID == 2) { // Check box type
 
-	if (col == 3 && row > 3) {
+		if (col == 3 && row > 3) {
 		size_t iens = row - 4;
 		GetCell(col, row, &cell);
 		if (cell.GetBool())
@@ -3078,6 +3272,14 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 
 		m_pSimDoc->m_MStorage.EvaluateFile(false);
 	};
+	if (item == 4055) {
+		if (m_Distribution_As_Independent)
+			m_Distribution_As_Independent = false;
+		else
+			m_Distribution_As_Independent = true;
+		OnSheetSetup(isheet);
+		return;
+	}
 
 	if (item == 1065) {
 		//Reset_All();
@@ -3266,7 +3468,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			DefineNewSubPeriod();
 			m_SavedCriteria2File=false;
 		}
-		else if (item == 4001) {
+		else if (item == 4091) {
 
 			size_t index = row - 4;
 			if(m_pSimDoc->m_MStorage.RemoveEnsemble(index))	OnSheetSetup(isheet);
@@ -4157,6 +4359,7 @@ MultiVAL ValidationCug::GetMultiValStruct(int row, int col,int sheet, bool *Add,
 				out=m_pCUG->GetBlankMultiValStruct();
 			if(*Add) {
 				out.Index=Index;
+				out.index_cycle = 1;
 				out.row=row;
 				out.col=col;
 				out.type=DATA_TYPES::SIM_PERFORMANCE;

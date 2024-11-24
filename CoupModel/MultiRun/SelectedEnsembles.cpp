@@ -1785,6 +1785,8 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 			index_trans = string::npos;
 
 
+		m_VarValidTransformed[index_trans].Dim1_index = m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
+
 	}
 	if (m_AcceptedRuns.size() > m_ActualEnsemble)
 		m_TotalNumAccepted = m_AcceptedRuns[m_ActualEnsemble].size();

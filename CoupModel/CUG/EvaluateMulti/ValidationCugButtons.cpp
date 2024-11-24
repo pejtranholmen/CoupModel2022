@@ -9,7 +9,7 @@
 
 ValidationCugButtons::ValidationCugButtons()
 {
-	DefineHintList();
+	DefineHintList();	m_pProp = MySingle::instance().GetChartPropPointer();
 }
 
 
@@ -31,6 +31,11 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 		AddMenuItem(1000, "Cut");
 		AddMenuItem(2000, "Copy");
 		AddMenuItem(3000, "Paste");
+	}
+	else if (section == UG_CORNERBUTTON) {
+		auto pSw=m_pSimDoc->GetSw("PreDefinedEnsembles");
+		if(pSw->GetIntValue()>0)
+			AddMenuItem(1065, "Reset and ReCalculated with predefined criteria");
 	}
 	if (section == UG_GRID && col > 9 && sheetNumber == 3) {
 		int pos = sheetNumber * m_pSimDoc->GetNumAll_TSV_ValVariables();
@@ -79,45 +84,56 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 
 		}
 		return TRUE;
-
-
-
 	}
 	if (section == UG_TOPHEADING && !m_OnGoingUpdate) {
-		if(m_pSimDoc->m_MStorage.m_Valid_TSV.size()> m_pSimDoc->m_MStorage.m_ActualEnsemble) {
-		m_Transformation = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed; //GetTransformationIndicator(m_pSimDoc->m_MStorage.m_ActualEnsemble);
-	
-		if(m_Transformation!=0)
-			AddMenuItem(4019,"Estimate performance indicators using actual values");
-		if(m_Transformation!=1)
-			AddMenuItem(4020,"Estimate performance indicators using cumulated values");
-		if(m_Transformation !=2)
-			AddMenuItem(4021,"Estimate performance indicators using year cumulated values");
-		if(m_Transformation !=3)
-			AddMenuItem(4022,"Estimate performance indicators using day cumulated values");
-		if (m_Transformation != 4)
-			AddMenuItem(4023, "Estimate performance with mean of Dimension 1 ");
-		}
-		if (m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension > 1) {
-			size_t next_index=0;
-			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_Valid_TSV.size(); i++) {
-				if (m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed > 4) {
-					if(m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed - 4> next_index) next_index= m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed - 4;
+		if (m_pSimDoc->m_MStorage.m_Valid_TSV.size() > m_pSimDoc->m_MStorage.m_ActualEnsemble) {
+			m_Transformation = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].VarTranformed; //GetTransformationIndicator(m_pSimDoc->m_MStorage.m_ActualEnsemble);
+			if (col == 0) {
+				if (m_Transformation != 0)
+					AddMenuItem(4019, "Estimate performance indicators using actual values");
+				if (m_Transformation != 1)
+					AddMenuItem(4020, "Estimate performance indicators using cumulated values");
+				if (m_Transformation != 2)
+					AddMenuItem(4021, "Estimate performance indicators using year cumulated values");
+				if (m_Transformation != 3)
+					AddMenuItem(4022, "Estimate performance indicators using day cumulated values");
+				if (m_Transformation != 4)
+					AddMenuItem(4023, "Estimate performance with mean of Dimension 1 ");
+
+				if (m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension > 1) {
+					size_t next_index = 0;
+					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_Valid_TSV.size(); i++) {
+						if (m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed > 4) {
+							if (m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed - 4 > next_index) next_index = m_pSimDoc->m_MStorage.m_Valid_TSV[i].VarTranformed - 4;
+
+						}
+						if (next_index >= m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension) {
+							next_index = string::npos;
+							break;
+						}
+
+					}
+					if (next_index != string::npos)
+						AddMenuItem(4024 + int(next_index), "Assign performance based on single index within Dimension 1 ");
 
 				}
-				if (next_index >= m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension) {
-					next_index = string::npos;
-					break;
-				}
+			}
+			if (col == 1) {
+				if (m_Distribution_As_Independent) 
+					AddMenuItem(4055, " Shift to Parameters as Independet in Charts");
+				else
+					AddMenuItem(4055, " Shift to show distribution of Performance in Charts");
+
 
 			}
-			if(next_index!=string::npos) 
-				AddMenuItem(4024+int(next_index), "Assign performance based on single index within Dimension 1 ");
-
 		}
-		
+		if (col == 0) {
+			AddMenuItem(1063, "Add New Ensemble for setting of new criteria");
+			AddMenuItem(1064, "Add New Ensemble for setting of new criteria - Keeping actual criteria in new ensemble");
+		}
+		return true;
 	}
-
+		
 	if (m_pSimDoc == nullptr) return false;
 
 	int ifile=m_pSimDoc->m_ValidationData.GetValFileNumber(0);
@@ -131,7 +147,7 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 	}
 	if(m_pSimDoc->m_SelectMultiVal.size()>0&&sheetNumber<7) {
 		
-			AddMenuItem(4001,"Clear All Selected");
+			AddMenuItem(4001,"Clear All Charts");
 	}
 	if(sheetNumber==12&&m_pSimDoc->MR_XBin_IsOpen(ifile)) {
 				
@@ -152,7 +168,7 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 				AddMenuItem(4000, "Estimate performance indicators valid for equal big sub periods");
 		}
 		else if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size()>1&&row>3) {
-			AddMenuItem(4001, "Remove Ensemble");
+			AddMenuItem(4091, "Remove Ensemble");
 
 
 		}
@@ -162,7 +178,7 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 		if(m_SplitPeriods>0&&sheetNumber<7)
 			AddMenuItem(4001,"Make Chart with performance indicator for all sub periods");
 	}*/
-	else {
+	else if(col>9) {
 		if(m_Changed) {
 			if(ifile<0) {
 				AddMenuItem(1060,"Update the list of Accepted Runs");
@@ -184,9 +200,6 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 		}
 		
 	}
-	AddMenuItem(1063, "Add New Ensemble for setting of new criteria");
-	AddMenuItem(1064, "Add New Ensemble for setting of new criteria - Keeping actual criteria in new ensemble");
-	AddMenuItem(1065, "Reset and ReCalculated with predefined criteria");
 
 	return TRUE;
 }
@@ -211,24 +224,29 @@ int ValidationCugButtons::OnHint(int col,long row,int section,CString *str1)
 
 	if (section == UG_CORNERBUTTON) {
 
-		str1->Format(_T("Single click to shift to another ensemble\nRight click to create new ensemble with same performance indicators"));
+		str1->Format(_T("if you have a simulation with Predefined criteria right click to redefine your criteria after change of parameters in Criteria Table "));
 
 
 	}
 	if (section == UG_TOPHEADING) {
-
-		str1->Format(_T("Single click to shift to a new performance indicators or Right click to select new performance indicators"));
-
+		if (col == 1 && row == -2) {
+		
+			str1->Format(_T("Click to shift chart type"));
+		}
+		else if (col == 1 && row == -1) {
+		    str1->Format(_T("Click in Box below to view distribution of candidates"));
+	
+		}
+		else {
+			str1->Format(_T("Single click to shift to a new performance indicators or Right click to select new performance indicators"));
+		}
 
 	}
 	else if (section == UG_GRID) {
 		if (col < 2 && sheetNumber < 7) {
 			if ((m_SplitPeriods == 0 && col == 0) || (m_SplitPeriods >= 0 && col == 0))
-				str1->Format(_T("Single Click on Variable name to make a chart"));
-			else if (m_SplitPeriods == 0)
-				str1->Format(_T("Single Click Split tab to define sub periods"));
-			else
-				str1->Format(_T("Single click on sub period to make a chart representing that sub period"));
+				str1->Format(_T("Single Click on check box to make a chart"));
+
 
 
 		}

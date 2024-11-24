@@ -341,6 +341,7 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 				m_EvaluationFile.rbool(&m_Valid_TSV[i].tobe_Plotted);
 				m_EvaluationFile.rbool(&m_Valid_TSV[i].is_Updated);
 				m_EvaluationFile.rsize_t(&m_Valid_TSV[i].VarTranformed);
+				if(m_New7_Stat) m_EvaluationFile.rsize_t(&m_Valid_TSV[i].Dim1_Par_Index);
 
 				//History of Criteria Setting
 				size_t numhistory;
@@ -502,6 +503,7 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 				m_EvaluationFile.wbool(&m_Valid_TSV[i].tobe_Plotted);
 				m_EvaluationFile.wbool(&m_Valid_TSV[i].is_Updated);
 				m_EvaluationFile.wSize_t(&m_Valid_TSV[i].VarTranformed);
+				m_EvaluationFile.wSize_t(&m_Valid_TSV[i].Dim1_Par_Index);
 
 				//History of Criteria Setting
 				size_t numhistory = m_Valid_TSV[i].History.size();
@@ -607,8 +609,10 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			for(size_t i = 0; i < num; i++) {
 				if(!m_EvaluationFile.rsize_t(&add.Transformed_index)) return false;
 				size_t numvector;
+				if (m_New7_Stat&&!m_EvaluationFile.rsize_t(&add.Dim1_index)) return false;
 				if(!m_EvaluationFile.rsize_t(&numvector)) return false;
 				add.VarValidVector.resize(numvector);
+
 				add.VarValidVector=m_EvaluationFile.rFloatArray2(numvector);
 				m_VarValidTransformed.push_back(add);
 				MapOfStoredTSV.insert(pair<size_t,size_t>(add.Transformed_index, m_VarValidTransformed.size() - 1));
@@ -632,6 +636,7 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 
 			for (size_t i = 0; i < m_VarValidTransformed.size(); i++) {
 				m_EvaluationFile.wSize_t(&m_VarValidTransformed[i].Transformed_index);
+				if (m_New7_Stat) m_EvaluationFile.wSize_t(&m_VarValidTransformed[i].Dim1_index);
 				if (m_VarValid.size() != m_VarValidTransformed[i].VarValidVector.size()&& m_VarValidTransformed[i].Transformed_index==0) {
 					m_VarValidTransformed[i].VarValidVector.resize(m_VarValid.size());
 
@@ -640,6 +645,7 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 				}
 				num = m_VarValidTransformed[i].VarValidVector.size();
 				m_EvaluationFile.wSize_t(&num);
+			
 				m_EvaluationFile.wFloatArray2(m_VarValidTransformed[i].VarValidVector, num);
 			}
 
@@ -936,7 +942,7 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 }
 
 
-bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t ActualCumulatedPerformance) {
+bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t ActualCumulatedPerformance, size_t dim1_index) {
 	size_t newindex;
 	if (MapOfStoredTSV.empty()) 
 		return false;
@@ -963,6 +969,7 @@ bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t Actua
 		for (size_t i = 0; i < m_VarValidTransformed[newindex].VarValidVector.size();i++)
 			m_VarValid[i] = m_VarValidTransformed[newindex].VarValidVector[i];
 		m_Valid_TSV[m_ActualEnsemble].VarTranformed = m_CumulatedPerformance;
+		if (dim1_index != string::npos) m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index = dim1_index;
 	}
 	else
 		return false; //Keep m_VarValid as the original values

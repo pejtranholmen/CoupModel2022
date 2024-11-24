@@ -1157,8 +1157,8 @@ void LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 	NumValidVar = m_pSimDoc->GetNumAll_TSV_ValVariables();
 
 	if (p_info.DataType == DATA_TYPES::SIM_PERFORMANCE) {
-		ind_rmse = 4 * NumValidVar + p_info.Residual_VarNum;
-		rmse_o = pDocAct->m_ValidationData.GetValRMSE_O(p_info.Residual_VarNum) / pDocAct->m_ValidationData.GetValn(p_info.Residual_VarNum);
+		//m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+		auto koll = m_pProp->GetIndepFirst();
 	}
 	m_Contour.SecondMin = abs(MISSING);
 	m_Contour.SecondMax = MISSING;
@@ -1181,6 +1181,8 @@ void LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 			m_pProp->SetFirstIndepIndex(VALVARSUM, p_info.Index);
 		}
 	}
+
+
 
 	VALSUMv valsum;
 	switch (m_pProp->GetIndepFirst()) {
@@ -1325,6 +1327,8 @@ void LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		
 		//	TT[i]=double(pDocAct->m_MStorage.GetMultiP(i,m_pProp->GetFirstIndepIndex()-1));
 		break;
+	default:;
+	
 	}
 	if (m_pProp->IsSecondIndepSet()) {
 		size_t index = m_pProp->GetSecondIndepIndex();
@@ -1423,10 +1427,7 @@ void LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 			//pDocAct->m_MStorage.m_ActualEnsemble = p_info.EnsembleNo;
 			pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
 		}
-		if (p_info.Index / NumValidVar == 6 && p_info.PGSection == 0) {
-			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = 1. - pDocAct->m_MStorage.GetValid(i, ind_rmse)*pDocAct->m_MStorage.GetValid(i, ind_rmse) / rmse_o;
-		}
-		else if (p_info.PGSection == 0)
+		if (p_info.PGSection == 0)
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index, p_info.index_cycle));
 		else if (p_info.PGSection>0)
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetSplitValid(i, p_info.Index, p_info.PGSection - 1));

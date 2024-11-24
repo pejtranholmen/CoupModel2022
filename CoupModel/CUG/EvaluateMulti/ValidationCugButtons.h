@@ -1,6 +1,7 @@
 #pragma once
 #include "..\PEJUGCtrl.h"
 class Doc;
+class ChartProp;
 class ValidationCugButtons :
 	public PEJUGCtrl
 {
@@ -29,6 +30,9 @@ protected:
 	bool m_SavedCriteria2File;
 	CPG *m_pPG;
 	MyCug  *m_pCUG;
+	ChartProp* m_pProp;
+	bool m_Distribution_As_Independent{ true };
+	size_t m_Indep_Par_Index{ 0 };
 
 
 	int m_CurrentChart;
