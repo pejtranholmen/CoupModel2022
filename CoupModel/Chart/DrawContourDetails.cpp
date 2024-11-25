@@ -126,7 +126,11 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 			if(m_pProp->IsSecondIndepSet()) {
 					m_Label.unit1=m_Label.unit;
 				}
-
+			auto prev = m_pProp->m_Title;
+			if (prev[0] == 'E')
+				m_pProp->m_Title = prev + " " + m_Label.test;
+			else
+				m_pProp->m_Title = m_Label.test;
 			
 			if(m_pProp->IsSecondIndepSet()) {
 					if(m_pProp->isXScaleChanged(ich)) {
@@ -161,15 +165,13 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 				m_Label.test= m_pProp->GetZLabel(ich);
 			}
 			else  {
-				m_pProp->m_Title=m_Label.test;
-
-
 				m_pProp->m_Title+="(";
 				string unit=m_Label.unit;
 				FUtil::trim(unit);
 				m_pProp->m_Title+=unit.c_str();
 				m_pProp->m_Title+=")";
 				m_pProp->SetZLabel(ich, m_pProp->m_Title);
+
 				pData->setDataName(m_pProp->m_Title.c_str());
 				//c->addTitle(Chart::TopCenter,m_Title,"arialbd.ttf", m_pUtil->m_TitleSizePoint);
 			}
@@ -197,12 +199,12 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 			}
 			else if(!m_Contour.ScaleContourChart) {
 				c->layout();
-				m_pProp->m_Title=m_Label.test;
+				/*m_pProp->m_Title = m_Label.test;
 				m_pProp->m_Title+="(";
 				string unit=m_Label.unit;
 				FUtil::trim(unit);
 				m_pProp->m_Title+=unit.c_str();
-				m_pProp->m_Title+=")";
+				m_pProp->m_Title+=")";*/
 				m_pProp->SetZLabel(ich, m_pProp->m_Title);
 			//	pData->setDataName(m_pProp->m_Title.c_str());
 

@@ -44,7 +44,7 @@ void DrawAxisDesign::FindandSet_Labels_ForBothXandY_ScatterChart()
 			newtitle = "Independent Variable :"; newtitle += m_Label.IndepId;
 		}
 		else
-			newtitle = "";
+			newtitle = m_pProp->m_Title;
 		if (m_pProp->m_MakeChartTitle)
 			pXY_Chart->addTitle(Chart::TopCenter, newtitle.c_str(), "arialbd.ttf", m_pUtil->m_TitleSizePoint);
 	}
@@ -114,7 +114,9 @@ void DrawAxisDesign::FindandSet_Labels_ForBothXandY_ContourChart()
 	if (m_pProp->isZLabelChanged(m_ichart))
 		m_ChartOrigInfo[m_ichart].Y_AxisTitle_Left=m_pProp->GetZLabel(m_ichart);
 
-	pXY_Chart->addTitle(Chart::TopCenter, m_ChartOrigInfo[m_ichart].Y_AxisTitle_Left.c_str(), "arialbd.ttf", m_pUtil->m_TitleSizePoint);
+	auto test_title = m_pProp->GetTitle();
+	if (test_title.size() == 0) test_title = m_ChartOrigInfo[m_ichart].Y_AxisTitle_Left;
+	pXY_Chart->addTitle(Chart::TopCenter, test_title.c_str(), "arialbd.ttf", m_pUtil->m_TitleSizePoint);
 	
 	if (!m_pProp->isXLabelChanged(m_ichart)) {
 		m_Label.xtitle = m_pProp->GetFirstIndepString();
@@ -665,7 +667,9 @@ void DrawAxisDesign::Adjust_Legends_Axis_Labels()
 				m_ChartOrigInfo[i].legends[index] = "";
 
 		}
-		m_pProp->SetTitle(m_ChartOrigInfo[i].title);
+		auto test_title=m_pProp->GetTitle();
+		if(test_title.size()==0)
+			m_pProp->SetTitle(m_ChartOrigInfo[i].title);
 
 		common = true;
 		for (size_t index = 0; index < m_ChartOrigInfo[i].legends.size(); index++) {

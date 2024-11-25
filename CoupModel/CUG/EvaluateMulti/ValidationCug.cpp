@@ -237,6 +237,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 
 	}
+	
 	//	m_pDlg->SetWindowText(txt);
 	//	m_pDlg->OnInitDialog();
 	SetDefFont(&m_font);
@@ -276,6 +277,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 		str = "";
 
 	cell.SetText(str);
+	if(!m_Distribution_As_Independent) 	m_pProp->SetTitle(str);
+	else m_pProp->SetTitle("");
 	SetCell(-1, -1, &cell);
 
 
@@ -324,48 +327,25 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	
 	
 	if (m_Distribution_As_Independent) {
+		
 		GetCell(1, -2, &cell);
 		cell.SetBackColor(m_ColorClick);
 		if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) txt = "serie";
 		else if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) txt = "frequence";
-		else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) txt = "cummulated";
+		else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) txt = "cumulated";
 		cell.SetText(txt);
 		SetCell(1, -2, &cell);
-		QuickSetText(1, GetNumberRows()-1, ""); QuickSetText(5, GetNumberRows() - 1, "");
 	}
 	else {
-	/*	auto NoRow = GetNumberRows();
-		GetCell(1, NoRow, &cell);
-		cell.SetCellType(UGCT_DROPLIST);
-
-		string optionlist = "Run No";
-		optionlist += '\n';
-
-		SimB* pPar;
-		int nTabIndex;
-		string namep;
-		for (size_t i = 1; i < m_pSimDoc->MR_GetNumberOfDimensions(); i++) {
-			for (size_t ii = 0; ii < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
-				pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
-				nTabIndex = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
-				namep = pPar->GetName().c_str();
-				if (nTabIndex >= 0)
-					namep += "(" + FUtil::STD_ItoAscii(nTabIndex + 1) + ")";
-				namep += '\n';
-				optionlist += namep;
-			}
+		GetCell(1, -2, &cell);
+		cell.SetBackColor(m_ColorClick);
+		if (m_Add_Second_Independent) txt = "2 Independent Par";
+		else {
+			txt = "1 Independent Par";
+			m_pProp->SetSecondIndepVarType(NO_USE);
 		}
-		enum vartype var = m_pProp->GetFirstIndepVarType();
-		//enum vartype var2 = m_pProp->GetSecondIndepVarType();
-		m_pProp->SetFirstIndepVarType(PARVAR);
-		//m_pProp->SetSecondIndepVarType(PARVAR);
-		string selected_str = FUtil::GetOptionString(optionlist, m_pProp->GetFirstIndepIndex() + 1);
-		cell.SetText(selected_str.c_str());
-		cell.SetLabelText(optionlist.c_str());
-		QuickSetText(1, -2, selected_str);
-		cell.SetParam(100);
-		
-		SetCell(1,NoRow, &cell);*/
+		cell.SetText(txt);
+		SetCell(1, -2, &cell);
 	}
 	
 	//QuickSetText(1, -2, "select");
@@ -690,10 +670,17 @@ if(m_NumValidVar>1) {
 	if (!m_Distribution_As_Independent) {
 		for(size_t i=0; i<8;i++) UnJoinCells(i, line);
 		QuickSetText(0, line, "First Indep Par");
-		//JoinCells(7, line, 8, line);
-		//JoinCells(1, line, 2, line);
-		JoinCells(3, line, 4, line); QuickSetText(3, line, "Second Index Par");
-		//JoinCells(5, line, 6, line);
+		JoinCells(7, line, 8, line);
+		JoinCells(1, line, 2, line);
+		if (m_Add_Second_Independent) {
+			JoinCells(3, line, 4, line); QuickSetText(3, line, "Second Index Par");
+			JoinCells(5, line, 6, line);
+		}
+		else {
+			JoinCells(3, line, 6, line);
+		}
+
+		
 		auto NoRow = GetNumberRows();
 		NoRow=NoRow - 1;
 
@@ -730,7 +717,7 @@ if(m_NumValidVar>1) {
 
 
 		int index_sel = 0;
-		index_sel = m_pProp->GetFirstIndepIndex() + 1;
+		index_sel = m_pProp->GetFirstIndepIndex();
 		if (m_pProp->GetFirstIndepIndex() >= num_in_firstdim)
 			index_sel -= num_in_firstdim;
 
@@ -741,6 +728,22 @@ if(m_NumValidVar>1) {
 		cell.SetBackColor(m_ColorClick);
 
 		SetCell(1, line, &cell);
+		if (m_Add_Second_Independent) {
+			if (m_pProp->GetIndepFirst() > 0) {
+				GetCell(5, line, &cell);
+				cell.SetCellType(UGCT_DROPLIST);
+				var = m_pProp->GetSecondIndepVarType();
+				index_sel = m_pProp->GetSecondIndepIndex();
+				if (m_pProp->GetFirstIndepIndex() >= num_in_firstdim)
+					index_sel -= num_in_firstdim;
+				string selected_str = FUtil::GetOptionString(optionlist, index_sel);
+				cell.SetText(selected_str.c_str());
+				cell.SetLabelText(optionlist.c_str());
+				cell.SetParam(300);
+				cell.SetBackColor(m_ColorClick);
+				SetCell(5, line, &cell);
+			}
+		}
 		//QuickSetText(0, line, "koll");
 	}
 
@@ -2982,18 +2985,24 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 			optionlist = cell.GetStdLabelText();
 			auto optionlist2 = cell.GetLabelText();
 		}
-		if (col == 1&&msg==103&&sheetNumber==0) {
+		if (col == 1||col==5&&sheetNumber<7) {
 			auto test = FUtil::GetOptionIndex(optionlist, m_After);
 			auto row_of_par = test;
 			size_t mr_par_index{ 0 };
 			if (m_pSimDoc->MR_GetNumberOfDimensions() > 1) {
 				mr_par_index+=m_pSimDoc->MR_Get_NumberOfParametersWithinDim(1);
 			}
-			mr_par_index +=test-1 ;
-
-			m_pProp->SetFirstIndepIndex(PARVAR, mr_par_index);
-			m_pProp->SetFirstIndepString(PARVAR, m_After);
-			m_pProp->SetFirstIndepVarType(PARVAR);
+			mr_par_index +=test ;
+			if (cell.GetParam() == 100) {
+				m_pProp->SetFirstIndepIndex(PARVAR, mr_par_index);
+				m_pProp->SetFirstIndepString(PARVAR, m_After);
+				m_pProp->SetFirstIndepVarType(PARVAR);
+			}
+			else if (cell.GetParam() == 300) {
+				m_pProp->SetSecondIndepIndex(PARVAR, mr_par_index);
+				m_pProp->SetSecondIndepString(PARVAR, m_After);
+				m_pProp->SetSecondIndepVarType(PARVAR);
+			}
 
 			MultiPlotClick(sheetNumber, col, row_of_par, false);
 			OnSheetSetup(0);
@@ -3277,6 +3286,14 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			m_Distribution_As_Independent = false;
 		else
 			m_Distribution_As_Independent = true;
+		OnSheetSetup(isheet);
+		return;
+	}
+	if (item == 4056) {
+		if (m_Add_Second_Independent)
+			m_Add_Second_Independent = false;
+		else
+			m_Add_Second_Independent = true;
 		OnSheetSetup(isheet);
 		return;
 	}

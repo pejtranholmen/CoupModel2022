@@ -1401,12 +1401,14 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				for(size_t ii=0; ii<Sim.size(); ii++) {
 					Residual[ii] = MISSING;
 					if (Sim[ii] > -1.E37f && Obs[ii] > -1.E37f) {
-						if ((FilterPGIndex == 0 || Filter_Values[ii] == FilterTestValue)
+						/*if ((FilterPGIndex == 0 || Filter_Values[ii] == FilterTestValue)
 							&&(QualityPGIndex ==0 || Quality_Values[ii] > QualityTestValue)) {
-							sim.push_back(double(Sim[ii]));
-							obs.push_back(double(Obs[ii]));
-							Residual[ii] = Obs[ii] - Sim[ii];
-						}
+
+							
+						}*/ //Removed Filter index for all with predefined criteria
+						sim.push_back(double(Sim[ii]));
+						obs.push_back(double(Obs[ii]));
+						Residual[ii] = Obs[ii] - Sim[ii];
 					}
 				}
 				if(m_ValPGFile[i].pRes!=nullptr) {
@@ -1433,15 +1435,18 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 					a.sse = 0. ;
 					m_pSim->m_Val_Array[LL].LogLi = MISSING;
 				}
-				m_pSim->m_Val_Array[LL].A0=a.intercept;
-				m_pSim->m_Val_Array[LL].A1=a.slope;
-				m_pSim->m_Val_Array[LL].nNumber=int(a.n);
-				m_pSim->m_Val_Array[LL].R2=a.r2;
-				m_pSim->m_Val_Array[LL].MeanSim=a.meansim;
-				m_pSim->m_Val_Array[LL].MeanVal=a.meanobs;
-				m_pSim->m_Val_Array[LL].NSE=a.nse;
-				m_pSim->m_Val_Array[LL].RMSE=a.rmse;
-				m_pSim->m_Val_Array[LL].ME=a.me;
+				// Set performance to Array
+				{
+					m_pSim->m_Val_Array[LL].A0 = a.intercept;
+					m_pSim->m_Val_Array[LL].A1 = a.slope;
+					m_pSim->m_Val_Array[LL].nNumber = int(a.n);
+					m_pSim->m_Val_Array[LL].R2 = a.r2;
+					m_pSim->m_Val_Array[LL].MeanSim = a.meansim;
+					m_pSim->m_Val_Array[LL].MeanVal = a.meanobs;
+					m_pSim->m_Val_Array[LL].NSE = a.nse;
+					m_pSim->m_Val_Array[LL].RMSE = a.rmse;
+					m_pSim->m_Val_Array[LL].ME = a.me;
+				}
 			}
 			m_ValPGFile[i].file->ResetPos();
 			m_ValPGFile[i].simvalfile->ResetPos();

@@ -32,6 +32,7 @@ protected:
 	MyCug  *m_pCUG;
 	ChartProp* m_pProp;
 	bool m_Distribution_As_Independent{ true };
+	bool m_Add_Second_Independent{ true };
 	size_t m_Indep_Par_Index{ 0 };
 
 

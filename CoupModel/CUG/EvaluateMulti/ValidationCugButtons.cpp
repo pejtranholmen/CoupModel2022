@@ -119,10 +119,14 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 				}
 			}
 			if (col == 1) {
-				if (m_Distribution_As_Independent) 
-					AddMenuItem(4055, " Shift to Parameters as Independet in Charts");
-				else
+				if (m_Distribution_As_Independent)
+					AddMenuItem(4055, " Shift to Parameters as Independent in Charts");
+				else {
 					AddMenuItem(4055, " Shift to show distribution of Performance in Charts");
+					if (m_Add_Second_Independent) AddMenuItem(4056, "Shift to only one Independent Par");
+					else AddMenuItem(4056, "Shift to 2 Independent parameters");
+					
+				}
 
 
 			}

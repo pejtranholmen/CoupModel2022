@@ -1219,6 +1219,7 @@ bool TimeSeriePlot::MakeAllMultiCharts(MultiChart *mc, size_t TotNumPrior) {
 
 		ChartFilled = AddData_ToChart( TotNumPrior);
 
+
 		if (ChartFilled) {
 			AddTitle_Axis_ToChart( mc);
 			CloseActivePGFile();

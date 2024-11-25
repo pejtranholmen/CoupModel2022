@@ -2072,8 +2072,9 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 					SetAcceptedRangeBandValue(i_band, pg_control, act_rec, PGindex, p_info.EnsembleNo);
 				}
 				else {
-					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, act_rec, PGindex);
-					if (p_info.PG_FilterVarIndex > 0 && !p_info.pPG_MeasValFile->FilterTest(p_info.PG_FilterVarIndex, act_rec + pg_control.StartIndex, p_info.PG_FilterVarValue)) {
+					act_rec = i+ pg_control.StartIndex-1;
+					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i + pg_control.StartIndex, PGindex);
+					if (p_info.PG_FilterVarIndex > 0 && !p_info.pPG_MeasValFile->FilterTest(p_info.PG_FilterVarIndex, i + pg_control.StartIndex, p_info.PG_FilterVarValue)) {
 						SetDataValueMissing(icurve, pg_control, i);
 						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) SetDataBandValueMissing(i_band, pg_control, i);
 					}
@@ -2111,8 +2112,15 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							auto resno = c_info.ResRunNo+act_rep-1;
 							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, resno, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 						}
-						else
-							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.ResRunNo, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
+						else {
+							auto koll=c_info.pRes->GetResiduals(c_info.ResRunNo, Residual_VarNum, act_rec);
+							if (koll > MISSING) {
+								auto Koll2 = i;
+
+							}
+							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.ResRunNo, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
+
+						}
 					else if (!m_ChartInfo.ResidualSource&&datatype == DATA_TYPES::SIM_VAL) {
 						//AA[icurve][i + pg_control.YearStartIndex] = -1;
 						if (m_pUtil->m_ResidualPlot == 1) {
