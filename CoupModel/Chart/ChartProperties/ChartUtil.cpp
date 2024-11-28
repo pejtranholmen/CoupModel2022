@@ -13,8 +13,6 @@ ChartUtil::ChartUtil(void)
 	m_X_AxisAutoScaleSensitivy = 0;
 
 
-
-
 	//SetAutoX_ScaleValue(m_X_AxisAutoScaleSensitivy);
 	
 
@@ -43,6 +41,7 @@ int ChartUtil::GetColorBackground()
 	m_ColorBackground=0xf0f0ff;
 	m_ColorBackground=MFC_Util::GetProfileIntNo( "ColorBackground", m_ColorBackground);
 	return m_ColorBackground;
+
 
 }
 bool ChartUtil::SetColorBoxEdge(int color)
@@ -75,7 +74,20 @@ bool ChartUtil::SetColorDist(int color)
 	return true;
 }
 
-
+int ChartUtil::GetEnsembleViewOption()
+{
+	CWinApp* pApp;
+	pApp = AfxGetApp();
+	m_EnsembleViewOption = MFC_Util::GetProfileIntNo("EnsembleViewOption", m_EnsembleViewOption);
+	return m_EnsembleViewOption;
+}
+void ChartUtil::SetEnsembleViewOption(int value)
+{
+	CWinApp* m_pApp;
+	m_pApp = AfxGetApp();
+	MFC_Util::WriteProfileInt("EnsembleViewOption", value);
+	m_EnsembleViewOption = value;
+}
 
 int ChartUtil::GetColorDistH()
 {

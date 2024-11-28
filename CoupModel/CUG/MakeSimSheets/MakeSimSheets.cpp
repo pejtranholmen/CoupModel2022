@@ -4897,6 +4897,7 @@ bool MakeSimSheets::Make_MultiRunListSheet()
 	return true;
 }
 size_t MakeSimSheets::Val_Post_Header() {
+	CUGCell cell;
 
 				bool multivalid=false;
 				bool multimeanvalid=true;
@@ -4932,7 +4933,19 @@ size_t MakeSimSheets::Val_Post_Header() {
 				QuickSetText(1,-1, "Measured");
 				QuickSetText(2,-1, "Group");
 				QuickSetText(3,-1, "Simulated");
-				QuickSetText(4,-1, "Ensemble");
+				GetCell(4, -1, &cell);
+				if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0) {
+					cell.SetBackColor(m_ColorClick);
+					string text = FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_ActualEnsemble + 1) + " (";
+					text += FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_AcceptedIdString.size()) + ")";
+					text += " Ensembles";
+					cell.SetText(text);
+				}
+				else {
+					cell.SetBackColor(m_NoColor);
+					cell.SetText("Ensemble");
+				}
+				SetCell(4, -1, &cell);
 				QuickSetText(5,-1, "Chart");
 				QuickSetText(6,-1, "n");
 				QuickSetText(7,-1, "r2");

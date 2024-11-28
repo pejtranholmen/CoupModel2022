@@ -102,6 +102,9 @@ class ChartUtil
 
 	void SetAutoX_ScaleValue(int value);
 
+	int GetEnsembleViewOption();
+	void SetEnsembleViewOption(int value);
+
 	int m_BoxEdgeColor;
 	int m_DistColor;
 	int m_ColorBackground, m_ColorLegendBackground, m_ColorLegendBackgroundFrame;
@@ -138,6 +141,7 @@ class ChartUtil
 	bool m_XAxisExist, m_ZAxisExist;
 
 	int m_X_AxisAutoScaleSensitivy;
+	int m_EnsembleViewOption{0};
 	double m_X_AxisAutoScaleValue;
 
 	int m_SymbolCode[10];

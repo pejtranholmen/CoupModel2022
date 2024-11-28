@@ -2098,6 +2098,19 @@ void MyCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL
 		else if(col==1) 
 			return;
 	}
+	else if (isheet == 6 && col == 4&& row== -1&&updn) {
+		//Shift to a new ensemble
+		m_pSimDoc->m_MStorage.m_ActualEnsemble++;
+		if (m_pSimDoc->m_MStorage.m_ActualEnsemble == m_pSimDoc->m_MStorage.m_AcceptedIdString.size()) m_pSimDoc->m_MStorage.m_ActualEnsemble = 0;
+		m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
+		if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+			m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+		}
+
+		
+		OnSheetSetup(6);
+		return;
+	}
 	else if(isheet==6&&m_ShowValidationTimeSerieTable) {
 		SelectRange ( col, -4, col, GetNumberRows()-1 );
 	}
@@ -5266,6 +5279,7 @@ int MyCug::OnHint(int col,long row,int section,CString *str)
 					}
 
 				}
+
 				return FALSE;
 			case 7:
 				return FALSE;
@@ -5481,6 +5495,13 @@ int MyCug::OnHint(int col,long row,int section,CString *str)
 					str->SetString(_T("Click to Sort all Output Variables by Name\nRight click to select Variables to View"));
 				return TRUE;
 			case 6:
+				if (col == 4 && row == -1) {
+					if (m_pSimDoc->IsFinishedSimulation() && m_pSimDoc->IsMultiSimulation() && m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0) {
+						str->SetString(_T("Click on header to increment to the next ensemble"));
+						return TRUE;
+					}
+
+				}
 				return FALSE;
 			case 7:
 				return FALSE;

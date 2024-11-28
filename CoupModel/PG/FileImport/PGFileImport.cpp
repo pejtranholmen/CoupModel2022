@@ -627,6 +627,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		//if (nrec < 5) numhead = nrec - 1;
 		enum class ReadVar { StatNamn, ParNamn, Period, DatumStart, No };
 		auto ReadStatus = ReadVar::No;
+		bool Heads_Set = false;
 		if (format == SITES) {
 			if (varstr.find("\"") != string::npos) varstr = varstr.substr(1, varstr.size() - 2);
 			
@@ -882,6 +883,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				out.DateColumn = 1;
 				if (nrec == 1 && varstr.find("Variable Name")==string::npos) {
 					out.FirstValidHeads.push_back(varstr);
+					Heads_Set = true;
 				}
 				out.SkipBeforeVar = 1;
 			}
@@ -966,8 +968,8 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 	
 			if (UnitsHeaderFind&& nrec==2)	 out.UnitsFromHead.push_back(varstr);
-			else if (numhead != 0 && nrec ==numhead  && format != SMHI_OPENDATA&&format!=STANDARD) 	out.FirstValidHeads.push_back(varstr);
-			else if (format == SMHI_OPENDATA && nrec == SMHI_HeadLineNo&& nvar>= SMHI_TidPosStart &&varstr!=""&&varstr!="Tidsutsnitt:") out.FirstValidHeads.push_back(varstr);
+			else if (numhead != 0 && nrec ==numhead  && format != SMHI_OPENDATA&&format!=STANDARD&&!Heads_Set) 	out.FirstValidHeads.push_back(varstr);
+			else if (format == SMHI_OPENDATA && nrec == SMHI_HeadLineNo&& nvar>= SMHI_TidPosStart &&varstr!=""&&varstr!="Tidsutsnitt:"&&!Heads_Set) out.FirstValidHeads.push_back(varstr);
 		}
 		return numhead;
 	};
@@ -1390,8 +1392,8 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					if (varstr.find("Variable Name")!=string::npos) m_format = STANDARD;
 
 				}
-
-				size_t num = CountHeads(m_format, varstr, nrec, nvar);
+				size_t num = string::npos;
+				if(!FirstDataHit)	 num = CountHeads(m_format, varstr, nrec, nvar);
 				if (num < 10&&num!=string::npos&&!FirstDataHit) {
 					nhead = num;
 					SetDescription();

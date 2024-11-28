@@ -83,12 +83,12 @@ class LoadDataToChart :public DistributionCurves
 		void AdjustForResiduals(double &v, CResiduals *pRes, long ResRunNo, int IndexVal, int LogLiVersion, long index, bool MeasuredAsSource=false);
 		void AdjustForMeanOfResiduals(double &v, CResiduals *pRes, bool Accepted, int IndexVal, int LogLiVersion, long index, int TypeStat);
 		void AdjustForMeanOfResidualsBetweenYear(double &v, CResiduals *pRes, bool Accepted, int IndexVal, int LogLiVersion, long index, int TypeStat);
-		void TransformSelectedVariables(PLOTv p_info, size_t icurve, size_t i_band);
-		void LoadSelectedVariables(int j, size_t ich, size_t i_band, CURVEINFO c_info, PLOTv info);
+		bool TransformSelectedVariables(PLOTv p_info, size_t icurve, size_t i_band);
+		bool LoadSelectedVariables(int j, size_t ich, size_t i_band, CURVEINFO c_info, PLOTv info);
 
-		void CurveData_MultiRun(size_t icurve, PLOTv p_info);
-		void CurveData_SingleTime(size_t icurve, size_t i_band, CURVEINFO c_info, PLOTv p_info);
-		void CurveData_MultiPG(size_t icurve, PLOTv p_info);
+		bool CurveData_MultiRun(size_t icurve, PLOTv p_info);
+		bool CurveData_SingleTime(size_t icurve, size_t i_band, CURVEINFO c_info, PLOTv p_info);
+		bool CurveData_MultiPG(size_t icurve, PLOTv p_info);
 
 		CURVEINFO OpenCurvePG_File(PLOTv p_info, int j = 0);
 		bool CheckandOpenPGFile(PLOTv plotinfo);
@@ -115,14 +115,14 @@ class LoadDataToChart :public DistributionCurves
 		bool SetIndependentMeasuredValidVar(PLOTv p_info, CURVEINFO c_info, size_t icurve);
 
 		size_t GetNumTimePoints(PG_TIMECONTROL *ptimecontrol, size_t icurve, PLOTv p_info);
-		void SetTimeDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control);
-		void SetDataValuesForYearSelection(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, int PGIndex);
+		bool SetTimeDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control);
+		bool SetDataValuesForYearSelection(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, int PGIndex);
 
 		void SetTimeDataMinMax(int Type);
 
 		void ReSizeBandDataVectors(size_t iband, size_t ActNoPoints);
 
-		void SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, size_t i_band, CURVEINFO c_info);
+		bool SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, size_t i_band, CURVEINFO c_info);
 		void SetMeanDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, size_t i_band, CURVEINFO c_info);
 
 

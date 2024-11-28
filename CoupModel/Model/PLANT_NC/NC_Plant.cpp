@@ -332,9 +332,15 @@ bool NC_Plant::Ini()	{
 				for (size_t j = 0; j < 2; j++)
 					pNCSoil->SurfaceLitter[j][jj] = 0.0;
 				P_SumPlant[_ROOT_ALL][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_ROOT_ALL][jj].assign(pPlant->NumPlants, 0.);
+
 				P_SumPlant[_PLANT_WHOLE][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_PLANT_WHOLE][jj].assign(pPlant->NumPlants, 0.);
 				P_SumPlant[_LEAF_ALL][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_LEAF_ALL][jj].assign(pPlant->NumPlants, 0.);
 				P_SumPlant[_ABOVE_GROUND][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_ABOVE_GROUND][jj].assign(pPlant->NumPlants, 0.);
+
 				C_RatioPlant[jj].resize(pPlant->NumPlants);
 			}
 

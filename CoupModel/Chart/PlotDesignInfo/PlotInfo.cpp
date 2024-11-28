@@ -177,7 +177,9 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 	}
 			
 	if (out.pSimDoc->IsMultiSimulation()) {
-		auto pSw = out.pSimDoc->GetSw("UseFilterParameters");
+		pair<size_t, size_t> filterinfo = GetFilterForEnsemble(m_pSimDoc->m_MStorage.m_ActualEnsemble, out.Index);
+		out.PG_FilterVarIndex = filterinfo.first; out.PG_FilterVarValue = filterinfo.second;
+		/*auto pSw = out.pSimDoc->GetSw("UseFilterParameters");
 		auto pSw2 = out.pSimDoc->GetSw("PreDefinedEnsembles");
 		if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
 			auto ensemble_no = m_pSimDoc->m_MStorage.m_ActualEnsemble;
@@ -203,7 +205,7 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 		else if (pSw->GetIntValue() > 0) {
 			out.PG_FilterVarIndex = out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
 			out.PG_FilterVarValue = out.pSimDoc->m_Val_Array[out.Index].PG_FilterValue;
-		}
+		}*/
 	}
 
 	
@@ -484,6 +486,39 @@ PLOTv PlotInfo::MakeMultiPGChart(size_t i) {
 
 	//if(out.SubChart_No>m_pProp->m_NumSubCharts) out.SubChart_No=m_pProp->m_NumSubCharts;
 	if(out.SubChart_No>m_pProp->m_NumChartX*m_pProp->m_NumChartY) out.SubChart_No=m_pProp->m_NumChartX*m_pProp->m_NumChartY;
+	return out;
+}
+pair<size_t, size_t> PlotInfo::GetFilterForEnsemble(size_t ensemble_index, size_t var_index)
+{
+	pair<size_t, size_t> out;
+	auto pSw = m_pSimDoc->GetSw("UseFilterParameters");
+	auto pSw2 = m_pSimDoc->GetSw("PreDefinedEnsembles");
+	if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
+		//auto ensemble_no = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+		auto Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[ensemble_index].Dim1_Par_Index;
+		if (Dim1Value > 0) {
+			out.first = Dim1Value;
+			for (int i1 = 0; i1 < m_pSimDoc->m_MultiRun_Array.size(); i1++) {
+				for (int i2 = 0; i2 < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i1 + 1); i2++) {
+					auto test = m_pSimDoc->MR_GetParName(i1 + 1, i2 + 1);
+					if (test == "Filter Var Value") {
+						auto indexmulti = i2 + 1;
+						auto test_value_sim = size_t(m_pSimDoc->m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
+						out.second = test_value_sim;
+						break;
+					}
+				}
+			}
+			out.first = m_pSimDoc->m_Val_Array[var_index].PG_FilterIndex;
+		}
+		else
+			out.first = 0;
+	}
+	else if (pSw->GetIntValue() > 0) {
+		out.first = m_pSimDoc->m_Val_Array[var_index].PG_FilterIndex;
+		out.second = m_pSimDoc->m_Val_Array[var_index].PG_FilterValue;
+	}
+
 	return out;
 }
 void PlotInfo::SetDoc(Doc *pDoc) {

@@ -948,6 +948,20 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 						//pDoc->m_Doc.m_ValidationData.Init(pDoc);
 
 						for(int ii=0;ii<m_pSimDoc->m_SelectValTime.size();ii++) {
+
+							if (col == 4) { // To check if Mean value is calculated
+									size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(row);
+									CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
+									if (!pRes->EnableEstimatesMade()) {
+										MFC_Util::MessageBox("Error Please right click and select option to estimated mean value");
+										GetCell(col, row, &cell);
+										cell.SetBool(FALSE);
+										SetCell(col, row, &cell);
+										m_pSimDoc->m_SelectValTime.clear();
+										OnSheetSetup(6);
+										return;			// Return without plot if not estimated					
+									}
+							}
 							vector<size_t> EnsemblesToPlot;
 							if (m_pSimDoc->m_SelectValTime[ii].MeanIndicator>ENSEMBLE_TYPE::NO) {
 
@@ -963,12 +977,16 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 							for (size_t i = 0; i<EnsemblesToPlot.size(); i++) {
 								PLOTv plotinfo = m_pPlotInfo->MakeValidationChartInfo(ii, j, ResidualPlot);
 								plotinfo.EnsembleNo = EnsemblesToPlot[i];
-								if (j > 0 && plotinfo.DataType == DATA_TYPES::MEASURED_VAL) continue;
+								if (m_pSimDoc->m_MStorage.m_ActualEnsemble == plotinfo.EnsembleNo||m_pUtil->GetEnsembleViewOption()!=0) {
+									pair<size_t, size_t> pmoreinfo = m_pPlotInfo->GetFilterForEnsemble(plotinfo.EnsembleNo, plotinfo.Index);
+									plotinfo.PG_FilterVarIndex = pmoreinfo.first; plotinfo.PG_FilterVarValue = pmoreinfo.second;
+									if (j > 0 && plotinfo.DataType == DATA_TYPES::MEASURED_VAL) continue;
 
-								if (!m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart)) {
-									;//, m_CurrentChartType,string(pSimDoc->GetCurrentSimFile()), ValFileNo, ValFileIndex, mrunno,0,Isubchart, logli)) {
-									m_pSimDoc->SetOutputValidBinFileMissing();
-									return;
+									if (!m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart)) {
+										;//, m_CurrentChartType,string(pSimDoc->GetCurrentSimFile()), ValFileNo, ValFileIndex, mrunno,0,Isubchart, logli)) {
+										m_pSimDoc->SetOutputValidBinFileMissing();
+										return;
+									}
 								}
 							}
 						}
@@ -1102,6 +1120,11 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 			}
 			else {
 				 m_pFrame->UpdatePaneText(0,"Problems when making time serie chart - File may be missing or currupt");
+				 if (isheet == 6 && col == 4) {
+					 // Estimated mean value
+
+
+				 }
 			}
 			
 
@@ -1165,6 +1188,7 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival)
 		}
 	}
 	else if(item==1602) {
+
 
 		m_OutMAPMulti_Defined=true;
 

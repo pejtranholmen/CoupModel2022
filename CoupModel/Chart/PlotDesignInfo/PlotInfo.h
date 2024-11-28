@@ -26,6 +26,7 @@ public:
 	PLOTv MakeMultiValChart(size_t index_select, size_t index_doc);
 	PLOTv MakeMultiParChart(size_t index_select, size_t index_doc);
 	PLOTv MakeMultiPGChart(size_t index_select);
+	pair<size_t, size_t> GetFilterForEnsemble(size_t ensemble_index, size_t var_index);
 	void  SetFirstIndep(enum vartype vtype);
 	void  DisableFirstIndep();
 	void  DisableFirstIndep(enum vartype vtype);

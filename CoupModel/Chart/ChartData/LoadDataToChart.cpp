@@ -184,7 +184,7 @@ bool LoadDataToChart::LoadTimeSerieData()
 
 
 			//AllocateSpaceToData(icurve);
-			LoadSelectedVariables(j, icurve, i_band, c_info, p_info);
+			if(!LoadSelectedVariables(j, icurve, i_band, c_info, p_info)) return false;
 			TransformSelectedVariables(p_info, icurve, i_band);
 
 
@@ -987,7 +987,7 @@ void LoadDataToChart::AdjustForMeanOfResidualsBetweenYear(double &v, CResiduals 
 	}
 }
 
-void LoadDataToChart::LoadSelectedVariables(int j, size_t icurve, size_t i_band, CURVEINFO c_info, PLOTv p_info)
+bool LoadDataToChart::LoadSelectedVariables(int j, size_t icurve, size_t i_band, CURVEINFO c_info, PLOTv p_info)
 {
 
 	Doc *pDocAct;
@@ -1039,13 +1039,13 @@ void LoadDataToChart::LoadSelectedVariables(int j, size_t icurve, size_t i_band,
 
 		if (!m_pUtil->m_MultiRunPlot && !m_pProp->IsMultiPGFilePlot() && !m_pUtil->m_MultiPGPlot) {
 			//Select Data from PG File and Residual file
-			CurveData_SingleTime(icurve, i_band, c_info, p_info);
+			if(!CurveData_SingleTime(icurve, i_band, c_info, p_info)) return false;
 		}
 		else if (m_pUtil->m_MultiRunPlot) {
-			CurveData_MultiRun(icurve, p_info);
+			if(!CurveData_MultiRun(icurve, p_info)) return false;
 		}
 		else if (m_pUtil->m_MultiPGPlot || m_pProp->IsMultiPGFilePlot()) {
-			CurveData_MultiPG(icurve, p_info);
+			if(!CurveData_MultiPG(icurve, p_info)) return false;
 		}
 
 		if (m_pProp->m_ReShape.m_CommonDayNo)
@@ -1076,14 +1076,15 @@ void LoadDataToChart::LoadSelectedVariables(int j, size_t icurve, size_t i_band,
 
 		//m_PointType[m_ChartInfo.NumVariables-1]=false;
 	}
+	return true;
 }
-void LoadDataToChart::TransformSelectedVariables(PLOTv p_info, size_t icurve, size_t i_band)
+bool LoadDataToChart::TransformSelectedVariables(PLOTv p_info, size_t icurve, size_t i_band)
 {
 
 	auto datatype = p_info.DataType;
 	int IndexVal = 0;
 	//No Transformation of data from Time serie that are not based on PG file source
-	if (m_pPG_Active == nullptr) return;
+	if (m_pPG_Active == nullptr) return false;
 
 	
 	if (m_pProp->m_ReShape.m_Cumulated>0 && !m_pProp->m_ReShape.m_SortedSeries && (!m_pUtil->m_ResidualPlot || m_ChartInfo.ResidualSource || datatype != DATA_TYPES::SIM_VAL)) {
@@ -1135,9 +1136,10 @@ void LoadDataToChart::TransformSelectedVariables(PLOTv p_info, size_t icurve, si
 
 		}
 	}
+	return true;
 }
 
-void LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
+bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 {
 	/// Select data from MultiRunPlot
 	Doc *pDocAct;
@@ -1497,10 +1499,10 @@ void LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		}
 	}
 
-
+	return true;
 
 }
-void LoadDataToChart::CurveData_SingleTime(size_t icurve, size_t i_band, CURVEINFO c_info, PLOTv p_info) {
+bool LoadDataToChart::CurveData_SingleTime(size_t icurve, size_t i_band, CURVEINFO c_info, PLOTv p_info) {
 
 	CPG *pPG1;
 	int PGNumVar;
@@ -1550,19 +1552,23 @@ void LoadDataToChart::CurveData_SingleTime(size_t icurve, size_t i_band, CURVEIN
 		if (p_info.RepitDataType || pg_control.MeanValueBand) ReSizeBandDataVectors(i_band, ActNoPoints);
 		if (icurve == 0 && (!m_pProp->m_ReShape.m_CommonDayNo && !m_pProp->m_ReShape.m_CommonWithDay)) SetTimeDataValues(ActNoPoints, pg_control);
 		if (pg_control.MeanValueBand) SetMeanDataValues(ActNoPoints, pg_control, icurve, i_band, c_info);
-		else if (m_pProp->m_MultiPG_dep.SecondType == PGHOUR) SetDataValuesForYearSelection(ActNoPoints, pg_control, icurve, p_info.PGFileIndex);
-		else SetDataValues(ActNoPoints, pg_control, icurve, i_band, c_info);
+		else if (m_pProp->m_MultiPG_dep.SecondType == PGHOUR) {
+			if(!SetDataValuesForYearSelection(ActNoPoints, pg_control, icurve, p_info.PGFileIndex)) return false;
+		}
+		else if(!SetDataValues(ActNoPoints, pg_control, icurve, i_band, c_info)) return false;
 
 	}
 	if (m_pSimDoc->m_PlotStorage.IsValidIndepPGVar() && p_info.DataType == DATA_TYPES::SIM_VAL) {
-		SetIndependentMeasuredValidVar(p_info, c_info, icurve);
+		if (!SetIndependentMeasuredValidVar(p_info, c_info, icurve)) return false;
 
 	}
 	else if (!m_pSimDoc->m_PlotStorage.IsValidIndepPGVar() && p_info.DataType != DATA_TYPES::MEASURED_VAL)
-		SetIndependentSingleTime(p_info);
+		if (!SetIndependentSingleTime(p_info)) return false;
+
+	return true;
 
 }
-void LoadDataToChart::CurveData_MultiPG(size_t icurve, PLOTv p_info) {
+bool LoadDataToChart::CurveData_MultiPG(size_t icurve, PLOTv p_info) {
 	if (p_info.PGFileIndex == 0) p_info.PGFileIndex = 1;
 	if (m_pProp->GetIndepFirst() == PGREPIT) {
 
@@ -1690,6 +1696,7 @@ void LoadDataToChart::CurveData_MultiPG(size_t icurve, PLOTv p_info) {
 		SetIndependentSingleTime(p_info);
 
 	}
+	return true;
 
 }
 
@@ -1862,7 +1869,7 @@ size_t LoadDataToChart::GetNumTimePoints(PG_TIMECONTROL *pg_control, size_t icur
 	return ActNoPoints;
 
 }
-void LoadDataToChart::SetDataValuesForYearSelection(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, int PGIndex) {
+bool LoadDataToChart::SetDataValuesForYearSelection(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, int PGIndex) {
 	double sum;
 	size_t count;
 	float value;
@@ -1886,12 +1893,13 @@ void LoadDataToChart::SetDataValuesForYearSelection(size_t ActNoPoints, PG_TIMEC
 			AA[icurve][i] = m_pPG_Active->GetVarValue(PGIndex, i - countextra + pg_control.StartIndex + pg_control.YearStartIndex);
 		if ((i + 1) % m_ChartInfo.NumExtraPointFreq == 0) countextra++;
 	}
+	return true;
 }
 
 
-void LoadDataToChart::SetTimeDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control) {
+bool LoadDataToChart::SetTimeDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control) {
 	double sum;
-	m_pPG_Active->ReOpen();
+	if (!m_pPG_Active->ReOpen()) return false;
 	for (int i = 0; i<ActNoPoints; i++)
 
 		if (m_ChartInfo.WithinDayRepresentation>1) {
@@ -1910,8 +1918,9 @@ void LoadDataToChart::SetTimeDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_co
 
 
 		}
+	return true;
 }
-void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, size_t i_band, CURVEINFO c_info) {
+bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_control, size_t icurve, size_t i_band, CURVEINFO c_info) {
 
 	int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, icurve);
 	PLOTv p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
@@ -1929,13 +1938,13 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 	if (PGindex<0) {
 		for (size_t i = 0; i<ActNoPoints; i++) SetDataValueMissing(icurve, pg_control, i);
-		return;
+		return false;
 	}
 	//Check number of points
 	size_t koll = m_pPG_Active->GetNumRecords()*m_pPG_Active->GetNumRepititions();
 	if (koll<ActNoPoints) {
 		for (size_t i = 0; i<ActNoPoints; i++) SetDataValueMissing(icurve, pg_control, i);
-		return;
+		return false;
 
 
 	}
@@ -1946,7 +1955,7 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 	CResiduals *pResAct = c_info.pRes;
 	int ResRunNoAct = c_info.ResRunNo;
-	if (pg_control.StartIndex <= 0) return;
+	if (pg_control.StartIndex <= 0) return false;
 	kollens = p_info.EnsembleNo;
 
 	if (p_info.EnsembleType>ENSEMBLE_TYPE::NO && pResAct != nullptr) {
@@ -1956,8 +1965,8 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		if (!pResAct->SetNewEnsembleByNumber(p_info.EnsembleNo)) {
 			// Error when shiftning to new ensemble
 			int i = 0;
-
-
+			MFC_Util::MessageBoxW("Error No mean value estimated");
+			return false;
 		}
 
 
@@ -2149,6 +2158,7 @@ void LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 
 	}
+	return true;
 
 
 

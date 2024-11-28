@@ -1567,6 +1567,20 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 
 
 			};
+			QuickSetText(6, 5, "Ensemble Time Charts options");
+			QuickSetBackColor(6, 5, m_ColorHeading);
+			GetCell(6, 6, &cell);
+			cell.SetCellType(UGCT_DROPLIST);
+			optionlist = "Show One Selected Ensemble \n";
+			optionlist += "Show All marked Ensembles \n";
+			optionlist += "Show All Ensemble \n";
+			m_pUtil->m_EnsembleViewOption=m_pUtil->GetEnsembleViewOption();
+			string selected_str = FUtil::GetOptionString(optionlist, m_pUtil->m_EnsembleViewOption);
+			
+			cell.SetText(selected_str.c_str());
+			cell.SetLabelText(optionlist.c_str());
+
+			SetCell(6, 6, &cell);
 
 
 
@@ -1602,7 +1616,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 			optionlist += "Small Extra Space \n";
 			optionlist += "Very Small Extra Space \n";
 
-			string selected_str = FUtil::GetOptionString(optionlist, m_pUtil->m_X_AxisAutoScaleSensitivy);
+			selected_str = FUtil::GetOptionString(optionlist, m_pUtil->m_X_AxisAutoScaleSensitivy);
 
 			cell.SetText(selected_str.c_str());
 			cell.SetLabelText(optionlist.c_str());

@@ -231,6 +231,12 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 
 
 					}
+					else if (row == 6) {
+						auto iopt = FUtil::GetOptionIndex(optionlist, After);
+						m_pUtil->SetEnsembleViewOption(iopt);
+						return true;
+
+					}
 
 
 

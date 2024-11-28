@@ -837,7 +837,10 @@ bool Simulator::Valid_Check_Precise(size_t i, bool Filter) {
 			size_t LL = m_ValPGFile[i].val_listindex[j];
 			m_ValPGFile[i].simvalues[j] = float(GetSimValValue(LL));
 
+			if (LL == 3) {
 
+				auto koll = i;
+			}
 
 
 			if (m_StructureModel.m_Structure.PressureHeadSign == 0 && m_ShiftPointer != nullptr)
@@ -1063,6 +1066,8 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 				if(!m_ValPGFile[i].pRes->CreateFile(((NewMap*)m_pSim)->GetXBinFileName(int(i+1)),totrec, recl, numvar )) m_ValPGFile[i].pRes=nullptr;
 		}
 		m_ValPGFile[i].simvalues.resize(m_ValPGFile[i].varindex.size());
+		m_ValPGFile[i].simvalues.assign(m_ValPGFile[i].varindex.size(), 0.);
+
 		m_ValPGFile[i].prevSimTime = m_pModelInfo->T_Current;
 		m_ValPGFile[i].accduration = 0;
 		if(m_ValPGFile[i].file==nullptr) continue;
@@ -1106,7 +1111,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		m_ValPGFile[i].ActPos=pos.first-1;
 
 		if(pos.first>1) m_ValPGFile[i].FirstValidRecord=pos.first*(m_ValPGFile[i].varindex.size()+1);
-		else m_ValPGFile[i].FirstValidRecord=0;
+		else m_ValPGFile[i].FirstValidRecord=1;
 		//if(!First) {
 			if(pos.first>1) {
 				size_t ist; /// Set Missing values in validation file if validation data is outside simulated period
