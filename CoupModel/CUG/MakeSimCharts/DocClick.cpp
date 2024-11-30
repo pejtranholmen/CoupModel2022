@@ -1013,8 +1013,10 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 
 
 						}
-						if(m_pSimDoc->m_SelectValTime.size()>=0)
-							TimeSerieChartClick(col, row, isheet, pSw, 0,int(val.MeanIndicator) , "", ValFileNo);	
+						if (m_pSimDoc->m_SelectValTime.size() >= 0) {
+							m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
+							TimeSerieChartClick(col, row, isheet, pSw, 0, int(val.MeanIndicator), "", ValFileNo);
+						}
 						UpdatePlotStatusBar(1);
 
 				
@@ -1124,12 +1126,14 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 								}
 							}
 						}
+						m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 						if(All) val.MeanIndicator= ENSEMBLE_TYPE::ALL;
 						TimeSerieChartClick(col, row, isheet, pSw,0, int(val.MeanIndicator),"", ValFileNo);	
 						UpdatePlotStatusBar(1);
 					return -1;
 				}
 				else if(col==5) { //Update subchart Number
+					m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 					int iv=0;
 					GetCell(5,row,&cell);
 					string s=cell.GetStdText();

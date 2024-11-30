@@ -6,6 +6,7 @@
 #include "../Util.h"
 #include "../NewBase/Doc.h"
 #include "Residuals.h"
+#include "../PG/PG.h"
 #ifndef COUPSTD
 #include "../NewBase/FileScanner.h"
 #include "../MainFrm.h"
@@ -882,6 +883,23 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 	}
 
 
+	
+	auto pSw = m_pNewMap->GetSw("UseFilterParameters");
+	auto pSw2 = m_pNewMap->GetSw("PreDefinedEnsembles");
+	size_t n_cycle_withinPGFile=1;
+	CPG* pPG_ObsFile;
+
+	if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
+
+		if (m_ValidationVarIndex != string::npos) {
+			auto valfileindex=m_pNewMap->m_Val_Array[m_ValidationVarIndex].ValidationFileNumber;
+			F* pF = m_pNewMap->ValidationFilePointer(valfileindex);
+			pPG_ObsFile=pF->GetPointer();
+			pPG_ObsFile->ReOpen();
+			n_cycle_withinPGFile=pPG_ObsFile->GetCycleWithCommonTime();
+		}
+	}
+
 	for (size_t iens = 0; iens < m_pNewMap->m_MStorage.m_AcceptedRuns.size(); iens++) {
 		m_IsUpdated = true;
 		for (size_t i = 0; i < m_Ensembles.size(); i++) {
@@ -889,7 +907,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 				m_IsUpdated = false;
 			}
 		}
-
+		
 		vector<int> NumberValidPoints, NumberValidRecords;
 		if (!m_IsUpdated) {
 			m_NumAccepted = m_pNewMap->m_MStorage.m_AcceptedRuns[iens].size();
@@ -918,10 +936,58 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 						var_to_read = 0;
 						run_to_start = ii;
 					}
-					for (size_t i = 0; i < m_NumAccepted; i+= m_ScalingNumVarWithDim1) {
+					size_t Dim1Value = m_pNewMap->m_MStorage.m_Valid_TSV[iens].Dim1_Par_Index;
+					size_t startvalue = 0;
+					if (Dim1Value == 0)
+						n_cycle_withinPGFile = 1;
+					else {
+						n_cycle_withinPGFile = pPG_ObsFile->GetCycleWithCommonTime();
+						
+						size_t test_value_sim{ string::npos };
+							for (int i2 = 0; i2 < m_pNewMap->MR_Get_NumberOfParametersWithinDim(0 + 1); i2++) {
+								auto test = m_pNewMap->MR_GetParName( 1, i2 + 1);
+								if (test == "Filter Var Value") {
+									auto indexmulti = i2 + 1;
+									test_value_sim = size_t(m_pNewMap->m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
+									break;
+								}
+							}
+						size_t pg_filter_index=m_pNewMap->m_Val_Array[m_ValidationVarIndex].PG_FilterIndex;
+						startvalue = string::npos;
+						if(test_value_sim!=string::npos)
+							for (size_t irec = 0; irec < n_cycle_withinPGFile; irec++) {
+								if (pPG_ObsFile->FilterTest(pg_filter_index, irec + 1, test_value_sim)) {
+									startvalue = irec + 1;
+									break;
+								}
+							}
+
+					}
+					if (n_cycle_withinPGFile > 1) {
+						for (size_t index = 0; index < m_RecL; index++) {
+							m_MeanPost.mean[ii][index] = float(MISSING);
+							m_MeanPost.min[ii][index] = float(MISSING);
+							m_MeanPost.max[ii][index] = float(MISSING);
+							m_MeanPost.std[ii][index] = float(MISSING);
+							m_MeanPost.p10[ii][index] = float(MISSING);
+							m_MeanPost.p50[ii][index] = float(MISSING);
+							m_MeanPost.p90[ii][index] = float(MISSING);
+						}
+					}
+					if (startvalue == string::npos) break; // If Variable not exist in validation file 
+
+
+					size_t inc_step;
+					if (m_ScalingNumVarWithDim1 > 1)
+						inc_step = m_ScalingNumVarWithDim1;
+					else
+						inc_step = n_cycle_withinPGFile;
+
+
+					for (size_t i = 0; i < m_NumAccepted/inc_step; i+= m_ScalingNumVarWithDim1) {
 						AcceptedResiduals[i].resize(m_RecL);
 						size_t iaccept = i;
-						size_t irun = m_pNewMap->m_MStorage.m_AcceptedRuns[iens][iaccept];
+						size_t irun = m_pNewMap->m_MStorage.m_AcceptedRuns[iens][iaccept]+startvalue;
  						ifile = m_pNewMap->MR_GetAddedFiles(irun);
  						size_t run_to_read = irun;
 						if (ifile == 0)
@@ -935,7 +1001,11 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 						}
 					}
 
-					for (size_t index = 0; index < m_RecL; index++) {
+	
+
+
+
+					for (size_t index = startvalue; index < m_RecL; index+=n_cycle_withinPGFile) {
 						if (index % 200 == 0) {
 #ifndef COUPSTD	
 							float scale;
@@ -945,7 +1015,9 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 						}
 						vector<float> FArray;
 						FArray.clear();
-						for (size_t i = 0; i < m_NumAccepted; i+=m_ScalingNumVarWithDim1) {
+						
+
+						for (size_t i = 0; i < m_NumAccepted/ inc_step; i+=m_ScalingNumVarWithDim1) {
 							float value = AcceptedResiduals[i][index];
 							if (abs(value) < abs(MISSING))
 								FArray.push_back(value);

@@ -64,6 +64,7 @@ struct PLOTv
 	int PG_FilterVarIndex=0;
 	int PG_FilterVarValue=0;
 	vector<CONSTRAIN_BY> m_ConstrainBy;
+	size_t pg_start_pos{0};
 };
 
 class CPlotStorage

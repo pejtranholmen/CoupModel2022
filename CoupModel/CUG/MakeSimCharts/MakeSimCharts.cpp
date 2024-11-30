@@ -963,21 +963,29 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 									}
 							}
 							vector<size_t> EnsemblesToPlot;
-							if (m_pSimDoc->m_SelectValTime[ii].MeanIndicator>ENSEMBLE_TYPE::NO) {
-
-								EnsemblesToPlot = m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
-							}
-							else
-								EnsemblesToPlot.push_back(0);
+	
 							
 							m_pProp->SetFirstIndepVarType(DATEAXIS);
 							m_pProp->SetSecondIndepVarType(NO_USE);
 							m_pProp->m_multi_ResidualSequence = 0;
 
+							if (m_pUtil->GetEnsembleViewOption() == 0) {
+	 							EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
+							}
+							else {
+								if (m_pSimDoc->m_SelectValTime[ii].MeanIndicator > ENSEMBLE_TYPE::NO || col == 1 || col == 3) {
+									EnsemblesToPlot = m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
+								}
+								else
+									EnsemblesToPlot.push_back(0);
+							}
+
 							for (size_t i = 0; i<EnsemblesToPlot.size(); i++) {
 								PLOTv plotinfo = m_pPlotInfo->MakeValidationChartInfo(ii, j, ResidualPlot);
+								
 								plotinfo.EnsembleNo = EnsemblesToPlot[i];
 								if (m_pSimDoc->m_MStorage.m_ActualEnsemble == plotinfo.EnsembleNo||m_pUtil->GetEnsembleViewOption()!=0) {
+									if (m_pUtil->GetEnsembleViewOption() == 0) m_pProp->m_Title = m_pSimDoc->m_MStorage.m_AcceptedIdString[plotinfo.EnsembleNo];
 									pair<size_t, size_t> pmoreinfo = m_pPlotInfo->GetFilterForEnsemble(plotinfo.EnsembleNo, plotinfo.Index);
 									plotinfo.PG_FilterVarIndex = pmoreinfo.first; plotinfo.PG_FilterVarValue = pmoreinfo.second;
 									if (j > 0 && plotinfo.DataType == DATA_TYPES::MEASURED_VAL) continue;
@@ -1179,8 +1187,7 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival)
 				//auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			//	pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
 			}
-
-
+			pRes->SetOneValidationVariableIndex(ival);
 			pRes->ToBeUpdated();
 			if(!pRes->m_MeanDefined&&!pRes->m_Calculating)
 				AfxBeginThread(UpdateAcceptedThreadProc2,pRes);

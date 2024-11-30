@@ -1161,6 +1161,21 @@ size_t CPG::GetMinuteStartNextDay(size_t var_rec)
 	str=str.substr(0,11)+"00:00";
 	return PGUtil::MinutConv(str)+1440;	
 }
+size_t CPG::GetCycleWithCommonTime()
+{  /// The common
+	size_t common_records=0;
+	size_t record;
+	record = 1;
+	size_t minutv = GetLongTime(record);
+	while (GetLongTime(record) == minutv) {
+		common_records++;
+		if (record > pg.Shape.NumRecords) {
+			return 1;
+		}
+		record++;
+	}
+	return size_t(common_records);
+}
 size_t CPG::GetMinuteNumber(size_t var_rec)
 {
 	string str=GetDate(var_rec);

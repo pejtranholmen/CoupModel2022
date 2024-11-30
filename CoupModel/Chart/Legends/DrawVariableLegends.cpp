@@ -196,24 +196,21 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 			if (irun >= 1 && irun<100000) {
 				if (m_pUtil->m_ResidualPlot) {
 					int LogLiVersion = m_pSimDoc->m_PlotStorage.GetLogLiVersion(Index_In_PlotArray);
-					if (LogLiVersion == 2)
-						m_Label.st = "Residuals from MRun: " + FUtil::STD_ItoAscii(irun);
-					else
-						m_Label.st = "Simulated MRun: " + FUtil::STD_ItoAscii(irun);
+					if (p_info.Residual_RunNo == 0) {
+						if (LogLiVersion == 2)
+							m_Label.st = "Residuals MRun: " + FUtil::STD_ItoAscii(irun);
+						else
+							m_Label.st = "Simulated MRun: " + FUtil::STD_ItoAscii(irun);
+					}
+					else {
+							m_Label.st = FUtil::STD_ItoAscii(irun);
+					}
+
 
 				}
 				else
 					m_Label.st = "MRun (" + FUtil::STD_ItoAscii(irun) + ")";
-				PlotInfo *pPlotInfo;
-				pPlotInfo = MySingle::instance().GetPlotInfoPointer();
-				if (pPlotInfo != nullptr) {
-					string id = pPlotInfo->GetDepth(p_info.pBase, p_info.TabIndex);
-					if (id.size()>0) {
-						m_Label.st += " - " + id;
 
-					}
-
-				}
 			}
 			else if (irun == 120001 || irun == 110002)
 				m_Label.st = "Measured " + m_pPG_Active->GetVarId(PGindex);
@@ -241,8 +238,8 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 					+ MFC_Util::ItoAscii(m_ChartInfo.WithinDayRepresentation) + ") ";
 			}
 			else if (p_info.index_cycle != string::npos) {
-				m_Label.st += "var :";
-				m_Label.st += FUtil::STD_ItoAscii(p_info.index_cycle + 1);
+				//m_Label.st += "var :";
+				//m_Label.st += FUtil::STD_ItoAscii(p_info.index_cycle + 1);
 			}
 		}
 		else if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {

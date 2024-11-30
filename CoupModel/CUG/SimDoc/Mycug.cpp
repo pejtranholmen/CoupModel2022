@@ -2098,13 +2098,21 @@ void MyCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL
 		else if(col==1) 
 			return;
 	}
-	else if (isheet == 6 && col == 4&& row== -1&&updn) {
+	else if (isheet == 6 && (col == 4||col==3)&& row== -1&&updn) {
 		//Shift to a new ensemble
-		m_pSimDoc->m_MStorage.m_ActualEnsemble++;
-		if (m_pSimDoc->m_MStorage.m_ActualEnsemble == m_pSimDoc->m_MStorage.m_AcceptedIdString.size()) m_pSimDoc->m_MStorage.m_ActualEnsemble = 0;
-		m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
-		if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
-			m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+		if (col == 4) {
+			m_pSimDoc->m_MStorage.m_ActualEnsemble++;
+			if (m_pSimDoc->m_MStorage.m_ActualEnsemble == m_pSimDoc->m_MStorage.m_AcceptedIdString.size()) m_pSimDoc->m_MStorage.m_ActualEnsemble = 0;
+			m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
+			if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+				m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+			}
+		}
+		else if (col == 3) {
+			auto value=m_pUtil->GetResidualRepresentation();
+			value++;
+			if (value == 2) value = 0;
+			m_pUtil->SetResidualRepresentation(value);
 		}
 
 		
@@ -5500,7 +5508,12 @@ int MyCug::OnHint(int col,long row,int section,CString *str)
 						str->SetString(_T("Click on header to increment to the next ensemble"));
 						return TRUE;
 					}
-
+				}
+				else if (col == 3 && row == -1) {
+					if (m_pSimDoc->IsFinishedSimulation()) {
+						str->SetString(_T("Click on header to shift between Simulated/Residuals/Log Likelihood "));
+						return TRUE;
+					}
 				}
 				return FALSE;
 			case 7:

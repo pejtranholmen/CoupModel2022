@@ -236,9 +236,14 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 
 		size_t incrementstep = 1;
 		size_t NumAgg = 1;
-		Ps* pAgg = m_pSimDoc->GetPs("Aggregate Calib Number");
-		if (pAgg != nullptr) NumAgg = size_t(pAgg->GetValue());
-		if (NumAgg > 1) incrementstep = NumAgg;
+		if (m_pSimDoc->m_MStorage.GetCyclicNumber() > 1) {
+			incrementstep = m_pSimDoc->m_MStorage.GetCyclicNumber();
+		}
+		else {
+			Ps* pAgg = m_pSimDoc->GetPs("Aggregate Calib Number");
+			if (pAgg != nullptr) NumAgg = size_t(pAgg->GetValue());
+			if (NumAgg > 1) incrementstep = NumAgg;
+		}
 
 
 		vector<size_t> AcceptedCandidates;

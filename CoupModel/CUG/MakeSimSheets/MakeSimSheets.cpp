@@ -4932,7 +4932,16 @@ size_t MakeSimSheets::Val_Post_Header() {
 				QuickSetText(0,-1, "#");
 				QuickSetText(1,-1, "Measured");
 				QuickSetText(2,-1, "Group");
-				QuickSetText(3,-1, "Simulated");
+				GetCell(3, -1, &cell);
+				cell.SetBackColor(m_ColorClick);
+				if (m_pUtil->GetResidualRepresentation() == 0)
+					cell.SetText("Simulated Value");
+				else if (m_pUtil->GetResidualRepresentation() == 1)
+					cell.SetText("Residual (Sim-Meas)");
+				else if (m_pUtil->GetResidualRepresentation() == 2)
+					cell.SetText("Log Likelihood Value");
+				SetCell(3, -1, &cell);
+
 				GetCell(4, -1, &cell);
 				if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0) {
 					cell.SetBackColor(m_ColorClick);
@@ -5075,7 +5084,6 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					GetCell(4,i, &cell);
 					if (multimeanvalid) {
 						cell.SetCellType(UGCT_CHECKBOX);
-						cell.SetBool(FALSE);
 						if (!validMBinFile) {
 							if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() == 0) {
 								m_pSimDoc->m_MStorage.OpenFile(m_pSimDoc->m_DocFile2.m_Multi_MBin_File);
@@ -5094,16 +5102,13 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 
 						CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 						if (pRes != nullptr) {
-
 							if (!pRes->EnableEstimatesMade()) {
 								if (pRes->EnsembleReadWrite(true, string::npos)) {
 									cell.SetBackColor(m_ColorClick);
 									cell.SetReadOnly(FALSE);
 								}
 								else {
-
 									cell.SetReadOnly(FALSE);
-
 								}
 							}
 							else if (pRes->m_MeanDefined) {
@@ -5113,14 +5118,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 							else {
 								cell.SetReadOnly(TRUE);
 								cell.SetBackColor(m_NoColor);
-							//	MyCug *pCug = MySingle::instance().GetCugPointer();
-							//	if (!pRes->m_MeanDefined&&!pRes->m_Calculating) {
-							//		pCug->CalculateMeanOffTimeSeries(5002, FileNo);
-							//	}
-								
 							}
-
-
 						}
 						cell.SetParam(2100);
 					}

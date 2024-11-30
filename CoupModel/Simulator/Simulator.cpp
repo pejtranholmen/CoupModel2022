@@ -9,6 +9,7 @@
 #include "../ModelTypes/SimB.h"
 #include "../Simulator/ModelInfo.h"
 #include "../Util/StatUtil.h"
+//#include "../PG/NewReShaped.h"
 
 
 
@@ -1102,6 +1103,12 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			}
 			m_ValPGFile[i].simvalfile->pg.status.MinStart = min_min;
 		}
+		auto name_obs = m_ValPGFile[i].file->GetFileName();
+		if (name_obs.find("Reshaped.bin") != string::npos) {
+			 NewReShaped a;
+			 CPG* pPG=a.CreateReshaped(m_ValPGFile[i].file);
+		}
+	
 
 		m_ValPGFile[i].simvalfile->ResetPos();
 		PGPOS pos = m_ValPGFile[i].simvalfile->GetPos(m_pModelInfo->m_ActMin);
@@ -1158,8 +1165,6 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			m_ValPGFile[i].file->SetActBuffer(0);
 			m_ValPGFile[i].file->ReadFirst_Buffer();
 		}
-		
-
 	}
 
 	for(size_t i=0; i<m_ValTest.size(); i++) 

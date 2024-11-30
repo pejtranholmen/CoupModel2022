@@ -5,6 +5,7 @@ public:
 	~NewReShaped();
 
 	CPG* CreateNewReShapedFile(CPG* pPG,  vector<string> unique_names, vector<size_t> num_repof_names, vector<vector<size_t>> VarNamePos, bool treatment, bool specialtreatment, bool parcNo);
+	CPG* CreateReshaped(CPG* pPG);
 
 	int GetTreatment(string idkod);
 	int GetParcell(string idkod);

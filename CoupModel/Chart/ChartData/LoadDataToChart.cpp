@@ -122,6 +122,7 @@ bool LoadDataToChart::LoadTimeSerieData()
 
 			if (p_info.pPG_MeasValFile != nullptr) {
 				if (p_info.pPG_MeasValFile->GetNumRepititions() > 1) m_ChartInfo.PGRepitMode = true;
+				else if(p_info.RepitDataType) m_ChartInfo.PGRepitMode = true;
 			}
 			c_info.PGindex = m_pSimDoc->m_PlotStorage.GetVar_Index(j);
 			if (!CheckandOpenPGFile(p_info)) return false;
@@ -2035,8 +2036,25 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		}
 		//p_info.PG_FilterVarIndex = 1;
 		//p_info.PG_FilterVarValue = 3;
+		size_t inc_step = 1;
+		if (p_info.index_cycle > 1) inc_step = p_info.index_cycle;
+		size_t start_pos = 0;
+		start_pos = p_info.pg_start_pos%inc_step;
+		if (inc_step > 1) {
+			for (size_t i = 0; i < ActNoPoints; i++) {
+				AA[icurve][i] = MISSING;
+				if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+					SetDataBandValueMissing(i_band, pg_control, i);
+				}
 
-		for (size_t i = 0; i < ActNoPoints; i++) {
+			}
+		}
+
+
+
+
+
+		for (size_t i = start_pos; i < ActNoPoints; i+=inc_step) {
 			act_rec = i;
 			if (allrep) {
 
@@ -2082,7 +2100,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				}
 				else {
 					act_rec = i+ pg_control.StartIndex-1;
-					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i + pg_control.StartIndex, PGindex);
+					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i , PGindex);
 					if (p_info.PG_FilterVarIndex > 0 && !p_info.pPG_MeasValFile->FilterTest(p_info.PG_FilterVarIndex, i + pg_control.StartIndex, p_info.PG_FilterVarValue)) {
 						SetDataValueMissing(icurve, pg_control, i);
 						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) SetDataBandValueMissing(i_band, pg_control, i);
@@ -2122,6 +2140,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, resno, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 						}
 						else {
+							auto irun = act_rec / inc_step + act_rec % inc_step + 0;
 							auto koll=c_info.pRes->GetResiduals(c_info.ResRunNo, Residual_VarNum, act_rec);
 							if (koll > MISSING) {
 								auto Koll2 = i;

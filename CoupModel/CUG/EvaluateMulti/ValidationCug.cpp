@@ -2626,6 +2626,7 @@ void ValidationCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point
 			if (m_Distribution_As_Independent) {
 				m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE;
 				m_pProp->SetFirstIndepSet(PARVAR, false);
+				m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
 				MultiPlotClick(isheet, col, row, true);
 			}
 			else {
@@ -2695,7 +2696,8 @@ void ValidationCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 			else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 			else if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
 			if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->SetFirstIndepVarType(NO_USE);
-
+			auto ivar = m_pSimDoc->m_SelectMultiVal.size();
+			if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
 		}
 		else {
 			/*if (col == 1) {
@@ -2734,14 +2736,14 @@ void ValidationCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 		}
 		OnSheetSetup(isheet);
 
-
+		/*
 		MyCug* pCug;
 		pCug = MySingle::instance().GetCugPointer();
 		int isheet = pCug->GetSheetNumber();
 		if (isheet == 6 || isheet == 10)
 			pCug->OnSheetSetup(isheet);
 		else
-			pCug->OnSheetSetup(6);
+			pCug->OnSheetSetup(6);*/
 	}
 
 	if ( updn &&col==0&&isheet>=9)
@@ -2874,6 +2876,9 @@ void ValidationCug::OnCB_LClicked(int updn,RECT *rect,POINT *point,BOOL processe
 			}
 			OnSheetSetup(isheet);
 
+			auto ivar = m_pSimDoc->m_SelectMultiVal.size();
+			if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
+			/*
 			MyCug* pCug;
 			pCug = MySingle::instance().GetCugPointer();
 			int isheet = pCug->GetSheetNumber();
@@ -2881,6 +2886,7 @@ void ValidationCug::OnCB_LClicked(int updn,RECT *rect,POINT *point,BOOL processe
 				pCug->OnSheetSetup(isheet);
 			else
 				pCug->OnSheetSetup(6);
+				*/
 		}
 	}
 }

@@ -117,6 +117,140 @@ NewReShaped::~NewReShaped()
 	return pPG_Dest;
 }
 
+ CPG* NewReShaped::CreateReshaped(CPG* pPG)
+// This is with aggregation of common Treatment variable
+ { CPG* pPG_Dest;
+ 
+
+ bool fail = true;
+ if (pPG == nullptr && m_pPGSource == nullptr) return nullptr;
+ else if (pPG != nullptr)
+	 m_pPGSource = pPG;
+
+ m_DestFileName = m_pPGSource->GetFileName();
+ int ipos = m_DestFileName.find("_Reshaped.bin");
+
+ m_DestFileName = m_DestFileName.substr(0, ipos);
+ m_DestFileName += "_ReshapedMean.bin";
+
+
+ auto irec = m_pPGSource->GetNumRecords();
+ auto ivar = m_pPGSource->GetNumVariables();
+ m_pPGSource->ReOpen();
+ m_pPGSource->SetCompleteRead(true);
+ size_t treat_var{ 0 };
+ for (auto i = 0; i < ivar; i++) {
+	 string varname = m_pPGSource->GetVarName(i + 1);
+	 if(varname.find("Treatment")!=string::npos) {
+		 treat_var = i + 1;
+	 }
+ }
+
+ if (treat_var > 0) {
+	 pPG_Dest = new CPG();
+
+	 pPG_Dest->SetFileName(m_DestFileName);
+	 pPG_Dest->SetInfoMode();
+	 pPG_Dest->SetCompleteRead(true);
+	 pPG_Dest->CreateNewFile(ivar, irec, 1);
+
+
+
+
+	 size_t count_rec{0}, count{0};
+	 size_t min_pre, min_act;
+	 vector<float> varvalues;
+	 vector<int> n_values;
+	 varvalues.resize(treat_var - 1);
+	 n_values.resize(treat_var - 1);
+	 min_pre = m_pPGSource->GetLongTime(1);
+
+	 float post_treat_value;
+	
+	 
+	 int treat_num, pre_treat_num, post_treat_num{ 0 };
+	 pre_treat_num = int(m_pPGSource->GetVarValue(treat_var, 1) + 0.0001);
+	 if (treat_var < ivar)  post_treat_num = ivar;
+
+	 auto estimate = [&]() {
+		 count_rec++;
+		 pPG_Dest->SetLongTime(count_rec, min_pre);
+		 for (size_t ivar = 0; ivar < treat_var - 1; ivar++) {
+			 float koll = MISSING;
+			 if (n_values[ivar] > 0) {
+				 koll = varvalues[ivar] / n_values[ivar];
+			 }
+			 pPG_Dest->SetVarValue(ivar + 1, count_rec, koll);
+			 pPG_Dest->SetVarValue(treat_var, count_rec, float(pre_treat_num));
+			 if(post_treat_num!=0) pPG_Dest->SetVarValue(post_treat_num, count_rec, float(post_treat_value));
+			 varvalues[ivar] = 0.;
+			 n_values[ivar] = 0;
+		 }
+
+	  };
+
+
+	 for (size_t i = 0; i < irec; i++) {
+		 min_act = m_pPGSource->GetLongTime(i + 1);
+		 treat_num = int(m_pPGSource->GetVarValue(treat_var, i+ 1)+0.0001);
+		 if (min_act != min_pre||treat_num!=pre_treat_num) {
+			 estimate();
+		 }
+		 for (size_t ivar = 0; ivar < treat_var - 1; ivar++) {
+				 auto koll = m_pPGSource->GetVarValue(ivar+1, i + 1);
+				 if (koll > MISSING + .0001) {
+					 varvalues[ivar] += koll;
+					 n_values[ivar]++;
+				 }
+		 }
+		 if(post_treat_num!=0) post_treat_value= m_pPGSource->GetVarValue(post_treat_num, i + 1);
+		 min_pre = min_act;
+		 pre_treat_num = treat_num;
+	 }
+	 estimate();
+
+
+	 
+	// pPG_Dest->SetNumRecords(count_rec);
+	 pPG_Dest->CreateNewFile(ivar, count_rec, 1);
+
+	 string txt;
+	 for (size_t i = 1; i <= ivar; i++) {
+		 txt = m_pPGSource->GetVarName(i, 1);
+		 pPG_Dest->SetVarName(i, txt, 1);
+		 txt = m_pPGSource->GetVarUnit(i, 1);
+		 pPG_Dest->SetVarUnit(i, txt, 1);
+		 txt = m_pPGSource->GetVarId(i, 1);
+		 pPG_Dest->SetVarId(i, txt, 1);
+		 txt = m_pPGSource->GetVarPos(i, 1);
+		 pPG_Dest->SetVarPos(i, txt, 1);
+		 double Lat = m_pPGSource->GetVarLat(i, 1);
+		 pPG_Dest->SetVarLat(i, Lat, 1);
+		 double Long = m_pPGSource->GetVarLong(i, 1);
+		 pPG_Dest->SetVarLong(i, Long, 1);
+		 double Alt = m_pPGSource->GetVarAlt(i, 1);
+		 pPG_Dest->SetVarAlt(i, Alt, 1);
+		 string txt = m_pPGSource->GetVarStation(i, 1);
+		 pPG_Dest->SetVarStation(i, txt, 1);
+		 txt = m_pPGSource->GetVarCountry(i, 1);
+		 pPG_Dest->SetVarCountry(i, txt, 1);
+
+	 }
+
+
+	 pPG_Dest->ReCalculateMinMax();
+	 if (count_rec < irec) {
+		 if (pPG_Dest->SaveAs(m_DestFileName, true)) ivar = 100;
+	 }
+
+	 if (count_rec == irec) delete pPG_Dest;
+	 else delete pPG_Dest;
+ }
+
+	 return nullptr;
+ }
+
+
 int NewReShaped::GetTreatment(string idkod) {
 
 int IBeh = 0;

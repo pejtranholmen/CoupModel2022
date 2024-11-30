@@ -14,6 +14,7 @@ struct VALID_PGFILE
 {
 	CPG* file;
 	CPG* simvalfile;
+	CPG* obs_aggregatedFilterFile;
 	vector<size_t> varindex;
 	size_t	ActPos;
 	vector<float> simvalues;

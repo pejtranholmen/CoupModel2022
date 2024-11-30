@@ -261,6 +261,7 @@ public:
 	size_t	GetMinuteStartThisYear(size_t var_rec);
 	size_t	GetMinuteStartNextYear(size_t var_rec);
 	size_t	GetMinuteStartNextDay(size_t var_rec);
+	size_t  GetCycleWithCommonTime();
 	void	SetYearSectionStyle(bool value);
 	void	SetSectionNumber(size_t value);
 	size_t	GetNumberofSections();

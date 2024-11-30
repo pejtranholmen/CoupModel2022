@@ -177,35 +177,45 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 	}
 			
 	if (out.pSimDoc->IsMultiSimulation()) {
+		out.pPG_MeasValFile->ReOpen();
 		pair<size_t, size_t> filterinfo = GetFilterForEnsemble(m_pSimDoc->m_MStorage.m_ActualEnsemble, out.Index);
 		out.PG_FilterVarIndex = filterinfo.first; out.PG_FilterVarValue = filterinfo.second;
-		/*auto pSw = out.pSimDoc->GetSw("UseFilterParameters");
-		auto pSw2 = out.pSimDoc->GetSw("PreDefinedEnsembles");
+		auto pSw = m_pSimDoc->GetSw("UseFilterParameters");
+		auto pSw2 = m_pSimDoc->GetSw("PreDefinedEnsembles");
+		out.EnsembleNo = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 		if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
-			auto ensemble_no = m_pSimDoc->m_MStorage.m_ActualEnsemble;
-			auto Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[ensemble_no].Dim1_Par_Index;
-			if (Dim1Value > 0) {
-				out.PG_FilterVarValue = Dim1Value;
-				for (int i1 = 0; i1 < out.pSimDoc->m_MultiRun_Array.size(); i1++) {
-					for (int i2 = 0; i2 < out.pSimDoc->MR_Get_NumberOfParametersWithinDim(i1 + 1); i2++) {
-						auto test = out.pSimDoc->MR_GetParName(i1 + 1, i2 + 1);
-						if (test == "Filter Var Value") {
-							auto indexmulti = i2 + 1;
-							auto test_value_sim = size_t(out.pSimDoc->m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
-							out.PG_FilterVarValue = test_value_sim;
-							break;
-						}
+			out.RepitDataType = true;
+			auto cycle=out.pPG_MeasValFile->GetCycleWithCommonTime();
+			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+			
+			if (out.PG_FilterVarIndex == 0) {
+				m_pSimDoc->m_MStorage.SetCyclicNumber(1);
+
+
+			}
+			else {
+				m_pSimDoc->m_MStorage.SetCyclicNumber(cycle);
+				size_t start_pos{ string::npos };
+				for (size_t i = 0; i <cycle ; i++) {
+					auto koll2=out.pPG_MeasValFile->GetVarValue(out.PG_FilterVarIndex, i + 1);
+					if (size_t(out.PG_FilterVarValue) == koll2) {
+						start_pos = i; break;
 					}
 				}
-				out.PG_FilterVarIndex = out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
+				if (start_pos != string::npos) {
+					out.pg_start_pos = start_pos;
+
+				}
+				else {
+					out.pg_start_pos = 0;
+					out.PG_FilterVarIndex = 0;
+				}
+
+
 			}
-			else
-				out.PG_FilterVarIndex = 0;
+			out.index_cycle = m_pSimDoc->m_MStorage.GetCyclicNumber();
 		}
-		else if (pSw->GetIntValue() > 0) {
-			out.PG_FilterVarIndex = out.pSimDoc->m_Val_Array[out.Index].PG_FilterIndex;
-			out.PG_FilterVarValue = out.pSimDoc->m_Val_Array[out.Index].PG_FilterValue;
-		}*/
+
 	}
 
 	
