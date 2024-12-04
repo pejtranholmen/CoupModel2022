@@ -248,14 +248,15 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 
 		vector<size_t> AcceptedCandidates;
 
+		size_t iens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+		//m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][iaccept] + startvalue;
+		AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
+		size_t j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0);
+		PLOTv p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
 
-		while (count<int(m_pSimDoc->MR_Get_TotalNumberofRuns())) {
-			validv = m_pSimDoc->m_MStorage.GetMultiP(count, m_pSimDoc->MR_Get_NumTotalPar());
-			if (validv > .1) AcceptedCandidates.push_back(count);
-			count += incrementstep;
-		}
-		if(AcceptedCandidates.size()> m_pProp->m_multi_ResidualSequence)
-			m_pProp->m_MultiSequence = AcceptedCandidates[m_pProp->m_multi_ResidualSequence];
+		auto incstep=p_info.pPG_MeasValFile->GetCycleWithCommonTime();
+		if(AcceptedCandidates.size()> m_pProp->m_multi_ResidualSequence*incstep)
+			m_pProp->m_MultiSequence = AcceptedCandidates[(m_pProp->m_multi_ResidualSequence)*incstep];
 
 
 		int il=m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber)-1;
@@ -270,7 +271,7 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 			
 			auto datatype=m_pSimDoc->m_PlotStorage.GetDataType(j);
 			auto ens_type= m_pSimDoc->m_PlotStorage.GetEnsembleType(j);
-			if(ens_type!=ENSEMBLE_TYPE::NO||datatype==DATA_TYPES::SIM_VAL||m_ChartInfo.MultiPGMode||m_ChartInfo.MultiValMode) {
+		if(ens_type!=ENSEMBLE_TYPE::NO||datatype==DATA_TYPES::SIM_VAL||m_ChartInfo.MultiPGMode||m_ChartInfo.MultiValMode) {
 				//if(m_ChartInfo.MultiPGMode&&itype!= DATA_TYPES::SIM_VAL)
 			//		m_pSimDoc->m_PlotStorage.SetPGRepitNo(j, m_pProp->m_MultiSequence);
 				//else 

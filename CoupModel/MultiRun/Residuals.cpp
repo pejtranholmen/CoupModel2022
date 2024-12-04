@@ -943,25 +943,10 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 					else {
 						n_cycle_withinPGFile = pPG_ObsFile->GetCycleWithCommonTime();
 						
-						size_t test_value_sim{ string::npos };
-							for (int i2 = 0; i2 < m_pNewMap->MR_Get_NumberOfParametersWithinDim(0 + 1); i2++) {
-								auto test = m_pNewMap->MR_GetParName( 1, i2 + 1);
-								if (test == "Filter Var Value") {
-									auto indexmulti = i2 + 1;
-									test_value_sim = size_t(m_pNewMap->m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
-									break;
-								}
-							}
-						size_t pg_filter_index=m_pNewMap->m_Val_Array[m_ValidationVarIndex].PG_FilterIndex;
-						startvalue = string::npos;
-						if(test_value_sim!=string::npos)
-							for (size_t irec = 0; irec < n_cycle_withinPGFile; irec++) {
-								if (pPG_ObsFile->FilterTest(pg_filter_index, irec + 1, test_value_sim)) {
-									startvalue = irec + 1;
-									break;
-								}
-							}
-
+						startvalue = (Dim1Value - 1) % n_cycle_withinPGFile;
+						auto koll = m_pNewMap->StartValueofMatchingEnsembleInDim1(iens, pPG_ObsFile, m_ValidationVarIndex);
+						startvalue = koll.first;
+						n_cycle_withinPGFile = koll.second;
 					}
 					if (n_cycle_withinPGFile > 1) {
 						for (size_t index = 0; index < m_RecL; index++) {
@@ -974,81 +959,77 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 							m_MeanPost.p90[ii][index] = float(MISSING);
 						}
 					}
-					if (startvalue == string::npos) break; // If Variable not exist in validation file 
+					if (startvalue != string::npos) { // If Variable not exist in validation file 
+						size_t inc_step;
+						if (m_ScalingNumVarWithDim1 > 1)
+							inc_step = m_ScalingNumVarWithDim1;
+						else
+							inc_step = n_cycle_withinPGFile;
 
 
-					size_t inc_step;
-					if (m_ScalingNumVarWithDim1 > 1)
-						inc_step = m_ScalingNumVarWithDim1;
-					else
-						inc_step = n_cycle_withinPGFile;
-
-
-					for (size_t i = 0; i < m_NumAccepted/inc_step; i+= m_ScalingNumVarWithDim1) {
-						AcceptedResiduals[i].resize(m_RecL);
-						size_t iaccept = i;
-						size_t irun = m_pNewMap->m_MStorage.m_AcceptedRuns[iens][iaccept]+startvalue;
- 						ifile = m_pNewMap->MR_GetAddedFiles(irun);
- 						size_t run_to_read = irun;
-						if (ifile == 0)
-							AcceptedResiduals[i] = GetResidualVector(run_to_read, var_to_read);
-						else {
-							pRes = m_pNewMap->GetValidResidualPointer(m_FileNo, ifile);
-							irun_int = m_pNewMap->MR_GetInternalRunNo(irun);
-							run_to_read = irun_int;
-							if (m_ScalingNumVarWithDim1 > 1) run_to_read = (irun_int / m_ScalingNumVarWithDim1)*m_ScalingNumVarWithDim1 + ii % m_ScalingNumVarWithDim1;
-							AcceptedResiduals[i] = pRes->GetResidualVector(run_to_read, var_to_read);
+						for (size_t i = 0; i < m_NumAccepted / inc_step; i += m_ScalingNumVarWithDim1) {
+							AcceptedResiduals[i].resize(m_RecL);
+							size_t iaccept = i * inc_step;
+							size_t irun = m_pNewMap->m_MStorage.m_AcceptedRuns[iens][iaccept] + startvalue;
+							ifile = m_pNewMap->MR_GetAddedFiles(irun);
+							size_t run_to_read = irun;
+							if (ifile == 0)
+								AcceptedResiduals[i] = GetResidualVector(run_to_read, var_to_read);
+							else {
+								pRes = m_pNewMap->GetValidResidualPointer(m_FileNo, ifile);
+								irun_int = m_pNewMap->MR_GetInternalRunNo(irun);
+								run_to_read = irun_int;
+								if (m_ScalingNumVarWithDim1 > 1) run_to_read = (irun_int / m_ScalingNumVarWithDim1) * m_ScalingNumVarWithDim1 + ii % m_ScalingNumVarWithDim1;
+								AcceptedResiduals[i] = pRes->GetResidualVector(run_to_read, var_to_read);
+							}
 						}
-					}
-
-	
 
 
-
-					for (size_t index = startvalue; index < m_RecL; index+=n_cycle_withinPGFile) {
-						if (index % 200 == 0) {
+						for (size_t index = startvalue; index < m_RecL; index += n_cycle_withinPGFile) {
+							if (index % 200 == 0) {
 #ifndef COUPSTD	
-							float scale;
-							scale = float(index) / float(m_RecL) / float(m_NumVar) + float(ii) / float(m_NumVar);
-							p_mainframe->UpdateResidualProgress(ii + 1, m_NumVar, scale);
+								float scale;
+								scale = float(index) / float(m_RecL) / float(m_NumVar) + float(ii) / float(m_NumVar);
+								p_mainframe->UpdateResidualProgress(ii + 1, m_NumVar, scale);
 #endif
-						}
-						vector<float> FArray;
-						FArray.clear();
-						
+							}
+							vector<float> FArray;
+							FArray.clear();
 
-						for (size_t i = 0; i < m_NumAccepted/ inc_step; i+=m_ScalingNumVarWithDim1) {
-							float value = AcceptedResiduals[i][index];
-							if (abs(value) < abs(MISSING))
-								FArray.push_back(value);
-						}
-						if (m_MeanPost.mean.size() <= ii) {
-							AlloResVector();
-						}
-						if (FArray.size() >= 3) {
-							//BAYESIANCALIB_mp_DIST();
-							DistStat Stat;
-							size_t ncheck;
-							StatUtil::SortArray(&FArray[0], FArray.size());
-							MeanStat(&FArray[0], FArray.size(), &ncheck, &Stat);
-							m_MeanPost.mean[ii][index] = Stat.Mean;
-							m_MeanPost.min[ii][index] = Stat.Min;
-							m_MeanPost.max[ii][index] = Stat.Max;
-							m_MeanPost.std[ii][index] = Stat.Std;
-							m_MeanPost.p10[ii][index] = Stat.P5;
-							m_MeanPost.p50[ii][index] = Stat.P50;
-							m_MeanPost.p90[ii][index] = Stat.P95;
-							NumberValidPoints[ii] += ncheck;
-							NumberValidRecords[ii]++;
-						}
-						else {
-							m_MeanPost.mean[ii][index] = float(MISSING);
-							m_MeanPost.min[ii][index] = float(MISSING);
-							m_MeanPost.max[ii][index] = float(MISSING);
-							m_MeanPost.std[ii][index] = float(MISSING);
-							m_MeanPost.p10[ii][index] = float(MISSING);
-							m_MeanPost.p50[ii][index] = float(MISSING);
-							m_MeanPost.p90[ii][index] = float(MISSING);
+
+							for (size_t i = 0; i < m_NumAccepted / inc_step; i += m_ScalingNumVarWithDim1) {
+								float value = AcceptedResiduals[i][index];
+								if (abs(value) < abs(MISSING))
+									FArray.push_back(value);
+							}
+							if (m_MeanPost.mean.size() <= ii) {
+								AlloResVector();
+							}
+							if (FArray.size() >= 3) {
+								//BAYESIANCALIB_mp_DIST();
+								DistStat Stat;
+								size_t ncheck;
+								StatUtil::SortArray(&FArray[0], FArray.size());
+								MeanStat(&FArray[0], FArray.size(), &ncheck, &Stat);
+								m_MeanPost.mean[ii][index] = Stat.Mean;
+								m_MeanPost.min[ii][index] = Stat.Min;
+								m_MeanPost.max[ii][index] = Stat.Max;
+								m_MeanPost.std[ii][index] = Stat.Std;
+								m_MeanPost.p10[ii][index] = Stat.P5;
+								m_MeanPost.p50[ii][index] = Stat.P50;
+								m_MeanPost.p90[ii][index] = Stat.P95;
+								NumberValidPoints[ii] += ncheck;
+								NumberValidRecords[ii]++;
+							}
+							else {
+								m_MeanPost.mean[ii][index] = float(MISSING);
+								m_MeanPost.min[ii][index] = float(MISSING);
+								m_MeanPost.max[ii][index] = float(MISSING);
+								m_MeanPost.std[ii][index] = float(MISSING);
+								m_MeanPost.p10[ii][index] = float(MISSING);
+								m_MeanPost.p50[ii][index] = float(MISSING);
+								m_MeanPost.p90[ii][index] = float(MISSING);
+							}
 						}
 					}
 
@@ -1077,10 +1058,10 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 
 #ifndef COUPSTD
 
-	MyCug *pCug;
+/*	MyCug* pCug;
 	pCug = MySingle::instance().GetCugPointer();
-	pCug->OnSheetSetup(6);
-	p_mainframe->UpdateResidualProgress(12, m_NumVar, 1.0);
+	pCug->OnSheetSetup(6);*/
+	p_mainframe->UpdatePaneText(0,"New values estimated for Ensemble mean values");
 	p_mainframe->m_wndEvalMulti.m_ValidationCug.OnSetup();
 #endif
 #ifndef COUPSTD

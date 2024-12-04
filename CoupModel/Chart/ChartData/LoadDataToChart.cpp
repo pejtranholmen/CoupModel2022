@@ -1953,6 +1953,24 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		p_info.pPG_MeasValFile->ReOpen();
 	size_t save_ensemble_no;
 
+	if (m_ChartInfo.MultiValMode) {
+		size_t iens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+		//m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][iaccept] + startvalue;
+		auto AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
+		if (AcceptedCandidates.size() > 0 &&  icurve == 0) {
+			m_pProp->m_MultiSequence=AcceptedCandidates[0];
+			m_pSimDoc->m_PlotStorage.SetValRunNo(j, m_pProp->m_MultiSequence);
+		}
+
+
+	}
+
+
+
+
+
+
+
 
 	CResiduals *pResAct = c_info.pRes;
 	int ResRunNoAct = c_info.ResRunNo;
@@ -1982,11 +2000,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	int ValIndex_In_MultiParList=-1;
 	vector<float> SumVal;
 	vector<int> NumValid;
-	int startRunNo;
-	//if (p_info.index_cycle != string::npos)
-	//	startRunNo = c_info.ResRunNo + p_info.index_cycle;
-	//else
-		startRunNo = c_info.ResRunNo;
+
 	int VAL_PGindex = PGindex;
 	size_t act_rep = 0;
 	if (NumAgg > 1|| m_pPG_Active->GetNumRepititions()>1) {
@@ -2004,11 +2018,10 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			}
 		}
 	}
-
+	vector<float> points;
 
 	//for (size_t index_ValAgg = 0; index_ValAgg < NumAgg; index_ValAgg++) {
 
-		c_info.ResRunNo = startRunNo ;
 		//if (NumAgg > 1&& m_ChartInfo.ResidualSource) {
 		//	if(ValIndex_In_MultiParList>=0)	PGindex=size_t(m_pSimDoc->m_MStorage.GetMultiP(c_info.ResRunNo, ValIndex_In_MultiParList));
 
@@ -2034,12 +2047,13 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			p_info.pPG_MeasValFile->ReOpen();
 
 		}
-		//p_info.PG_FilterVarIndex = 1;
-		//p_info.PG_FilterVarValue = 3;
 		size_t inc_step = 1;
-		if (p_info.index_cycle > 1) inc_step = p_info.index_cycle;
 		size_t start_pos = 0;
-		start_pos = p_info.pg_start_pos%inc_step;
+		if (p_info.index_cycle != string::npos) {
+			if (p_info.index_cycle > 1) inc_step = p_info.index_cycle;
+			start_pos = p_info.pg_start_pos % inc_step;
+		}
+	
 		if (inc_step > 1) {
 			for (size_t i = 0; i < ActNoPoints; i++) {
 				AA[icurve][i] = MISSING;
@@ -2048,7 +2062,25 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				}
 
 			}
+	
 		}
+
+		size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+		if (Dim1Value == 0)
+			inc_step = 1;
+		else {
+			auto n_cycle_withinPGFile = p_info.pPG_MeasValFile->GetCycleWithCommonTime();
+			start_pos = (Dim1Value - 1)% n_cycle_withinPGFile;
+			auto koll=m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
+			start_pos = koll.first;
+			inc_step = koll.second;
+			auto koll5 = m_pProp->m_MultiSequence;
+			auto koll3 = c_info.ResRunNo;
+
+
+		}
+
+
 
 
 
@@ -2102,8 +2134,8 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 					act_rec = i+ pg_control.StartIndex-1;
 					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i , PGindex);
 					if (p_info.PG_FilterVarIndex > 0 && !p_info.pPG_MeasValFile->FilterTest(p_info.PG_FilterVarIndex, i + pg_control.StartIndex, p_info.PG_FilterVarValue)) {
-						SetDataValueMissing(icurve, pg_control, i);
-						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) SetDataBandValueMissing(i_band, pg_control, i);
+					/*	SetDataValueMissing(icurve, pg_control, i);
+						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) SetDataBandValueMissing(i_band, pg_control, i);*/
 					}
 					else if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
 						if (m_ChartInfo.ResidualSource) {
@@ -2142,6 +2174,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 						else {
 							auto irun = act_rec / inc_step + act_rec % inc_step + 0;
 							auto koll=c_info.pRes->GetResiduals(c_info.ResRunNo, Residual_VarNum, act_rec);
+							auto allkoll = c_info.pRes->GetResidualVector(c_info.ResRunNo, Residual_VarNum);
 							if (koll > MISSING) {
 								auto Koll2 = i;
 
@@ -2168,7 +2201,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 //			}
 		}
 	}
-	c_info.ResRunNo = startRunNo;
+	
 	if (p_info.EnsembleType>ENSEMBLE_TYPE::NO && pResAct != nullptr) {
 		save_ensemble_no = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 		// Set the correct ensemble using number....

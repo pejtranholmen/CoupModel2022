@@ -376,7 +376,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	
 	m_NumValidVar = m_pSimDoc->GetNumAll_TSV_ValVariables();
 	if (m_pSimDoc->m_MStorage.GetCyclicNumber() > 1&& m_NumValidVar> m_pSimDoc->m_MStorage.GetCyclicNumber())
-	m_NumValidVar/= m_pSimDoc->m_MStorage.GetCyclicNumber();
+	//m_NumValidVar/= m_pSimDoc->m_MStorage.GetCyclicNumber();
 
 	Type = "Tables";
 	Group = "Technical";

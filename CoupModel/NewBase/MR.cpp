@@ -1444,6 +1444,7 @@ bool MR::PreDefined_Criteria_Process() {
 			else
 				num = numens; // to quit
 		}
+		auto pre_actEnsemble = m_MStorage.m_ActualEnsemble;
 		m_MStorage.m_ActualEnsemble = 0;
 		size_t left;
 		for (size_t i = 0; i < numens; i++) { //Reset Criteria
@@ -1501,15 +1502,15 @@ bool MR::PreDefined_Criteria_Process() {
 			}
 			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
 		}
+		m_MStorage.m_ActualEnsemble = pre_actEnsemble;
 	}
 	m_MStorage.EvaluateFile(false);
+
 	return true;
 }
 bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 {
 	F* pValFile;
-
-	/*left = m_MStorage.ReduceCriteria(LOGLI_STAT, VarIndex, ThresholdType, Threshold);*/
 
 	CResiduals* pRes;
 	vector<CResiduals*> ResidualPtr;
@@ -1567,6 +1568,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 	size_t counterr = 0;
 	vector<float> VarValidNewVector;
 	VarValidNewVector.resize(NumValidVar * m_MStorage.GetNumberOfRuns() * Num_Stat_Perf);
+	
 
 	if (cumulated <= 3) {
 		for (int i_var_index = 0; i_var_index < NumValidVar; i_var_index++) {
@@ -1577,10 +1579,13 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			CPG* pPG;
 			bool valid;
 			pPG = (CPG*)pValFile->GetPointer();
+
+
 			pPG->SetCompleteRead(true);
 			pPG->ReOpen();
+
 			if (pPG == nullptr) {
-				pPG = new CPG;
+			pPG = new CPG;
 				//CPG_Array.Add(pCPG);
 
 				valid = pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
@@ -1736,24 +1741,31 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 					
 					meas_filter= pPG->GetVarVector(filter_index);
 				}
-					
-				for (long ii = 0; ii < numrec; ii++) {
-					if (indexmulti != string::npos) {
+				pair<size_t, size_t> cycle;
+				cycle = StartValueofMatchingEnsembleInDim1(m_MStorage.m_ActualEnsemble, pPG, i_var_index);
+				if (cycle.first == string::npos) {
 
-						size_t test_value_sim=size_t(m_MStorage.GetMultiP(irun, indexmulti)+0.001);
-						size_t test_value_obs = size_t(meas_filter[ii] + 0.001);
-						if (test_value_sim == test_value_obs&&res_v[ii]>MISSING) {
-							sim_v[ii] = meas_v[ii] - res_v[ii];
+
+				}
+				else {
+					for (long ii = cycle.first; ii < numrec; ii += cycle.second) {
+						if (indexmulti != string::npos) {
+
+							size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
+							size_t test_value_obs = size_t(meas_filter[ii] + 0.001);
+							if (test_value_sim == test_value_obs && res_v[ii] > MISSING) {
+								sim_v[ii] = meas_v[ii] - res_v[ii];
+							}
+							else
+								meas_v[ii] = MISSING;
+
 						}
 						else
-							meas_v[ii] = MISSING;
+							sim_v[ii] = meas_v[ii] - res_v[ii];
+
+
 
 					}
-					else
-						sim_v[ii] = meas_v[ii] - res_v[ii];
-
-
-
 				}
 
 				STAT_PERF newperf;
@@ -1777,7 +1789,8 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 				size_t first = 0;
 				double AccSimOrg = 0, AccMeasOrg = 0;
 				meas_v = pPG->GetVarVector(ind + 1);
-				for (long j = 0; j < numrec; j++) {
+				if(cycle.first!=string::npos) 
+					for (long j = cycle.first; j < numrec; j+=cycle.second) {
 
 					if (indexmulti != string::npos) {
 
@@ -1963,6 +1976,37 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 	m.SetPaneMessage("Performance indicators estimated based on " + text+ "Estimated new performance");
 #endif
 	return m_MStorage.EvaluateFile(false); // Saving new indicators in file
+}
+pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CPG* pPGMeas, size_t Index_val)
+{
+
+	size_t start_pos;
+	size_t test_value_sim{ string::npos };
+	size_t Dim1Value = m_MStorage.m_Valid_TSV[ensembleno].Dim1_Par_Index;
+	if (Dim1Value == 0) return pair < size_t, size_t>(0,1);
+
+
+	for (int i2 = 0; i2 < MR_Get_NumberOfParametersWithinDim(0 + 1); i2++) {
+		auto test = MR_GetParName(1, i2 + 1);
+		if (test == "Filter Var Value") {
+			auto indexmulti = i2 + 1;
+			test_value_sim = size_t(m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
+			break;
+		}
+	}
+	size_t pg_filter_index = m_pSimDoc->m_Val_Array[Index_val].PG_FilterIndex;
+	start_pos = string::npos;
+	if (test_value_sim != string::npos)
+		auto koll = pPGMeas->GetNumRecords();
+	auto koll2 = pPGMeas->GetFileName();
+	for (size_t irec = 0; irec < pPGMeas->GetCycleWithCommonTime(); irec++) {
+		if (pPGMeas->FilterTest(pg_filter_index, irec + 1, test_value_sim)) {
+			start_pos = irec;
+			break;
+		}
+	}
+	auto n_cycle_withinPGFile = pPGMeas->GetCycleWithCommonTime();
+	return pair <size_t, size_t>(start_pos, n_cycle_withinPGFile);
 }
 ;
 string MR::MR_Get_CalibParName(size_t index)

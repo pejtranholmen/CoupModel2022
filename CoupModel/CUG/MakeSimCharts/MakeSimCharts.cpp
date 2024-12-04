@@ -936,7 +936,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 			UpdateCurrentChart(false);
 			if(isheet==6) {
 
-				if(m_pSimDoc->m_SelectValTime.size()>0) {				
+				//if(m_pSimDoc->m_SelectValTime.size()>0) {				
 					m_pSimDoc->m_PrevSheet=6;
 					for(int j=0;j<m_NumOpenDoc;j++) {
 						if(m_NumOpenDoc<=1)
@@ -954,9 +954,6 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 									CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 									if (!pRes->EnableEstimatesMade()) {
 										MFC_Util::MessageBox("Error Please right click and select option to estimated mean value");
-										GetCell(col, row, &cell);
-										cell.SetBool(FALSE);
-										SetCell(col, row, &cell);
 										m_pSimDoc->m_SelectValTime.clear();
 										OnSheetSetup(6);
 										return;			// Return without plot if not estimated					
@@ -1000,11 +997,11 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 						}
 
 					}
-				}
+			/* }
 				else {
 					pChart->MakeTextPlot("No Variables selected");
 					return;
-				}
+				}*/
 			}
 			else if(isheet==5) {
 				if(m_pSimDoc->m_SelectedDocuments.size()>0&&m_pSimDoc->m_SelectOut.size()>0) {
@@ -1187,7 +1184,7 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival)
 				//auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			//	pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
 			}
-			pRes->SetOneValidationVariableIndex(ival);
+			pRes->SetOneValidationVariableIndex(ival-1);
 			pRes->ToBeUpdated();
 			if(!pRes->m_MeanDefined&&!pRes->m_Calculating)
 				AfxBeginThread(UpdateAcceptedThreadProc2,pRes);
