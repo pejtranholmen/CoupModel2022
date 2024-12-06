@@ -279,10 +279,21 @@ if (sheet < 9) {
 
 			}
 			else {
-				if (pCPG->ReCalculateMinMax());
+				if (pCPG->pg.Shape.NumRepetitions > 1) {
+					for (size_t i = 1; i <= pCPG->pg.Shape.NumRepetitions; i++) {
+						if (pCPG->ReCalculateMinMax(i));
+						else {
+							pCPG->ReOpen();
+							pCPG->ReCalculateMinMax(i);
+						}
+					}
+				}
 				else {
-					pCPG->ReOpen();
-					pCPG->ReCalculateMinMax();
+					if (pCPG->ReCalculateMinMax());
+					else {
+						pCPG->ReOpen();
+						pCPG->ReCalculateMinMax();
+					}
 				}
 				pCPG->SaveAs(newname);
 			}

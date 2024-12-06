@@ -1029,6 +1029,8 @@ bool PG_Stream::WritePGFileVarValue(size_t varno, size_t var_rec, float value, s
 {
 	std::streamsize newpos = pg.Shape.RecordSize*var_rec + pg.Shape.RecordSize*(repit - 1)*pg.Shape.NumRecords + varno * 4;
 	m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
+	auto index = (newpos - pg.Shape.RecordSize) / 4;
+	pg.Var.v[index] = value;
 	m_MainPGStreamReadWrite.write((char*)&value, 4);
 	if (m_MainPGStreamReadWrite.good())
 		return true;
@@ -1240,7 +1242,14 @@ bool PG_Stream::ReadNewBuffer(size_t BufferNum) {
 	else
 		return false;
 	try { m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
-		if (!m_MainPGStreamReadWrite.good()) return false;
+		if (!m_MainPGStreamReadWrite.good()) {
+			//return false;
+			m_MainPGStreamReadWrite.clear();
+			if (newpos > pg.Shape.RecordSize * pg.status.b.buf_Size + pg.Shape.RecordSize)
+				newpos = pg.Shape.RecordSize;
+			return m_MainPGStreamReadWrite.good();
+
+		}
 	}
 	catch (const std::exception& e) {
 		auto koll=e.what();
@@ -1426,17 +1435,26 @@ bool PG_Stream::WritePGFileData(size_t nrecords, fstream *pPGOutStream)
 		m_OutFileEnd = GetDateFromVarRecord(pg.status.a.OutRecordStart + nrecords - 1);
 	}
 	else {
-		for (size_t nrep = 1; nrep <= pg.Shape.NumRepetitions; nrep++) {
-			if (ReadNewBuffer(nrep)) {
-				pPGOutStream->write((char*)&pg.Var.v[(pg.status.a.OutRecordStart - 1) * pg.Shape.RecordIndexSize], OutSizeData);
-				auto min = *(unsigned int*)&pg.Var.v[(pg.status.a.OutRecordStart - 1) * pg.Shape.RecordIndexSize];
-				m_OutFileStart = GetDateFromVarRecord(pg.status.a.OutRecordStart);
-				m_OutFileEnd = GetDateFromVarRecord(pg.status.a.OutRecordStart + nrecords - 1);
-			}
-			else
-				return false;
+		if (pg.status.CompleteFileRead) {
+			//ReadNewBuffer(0);
+			auto pos = pPGOutStream->tellp();
+			pPGOutStream->write((char*)&pg.Var.v[0], OutSizeData*pg.Shape.NumRepetitions);
+			
+			//ReadNewBuffer(0);
 		}
-		ReadNewBuffer(0);
+		else {
+			for (size_t nrep = 1; nrep <= pg.Shape.NumRepetitions; nrep++) {
+				if (ReadNewBuffer(nrep)) {
+					pPGOutStream->write((char*)&pg.Var.v[(pg.status.a.OutRecordStart - 1) * pg.Shape.RecordIndexSize], OutSizeData);
+					auto min = *(unsigned int*)&pg.Var.v[(pg.status.a.OutRecordStart - 1) * pg.Shape.RecordIndexSize];
+					m_OutFileStart = GetDateFromVarRecord(pg.status.a.OutRecordStart);
+					m_OutFileEnd = GetDateFromVarRecord(pg.status.a.OutRecordStart + nrecords - 1);
+				}
+				else
+					return false;
+			}
+			ReadNewBuffer(0);
+		}
 	}
 	return pPGOutStream->good();
 }

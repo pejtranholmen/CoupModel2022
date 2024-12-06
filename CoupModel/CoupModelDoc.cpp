@@ -232,6 +232,7 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 			}
 			else {
 				CPG *pPG = new CPG;
+				//pPG->SetCompleteRead(true);
 				pPG->Open(file);
 				if (pPG->IsOpen()) {
 					//	m_Doc.m_PlotStorage.m_PGFileArray.push_back(pPG);
@@ -243,6 +244,13 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 					Fil.pFile = pPG;
 					Fil.Visible = false;
 					Fil.pDoc = this;
+					float koll;
+
+					for(size_t i=1; i<26;i++)
+					   koll = pPG->GetVarValue(3, 1, i);
+					pPG->ReOpen();
+					for (size_t i = 1; i < 12; i++)
+						koll=	pPG->GetVarValue(3, 1, i);
 					MySingle::instance().GetPGFileArchivePointer()->AddPGFile(Fil);
 					//m_pApp->m_PGFileArray.push_back(Fil);
 					num = MySingle::instance().GetPGFileArchivePointer()->GetNumPGFile();
@@ -250,8 +258,13 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 					p_mainframe->m_wndFileView.FillFileView();
 					num = MySingle::instance().GetPGFileArchivePointer()->GetNumPGFile();
 				}
-				else
-					return FALSE;
+				else {
+					pPG->ReOpen();
+					for (size_t i = 7; i < 12; i++)
+						auto koll = pPG->GetVarValue(3, 1, i);
+
+				}
+					//return FALSE;
 				num = MySingle::instance().GetPGFileArchivePointer()->GetNumPGFile();
 				CString kalle;
 				kalle = pzPathName;

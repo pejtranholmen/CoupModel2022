@@ -53,17 +53,19 @@ NewReShaped::~NewReShaped()
 	pPG_Dest->SetCompleteRead(true);
 	auto newidvar = 0;
 	if (treatment) newidvar++; if (specialtreatment) newidvar++; if (parcelNo) newidvar++;
+
+
 	pPG_Dest->CreateNewFile(unique_names.size() + newidvar, TotalRecords);
 	//pPG_Dest->ReAllocate(TotalRecords, );
 	auto counter1 = 0;	
 	string idkod;
 	
-
+	auto counter2 = 0;
 	for (auto i = 0; i < unique_names.size(); i++) {		
-		auto counter2 = 0;
+		counter2 = 0;
 		for (auto ir = 0; ir < irec; ir++) {
 			auto minn = m_pPGSource->GetLongTime(ir + 1);
-			if (ir == 0) counter2 = 0;
+
 			for (auto j = 0; j < VarNamePos[i].size(); j++) {
 				counter2++;
 				auto value = m_pPGSource->GetVarValue(VarNamePos[i][j], ir + 1);
@@ -86,7 +88,7 @@ NewReShaped::~NewReShaped()
 					int IParc = GetParcell(idkod);
 					pPG_Dest->SetVarValue(unique_names.size() + newidvar, counter2, float(IParc));
 				}
-			
+
 			}
 		}
 		auto name = m_pPGSource->GetVarName(VarNamePos[i][0]);
@@ -110,9 +112,9 @@ NewReShaped::~NewReShaped()
 	pPG_Dest->WritePGFile();
 
 	
-	pPG_Dest->CloseFile();
 	pPG_Dest->ReOpen();
 
+	auto koll=CreateRepitionsStructure(pPG_Dest);
 	
 	return pPG_Dest;
 }
@@ -249,6 +251,110 @@ NewReShaped::~NewReShaped()
 
 	 return nullptr;
  }
+
+ CPG* NewReShaped::CreateRepitionsStructure(CPG* pPGSource)
+ {
+	 // Input File any PG-file with repeated number of variables with common time points.
+	 pPGSource->CloseFile();
+	 pPGSource->Open(pPGSource->GetFileName());
+
+	 auto numcommontime = pPGSource->GetCycleWithCommonTime();
+	 if (numcommontime == 1) return nullptr; // no possible restructure of file
+	 auto NumRecDest = pPGSource->GetNumRecords() / numcommontime;
+	 auto TotRec = pPGSource->GetNumRecords();
+
+	 
+	 CPG* pPG_Dest = new CPG;
+	 pPG_Dest->CloseFile();
+
+	 m_DestFileName = m_pPGSource->GetFileName();
+
+	 size_t ipos = m_DestFileName.find("_Reshaped.bin");
+	 if(ipos==string::npos) ipos = m_DestFileName.find(".bin");
+	 if (ipos==string::npos) ipos = m_DestFileName.find(".BIN");
+	 if (ipos == string::npos) ipos = m_DestFileName.find(".Bin");
+
+	 m_DestFileName = m_DestFileName.substr(0, ipos);
+	 m_DestFileName += "_WithRepetitions.bin";
+	 pPG_Dest->SetFileName(m_DestFileName);
+
+
+	 m_pPGSource->ReOpen();
+	 m_pPGSource->SetCompleteRead(true);
+	 auto ivar = pPGSource->GetNumVariables();
+	 pPGSource->ReOpen();
+	 pPG_Dest->SetInfoMode();
+	 pPG_Dest->SetCompleteRead(true);
+
+	 pPG_Dest->CreateNewFile(ivar, pPGSource->GetNumRecords() /numcommontime,numcommontime );
+	 if (!pPG_Dest->ReOpen(true)) {
+		 if (!pPG_Dest->Open(pPG_Dest->GetFileName())) {
+			 auto stillproblem = 1;
+
+		 }
+
+	 }
+	 //pPG_Dest->SaveAs(m_DestFileName, true);
+	 size_t count_iout=0;
+	 size_t minn;
+	 float vvv;
+	 for (size_t irec = 0; irec < pPGSource->GetNumRecords(); irec+=numcommontime) {
+		 count_iout++;
+		 for (size_t irep = 0; irep < numcommontime; irep++) {
+			 pPG_Dest->SetRepititionSequence(irep+1, false);
+
+			 auto kollv = pPGSource->GetRecordDataVector(irec + irep+1, 1);
+			 for(size_t iivar=0; iivar<kollv.size(); iivar++) 
+				  if (!pPG_Dest->WritePGFileVarValue(iivar, count_iout, kollv[iivar], irep + 1)) { 
+					 auto error8 = 0;
+				 
+				 };
+				vvv = pPG_Dest->GetVarValue(3,count_iout , irep+1);
+
+		}
+	}
+
+	 string txt;
+	 auto test_cycle=m_pPGSource->GetCycleWithCommonTime();
+	 auto ivar_test = m_pPGSource->GetNumVariables();
+	 for (size_t irep = 1; irep <= numcommontime; irep++) {
+		 for (size_t i = 1; i <= ivar; i++) {
+			 txt = pPGSource->GetVarName(i, 1);
+			 pPG_Dest->SetVarName(i, txt, irep);
+			 txt = pPGSource->GetVarUnit(i, 1);
+			 pPG_Dest->SetVarUnit(i, txt, irep);
+			 size_t indexkol = i % 5+i/5;
+			 if(irep>1) indexkol+=(irep - 1) * 4;
+			 txt = m_pPGSource->GetVarId(indexkol, 1);
+			 pPG_Dest->SetVarId(i, txt, irep);
+			 txt = pPGSource->GetVarPos(i, 1);
+			 pPG_Dest->SetVarPos(i, txt, irep);
+			 double Lat = pPGSource->GetVarLat(i, 1);
+			 pPG_Dest->SetVarLat(i, Lat, irep);
+			 double Long = pPGSource->GetVarLong(i, 1);
+			 pPG_Dest->SetVarLong(i, Long, irep);
+			 double Alt = pPGSource->GetVarAlt(i, 1);
+			 pPG_Dest->SetVarAlt(i, Alt, irep);
+			 string txt = pPGSource->GetVarStation(i, 1);
+			 pPG_Dest->SetVarStation(i, txt, irep);
+			 txt = pPGSource->GetVarCountry(i, 1);
+			 pPG_Dest->SetVarCountry(i, txt, irep);
+		 }
+
+	 }
+	 for(size_t irep=1; irep<=pPG_Dest->GetNumRepititions(); irep++)
+		pPG_Dest->ReCalculateMinMax(irep);
+
+	 pPG_Dest->WritePGFile();
+	 delete pPG_Dest;
+
+
+
+
+	 return nullptr;
+ }
+
+
 
 
 int NewReShaped::GetTreatment(string idkod) {

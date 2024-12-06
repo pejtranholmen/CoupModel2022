@@ -171,7 +171,7 @@ void* CPGFile::GetRecordPointer(size_t var_rec, size_t rep)
 	m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0],pg.Shape.RecordSize);
 	if(m_MainPGStreamReadWrite.good())
 		return &pg.Var.v[0];
-	return 
+	return
 		nullptr;
 
 }
@@ -1091,11 +1091,21 @@ void CPGFile::SetVarMin(size_t index, float vnew, size_t repit)
 bool CPGFile::ReCalculateMinMax(size_t repit)
 {
 	float vmin,vmax, vnew;
+	size_t rec_read_start = 1;
+	size_t rec_read_end = pg.Shape.NumRecords;
 	for(size_t i=1;i<=pg.Shape.NumVar;i++)  {
 		vmin=abs(MISSING);
 		vmax=MISSING;
-		for(size_t ii=1;ii<=pg.Shape.NumRecords;ii++) {
-				vnew=GetVarValue(i, ii);
+		/*f(pg.Shape.NumRecords != pg.Shape.TotalNumberOfRecords) {
+			if (pg.status.CompleteFileRead) {
+				rec_read_start = 1 + (repit - 1) * pg.Shape.NumRecords;
+				rec_read_end = 1 + repit * pg.Shape.NumRecords;
+			}
+		}*/
+
+
+		for(size_t ii=rec_read_start;ii<=rec_read_end;ii++) {
+				vnew=GetVarValue(i, ii,repit);
 				if(vnew>-1.E37) {
 					if(vnew>vmax)
 						vmax=vnew;
@@ -1116,23 +1126,35 @@ bool CPGFile::FilterTest(size_t varno, size_t var_rec, int requiredvalue) {
 
 
 }
-float CPGFile::GetVarValue(size_t varno, size_t var_rec)
+float CPGFile::GetVarValue(size_t varno, size_t var_rec, size_t repit_no)
 {
 	//return *m_var[varno-1][var_rec-1];
-	if(var_rec>pg.Shape.NumRecords)
+	if(var_rec>pg.Shape.NumRecords*repit_no)
 		return MISSING;
 	if(pg.status.CompleteFileRead&&!pg.Shape.RepetitionMode)
 		return pg.Var.v[(var_rec-1)*pg.Shape.RecordIndexSize+varno];
 	else if(pg.status.CompleteFileRead&&pg.Shape.RepetitionMode) {
 		size_t koll=pg.Var.v.size();
+
+
 		size_t ind=(var_rec-1+pg.status.a.LocalStartRecord)*pg.Shape.RecordIndexSize+varno;
-		if(ind<koll)
-			return pg.Var.v[ind];
+		size_t ind2 = (var_rec - 1 ) * pg.Shape.RecordIndexSize + varno+(repit_no-1)* pg.Shape.RecordIndexSize*pg.Shape.NumRecords;
+		auto koll3=pg.Var.v[ind2];
+		if(ind2<koll)
+			return pg.Var.v[ind2];
 		else
 			return MISSING;
 	}
 	else {
 		if(pg.Shape.RepetitionMode) {
+			if (repit_no != GetRepititionSequence()&&repit_no!=1) {
+				if (!SetRepititionSequence(repit_no)) {
+					auto prof = 2;
+
+				}
+
+
+			}
 			size_t koll=pg.Var.v.size();
 			size_t ind=(var_rec-1)*pg.Shape.RecordIndexSize+varno;
 			if(ind<koll)

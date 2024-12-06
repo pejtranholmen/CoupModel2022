@@ -55,7 +55,7 @@ bool	SetActBufferReset();
 bool	SetActBuffer(size_t abuffer);
 bool	SetActBufferSize(size_t abuffer);
 
-	bool	SetRepititionSequence(size_t, bool resetindex = true);
+	bool	SetRepititionSequence(size_t, bool resetindex = false);
 	size_t	GetRepititionSequence();
 	void	SetRepititionMode(bool, size_t repititions = 1);
 	size_t	CheckAndEstimateRepetions();

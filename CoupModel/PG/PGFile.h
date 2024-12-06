@@ -126,7 +126,7 @@ public:
 	bool    ReCalculateMinMax(size_t repit=1);
 		
 	float	GetVarValue(size_t varno) {return pg.Var.v[varno];}; // Return the value in Record 1
-	float	GetVarValue(size_t varno, size_t recno);
+	float	GetVarValue(size_t varno, size_t recno, size_t repit_no=1);
 	bool	FilterTest(size_t varno, size_t var_rec, int requiredvalue);
 	float	GetVarValueRead(size_t varno, size_t recno);
 
