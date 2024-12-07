@@ -182,7 +182,12 @@ bool PGEditCells::AllEditCells(int col, long row, string txt)
 				m_TimeAggregate.m_DestFileName = txt;
 				m_DestFileSet[4] = true;
 			}
-			if (col >= 0 && col<8)
+			else if (col == 3) {
+				m_AggregationStepSize = FUtil::AtoInt(txt);
+				if(m_AggregationStepSize!=1) 
+					QuickSetBackColor(col, row, m_ColorChanged);
+			}
+			if (col >= 0 && col<8&&col != 3)
 				QuickSetBackColor(col, row, m_ColorChanged);
 		}
 

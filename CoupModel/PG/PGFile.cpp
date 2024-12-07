@@ -1150,7 +1150,7 @@ float CPGFile::GetVarValue(size_t varno, size_t var_rec, size_t repit_no)
 			if (repit_no != GetRepititionSequence()&&repit_no!=1) {
 				if (!SetRepititionSequence(repit_no)) {
 					auto prof = 2;
-
+					m_MainPGStreamReadWrite.clear();
 				}
 
 

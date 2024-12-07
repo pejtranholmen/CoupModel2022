@@ -41,7 +41,7 @@ bool PG_Stream::SetActBufferSize(size_t ind_buf)
 	pg.status.b.buf_Size = ind_buf;
 
 	pg.status.b.NumberOfBuf = (pg.Shape.NumRecords - 1) / pg.status.b.buf_Size + 1;
-	if (!pg.status.CompleteFileRead)	pg.Var.v.resize(pg.Shape.RecordIndexSize*pg.status.b.buf_Size);
+	if (!pg.status.CompleteFileRead&& !pg.status.CompleteRepRead)	pg.Var.v.resize(pg.Shape.RecordIndexSize*pg.status.b.buf_Size);
 	else pg.status.b.buf_Size = ind_buf;
 
 	if (m_MainPGStreamReadWrite.good())
@@ -921,7 +921,7 @@ bool PG_Stream::CreateNewFile(size_t numv, size_t numr, size_t repit)
 		}
 		else
 
-			pg.Var.v.resize(numr*(pg.Shape.NumVar + 1));
+			pg.Var.v.resize(numr*repit*(pg.Shape.NumVar + 1));
 
 
 	}

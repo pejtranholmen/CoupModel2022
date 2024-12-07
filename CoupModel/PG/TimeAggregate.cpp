@@ -1,7 +1,7 @@
 #include "./TimeAggregate.h"
 #include "../stdafx.h"
 #include "../MainFrm.h"
-bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option)
+bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int AggregationStep)
 {
 	CPG *pPG_Dest;
 	pPG_Dest= new CPG;
@@ -25,6 +25,7 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option)
 		m_pPGSource->SetActBufferSize(m_pPGSource->GetNumRecords());
 	}
 
+ 
 
 
 	m_pPGSource->ReadNewBuffer(1, 1);
@@ -33,19 +34,19 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option)
 	float *pFloat;
 	switch(Option) {
 		case 0:
-			NewNumRec=m_pPGSource->GetNumRecordsYear(1);		
+			NewNumRec=m_pPGSource->GetNumRecordsYear(AggregationStep);
 			break;
 		case 1:
-			NewNumRec=m_pPGSource->GetNumRecordsMonth(1);
+			NewNumRec=m_pPGSource->GetNumRecordsMonth(AggregationStep);
 			break;
 		case 2:
-			NewNumRec=m_pPGSource->GetNumRecordsDays(1);
+			NewNumRec=m_pPGSource->GetNumRecordsDays(AggregationStep);
 			break;
 		case 3:
-			NewNumRec=m_pPGSource->GetNumRecordsHour(1);
+			NewNumRec=m_pPGSource->GetNumRecordsHour(AggregationStep);
 			break;
 		case 4:
-			NewNumRec=m_pPGSource->GetNumRecordsMinute(10);
+			NewNumRec=m_pPGSource->GetNumRecordsMinute(10*AggregationStep);
 			break;
 	}
 
@@ -95,7 +96,7 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option)
 		m_pPGSource->SetActBufferSize(m_pPGSource->GetNumRecords());
 		pPG_Dest->SetActBufferSize(NewNumRec);
 	}
-
+	auto kul=pPG_Dest->pg.Var.v.size();
 
 	for(size_t rep=0; rep<nrep; rep++) {
 		m_pPGSource->ReadNewBuffer(1, rep+1);
@@ -109,22 +110,22 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option)
 		float rel=float(rep)/float(nrep);
 		p_mainframe->UpdateProgress(0, rel);
 		if(!m_pPGSource->SetRepititionSequence(rep+1, true)) return false;
-
+		kul = pPG_Dest->pg.Var.v.size();
 		switch(Option) {
 		case 0:
-			NewNumRec=m_pPGSource->GetNumRecordsYear(1, rep+1);		
+			NewNumRec=m_pPGSource->GetNumRecordsYear(AggregationStep, rep+1);
 			break;
 		case 1:
-			NewNumRec=m_pPGSource->GetNumRecordsMonth(1, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsMonth(AggregationStep, rep+1);
 			break;
 		case 2:
-			NewNumRec=m_pPGSource->GetNumRecordsDays(1, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsDays(AggregationStep, rep+1);
 			break;
 		case 3:
-			NewNumRec=m_pPGSource->GetNumRecordsHour(1, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsHour(AggregationStep, rep+1);
 			break;
 		case 4:
-			NewNumRec=m_pPGSource->GetNumRecordsMinute(10, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsMinute(10* AggregationStep, rep+1);
 			break;
 		}
 		pFloat=m_pPGSource->GetMeanPointer(Option);
@@ -145,17 +146,25 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option)
 			pPG_Dest->SetCompleteRead(true);
 
 		}
-		if(!pPG_Dest->ReCalculateMinMax(rep+1)) {
+
+	}
+	for (size_t rep = 0; rep < nrep; rep++) {
+		kul = pPG_Dest->pg.Var.v.size();
+		if (!pPG_Dest->ReCalculateMinMax(rep + 1)) {
 			delete pPG_Dest;
 			return false;
-			
+
 		}
 	}
+
 
 
 //	pPG_Dest->CheckMissingNumbers();
 	string txt;
 	if(pPG_Dest->WritePGFileEnd(NewNumRec,nrep)) {
+
+
+		
 		txt="Calculation made and file created with : ";
 		txt+=FUtil::STD_ItoAscii(pPG_Dest->GetNumRecords());
 		txt+=" records and ";

@@ -1169,7 +1169,7 @@ size_t CPG::GetCycleWithCommonTime()
 	size_t minutv = GetLongTime(record);
 	while (GetLongTime(record) == minutv) {
 		common_records++;
-		if (record > pg.Shape.NumRecords) {
+		if (record >= pg.Shape.NumRecords) {
 			return 1;
 		}
 		record++;

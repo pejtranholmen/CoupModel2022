@@ -33,6 +33,12 @@ NewReShaped::~NewReShaped()
 	else if (pPG != nullptr)
 		m_pPGSource = pPG;
 
+	if (m_pPGSource->ReOpen()) {
+
+		auto file = 1;
+
+	}
+
 	m_DestFileName = m_pPGSource->GetFileName();
 	int ipos = m_DestFileName.find(".bin");
 	if (ipos < 0) ipos = m_DestFileName.find(".BIN");
@@ -111,10 +117,12 @@ NewReShaped::~NewReShaped()
 	pPG_Dest->ReCalculateMinMax();
 	pPG_Dest->WritePGFile();
 
+	auto koll = pPG_Dest->GetCycleWithCommonTime();
+
 	
 	pPG_Dest->ReOpen();
 
-	auto koll=CreateRepitionsStructure(pPG_Dest);
+	if(m_RepetitionOutputStyle)  pPG_Dest=CreateRepitionsStructure(pPG_Dest);
 	
 	return pPG_Dest;
 }
@@ -346,12 +354,12 @@ NewReShaped::~NewReShaped()
 		pPG_Dest->ReCalculateMinMax(irep);
 
 	 pPG_Dest->WritePGFile();
-	 delete pPG_Dest;
+	 
 
 
 
 
-	 return nullptr;
+	 return pPG_Dest;
  }
 
 

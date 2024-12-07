@@ -15,6 +15,7 @@ public:
 	vector<pair<string, int>> treatment_convert;
 	vector<string> Parcell_Stop;
 	vector<size_t> Parcell_Add;
+	bool m_RepetitionOutputStyle{ true };
 
 protected:
 

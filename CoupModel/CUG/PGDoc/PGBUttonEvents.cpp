@@ -269,6 +269,15 @@ void PGButtonEvents::ImportSheetButtons(int ParV, int col)
 
 
 	}
+	else if (m_ShiftOutputFormat.Param == ParV) {
+		if (m_ShiftOutputFormat.NormalState) m_ShiftOutputFormat.NormalState = false;
+		else m_ShiftOutputFormat.NormalState = true;
+		if (m_AddMix_Actions.m_pPGReshape_Out != nullptr) {
+			delete m_AddMix_Actions.m_pPGReshape_Out;
+			m_AddMix_Actions.m_pPGReshape_Out = nullptr;
+		}
+		Make_ReShape_Prior(true);
+	}
 	else if (m_CreateNewReshapeButton.Param == ParV) {
 		if (m_AddMix_Actions.m_pPGReshape_Out != nullptr) {
 			string filename = m_AddMix_Actions.m_pPGReshape_Out->GetFileName();

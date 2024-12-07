@@ -886,7 +886,7 @@ void MyPGCug::OnLClicked(int col, long row, int updn, RECT *rect, POINT *point, 
 		// Action for substitution of data
 	 if(row==2&&col==5) {
 			CPG *pPG=(CPG*)m_pPGArchive->m_PGFileArray[m_IndexSource].pFile;
-			bool res=m_TimeAggregate.CreateNewAggregatedFile(pPG, m_AggregateOption);
+			bool res=m_TimeAggregate.CreateNewAggregatedFile(pPG, m_AggregateOption, m_AggregationStepSize);
 			m_ShowSubResults=true;
 			if(res)  Make_DataAggregation();
 			else {

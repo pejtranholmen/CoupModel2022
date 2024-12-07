@@ -133,6 +133,7 @@ protected:
 	bool	m_SpatialSourceFileReady;
 	int		m_SubstituteOption;
 	int		m_AggregateOption;
+	int		m_AggregationStepSize;
 	int		m_NewResolutionOption, m_NewResolutionOption_Extra;
 	int		m_NewResolutionSteps;
 	int		m_ChangePeriodOption;
@@ -210,6 +211,7 @@ protected:
 	CLICK_BUTTON m_TranslationListButton;
 	CLICK_BUTTON m_CreateNewReshapeButton;
 	CLICK_BUTTON m_UpdateReshapeButton;
+	CLICK_BUTTON m_ShiftOutputFormat;
 
 	//Mix
 	CLICK_BUTTON m_MixMorePGFilesButton;

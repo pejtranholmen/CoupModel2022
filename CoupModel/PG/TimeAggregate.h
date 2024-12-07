@@ -17,7 +17,7 @@ class TimeAggregate
 public:
 	TimeAggregate(void) {;};
 	~TimeAggregate(void) {;};
-	bool CreateNewAggregatedFile(CPG *pPG, int option);
+	bool CreateNewAggregatedFile(CPG *pPG, int option, int AggregationStep=1);
 
 	string m_DestFileName;
 	vector<string> m_ResultSum;

@@ -53,6 +53,7 @@ GridPGDoc::GridPGDoc(void)
 	def.FileName = "NewEmpty.bin";
 	def.Assigned = false;
 	m_DescriptionImportedFile.param = 3211;
+	m_AggregationStepSize = 1;
 	
 	m_NewGridInfo = def;
 }
@@ -1836,8 +1837,9 @@ bool GridPGDoc::Make_DataAggregation()
 			ind++;
 			QuickSetText(0,ind,"Output File Name");
 			QuickSetText(1,ind,"Method for TimeAggregation");
-			JoinCells(1,ind,4,ind);
-		
+			JoinCells(1,ind,2,ind);
+			QuickSetText(3, ind, "Scaling of Aggregation Unit");
+			JoinCells(3, ind, 4, ind);
 			int ncol=8;
 			for(int i=0;i<ncol;i++)
 				QuickSetBackColor(i, ind, m_ColorHeading);
@@ -1899,7 +1901,13 @@ bool GridPGDoc::Make_DataAggregation()
 			else if(m_AggregateOption==4) str="10 minutes Mean Value";
 			cell.SetText(str.c_str());
 			SetCell(1,ind, &cell);
-			JoinCells(1,ind,4,ind);
+			JoinCells(1,ind,2,ind);
+			GetCell(3, ind, &cell);
+			cell.SetNumber(m_AggregationStepSize);
+		
+
+			SetCell(3, ind, &cell);
+			JoinCells(3, ind, 4, ind);
 			QuickSetText(5,ind, "Click to Create New File");
 			QuickSetBackColor(5,ind,m_ColorClick);
 			JoinCells(5,ind,6,ind);
@@ -2362,7 +2370,9 @@ bool GridPGDoc::Make_ReShape_Prior(bool update) {
 	SetCellClickButton(m_CreateNewReshapeButton);
 	SetCellClickButton(m_QuitButton);
 	SetCellClickButton(m_UpdateReshapeButton);
+	SetCellClickButton(m_ShiftOutputFormat);
 
+	m_ReShaped_Actions.m_RepetitionOutputStyle=m_ShiftOutputFormat.NormalState;
 	//SetCellClickButton(m_TranslationListButton);
 	CPG* pCPG;
 	m_IndexSource = m_pPGArchive->GetIndex(m_pDoc);
@@ -2441,9 +2451,7 @@ bool GridPGDoc::Make_ReShape_Prior(bool update) {
 
 	SetCodeTranslateInfo(m_TranslationListButton, m_ReShaped_Actions.treatment_convert, m_ReShaped_Actions.Parcell_Stop, m_ReShaped_Actions.Parcell_Add, hits_map, parc_hit_map);
 
-
-	m_AddMix_Actions.m_pPGReshape_Out = m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, unique_names, num_repof_names, VarNamePos, treatmentkod, specialtreatmentkod, parcelNo);
-		
+	m_AddMix_Actions.m_pPGReshape_Out = m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, unique_names, num_repof_names, VarNamePos, treatmentkod, specialtreatmentkod, parcelNo);	
 
 	SetPGFileColumnsInfo(m_pGSource, 0, 6, 0, false, true);
 	if (m_AddMix_Actions.m_pPGReshape_Out != nullptr) {
@@ -4706,21 +4714,28 @@ void GridPGDoc::DefineClickButtonInfos()
 	SetClickButtonMap(b);
 
 
-	b.Text = "Create New File";
+	b.Text = "Create File ";
 	b.Row = -2;
 	b.HintText = ClickAdd + b.Text;
 	b.Col_start = 3; b.Col_end = 4; b.Param = GetUniqueMenuNumber();
 	m_CreateNewAddButton=b;
 	SetClickButtonMap(b);
 
-	b.Text = "Create New File";
-	b.Row = -2;
-	b.HintText = ClickAdd + b.Text;
+	b.NormalState = false;
+	b.Text = "Format (many lines)";
+	b.TextOptional = " Format (Repetitions)";
+	b.HintText = "Click on button to shift between different output options" + b.Text;
+	b.Col_start = 5, b.Col_end = 5;
+	b.Param = GetUniqueMenuNumber();
+	m_ShiftOutputFormat = b;
+
+	b.NormalState = true;
+	b.Text = "Create File";
+		b.Row = -2;
+		b.HintText = ClickAdd + b.Text;
 	b.Col_start = 3; b.Col_end = 4; b.Param = GetUniqueMenuNumber();
 	m_CreateNewReshapeButton = b;
 	SetClickButtonMap(b);
-
-
 
 
 	b.Param = GetUniqueMenuNumber();
