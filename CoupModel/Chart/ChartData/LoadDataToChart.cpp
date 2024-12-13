@@ -185,7 +185,7 @@ bool LoadDataToChart::LoadTimeSerieData()
 
 
 			//AllocateSpaceToData(icurve);
-			if(!LoadSelectedVariables(j, icurve, i_band, c_info, p_info)) return false;
+			if(!LoadSelectedVariables(j, icurve, i_band, c_info, p_info))  return false;
 			TransformSelectedVariables(p_info, icurve, i_band);
 
 
@@ -1949,17 +1949,34 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 
 	}
-	if(p_info.pPG_MeasValFile!=NULL&&m_pUtil->m_ResidualPlot == 1)
+	if (p_info.pPG_MeasValFile != NULL && m_pUtil->m_ResidualPlot == 1|| p_info.DataType == DATA_TYPES::SIM_VAL) {
+		p_info.pPG_MeasValFile->SetCompleteRead(true);
+		p_info.pPG_MeasValFile->CloseFile();
+		p_info.pPG_MeasValFile->Open(p_info.pPG_MeasValFile->GetFileName());
 		p_info.pPG_MeasValFile->ReOpen();
+
+	}
 	size_t save_ensemble_no;
 
-	if (m_ChartInfo.MultiValMode) {
+	if (m_ChartInfo.MultiValMode&& m_pSimDoc->m_MStorage.m_AcceptedRuns.size()>0) {
 		size_t iens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 		//m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][iaccept] + startvalue;
 		auto AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
-		if (AcceptedCandidates.size() > 0 &&  icurve == 0) {
-			m_pProp->m_MultiSequence=AcceptedCandidates[0];
-			m_pSimDoc->m_PlotStorage.SetValRunNo(j, m_pProp->m_MultiSequence);
+		vector<size_t> NewList;
+		size_t accept_seq{ 0 };
+		if (p_info.pPG_MeasValFile->GetNumRepititions() > 1) {
+			for (size_t i = 0; i < AcceptedCandidates.size(); i++) {
+				if (m_pSimDoc->ValidDim1VersusRunNo(iens, AcceptedCandidates[i]))
+					NewList.push_back(AcceptedCandidates[i]);
+			}
+			AcceptedCandidates = NewList;
+		}
+
+
+		if (AcceptedCandidates.size() > p_info.Residual_Sequence) {
+			size_t runno=AcceptedCandidates[p_info.Residual_Sequence];
+			p_info.Residual_RunNo = runno;
+			c_info.ResRunNo = runno;
 		}
 
 
@@ -2003,6 +2020,16 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 	int VAL_PGindex = PGindex;
 	size_t act_rep = 0;
+	vector<size_t> RepHits;
+
+	auto AllMissing = [&]() {
+		for (size_t i = 0; i < ActNoPoints; i += 1)
+			AA[icurve][i + pg_control.YearStartIndex] = MISSING;
+		return true;	
+	};
+	
+
+
 	if (NumAgg > 1|| m_pPG_Active->GetNumRepititions()>1) {
 		SumVal.assign(ActNoPoints, 0);
 		NumValid.assign(ActNoPoints, 0);
@@ -2012,12 +2039,28 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			if (namep == "Index in val file") {
 				ValIndex_In_MultiParList = ii;
 			}
+			else if(namep =="Filter Var Value") {
+				ValIndex_In_MultiParList = ii;
+				RepHits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
+				break;
+				//act_rep=m_pProp->m_MultiSequence%m_pSimDoc->MR_Get_NumberOfParametersWithinDim(1)+1;
+
+				// hitta om värdet av ValIndex är en repetitions i pg_Meas
+			
+			}
 			else if (namep.find("Index for selection of File") != string::npos) {
-				act_rep = m_pPG_Active->GetRepititionSequence(); // Function of RunNo
+				RepHits.push_back(m_pPG_Active->GetRepititionSequence()); // Function of RunNo
 
 			}
 		}
+		if (!m_pSimDoc->ValidDim1VersusRunNo(p_info.EnsembleNo, p_info.Residual_RunNo)) {
+			if (AllMissing()) return false;
+		}
+		size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+		if (Dim1Value == 0) act_rep = 1;
+
 	}
+	if (RepHits.size() > 0) act_rep = RepHits.back();
 	vector<float> points;
 
 	//for (size_t index_ValAgg = 0; index_ValAgg < NumAgg; index_ValAgg++) {
@@ -2033,7 +2076,8 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		else if (p_info.RepitDataType && p_info.DataType == DATA_TYPES::MEASURED_VAL) allrep = true;
 		if (act_rep > 0) {
 			allrep = false;
-			m_pPG_Active->SetRepititionSequence(act_rep, false);
+			m_pPG_Active->SetRepititionSequence(act_rep, true);
+			p_info.pPG_MeasValFile->SetRepititionSequence(act_rep, true);
 		}
 		
 		size_t act_rec;
@@ -2042,11 +2086,6 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		size_t count = 0;
 		koll = 0;
 
-		if (p_info.DataType == DATA_TYPES::SIM_VAL) {
-
-			p_info.pPG_MeasValFile->ReOpen();
-
-		}
 		size_t inc_step = 1;
 		size_t start_pos = 0;
 		if (p_info.index_cycle != string::npos) {
@@ -2065,26 +2104,60 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	
 		}
 
+		
+		vector<float> ActiveResiduals;
 		size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
-		if (Dim1Value == 0)
-			inc_step = 1;
-		else {
-			auto n_cycle_withinPGFile = p_info.pPG_MeasValFile->GetCycleWithCommonTime();
-			start_pos = (Dim1Value - 1)% n_cycle_withinPGFile;
-			auto koll=m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
-			start_pos = koll.first;
-			inc_step = koll.second;
-			auto koll5 = m_pProp->m_MultiSequence;
-			auto koll3 = c_info.ResRunNo;
+		if (c_info.pRes != nullptr) {
+			auto allkoll = c_info.pRes->GetResidualVector(c_info.ResRunNo, Residual_VarNum);
 
+			size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+			ActiveResiduals.resize(ActNoPoints);
+			if (act_rep == string::npos) act_rep = 1;
+			if (act_rep == 0) {
+				if (AllMissing()) return true;
+			}
+			for (size_t i = 0; i < ActNoPoints; i++)
+				ActiveResiduals[i] = allkoll[ActNoPoints * (act_rep - 1) + i];
+			m_pPG_Active->SetRepititionSequence(act_rep);
+
+			vector<float> Measure;
+			Measure.resize(ActNoPoints);
+
+			for (size_t i = start_pos; i < ActNoPoints; i += inc_step) {
+				AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i, PGindex);
+				AA[icurve][i + pg_control.YearStartIndex] = m_pPG_Active->GetVarValue(PGindex, i+1, act_rep);
+				Measure[i]= m_pPG_Active->GetVarValue(PGindex, i + 1, act_rep);
+				if(LogLiVersion==3)
+					AA[icurve][i + pg_control.YearStartIndex] -= ActiveResiduals[i];
+				else
+					AA[icurve][i + pg_control.YearStartIndex] = ActiveResiduals[i];
+			}
+
+			return true;
 
 		}
+		else {
+
+			size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+			if (act_rep == string::npos) act_rep = 1;
+			if (act_rep == 0) {
+				if (AllMissing()) return false;
+			}
+
+			m_pPG_Active->SetRepititionSequence(act_rep);
+
+			vector<float> Measure;
+			Measure.resize(ActNoPoints);
+			for (size_t i = start_pos; i < ActNoPoints; i += inc_step) {
+				AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i, PGindex);
+				AA[icurve][i + pg_control.YearStartIndex] = m_pPG_Active->GetVarValue(PGindex, i+1, act_rep);
+				Measure[i] = m_pPG_Active->GetVarValue(PGindex, i + 1, act_rep);
+			}
 
 
+			return true;
 
-
-
-
+		}
 
 		for (size_t i = start_pos; i < ActNoPoints; i+=inc_step) {
 			act_rec = i;
@@ -2104,13 +2177,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			}
 			else if(m_ChartInfo.ResidualSource&& NumRepit > 1){
 
-				count = 0;
-				while(m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex) < -1.E38&&count<5) {
-					last_rep++;					
-					last_rep = last_rep % NumRepit;
-					m_pPG_Active->SetRepititionSequence(last_rep+1);
-					count++;
-				}
+	
 			}
 
 
@@ -2166,22 +2233,28 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							}
 						}
 					}
-					else if (m_ChartInfo.ResidualSource&&c_info.ResRunNo != 120000 && c_info.ResRunNo <= 100000 && datatype != DATA_TYPES::MEASURED_VAL)
+					else if (m_ChartInfo.ResidualSource && c_info.ResRunNo != 120000 && c_info.ResRunNo <= 100000 && datatype != DATA_TYPES::MEASURED_VAL) {
 						if (allrep) {
-							auto resno = c_info.ResRunNo+act_rep-1;
+							auto resno = c_info.ResRunNo + act_rep - 1;
 							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, resno, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 						}
 						else {
 							auto irun = act_rec / inc_step + act_rec % inc_step + 0;
-							auto koll=c_info.pRes->GetResiduals(c_info.ResRunNo, Residual_VarNum, act_rec);
+							auto koll = c_info.pRes->GetResiduals(c_info.ResRunNo, Residual_VarNum, act_rec);
 							auto allkoll = c_info.pRes->GetResidualVector(c_info.ResRunNo, Residual_VarNum);
 							if (koll > MISSING) {
 								auto Koll2 = i;
 
 							}
-							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.ResRunNo, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
+							if (LogLiVersion == 3)
+								AA[icurve][i + pg_control.YearStartIndex] -= ActiveResiduals[i];
+							else
+								AA[icurve][i + pg_control.YearStartIndex] = ActiveResiduals[i];
+
+							//AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.ResRunNo, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 
 						}
+					}
 					else if (!m_ChartInfo.ResidualSource&&datatype == DATA_TYPES::SIM_VAL) {
 						//AA[icurve][i + pg_control.YearStartIndex] = -1;
 						if (m_pUtil->m_ResidualPlot == 1) {

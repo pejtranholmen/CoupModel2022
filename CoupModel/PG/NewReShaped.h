@@ -18,7 +18,7 @@ public:
 	bool m_RepetitionOutputStyle{ true };
 
 protected:
-
+	size_t m_NewIdVar;
 	CPG* m_pPGSource;
 	
 

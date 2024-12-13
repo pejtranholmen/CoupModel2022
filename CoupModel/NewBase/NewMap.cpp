@@ -5841,6 +5841,7 @@ void NewMap::Export_MBinToCSV(bool AcceptedOnly)
 
 string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOut, string varname)
 {
+	if (m_pSimDoc == nullptr) m_pSimDoc = this;
 #ifndef COUPSTD
 	string strbase;
 	bool fileexist = false;
@@ -6671,43 +6672,64 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		}
 
 	if (option == ExportOptions::All || option == ExportOptions::ValidValues) {
-		header.clear();
-		header.push_back("Date");
-		header.push_back("Measured");
-		header2.clear();
 
 
 
 
-		size_t num_col = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
+
+	
 		vector<size_t> number_of_runs_per_ensemble;
 		vector<size_t> AllAccepted;
 		vector<size_t> ActualEnsemble;
-		if (AcceptedOnly) {
-			num_col = 1;
-			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
-				size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[i].size();
-				number_of_runs_per_ensemble.push_back(numruns);
-				auto ens_string = m_pSimDoc->m_MStorage.m_AcceptedIdString[i];
-				for (size_t j = 0; j < numruns; j++) {
-					size_t numrun = m_pSimDoc->m_MStorage.m_AcceptedRuns[i][j];
-					string txt = FUtil::STD_ItoAscii(i+1) + "-" + FUtil::STD_ItoAscii(j + 1)+":"+ FUtil::STD_ItoAscii(numrun);
-					header.push_back(txt);
+		size_t num_col;
+
+		size_t numtsv= m_pSimDoc->GetNumAll_TSV_ValVariables();
+
+
+		auto makeheaders = [&](CPG* pPG) {
+			if (AcceptedOnly) {
+			    num_col = m_MStorage.GetNumberOfTotalRunsWithAttachedFiles();
+				header.clear();
+				header.push_back("Date");
+				if (pPG->GetNumRepititions() > 0) {
+					for (size_t i = 0; i < pPG->GetNumRepititions(); i++) {
+						header.push_back("Measured(" + FUtil::STD_ItoAscii(i + 1) + ")");
+					}
+				}
+				else
+					header.push_back("Measured");
+
+				header2.clear();
+
+				for (size_t iens = 0; iens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); iens++) {
+					size_t numruns = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens].size();
 					
-					AllAccepted.push_back(numrun);
-					ActualEnsemble.push_back(i);
-					header2.push_back(FUtil::STD_ItoAscii(numrun));
+					auto ens_string = m_pSimDoc->m_MStorage.m_AcceptedIdString[iens];
+					size_t count_validens=0;
+					for (size_t j = 0; j < numruns; j++) {
+
+						size_t numrun = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][j];
+						if (m_pSimDoc->ValidDim1VersusRunNo(iens, numrun)) {
+							string txt = FUtil::STD_ItoAscii(iens + 1) + "-" + FUtil::STD_ItoAscii(j + 1) + ":" + FUtil::STD_ItoAscii(numrun);
+							header.push_back(txt);
+							AllAccepted.push_back(numrun);
+							ActualEnsemble.push_back(iens);
+							header2.push_back(FUtil::STD_ItoAscii(numrun));
+							num_col++;
+							count_validens++;
+						}
+					}
+					number_of_runs_per_ensemble.push_back(count_validens);
+
+				}
+				for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
+					string txt = FUtil::STD_ItoAscii(i + 1) + "- Mean";
+					header.push_back(txt);
 					num_col++;
 				}
 
 			}
-			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) {
-				string txt = FUtil::STD_ItoAscii(i + 1) + "- Mean";
-				header.push_back(txt);
-				num_col++;
-			}
-
-		}
+			};
 		
 
 
@@ -6722,8 +6744,13 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			CPG* pPG=pValFile->GetPointer();
 			pValFile->CheckFileNameAndAssignNameToPGClass();
 			pPG->SetCompleteRead(true);
+			pPG->CloseFile();
+			pPG->Open(pPG->GetFileName());
 			pPG->ReOpen();
+			makeheaders(pPG);
 			auto numrec=pPG->GetNumRecords();
+			auto totrec = pPG->GetNumRecords() * pPG->GetNumRepititions();
+
 			allvalues.resize(numrec + 2);
 
 			header3.resize(numrec + 2);
@@ -6738,49 +6765,61 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 			clean_allvalues.clear();
 
 			for (size_t rec = 0; rec < numrec; rec++) {
-				allvalues[rec].resize(num_col);
+				allvalues[rec].resize(num_col+ pPG->GetNumRepititions()-1);
 				keep_lines[rec] = true;
 			}
 			string FilterIndicator{""};
 			for (size_t rec = 0; rec < numrec; rec++) {
 				header3[rec] = pPG->GetDate(rec + 1);
 				//allvalues[rec][0]= pPG->GetLongTime(rec+1);
-				int ind= m_pSimDoc->m_ValidationData.GetValFileIndex(s);
-				int filterindex=m_pSimDoc->m_ValidationData.GetValPG_FilterIndex(s);
-				int filtervalue= m_pSimDoc->m_ValidationData.GetValPG_FilterValue(s);
-				if (filterindex > 0) {
-					auto valueread= pPG->GetVarValue(filterindex, rec + 1);
-					if (int(valueread + 0.001) == filtervalue) {
-						allvalues[rec][0] = pPG->GetVarValue(ind + 1, rec + 1);
-						FilterIndicator = FUtil::STD_ItoAscii(filtervalue);
+
+				for (size_t ens = 0; ens < pPG->GetNumRepititions(); ens++) { // Measured values
+					int ind = m_pSimDoc->m_ValidationData.GetValFileIndex(s);
+					int filterindex = m_pSimDoc->m_ValidationData.GetValPG_FilterIndex(s);
+					int filtervalue = m_pSimDoc->m_ValidationData.GetValPG_FilterValue(s);
+					if (filterindex > 0) {
+						auto valueread = pPG->GetVarValue(filterindex, rec + 1);
+						if (int(valueread + 0.001) == filtervalue) {
+							allvalues[rec][ens] = pPG->GetVarValue(ind + 1, rec + 1, ens+1);
+							FilterIndicator = FUtil::STD_ItoAscii(filtervalue);
+						}
+						else {
+							allvalues[rec][ens] = MISSING;
+							keep_lines[rec] = false;
+						}
+
 					}
 					else {
-						allvalues[rec][0] = MISSING;
-						keep_lines[rec] = false;
+						allvalues[rec][ens] = pPG->GetVarValue(ind + 1, rec + 1, ens+1);
 					}
-
-				}
-				else {
-					allvalues[rec][0] = pPG->GetVarValue(ind + 1, rec + 1);
 				}
 
 				size_t count = 0;
+				if (pPG->GetNumRepititions() > 0) count += pPG->GetNumRepititions()-1;
 				vector<float> ens_mean;
 				for (size_t ens = 0; ens < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); ens++) {
 					vector<float> meanv;
 					meanv.resize(m_pSimDoc->m_MStorage.m_AcceptedRuns[ens].size());
 					for (size_t runno = 0; runno < m_pSimDoc->m_MStorage.m_AcceptedRuns[ens].size(); runno++) {
 						auto run_to_read = m_pSimDoc->m_MStorage.m_AcceptedRuns[ens][runno];
-						int ifile = m_pSimDoc->MR_GetAddedFiles(run_to_read);
-						pRes = m_pSimDoc->GetValidResidualPointer(FileNo,ifile);
-						auto internal_no = m_pSimDoc->MR_GetInternalRunNo(run_to_read);
-						auto resvalue = pRes->GetResiduals(internal_no, s, rec);
-						if (resvalue < -1.E37) keep_lines[rec] = false;
-						allvalues[rec][count + 1] = allvalues[rec][0] - resvalue;
-						meanv[runno] = allvalues[rec][count + 1];
-						count++;
-						auto txt=FUtil::STD_ItoAscii(count) + ":" + FUtil::STD_ItoAscii(runno) + FUtil::STD_ItoAscii(ens);
-						m.SetPaneMessage(txt);
+						if (m_pSimDoc->ValidDim1VersusRunNo(ens, run_to_read)) {
+							int ifile = m_pSimDoc->MR_GetAddedFiles(run_to_read);
+							pRes = m_pSimDoc->GetValidResidualPointer(FileNo, ifile);
+
+							auto internal_no = m_pSimDoc->MR_GetInternalRunNo(run_to_read);
+
+							auto reps = m_pSimDoc->ActualRepetitionInMeasFile(ens, pPG, s);
+							size_t act_rep = 1;
+							if (reps.size() > 0) act_rep = reps.back();
+							auto resvalue = pRes->GetResiduals(internal_no, s, rec + (act_rep - 1) * numrec);
+							if (resvalue < -1.E37) keep_lines[rec] = false;
+
+							allvalues[rec][count + 1] = allvalues[rec][act_rep - 1] - resvalue;
+							meanv[runno] = allvalues[rec][count + 1];
+							count++;
+							auto txt = FUtil::STD_ItoAscii(count) + ":" + FUtil::STD_ItoAscii(runno) + FUtil::STD_ItoAscii(ens);
+							m.SetPaneMessage(txt);
+						}
 					}
 					DistStat stat;
 

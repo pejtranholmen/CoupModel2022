@@ -890,7 +890,6 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 	CPG* pPG_ObsFile;
 
 	if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
-
 		if (m_ValidationVarIndex != string::npos) {
 			auto valfileindex=m_pNewMap->m_Val_Array[m_ValidationVarIndex].ValidationFileNumber;
 			F* pF = m_pNewMap->ValidationFilePointer(valfileindex);
@@ -932,6 +931,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 
 					size_t var_to_read=ii;
 					size_t run_to_start = 0;
+					bool missing_measured{ false };
 					if (m_ScalingNumVarWithDim1 > 1) {
 						var_to_read = 0;
 						run_to_start = ii;
@@ -942,11 +942,17 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 						n_cycle_withinPGFile = 1;
 					else {
 						n_cycle_withinPGFile = pPG_ObsFile->GetCycleWithCommonTime();
-						
+
 						startvalue = (Dim1Value - 1) % n_cycle_withinPGFile;
-						auto koll = m_pNewMap->StartValueofMatchingEnsembleInDim1(iens, pPG_ObsFile, m_ValidationVarIndex);
-						startvalue = koll.first;
-						n_cycle_withinPGFile = koll.second;
+						if (pPG_ObsFile->GetNumRepititions() > 0){
+							auto vector_rep = m_pNewMap->ActualRepetitionInMeasFile(iens, pPG_ObsFile, m_ValidationVarIndex);
+							if (vector_rep.size() == 0) startvalue = MISSING;
+						}
+						else {
+							auto koll = m_pNewMap->StartValueofMatchingEnsembleInDim1(iens, pPG_ObsFile, m_ValidationVarIndex);
+							startvalue = koll.first;
+							n_cycle_withinPGFile = koll.second;
+						}
 					}
 					if (n_cycle_withinPGFile > 1) {
 						for (size_t index = 0; index < m_RecL; index++) {
@@ -959,7 +965,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 							m_MeanPost.p90[ii][index] = float(MISSING);
 						}
 					}
-					if (startvalue != string::npos) { // If Variable not exist in validation file 
+					if (startvalue != string::npos) { // If Variable exist in validation file 
 						size_t inc_step;
 						if (m_ScalingNumVarWithDim1 > 1)
 							inc_step = m_ScalingNumVarWithDim1;

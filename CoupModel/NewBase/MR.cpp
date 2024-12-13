@@ -1625,7 +1625,6 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			mcorr = 0.0;
 
 			std::vector <float> meas_v, res_v, sim_v;
-			meas_v.resize(numrec);
 
 			meas_v = pPG->GetVarVector(ind + 1);
 			auto pSw = GetSw("PreDefinedEnsembles");
@@ -1651,11 +1650,12 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 					}
 				}
 			}
-			//res_v.resize(numrec);
 
 			long irun_int;
 			int ifile;
 			string filename;
+
+
 			auto ReadVector = [&]() {
 				ifstream stream;
 				size_t recl, numrec, numv;
@@ -1678,7 +1678,10 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 				fpos_t newpos = size_t(irun_int) * (recl * numv) + ResidualIndex[FileNo - 1] * recl + recl;
 				newpos = newpos * 4;
 				stream.seekg(newpos, ios::beg);
+
 				res_v.resize(recl);
+			
+				
 				stream.read((char*)&res_v[0], recl * 4);
 				if (!stream.good()) {
 					string koll = "Error reading :";
@@ -1716,6 +1719,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 
 				ReadVector();
 
+				numrec = res_v.size();
 				//res_v=pRes->GetResidualVector(irun_int, ResidualIndex[FileNo-1]);
 				if (numrec != res_v.size() && counterr < 2) {
 					counterr++;
@@ -1738,33 +1742,59 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 				sim_v.resize(numrec);
 				vector<float> meas_filter;
 				if (indexmulti != string::npos) {
-					
-					meas_filter= pPG->GetVarVector(filter_index);
+
+					meas_filter = pPG->GetVarVector(filter_index);
 				}
 				pair<size_t, size_t> cycle;
-				cycle = StartValueofMatchingEnsembleInDim1(m_MStorage.m_ActualEnsemble, pPG, i_var_index);
-				if (cycle.first == string::npos) {
+				vector<size_t> rephits;
+
+				if (pPG->GetNumRepititions() > 0) {
+					rephits = ActualRepetitionInMeasFile(m_MStorage.m_ActualEnsemble, pPG, i_var_index);
+					cycle.first = 0;
+					cycle.second = 1;
+				}
+				else
+					cycle = StartValueofMatchingEnsembleInDim1(m_MStorage.m_ActualEnsemble, pPG, i_var_index);
+
+				auto UpdateMeasuredToValidPointsOnly = [&]() {
+					if (pPG->GetNumRepititions() > 0&&rephits.size()>0) {
+						for (size_t i = 0; i < meas_v.size(); i++) meas_v[i] = MISSING;
+
+						for (size_t i_rep = 0; i_rep < rephits.size(); i_rep++) {
+							size_t active_points = pPG->GetNumRecords();
+							for (size_t irec = 0; irec < active_points; irec++) {
+								size_t hit_index = (rephits[i_rep] - 1) * active_points + irec;
+								sim_v[hit_index] = meas_v[hit_index] - res_v[hit_index];
+							}
+						}
+						return true;
+					}
+					else
+						return false;
+				};
+
+					
+				
+				if (cycle.first == string::npos&& pPG->GetNumRepititions() == 0 ||rephits.size()==0&& pPG->GetNumRepititions() > 0) {
 
 
 				}
 				else {
-					for (long ii = cycle.first; ii < numrec; ii += cycle.second) {
-						if (indexmulti != string::npos) {
-
-							size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
-							size_t test_value_obs = size_t(meas_filter[ii] + 0.001);
-							if (test_value_sim == test_value_obs && res_v[ii] > MISSING) {
-								sim_v[ii] = meas_v[ii] - res_v[ii];
+					if (UpdateMeasuredToValidPointsOnly());
+					else { // Many line mode
+						for (long ii = cycle.first; ii < numrec; ii += cycle.second) {
+							if (indexmulti != string::npos) {
+								size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
+								size_t test_value_obs = size_t(meas_filter[ii] + 0.001);
+								if (test_value_sim == test_value_obs && res_v[ii] > MISSING) {
+									sim_v[ii] = meas_v[ii] - res_v[ii];
+								}
+								else
+									meas_v[ii] = MISSING;
 							}
 							else
-								meas_v[ii] = MISSING;
-
+								sim_v[ii] = meas_v[ii] - res_v[ii];
 						}
-						else
-							sim_v[ii] = meas_v[ii] - res_v[ii];
-
-
-
 					}
 				}
 
@@ -1789,25 +1819,21 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 				size_t first = 0;
 				double AccSimOrg = 0, AccMeasOrg = 0;
 				meas_v = pPG->GetVarVector(ind + 1);
+				UpdateMeasuredToValidPointsOnly();
+
 				if(cycle.first!=string::npos) 
 					for (long j = cycle.first; j < numrec; j+=cycle.second) {
-
-					if (indexmulti != string::npos) {
-
-						size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
-						size_t test_value_obs = size_t(meas_filter[j] + 0.001);
-						if (test_value_sim == test_value_obs && res_v[j] > MISSING) {
-							sim_v[j] = meas_v[j] - res_v[j];
+						if (indexmulti != string::npos && pPG->GetNumRepititions() == 0) {
+							size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
+							size_t test_value_obs = size_t(meas_filter[j] + 0.001);
+							if (test_value_sim == test_value_obs && res_v[j] > MISSING) {
+								sim_v[j] = meas_v[j] - res_v[j];
+							}
+							else
+								meas_v[j] = MISSING;
 						}
 						else
-							meas_v[j] = MISSING;
-
-					}
-					else
-						sim_v[j] = meas_v[j] - res_v[j];
-
-
-
+							sim_v[j] = meas_v[j] - res_v[j];
 					if (cumulated >= 2 && resetindex.size() > 0) {
 						if (j + 1 == resetindex[first]) {
 							AccSim = 0.0;
@@ -1916,7 +1942,6 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			return false;
 	}
 
-	
 	if (dim1_index > 0) {
 		size_t IndexDim1;
 		size_t RepinDim1 = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
@@ -1927,24 +1952,26 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 
 		if (cumulated == 0) {
 			for (size_t irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
-				for(size_t i=0; i<NumValidVar*Num_Stat_Perf;i++) 
-					previous_values[irun*NumValidVar*Num_Stat_Perf+i]= m_MStorage.GetValid(irun, i);
+				for (size_t i = 0; i < NumValidVar * Num_Stat_Perf; i++)
+					previous_values[irun * NumValidVar * Num_Stat_Perf + i] = m_MStorage.GetValid(irun, i);
 			}
 		}
-	
+
 		for (size_t irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
 			acc_index = irun / RepinDim1;
 			for (int ivar = 0; ivar < NumValidVar; ivar++) {
 				for (int istat = 0; istat < Num_Stat_Perf; istat++) {
-					auto index1 = irun * NumValidVar * Num_Stat_Perf + istat+ivar*Num_Stat_Perf;
-					auto index2 = (acc_index * RepinDim1 + dim1_index - 1) * NumValidVar * Num_Stat_Perf+istat+ivar*Num_Stat_Perf;
+					auto index1 = irun * NumValidVar * Num_Stat_Perf + istat + ivar * Num_Stat_Perf;
+
+					auto index2 = (acc_index * RepinDim1 + dim1_index - 1) * NumValidVar * Num_Stat_Perf + istat + ivar * Num_Stat_Perf;
 					VarValidNewVector[index1] = previous_values[index2];
 				}
 			}
 		}
-		m_MStorage.m_CumulatedPerformance = dim1_index*10+cumulated;
-		
+		m_MStorage.m_CumulatedPerformance = dim1_index * 10 + cumulated;
+
 	}
+
 	
 
 	if (cumulated == 0&&(dim1_index==0||dim1_index==string::npos))
@@ -1958,7 +1985,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 
 
 	m_MStorage.VarValidAllo();
-	m_MStorage.UpdateAcceptedRuns(true);
+m_MStorage.UpdateAcceptedRuns(true);
 	string text;
 	if (cumulated%10 == 0) text = "actual values";
 	else if (cumulated%10 == 1) text = "cumulated values";
@@ -2008,6 +2035,41 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 	auto n_cycle_withinPGFile = pPGMeas->GetCycleWithCommonTime();
 	return pair <size_t, size_t>(start_pos, n_cycle_withinPGFile);
 }
+vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, size_t index_val)
+{
+	vector<size_t> out;
+	size_t Dim1Value = m_MStorage.m_Valid_TSV[ensembleno].Dim1_Par_Index;
+	if(Dim1Value==0) return out;
+	size_t test_value_sim{ string::npos };
+	for (int i2 = 0; i2 < MR_Get_NumberOfParametersWithinDim(0 + 1); i2++) {
+		auto test = MR_GetParName(1, i2 + 1);
+		if (test == "Filter Var Value") {
+			auto indexmulti = i2 + 1;
+			test_value_sim = size_t(m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
+			break;
+		}
+	}
+	size_t pg_filter_index = m_Val_Array[index_val].PG_FilterIndex;
+	auto koll2 = pPGMeas->GetFileName();
+	auto numrep = pPGMeas->GetNumRepititions();
+
+	size_t valid_Value;
+	for (size_t i = 0; i < numrep; i++) {
+		if (test_value_sim == size_t(pPGMeas->GetVarValue(pg_filter_index, test_value_sim, i + 1) + 0.0001)) {
+			out.push_back(i + 1);
+		}
+	}
+	return out;
+}
+
+bool MR::ValidDim1VersusRunNo(size_t EnsembleNo, size_t RunNo)
+{
+	size_t Dim1Value = m_MStorage.m_Valid_TSV[EnsembleNo].Dim1_Par_Index;
+	size_t SizeDim1 = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+	if ((RunNo+1) % SizeDim1 == Dim1Value%SizeDim1) return true;
+	else return false;
+}
+
 ;
 string MR::MR_Get_CalibParName(size_t index)
 {

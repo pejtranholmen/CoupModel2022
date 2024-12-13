@@ -235,6 +235,8 @@ bool CPlotStorage::AddCurve(size_t add_section, size_t backshift)
 
 	if(add_section!=0)
 		plot.PGSection=add_section;
+
+	
 	m_PlotArray.push_back(plot);
 	return true;
 }
@@ -827,10 +829,11 @@ size_t	CPlotStorage::GetValRunNo(size_t index)
 {
 	return m_PlotArray[index].Residual_RunNo;
 }
-bool CPlotStorage::SetValRunNo(size_t index, size_t value)
+bool CPlotStorage::SetValRunNo(size_t index, size_t value_runno, size_t sequence_no)
 {
 	if(m_PlotArray.size()>index) {
-		m_PlotArray[index].Residual_RunNo=value;
+		m_PlotArray[index].Residual_RunNo=value_runno;
+		m_PlotArray[index].Residual_Sequence = sequence_no;
 		return true;
 	}
 	else

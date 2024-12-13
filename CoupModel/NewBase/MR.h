@@ -206,7 +206,8 @@ public:
 	bool EstimateNewTransformedPerformance(size_t cumulated, size_t dim1Index=string::npos);
 
 	pair<size_t,size_t> StartValueofMatchingEnsembleInDim1(size_t ensembleno, CPG* pPGMeas, size_t index_val);
-
+	vector<size_t> ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, size_t index_val);
+	bool ValidDim1VersusRunNo(size_t EnsembleNo, size_t RunNo);
 	vector<SIMB_VALUE> m_ParToUpdate;
 
 

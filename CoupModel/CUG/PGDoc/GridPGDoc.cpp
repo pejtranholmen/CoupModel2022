@@ -4721,9 +4721,9 @@ void GridPGDoc::DefineClickButtonInfos()
 	m_CreateNewAddButton=b;
 	SetClickButtonMap(b);
 
-	b.NormalState = false;
-	b.Text = "Format (many lines)";
-	b.TextOptional = " Format (Repetitions)";
+	b.NormalState = true;
+	b.TextOptional = "Format (many lines)";
+	b.Text = " Format (Repetitions)";
 	b.HintText = "Click on button to shift between different output options" + b.Text;
 	b.Col_start = 5, b.Col_end = 5;
 	b.Param = GetUniqueMenuNumber();

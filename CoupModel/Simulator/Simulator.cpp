@@ -1060,9 +1060,9 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		m_ValPGFile[i].pRes=(CResiduals*)((NewMap*)m_pSim)->GetResidualPointer(i+1);
 		if(MultiFlag&&First) {
 			if(m_ValPGFile[i].file==nullptr) continue;
-			auto recl=m_ValPGFile[i].file->GetNumRecords();
+			auto recl=m_ValPGFile[i].file->GetNumRecords() * m_ValPGFile[i].file->GetNumRepititions();
 			auto numvar=m_ValPGFile[i].varindex.size();
-			auto totrec=numvar*m_pModelInfo->TotalNoMulRun ;
+			auto totrec=numvar*m_pModelInfo->TotalNoMulRun;
 			if(m_ValPGFile[i].pRes!=nullptr) // One residual Xbin file for entire Multirun
 				if(!m_ValPGFile[i].pRes->CreateFile(((NewMap*)m_pSim)->GetXBinFileName(int(i+1)),totrec, recl, numvar )) m_ValPGFile[i].pRes=nullptr;
 		}
@@ -1073,7 +1073,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		m_ValPGFile[i].accduration = 0;
 		if(m_ValPGFile[i].file==nullptr) continue;
 		// Open Validation File
-		m_ValPGFile[i].file->SetCompleteRead(false);
+		m_ValPGFile[i].file->SetCompleteRead(true);
 
 		m_ValPGFile[i].file->CloseFile();
 		bool testfile = m_ValPGFile[i].file->ReOpen();
@@ -1095,12 +1095,12 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			// Add Filter Variables
 			m_ValPGFile[i].simvalfile->CreateNewFile(m_ValPGFile[i].varindex.size(),rec,1);
 			unsigned int min_min;
-			for (size_t j = 0; j < rec; j++) {
-				size_t ist = j*(m_ValPGFile[i].varindex.size() + 1);
-				auto min = m_ValPGFile[i].file->GetLongTime(j + 1);
-				if (j == 0) min_min = min;
-				m_ValPGFile[i].simvalfile->SetDatePointer(&min, ist);
-			}
+				for (size_t j = 0; j < rec; j++) {
+					size_t ist = j * (m_ValPGFile[i].varindex.size() + 1);
+					auto min = m_ValPGFile[i].file->GetLongTime(j + 1);
+					if (j == 0) min_min = min;
+					m_ValPGFile[i].simvalfile->SetDatePointer(&min, ist);
+				}
 			m_ValPGFile[i].simvalfile->pg.status.MinStart = min_min;
 		}
 		auto name_obs = m_ValPGFile[i].file->GetFileName();
@@ -1122,12 +1122,12 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		//if(!First) {
 			if(pos.first>1) {
 				size_t ist; /// Set Missing values in validation file if validation data is outside simulated period
-				for(size_t j=0; j<m_ValPGFile[i].simvalfile->GetNumRecords(); j++) {
-					ist=j*(m_ValPGFile[i].varindex.size()+1);
-					m_ValPGFile[i].simvalfile->SetRecordPointer(&m_ValPGFile[i].simvalues[0], ist,m_ValPGFile[i].varindex.size()); 
-					m_ValPGFile[i].simvalfile->SetMissingValueRecordPointer(ist,m_ValPGFile[i].varindex.size()); 
-	
-				}
+					for (size_t j = 0; j < m_ValPGFile[i].simvalfile->GetNumRecords(); j++) {
+						ist = j * (m_ValPGFile[i].varindex.size() + 1);
+						m_ValPGFile[i].simvalfile->SetRecordPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
+						m_ValPGFile[i].simvalfile->SetMissingValueRecordPointer(ist, m_ValPGFile[i].varindex.size());
+
+					}
 				m_ValPGFile[i].FirstValidRecord=pos.first*(m_ValPGFile[i].varindex.size()+1);
 
 			}
@@ -1318,7 +1318,11 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 			if (!pPG_Sim->IsGood() || !pPG_Obs->IsGood()) continue;
 
 			if (pPG_Obs->GetNumRepititions() > 1&&(MultiFlag|| m_StructureModel.m_Structure.DynamicValidFileIndex == 1)) {
+
 				pPG_Obs->SetRepititionMode(true);
+				pPG_Obs->SetCompleteRead(true);
+				pPG_Obs->CloseFile();
+				pPG_Obs->Open(pPG_Obs->GetFileName());
 				if (m_StructureModel.m_Structure.DynamicValidFileIndex == 1) {
 					m_ValPGFile[i].file->SetRepititionSequence(size_t(m_StructureModel.m_Structure.ValFile_Index + 0.1), false);
 				}
@@ -1385,6 +1389,16 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				else {
 					Sim = pPG_Sim->GetVarVector(j + 1);
 					Obs = pPG_Obs->GetVarVector(m_ValPGFile[i].varindex[j] + 1);
+					if (Sim.size() < Obs.size()) {
+						auto ration = Obs.size() / Sim.size();
+						auto prevSim = Sim.size();
+						Sim.resize(Obs.size());
+						for (size_t ii = 1; ii < ration; ii++) {
+							for (size_t k = 0; k < prevSim; k++) {
+								Sim[k + prevSim*ii] = Sim[k];
+							}
+						}
+					}
 					LinkPrevious_Index.insert({ int(m_ValPGFile[i].varindex[j]+i*200), int(j) });
 				}
 				Residual.resize(Obs.size());

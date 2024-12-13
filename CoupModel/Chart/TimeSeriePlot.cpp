@@ -229,8 +229,31 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 		m_pSimDoc->m_PlotStorage.SetPGRepitNo(ArrayIndex, irep);
 		m_pUtil->m_FileSave.OnReDraw(true, m_pSimDoc);
 	}
-	else if(m_ChartInfo.MultiPGMode||m_ChartInfo.MultiValMode) {
-		float validv=0;
+	else if (m_ChartInfo.MultiPGMode || m_ChartInfo.MultiValMode) {
+		size_t il = m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber) - 1;
+		size_t j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, il);
+		PLOTv p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
+		p_info.Residual_Sequence = m_pProp->m_multi_ResidualSequence;
+
+		auto AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[p_info.EnsembleNo];
+		vector<size_t> NewList;
+		size_t accept_seq{ 0 };
+		if (p_info.pPG_MeasValFile->GetNumRepititions() > 1) {
+			for (size_t i = 0; i < AcceptedCandidates.size(); i++) {
+				if (m_pSimDoc->ValidDim1VersusRunNo(p_info.EnsembleNo, AcceptedCandidates[i]))
+					NewList.push_back(AcceptedCandidates[i]);
+			}
+			AcceptedCandidates = NewList;
+		}
+
+		if (p_info.Residual_Sequence < AcceptedCandidates.size()) {
+			p_info.Residual_RunNo = AcceptedCandidates[p_info.Residual_Sequence];
+			m_pSimDoc->m_PlotStorage.SetValRunNo(j, p_info.Residual_RunNo, p_info.Residual_Sequence);
+		}
+
+
+	}
+	/*	float validv = 0;
 		int count=0;
 
 
@@ -250,14 +273,26 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 
 		size_t iens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 		//m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][iaccept] + startvalue;
-		AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
+
+
 		size_t j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0);
 		PLOTv p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
+		
+		AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
 
-		auto incstep=p_info.pPG_MeasValFile->GetCycleWithCommonTime();
-		if(AcceptedCandidates.size()> m_pProp->m_multi_ResidualSequence*incstep)
-			m_pProp->m_MultiSequence = AcceptedCandidates[(m_pProp->m_multi_ResidualSequence)*incstep];
+		vector<size_t> NewList;
+		if (p_info.pPG_MeasValFile->GetNumRepititions() > 1) {
+			for (size_t i = 0; i < AcceptedCandidates.size(); i++) {
+				if (m_pSimDoc->ValidDim1VersusRunNo(iens, AcceptedCandidates[i]))
+					NewList.push_back(AcceptedCandidates[i]);
+			}
+			AcceptedCandidates = NewList;
+		}
+	
+		if(AcceptedCandidates.size()> m_pProp->m_MultiSequence)
+			m_pProp->m_multi_ResidualSequence = AcceptedCandidates[m_pProp->m_MultiSequence];
 
+		//m_pProp->m_multi_ResidualSequence = m_pProp->m_MultiSequence;
 
 		int il=m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber)-1;
 		bool valid=true;
@@ -297,7 +332,7 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 		}
 
 
-	}
+	}*/
 
 	else {
 				int j=m_pSimDoc->m_PlotStorage.NumSelected()-1;

@@ -113,8 +113,8 @@ void ChartBase::SetMultiSequenceInfo()
 {
 	if (m_pPG_Active != nullptr) {
 		//SetMultiMode(true);  // Removed by PEJ to make table without extra 2 variables
-		m_pProp->SetMultiSequence(m_pPG_Active->GetRepititionSequence());
-		m_pProp->SetMultiRepititions(m_pSimDoc->MR_Get_TotalNumberofRuns());
+		//m_pProp->SetMultiSequence(m_pPG_Active->GetRepititionSequence());
+		//m_pProp->SetMultiRepititions(m_pSimDoc->MR_Get_TotalNumberofRuns());
 
 	}
 

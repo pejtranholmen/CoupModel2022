@@ -204,7 +204,7 @@ ChartCugBase::ChartCugBase()
 	m_pProp->viewPortTimeStamps=nullptr;
 	m_pProp->viewPortTimeStamps2=nullptr;
 
-	m_pProp->m_MultiSequence=1;
+	m_pProp->m_MultiSequence=0;
 	m_TimeSeriePlot.m_ChartInfo.MultiPGMode=false;
 	m_ChangeAllRunNo=false;
 	m_NumberofMoves=0;

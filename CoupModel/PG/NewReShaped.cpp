@@ -33,11 +33,7 @@ NewReShaped::~NewReShaped()
 	else if (pPG != nullptr)
 		m_pPGSource = pPG;
 
-	if (m_pPGSource->ReOpen()) {
-
-		auto file = 1;
-
-	}
+	if (!m_pPGSource->ReOpen()) return nullptr;
 
 	m_DestFileName = m_pPGSource->GetFileName();
 	int ipos = m_DestFileName.find(".bin");
@@ -57,11 +53,12 @@ NewReShaped::~NewReShaped()
 	TotalRecords=VarNamePos[0].size() * irec;
 	
 	pPG_Dest->SetCompleteRead(true);
-	auto newidvar = 0;
-	if (treatment) newidvar++; if (specialtreatment) newidvar++; if (parcelNo) newidvar++;
+	m_NewIdVar = 0;
+	if (treatment) m_NewIdVar++; if (specialtreatment) m_NewIdVar++; if (parcelNo) m_NewIdVar++;
 
 
-	pPG_Dest->CreateNewFile(unique_names.size() + newidvar, TotalRecords);
+
+	pPG_Dest->CreateNewFile(unique_names.size() + m_NewIdVar, TotalRecords);
 	//pPG_Dest->ReAllocate(TotalRecords, );
 	auto counter1 = 0;	
 	string idkod;
@@ -78,7 +75,7 @@ NewReShaped::~NewReShaped()
 				idkod = m_pPGSource->GetVarId(VarNamePos[i][j]);
 				pPG_Dest->SetLongTime(counter2, minn);
 				pPG_Dest->SetVarValue(i + 1, counter2, value);
-				newidvar = 0;
+				auto newidvar = 0;
 				if (treatment) {
 					newidvar++;
 					int IBeh = GetTreatment(idkod);
@@ -99,7 +96,9 @@ NewReShaped::~NewReShaped()
 		}
 		auto name = m_pPGSource->GetVarName(VarNamePos[i][0]);
 		pPG_Dest->SetVarName(i + 1, name);
-		newidvar = 1;
+		auto id = m_pPGSource->GetVarId(VarNamePos[i][0]);
+		pPG_Dest->SetVarId(i + 1, id);
+		auto newidvar = 1;
 		pPG_Dest->SetVarName(unique_names.size() + 2, "ParcNo");
 		if (treatment) {
 			pPG_Dest->SetVarName(unique_names.size() + newidvar, "Treatment");
@@ -305,7 +304,6 @@ NewReShaped::~NewReShaped()
 	 //pPG_Dest->SaveAs(m_DestFileName, true);
 	 size_t count_iout=0;
 	 size_t minn;
-	 float vvv;
 	 for (size_t irec = 0; irec < pPGSource->GetNumRecords(); irec+=numcommontime) {
 		 count_iout++;
 		 for (size_t irep = 0; irep < numcommontime; irep++) {
@@ -317,11 +315,10 @@ NewReShaped::~NewReShaped()
 					 auto error8 = 0;
 				 
 				 };
-				vvv = pPG_Dest->GetVarValue(3,count_iout , irep+1);
-
 		}
 	}
 
+	 m_pPGSource->ReOpen();
 	 string txt;
 	 auto test_cycle=m_pPGSource->GetCycleWithCommonTime();
 	 auto ivar_test = m_pPGSource->GetNumVariables();
@@ -331,8 +328,9 @@ NewReShaped::~NewReShaped()
 			 pPG_Dest->SetVarName(i, txt, irep);
 			 txt = pPGSource->GetVarUnit(i, 1);
 			 pPG_Dest->SetVarUnit(i, txt, irep);
-			 size_t indexkol = i % 5+i/5;
-			 if(irep>1) indexkol+=(irep - 1) * 4;
+			 size_t indexkol = i % (ivar-m_NewIdVar)+i/(ivar-m_NewIdVar+1);
+			 if (ivar <= 2) indexkol = 1;
+			 if(irep>1) indexkol+=(irep - 1) * (ivar-m_NewIdVar);
 			 txt = m_pPGSource->GetVarId(indexkol, 1);
 			 pPG_Dest->SetVarId(i, txt, irep);
 			 txt = pPGSource->GetVarPos(i, 1);

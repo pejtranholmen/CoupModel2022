@@ -759,17 +759,17 @@ void ChartCugClick::OnNewCurve()
 	
 	size_t il=m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber)-1;	
 	size_t j=m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, il);
+	auto plot = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
 	auto itype=m_pSimDoc->m_PlotStorage.GetDataType(j);
+	size_t actual_chart =0;
 	if(m_TimeSeriePlot.m_ChartInfo.MultiValMode) {
-		if(itype!=DATA_TYPES::SIM_VAL&&il>0)
-			il=1;
-		else
-			il=0;
+		il = 0;
+		m_pProp->m_MultiSequence++;
+		m_pProp->m_multi_ResidualSequence++;
 	}
 	
 	if(m_pSimDoc->m_PlotStorage.AddCurve(0,il)&&(m_TimeSeriePlot.m_ChartInfo.MultiPGMode||m_TimeSeriePlot.m_ChartInfo.MultiValMode||(itype==DATA_TYPES::PGDATA&&m_PGRepit))){
 		m_pProp->m_PrevChartNumber=-1;
-		m_pProp->m_multi_ResidualSequence++;
 		if(m_TimeSeriePlot.OnUpdateSequence())
 			m_TimeSeriePlot.MakeTimeSeriePlot();
 	}

@@ -55,6 +55,7 @@ struct PLOTv
 	size_t Doc=0;
 	size_t Residual_VarNum=0;
 	size_t Residual_RunNo=0;
+	size_t Residual_Sequence = 0;
 	size_t PGSection=0;
 	size_t SubChart_No=0;
 	size_t LogLiVersion=0;  // 0 Gaussian 1 Non Gaussian 2 forced Residual Only
@@ -110,7 +111,7 @@ public:
 
 	size_t GetValVarNo(size_t index);
 	size_t GetValRunNo(size_t index);
-	bool SetValRunNo(size_t index, size_t value);
+	bool SetValRunNo(size_t index, size_t value_runo, size_t sequence_no=0);
 	size_t GetPGSectionNo(size_t index);
 	bool SetPGSectionNo(size_t index, size_t value);
 	size_t GetPGRepitNo(size_t index);

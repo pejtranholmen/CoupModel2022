@@ -271,11 +271,10 @@ std::vector <float> CPGFile::GetVarVector(size_t varno) {
 	if (pg.status.CompleteFileRead) {
 		vut.resize(pg.Shape.NumRecords);
 		if (pg.Shape.RepetitionMode) {
-			vut = ReadVarVector(varno);
-			//for (size_t j = 1; j <= pg.Shape.NumRecords; j++) {
-			//	size_t ind = (j - 1 + pg.status.a.LocalStartRecord) * pg.Shape.RecordIndexSize + varno;
-			//	vut[j - 1] = pg.Var.v[ind];
-			//}
+			if(pg.Shape.NumRecords<pg.Shape.TotalNumberOfRecords)
+				vut.resize(pg.Shape.TotalNumberOfRecords);
+				for (size_t j = 1; j <= pg.Shape.TotalNumberOfRecords; j++)
+					vut[j - 1] = pg.Var.v[(j - 1) * pg.Shape.RecordIndexSize + varno];
 		}
 		else
 		    for (size_t j = 1; j <= pg.Shape.NumRecords; j++)

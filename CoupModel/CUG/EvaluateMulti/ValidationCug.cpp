@@ -2624,7 +2624,7 @@ void ValidationCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point
 	if (col == 1 && updn) {
 		if (row < GetNumberRows()) {
 			if (m_Distribution_As_Independent) {
-				m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE;
+				m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 				m_pProp->SetFirstIndepSet(PARVAR, false);
 				m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
 				MultiPlotClick(isheet, col, row, true);

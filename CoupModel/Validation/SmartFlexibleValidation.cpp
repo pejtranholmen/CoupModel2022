@@ -679,7 +679,7 @@ BAYES option;
 
 bool SmartFlexibleValidation::SetValSum(size_t index, VALSUMv valsumv) {
 	m_pSimDoc = dynamic_cast<MR*>(this);
-	if (m_pSimDoc == nullptr) return MISSING;
+	if (m_pSimDoc == nullptr) return false;
 	if (index < m_pSimDoc->m_ValSum_Array.size()) {
 		m_pSimDoc->m_ValSum_Array[index] = valsumv;
 		return true;
