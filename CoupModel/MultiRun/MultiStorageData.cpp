@@ -744,8 +744,10 @@ float MultiStorageData::GetSplitValid(unsigned long irun, unsigned long ip, unsi
 }
 float MultiStorageData::GetValid(unsigned long rec, unsigned long ip, size_t i_cycle)
 {
-	if (m_CyclicNumber > 1&&i_cycle!=string::npos) {
-		rec=(rec/(m_CyclicNumber))*m_CyclicNumber;				// removed i_cycle
+	if (rec % m_CyclicNumber != m_CyclicStartPos)
+		return MISSING;
+	else if (m_CyclicNumber > 0) {
+		rec=(rec/(m_CyclicNumber))*m_CyclicNumber+m_CyclicStartPos;				// removed i_cycle
 	}
 	auto index=ip+(m_NumValid+m_NumExtraValid)*rec;
 	if(index>=m_TotalNumberRuns*(m_NumValid+m_NumExtraValid)) return MISSING;
@@ -1005,6 +1007,17 @@ bool MultiStorageData::IsCoCorValidSet()
 }
 void MultiStorageData::SetCoParUpdated(bool updated) {
 	m_Valid_TSV[m_ActualEnsemble].is_Copar_Updated = updated;
+}
+size_t MultiStorageData::Get_ActualFilterVarValue(size_t RunNo)
+{
+
+	for (int ii = 0; ii < m_pNewMap->MR_Get_NumberOfParametersWithinDim(1); ii++) {
+		auto pValIndex = (Ps*)m_pNewMap->MR_Get_pPar(1, ii + 1);
+		string namep = pValIndex->GetName();
+		if (namep == "Filter Var Value")
+			return size_t(m_pNewMap->m_MStorage.GetMultiP(RunNo, ii+1)+0.0001);
+	}
+	return string::npos;
 }
 unsigned long MultiStorageData::GetNumberOfAddedFiles(string str)
 {

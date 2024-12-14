@@ -2039,7 +2039,7 @@ vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, s
 {
 	vector<size_t> out;
 	size_t Dim1Value = m_MStorage.m_Valid_TSV[ensembleno].Dim1_Par_Index;
-	if(Dim1Value==0) return out;
+	//if(Dim1Value==0) return out;
 	size_t test_value_sim{ string::npos };
 	for (int i2 = 0; i2 < MR_Get_NumberOfParametersWithinDim(0 + 1); i2++) {
 		auto test = MR_GetParName(1, i2 + 1);
@@ -2066,7 +2066,8 @@ bool MR::ValidDim1VersusRunNo(size_t EnsembleNo, size_t RunNo)
 {
 	size_t Dim1Value = m_MStorage.m_Valid_TSV[EnsembleNo].Dim1_Par_Index;
 	size_t SizeDim1 = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
-	if ((RunNo+1) % SizeDim1 == Dim1Value%SizeDim1) return true;
+	if (Dim1Value == 0) return true;
+	else if ((RunNo+1) % SizeDim1 == Dim1Value%SizeDim1) return true;
 	else return false;
 }
 

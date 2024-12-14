@@ -188,13 +188,13 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 			auto cycle=out.pPG_MeasValFile->GetCycleWithCommonTime();
 			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			
-			if (out.PG_FilterVarIndex == 0) {
-				m_pSimDoc->m_MStorage.SetCyclicNumber(1);
+			/*if (out.PG_FilterVarIndex == 0) {
+				m_pSimDoc->m_MStorage.SetCyclicNumbers(1);
 
 
 			}
 			else {
-				m_pSimDoc->m_MStorage.SetCyclicNumber(cycle);
+				m_pSimDoc->m_MStorage.SetCyclicNumbers(cycle);
 				size_t start_pos{ string::npos };
 				for (size_t i = 0; i <cycle ; i++) {
 					auto koll2=out.pPG_MeasValFile->GetVarValue(out.PG_FilterVarIndex, i + 1);
@@ -213,7 +213,7 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 
 
 			}
-			out.index_cycle = m_pSimDoc->m_MStorage.GetCyclicNumber();
+			out.index_cycle = m_pSimDoc->m_MStorage.GetCyclicNumber();*/
 		}
 
 	}

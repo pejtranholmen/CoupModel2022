@@ -1187,6 +1187,15 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 
 
 
+	size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+	if (Dim1Value == 0) 
+		m_pSimDoc->m_MStorage.SetCyclicNumbers(1,0);
+	else {
+		auto koll = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+		m_pSimDoc->m_MStorage.SetCyclicNumbers(koll, Dim1Value - 1);
+	}
+
+
 	VALSUMv valsum;
 	switch (m_pProp->GetIndepFirst()) {
 	case NO_USE:
@@ -1425,11 +1434,11 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 
 	if (p_info.DataType == DATA_TYPES::SIM_PERFORMANCE) {
 
-		if (p_info.EnsembleNo >= 0) {
+		//if (p_info.EnsembleNo = 0) {
 
 			//pDocAct->m_MStorage.m_ActualEnsemble = p_info.EnsembleNo;
 			pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
-		}
+		//}
 		if (p_info.PGSection == 0)
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index, p_info.index_cycle));
 		else if (p_info.PGSection>0)
@@ -1974,9 +1983,13 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 
 		if (AcceptedCandidates.size() > p_info.Residual_Sequence) {
-			size_t runno=AcceptedCandidates[p_info.Residual_Sequence];
+			size_t runno = AcceptedCandidates[p_info.Residual_Sequence];
 			p_info.Residual_RunNo = runno;
 			c_info.ResRunNo = runno;
+		}
+		else {
+			MFC_Util::MessageBoxW("No more Accepted runs");
+			return false;
 		}
 
 
@@ -2039,10 +2052,26 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			if (namep == "Index in val file") {
 				ValIndex_In_MultiParList = ii;
 			}
-			else if(namep =="Filter Var Value") {
+			else if(namep =="Filter Var Value")  {
+				size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+			if (Dim1Value > 0) {
 				ValIndex_In_MultiParList = ii;
 				RepHits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
 				break;
+			}
+			else {
+				auto indexmulti = ii + 1;
+				auto test_value=m_pSimDoc->m_MStorage.GetMultiP(p_info.Residual_RunNo, indexmulti);
+				size_t pg_filter_index = m_pSimDoc->m_Val_Array[p_info.Index].PG_FilterIndex;
+
+				for (size_t i = 0; i < p_info.pPG_MeasValFile->GetNumRepititions(); i++) {
+					if (test_value == size_t(p_info.pPG_MeasValFile->GetVarValue(pg_filter_index, test_value, i + 1) + 0.0001)) {
+						RepHits.push_back(i + 1);
+					}
+				}
+				break;
+
+			}
 				//act_rep=m_pProp->m_MultiSequence%m_pSimDoc->MR_Get_NumberOfParametersWithinDim(1)+1;
 
 				// hitta om värdet av ValIndex är en repetitions i pg_Meas
@@ -2060,7 +2089,8 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		if (Dim1Value == 0) act_rep = 1;
 
 	}
-	if (RepHits.size() > 0) act_rep = RepHits.back();
+	if (RepHits.size() > 1) act_rep = RepHits[(p_info.Residual_RunNo) % RepHits.size()];
+	else if (RepHits.size() == 1) act_rep = RepHits.back();
 	vector<float> points;
 
 	//for (size_t index_ValAgg = 0; index_ValAgg < NumAgg; index_ValAgg++) {

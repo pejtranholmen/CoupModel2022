@@ -763,7 +763,7 @@ void ChartCugClick::OnNewCurve()
 	auto itype=m_pSimDoc->m_PlotStorage.GetDataType(j);
 	size_t actual_chart =0;
 	if(m_TimeSeriePlot.m_ChartInfo.MultiValMode) {
-		il = 0;
+		il = il%2;
 		m_pProp->m_MultiSequence++;
 		m_pProp->m_multi_ResidualSequence++;
 	}

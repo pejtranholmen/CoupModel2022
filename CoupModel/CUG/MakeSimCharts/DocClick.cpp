@@ -940,7 +940,7 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 							int iv=m_pSimDoc->m_SelectValTime.size();
 						}
 						 
-						if(cell.GetBool()&&m_pSimDoc->m_SelectValTime.size()<=0) {
+						if(cell.GetBool()||m_pSimDoc->m_SelectValTime.size()<=1) {
 							if(m_pSimDoc->m_SelectValTime.size()==0)
 									m_CurrentSubChart=1;
 							else if(m_CurrentSubChart<m_pProp->m_NumSubCharts&&m_pSimDoc->m_SelectValTime.size()%2==0)

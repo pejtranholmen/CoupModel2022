@@ -69,7 +69,8 @@ class MultiStorageData
 public:
 	MultiStorageData();
 	virtual ~MultiStorageData();
-	void SetCyclicNumber(size_t Cycle) { m_CyclicNumber = Cycle; };
+	void SetCyclicNumbers(size_t CycleLength, size_t CycleStartPos = 0) { m_CyclicNumber = CycleLength; m_CyclicStartPos = CycleStartPos; };
+	
 	size_t GetCyclicNumber() { return m_CyclicNumber; };
 	bool ReadAllStat();
 	bool ReadNewData(unsigned long InitRuns);
@@ -132,6 +133,9 @@ public:
 	void  SetCoCorValid_Init(unsigned long);
 	bool  IsCoCorValidSet();
 	void SetCoParUpdated(bool updated);
+
+	size_t Get_ActualFilterVarValue(size_t RunNo);
+
 	size_t   m_CoCorNumValid;
 	vector<float> m_CoCorValid;
 
@@ -265,7 +269,7 @@ public:
 
 	
 protected:
-	size_t m_CyclicNumber;
+	size_t m_CyclicNumber, m_CyclicStartPos;
 	
 	unsigned long m_NumValidVar;
 	unsigned long m_runs;

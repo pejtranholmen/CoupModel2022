@@ -2874,19 +2874,16 @@ void ValidationCug::OnCB_LClicked(int updn,RECT *rect,POINT *point,BOOL processe
 					m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
 				}
 			}
+			auto charts=m_pSimDoc->m_PlotStorage.m_PlotArray.size();
+			if (charts > 0) {
+				auto pinfo = m_pSimDoc->m_PlotStorage.GetPlotInfo(charts - 1);
+				pinfo.EnsembleNo = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+				m_pSimDoc->m_PlotStorage.m_PlotArray.erase(m_pSimDoc->m_PlotStorage.m_PlotArray.begin());
+				m_pSimDoc->m_PlotStorage.m_PlotArray.push_back(pinfo);
+				auto ivar = m_pSimDoc->m_SelectMultiVal.size();
+				if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
+			}
 			OnSheetSetup(isheet);
-
-			auto ivar = m_pSimDoc->m_SelectMultiVal.size();
-			if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
-			/*
-			MyCug* pCug;
-			pCug = MySingle::instance().GetCugPointer();
-			int isheet = pCug->GetSheetNumber();
-			if (isheet == 6 || isheet == 10)
-				pCug->OnSheetSetup(isheet);
-			else
-				pCug->OnSheetSetup(6);
-				*/
 		}
 	}
 }

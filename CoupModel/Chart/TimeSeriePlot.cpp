@@ -250,6 +250,13 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 			p_info.Residual_RunNo = AcceptedCandidates[p_info.Residual_Sequence];
 			m_pSimDoc->m_PlotStorage.SetValRunNo(j, p_info.Residual_RunNo, p_info.Residual_Sequence);
 		}
+		else {
+			MFC_Util::MessageBoxW("No more Accepted runs");
+			return false;
+
+
+		}
+
 
 
 	}

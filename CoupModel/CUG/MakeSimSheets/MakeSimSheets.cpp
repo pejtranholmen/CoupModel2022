@@ -5024,7 +5024,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			DynamicIndexPos= m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1();
 			DynamicIndexValFile = true;
-			m_pSimDoc->m_MStorage.SetCyclicNumber(NumberofDim1);
+			m_pSimDoc->m_MStorage.SetCyclicNumbers(NumberofDim1);
 			auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(0);
 			CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 			if (pRes != nullptr) {
