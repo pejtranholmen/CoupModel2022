@@ -1192,7 +1192,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		m_pSimDoc->m_MStorage.SetCyclicNumbers(1,0);
 	else {
 		auto koll = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
-		m_pSimDoc->m_MStorage.SetCyclicNumbers(koll, Dim1Value - 1);
+		m_pSimDoc->m_MStorage.SetCyclicNumbers(koll, Dim1Value - 1, Dim1Value);
 	}
 
 

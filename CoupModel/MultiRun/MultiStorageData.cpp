@@ -885,7 +885,7 @@ unsigned long MultiStorageData::GetNumBayesAccepted(unsigned long num_burn_in)
 float MultiStorageData::GetMinPar(unsigned long ip)
 {
 	if (m_ParMin.size() <= ip) return 1.1E38;
-	if(!IsMinUpdated) {
+	if(!m_pNewMap->m_MStorage.IsMinUpdated) {
 		float v=1.1E38f;
 		for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
 			if(GetMultiP(i,ip)<v)
@@ -901,7 +901,7 @@ float MultiStorageData::GetMinPar(unsigned long ip)
 float MultiStorageData::GetMaxPar(unsigned long ip)
 {
 	if (m_ParMax.size() <= ip) return -1.1E38;
-	if(!IsMinUpdated) {
+	if(!m_pNewMap->m_MStorage.IsMinUpdated) {
 		float v=float(MISSING);
 		for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
 			if(GetMultiP(i,ip)>v)
@@ -1401,8 +1401,8 @@ bool MultiStorageData::ReadAllStat(){
 		else {
 			for (unsigned long i = 0; i < m_TotalNumberRuns; i++)
 				SetAcceptedRunNo(i, true);
-				IsMinUpdated = false;
-				IsMaxUpdated = false;
+			    m_pNewMap->m_MStorage.IsMinUpdated = false;
+				m_pNewMap->m_MStorage.IsMaxUpdated = false;
 				for (unsigned long split = 0; split <m_NumSplitPeriod; split++) {
 						for (unsigned long i = 0; i < m_NumValid + m_NumExtraValid; i++) {
 							size_t index = i + split*(m_NumValid + m_NumExtraValid);
@@ -1611,14 +1611,14 @@ bool MultiStorageData::ReadAcceptedRunInfo() {
 			m_MultiFile.read((char*)&m_ParValidMax[0], 4 * m_NumMulti);
 			nbyte = (unsigned long)(m_MultiFile.gcount());
 			if (nbyte == 0) {
-				IsMinUpdated = false;
+				m_pNewMap->m_MStorage.IsMinUpdated = false;
 				for (unsigned long i = 0; i<m_NumMulti; i++) {
 					GetMinPar(i);
 					GetMaxPar(i);
 				//	GetMinValidPar(i);
 				//	GetMaxValidPar(i);
 				}
-				IsMinUpdated = true;
+				m_pNewMap->m_MStorage.IsMinUpdated = true;
 
 
 

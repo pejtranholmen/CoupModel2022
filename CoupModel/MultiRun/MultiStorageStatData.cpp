@@ -365,8 +365,8 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 
 
 
-				IsMinUpdated = true;
-				IsMaxUpdated = true;
+				m_pNewMap->m_MStorage.IsMinUpdated = true;
+				m_pNewMap->m_MStorage.IsMaxUpdated = true;
 				
 			}
 		}

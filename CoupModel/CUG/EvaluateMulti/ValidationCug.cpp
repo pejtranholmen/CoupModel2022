@@ -197,6 +197,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 
 	CUGCell cell;
+	auto checkens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+
 	m_SplitPeriods = m_pSimDoc->m_MStorage.GetNumSplitPeriods();
 
 	int NumLinesSV = m_pSimDoc->m_ValidationData.GetNumSumVarVariables();

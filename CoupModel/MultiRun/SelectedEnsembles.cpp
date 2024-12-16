@@ -166,15 +166,36 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 	else
 		mfc_util.SetPaneMessage("Find Posterior ensemble of accepted runs");
 #endif
+	size_t Dim1Value = m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
+	if (Dim1Value == 0)
+		SetCyclicNumbers(1, 0);
+	else {
+		auto koll = m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+		SetCyclicNumbers(koll, Dim1Value - 1);
+	}
+
+
+
 
 	auto setall_valid = [&]() {
+
+
+
 		for(size_t i=0; i<m_ValidStatBase; i++)
 			m_MeanTSV_Accepted[i]=m_MeanTSV_All[i];
 		if (m_TotalNumberRuns != Get_And_UpdateTotalNumberofRuns())
 			m_TotalNumberRuns = Get_And_UpdateTotalNumberofRuns();
 
 		for (unsigned long i = 0; i<m_TotalNumberRuns; i++) {
-			SetAcceptedRunNo(i, true);
+			if (Dim1Value > 0) {
+				if (i % m_CyclicNumber == Dim1Value - 1)
+					SetAcceptedRunNo(i, true);
+				else
+					SetAcceptedRunNo(i, false);
+			}
+			else
+				SetAcceptedRunNo(i, true);
+
 		}
 	};
 
@@ -682,7 +703,9 @@ float SelectedEnsembles::GetMinValidAll(unsigned long ip, unsigned long ind_spli
 		if (ind_split == 0) {
 			
 			for (unsigned long i = 0; i < m_TotalNumberRuns; i++) {
-						if(GetValid(i, ip)<v)	v = GetValid(i, ip);
+				if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0 && m_Dim1Value == 0)) {
+					if (GetValid(i, ip) < v)	v = GetValid(i, ip);
+				}
 
 			}
 			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][ip] = v;
@@ -790,7 +813,9 @@ float SelectedEnsembles::GetMaxValidAll(unsigned long ip, unsigned long ind_spli
 			if(ind_split==0) {
 				size_t numruns = m_TotalNumberRuns;
 				for(unsigned long i=0;i<numruns;i++) {
-					if(GetValid(i,ip)>v) v=GetValid(i,ip);
+					if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0 && m_Dim1Value == 0)) {
+						if (GetValid(i, ip) > v) v = GetValid(i, ip);
+					}
 				}
 				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip] = v;
 				return v;
@@ -824,8 +849,10 @@ float SelectedEnsembles::GetMeanValidAll(unsigned long ip, unsigned long ind_spl
 		if(ind_split==0) {
 			size_t numruns = m_TotalNumberRuns;
 			for(unsigned long i=0;i<numruns;i++) {
-				count++;
-				sum+=GetValid(i,ip);
+				if (i % m_CyclicNumber == m_CyclicStartPos|| (m_CyclicStartPos==0&&m_Dim1Value==0)) {
+					count++;
+					sum += GetValid(i, ip);
+				}
 
 			}
 			if(count>0)	m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip ]= float(sum / count);
@@ -866,6 +893,7 @@ float SelectedEnsembles::GetMeanValid(unsigned long ip, unsigned long ind_split)
 {
 	//if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN].size()<=ip) return 0.;
 	//if(!IsMeanUpdated) {
+
 	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 		float v=1.1E38f;
 		double sum=0.;
@@ -971,8 +999,10 @@ float SelectedEnsembles::GetCV_ValidAll(unsigned long ip, unsigned long ind_spli
 		unsigned long count=0;
 		if(ind_split==0) {
 			for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
+				if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0&&m_Dim1Value == 0)) {
 					count++;
-					sum+=pow(GetValid(i,ip)-GetMeanValidAll(ip),2);
+					sum += pow(GetValid(i, ip) - GetMeanValidAll(ip), 2);
+				}
 			}
 			if(count>2&&abs(GetMeanValidAll(ip))>0)
 				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][ip]=float(sqrt(sum/(count-1)))/abs(GetMeanValidAll(ip));
@@ -1105,6 +1135,18 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 	IsMaxUpdated = false;
 	IsCVUpdated = false;
 	IsMeanUpdated = false;
+
+
+	size_t Dim1Value = m_pNewMap->m_MStorage.m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
+	if (Dim1Value == 0)
+		m_pNewMap->m_MStorage.SetCyclicNumbers(1, 0);
+	else {
+		auto koll = m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+		m_pNewMap->m_MStorage.SetCyclicNumbers(koll, Dim1Value - 1, Dim1Value);
+	}
+
+
+
 	for (unsigned long i = 0; i<m_NumMulti; i++) {
 		GetMinPar(i);
 		GetMaxPar(i);

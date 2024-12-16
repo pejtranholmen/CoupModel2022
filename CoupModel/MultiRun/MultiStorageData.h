@@ -69,7 +69,7 @@ class MultiStorageData
 public:
 	MultiStorageData();
 	virtual ~MultiStorageData();
-	void SetCyclicNumbers(size_t CycleLength, size_t CycleStartPos = 0) { m_CyclicNumber = CycleLength; m_CyclicStartPos = CycleStartPos; };
+	void SetCyclicNumbers(size_t CycleLength, size_t CycleStartPos = 0, size_t Dim1Value=0) { m_CyclicNumber = CycleLength; m_CyclicStartPos = CycleStartPos; m_Dim1Value = Dim1Value; };
 	
 	size_t GetCyclicNumber() { return m_CyclicNumber; };
 	bool ReadAllStat();
@@ -154,8 +154,8 @@ public:
 
 
 
-	bool IsMinUpdated, IsMaxUpdated, IsCVUpdated, IsMeanUpdated, IsCVSumUpdated, IsMeanSumUpdated, IsMeanSumUpdatedAll;
-	bool IsCVSumUpdatedAll,IsMinSumUpdatedAll, IsMaxSumUpdatedAll;
+	//bool IsMinUpdated, IsMaxUpdated, IsCVUpdated, IsMeanUpdated, IsCVSumUpdated, IsMeanSumUpdated, IsMeanSumUpdatedAll;
+	//bool IsCVSumUpdatedAll,IsMinSumUpdatedAll, IsMaxSumUpdatedAll;
 
 	bool SelSumV_Index_Add(unsigned long);
 	void SelSumV_Index_Reset();
@@ -269,7 +269,7 @@ public:
 
 	
 protected:
-	size_t m_CyclicNumber, m_CyclicStartPos;
+	size_t m_CyclicNumber, m_CyclicStartPos, m_Dim1Value;
 	
 	unsigned long m_NumValidVar;
 	unsigned long m_runs;
