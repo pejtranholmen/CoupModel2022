@@ -450,7 +450,7 @@ DataSet* DrawDetails::TimeSerieChart( int ivar,int TotNumPrior, bool accept_type
 			size_t count_to_plot = 0;
 			for (size_t i = 0; i < numensembles; i++) {
 				string legend;
-				if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
+				if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 						count_to_plot++;
 						auto color = m_pUtil->GetHColorLine(count_to_plot);
 						legend = m_pSimDoc->m_MStorage.m_AcceptedIdString[i];
@@ -577,7 +577,7 @@ DataSet* DrawDetails::TimeSerieFrequenceChart( int ivar,int TotNumPrior, bool ac
 							numensembles = m_pSimDoc->m_MStorage.m_AcceptedRuns.size();
 						size_t count_to_plot = 0;
 						for (size_t i = 0; i < numensembles; i++) {
-							if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
+							if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 								count_to_plot++;
 								string legend;
 
@@ -624,7 +624,7 @@ DataSet* DrawDetails::TimeSerieFrequenceChart( int ivar,int TotNumPrior, bool ac
 				numensembles = m_pSimDoc->m_MStorage.m_AcceptedRuns.size();
 				size_t count_to_plot = 0;
 				for (size_t i = 0; i < numensembles; i++) {
-					if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
+					if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 						count_to_plot++;
 
 						legend = m_pSimDoc->m_MStorage.m_AcceptedIdString[i];
@@ -671,7 +671,7 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 				size_t count_to_plot = 0;
 				
 				for (size_t i = 0; i < GetNumberOfEnsembles(); i++) {
-					if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
+					if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 						count_to_plot++;
 						m_Color.ivar = m_pUtil->GetHColorLine(count_to_plot);;
 						string legend = GetEnsembleIdString(i);
@@ -757,7 +757,7 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 
 				size_t count_to_plot = 0;
 					for (size_t i = 0; i < GetNumberOfEnsembles(); i++) {
-						if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
+						if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 							count_to_plot++;
 							string legend = GetEnsembleIdString(i);
 							m_Color.ivar = m_pUtil->GetHColorLine(count_to_plot);
@@ -821,14 +821,14 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 					size_t iens = 0;
 
 					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns.size(); i++) {
-						if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
+						if ((m_pSimDoc->m_MStorage.IsToBePlotted(i)&& m_pUtil->GetEnsembleViewOption()==1)||i== m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 							iens++;
 							m_dataSeriesA[iens*ivar+var_index] = DoubleArray(m_pProp->viewPortDataSeries[iens*ivar+var_index], m_ChartInfo.NumOfDistPoints);
 						}
 					}
 																																		 			}
 			else if(m_pProp->m_ChartType >=CHART_TYPES::FREQUENCE&&m_pProp->m_ChartType <=CHART_TYPES::CUM_FREQUENCE&&m_ichart==p_info.SubChart_No-1) {
-																																		 					m_pProp->m_TimeScale.MinX=m_pProp->GetXDistMin(var_index%TotNumPrior);
+					m_pProp->m_TimeScale.MinX=m_pProp->GetXDistMin(var_index%TotNumPrior);
 					m_pProp->m_TimeScale.MaxX=m_pProp->GetCommonXDistMax();
 					m_pProp->m_TimeScale.MinX =m_pProp->GetCommonXDistMin();
 				//	m_pProp->m_ReShape.m_LogScale=m_pProp->isXDistLog(var_index%TotNumPrior);
@@ -839,7 +839,7 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 					if (var_index == 0) m_dataSeriesA[var_index*ivar] = DoubleArray(m_pProp->viewPortDataSeries[var_index], m_ChartInfo.NumOfDistPoints);
 					size_t iens = 0;
 					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns.size(); i++) {
-						if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
+						if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 							iens++;
 							m_dataSeriesA[iens*ivar + var_index] = DoubleArray(m_pProp->viewPortDataSeries[iens*ivar + var_index], m_ChartInfo.NumOfDistPoints);
 						}

@@ -324,6 +324,11 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 			good=m_EvaluationFile.rsize_t(&num);
 			if (num != m_Valid_TSV.size()&&good) m_Valid_TSV.resize(num);
 
+			m_pNewMap->m_MStorage.IsMinUpdated.resize(num);
+			m_pNewMap->m_MStorage.IsMaxUpdated.resize(num);
+			m_pNewMap->m_MStorage.IsCVUpdated.resize(num);
+			m_pNewMap->m_MStorage.IsMeanUpdated.resize(num);
+
 			for (size_t i = 0; i < m_Valid_TSV.size(); i++) {
 				m_EvaluationFile.rsize_t(&num);
 				if (num > 0) {			
@@ -362,12 +367,9 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 					}
 				}
 
+				m_pNewMap->m_MStorage.IsMinUpdated[i] = true;
+				m_pNewMap->m_MStorage.IsMaxUpdated[i] = true;
 
-
-
-				m_pNewMap->m_MStorage.IsMinUpdated = true;
-				m_pNewMap->m_MStorage.IsMaxUpdated = true;
-				
 			}
 		}
 		if (m_pNewMap->m_ValSum_Array.size() > 0) {

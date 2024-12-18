@@ -1447,6 +1447,19 @@ bool MR::PreDefined_Criteria_Process() {
 		auto pre_actEnsemble = m_MStorage.m_ActualEnsemble;
 		m_MStorage.m_ActualEnsemble = 0;
 		size_t left;
+		m_MStorage.IsMaxUpdated.assign(numens,false);
+		m_MStorage.IsMinUpdated.assign(numens, false);
+		m_MStorage.IsCVUpdated.assign(numens, false);
+		m_MStorage.IsMeanUpdated.assign(numens, false);
+		m_MStorage.IsCVUpdated.assign(numens, false);
+		m_MStorage.IsCVSumUpdated.assign(numens, false);
+		m_MStorage.IsMeanSumUpdated.assign(numens, false);
+		m_MStorage.IsCVSumUpdated.assign(numens, false);
+		m_MStorage.IsCVSumUpdatedAll.assign(numens, false);
+		m_MStorage.IsMeanSumUpdatedAll.assign(numens, false);
+		m_MStorage.IsMinSumUpdatedAll.assign(numens, false);
+		m_MStorage.IsMaxSumUpdatedAll.assign(numens, false);
+
 		for (size_t i = 0; i < numens; i++) { //Reset Criteria
 			m_MStorage.m_ActualEnsemble = i;
 			m_MStorage.ResetCriteria();
@@ -1456,9 +1469,10 @@ bool MR::PreDefined_Criteria_Process() {
 			EstimateNewTransformedPerformance(Transform, Dim1_Par_Index);
 			m_MStorage.EvaluateFile(false);
 			auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(0);
-			auto kollvector2 = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(7);
 		}
-		m_MStorage.EvaluateFile(false);
+
+		
+
 		if (numens == 0) return true;
 
 		for (size_t i = 0; i<pEnsemble->GetSize(); i++) {
@@ -1474,12 +1488,30 @@ bool MR::PreDefined_Criteria_Process() {
 			
 			ensemble = max(size_t(1), ensemble);
 			m_MStorage.m_ActualEnsemble=ensemble- 1;
+			m_MStorage.UpdateCyclicNumbers(m_MStorage.m_ActualEnsemble);
 
 			m_MStorage.SetActualPerformanceVector_TSV_Variables(transform_index);
+			auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
+
 			m_MStorage.SetActual_AcceptedEnsemble();
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
 			if (m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
 				m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
 			}
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+1);
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+2);
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+3);
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+4);
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex + 5);
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex + 6);
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex + 7);
+
+
+
+
+
+
 			switch (Indicator) {
 				case 0:
 					left=m_MStorage.ReduceCriteria(R2_STAT, VarIndex,ThresholdType, Threshold);
@@ -1504,8 +1536,8 @@ bool MR::PreDefined_Criteria_Process() {
 					break;
 			}
 			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
-			auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
-			m_MStorage.IsMaxUpdated = m_MStorage.IsMinUpdated = false;
+			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
+			m_MStorage.IsMaxUpdated[i] = m_MStorage.IsMinUpdated[i] = false;
 		}
 		m_MStorage.m_ActualEnsemble = pre_actEnsemble;
 	}
@@ -1525,7 +1557,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 	Sim* pSim;
 #ifndef COUPSTD 
 	MFC_Util m;
-	
+
 #endif
 	const size_t Num_Stat_Perf{ 7 };
 	pSim = ((Sim*)this);
@@ -1568,7 +1600,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			PGPtr[i] = pPG;
 			pPG->ReOpen();
 		}
-	} 
+	}
 	//checking of files made
 	size_t NumValidVar = m_Val_Array.size();
 	size_t counterr = 0;
@@ -1577,22 +1609,16 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 	// Vector with all performance indicators
 
 	//Make the storage sensitive to ensemble and Dim1 values
+	m_MStorage.UpdateCyclicNumbers(m_MStorage.m_ActualEnsemble);
 	size_t Dim1Value = m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].Dim1_Par_Index;
-	if (Dim1Value == 0)
-		m_pSimDoc->m_MStorage.SetCyclicNumbers(1, 0);
-	else {
-		auto koll = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
-		m_pSimDoc->m_MStorage.SetCyclicNumbers(koll, Dim1Value - 1, Dim1Value);
-	}
 
-
-	if (cumulated <= 3) {
+	if (cumulated <= 4) {
 		for (int i_var_index = 0; i_var_index < NumValidVar; i_var_index++) {
 			auto test = FUtil::STD_ItoAscii(i_var_index + 1);
 			auto FileNo = m_ValidationData.GetValFileNumber(i_var_index);
 			pValFile = ValidationFilePointer(FileNo);
 			auto ind = m_ValidationData.GetValFileIndex(i_var_index);
-			
+
 			CPG* pPG;
 			bool valid;
 			pPG = (CPG*)pValFile->GetPointer();
@@ -1602,7 +1628,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			pPG->ReOpen();
 
 			if (pPG == nullptr) {
-			pPG = new CPG;
+				pPG = new CPG;
 				//CPG_Array.Add(pCPG);
 
 				valid = pPG->ReadContentOfPGFileAndOpenMainPGStreamForReading(pValFile->GetStrValue().c_str());
@@ -1643,8 +1669,11 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			mcorr = 0.0;
 
 			std::vector <float> meas_v, res_v, sim_v;
+			vector<double> sim_acc, meas_acc;
 
 			meas_v = pPG->GetVarVector(ind + 1);
+
+
 			auto pSw = GetSw("PreDefinedEnsembles");
 			size_t indexmulti{ string::npos };
 			size_t filter_index{ string::npos };
@@ -1656,6 +1685,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 
 				auto Dim1_Par_Index = size_t(pDim1Index->GetValue(i_var_index) + 0.0001);
 				auto FilterPGIndex = pFilterVarIndex->GetValue(i_var_index);
+				filter_index = size_t(FilterPGIndex + 0.00001);
 
 
 				for (int i1 = 0; i1 < m_MultiRun_Array.size(); i1++) {
@@ -1663,7 +1693,6 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 						auto test = MR_GetParName(i1 + 1, i2 + 1);
 						if (test == "Filter Var Value") {
 							indexmulti = i2;
-							filter_index = size_t(FilterPGIndex + 0.00001);
 						}
 					}
 				}
@@ -1698,8 +1727,8 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 				stream.seekg(newpos, ios::beg);
 
 				res_v.resize(recl);
-			
-				
+
+
 				stream.read((char*)&res_v[0], recl * 4);
 				if (!stream.good()) {
 					string koll = "Error reading :";
@@ -1764,57 +1793,46 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 					meas_filter = pPG->GetVarVector(filter_index);
 				}
 				pair<size_t, size_t> cycle;
-				vector<size_t> rephits;
+				vector<size_t> rephits; // Vector show the repetitions that exist for the variable in the PG Validation File
 
 				if (pPG->GetNumRepititions() > 0) {
 					rephits = ActualRepetitionInMeasFile(m_MStorage.m_ActualEnsemble, pPG, i_var_index, irun);
 					cycle.first = 0;
 					cycle.second = 1;
+					cycle = StartValueofMatchingEnsembleInDim1(m_MStorage.m_ActualEnsemble, pPG, i_var_index);
+
 				}
 				else
 					cycle = StartValueofMatchingEnsembleInDim1(m_MStorage.m_ActualEnsemble, pPG, i_var_index);
 
 				auto UpdateMeasuredToValidPointsOnly_ReturnNewRec = [&]() {
-					if (pPG->GetNumRepititions() > 0&&rephits.size()>0) {
+					if (pPG->GetNumRepititions() > 0 && rephits.size() > 0) {
 						//for (size_t i = 0; i < meas_v.size(); i++) meas_v[i] = MISSING;
-						size_t active_points = pPG->GetNumRecords();
+						size_t active_points = pPG->GetNumRecords()*rephits.size();
+						
+						vector<float> sim, obs;
+						sim.resize(active_points);
+						obs = sim;
+						size_t count;
 						for (size_t i_rep = 0; i_rep < rephits.size(); i_rep++) {
-							
-							for (size_t irec = 0; irec < active_points; irec++) {
-								size_t hit_index = (rephits[i_rep] - 1) * active_points + irec;
-								sim_v[hit_index] = meas_v[hit_index] - res_v[hit_index];
+							count = i_rep * active_points / rephits.size();
+							for (size_t irec = 0; irec < active_points/rephits.size(); irec++) {
+								size_t hit_index = (rephits[i_rep] - 1) * active_points/rephits.size() + irec;
+								sim[count+irec] = meas_v[hit_index] - res_v[hit_index];
+								obs[count+irec] = meas_v[hit_index];
 							}
+							
 						}
+						meas_v = obs;
+						sim_v = sim;
 						return active_points;
 					}
+					else if (pPG->GetNumRepititions() > 0 && rephits.size() == 0)
+						return size_t(0);
 					else
 						return meas_v.size();
-				};
+					};
 
-					
-				/*
-				if (cycle.first == string::npos&& pPG->GetNumRepititions() == 0 ||rephits.size()==0&& pPG->GetNumRepititions() > 0) {
-
-
-				}
-				else {
-					if (UpdateMeasuredToValidPointsOnly());
-					else { // Many line mode
-						for (long ii = cycle.first; ii < numrec; ii += cycle.second) {
-							if (indexmulti != string::npos) {
-								size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
-								size_t test_value_obs = size_t(meas_filter[ii] + 0.001);
-								if (test_value_sim == test_value_obs && res_v[ii] > MISSING) {
-									sim_v[ii] = meas_v[ii] - res_v[ii];
-								}
-								else
-									meas_v[ii] = MISSING;
-							}
-							else
-								sim_v[ii] = meas_v[ii] - res_v[ii];
-						}
-					}
-				}*/
 
 				STAT_PERF newperf;
 				double AccSim = 0., AccMeas = 0.;
@@ -1837,7 +1855,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 				size_t first = 0;
 				double AccSimOrg = 0, AccMeasOrg = 0;
 				meas_v = pPG->GetVarVector(ind + 1);
-				size_t Valid_Records=UpdateMeasuredToValidPointsOnly_ReturnNewRec();
+				size_t Valid_Records = UpdateMeasuredToValidPointsOnly_ReturnNewRec();
 
 				if (cycle.first != string::npos) {
 					for (long j = cycle.first; j < Valid_Records; j += cycle.second) {
@@ -1851,7 +1869,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 								meas_v[j] = MISSING;
 						}
 
-						if (cumulated >= 2 && resetindex.size() > 0) {
+						if (cumulated >= 2&&cumulated<4 && resetindex.size() > 0) {
 							if (j + 1 == resetindex[first]) {
 								AccSim = 0.0;
 								AccMeas = 0.;
@@ -1861,7 +1879,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 						}
 						auto meas = meas_v[j];
 						if (abs(meas) < .9E38 && abs(res_v[j]) < 0.9E38) {
-							if (cumulated > 0) {
+							if (cumulated > 0&&cumulated<4) {
 								AccSim += sim_v[j] * AccCorrection;
 								AccMeas += meas * AccCorrection;
 								sim.push_back(AccSim);
@@ -1889,6 +1907,28 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 					newperf.me = MISSING;
 				}
 				if (cumulated == 0) m_MStorage.SetNewPerformance(irun, i_var_index, newperf);
+				else if (cumulated == 4) {
+					size_t count_pre = sim_acc.size();
+					sim_acc.resize(sim_acc.size() + sim.size());
+					meas_acc.resize(meas_acc.size() + obs.size());
+					
+					for (size_t i = 0; i < sim.size(); i++) {
+						sim_acc[count_pre + i] = sim[i];
+						meas_acc[count_pre + i] = obs[i];
+					}
+					newperf = StatUtil::Get_StatComp(&sim_acc, &meas_acc);
+					newperf.logli = pSim->m_Simulator.m_pModelStructure->SumLikelihood(size_t(i_var_index), &sim, &obs);
+
+					if (sim_acc.size() == 0) {
+						newperf.n = 0;
+						newperf.intercept = newperf.slope = newperf.r2 = newperf.nse = newperf.rmse = newperf.logli = MISSING;
+						newperf.me = MISSING;
+					}
+					m_MStorage.SetNewPerformance(irun, i_var_index, newperf);
+					if ((irun + 1) % m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension == 0) {
+						sim_acc.clear(); meas_acc.clear();
+					}
+				}
 				else {
 					size_t NumValid = NumValidVar * Num_Stat_Perf;
 					VarValidNewVector[i_var_index + irun * NumValid] = newperf.r2;
@@ -1900,7 +1940,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 					VarValidNewVector[i_var_index + 6 * NumValidVar + irun * NumValid] = newperf.nse;
 				}
 				auto kollvectorq = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(0);
-				auto kollq = m_MStorage.GetValid(0, 0);
+				auto kollq = m_MStorage.GetValid(4, 0);
 			}
 			ResidualIndex[FileNo - 1]++;
 			pPG->CloseFile();
@@ -1908,7 +1948,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 			auto koll0 = m_MStorage.GetValid(0, 0);
 		}
 		auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(0);
-		auto koll2=m_MStorage.GetValid(0, 0);
+		auto koll2 = m_MStorage.GetValid(0, 0);
 		auto previous_values = VarValidNewVector;
 		for (size_t irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
 			for (size_t i = 0; i < NumValidVar * Num_Stat_Perf; i++)
@@ -1918,7 +1958,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 
 	}
 	// Estimation for all when basic transformations made
-	else if (cumulated == 4) {
+	/*else if (cumulated == 4) {
 
 		STAT_PERF oldperf, newperf;
 		size_t IndexDim1;
@@ -1935,7 +1975,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 					VarAcc[i] += m_MStorage.GetValid(irun, i);
 					if (IndexDim1 == RepinDim1 - 1) {
 						for (size_t idim1 = 0; idim1 < RepinDim1; idim1++) {
-							VarValidNewVector[(irun / RepinDim1) * NumValidVar * RepinDim1 * Num_Stat_Perf + idim1 * NumValidVar * Num_Stat_Perf + i] = VarAcc[i] / RepinDim1;
+							VarValidNewVector[i] = VarAcc[i] / RepinDim1;
 						}
 					}
 				}
@@ -1944,7 +1984,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 		}
 		else
 			return false;
-	}
+	}*/
 	// Estimations for aggregated mean value of all repeated 
 	else if (cumulated >= 5 && dim1_index == 0) {
 
@@ -2001,11 +2041,13 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index)
 
 	// Setting of new vector below
 
-	if (cumulated == 0&&(dim1_index==0||dim1_index==string::npos))
+	if (cumulated == 0 && (dim1_index == 0 || dim1_index == string::npos)) {
 		m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].VarTranformed = 0;
-	else {
-		if (dim1_index == string::npos) dim1_index = 0;
+		m_MStorage.SetNewPerformanceVector(cumulated + dim1_index * 10, VarValidNewVector);
+	}
+	else {	
 		m_MStorage.SetNewPerformanceVector(cumulated+dim1_index*10, VarValidNewVector);
+		if (dim1_index == string::npos) dim1_index = 0;
 		m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].Dim1_Par_Index = dim1_index;
 	}
 

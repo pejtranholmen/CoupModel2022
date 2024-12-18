@@ -198,6 +198,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	CUGCell cell;
 	auto checkens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+	if (!m_pSimDoc->m_MStorage.IsMaxUpdated[checkens] || !m_pSimDoc->m_MStorage.IsMinUpdated[checkens])
+		m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
 
 	m_SplitPeriods = m_pSimDoc->m_MStorage.GetNumSplitPeriods();
 
@@ -215,8 +217,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	switch (SheetNumber) {
 	case 0:
 		txt = "Coefficients of Determination for the regression line";
-		if(!m_pSimDoc->m_MStorage.IsMaxUpdated|| !m_pSimDoc->m_MStorage.IsMinUpdated)
-			m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
+
 		break;
 	case 1:
 		txt = "Intercept for linear regression line with simulated values as independent variable";
@@ -267,14 +268,14 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	SetUniformRowHeight(TRUE);
 	GetCell(-1, -1, &cell);
-	if (m_pSimDoc->m_MStorage.IsCVUpdated)
+	if (m_pSimDoc->m_MStorage.IsCVUpdated[checkens])
 		cell.SetBackColor(m_ColorClick);
 	else
 		cell.SetBackColor(m_NoColor);
 
 	string str;
 	if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0)
-		str = m_pSimDoc->m_MStorage.m_AcceptedIdString[m_pSimDoc->m_MStorage.m_ActualEnsemble];
+		str = m_pSimDoc->m_MStorage.m_AcceptedIdString[checkens];
 	else
 		str = "";
 
@@ -4958,6 +4959,7 @@ void ValidationCug::ReducebyR2(size_t ivar, size_t n_left, bool SV_Variable) {
 
 
 	int icount=dist.size();
+	if (icount == 0) return;
 	float lastvalid=0.f;
 	StatUtil::SortArray(&dist[0],icount );
 	size_t n_toremove = dist.size() - n_left-1;

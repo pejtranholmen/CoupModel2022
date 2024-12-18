@@ -22,6 +22,9 @@ SelectedEnsembles::SelectedEnsembles()
 {
 	m_SV_StatMemory.AcceptedRuns = false;
 	m_SV_StatMemory.AllRuns = false;
+	IsMinUpdated.assign(1, false); IsMaxUpdated.assign(1, false); IsCVUpdated.assign(1, false); IsMeanUpdated.assign(1, false); 
+	IsCVSumUpdated.assign(1, false); IsMeanSumUpdated.assign(1, false); IsMeanSumUpdatedAll.assign(1, false);
+	IsCVSumUpdatedAll.assign(1, false); IsMinSumUpdatedAll.assign(1, false); IsMaxSumUpdatedAll.assign(1, false);
 
 }
 
@@ -396,10 +399,10 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 			if (m_pNewMap->GetNumberofSumVariables() > 1) testcond_sv_mean();
 
 			for (unsigned long iv = 0; iv < m_pNewMap->m_MStorage.m_ValSumValues_Stored.size(); testcond_ValSumValues_Stored(iv), iv++);
-			IsMinUpdated=false;
-			IsCVUpdated=false;
-			IsMeanUpdated=false;
-			IsMaxUpdated=false;
+			IsMinUpdated[m_ActualEnsemble] =false;
+			IsCVUpdated[m_ActualEnsemble] =false;
+			IsMeanUpdated[m_ActualEnsemble] =false;
+			IsMaxUpdated[m_ActualEnsemble] =false;
 		}
 		else {
 			m_Valid_TSV[m_ActualEnsemble].History.clear();
@@ -662,7 +665,7 @@ unsigned long SelectedEnsembles::GetNumBayesAccepted(unsigned long num_burn_in)
 float SelectedEnsembles::GetMinValidPar(unsigned long ip)
 {
 	if (m_ParValidMin.size() == 0) return 0.;
-	if (!IsMinUpdated) {
+	if (!IsMinUpdated[m_pNewMap->m_MStorage.m_ActualEnsemble]) {
 		float v = 1.1E38f;
 		for (unsigned long i = 0; i<m_TotalNumAccepted; i++) {
 			unsigned long irun = Get_AcceptedRuns(i);
@@ -679,7 +682,7 @@ float SelectedEnsembles::GetMinValidPar(unsigned long ip)
 float SelectedEnsembles::GetMaxValidPar(unsigned long ip)
 {
 	if (m_ParValidMax.size() == 0) return 0.;
-	if (!IsMinUpdated) {
+	if (!IsMaxUpdated[m_pNewMap->m_MStorage.m_ActualEnsemble]) {
 		float v = float(MISSING);
 		for (unsigned long i = 0; i<m_TotalNumAccepted; i++) {
 			unsigned long irun = Get_AcceptedRuns(i);
@@ -704,7 +707,8 @@ float SelectedEnsembles::GetMinValidAll(unsigned long ip, unsigned long ind_spli
 			
 			for (unsigned long i = 0; i < m_TotalNumberRuns; i++) {
 				if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0 && m_Dim1Value == 0)) {
-					if (GetValid(i, ip) < v)	v = GetValid(i, ip);
+					auto koll= GetValid(i, ip);
+					if (koll > MISSING + 1&& koll < v)	v = koll;
 				}
 
 			}
@@ -808,13 +812,14 @@ float SelectedEnsembles::GetMaxValidAll(unsigned long ip, unsigned long ind_spli
 	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 		if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX].size()<=ip) return 0.;
 		if (m_NumValid == 0) return MISSING;
-		if(!IsMaxUpdated) {
+		if(!IsMaxUpdated[m_pNewMap->m_MStorage.m_ActualEnsemble]) {
 			float v=float(MISSING);
 			if(ind_split==0) {
 				size_t numruns = m_TotalNumberRuns;
 				for(unsigned long i=0;i<numruns;i++) {
 					if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0 && m_Dim1Value == 0)) {
-						if (GetValid(i, ip) > v) v = GetValid(i, ip);
+						auto koll = GetValid(i, ip);
+						if (koll > MISSING + 1.&&koll > v) v = koll;
 					}
 				}
 				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip] = v;
@@ -843,15 +848,18 @@ float SelectedEnsembles::GetMeanValidAll(unsigned long ip, unsigned long ind_spl
 	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN].size()<=ip) return 0.;
 	unsigned long count=0;
-	if(!IsMeanUpdated) {
+	if(!IsMeanUpdated[m_ActualEnsemble]) {
 		float v=1.1E38f;
 		double sum=0.;
 		if(ind_split==0) {
 			size_t numruns = m_TotalNumberRuns;
 			for(unsigned long i=0;i<numruns;i++) {
 				if (i % m_CyclicNumber == m_CyclicStartPos|| (m_CyclicStartPos==0&&m_Dim1Value==0)) {
-					count++;
-					sum += GetValid(i, ip);
+					auto koll= GetValid(i, ip);
+					if (koll > MISSING + 1.) {
+						count++;
+						sum += koll;
+					}
 				}
 
 			}
@@ -946,7 +954,7 @@ float SelectedEnsembles::GetCV_Valid(unsigned long ip, unsigned long ind_split)
 	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV].size() <=ip) return 0.;
 	if (m_NumValid == 0) return MISSING;
-	if (!IsCVUpdated) {
+	if (!IsCVUpdated[m_ActualEnsemble]) {
 		float v = 1.1E38f;
 		double sum = 0.;
 		unsigned long count = 0;
@@ -994,14 +1002,17 @@ float SelectedEnsembles::GetCV_ValidAll(unsigned long ip, unsigned long ind_spli
 	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
 	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV].size() <=ip) return 0.;
 	if (m_NumValid == 0) return MISSING;
-	if(!IsCVUpdated) {
+	if(!IsCVUpdated[m_ActualEnsemble]) {
 		double sum=0.;
 		unsigned long count=0;
 		if(ind_split==0) {
 			for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
 				if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0&&m_Dim1Value == 0)) {
-					count++;
-					sum += pow(GetValid(i, ip) - GetMeanValidAll(ip), 2);
+					auto koll = GetValid(i, ip);
+					if (koll > MISSING + 1) {
+						count++;
+						sum += pow(GetValid(i, ip) - GetMeanValidAll(ip), 2);
+					}
 				}
 			}
 			if(count>2&&abs(GetMeanValidAll(ip))>0)
@@ -1049,7 +1060,7 @@ float SelectedEnsembles::GetMinValid(unsigned long ip, unsigned long ind_split)
 				unsigned long irun=Get_AcceptedRuns(i);
 				if(irun<0) return MISSING;
 					fval=GetValid(irun,ip);
-					if(fval<v&&fval>MISSING) v=fval;
+					if(fval<v&&fval>MISSING+1) v=fval;
 			}
 			m_Valid_TSV[m_ActualEnsemble].v[E_POST_MIN][ip] = v;
 			return v;
@@ -1131,10 +1142,10 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 	string txt = FUtil::STD_ItoAscii(m_ActualEnsemble+1);
 	mfc_util.SetPaneMessage("Setting Statistics - Performance Indicators start for ensemble no :"+ txt);
 #endif
-	IsMinUpdated = false;
-	IsMaxUpdated = false;
-	IsCVUpdated = false;
-	IsMeanUpdated = false;
+	IsMinUpdated[m_ActualEnsemble] = false;
+	IsMaxUpdated[m_ActualEnsemble] = false;
+	IsCVUpdated[m_ActualEnsemble] = false;
+	IsMeanUpdated[m_ActualEnsemble] = false;
 
 
 	size_t Dim1Value = m_pNewMap->m_MStorage.m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
@@ -1162,8 +1173,8 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 			GetMaxValidAll(i, split);
 		}
 	}
-	IsMinUpdated = true;
-	IsMeanUpdated = false;
+	IsMinUpdated[m_ActualEnsemble] = true;
+	IsMeanUpdated[m_ActualEnsemble] = false;
 	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
 			GetMeanValid(i, split);
@@ -1171,14 +1182,14 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 		}
 	}
 
-	IsMeanUpdated = true;
+	IsMeanUpdated[m_ActualEnsemble] = true;
 	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
 			GetCV_Valid(i, split);
 			GetCV_ValidAll(i, split);
 		}
 	}
-	IsCVUpdated = true;
+	IsCVUpdated[m_ActualEnsemble] = true;
 
 
 	for (unsigned long i = 0; i<m_NumSumValid; i++) {
@@ -1190,8 +1201,8 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 	Update_TSV_VarStat(true);
 
 
-	IsMinUpdated = true;
-	IsMaxUpdated = true;
+	IsMinUpdated[m_ActualEnsemble] = true;
+	IsMaxUpdated[m_ActualEnsemble] = true;
 	  //false = update of prior distribution - true =posterior
 	Update_SV_VarStat(true);	//false = update of prior distribution
 #ifndef COUPSTD
@@ -1203,7 +1214,7 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 float SelectedEnsembles::GetMinSumValid(unsigned long ip)
 {
 	if(m_VarValidMinSum.size()<=0) return 0.;
-	if(!IsMinSumUpdatedAll) {
+	if(!IsMinSumUpdatedAll[m_ActualEnsemble]) {
 		float v=1.1E38f;
 		float value;
 
@@ -1225,7 +1236,7 @@ float SelectedEnsembles::GetMinSumValid(unsigned long ip)
 float SelectedEnsembles::GetMaxSumValid(unsigned long ip)
 {
 	if(m_VarValidMaxSum.size()<=ip) return 0.;
-		if(!IsMaxSumUpdatedAll) {
+		if(!IsMaxSumUpdatedAll[m_ActualEnsemble]) {
 			float v=float(MISSING), value;
 			for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
 			unsigned long irun=Get_AcceptedRuns(i);
@@ -1243,7 +1254,7 @@ float SelectedEnsembles::GetMaxSumValid(unsigned long ip)
 float SelectedEnsembles::GetMinSumValidAll(unsigned long ip)
 {
 	if(m_VarValidMinSum.size()<=0) return 0.;
-	if(!IsMinSumUpdatedAll) {
+	if(!IsMinSumUpdatedAll[m_ActualEnsemble]) {
 		float v=1.1E38f, value;
 				for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
 					value = GetValidSum(i, ip);
@@ -1261,7 +1272,7 @@ float SelectedEnsembles::GetMinSumValidAll(unsigned long ip)
 float SelectedEnsembles::GetMaxSumValidAll(unsigned long ip)
 {
 		if(m_VarValidMaxSum.size()<=ip) return 0.;
-		if(!IsMaxSumUpdatedAll) {
+		if(!IsMaxSumUpdatedAll[m_ActualEnsemble]) {
 			float v=float(MISSING), value;
 			for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
 				value = GetValidSum(i, ip);
@@ -1286,7 +1297,7 @@ float SelectedEnsembles::GetMaxSumValidAll(unsigned long ip)
 float SelectedEnsembles::GetMeanSumValidAll(unsigned long ip)
 {
 	if (m_VarValidMeanSumAll.size() == 0) return 0.;
-	if (!IsMeanSumUpdatedAll) {
+	if (!IsMeanSumUpdatedAll[m_ActualEnsemble]) {
 		float v = 0, value;
 		unsigned long num = 0;
 
@@ -1304,7 +1315,7 @@ float SelectedEnsembles::GetMeanSumValidAll(unsigned long ip)
 		}
 		else
 			return -1.1e38f;
-		IsMeanSumUpdatedAll = true;
+		IsMeanSumUpdatedAll[m_ActualEnsemble] = true;
 	}
 	else
 		return m_VarValidMeanSumAll[ip];
@@ -1313,7 +1324,7 @@ float SelectedEnsembles::GetMeanSumValidAll(unsigned long ip)
 float SelectedEnsembles::GetCVSumValidAll(unsigned long ip)
 {
 	if (m_VarValidCVSumAll.size() == 0) return 0.;
-	if (!IsCVSumUpdatedAll) {
+	if (!IsCVSumUpdatedAll[m_ActualEnsemble]) {
 		double sum = 0.;
 		double mean = GetMeanSumValidAll(ip);
 		float testvalue;
@@ -1446,7 +1457,7 @@ float SelectedEnsembles::GetValidDynLogLi(unsigned long iv, unsigned long idin, 
 float SelectedEnsembles::GetMeanSumValid(unsigned long ip)
 {
 	if(m_VarValidMeanSum.size()==0) return 0.;
-	if(!IsMeanSumUpdated) {
+	if(!IsMeanSumUpdated[m_ActualEnsemble]) {
 		float v=0, value;
 		unsigned long num=0;
 
@@ -1466,7 +1477,7 @@ float SelectedEnsembles::GetMeanSumValid(unsigned long ip)
 		}
 		else
 			return -1.1e38f;
-		IsMeanSumUpdated=true;
+		IsMeanSumUpdated[m_ActualEnsemble] =true;
 	}
 	else 
 		return m_VarValidMeanSum[ip];
@@ -1475,7 +1486,7 @@ float SelectedEnsembles::GetMeanSumValid(unsigned long ip)
 float SelectedEnsembles::GetCVSumValid(unsigned long ip)
 {
 	if(m_VarValidCVSum.size()==0) return 0.;
-	if(!IsCVSumUpdated) {
+	if(!IsCVSumUpdated[m_ActualEnsemble]) {
 		double sum=0.;
 		double mean=GetMeanSumValid(ip);
 		float testvalue;
@@ -1737,7 +1748,8 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 				if(posterior) irun= Get_AcceptedRuns(i);
 				else irun = i;
 				candidate = GetValid(irun, ip);
-				values.push_back(candidate);
+				if(candidate>MISSING+1.)
+					values.push_back(candidate);
 			}
 
 
@@ -1753,7 +1765,8 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 				if (ip < m_NumValid) {
 					if (valid) {
 						candidate = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
-						values.push_back(candidate);
+						if (candidate > MISSING + 1.)
+							values.push_back(candidate);
 					}
 				}
 			}
@@ -1812,7 +1825,7 @@ vector<float> SelectedEnsembles::GetPost_SV_ValidPerformanceIndicatorVector(size
 }
 
 vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(unsigned long ip, unsigned long ind_split) {
-	float v = 1.1E38f;
+	float v = MISSING;
 	vector<float> out;
 	size_t index_trans = string::npos;
 	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed >= 0) {
@@ -1837,16 +1850,15 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 
 	if (ind_split == 0) {
 
-		float fval;
 		size_t count = 0;
 		for (unsigned long i = 0; i < m_TotalNumAccepted; i++) {
 			unsigned long irun = Get_AcceptedRuns(i);
 
-			fval = MISSING;
-			fval = GetValid(irun, ip);
+			//fval = MISSING;
+			auto koll = GetValid(irun, ip);
 
-			if (fval > MISSING)
-				out.push_back(fval);
+			if (koll >MISSING+1.)
+				out.push_back(koll);
 		}
 	}
 	return out;

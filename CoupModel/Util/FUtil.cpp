@@ -664,7 +664,6 @@ bool FUtil::IsFileExisting(string str)
 }
  int FUtil::GetOptionIndex(string optionlist, string str)
 {
-
 	 int ipos_end, index;
 	 vector<string> v;
 	 int ipos = optionlist.find("\n");
@@ -679,23 +678,6 @@ bool FUtil::IsFileExisting(string str)
 	 if (str == v[v.size() - 1]) index = v.size() - 1;
 	 
 	 return index;
-
-
-	/*ipos_end=optionlist.find(str);	
-	if(ipos_end==0) return 0;
-	optionlist=optionlist.substr(0,ipos_end+1);
-	int ipos=optionlist.find("\n");
-	if(ipos<0)
-		index=-1;
-	else
-		index=0;
-	while(ipos>0) {
-		optionlist=optionlist.substr(ipos+1);
-		ipos=optionlist.find("\n");
-		index++;
-	}
-	return index;*/
-
 }
 string FUtil::GetOptionString(string optionlist, int Index)
 {

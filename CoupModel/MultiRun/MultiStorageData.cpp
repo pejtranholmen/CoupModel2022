@@ -83,6 +83,18 @@ MultiStorageData::~MultiStorageData()
 	if(m_IsOpen) m_MultiFile.close();
 	if(m_IsSplitOpen) m_SplitPeriodFile.close();
 }
+void MultiStorageData::UpdateCyclicNumbers(size_t ActualEnsemble)
+{
+	{
+		size_t Dim1Value = m_Valid_TSV[ActualEnsemble].Dim1_Par_Index;
+		if (Dim1Value == 0)
+			SetCyclicNumbers(1, 0);
+		else {
+			auto koll = m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+			SetCyclicNumbers(koll, Dim1Value - 1, Dim1Value);
+		}
+	};
+}
 bool MultiStorageData::Reset()
 {
 
@@ -244,15 +256,15 @@ void MultiStorageData::SetNewPerformance(unsigned long irun, unsigned long ivar,
 {
 	//m_VarValid[irun*m_NumValid]=
 	size_t ival = m_NumValid / m_ValidStatBase;
-	unsigned long index=ivar%ival*m_ValidStatBase;
+	unsigned long index=ivar%ival;
 
 	AddValid(irun,index,newperf.r2);
-	AddValid(irun,1+index,newperf.intercept);
-	AddValid(irun,2+index,newperf.slope);
-	AddValid(irun,3+index,newperf.me);
-	AddValid(irun,4+index,newperf.rmse);
-	AddValid(irun,5+index,newperf.logli);
-	AddValid(irun,6+index, newperf.nse);
+	AddValid(irun,1*ival+index,newperf.intercept);
+	AddValid(irun,2*ival+index,newperf.slope);
+	AddValid(irun,3*ival+index,newperf.me);
+	AddValid(irun,4*ival+index,newperf.rmse);
+	AddValid(irun,5*ival+index,newperf.logli);
+	AddValid(irun,6*ival+index, newperf.nse);
 
 }
 bool MultiStorageData::SaveSplitData(unsigned long index)
@@ -885,7 +897,7 @@ unsigned long MultiStorageData::GetNumBayesAccepted(unsigned long num_burn_in)
 float MultiStorageData::GetMinPar(unsigned long ip)
 {
 	if (m_ParMin.size() <= ip) return 1.1E38;
-	if(!m_pNewMap->m_MStorage.IsMinUpdated) {
+	if(!m_pNewMap->m_MStorage.IsMinUpdated[m_pNewMap->m_MStorage.m_ActualEnsemble]) {
 		float v=1.1E38f;
 		for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
 			if(GetMultiP(i,ip)<v)
@@ -901,7 +913,7 @@ float MultiStorageData::GetMinPar(unsigned long ip)
 float MultiStorageData::GetMaxPar(unsigned long ip)
 {
 	if (m_ParMax.size() <= ip) return -1.1E38;
-	if(!m_pNewMap->m_MStorage.IsMinUpdated) {
+	if(!m_pNewMap->m_MStorage.IsMinUpdated[m_pNewMap->m_MStorage.m_ActualEnsemble]) {
 		float v=float(MISSING);
 		for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
 			if(GetMultiP(i,ip)>v)
@@ -1160,7 +1172,14 @@ void MultiStorageData::VarValidAllo()
 	m_VarValidCriteria.resize(m_NumValidAll);*/
 
 	if (m_AcceptedRuns.size() == 0) m_AcceptedRuns.resize(1);
-	if (m_Valid_TSV.size() < m_AcceptedRuns.size()) m_Valid_TSV.resize(m_AcceptedRuns.size());
+	if (m_Valid_TSV.size() < m_AcceptedRuns.size()) {
+		m_Valid_TSV.resize(m_AcceptedRuns.size());
+		m_pNewMap->m_MStorage.IsMinUpdated.resize(m_AcceptedRuns.size());
+		m_pNewMap->m_MStorage.IsMaxUpdated.resize(m_AcceptedRuns.size());
+		m_pNewMap->m_MStorage.IsCVUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanUpdated.resize(m_AcceptedRuns.size());
+		m_pNewMap->m_MStorage.IsCVSumUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanSumUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanSumUpdatedAll.resize(m_AcceptedRuns.size());
+		m_pNewMap->m_MStorage.IsCVSumUpdatedAll.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMinSumUpdatedAll.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMaxSumUpdatedAll.resize(m_AcceptedRuns.size());
+	}
 	for(size_t i=0; i< m_AcceptedRuns.size(); i++)	AllocateValid_TSV(i);
 	if (m_Valid_SV.size() < m_AcceptedRuns.size()) m_Valid_SV.resize(m_AcceptedRuns.size());
 	if (m_Valid_SV_Mean.size() < m_AcceptedRuns.size()) m_Valid_SV_Mean.resize(m_AcceptedRuns.size());
@@ -1275,8 +1294,6 @@ void MultiStorageData::AllocateMeanValidVar() {
 	for (size_t i = 0; i < 7; i++) m_MeanSV_All[i].resize(m_TotalNumberRuns);
 	CalculateMeanValidValues(true);
 
-
-
 }
 bool MultiStorageData::ReadAllStat(){
 
@@ -1358,10 +1375,6 @@ bool MultiStorageData::ReadAllStat(){
 	m_HeaderStart = m_MultiFile.tellg();
 	string str;
 
-
-
-
-
 	readmore = true;
 	AllocateMeanValidVar();
 
@@ -1401,8 +1414,8 @@ bool MultiStorageData::ReadAllStat(){
 		else {
 			for (unsigned long i = 0; i < m_TotalNumberRuns; i++)
 				SetAcceptedRunNo(i, true);
-			    m_pNewMap->m_MStorage.IsMinUpdated = false;
-				m_pNewMap->m_MStorage.IsMaxUpdated = false;
+			    m_pNewMap->m_MStorage.IsMinUpdated.assign(m_pNewMap->m_MStorage.IsMinUpdated.size(),false);
+				m_pNewMap->m_MStorage.IsMaxUpdated.assign(m_pNewMap->m_MStorage.IsMaxUpdated.size(), false);
 				for (unsigned long split = 0; split <m_NumSplitPeriod; split++) {
 						for (unsigned long i = 0; i < m_NumValid + m_NumExtraValid; i++) {
 							size_t index = i + split*(m_NumValid + m_NumExtraValid);
@@ -1611,14 +1624,14 @@ bool MultiStorageData::ReadAcceptedRunInfo() {
 			m_MultiFile.read((char*)&m_ParValidMax[0], 4 * m_NumMulti);
 			nbyte = (unsigned long)(m_MultiFile.gcount());
 			if (nbyte == 0) {
-				m_pNewMap->m_MStorage.IsMinUpdated = false;
+				m_pNewMap->m_MStorage.IsMinUpdated[0] = false;
 				for (unsigned long i = 0; i<m_NumMulti; i++) {
 					GetMinPar(i);
 					GetMaxPar(i);
 				//	GetMinValidPar(i);
 				//	GetMaxValidPar(i);
 				}
-				m_pNewMap->m_MStorage.IsMinUpdated = true;
+				m_pNewMap->m_MStorage.IsMinUpdated[0] = true;
 
 
 
@@ -1830,7 +1843,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		Threshold = 10000;
 	}
 	else
-		ip = VarIndex + Indicator * MaxNum;;
+		ip = VarIndex + Indicator*MaxNum ;
 
 	if (VarIndex == MaxNum) MeanOfMany = true;
 	if (ip == string::npos) return false;
