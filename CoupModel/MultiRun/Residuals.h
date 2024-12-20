@@ -22,7 +22,8 @@ public:
 	size_t GetMaxNumRec() {return m_MaxNumRec;};
 
 	float GetResiduals(size_t, size_t, size_t);
-	vector<float> GetResidualVector(size_t, size_t);
+	vector<float> GetResidualVector(size_t RunNo, size_t NumValues);
+	vector<float> GetResidualVectorSubSet(size_t RunNo, size_t NumValue, size_t ActPoints, size_t Section_);
 	vector<size_t> GetAcceptedRunVector();
 	int m_ErrorCount;
 

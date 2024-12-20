@@ -703,6 +703,20 @@ vector<float> CResiduals::GetResidualVector(size_t irun, size_t iv)
 
 	return v;
 }
+vector<float> CResiduals::GetResidualVectorSubSet(size_t RunNo, size_t NumVar, size_t ActPoints, size_t Section)
+{
+	vector<float> Subset;
+	Subset.resize(ActPoints);
+	vector<float> all = GetResidualVector(RunNo, NumVar);
+	if (all.size() >= ActPoints * Section) {
+		for (size_t i = 0; i < ActPoints; i++)
+			Subset[i] = all[ActPoints * (Section)+i];
+	}
+	else
+		Subset.assign(ActPoints, MISSING);
+
+	return Subset;
+}
 float CResiduals::GetResiduals(size_t irun, size_t iv, size_t irec)
 
 {

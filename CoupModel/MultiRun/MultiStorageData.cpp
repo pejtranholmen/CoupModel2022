@@ -235,6 +235,17 @@ void MultiStorageData::AlloSplitPerformance(unsigned long splitperiods)
 	}
 
 }
+void MultiStorageData::AlloMinMaxUpdated(size_t NumOfEnsembles) 
+{
+	m_pNewMap->m_MStorage.IsMinUpdated.resize(NumOfEnsembles);
+	m_pNewMap->m_MStorage.IsMaxUpdated.resize(NumOfEnsembles);
+	m_pNewMap->m_MStorage.IsCVUpdated.resize(NumOfEnsembles); m_pNewMap->m_MStorage.IsMeanUpdated.resize(NumOfEnsembles);
+	m_pNewMap->m_MStorage.IsCVSumUpdated.resize(NumOfEnsembles); m_pNewMap->m_MStorage.IsMeanSumUpdated.resize(NumOfEnsembles); m_pNewMap->m_MStorage.IsMeanSumUpdatedAll.resize(NumOfEnsembles);
+	m_pNewMap->m_MStorage.IsCVSumUpdatedAll.resize(NumOfEnsembles); m_pNewMap->m_MStorage.IsMinSumUpdatedAll.resize(NumOfEnsembles); m_pNewMap->m_MStorage.IsMaxSumUpdatedAll.resize(NumOfEnsembles);
+
+
+
+}
 void MultiStorageData::SetPerformance(unsigned long irun,  unsigned long ind_split, STAT_PERF split)
 {
 	unsigned long ival=m_NumValid/m_ValidStatBase;
@@ -1174,11 +1185,7 @@ void MultiStorageData::VarValidAllo()
 	if (m_AcceptedRuns.size() == 0) m_AcceptedRuns.resize(1);
 	if (m_Valid_TSV.size() < m_AcceptedRuns.size()) {
 		m_Valid_TSV.resize(m_AcceptedRuns.size());
-		m_pNewMap->m_MStorage.IsMinUpdated.resize(m_AcceptedRuns.size());
-		m_pNewMap->m_MStorage.IsMaxUpdated.resize(m_AcceptedRuns.size());
-		m_pNewMap->m_MStorage.IsCVUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanUpdated.resize(m_AcceptedRuns.size());
-		m_pNewMap->m_MStorage.IsCVSumUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanSumUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanSumUpdatedAll.resize(m_AcceptedRuns.size());
-		m_pNewMap->m_MStorage.IsCVSumUpdatedAll.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMinSumUpdatedAll.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMaxSumUpdatedAll.resize(m_AcceptedRuns.size());
+		m_pNewMap->m_MStorage.AlloMinMaxUpdated(m_AcceptedRuns.size());
 	}
 	for(size_t i=0; i< m_AcceptedRuns.size(); i++)	AllocateValid_TSV(i);
 	if (m_Valid_SV.size() < m_AcceptedRuns.size()) m_Valid_SV.resize(m_AcceptedRuns.size());

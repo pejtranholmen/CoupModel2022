@@ -95,13 +95,9 @@ bool SelectedAddEnsembles::AddNewEnsemble(bool KeepPreviousCriteria) {
 	m_ActualEnsemble = m_AcceptedIdString.size() - 1;
 
 	m_Valid_TSV.resize(m_AcceptedRuns.size());
+	m_pNewMap->m_MStorage.AlloMinMaxUpdated(m_AcceptedRuns.size());
 
-	m_pNewMap->m_MStorage.IsMinUpdated.resize(m_AcceptedRuns.size());
-	m_pNewMap->m_MStorage.IsMaxUpdated.resize(m_AcceptedRuns.size());
-	m_pNewMap->m_MStorage.IsCVUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanUpdated.resize(m_AcceptedRuns.size());
-	m_pNewMap->m_MStorage.IsCVSumUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanSumUpdated.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMeanSumUpdatedAll.resize(m_AcceptedRuns.size());
-	m_pNewMap->m_MStorage.IsCVSumUpdatedAll.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMinSumUpdatedAll.resize(m_AcceptedRuns.size()); m_pNewMap->m_MStorage.IsMaxSumUpdatedAll.resize(m_AcceptedRuns.size());
-		
+			
 
 	AllocateValid_TSV(m_ActualEnsemble);
 	m_Valid_SV.resize(m_AcceptedRuns.size());

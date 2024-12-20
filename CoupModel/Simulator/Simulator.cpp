@@ -1118,7 +1118,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		m_ValPGFile[i].ActPos=pos.first-1;
 
 		if(pos.first>1) m_ValPGFile[i].FirstValidRecord=pos.first*(m_ValPGFile[i].varindex.size()+1);
-		else m_ValPGFile[i].FirstValidRecord=1;
+		else m_ValPGFile[i].FirstValidRecord=0;
 		//if(!First) {
 			if(pos.first>1) {
 				size_t ist; /// Set Missing values in validation file if validation data is outside simulated period

@@ -177,13 +177,13 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 	}
 			
 	if (out.pSimDoc->IsMultiSimulation()) {
-		out.pPG_MeasValFile->ReOpen();
+		bool file_good=out.pPG_MeasValFile->ReOpen();
 		pair<size_t, size_t> filterinfo = GetFilterForEnsemble(m_pSimDoc->m_MStorage.m_ActualEnsemble, out.Index);
 		out.PG_FilterVarIndex = filterinfo.first; out.PG_FilterVarValue = filterinfo.second;
 		auto pSw = m_pSimDoc->GetSw("UseFilterParameters");
 		auto pSw2 = m_pSimDoc->GetSw("PreDefinedEnsembles");
 		out.EnsembleNo = m_pSimDoc->m_MStorage.m_ActualEnsemble;
-		if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
+		if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0&&file_good) {
 			out.RepitDataType = true;
 			auto cycle=out.pPG_MeasValFile->GetCycleWithCommonTime();
 			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;

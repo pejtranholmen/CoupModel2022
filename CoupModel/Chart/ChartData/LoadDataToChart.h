@@ -81,6 +81,7 @@ class LoadDataToChart :public DistributionCurves
 		Doc *m_pSimDoc;
 		CPG *m_pPG_Active;
 		void AdjustForResiduals(double &v, CResiduals *pRes, long ResRunNo, int IndexVal, int LogLiVersion, long index, bool MeasuredAsSource=false);
+		void AdjustForResiduals(double& v, float ResValue, long ResRunNo, int IndexVal, int LogLiVersion, long index, bool MeasuredAsSource);
 		void AdjustForMeanOfResiduals(double &v, CResiduals *pRes, bool Accepted, int IndexVal, int LogLiVersion, long index, int TypeStat);
 		void AdjustForMeanOfResidualsBetweenYear(double &v, CResiduals *pRes, bool Accepted, int IndexVal, int LogLiVersion, long index, int TypeStat);
 		bool TransformSelectedVariables(PLOTv p_info, size_t icurve, size_t i_band);
@@ -135,7 +136,7 @@ class LoadDataToChart :public DistributionCurves
 
 		void SetDataValueMissing(size_t icurve, PG_TIMECONTROL pg_control, size_t index);
 		void SetDataBandValueMissing(size_t i_band, PG_TIMECONTROL pg_control, size_t index);
-		double GetDataFromPGFile(PG_TIMECONTROL pg_control, size_t index, int PGindex);
+		double GetDataFromPGFile(PG_TIMECONTROL pg_control, size_t index, int PGindex, size_t act_rep=1);
 
 
 

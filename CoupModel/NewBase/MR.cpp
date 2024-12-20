@@ -1468,7 +1468,6 @@ bool MR::PreDefined_Criteria_Process() {
 			auto Dim1_Par_Index = size_t(pDim1Index->GetValue(i) + 0.0001);
 			EstimateNewTransformedPerformance(Transform, Dim1_Par_Index);
 			m_MStorage.EvaluateFile(false);
-			auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(0);
 		}
 
 		
@@ -1491,26 +1490,12 @@ bool MR::PreDefined_Criteria_Process() {
 			m_MStorage.UpdateCyclicNumbers(m_MStorage.m_ActualEnsemble);
 
 			m_MStorage.SetActualPerformanceVector_TSV_Variables(transform_index);
-			auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
 
 			m_MStorage.SetActual_AcceptedEnsemble();
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
+
 			if (m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
 				m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
 			}
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+1);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+2);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+3);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex+4);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex + 5);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex + 6);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex + 7);
-
-
-
-
-
 
 			switch (Indicator) {
 				case 0:
@@ -1536,7 +1521,6 @@ bool MR::PreDefined_Criteria_Process() {
 					break;
 			}
 			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
-			kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(VarIndex);
 			m_MStorage.IsMaxUpdated[i] = m_MStorage.IsMinUpdated[i] = false;
 		}
 		m_MStorage.m_ActualEnsemble = pre_actEnsemble;
@@ -2087,7 +2071,6 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 		if (test == "Filter Var Value") {
 			auto indexmulti = i2 + 1;
 			test_value_sim = size_t(m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001);
-			test_value_sim = size_t(m_MStorage.GetMultiP(1, indexmulti) + 0.001);
 			break;
 		}
 	}
@@ -2096,12 +2079,14 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 	if (test_value_sim != string::npos)
 		auto koll = pPGMeas->GetNumRecords();
 	auto koll2 = pPGMeas->GetFileName();
+
 	for (size_t irec = 0; irec < pPGMeas->GetCycleWithCommonTime(); irec++) {
 		if (pPGMeas->FilterTest(pg_filter_index, irec + 1, test_value_sim)) {
 			start_pos = irec;
 			break;
 		}
 	}
+
 	auto n_cycle_withinPGFile = pPGMeas->GetCycleWithCommonTime();
 	return pair <size_t, size_t>(start_pos, n_cycle_withinPGFile);
 }
@@ -2124,7 +2109,6 @@ vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, s
 		}
 	}
 	size_t pg_filter_index = m_Val_Array[index_val].PG_FilterIndex;
-	auto koll2 = pPGMeas->GetFileName();
 	auto numrep = pPGMeas->GetNumRepititions();
 
 	size_t valid_Value;

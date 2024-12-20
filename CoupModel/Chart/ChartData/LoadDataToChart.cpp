@@ -802,27 +802,7 @@ void LoadDataToChart::AdjustForResiduals(double &v, CResiduals *pRes, long ResRu
 			else if (LogLiVersion == 3) {
 				if (v > 0.1 * MISSING)
 					v -= pRes->GetResiduals(ResRunNo, IndexVal, index);
-				if (index < 247) {
-					auto koll = ResRunNo;
-					if (ResRunNo == 2) {
-						auto koll2= pRes->GetResiduals(0, IndexVal, index);
-						koll2= pRes->GetResiduals(1, IndexVal, index);
-						koll2 = pRes->GetResiduals(2, IndexVal, index);
-						koll2 = pRes->GetResiduals(3, IndexVal, index);
-						koll2 = pRes->GetResiduals(4, IndexVal, index);
-						koll2 = pRes->GetResiduals(5, IndexVal, index);
-						koll2 = pRes->GetResiduals(6, IndexVal, index);
-
-
-
-
-
-
-					}
-
-				}
 			}
-
 
 		}
 		else {
@@ -845,6 +825,53 @@ void LoadDataToChart::AdjustForResiduals(double &v, CResiduals *pRes, long ResRu
 	}
 
 }
+void LoadDataToChart::AdjustForResiduals(double& v, float ResValue, long ResRunNo, int IndexVal, int LogLiVersion, long index, bool MeasuredAsSource) {
+	float meas, modelvalue;
+	if (index > 0) index--;
+	//if(m_pUtil->m_ResidualPlot<=1) {
+	meas = v;
+	if (m_BoxCox.use && m_pUtil->m_ResidualPlot == 1) {
+		float meas = v;
+		float modelvalue = v - ResValue;
+		meas = m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.boxcox(meas, m_BoxCox.box_power, m_BoxCox.box_offset);
+		modelvalue = m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.boxcox(modelvalue, m_BoxCox.box_power, m_BoxCox.box_offset);
+		v = double(modelvalue) - meas;
+	}
+	else if (m_BoxCox.use && m_pUtil->m_ResidualPlot == 0) {
+		float modelvalue = v - ResValue;
+		v = m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.boxcox(modelvalue, m_BoxCox.box_power, m_BoxCox.box_offset);
+	}
+	else {
+		if (MeasuredAsSource) {
+			if (LogLiVersion == 2)
+				v = ResValue;
+			else if (LogLiVersion == 3) {
+				if (v > 0.1 * MISSING)
+					v -= ResValue;
+			}
+
+		}
+		else {
+			if (LogLiVersion == 2)
+				v = -ResValue;
+			else if (LogLiVersion == 3) {
+				if (v > 0.1 * MISSING)
+					v -= ResValue;
+
+			}
+			else if (LogLiVersion == 0) {
+				double meas = v;
+				double modelvalue = v + ResValue;
+				v = m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.SumLikelihood(size_t(IndexVal), modelvalue, meas);
+			}
+			else if (LogLiVersion == 1) {
+				v = ResValue;
+			}
+		}
+	}
+
+}
+
 void LoadDataToChart::AdjustForMeanOfResiduals(double &v,CResiduals *pRes, bool AllAccepted, int IndexVal, int LogLiVersion, long index, int TypeStat)
 {
 	float meas, modelvalue;
@@ -1967,7 +1994,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	}
 	size_t save_ensemble_no;
 
-	if (m_ChartInfo.MultiValMode&& m_pSimDoc->m_MStorage.m_AcceptedRuns.size()>0) {
+	if (m_ChartInfo.MultiValMode&& m_pSimDoc->m_MStorage.m_AcceptedRuns.size()>0&&datatype==DATA_TYPES::SIM_VAL) {
 		size_t iens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 		//m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][iaccept] + startvalue;
 		auto AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
@@ -2032,7 +2059,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	vector<int> NumValid;
 
 	int VAL_PGindex = PGindex;
-	size_t act_rep = 0;
+	size_t act_rep = 1;
 	vector<size_t> RepHits;
 
 	auto AllMissing = [&]() {
@@ -2043,7 +2070,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	
 
 
-	if (NumAgg > 1|| m_pPG_Active->GetNumRepititions()>1) {
+	/*if (NumAgg > 1 || m_pPG_Active->GetNumRepititions()>1 && datatype == DATA_TYPES::SIM_VAL) {
 		SumVal.assign(ActNoPoints, 0);
 		NumValid.assign(ActNoPoints, 0);
 		for (int ii = 0; ii < m_pSimDoc->MR_Get_NumberOfParametersWithinDim(1); ii++) {
@@ -2090,7 +2117,25 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 	}
 	if (RepHits.size() > 1) act_rep = RepHits[(p_info.Residual_RunNo) % RepHits.size()];
-	else if (RepHits.size() == 1) act_rep = RepHits.back();
+	else if (RepHits.size() == 1) act_rep = RepHits.back();*/
+
+	//m_pSimDoc->m_MStorage.UpdateCyclicNumbers(p_info.EnsembleNo);
+	if (p_info.RepitDataType)
+		act_rep = p_info.PGRepitNo;
+	if(p_info.pPG_MeasValFile!=nullptr)
+	if (p_info.pPG_MeasValFile->GetNumRepititions() > 0) {
+		auto rephits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index, p_info.Residual_RunNo);
+		if (rephits.size() > 0) act_rep = rephits.front();
+	}
+	else {
+		auto pSw = m_pSimDoc->GetSw("PreDefinedEnsembles");
+		if (pSw > 0) {
+			auto cycle_pair = m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
+			if (cycle_pair.first = string::npos) act_rep = cycle_pair.first + 1;
+		}
+	}
+
+
 	vector<float> points;
 
 	//for (size_t index_ValAgg = 0; index_ValAgg < NumAgg; index_ValAgg++) {
@@ -2107,11 +2152,12 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		if (act_rep > 0) {
 			allrep = false;
 			m_pPG_Active->SetRepititionSequence(act_rep, true);
-			p_info.pPG_MeasValFile->SetRepititionSequence(act_rep, true);
+			if(p_info.pPG_MeasValFile!=nullptr)
+				p_info.pPG_MeasValFile->SetRepititionSequence(act_rep, true);
 		}
 		
 		size_t act_rec;
-		//m_pPG_Active->SetRepititionSequence(act_rep);
+		m_pPG_Active->SetRepititionSequence(act_rep);
 		size_t last_rep = 0;
 		size_t count = 0;
 		koll = 0;
@@ -2133,10 +2179,17 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			}
 	
 		}
-
-		
 		vector<float> ActiveResiduals;
-		size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+		size_t Start_SubSet_Residuals = 0;
+		if (c_info.pRes != nullptr) {
+			ActiveResiduals = c_info.pRes->GetResidualVectorSubSet(c_info.ResRunNo, Residual_VarNum, ActNoPoints, act_rep - 1);
+			Start_SubSet_Residuals = ActNoPoints * (act_rep - 1);
+		}
+		else ActiveResiduals.assign(ActNoPoints, MISSING);
+		
+			;
+		/*size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
+		
 		if (c_info.pRes != nullptr) {
 			auto allkoll = c_info.pRes->GetResidualVector(c_info.ResRunNo, Residual_VarNum);
 
@@ -2157,22 +2210,21 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i, PGindex);
 				AA[icurve][i + pg_control.YearStartIndex] = m_pPG_Active->GetVarValue(PGindex, i+1, act_rep);
 				Measure[i]= m_pPG_Active->GetVarValue(PGindex, i + 1, act_rep);
-				if(LogLiVersion==3)
-					AA[icurve][i + pg_control.YearStartIndex] -= ActiveResiduals[i];
+				if (ActiveResiduals[i] > (MISSING*.99)) {
+					if (LogLiVersion == 3)
+						AA[icurve][i + pg_control.YearStartIndex] -= ActiveResiduals[i];
+					else
+						AA[icurve][i + pg_control.YearStartIndex] = ActiveResiduals[i];
+				}
 				else
-					AA[icurve][i + pg_control.YearStartIndex] = ActiveResiduals[i];
+					AA[icurve][i + pg_control.YearStartIndex] = MISSING;
+
 			}
 
 			return true;
 
 		}
 		else {
-
-			size_t Dim1Value = m_pSimDoc->m_MStorage.m_Valid_TSV[p_info.EnsembleNo].Dim1_Par_Index;
-			if (act_rep == string::npos) act_rep = 1;
-			if (act_rep == 0) {
-				if (AllMissing()) return false;
-			}
 
 			m_pPG_Active->SetRepititionSequence(act_rep);
 
@@ -2188,7 +2240,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			return true;
 
 		}
-
+		*/
 		for (size_t i = start_pos; i < ActNoPoints; i+=inc_step) {
 			act_rec = i;
 			if (allrep) {
@@ -2214,7 +2266,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			
 
 
-			if (m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex) < -1.E38) {
+			if (m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex, act_rep) < -1.E38) {
 				SetDataValueMissing(icurve, pg_control, i);
 				if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) SetDataBandValueMissing(i_band, pg_control, i);
 			}
@@ -2229,12 +2281,8 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				}
 				else {
 					act_rec = i+ pg_control.StartIndex-1;
-					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i , PGindex);
-					if (p_info.PG_FilterVarIndex > 0 && !p_info.pPG_MeasValFile->FilterTest(p_info.PG_FilterVarIndex, i + pg_control.StartIndex, p_info.PG_FilterVarValue)) {
-					/*	SetDataValueMissing(icurve, pg_control, i);
-						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) SetDataBandValueMissing(i_band, pg_control, i);*/
-					}
-					else if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+					AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i , PGindex,act_rep);
+					if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
 						if (m_ChartInfo.ResidualSource) {
 							BB_MIN[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 							BB_MAX[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
@@ -2243,13 +2291,13 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							BB_P50[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 							BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 
-							AdjustForMeanOfResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex, 0);
-							AdjustForMeanOfResiduals(BB[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex, 1);
-							AdjustForMeanOfResiduals(BB_MIN[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex, 2);
-							AdjustForMeanOfResiduals(BB_MAX[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex, 3);
-							AdjustForMeanOfResiduals(BB_P10[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex, 4);
-							AdjustForMeanOfResiduals(BB_P90[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex, 5);
-							AdjustForMeanOfResiduals(BB_P50[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex, 6);
+							AdjustForMeanOfResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex+Start_SubSet_Residuals, 0);
+							AdjustForMeanOfResiduals(BB[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 1);
+							AdjustForMeanOfResiduals(BB_MIN[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 2);
+							AdjustForMeanOfResiduals(BB_MAX[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 3);
+							AdjustForMeanOfResiduals(BB_P10[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 4);
+							AdjustForMeanOfResiduals(BB_P90[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 5);
+							AdjustForMeanOfResiduals(BB_P50[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 6);
 						}
 						else {
 
@@ -2269,26 +2317,13 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, resno, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 						}
 						else {
-							auto irun = act_rec / inc_step + act_rec % inc_step + 0;
-							auto koll = c_info.pRes->GetResiduals(c_info.ResRunNo, Residual_VarNum, act_rec);
-							auto allkoll = c_info.pRes->GetResidualVector(c_info.ResRunNo, Residual_VarNum);
-							if (koll > MISSING) {
-								auto Koll2 = i;
-
-							}
-							if (LogLiVersion == 3)
-								AA[icurve][i + pg_control.YearStartIndex] -= ActiveResiduals[i];
-							else
-								AA[icurve][i + pg_control.YearStartIndex] = ActiveResiduals[i];
-
-							//AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.ResRunNo, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
+							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], ActiveResiduals[i + pg_control.YearStartIndex], c_info.ResRunNo, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 
 						}
 					}
 					else if (!m_ChartInfo.ResidualSource&&datatype == DATA_TYPES::SIM_VAL) {
-						//AA[icurve][i + pg_control.YearStartIndex] = -1;
 						if (m_pUtil->m_ResidualPlot == 1) {
-							auto Meas = p_info.pPG_MeasValFile->GetVarValue(p_info.Residual_VarNum, i + pg_control.StartIndex + pg_control.YearStartIndex);
+							auto Meas = ActiveResiduals[i + pg_control.StartIndex + pg_control.YearStartIndex];// p_info.pPG_MeasValFile->GetVarValue(p_info.Residual_VarNum, i + pg_control.StartIndex + pg_control.YearStartIndex);
 							AA[icurve][i + pg_control.YearStartIndex] -= Meas;
 						}
 						else {
@@ -2454,12 +2489,12 @@ void LoadDataToChart::SetDataValue(size_t icurve, PG_TIMECONTROL pg_control, siz
 
 	}
 }
-double LoadDataToChart::GetDataFromPGFile(PG_TIMECONTROL pg_control, size_t i, int PGindex) {
+double LoadDataToChart::GetDataFromPGFile(PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t act_rep) {
 	if (m_ChartInfo.WithinDayRepresentation == 1 && m_pProp->GetIndepSecond() != PGHOUR)
-		return double(m_pPG_Active->GetVarValue(PGindex, i + pg_control.StartIndex));
+		return double(m_pPG_Active->GetVarValue(PGindex, i + pg_control.StartIndex,act_rep));
 	else if (m_pProp->GetIndepSecond() == PGHOUR&&m_pPG_Active->GetNumberofYears()>1) {
 
-		return double(m_pPG_Active->GetVarValue(PGindex, i + pg_control.StartIndex + pg_control.YearStartIndex));
+		return double(m_pPG_Active->GetVarValue(PGindex, i + pg_control.StartIndex + pg_control.YearStartIndex, act_rep));
 
 
 
@@ -2468,11 +2503,11 @@ double LoadDataToChart::GetDataFromPGFile(PG_TIMECONTROL pg_control, size_t i, i
 
 	else if (m_pProp->m_HourValueRepresentation == 0) {
 		double sum = 0.;
-		for (size_t ii = 0; ii<m_ChartInfo.WithinDayRepresentation; ii++) sum += m_pPG_Active->GetVarValue(PGindex, i*m_ChartInfo.WithinDayRepresentation + pg_control.StartIndex + ii);
+		for (size_t ii = 0; ii<m_ChartInfo.WithinDayRepresentation; ii++) sum += m_pPG_Active->GetVarValue(PGindex, i*m_ChartInfo.WithinDayRepresentation + pg_control.StartIndex + ii, act_rep);
 		return sum / m_ChartInfo.WithinDayRepresentation;
 	}
 	else
-		return m_pPG_Active->GetVarValue(PGindex, i*m_ChartInfo.WithinDayRepresentation + pg_control.StartIndex + m_pProp->m_HourValueRepresentation - 1);
+		return m_pPG_Active->GetVarValue(PGindex, i*m_ChartInfo.WithinDayRepresentation + pg_control.StartIndex + m_pProp->m_HourValueRepresentation - 1, act_rep);
 
 
 }

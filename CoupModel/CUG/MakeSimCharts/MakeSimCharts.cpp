@@ -950,6 +950,12 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 						for(int ii=0;ii<m_pSimDoc->m_SelectValTime.size();ii++) {
 
 							if (col == 4) { // To check if Mean value is calculated
+								GetCell(4, row, &cell);
+								if (cell.GetBool() == false) {
+									cell.SetBool(FALSE);
+									SetCell(4, row, &cell);
+									return;
+								}
 									size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(row);
 									CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 									if (!pRes->EnableEstimatesMade()) {
@@ -982,7 +988,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 								
 								plotinfo.EnsembleNo = EnsemblesToPlot[i];
 								if (m_pSimDoc->m_MStorage.m_ActualEnsemble == plotinfo.EnsembleNo||m_pUtil->GetEnsembleViewOption()!=0) {
-									if (m_pUtil->GetEnsembleViewOption() == 0) m_pProp->m_Title = m_pSimDoc->m_MStorage.m_AcceptedIdString[plotinfo.EnsembleNo];
+									if (m_pUtil->GetEnsembleViewOption() == 0&&m_pSimDoc->IsMultiSimulation()) m_pProp->m_Title = m_pSimDoc->m_MStorage.m_AcceptedIdString[plotinfo.EnsembleNo];
 									pair<size_t, size_t> pmoreinfo = m_pPlotInfo->GetFilterForEnsemble(plotinfo.EnsembleNo, plotinfo.Index);
 									plotinfo.PG_FilterVarIndex = pmoreinfo.first; plotinfo.PG_FilterVarValue = pmoreinfo.second;
 									if (j > 0 && plotinfo.DataType == DATA_TYPES::MEASURED_VAL) continue;

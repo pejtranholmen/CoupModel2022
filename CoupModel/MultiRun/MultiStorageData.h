@@ -179,6 +179,7 @@ public:
 	string GetSplitFileName();
 	string GetStatFileName();
 	void AlloSplitPerformance(unsigned long splitperiods);
+	void AlloMinMaxUpdated(size_t NumOfEnsembles);
 	void SetPerformance(unsigned long irun,  unsigned long ind_split, STAT_PERF stat);
 	void SetNewPerformance(unsigned long irun, unsigned long ivar, STAT_PERF stat);
 	unsigned long GetNumSplitPeriods();
