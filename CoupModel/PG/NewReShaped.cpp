@@ -5,11 +5,11 @@
 
 NewReShaped::NewReShaped()
 {
-	treatment_convert.push_back(pair<string, int>("C", 1));
-	treatment_convert.push_back(pair<string, int>("F", 2));
-	treatment_convert.push_back(pair<string, int>("I", 3));
-	treatment_convert.push_back(pair<string, int>("IL", 4));
-	treatment_convert.push_back(pair<string, int>("AN", 5));
+	treatment_convert.push_back(pair<string, int>("C", 10));
+	treatment_convert.push_back(pair<string, int>("F", 20));
+	treatment_convert.push_back(pair<string, int>("I", 30));
+	treatment_convert.push_back(pair<string, int>("IL", 40));
+	treatment_convert.push_back(pair<string, int>("AN", 50));
 	treatment_convert.push_back(pair<string, int>("G(F-Mg)", 12));
 	treatment_convert.push_back(pair<string, int>("G(F-P)", 12));
 	treatment_convert.push_back(pair<string, int>("GC", 11));
@@ -18,6 +18,12 @@ NewReShaped::NewReShaped()
 	Parcell_Stop.push_back("A");
 	Parcell_Stop.push_back("B");
 	Parcell_Add.push_back(17);
+
+
+
+	P_Cutting30 = {3,8,12,17, 18,20, 24,28,32, };
+	P_Cutting60 = { 2, 5, 26,30};
+	P_Cutting100 = {11, 19,22,23,27 };
 }
 
 NewReShaped::~NewReShaped()
@@ -329,7 +335,7 @@ NewReShaped::~NewReShaped()
 			 txt = pPGSource->GetVarUnit(i, 1);
 			 pPG_Dest->SetVarUnit(i, txt, irep);
 			 size_t indexkol = i % (ivar-m_NewIdVar)+i/(ivar-m_NewIdVar+1);
-			 if (ivar <= 2) indexkol = 1;
+			 if (ivar <= 2||indexkol==0) indexkol = 1;
 			 if(irep>1) indexkol+=(irep - 1) * (ivar-m_NewIdVar);
 			 txt = m_pPGSource->GetVarId(indexkol, 1);
 			 pPG_Dest->SetVarId(i, txt, irep);
@@ -367,10 +373,20 @@ int NewReShaped::GetTreatment(string idkod) {
 
 int IBeh = 0;
 for (size_t i = 0; i < treatment_convert.size(); i++) {
-	if (idkod.find(treatment_convert[i].first) == 0) IBeh = treatment_convert[i].second;
+	if (idkod.find(treatment_convert[i].first) == 0) {
+		IBeh = treatment_convert[i].second;
+		auto npos=idkod.find("-");
+		if (npos != string::npos) {
+			auto newstr = idkod.substr(npos);
+			if (newstr.find("IL")) IBeh = 60;
+		}		
+	}
 }
 
-
+	 auto parcell = GetParcell(idkod);
+	 for (size_t i = 0; i < P_Cutting30.size(); i++) if(parcell==P_Cutting30[i]) IBeh += 1;
+	 for (size_t i = 0; i < P_Cutting60.size(); i++) if (parcell == P_Cutting60[i]) IBeh += 2;
+	 for (size_t i = 0; i < P_Cutting100.size(); i++) if (parcell == P_Cutting100[i]) IBeh += 3;
 
 
 	return IBeh;

@@ -13,8 +13,12 @@ public:
 	int GetSpecTreatment(string idkod);
 	string m_DestFileName;
 	vector<pair<string, int>> treatment_convert;
+	vector<size_t> P_Cutting30;
+	vector<size_t> P_Cutting60;
+	vector<size_t> P_Cutting100;
 	vector<string> Parcell_Stop;
 	vector<size_t> Parcell_Add;
+
 	bool m_RepetitionOutputStyle{ true };
 
 protected:

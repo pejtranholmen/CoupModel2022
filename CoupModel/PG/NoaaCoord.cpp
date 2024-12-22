@@ -804,7 +804,21 @@ bool NoaaCoord::SplitPGFile()
 	int numrec=m_pPGSource->GetNumRecords();
 
 
-	m_pPGSource->WriteSeparateSplitFiles();
+	if (m_pPGSource->WriteSeparateSplitFiles()) {
+#ifndef COUPSTD;
+		MFC_Util m;
+		m.SetPaneMessage("File are successfully split into " + FUtil::STD_ItoAscii(nrep) + " Files");
+#endif
+
+	}
+	else {
+#ifndef COUPSTD;
+		MFC_Util m;
+		m.SetPaneMessage("Failed to split file into new files ");
+#endif
+
+
+	};
 	
 
 	return true;

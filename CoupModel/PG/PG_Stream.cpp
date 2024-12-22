@@ -457,7 +457,7 @@ bool PG_Stream::WriteDescriptionsToStream(fstream * pWriteEnabledStream, size_t 
 		pWriteEnabledStream->write((char*)&fmax, 4);
 	};
 
-	CheckAndSetStartPosition();
+	if (!CheckAndSetStartPosition()) return false;;
 
 	if (RepNoInput_ToStore != string::npos) {
 		for (size_t i = 0; i < pg.Shape.NumVar; i++) {
@@ -550,7 +550,7 @@ bool PG_Stream::WritePGFileStartHeader(size_t nrecords, size_t nrepititions, siz
 	pPGOutStream->write((char*)&totnumrecords, 4);
 	pPGOutStream->write((char*)&lengthRecord, 4);
 
-	if (InputRepNo == string::npos&&nrepititions<=1&&lengthRecord>8) {
+	if (nrepititions<=1&&lengthRecord>8) {
 		unsigned int NewNumberOfRepititions = 1;
 		pPGOutStream->write((char*)&NewNumberOfRepititions, 4);
 	}
@@ -640,14 +640,16 @@ bool PG_Stream::ClearFile()
 	m_IsOpen=false;
 	return ReOpen(m_WriteEnabled);
 }
-void PG_Stream::CloseFile()
+void PG_Stream::CloseFile(bool ExtraStreamOnly)
 {
-	m_MainPGStreamReadWrite.clear();
-	if(m_MainPGStreamReadWrite.good()) {
-		m_MainPGStreamReadWrite.close();
-		m_Closed=true;
-		m_IsOpen=false;
+	if (!ExtraStreamOnly) {
+		m_MainPGStreamReadWrite.clear();
+		if (m_MainPGStreamReadWrite.good()) {
+			m_MainPGStreamReadWrite.close();
+			m_Closed = true;
+			m_IsOpen = false;
 
+		}
 	}
 	m_ExtraPGStreamWrite.clear();
 	m_ExtraPGStreamWrite.close();
@@ -1051,7 +1053,7 @@ std::streamsize  PG_Stream::WriteNewPGFileRecord(size_t rec)
 
 }
 
-bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream)
+bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream, bool Only_WithOut_RepAs_Output)
 {
 	if (m_OnlyNewFile) {
 		if (pPGOutStream == nullptr) pPGOutStream = &m_MainPGStreamReadWrite;
@@ -1064,7 +1066,10 @@ bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream)
 	size_t nrecords, OutSizeData;
 
 	if (InputRepNo != string::npos) {
-		ReadNewBuffer(InputRepNo);
+
+		if (!m_MainPGStreamReadWrite.good()) return false;
+
+		if(!ReadNewBuffer(InputRepNo)) return false;
 	}
 	else {
 		InputRepNo = pg.Shape.NumRecords * pg.Shape.RecordSize;
@@ -1111,14 +1116,18 @@ bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream)
 
 	pPGOutStream->seekp(pg.Shape.RecordSize, ios::beg);
 
+	if(Only_WithOut_RepAs_Output)
+		valid = WritePGFileStartHeader(nrecords, 1, InputRepNo, pPGOutStream);
+	else
+		valid = WritePGFileStartHeader(nrecords, pg.Shape.NumRepetitions, InputRepNo, pPGOutStream);
+	if (valid) valid = WritePGFileData(nrecords, pPGOutStream, Only_WithOut_RepAs_Output);
 
-	valid = WritePGFileStartHeader(nrecords, pg.Shape.NumRepetitions, InputRepNo, pPGOutStream);
-	if (valid) valid = WritePGFileData(nrecords, pPGOutStream);
 
 
-
-	if (valid) valid = WriteDescriptionsToStream(pPGOutStream);
-	CloseFile();
+	if (valid) valid = WriteDescriptionsToStream(pPGOutStream, InputRepNo-1);
+	bool closeAll = true;
+	if (!Only_WithOut_RepAs_Output && (pg.Shape.NumRepetitions == InputRepNo)) closeAll = false;
+	CloseFile(closeAll);
 	return valid;
 
 }
@@ -1237,8 +1246,9 @@ bool PG_Stream::ReadNewBuffer(size_t BufferNum) {
 		newpos = pg.Shape.RecordSize;
 	else if (BufferNum <= pg.status.b.NumberOfBuf)
 		newpos = pg.Shape.RecordSize*(BufferNum - 1)*pg.status.b.buf_Size + pg.Shape.RecordSize;
-	else if (BufferNum <= pg.Shape.NumRepetitions)
-		newpos = pg.Shape.RecordSize*(BufferNum - 1)*pg.status.b.buf_Size + pg.Shape.RecordSize;
+	else if (BufferNum <= pg.Shape.NumRepetitions) {
+		newpos = pg.Shape.RecordSize * (BufferNum - 1) * pg.status.b.buf_Size + pg.Shape.RecordSize;
+	}
 	else
 		return false;
 	try { m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
@@ -1247,7 +1257,6 @@ bool PG_Stream::ReadNewBuffer(size_t BufferNum) {
 			m_MainPGStreamReadWrite.clear();
 			if (newpos > pg.Shape.RecordSize * pg.status.b.buf_Size + pg.Shape.RecordSize)
 				newpos = pg.Shape.RecordSize;
-			return m_MainPGStreamReadWrite.good();
 
 		}
 	}
@@ -1348,18 +1357,32 @@ bool PG_Stream::WriteSeparateSplitFiles()
 	ReOpen();
 
 	for (size_t irep = 0; irep<pg.Shape.NumRepetitions; irep++) {
+		if (m_Closed) {
+			if(!ReOpen()) return false;
+		}
 		filename = bas; filename += "_"; filename += FUtil::STD_ItoAscii(irep + 1); filename += ".bin";
 		m_ExtraPGStreamWrite.clear();
 		m_ExtraPGStreamWrite.open(filename, ios::out | ios::binary);
+		for (size_t i = 0; i < pg.Shape.NumRepetitions; i++) {
+			m_MainPGStreamReadWrite.seekg(pg.Shape.RecordSize_Repetion*i + pg.Shape.RecordSize, ios::beg);
+			if (!m_MainPGStreamReadWrite.good()) {
+				auto iU = i;
+
+			}
+		}
 		if (!m_ExtraPGStreamWrite.good())
 			good = false;
 
-		if (!WritePGFileFrame(irep))
+		if (!WritePGFileFrame(irep+1, &m_ExtraPGStreamWrite, true))
 			good = false;
-		m_ExtraPGStreamWrite.close();
 		if (!good) return good;
+
 	}
 	CloseFile();
+
+	MFC_Util::MessageBoxW("File with Repetitions has been split into  " + FUtil::STD_ItoAscii(pg.Shape.NumRepetitions) + "\n" +
+			"The last file in a serie is named as: " + filename);
+
 	return true;
 
 }
@@ -1394,7 +1417,7 @@ bool PG_Stream::WritePGFileHeader(size_t nrecords, size_t nrepititions)
 
 	return true;
 }
-bool PG_Stream::WritePGFileData(size_t nrecords, fstream *pPGOutStream)
+bool PG_Stream::WritePGFileData(size_t nrecords, fstream *pPGOutStream, bool OnlyOne_RepOut)
 {
 	size_t  OutSizeData;
 	if (pPGOutStream == nullptr) {
@@ -1428,7 +1451,7 @@ bool PG_Stream::WritePGFileData(size_t nrecords, fstream *pPGOutStream)
 
 
 	// Saving only first Repetition in this case.
-	if (pg.Shape.NumRepetitions == 1) {
+	if (pg.Shape.NumRepetitions == 1||OnlyOne_RepOut) {
 		pPGOutStream->write((char*)&pg.Var.v[(pg.status.a.OutRecordStart - 1) * pg.Shape.RecordIndexSize], OutSizeData);
 		auto min = *(unsigned int*)&pg.Var.v[(pg.status.a.OutRecordStart - 1) * pg.Shape.RecordIndexSize];
 		m_OutFileStart = GetDateFromVarRecord(pg.status.a.OutRecordStart);
