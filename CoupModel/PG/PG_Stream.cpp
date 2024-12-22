@@ -1379,10 +1379,10 @@ bool PG_Stream::WriteSeparateSplitFiles()
 
 	}
 	CloseFile();
-
+#ifndef COUPSTD
 	MFC_Util::MessageBoxW("File with Repetitions has been split into  " + FUtil::STD_ItoAscii(pg.Shape.NumRepetitions) + "\n" +
 			"The last file in a serie is named as: " + filename);
-
+#endif // !COUPSTD
 	return true;
 
 }
