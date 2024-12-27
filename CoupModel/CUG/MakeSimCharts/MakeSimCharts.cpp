@@ -1016,16 +1016,27 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 						m_pProp->SetSecondIndepVarType(NO_USE);
 					}
 					m_pSimDoc->m_PrevSheet=5;
-					vector<size_t> mensembles=m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
+
+					vector<size_t> EnsemblesToPlot;
 					for(int j=0;j<m_NumOpenDoc;j++) {
-						for (size_t ens=0; ens < mensembles.size(); ens++) {
 							for (int i = 0; i < m_pSimDoc->m_SelectOut.size(); i++) {
-								PLOTv plotinfo = m_pPlotInfo->MakeOutPutChartInfo(i, j);
-								plotinfo.EnsembleNo = mensembles[ens];
-								if (m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart) == 0)
-									return;
+								if (m_pUtil->GetEnsembleViewOption() == 0) {
+									EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
+								}
+								else {
+									if (m_pSimDoc->m_SelectOut[i].MeanIndicator > ENSEMBLE_TYPE::NO || col == 1 || col == 3) {
+										EnsemblesToPlot = m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
+									}
+									else
+										EnsemblesToPlot.push_back(0);
+								}
+								for (size_t i = 0; i < EnsemblesToPlot.size(); i++) {
+									PLOTv plotinfo = m_pPlotInfo->MakeOutPutChartInfo(i, j);
+									plotinfo.EnsembleNo = EnsemblesToPlot[i];
+									if (m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart) == 0)
+										return;
+								}
 							}
-						}
 					}
 		
 				}

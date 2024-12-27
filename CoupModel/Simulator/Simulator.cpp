@@ -813,6 +813,7 @@ void Simulator::Store_Outputs(bool MultiFlag, size_t num_timescaling)
 		m_pSim->m_PG_OutPutFile.SetVarPointer(&m_OutFloat[0], ist, m_pModelInfo->m_NumOutputs);
 	}
 	else if(m_MultiOutputs.size()>0) {
+		ist+=  (m_pModelInfo->ActualNoMulRun-1) * m_pSim->m_PG_MultiOutputFile.GetNumRecords() * (m_pSim->m_PG_MultiOutputFile.GetNumVariables() + 1);
 		m_pSim->m_PG_MultiOutputFile.SetDatePointer(&minute,ist);	
 		m_pSim->m_PG_MultiOutputFile.SetVarPointer(&m_OutFloat[0], ist, m_MultiOutputs.size());
 	}

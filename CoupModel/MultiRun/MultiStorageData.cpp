@@ -1832,6 +1832,17 @@ bool MultiStorageData::GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG)
 		return false;
 	}
 }
+size_t MultiStorageData::ChangeEnsembleNo(size_t change)
+{
+	if (m_AcceptedIdString.size() > 1) {
+		if(change==string::npos)
+			m_ActualEnsemble--;
+		else
+		    m_ActualEnsemble ++;
+		m_ActualEnsemble = m_ActualEnsemble % m_AcceptedIdString.size();
+	}
+	return m_ActualEnsemble;
+}
 size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarIndex, size_t ThresholdType, size_t Threshold) {
 #ifndef COUPSTD
 	MFC_Util m;

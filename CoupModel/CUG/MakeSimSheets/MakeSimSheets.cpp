@@ -2276,14 +2276,43 @@ bool MakeSimSheets::Make_OutputSheet()
 				SetTH_NumberRows(1);
 				SetTH_Height(20); 
 				SetSheetNumber(5); 
+				SetSH_NumberCols(1);
+				SetSH_Width(30);
 				m_pSimDoc->OutputBinFileCheck();
 				BOOL validplot=m_pSimDoc->IsOutputBinFileValid();
+				auto checkens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+				auto sideheader = [&](int i) {
+					if (checkens > 0) {
+						UnJoinCells(-2, i);
+						UnJoinCells(-1, i);
+						QuickSetText(-2, i, "<");
+						QuickSetText(-1, i, ">");
+						QuickSetBackColor(-2, i, m_ColorClick);
+						QuickSetBackColor(-1, i, m_ColorClick);
+					}
+					else {
+						UnJoinCells(-2, i);
+						UnJoinCells(-1, i);
+						QuickSetText(-2, i, "");
+						QuickSetText(-1, i, ">");
+						QuickSetBackColor(-2, i, m_NoColor);
+						QuickSetBackColor(-1, i, m_ColorClick);
+					}
+
+					};
 				if(m_pSimDoc->IsFinishedSimulation()) {
 					m_ShowAllOutputs=0;
 					SetNumberCols(13);
 
-					if(m_pSimDoc->IsMultiSimulation())
-						SetColWidth(4,90);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						SetColWidth(4, 90);
+						if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0) {
+							SetSH_NumberCols(2);
+							SetSH_Width(50);
+							SetSH_ColWidth(-1, 25);
+						}
+
+					}
 					else
 						SetColWidth(4,0);
 					SetColWidth(5,28);
@@ -2344,7 +2373,7 @@ bool MakeSimSheets::Make_OutputSheet()
 				}
 
 				if(m_pSimDoc->IsFinishedSimulation()) {
-					QuickSetText(4,-1,"Ensemble");
+					QuickSetText(4,-1,"Ensemble "+FUtil::STD_ItoAscii(checkens+1));
 					QuickSetText(5,-1, "Chart");
 					QuickSetText(6,-1, "Unit");
 					QuickSetText(7,-1, "Initial");
@@ -2399,6 +2428,7 @@ bool MakeSimSheets::Make_OutputSheet()
 
 					SetNumberRows(NumLines);
 					for(size_t ij=0; ij<vvp.size();ij++) {
+						if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0) sideheader(ij);
 					
 						pSw=vvp[ij].pBase;	
 						ii=vvp[ij].TabIndex;
@@ -2677,10 +2707,10 @@ bool MakeSimSheets::Make_OutputSheet()
 	}
 
 
-	if(m_pSimDoc->IsFinishedSimulation())
-			QuickSetBackColor(-1,0,m_ColorCompleted);
+	if(m_pSimDoc->IsFinishedSimulation()&& m_pSimDoc->m_MStorage.m_AcceptedIdString.size()==0)
+		QuickSetBackColor(-1,0,m_ColorCompleted);
 	else 
-			QuickSetBackColor(-1,0,m_ColorClick);
+		QuickSetBackColor(-1,0,m_ColorClick);
 	RedrawAll();
 	if(m_CurrentTopRow>=0) SetTopRow(m_CurrentTopRow);
 
@@ -3068,27 +3098,7 @@ bool MakeSimSheets::Make_ValidationSheet()
 	SetSheetNumber(6); 
 	NumLines=m_pSimDoc->GetNumAll_TSV_ValVariables();
 
-/*	if (m_pSimDoc->IsMultiSimulation()&& m_pSimDoc->IsFinishedSimulation()) {
-		if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1()!=string::npos) {
-			//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
-			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
-			if (NumLines < NumberofDim1) {
-				for (size_t i = 0; i < NumLines; i++) {
-					auto newValv=m_pSimDoc->m_Val_Array[i];
-					for (size_t j = 1; j < NumberofDim1; j++) {
-						newValv.ValidationFileIndex = size_t(m_pSimDoc->m_MStorage.GetMultiP(j, m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1())+0.001)-1;
-						m_pSimDoc->m_Val_Array.push_back(newValv);
-					}
 
-				}
-				m_pSimDoc->m_MStorage.AllocateValid_TSV(0);
-
-
-			}
-			NumLines = m_pSimDoc->GetNumAll_TSV_ValVariables();
-		}
-	}*/
-	
 		SimB *pSw;
 		P *pObserved=nullptr;
 		pSw=m_pSimDoc->GetPtr(TABLE,"Scaling of Observed Variables");
@@ -3116,6 +3126,9 @@ bool MakeSimSheets::Make_ValidationSheet()
 	}
 
 	if(TotLines==0&&m_pSimDoc->IsFinishedSimulation()) return FALSE;
+	SetSH_ColWidth(-1, 30);
+	SetSH_Width(30);
+	SetSH_NumberCols(1);
 	JoinCells(-1,0,-1,TotLines-1);
 	SetDefFont(&m_font);
 	QuickSetBackColor(-1,-1,m_ColorClick);
@@ -3159,8 +3172,7 @@ bool MakeSimSheets::Make_ValidationSheet()
 
 			SetNumberRows(NumLines+1+nextra);
 			SetNumberCols(ncol*NUM_PERIND+ncol_extra+NumLinesSV);
-			SetSH_NumberCols(1);
-			SetSH_Width(30);
+
 			SetTH_NumberRows(1);
 			SetTH_Height(34);
 			SetColWidth(-1,20);
@@ -3585,10 +3597,10 @@ bool MakeSimSheets::Make_ValidationSheet()
 		Val_Post_CoVarRes();
 
 	}
-	if(m_pSimDoc->IsFinishedSimulation())
+	/*if (m_pSimDoc->IsFinishedSimulation())
 			QuickSetBackColor(-1,0,m_ColorCompleted);
 	else 
-			QuickSetBackColor(-1,0,m_ColorClick);
+			QuickSetBackColor(-1,0,m_ColorClick);*/
 	return true;
 }
 bool MakeSimSheets::Make_RunReportSheet()
@@ -4907,12 +4919,17 @@ size_t MakeSimSheets::Val_Post_Header() {
 				CString txt;
 				m_bDrawExcelFocus = TRUE;
 				SetMultiSelectMode(TRUE);
-				SetSH_NumberCols(1);
-				SetSH_Width(30);
+				if (multivalid) {
+					SetSH_NumberCols(2);
+					SetSH_Width(60);
+					SetColWidth(-1, 25);
+					//SetColWidth(-2, 25);
+				}
+
 				SetTH_NumberRows(1);
 				SetTH_Height(30);
 				SetNumberCols(16); 
-				SetColWidth(-1,20);
+
 
 				SetColWidth(0,40);
 				SetColWidth(1,160);
@@ -5040,11 +5057,41 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 
 
 
+	auto checkens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+	auto many_ensembles = false;
+	string str; 
+	if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0) {
+		str = m_pSimDoc->m_MStorage.m_AcceptedIdString[checkens] + "-" + FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
+		many_ensembles = true;
+	}
+	else
+		str = "";
 
+	auto sideheader = [&](int i) {
+		if (checkens > 0) {
+			UnJoinCells(-2, i);
+			UnJoinCells(-1, i);
+			QuickSetText(-2, i, "<");
+			QuickSetText(-1, i, ">");
+			QuickSetBackColor(-2, i, m_ColorClick);
+			QuickSetBackColor(-1, i, m_ColorClick);
+		}
+		else {
+			UnJoinCells(-2, i);
+			UnJoinCells(-1, i);
+			QuickSetText(-2, i, "");
+			QuickSetText(-1, i, ">");
+			QuickSetBackColor(-2, i, m_NoColor);
+			QuickSetBackColor(-1, i, m_ColorClick);
+		}
+
+	};
 
 
 
 	for(int i=0;i<numtsv;i++) {
+					if(many_ensembles)
+					sideheader(i);
 					test=FUtil::STD_ItoAscii(i+1);
 					QuickSetText(0, i, test);
 					sumv = m_pSimDoc->GetValSumStruct(i);
@@ -8672,8 +8719,8 @@ void MakeSimSheets::JoinOutputListRows(size_t NumColToJoin) {
 	}
 
 
-
-	int ivv = JoinCells(-1, 0, -1, maxrow - 1);
+	if(m_pSimDoc->m_MStorage.m_AcceptedIdString.size()==0)
+		int ivv = JoinCells(-1, 0, -1, maxrow - 1);
 
 	if (maxrow == 0) 	m_pFrame->UpdatePaneText(0, "No Output Variables in Current Document !");
 	else {

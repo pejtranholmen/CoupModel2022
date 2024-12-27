@@ -75,6 +75,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 	}
 	int repit = 1;
 	VALSUMv valsum;
+	std::vector<size_t> rephits;
 	//	if(p_info.MeanIndicator>0&&SectionNo<5000) m_ChartInfo.NumVariableBands++;
 	switch (p_info.DataType) {
 	case DATA_TYPES::PGDATA:
@@ -161,13 +162,22 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 		break;
 	case DATA_TYPES::MEASURED_VAL:
 		if (p_info.index_cycle != string::npos) {
-			irun = 1;
+			irun = p_info.pg_start_pos + 1;
 			PGindex += p_info.index_cycle;
 		}
+		else {
+			irun = p_info.Residual_RunNo + 1;
+			auto cycle_pair = m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
+			if (cycle_pair.first = string::npos) irun = cycle_pair.first + 1;
+		}
+		rephits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index, p_info.Residual_RunNo);
+		irun = rephits.front();
 
-		m_Label.st = "Measured " + m_pPG_Active->GetVarId(PGindex, irun);
-		m_Label.test = m_pPG_Active->GetVarName(PGindex, irun);
-		m_Label.unit = m_pPG_Active->GetVarUnit(PGindex, irun);
+
+
+		m_Label.st = "Measured " + p_info.pPG_MeasValFile->GetVarId(PGindex, irun);
+		m_Label.test = p_info.pPG_MeasValFile->GetVarName(PGindex, irun);
+		m_Label.unit = p_info.pPG_MeasValFile->GetVarUnit(PGindex, irun);
 
 		if (p_info.pBase == nullptr) {
 

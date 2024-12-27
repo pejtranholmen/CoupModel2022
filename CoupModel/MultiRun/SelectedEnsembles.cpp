@@ -170,8 +170,13 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		mfc_util.SetPaneMessage("Find Posterior ensemble of accepted runs");
 #endif
 	size_t Dim1Value = m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
-	if (Dim1Value == 0)
-		SetCyclicNumbers(1, 0);
+	size_t TransformationValue = m_Valid_TSV[m_ActualEnsemble].VarTranformed;
+	 if (TransformationValue == 4) {
+		auto koll = m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+		SetCyclicNumbers(koll, koll - 1);
+	}
+	else if (Dim1Value == 0)
+		 SetCyclicNumbers(1, 0);
 	else {
 		auto koll = m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 		SetCyclicNumbers(koll, Dim1Value - 1);
@@ -181,9 +186,6 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 
 
 	auto setall_valid = [&]() {
-
-
-
 		for(size_t i=0; i<m_ValidStatBase; i++)
 			m_MeanTSV_Accepted[i]=m_MeanTSV_All[i];
 		if (m_TotalNumberRuns != Get_And_UpdateTotalNumberofRuns())
@@ -196,8 +198,14 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 				else
 					SetAcceptedRunNo(i, false);
 			}
-			else
+			else if(TransformationValue!=4)
 				SetAcceptedRunNo(i, true);
+			else {
+				if(i%m_CyclicNumber==m_CyclicNumber-1)
+					SetAcceptedRunNo(i, true);
+				else
+					SetAcceptedRunNo(i, false);
+			}
 
 		}
 	};
@@ -420,6 +428,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 #endif
 
 	m_TotalNumAccepted = FindAcceptedRunsFromFlagInPar();
+	if (m_TotalNumAccepted == 0) return 0;
 	SetMinMaxOfPerformanceIndicators();
 	
 

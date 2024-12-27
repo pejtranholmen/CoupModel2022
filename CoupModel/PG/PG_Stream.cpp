@@ -1044,7 +1044,8 @@ std::streamsize  PG_Stream::WriteNewPGFileRecord(size_t rec)
 {
 	//m_driveFile.seekp(newpos,ios::beg);
 	if (rec == string::npos) {
-		//return string::npos;
+		auto newpos = (pg.Shape.NumVar + 1) * 4;
+		m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
 	}
 	auto newpos = m_MainPGStreamReadWrite.tellp();
 	m_MainPGStreamReadWrite.write((char*)&pg.Var.v[0], pg.Var.v.size() * 4);
@@ -1055,6 +1056,7 @@ std::streamsize  PG_Stream::WriteNewPGFileRecord(size_t rec)
 
 bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream, bool Only_WithOut_RepAs_Output)
 {
+	bool NoRepetitions = true;
 	if (m_OnlyNewFile) {
 		if (pPGOutStream == nullptr) pPGOutStream = &m_MainPGStreamReadWrite;
 		MakeFileToEnableWriting();
@@ -1070,6 +1072,7 @@ bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream, bool 
 		if (!m_MainPGStreamReadWrite.good()) return false;
 
 		if(!ReadNewBuffer(InputRepNo)) return false;
+		NoRepetitions = false;
 	}
 	else {
 		InputRepNo = pg.Shape.NumRecords * pg.Shape.RecordSize;
@@ -1124,7 +1127,11 @@ bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream, bool 
 
 
 
-	if (valid) valid = WriteDescriptionsToStream(pPGOutStream, InputRepNo-1);
+	if (valid) {
+		if (NoRepetitions) valid = WriteDescriptionsToStream(pPGOutStream);
+		else valid = WriteDescriptionsToStream(pPGOutStream,InputRepNo-1);
+
+	}
 	bool closeAll = true;
 	if (!Only_WithOut_RepAs_Output && (pg.Shape.NumRepetitions == InputRepNo)) closeAll = false;
 	CloseFile(closeAll);

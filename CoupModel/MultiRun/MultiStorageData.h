@@ -194,6 +194,7 @@ public:
 	bool UpdateParDist(vector<DistStat> ParDist, size_t ensemble=string::npos);
 	DistStat GetParDist(size_t index, size_t ensemble = string::npos);
 	bool  GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG);
+	size_t ChangeEnsembleNo(size_t change);
 	string GetTransformationIndicator(size_t i) {
 		string txt;
 		if (m_Valid_TSV.size() > i) {

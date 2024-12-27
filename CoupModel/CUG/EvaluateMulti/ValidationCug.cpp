@@ -213,28 +213,36 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	SetSheetNumber(SheetNumber);
 	string txt;
+	string short_perf_name;
 
 	switch (SheetNumber) {
 	case 0:
+		short_perf_name = "R2 -";
 		txt = "Coefficients of Determination for the regression line";
 
 		break;
 	case 1:
+		short_perf_name = "A0 -";
 		txt = "Intercept for linear regression line with simulated values as independent variable";
 		break;
 	case 2:
+		short_perf_name = "A1 -";
 		txt = "Slope for linear regression line with simulated values as independent variable";
 		break;
 	case 3:
+		short_perf_name = "ME -";
 		txt = "Mean Error between simulated values and measured variables";
 		break;
 	case 4:
+		short_perf_name = "RMSE - ";
 		txt = "Root Mean Square Error between simulated values and measured variables";
 		break;
 	case 5:
+		short_perf_name = "LogLi - ";
 		txt = "Log Likelihood values";
 		break;
 	case 6:
+		short_perf_name = "NSE - ";
 		txt = "Nash Sutcliffe Coefficient of Determination (Modelling efficiency)";
 		break;
 
@@ -251,6 +259,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	EnableMenu(TRUE);
 	EnableUpdate(TRUE);
 	SetNumberCols(cols);
+	SetSH_Width(90);
+	SetSH_NumberCols(2);
 	if (NumLinesSV > 1)
 		SetNumberRows(rows + 3);
 	else
@@ -275,7 +285,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	string str;
 	if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0)
-		str = m_pSimDoc->m_MStorage.m_AcceptedIdString[checkens];
+		str = m_pSimDoc->m_MStorage.m_AcceptedIdString[checkens]+ "-"+FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
 	else
 		str = "";
 
@@ -295,7 +305,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	SetTH_RowHeight(-2, 25);
 	SetTH_RowHeight(-1, 25);
 
-	SetColWidth(-1, 60);
+	SetColWidth(-1, 30);
 	SetColWidth(1, 100);
 	SetColWidth(0, 200);
 	SetColWidth(2, 40);
@@ -304,8 +314,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	m_Transformation = m_pSimDoc->m_MStorage.m_CumulatedPerformance;
 
-	auto ikoll = m_pSimDoc->m_MStorage.m_ActualEnsemble;
-	auto tests = m_pSimDoc->m_MStorage.m_Valid_TSV[ikoll].VarTranformed;
+	auto act_ensemble = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+	auto tests = m_pSimDoc->m_MStorage.m_Valid_TSV[act_ensemble].VarTranformed;
 
 	QuickSetText(0,-2, m_pSimDoc->m_MStorage.GetTransformationIndicator(m_pSimDoc->m_MStorage.m_ActualEnsemble));
 
@@ -322,8 +332,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	iaccept = m_pSimDoc->m_MStorage.m_AcceptedRuns[m_pSimDoc->m_MStorage.m_ActualEnsemble].size();
 
 
-	QuickSetText(3, -2, "Distribution Prior Selection n=" + FUtil::STD_ItoAscii(iacceptall));
-	QuickSetText(7, -2, "Distribution Post Selection n=" + FUtil::STD_ItoAscii(iaccept));
+	QuickSetText(3, -2, short_perf_name+"Distribution Prior Selection n=" + FUtil::STD_ItoAscii(iacceptall));
+	QuickSetText(7, -2, short_perf_name+"Distribution Post Selection n=" + FUtil::STD_ItoAscii(iaccept));
 	if (iaccept != iacceptall) QuickSetBackColor(5, -2, m_ColorEdit);
 	QuickSetText(12, -2, "Limits for Selection");
 
@@ -472,8 +482,8 @@ for(int i=0;i<m_NumValidVar;i++) {
 				if (!pRes->m_MeanDefined) 	QuickSetBackColor(-1, line, m_ColorClick);
 				else QuickSetBackColor(-1, line, m_NoColor);
 			}
-
-			QuickSetText(0,line, test);
+			auto vname = FUtil::STD_ItoAscii(i + 1) + ":" + test;
+			QuickSetText(0,line, vname);
 			criteria=m_pSimDoc->m_MStorage.GetCriteria(i+index_start, split_ind);
 			allmax=double(m_pSimDoc->m_MStorage.GetMaxValidAll(i+index_start, split_ind));
 			allmin=double(m_pSimDoc->m_MStorage.GetMinValidAll(i+index_start, split_ind));
@@ -483,7 +493,22 @@ for(int i=0;i<m_NumValidVar;i++) {
 			selmin=double(m_pSimDoc->m_MStorage.GetMinValid(i+index_start, split_ind));
 			selcv=double(m_pSimDoc->m_MStorage.GetCV_Valid(i+index_start, split_ind));
 			if(split_ind==0) {
-				QuickSetNumber(-1,line, i+1);
+
+					if (act_ensemble > 0) {
+						QuickSetText(-2, line, "<");
+						QuickSetBackColor(-2, line, m_ColorClick);
+					}
+					else {
+						QuickSetText(-2, line, "");
+						QuickSetBackColor(-2, line, m_NoColor);
+					}
+					QuickSetText(-1, line, ">");
+					QuickSetBackColor(-1, line, m_ColorClick);
+					
+
+				
+
+			
 				QuickSetNumber(2,line,m_pSimDoc->m_ValidationData.GetValn(i));
 				GetCell(1,line,&cell);
 				cell.SetCellType(UGCT_CHECKBOX);
@@ -2807,6 +2832,30 @@ void ValidationCug::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 		OnSheetSetup(isheet);
 	}
 	else if (isheet < 9) {
+		if (col == -2||col==-1) {
+			if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 1) {
+				if(col==-2)
+					m_pSimDoc->m_MStorage.ChangeEnsembleNo(string::npos);
+				else
+					m_pSimDoc->m_MStorage.ChangeEnsembleNo(1);
+				m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
+				if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+					m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+				}
+			}
+			auto charts = m_pSimDoc->m_PlotStorage.m_PlotArray.size();
+			if (charts > 0) {
+				auto pinfo = m_pSimDoc->m_PlotStorage.GetPlotInfo(charts - 1);
+				pinfo.EnsembleNo = m_pSimDoc->m_MStorage.m_ActualEnsemble;
+				m_pSimDoc->m_PlotStorage.m_PlotArray.erase(m_pSimDoc->m_PlotStorage.m_PlotArray.begin());
+				m_pSimDoc->m_PlotStorage.m_PlotArray.push_back(pinfo);
+				auto ivar = m_pSimDoc->m_SelectMultiVal.size();
+				if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
+			}
+			OnSheetSetup(isheet);
+
+			return;
+		}
 		m_CurrentTopRow = GetTopRow();
 		auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(row);
 		CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
@@ -2870,8 +2919,7 @@ void ValidationCug::OnCB_LClicked(int updn,RECT *rect,POINT *point,BOOL processe
 		int isheet = GetSheetNumber();
 		if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0) {
 			if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 1) {
-				m_pSimDoc->m_MStorage.m_ActualEnsemble++;
-				m_pSimDoc->m_MStorage.m_ActualEnsemble = m_pSimDoc->m_MStorage.m_ActualEnsemble%m_pSimDoc->m_MStorage.m_AcceptedIdString.size();
+				m_pSimDoc->m_MStorage.ChangeEnsembleNo(1);
 				m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
 				if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
 					m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();

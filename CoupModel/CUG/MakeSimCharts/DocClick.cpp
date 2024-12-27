@@ -1277,6 +1277,7 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 
 
 
+
 	return -1;
 }
 int DocClick::ChartsClick(int col, int row) {

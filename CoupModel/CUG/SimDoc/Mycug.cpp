@@ -1258,8 +1258,8 @@ void MyCug::OnSheetSetup(int sheetNumber)
 						SetCell(col,row,&cell);
 						RedrawCell(col,row);
 						int chart=m_pSimDoc->m_SelectValTime[i].subchart;
-						QuickSetNumber(4,row,chart);
-						RedrawCell(4,row);
+						QuickSetNumber(5,row,chart);
+						RedrawCell(5,row);
 						TimeSerieChart(6);
 					}
 				}
@@ -2272,6 +2272,16 @@ void MyCug::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL
 	UNREFERENCED_PARAMETER(*rect);
 	UNREFERENCED_PARAMETER(*point);
 	UNREFERENCED_PARAMETER(processed);
+	if (updn) return;
+	auto sheet = GetSheetNumber();
+	if (sheet == 6||sheet==5) {
+		if (col == -2)
+			m_pSimDoc->m_MStorage.ChangeEnsembleNo(string::npos);
+		else
+			m_pSimDoc->m_MStorage.ChangeEnsembleNo(1);
+		OnSheetSetup(sheet);
+	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

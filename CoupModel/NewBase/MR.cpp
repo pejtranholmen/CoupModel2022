@@ -1411,7 +1411,7 @@ bool MR::PreDefined_Criteria_Process() {
 				pRes->m_MeanDefined = false;
 			}
 		}
-		m_MStorage.EvaluateFile(false);
+		//m_MStorage.EvaluateFile(false);
 	};
 
 
@@ -1467,7 +1467,7 @@ bool MR::PreDefined_Criteria_Process() {
 			auto Transform = size_t(pTransformation->GetValue(i) + 0.0001);
 			auto Dim1_Par_Index = size_t(pDim1Index->GetValue(i) + 0.0001);
 			EstimateNewTransformedPerformance(Transform, Dim1_Par_Index);
-			m_MStorage.EvaluateFile(false);
+			//m_MStorage.EvaluateFile(false);
 		}
 
 		

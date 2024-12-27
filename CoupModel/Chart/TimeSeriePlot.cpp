@@ -219,6 +219,17 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 	if(m_ChartInfo.PGRepitMode&&ArrayIndex<0&&!m_ChartInfo.MultiValMode)
 		ArrayIndex=1;
 	auto itype=m_pSimDoc->m_PlotStorage.GetDataType(ArrayIndex);
+
+	size_t il = m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber) - 1;
+	size_t j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, il);
+	PLOTv p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
+
+
+
+
+
+
+
 	if(itype==DATA_TYPES::PGDATA&&m_ChartInfo.PGRepitMode) {
 		int irep=m_pSimDoc->m_PlotStorage.GetPGRepitNo(ArrayIndex);
 		CPG *pPG=(CPG*)m_pSimDoc->m_PlotStorage.GetPtr(ArrayIndex);
@@ -229,10 +240,8 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 		m_pSimDoc->m_PlotStorage.SetPGRepitNo(ArrayIndex, irep);
 		m_pUtil->m_FileSave.OnReDraw(true, m_pSimDoc);
 	}
-	else if (m_ChartInfo.MultiPGMode || m_ChartInfo.MultiValMode) {
-		size_t il = m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber) - 1;
-		size_t j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, il);
-		PLOTv p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
+	else if ((m_ChartInfo.MultiPGMode || m_ChartInfo.MultiValMode)&&p_info.pPG_MeasValFile!=nullptr) {
+
 		p_info.Residual_Sequence = m_pProp->m_multi_ResidualSequence;
 
 		auto AcceptedCandidates = m_pSimDoc->m_MStorage.m_AcceptedRuns[p_info.EnsembleNo];
