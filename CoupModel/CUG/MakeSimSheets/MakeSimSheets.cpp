@@ -2511,7 +2511,7 @@ bool MakeSimSheets::Make_OutputSheet()
 						if(selected_Single||selected_Multi||m_ShowAllOutputs||m_pSimDoc->GetGroupEnable(pSw->GetGroupNo())) {
 								newline++;
 
-								if(m_pSimDoc->IsFinishedSimulation())
+								if(m_pSimDoc->IsFinishedSimulation() && m_pSimDoc->m_MStorage.m_AcceptedIdString.size() == 0)
 									QuickSetBackColor(-1,newline,m_ColorCompleted);
 								else 
 									QuickSetBackColor(-1,newline,m_ColorClick);

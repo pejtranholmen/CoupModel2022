@@ -27,7 +27,7 @@ SelectedAddEnsembles::~SelectedAddEnsembles()
 
 
 }
-bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vector<float> VarValidVector) {
+bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vector<float> VarValidVector, bool SaveToFile) {
 
 
 	/**if (cumulatedPerformance == 0)

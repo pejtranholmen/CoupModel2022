@@ -156,8 +156,10 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			good = m_EvaluationFile.rsize_t(&numensembles);
 			good = m_EvaluationFile.rsize_t(&m_ActualEnsemble);
 			if (good) {
-				m_AcceptedIdString.resize(numensembles);
-				m_AcceptedRuns.resize(numensembles);
+				if (m_AcceptedRuns.size() < numensembles) {
+					m_AcceptedIdString.resize(numensembles);
+					m_AcceptedRuns.resize(numensembles);
+				}
 				for (size_t i = 0; i < numensembles; i++) {
 					good = m_EvaluationFile.rString(&m_AcceptedIdString[i]);
 					good = m_EvaluationFile.rsize_t(&num_accepted);
@@ -322,26 +324,28 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 
 			if (!good) return false;
 			good=m_EvaluationFile.rsize_t(&num);
-			if (num != m_Valid_TSV.size()&&good) m_Valid_TSV.resize(num);
+			if (num >= m_Valid_TSV.size() && good) {
+				m_Valid_TSV.resize(num);
+				m_pNewMap->m_MStorage.IsMinUpdated.resize(num);
+				m_pNewMap->m_MStorage.IsMaxUpdated.resize(num);
+				m_pNewMap->m_MStorage.IsCVUpdated.resize(num);
+				m_pNewMap->m_MStorage.IsMeanUpdated.resize(num);
+			}
 
-			m_pNewMap->m_MStorage.IsMinUpdated.resize(num);
-			m_pNewMap->m_MStorage.IsMaxUpdated.resize(num);
-			m_pNewMap->m_MStorage.IsCVUpdated.resize(num);
-			m_pNewMap->m_MStorage.IsMeanUpdated.resize(num);
-
-			for (size_t i = 0; i < m_Valid_TSV.size(); i++) {
-				m_EvaluationFile.rsize_t(&num);
+			for (size_t i = 0; i < num; i++) {
+				size_t num2;
+				m_EvaluationFile.rsize_t(&num2);
 				if (num > 0) {			
-					m_Valid_TSV[i].v[E_SELECT_LOW] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_SELECT_HIGH] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_POST_MIN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_POST_MAX] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_POST_MEAN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_POST_CV] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_PRIOR_MIN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_PRIOR_MAX] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_PRIOR_MEAN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_TSV[i].v[E_PRIOR_CV] = m_EvaluationFile.rFloatArray2(num);
+					m_Valid_TSV[i].v[E_SELECT_LOW] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_SELECT_HIGH] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_POST_MIN] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_POST_MAX] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_POST_MEAN] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_POST_CV] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_PRIOR_MIN] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_PRIOR_MAX] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_PRIOR_MEAN] = m_EvaluationFile.rFloatArray2(num2);
+					m_Valid_TSV[i].v[E_PRIOR_CV] = m_EvaluationFile.rFloatArray2(num2);
 				}
 				m_EvaluationFile.rbool(&m_Valid_TSV[i].tobe_Plotted);
 				m_EvaluationFile.rbool(&m_Valid_TSV[i].is_Updated);

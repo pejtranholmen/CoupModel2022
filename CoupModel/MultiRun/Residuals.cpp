@@ -1042,9 +1042,20 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 								NumberValidRecords[ii]++;
 							}
 							else {
-								m_MeanPost.mean[ii][index] = float(MISSING);
-								m_MeanPost.min[ii][index] = float(MISSING);
-								m_MeanPost.max[ii][index] = float(MISSING);
+								if (FArray.size() >= 1) {
+									DistStat Stat;
+									size_t ncheck;
+									StatUtil::SortArray(&FArray[0], FArray.size());
+									MeanStat(&FArray[0], FArray.size(), &ncheck, &Stat);
+									m_MeanPost.mean[ii][index] = Stat.Mean;
+									m_MeanPost.min[ii][index] = Stat.Min;
+									m_MeanPost.max[ii][index] = Stat.Max;
+								}
+								else {
+									m_MeanPost.mean[ii][index] = float(MISSING);
+									m_MeanPost.min[ii][index] = float(MISSING);
+									m_MeanPost.max[ii][index] = float(MISSING);
+								}
 								m_MeanPost.std[ii][index] = float(MISSING);
 								m_MeanPost.p10[ii][index] = float(MISSING);
 								m_MeanPost.p50[ii][index] = float(MISSING);
