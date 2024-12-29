@@ -87,9 +87,20 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 		mfc_util.SetPaneMessage("Writing Criteria settings Completed");
 #endif
 
-	if (!ReadWrite_OptionalTSV_Valid(reading)) return false;
+	bool error = false;
+
+	if (!ReadWrite_OptionalTSV_Valid(reading)) {
+		error = true;
+		mfc_util.SetPaneMessage("Error when Reading TSV data");
+		if (reading) {
+			m_EvaluationFile.CloseFileIn();
+			return true;
+		}
+
+	}
+		
 #ifndef COUPSTD 
-	if (reading)
+	if (reading) 
 		mfc_util.SetPaneMessage("Reading TSV data Completed");
 	else
 		mfc_util.SetPaneMessage("Writing TSV data Completed");
@@ -616,7 +627,9 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 				if(!m_EvaluationFile.rsize_t(&add.Transformed_index)) return false;
 				size_t numvector;
 				if (m_New7_Stat&&!m_EvaluationFile.rsize_t(&add.Dim1_index)) return false;
+				if (!m_EvaluationFile.IsFileInGood()) return false;
 				if(!m_EvaluationFile.rsize_t(&numvector)) return false;
+				if (numvector == string::npos||numvector>50000) return false;
 				add.VarValidVector.resize(numvector);
 
 				add.VarValidVector=m_EvaluationFile.rFloatArray2(numvector);

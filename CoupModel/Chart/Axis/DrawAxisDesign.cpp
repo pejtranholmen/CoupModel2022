@@ -654,6 +654,7 @@ void DrawAxisDesign::Adjust_Legends_Axis_Labels()
 
 	//for (size_t i = 0; i < m_ChartOrigInfo.size(); i++) {
 		size_t i = m_ChartOrigInfo.size() - 1;
+		auto subcharts=m_pProp->GetNumSubCharts();
 		m_ChartOrigInfo[i].title = "";
 // Check if the Legends are the same for all variables
 		string koll="";  bool common = true;
@@ -662,13 +663,13 @@ void DrawAxisDesign::Adjust_Legends_Axis_Labels()
 			else if (koll != m_ChartOrigInfo[i].legends[index]) common = false;
 		}
 		if (common) {
-			if(i==0) m_ChartOrigInfo[i].title += koll;  // Add only to first chart heading
+			if(i==0||m_pProp->GetNumSubCharts()>=i) m_ChartOrigInfo[i].title += koll;  // Add only to first chart heading
 			for (size_t index = 0; index < m_ChartOrigInfo[i].legends.size(); index++)
 				m_ChartOrigInfo[i].legends[index] = "";
 
 		}
 		auto test_title=m_pProp->GetTitle();
-		if(test_title.size()==0)
+		if(test_title.size()==0||test_title!= m_ChartOrigInfo[i].title)
 			m_pProp->SetTitle(m_ChartOrigInfo[i].title);
 
 		common = true;

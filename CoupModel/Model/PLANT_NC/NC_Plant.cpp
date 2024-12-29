@@ -219,6 +219,7 @@ bool NC_Plant::Ini()	{
 
 	m_ICountDay = m_pModelInfo->JDayNum + 1;
 	m_ResetMade = false;
+	
 
 	if((m_pModelInfo->ActualNoMulRun-1)%3==0) zadokoutstrings.clear();
 	if (ZadokScale_Sw(ZadokScale) ==ZadokScale_Sw::withOutPut2File) {
@@ -288,6 +289,7 @@ bool NC_Plant::Ini()	{
 		SpringDevDayNum.assign(pPlant->NumPlants, 0.0);
 		DormingStartDayNum.assign(pPlant->NumPlants, 0.0);
 		RemovedCompAtHarvest.assign(pPlant->NumPlants, false);
+		Grain_Develop_Done.assign(pPlant->NumPlants, false);
 		PreviousThinningYear = 0;
 		ICountHarvestCycle = 1;
 		m_pModelInfo->StartStateValue = false;
@@ -1761,7 +1763,10 @@ auto Growth_Stage = [&](size_t index) {
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 				f_EmergenceWithReset(true, index, NDrivTAir, T_Step) ;
 				f_EmergenceWithMoistControl_Reset(true, index, NDrivTAir, NDrivTheta[0], T_Step);
-				Emergence_Done[index] = false;
+				if(Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::off)
+					Emergence_Done[index] = true;
+				else
+					Emergence_Done[index] = false;
 				SpringDevDayNum[index] = m_pModelInfo->JDayNum;
 				GrowingStage[index] = 1.;
 			}
@@ -1771,22 +1776,24 @@ auto Growth_Stage = [&](size_t index) {
 			SpringDevDayNum[index] = 0.;
 			GrowingStage[index] = 0.;
 		}	
-		else
-			Emergence_Done[index] = false;
+		else	
+		     Emergence_Done[index] = false;
 	}
-	else if (GrowthStageIndex[index]<2.&&Max_GSI[index]>1.&&Emergence_Done[index]) { //
+	else if (GrowthStageIndex[index]<2.&&Max_GSI[index]>1&&Emergence_Done[index]) { //
 		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
 			out = Min_GSI[index];
 			SpringDevDayNum[index] = 0.;
 			GrowingStage[index] = 0.;
 		}
-		else {
+		else if (!Grain_Develop_Done[index]) {
 			out = 1. + f_GrainStartWithReset(false, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
-			if (out >= 2&&Max_GSI[index]>2) {
+			if (out >= 2 && Max_GSI[index] > 2) {
 				Emergence_Done[index] = false;
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
+		else
+			out = 1.;
 	}
 	else if (GrowthStageIndex[index]<3.&&Max_GSI[index]>2.) {
 	// Grain filling start
@@ -2296,15 +2303,21 @@ void NC_Plant::Cleaning_Harvest_Events() {
 			//EndDo
 			if (DoHarvest) {
 				// Do jj=1, Num_HarvestDays  
+				bool hit = false;
 				for (size_t jj = 0; jj < HarvestDays.size(); jj++) {
 					if (PlantsToHarvest == 0 && m_pModelInfo->JDayNum == int(HarvestDays[jj])) {
 						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+						hit = true;
 					}
 					else if (size_t(HarvestDayPlantIndex[jj] + 0.01) == i_plant+1 && m_pModelInfo->JDayNum == int(HarvestDays[jj])) {
 						HarvestDayNo[i_plant] = m_pModelInfo->JDayNum;
+						hit = true;
 					}
-					if (Harvest_Type_Days[jj] > 0.5 && DoFinalHarvest) 	DoFinalHarvest = true;
-					else  DoFinalHarvest = false;
+					if (hit) {
+						if (Harvest_Type_Days[jj] > 0.5 && DoFinalHarvest) 	DoFinalHarvest = true;
+						else  DoFinalHarvest = false;
+						jj=HarvestDays.size();
+					}
 				}
 			}
 			if (HarvestDayNo[i_plant] > 0) HarvestToBeDone[i_plant] = true;
@@ -2372,6 +2385,8 @@ void NC_Plant::Cleaning_Harvest_Events() {
 				SplitofPlant_At_Harvest(true);
 			MoveFromPlantToLitter = true;
 			GrowthStageIndex[i_plant] = Min_GSI[i_plant];
+			Grain_Develop_Done[i_plant] = true;
+
 			////// For Grazing = 2 above		
 
 		}
@@ -3278,6 +3293,7 @@ void NC_Plant::At_YearShifting() {//year shift for P added by HH
 
 		DormingTempSum[i] = 0.;
 		Emergence_Done[i] = false;
+		Grain_Develop_Done[i] = false;
 		f_GrainFillWithReset(true, i, NDrivTAir, T_Step);
 
 	};

@@ -6836,6 +6836,9 @@ void MakeSimSheets::Multi_Post_NormalList() {
 	SetSheetNumber(10);
 	SetNumberCols(NumberOfCols);
 	SetDefFont(&m_font);
+	SetSH_Width(60);
+	SetSH_NumberCols(2);
+	SetSH_ColWidth(-1, 30);
 	SetColWidth(-1, 20);
 	SetColWidth(0, 50);
 	SetColWidth(1, 150);
@@ -6857,7 +6860,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 	for (int i = 0; i < NumberOfCols; i++)
 		UnJoinCells(i, 0);
 
-	QuickSetText(0, -1, "Dim");
+	QuickSetText(0, -1, "Dim/Par");
 	QuickSetText(1, -1, "Module");
 	QuickSetText(2, -1, "Name");
 	QuickSetText(3, -1, "Method");
@@ -6935,12 +6938,15 @@ void MakeSimSheets::Multi_Post_NormalList() {
 			else
 				ParameterCalib = false;
 
-			QuickSetNumber(0, icount, i + 1);
-			QuickSetNumber(-1, icount, ii + 1);
-			if (m_pSimDoc->IsFinishedSimulation())
-				QuickSetBackColor(-1, icount, m_ColorCompleted);
-			else
-				QuickSetBackColor(-1, icount, m_ColorClick);
+
+			//QuickSetNumber(0, icount, i + 1);
+			//QuickSetNumber(-1, icount, ii + 1);
+			string txt = FUtil::STD_ItoAscii(i + 1) + ":" + FUtil::STD_ItoAscii(ii + 1);
+			QuickSetText(0, icount, txt);
+			QuickSetText(-2, icount, "<");
+			QuickSetText(-1, icount, ">");
+			QuickSetBackColor(-1, icount, m_ColorClick);
+			QuickSetBackColor(-2, icount, m_ColorClick);
 
 			for (int ifn = 1; ifn < NumberOfCols; ifn++) {
 				scale_color = m_NoColor;

@@ -198,8 +198,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	CUGCell cell;
 	auto checkens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
-	if (!m_pSimDoc->m_MStorage.IsMaxUpdated[checkens] || !m_pSimDoc->m_MStorage.IsMinUpdated[checkens])
-		m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
+//	if (!m_pSimDoc->m_MStorage.IsMaxUpdated[checkens] || !m_pSimDoc->m_MStorage.IsMinUpdated[checkens])
+	//	m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
 
 	m_SplitPeriods = m_pSimDoc->m_MStorage.GetNumSplitPeriods();
 

@@ -620,7 +620,7 @@ bool NewMap::WriteHeaderToXmlFile(pugi::xml_node node) {
 	general.append_attribute("ChildDocument") = m_ChildDocument;
 
 	string ExeDate;
-	ExeDate = "Version 6.2.6, ";
+	ExeDate = "Version 6.3.0, ";
 #ifndef COUPSTD
 	CWinApp* pApp;
 	pApp = AfxGetApp();
@@ -2575,7 +2575,7 @@ bool NewMap::Info_Header(bool reading)
 		}
 		else { //kk
 			string ExeDate; 
-			ExeDate="Version 6.2.6, ";
+			ExeDate="Version 6.3.0, ";
 #ifndef COUPSTD
 			CWinApp *pApp;
 			pApp=AfxGetApp();

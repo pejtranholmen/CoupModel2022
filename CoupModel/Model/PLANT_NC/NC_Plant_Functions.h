@@ -441,6 +441,7 @@ vector<double>  GCOSm, GtCOS; // Mousong
 ;
 
 vector<bool> Emergence_Done;
+vector<bool> Grain_Develop_Done;
 vector<size_t> ICConv, IGath ;
 ;
 size_t m_ICountDay;

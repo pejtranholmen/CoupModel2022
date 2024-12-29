@@ -1030,9 +1030,9 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 									else
 										EnsemblesToPlot.push_back(0);
 								}
-								for (size_t i = 0; i < EnsemblesToPlot.size(); i++) {
+								for (size_t i2 = 0; i2 < EnsemblesToPlot.size(); i2++) {
 									PLOTv plotinfo = m_pPlotInfo->MakeOutPutChartInfo(i, j);
-									plotinfo.EnsembleNo = EnsemblesToPlot[i];
+									plotinfo.EnsembleNo = EnsemblesToPlot[i2];
 									if (m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart) == 0)
 										return;
 								}

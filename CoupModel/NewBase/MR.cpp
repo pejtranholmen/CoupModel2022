@@ -1437,7 +1437,7 @@ bool MR::PreDefined_Criteria_Process() {
 		}
 
 		while (num < numens) {
-			if (m_MStorage.AddNewEnsemble(true)) {
+			if (m_MStorage.AddNewEnsemble(false)) {
 				num = m_MStorage.GetNumberofEnsembles();
 				//reset();
 			}

@@ -2274,7 +2274,7 @@ void MyCug::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL
 	UNREFERENCED_PARAMETER(processed);
 	if (updn) return;
 	auto sheet = GetSheetNumber();
-	if (sheet == 6||sheet==5) {
+	if (sheet == 6||sheet==5||sheet==10) {
 		if (col == -2)
 			m_pSimDoc->m_MStorage.ChangeEnsembleNo(string::npos);
 		else
