@@ -244,13 +244,9 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 					Fil.pFile = pPG;
 					Fil.Visible = false;
 					Fil.pDoc = this;
-					float koll;
-
-					for(size_t i=1; i<26;i++)
-					   koll = pPG->GetVarValue(3, 1, i);
+				
 					pPG->ReOpen();
-					for (size_t i = 1; i < 12; i++)
-						koll=	pPG->GetVarValue(3, 1, i);
+
 					MySingle::instance().GetPGFileArchivePointer()->AddPGFile(Fil);
 					//m_pApp->m_PGFileArray.push_back(Fil);
 					num = MySingle::instance().GetPGFileArchivePointer()->GetNumPGFile();
@@ -260,8 +256,7 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 				}
 				else {
 					pPG->ReOpen();
-					for (size_t i = 7; i < 12; i++)
-						auto koll = pPG->GetVarValue(3, 1, i);
+
 
 				}
 					//return FALSE;

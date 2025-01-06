@@ -78,7 +78,7 @@ void CPGView::UpdateViewOrder()
 		size_t ind;
 		if(m_RepetitionsFirst) {
 			for (size_t i=0;i<pg.Shape.NumVar;i++) {
-				for (size_t nrep=0; nrep<pg.Shape.NumRepetitions; nrep++) {
+				for (size_t nrep=0; nrep<pg.Shape.NumRepetitions+1; nrep++) {
 						ind=nrep*pg.Shape.NumVar+i;
 						if(pg.status.a.ToBeViewed[ind]) {
 							data.NumVar=i+1;
@@ -90,7 +90,7 @@ void CPGView::UpdateViewOrder()
 
 		}
 		else {
-			for (size_t nrep=0; nrep<pg.Shape.NumRepetitions; nrep++) {
+			for (size_t nrep=0; nrep<pg.Shape.NumRepetitions+1; nrep++) {
 				for (size_t i=0;i<pg.Shape.NumVar;i++) {
 						ind=nrep*pg.Shape.NumVar+i;
 						if(pg.status.a.ToBeViewed[ind]) {

@@ -150,7 +150,7 @@ CPG* NoaaCoord::CreateNewRandomFillingFile(CPG *pPGSource) {
 	long nvarsub=0, totsub=0;
 
 	for(int rep=0; rep<nrep;rep++) {
-		pPG_Dest->SetRepititionSequence(rep+1);
+		pPG_Dest->SetRepititionSequence(rep);
 		for(int j=1;j<=nvar;j++){
 			fmax=MISSING;
 			fmin=abs(MISSING);
@@ -333,7 +333,7 @@ CPG* NoaaCoord::CreateNewSpatialCorrelationFile(CPG *pPG)
 				WithoutIntercept = true;
 			else
 				WithoutIntercept = false;
-			for (int j = 1; j <= nrep; j++) {
+			for (int j = 0; j < nrep; j++) {
 				Maths::Regression::Linear *pLin;
 				pLin = nullptr;
 				vector<Maths::Regression::Linear *> Lin;				// vector of class Linear that keeps the regressions
@@ -353,7 +353,7 @@ CPG* NoaaCoord::CreateNewSpatialCorrelationFile(CPG *pPG)
 					}
 				}
 				MaxR = 0;
-				for (int jj = 1; jj <= nrep; jj++) { // This loops is scanning all repetition, make the regression, sort the regression in order 
+				for (int jj = 0; jj < nrep; jj++) { // This loops is scanning all repetition, make the regression, sort the regression in order 
 					vector<double> keep1;     // from the lowest r2 to the highest
 					vector<double> keep2;	// The missing values
 					double sumkeep1, sumkeep2;
@@ -681,7 +681,7 @@ bool NoaaCoord::EstimateWeightforInterpolation(double Lat1, double Long1)
 	m_disindex.resize(0);
 	m_sumweight=0.;
 	// Finding the distances to other stations and putting all including the weights into a sorted vector
-	for(int k=1;k<=nrep;k++){
+	for(int k=0;k<nrep;k++){
 		m_pPGSource->SetRepititionSequence(k);
 		double lat2=m_pPGSource->GetVarLat(1,k);
 		double long2=m_pPGSource->GetVarLong(1,k);				
@@ -986,8 +986,9 @@ CPG* NoaaCoord::CreateNewGridFile(double LatNorth, double LatSouth, double LongE
 	for (int Index_lat=0;Index_lat<n_Lat;Index_lat++){		
 		for (int Index_long=0;Index_long<n_Long;Index_long++){			
 			bool weight=EstimateWeightforInterpolation( GridLat[Index_lat], GridLong[Index_long]);
-			rep++;
+			
 			pPG_Dest->SetRepititionSequence(rep);
+		
 			for(int j=1;j<=nvar;j++){
 				fmax=MISSING;
 				fmin=abs(MISSING);
@@ -1032,6 +1033,7 @@ CPG* NoaaCoord::CreateNewGridFile(double LatNorth, double LatSouth, double LongE
 					pPG_Dest->SetVarSubstituted(j,0, rep);
 				//}
 			}
+			rep++;
 		}
 	}
 

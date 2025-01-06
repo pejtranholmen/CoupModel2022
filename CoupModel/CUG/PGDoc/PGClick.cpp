@@ -97,7 +97,7 @@ void PGClick::ChangeChartVar(int col, int row) {
 CUGCell cell, cell1; 
 		int Index=0;
 		GetCell(col,row, &cell); 
-		bool erase=true;
+ 		bool erase=true;
 		if(cell.GetBool()) erase=false;
 		int ParV=cell.GetParam();
 		int RepitNo;
@@ -107,7 +107,7 @@ CUGCell cell, cell1;
 		if(ParV==3100) {
 			pPG=(CPG*)m_pPGArchive->GetPGFile(m_IndexSource);
 			GetCell(-2,row,&cell);
-			RepitNo=int(cell.GetNumber());
+			RepitNo=int(cell.GetNumber()-1);
 			GetCell(0,row,&cell);
 		}
 		else {
@@ -204,11 +204,11 @@ void PGClick::ChangeChartChoice(int isheet,int col, int row, int ind,CString Aft
 			m_IndexSource=ind;
 	}
 	else if(ParV== m_RepOptionsCombo.Param) {
-		m_pGSource->SetRepititionSequence(ind+1, true);
+		m_pGSource->SetRepititionSequence(ind, true);
 		MySingle::instance().GetChartCugPointer()->m_TimeSeriePlot.m_ChartInfo.PGRepitMode=true;
 		for(int il=0; il< m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber);il++) {
 			int j=m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, il);
-			if(m_pSimDoc->m_PlotStorage.SetPGRepitNo(j, ind+1)) ;
+			if(m_pSimDoc->m_PlotStorage.SetPGRepitNo(j, ind)) ;
 		}
 		if(m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber)>0)
 			m_pUtil->m_FileSave.OnReDraw(true, m_pSimDoc);

@@ -14,7 +14,7 @@ CPGBase::CPGBase(void)
 	pg.status.CompleteRepRead=false;
 	pg.status.FileModified=false;
 	pg.status.RecordsToView = false;
-	pg.Shape = SetDataShape(0, pg.Shape.NumVar, 1);
+	pg.Shape = SetDataShape(0, pg.Shape.NumVar, 0);
 	pg.status.a.OutRecordStart = 0;
 	pg.status.a.OutRecordEnd = 0;
 	pg.status.a.LocalStartIndex = 0;

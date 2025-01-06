@@ -909,33 +909,33 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 					id_base = "";
 					if (m_ProFoundOption == 1) {
 						if (input.FirstValidHeads[i].find("taF_d") == 0) {
-							SetVarName(countv, "Air Temperature", irep + 1);
-							SetVarUnit(countv, "C", irep + 1);
+							SetVarName(countv, "Air Temperature", irep );
+							SetVarUnit(countv, "C", irep);
 							id_base = input.FirstValidHeads[i];
 						}
 						else if (input.FirstValidHeads[i].find("pF_m") == 0) {
-							SetVarName(countv, "Precipitation", irep + 1);
-							SetVarUnit(countv, "mm", irep + 1);
+							SetVarName(countv, "Precipitation", irep);
+							SetVarUnit(countv, "mm", irep);
 							id_base = input.FirstValidHeads[i];
 						}
 						else if (input.FirstValidHeads[i].find("vpdF_h") == 0) {
-							SetVarName(countv, "Vapour Pressure Deficit", irep + 1);
-							SetVarUnit(countv, "%", irep + 1);
+							SetVarName(countv, "Vapour Pressure Deficit", irep);
+							SetVarUnit(countv, "%", irep);
 							id_base = input.FirstValidHeads[i];
 						}
 						else if (input.FirstValidHeads[i].find("lwInF_W") == 0) {
-							SetVarName(countv, "Long Wave Radiation", irep + 1);
-							SetVarUnit(countv, "J/m2/day", irep + 1);
+							SetVarName(countv, "Long Wave Radiation", irep);
+							SetVarUnit(countv, "J/m2/day", irep);
 							id_base = input.FirstValidHeads[i];
 						}
 						else if (input.FirstValidHeads[i].find("swInF_W") == 0) {
-							SetVarName(countv, "Global Radiation", irep + 1);
-							SetVarUnit(countv, "J/m2/day", irep + 1);
+							SetVarName(countv, "Global Radiation", irep);
+							SetVarUnit(countv, "J/m2/day", irep);
 							id_base = input.FirstValidHeads[i];
 						}
 						else if (input.FirstValidHeads[i].find("wsF_m") == 0) {
-							SetVarName(countv, "Wind Speed", irep + 1);
-							SetVarUnit(countv, "m/s", irep + 1);
+							SetVarName(countv, "Wind Speed", irep);
+							SetVarUnit(countv, "m/s", irep);
 							id_base = input.FirstValidHeads[i];
 						}
 					}
@@ -975,11 +975,11 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 							id_base += FUtil::STD_ItoAscii((countv + 1) / 2);
 
 						}
-						SetVarName(countv, name, irep + 1);
-						SetVarUnit(countv, unit, irep + 1);
+						SetVarName(countv, name, irep);
+						SetVarUnit(countv, unit, irep);
 						string site_id;
 						site_id = id_base + " site:"; site_id += FUtil::STD_ItoAscii(input.LinkedSites[ActualIndexId].Ids);
-						SetVarId(countv, site_id, irep + 1);
+						SetVarId(countv, site_id, irep);
 
 
 					}
@@ -1001,18 +1001,18 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 
 
 						}
-						SetVarName(countv, name, irep + 1);
-						SetVarUnit(countv, unit, irep + 1);
+						SetVarName(countv, name, irep);
+						SetVarUnit(countv, unit, irep);
 						string site_id;
 						site_id = id_base + " site:"; site_id += FUtil::STD_ItoAscii(input.LinkedSites[ActualIndexId].Ids);
-						SetVarId(countv, site_id, irep + 1);
+						SetVarId(countv, site_id, irep);
 
 					}
 					else {
-						SetVarName(countv, input.FirstValidHeads[i], irep + 1);
+						SetVarName(countv, input.FirstValidHeads[i], irep);
 						string site_id;
 						site_id = id_base + " _"; site_id += FUtil::STD_ItoAscii(input.LinkedSites[ActualIndexId].Ids);
-						SetVarId(countv, site_id, irep + 1);
+						SetVarId(countv, site_id, irep);
 					}
 
 	

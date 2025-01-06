@@ -522,7 +522,7 @@ CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
 							}
 							else if (p_info.PGRepitNo > 0) {
 
-								out.pPG1->SetRepititionSequence(p_info.PGRepitNo+1,false);
+								out.pPG1->SetRepititionSequence(p_info.PGRepitNo,false);
 
 							}
 							else {
@@ -1584,7 +1584,7 @@ bool LoadDataToChart::CurveData_SingleTime(size_t icurve, size_t i_band, CURVEIN
 	else if (p_info.RepitDataType)
 		m_pPG_Active->SetRepititionSequence(p_info.PGRepitNo);
 	else if(p_info.DataType==DATA_TYPES::MEASURED_VAL|| p_info.DataType == DATA_TYPES::SIM_VAL && m_ChartInfo.PGRepitMode)
-		m_pPG_Active->SetRepititionSequence(c_info.ResRunNo+1);
+		m_pPG_Active->SetRepititionSequence(c_info.ResRunNo);
 	if (p_info.PGSection<10000) {
 		if (p_info.RepitDataType || pg_control.MeanValueBand) ReSizeBandDataVectors(i_band, ActNoPoints);
 		if (icurve == 0 && (!m_pProp->m_ReShape.m_CommonDayNo && !m_pProp->m_ReShape.m_CommonWithDay)) SetTimeDataValues(ActNoPoints, pg_control);
@@ -1978,6 +1978,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		return false;
 	}
 	//Check number of points
+
 	size_t koll = m_pPG_Active->GetNumRecords()*m_pPG_Active->GetNumRepititions();
 	if (koll<ActNoPoints) {
 		for (size_t i = 0; i<ActNoPoints; i++) SetDataValueMissing(icurve, pg_control, i);
@@ -2122,6 +2123,8 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	//m_pSimDoc->m_MStorage.UpdateCyclicNumbers(p_info.EnsembleNo);
 	if (p_info.RepitDataType)
 		act_rep = p_info.PGRepitNo;
+	else
+		act_rep = 0;
 	if(p_info.pPG_MeasValFile!=nullptr)
 	if (p_info.pPG_MeasValFile->GetNumRepititions() > 0) {
 		auto rephits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index, p_info.Residual_RunNo);
@@ -2149,7 +2152,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		if (NumRepit <= 1) allrep = false;
 		else if (p_info.RepitDataType&& p_info.DataType == DATA_TYPES::SIM_VAL) allrep = true;
 		else if (p_info.RepitDataType && p_info.DataType == DATA_TYPES::MEASURED_VAL) allrep = true;
-		if (act_rep > 0) {
+		if (act_rep >= 0) {
 			allrep = false;
 			m_pPG_Active->SetRepititionSequence(act_rep, true);
 			if(p_info.pPG_MeasValFile!=nullptr)
@@ -2182,8 +2185,8 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		vector<float> ActiveResiduals;
 		size_t Start_SubSet_Residuals = 0;
 		if (c_info.pRes != nullptr) {
-			ActiveResiduals = c_info.pRes->GetResidualVectorSubSet(c_info.ResRunNo, Residual_VarNum, ActNoPoints, act_rep - 1);
-			Start_SubSet_Residuals = ActNoPoints * (act_rep - 1);
+			ActiveResiduals = c_info.pRes->GetResidualVectorSubSet(c_info.ResRunNo, Residual_VarNum, ActNoPoints, act_rep );
+			Start_SubSet_Residuals = ActNoPoints * (act_rep);
 		}
 		else ActiveResiduals.assign(ActNoPoints, MISSING);
 		

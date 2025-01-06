@@ -379,6 +379,11 @@ bool Simulator::Run(bool MultiFlag)
 			if(m_pModelInfo->m_ActMin>= m_pModelInfo->m_MinStore&&(m_StructureModel.m_Structure.TimeSerieOutputLevels==0||!m_pSim->IsMultiSimulation()||m_MultiOutputs.size()>0)) {
 				m_pModelInfo->m_RecOutput++;
 				if (m_pModelInfo->m_RecOutput <= m_pModelInfo->m_OutRecord) {
+					if (m_pModelInfo->m_RecOutput == m_pModelInfo->m_OutRecord) {
+						
+
+
+					}
 					Store_Outputs(MultiFlag, num_timescaling);
 					m_pModelInfo->m_MinStore = m_pSim->RunOpt.longMinStart + m_pModelInfo->m_OutInterval * (m_pModelInfo->m_RecOutput + 1) + num_timescaling * (m_pSim->RunOpt.longMinEnd - m_pSim->RunOpt.longMinStart);
 				}
@@ -624,34 +629,33 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 	if(MultiFlag) {
 		for(size_t i=0;i<Stat.size(); i++) {
 			if(Stat[i].YBin) { // YBin true corresponds to a multiRun output of Variables to MultiBin File format
-				m_pSim->m_PG_MultiOutputFile.SetVarName(count+1,m_MultiOutputs[count].pBase->GetName(),m_pModelInfo->ActualNoMulRun);
-				m_pSim->m_PG_MultiOutputFile.SetVarUnit(count+1,m_MultiOutputs[count].pBase->GetUnit(),m_pModelInfo->ActualNoMulRun);
+				m_pSim->m_PG_MultiOutputFile.SetVarName(count+1,m_MultiOutputs[count].pBase->GetName(),m_pModelInfo->ActualNoMulRun-1);
+				m_pSim->m_PG_MultiOutputFile.SetVarUnit(count+1,m_MultiOutputs[count].pBase->GetUnit(),m_pModelInfo->ActualNoMulRun-1);
 				if(m_StructureModel.m_Additional.Multi_PGFile_ID_Selector==0)
-					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo),m_pModelInfo->ActualNoMulRun );
+					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo),m_pModelInfo->ActualNoMulRun-1 );
 				else if(m_StructureModel.m_Additional.Multi_PGFile_ID_Selector==1)
-					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(int(m_StructureModel.m_Additional.SeqNo_MetFile)),m_pModelInfo->ActualNoMulRun );
+					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(int(m_StructureModel.m_Additional.SeqNo_MetFile)),m_pModelInfo->ActualNoMulRun-1 );
 				else if(m_StructureModel.m_Additional.Multi_PGFile_ID_Selector==2)
-					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(int(m_StructureModel.m_Additional.IDNo_MetFile)),m_pModelInfo->ActualNoMulRun );
-				m_pSim->m_PG_MultiOutputFile.SetVarLat(count+1, m_StructureModel.m_Additional.Y_coordinate,m_pModelInfo->ActualNoMulRun);
-				m_pSim->m_PG_MultiOutputFile.SetVarLong(count+1, m_StructureModel.m_Additional.X_coordinate,m_pModelInfo->ActualNoMulRun);
-				m_pSim->m_PG_MultiOutputFile.SetVarAlt(count+1, m_StructureModel.m_Additional.Z_coordinate,m_pModelInfo->ActualNoMulRun);
-				m_pSim->m_PG_MultiOutputFile.SetVarStation(count+1,FUtil::STD_DtoAscii(m_AtmModel.m_Irrigation.PGFileName_Index),m_pModelInfo->ActualNoMulRun);
+					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(int(m_StructureModel.m_Additional.IDNo_MetFile)),m_pModelInfo->ActualNoMulRun-1 );
+				m_pSim->m_PG_MultiOutputFile.SetVarLat(count+1, m_StructureModel.m_Additional.Y_coordinate,m_pModelInfo->ActualNoMulRun-1);
+				m_pSim->m_PG_MultiOutputFile.SetVarLong(count+1, m_StructureModel.m_Additional.X_coordinate,m_pModelInfo->ActualNoMulRun-1);
+				m_pSim->m_PG_MultiOutputFile.SetVarAlt(count+1, m_StructureModel.m_Additional.Z_coordinate,m_pModelInfo->ActualNoMulRun-1);
+				m_pSim->m_PG_MultiOutputFile.SetVarStation(count+1,FUtil::STD_DtoAscii(m_AtmModel.m_Irrigation.PGFileName_Index),m_pModelInfo->ActualNoMulRun-1);
 				count++;
 				if (m_Outputs[i].pBase->Is_Vector()) {
 					((OutVector*)m_Outputs[i].pBase)->SetMultiPGFileIndex(m_Outputs[i].TabIndex,count);
-
 				}
 				else {
 					((OutSingle*)m_Outputs[i].pBase)->SetMultiPGFileIndex( count);
-
-
 				}
 			}
 		}
 		m_pSim->m_PG_MultiOutputFile.WriteNewPGFileRecord();
-		m_pSim->m_PG_MultiOutputFile.ReCalculateMinMax(m_pModelInfo->ActualNoMulRun);
+
 		if(Final) {
+			for(size_t i=0; i< m_pModelInfo->TotalNoMulRun;i++)	m_pSim->m_PG_MultiOutputFile.ReCalculateMinMax(i);
 			bool goodfile=m_pSim->m_PG_MultiOutputFile.WritePGFileEnd(m_pModelInfo->m_OutRecord, m_pModelInfo->TotalNoMulRun);
+
 			m_pSim->m_PG_MultiOutputFile.CloseFile();
 #ifdef COUPSTD
 			if(goodfile)
@@ -765,6 +769,13 @@ void Simulator::Store_Outputs(bool MultiFlag, size_t num_timescaling)
 	else
 		ist=(m_pModelInfo->m_RecOutput-1+num_timescaling* m_pModelInfo->m_OutRecord)*(m_MultiOutputs.size()+1);
 
+
+	if (m_pModelInfo->m_RecOutput == m_pModelInfo->m_OutRecord|| m_pModelInfo->m_RecOutput==1) {
+
+		//rec_koll.push_back(ist);
+
+	}
+
 	size_t ist_Wshed;
 
 	ist_Wshed=(m_pModelInfo->m_RecOutput-1+num_timescaling* m_pModelInfo->m_OutRecord)*(m_WshedOutputs.size()+1);
@@ -814,6 +825,14 @@ void Simulator::Store_Outputs(bool MultiFlag, size_t num_timescaling)
 	}
 	else if(m_MultiOutputs.size()>0) {
 		ist+=  (m_pModelInfo->ActualNoMulRun-1) * m_pSim->m_PG_MultiOutputFile.GetNumRecords() * (m_pSim->m_PG_MultiOutputFile.GetNumVariables() + 1);
+		if (m_pModelInfo->m_RecOutput == 1) {
+			rec_koll.push_back(ist);
+			//auto pP = m_pSim->GetPsPointer("Random Seed");
+			auto pP = m_pSim->GetPsPointer("TempAirMean");
+			rec_koll.push_back(size_t(100+pP->GetValue()*100.));
+
+
+		}
 		m_pSim->m_PG_MultiOutputFile.SetDatePointer(&minute,ist);	
 		m_pSim->m_PG_MultiOutputFile.SetVarPointer(&m_OutFloat[0], ist, m_MultiOutputs.size());
 	}
@@ -1061,7 +1080,11 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		m_ValPGFile[i].pRes=(CResiduals*)((NewMap*)m_pSim)->GetResidualPointer(i+1);
 		if(MultiFlag&&First) {
 			if(m_ValPGFile[i].file==nullptr) continue;
-			auto recl=m_ValPGFile[i].file->GetNumRecords() * m_ValPGFile[i].file->GetNumRepititions();
+			size_t recl;
+			if (m_ValPGFile[i].file->GetNumRepititions() == 0)
+				recl = m_ValPGFile[i].file->GetNumRecords();
+			else
+				recl=m_ValPGFile[i].file->GetNumRecords() * (m_ValPGFile[i].file->GetNumRepititions()+1);
 			auto numvar=m_ValPGFile[i].varindex.size();
 			auto totrec=numvar*m_pModelInfo->TotalNoMulRun;
 			if(m_ValPGFile[i].pRes!=nullptr) // One residual Xbin file for entire Multirun
@@ -1080,7 +1103,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		bool testfile = m_ValPGFile[i].file->ReOpen();
 		if (m_StructureModel.m_Structure.DynamicValidFileIndex == 1) {
 			m_ValPGFile[i].file->SetRepititionMode(true);
-			m_ValPGFile[i].file->SetRepititionSequence(size_t(m_StructureModel.m_Structure.ValFile_Index + 0.1), true);
+			m_ValPGFile[i].file->SetRepititionSequence(size_t(m_StructureModel.m_Structure.ValFile_Index - 0.9), true);
 		}
 		else {
 			m_ValPGFile[i].file->SetActBuffer(0);
@@ -1160,7 +1183,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		}
 		if (m_StructureModel.m_Structure.DynamicValidFileIndex == 1) {
 			m_ValPGFile[i].file->SetRepititionMode(true);
-			m_ValPGFile[i].file->SetRepititionSequence(size_t(m_StructureModel.m_Structure.ValFile_Index + 0.1), true);
+			m_ValPGFile[i].file->SetRepititionSequence(size_t(m_StructureModel.m_Structure.ValFile_Index -0.9), true);
 		}
 		else {
 			m_ValPGFile[i].file->SetActBuffer(0);
@@ -1325,11 +1348,11 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 				pPG_Obs->CloseFile();
 				pPG_Obs->Open(pPG_Obs->GetFileName());
 				if (m_StructureModel.m_Structure.DynamicValidFileIndex == 1) {
-					m_ValPGFile[i].file->SetRepititionSequence(size_t(m_StructureModel.m_Structure.ValFile_Index + 0.1), false);
+					m_ValPGFile[i].file->SetRepititionSequence(size_t(m_StructureModel.m_Structure.ValFile_Index + -0.9), false);
 				}
 				else {
 					size_t SeqnoDim1 = m_pSim->MR_GetDimCounter(0);
-					pPG_Obs->SetRepititionSequence(SeqnoDim1, false);
+					pPG_Obs->SetRepititionSequence(SeqnoDim1-1, false);
 				}
 
 

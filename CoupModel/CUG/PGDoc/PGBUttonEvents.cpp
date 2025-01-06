@@ -503,10 +503,10 @@ void PGButtonEvents::DescriptionButtons(int ParV)
 	CPG *pPG = GetCurrentPG_Pointer();
 	if (pPG != nullptr) {
 		if (ParV == m_ApplyUnitTypeButton.Param) {
-			for (size_t irep = 1; irep <= pPG->GetNumRepititions(); irep++)
+			for (size_t irep = 0; irep < pPG->GetNumRepititions(); irep++)
 				for (size_t ivar = 1; ivar <= pPG->GetNumVariables(); ivar++) {
 					string str;
-					UNIT_TYPES unit=pPG->GetVarUnitType(ivar, 1);
+					UNIT_TYPES unit=pPG->GetVarUnitType(ivar, irep);
 
 					if (unit < UNIT_TYPES::NO_UNIT&&unit >= UNIT_TYPES(0)) {
 						pPG->SetVarUnit(ivar, p_ModelInfo->GetUnitString(unit), irep);
@@ -516,10 +516,10 @@ void PGButtonEvents::DescriptionButtons(int ParV)
 
 		}
 		else if(ParV==m_ApplyElementTypeButton.Param) {
-			for (size_t irep = 1; irep <= pPG->GetNumRepititions(); irep++)
+			for (size_t irep = 0; irep < pPG->GetNumRepititions(); irep++)
 				for (size_t ivar = 1; ivar <= pPG->GetNumVariables(); ivar++) {
 					string str;
-					elements elem = pPG->GetVarElement(ivar, 1);
+					elements elem = pPG->GetVarElement(ivar, irep);
 					if (elem != GENERAL&&elem >= elements(0) && elem < p_ModelInfo->GetNumberOfElements()) {
 						pPG->SetVarName(ivar, p_ModelInfo->ElementName(elem), irep);
 						m_Changed_Description = true;

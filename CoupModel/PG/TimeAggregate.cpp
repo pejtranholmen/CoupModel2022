@@ -28,7 +28,7 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int Aggregatio
  
 
 
-	m_pPGSource->ReadNewBuffer(1, 1);
+	m_pPGSource->ReadNewBuffer(0, 0);
 	m_pPGSource->SetMeanReset(Option);
 	int NewNumRec=0;
 	float *pFloat;
@@ -62,24 +62,24 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int Aggregatio
 	for(size_t rep=0; rep<nrep; rep++) {
 		string txt;
 			for(size_t i=1; i<=nvar; i++) {
-							txt=m_pPGSource->GetVarName(i,rep+1);
-							pPG_Dest->SetVarName(i, txt, rep+1);
-							txt=m_pPGSource->GetVarUnit(i, rep+1);
-							pPG_Dest->SetVarUnit(i, txt, rep+1);
-							txt=m_pPGSource->GetVarId(i, rep+1);
-							pPG_Dest->SetVarId(i, txt, rep+1);
-							txt=m_pPGSource->GetVarPos(i, rep+1);
-							pPG_Dest->SetVarPos(i, txt, rep+1);
-							double Lat=m_pPGSource->GetVarLat(i, rep+1);
-							pPG_Dest->SetVarLat(i, Lat, rep+1);
-							double Long=m_pPGSource->GetVarLong(i, rep+1);
-							pPG_Dest->SetVarLong(i, Long, rep+1);
-							double Alt=m_pPGSource->GetVarAlt(i, rep+1);
-							pPG_Dest->SetVarAlt(i, Alt, rep+1);
-							string txt=m_pPGSource->GetVarStation(i, rep+1);
-							pPG_Dest->SetVarStation(i, txt, rep+1);
-							txt=m_pPGSource->GetVarCountry(i, rep+1);
-							pPG_Dest->SetVarCountry(i, txt, rep+1);		
+							txt=m_pPGSource->GetVarName(i,rep);
+							pPG_Dest->SetVarName(i, txt, rep);
+							txt=m_pPGSource->GetVarUnit(i, rep);
+							pPG_Dest->SetVarUnit(i, txt, rep);
+							txt=m_pPGSource->GetVarId(i, rep);
+							pPG_Dest->SetVarId(i, txt, rep);
+							txt=m_pPGSource->GetVarPos(i, rep);
+							pPG_Dest->SetVarPos(i, txt, rep);
+							double Lat=m_pPGSource->GetVarLat(i, rep);
+							pPG_Dest->SetVarLat(i, Lat, rep);
+							double Long=m_pPGSource->GetVarLong(i, rep);
+							pPG_Dest->SetVarLong(i, Long, rep);
+							double Alt=m_pPGSource->GetVarAlt(i, rep);
+							pPG_Dest->SetVarAlt(i, Alt, rep);
+							string txt=m_pPGSource->GetVarStation(i, rep);
+							pPG_Dest->SetVarStation(i, txt, rep);
+							txt=m_pPGSource->GetVarCountry(i, rep);
+							pPG_Dest->SetVarCountry(i, txt, rep);		
 
 				}
 	}
@@ -99,7 +99,7 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int Aggregatio
 	auto kul=pPG_Dest->pg.Var.v.size();
 
 	for(size_t rep=0; rep<nrep; rep++) {
-		m_pPGSource->ReadNewBuffer(1, rep+1);
+		m_pPGSource->ReadNewBuffer(1, rep);
 		m_pPGSource->SetMeanReset(Option);
 		/*if(!pPG_Dest->SetRepititionSequence(rep+1, true)) {
 				delete pPG_Dest;
@@ -109,23 +109,23 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int Aggregatio
 		}*/
 		float rel=float(rep)/float(nrep);
 		p_mainframe->UpdateProgress(0, rel);
-		if(!m_pPGSource->SetRepititionSequence(rep+1, true)) return false;
+		if(!m_pPGSource->SetRepititionSequence(rep, true)) return false;
 		kul = pPG_Dest->pg.Var.v.size();
 		switch(Option) {
 		case 0:
-			NewNumRec=m_pPGSource->GetNumRecordsYear(AggregationStep, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsYear(AggregationStep, rep);
 			break;
 		case 1:
-			NewNumRec=m_pPGSource->GetNumRecordsMonth(AggregationStep, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsMonth(AggregationStep, rep);
 			break;
 		case 2:
-			NewNumRec=m_pPGSource->GetNumRecordsDays(AggregationStep, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsDays(AggregationStep, rep);
 			break;
 		case 3:
-			NewNumRec=m_pPGSource->GetNumRecordsHour(AggregationStep, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsHour(AggregationStep, rep);
 			break;
 		case 4:
-			NewNumRec=m_pPGSource->GetNumRecordsMinute(10* AggregationStep, rep+1);
+			NewNumRec=m_pPGSource->GetNumRecordsMinute(10* AggregationStep, rep);
 			break;
 		}
 		pFloat=m_pPGSource->GetMeanPointer(Option);
@@ -136,7 +136,7 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int Aggregatio
 		}
 		if(!pPG_Dest->GetCompleteRead()) {
 
-			if(!pPG_Dest->WriteNewBuffer(rep+1)) {
+			if(!pPG_Dest->WriteNewBuffer(rep)) {
 				delete pPG_Dest;
 				return false;				
 				
@@ -150,7 +150,7 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int Aggregatio
 	}
 	for (size_t rep = 0; rep < nrep; rep++) {
 		kul = pPG_Dest->pg.Var.v.size();
-		if (!pPG_Dest->ReCalculateMinMax(rep + 1)) {
+		if (!pPG_Dest->ReCalculateMinMax(rep)) {
 			delete pPG_Dest;
 			return false;
 
@@ -161,7 +161,7 @@ bool TimeAggregate::CreateNewAggregatedFile(CPG *pPG, int Option, int Aggregatio
 
 //	pPG_Dest->CheckMissingNumbers();
 	string txt;
-	if(pPG_Dest->WritePGFileEnd(NewNumRec,nrep)) {
+	if(pPG_Dest->WritePGFileEnd(NewNumRec,nrep-1)) {
 
 
 		

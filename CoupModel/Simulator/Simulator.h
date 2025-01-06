@@ -101,6 +101,8 @@ class Simulator
 		vector<VALID_PGFILE> m_ValPGFile;
 		vector<VALID_RESULT> m_ValRes;
 		vector<SIMB> m_pValVar;
+
+		vector<size_t> rec_koll;
 		double m_DayError;
 		
 	};

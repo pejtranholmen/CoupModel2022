@@ -276,7 +276,7 @@ void PGEditCells::ChangeDescriptions(int col, long row, string txt, CPG *pPG)
 
 	size_t ivar, irep;
 	ivar = row%(pPG->pg.Shape.NumVar)+1;
-	irep = row /pPG->pg.Shape.NumVar+1;
+	irep = row /pPG->pg.Shape.NumVar;
 
 	double DValue=MISSING;
 	if (col > 10 && col < 14) {

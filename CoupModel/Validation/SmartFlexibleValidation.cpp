@@ -344,7 +344,7 @@ bool SmartFlexibleValidation::CalculatePerformanceAndSetValues() {
 
 						m_MStorage.GetMultiPGFileForCorrectRunNo(irun, pMulti_PG_File);
 
-						pMulti_PG_File->SetRepititionSequence(irun + 1, true);
+						pMulti_PG_File->SetRepititionSequence(irun, true);
 						size_t ist = pMulti_PG_File->GetRecord(valsum.MultiBin_StartMin);
 						size_t iend = pMulti_PG_File->GetRecord(valsum.MultiBin_EndMin);
 
@@ -560,7 +560,7 @@ bool SmartFlexibleValidation::SetSimObsRatio() {
 				else if (valsum.SimValueSource == SIMSUMSOURCE::MULTI_OUTPGFILE) {
 					m_pSimDoc->m_PG_MultiOutputFile.ReOpen();
 
-						m_pSimDoc->m_PG_MultiOutputFile.SetRepititionSequence(iii + 1, true);
+						m_pSimDoc->m_PG_MultiOutputFile.SetRepititionSequence(iii, true);
 						size_t ist = m_pSimDoc->m_PG_MultiOutputFile.GetRecord(valsum.MultiBin_StartMin);
 						size_t iend = m_pSimDoc->m_PG_MultiOutputFile.GetRecord(valsum.MultiBin_EndMin);
 						float sumacc = 0;

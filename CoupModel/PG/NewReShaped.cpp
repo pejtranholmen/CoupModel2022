@@ -313,11 +313,11 @@ NewReShaped::~NewReShaped()
 	 for (size_t irec = 0; irec < pPGSource->GetNumRecords(); irec+=numcommontime) {
 		 count_iout++;
 		 for (size_t irep = 0; irep < numcommontime; irep++) {
-			 pPG_Dest->SetRepititionSequence(irep+1, false);
+			 pPG_Dest->SetRepititionSequence(irep, false);
 
 			 auto kollv = pPGSource->GetRecordDataVector(irec + irep+1, 1);
 			 for(size_t iivar=0; iivar<kollv.size(); iivar++) 
-				  if (!pPG_Dest->WritePGFileVarValue(iivar, count_iout, kollv[iivar], irep + 1)) { 
+				  if (!pPG_Dest->WritePGFileVarValue(iivar, count_iout, kollv[iivar], irep)) { 
 					 auto error8 = 0;
 				 
 				 };

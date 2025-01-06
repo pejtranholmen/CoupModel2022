@@ -117,11 +117,11 @@ bool Meteorological_Data::Ini()	{
 			if(p_AdditionalVar->Multi_PGFile_ID_Selector==0)
 				m_PG_Meteor.SetRepititionSequence(m_pModelInfo->ActualNoMulRun);
 			else if(p_AdditionalVar->Multi_PGFile_ID_Selector==1) {
-				size_t repno=size_t(p_AdditionalVar->SeqNo_MetFile+0.2);
+				size_t repno=size_t(p_AdditionalVar->SeqNo_MetFile-0.99);
 				m_PG_Meteor.SetRepititionSequence(repno);
 			}
 			else if(p_AdditionalVar->Multi_PGFile_ID_Selector==2) {
-				long repid=long(p_AdditionalVar->IDNo_MetFile+0.2);
+				long repid=long(p_AdditionalVar->IDNo_MetFile-0.99);
 				m_PG_Meteor.SetRepititionIdNo(repid);
 			}
 			auto spatialId=m_PG_Meteor.GetRepititionSequence();

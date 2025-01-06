@@ -1437,7 +1437,7 @@ int MyPGCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 
 //******* Amend the cell using 'Get..Set'
 	int isheet=GetSheetNumber();
-	if ((isheet == 0 || isheet == 8)&& msg == 103) {
+	if ((isheet == 0 || isheet == 8)&& (msg == 103|| msg == 100)) {
 		GetCell(col, row, &cell);
 		int ParV = cell.GetParam();
 
@@ -1466,7 +1466,7 @@ int MyPGCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 
 
 	}
-	else if (isheet == 10 && msg == 103) {
+	else if (isheet == 10 && (msg == 103||msg == 100)) {
 		GetCell(col, row, &cell);
 		int ParV = cell.GetParam();
 		string After;

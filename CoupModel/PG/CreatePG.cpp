@@ -1286,8 +1286,8 @@ void CCreatePG::OnBnClickedMakerepstyle()
 	pCPG->Open(pCPG->GetFileName());
 
 	for(size_t irep=0; irep<m_Repit; irep++) {
-	   pCPG->SetRepititionSequence(irep+1);
-	   pCPG->ReCalculateMinMax(irep+1);
+	   pCPG->SetRepititionSequence(irep);
+	   pCPG->ReCalculateMinMax(irep);
 	}
 
 	OnBnClickedRereadpg();

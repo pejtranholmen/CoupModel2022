@@ -189,7 +189,7 @@ bool ChangeToNewResolution::CreateNewFile(CPG *pPG, CPG *pPGScaling, int Option,
 	if(!pPGScaling->ReOpen()) return false;
 	pPGScaling->SetRepititionMode(true);
 
-	for(size_t irep=1; irep<=nrep; irep++) {
+	for(size_t irep=0; irep<nrep; irep++) {
 		if(!pPGScaling->SetRepititionSequence(irep, true)) return false;
 
 

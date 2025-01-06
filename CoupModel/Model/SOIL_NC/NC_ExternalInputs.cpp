@@ -65,11 +65,11 @@ bool NC_ExternalInputs::Ini()	{
 			if(p_AdditionalVar->Multi_PGFile_ID_Selector==0)
 				m_PG_Manure.SetRepititionSequence(m_pModelInfo->ActualNoMulRun);
 			else if(p_AdditionalVar->Multi_PGFile_ID_Selector==1) {
-				size_t repno=size_t(p_AdditionalVar->SeqNo_MetFile+0.2);
+				size_t repno=size_t(p_AdditionalVar->SeqNo_MetFile-0.99);
 				m_PG_Manure.SetRepititionSequence(repno);
 			}
 			else if(p_AdditionalVar->Multi_PGFile_ID_Selector==2) {
-				long repid=long(p_AdditionalVar->IDNo_MetFile+0.2);
+				long repid=long(p_AdditionalVar->IDNo_MetFile-0.99);
 				m_PG_Manure.SetRepititionIdNo(repid);
 			}
 
@@ -148,11 +148,11 @@ bool NC_ExternalInputs::Ini()	{
 			if (p_AdditionalVar->Multi_PGFile_ID_Selector == 0)
 				m_PG_Manure.SetRepititionSequence(m_pModelInfo->ActualNoMulRun);
 			else if (p_AdditionalVar->Multi_PGFile_ID_Selector == 1) {
-				size_t repno = size_t(p_AdditionalVar->SeqNo_MetFile + 0.2);
+				size_t repno = size_t(p_AdditionalVar->SeqNo_MetFile -0.99);
 				m_PG_Manure.SetRepititionSequence(repno, false);
 			}
 			else if (p_AdditionalVar->Multi_PGFile_ID_Selector == 2) {
-				long repid = long(p_AdditionalVar->IDNo_MetFile + 0.2);
+				long repid = long(p_AdditionalVar->IDNo_MetFile -0.99);
 				m_PG_Manure.SetRepititionIdNo(repid);
 			}
 			
@@ -198,12 +198,12 @@ bool NC_ExternalInputs::Ini()	{
 			if(p_AdditionalVar->Multi_PGFile_ID_Selector==0)
 				m_PG_Deposition.SetRepititionSequence(m_pModelInfo->ActualNoMulRun);
 			else if(p_AdditionalVar->Multi_PGFile_ID_Selector==1) {
-				size_t repno=size_t(p_AdditionalVar->SeqNo_MetFile+0.2);
-				m_PG_Deposition.SetRepititionSequence(repno);
+				size_t repno=size_t(p_AdditionalVar->SeqNo_MetFile-0.99);
+				m_PG_Deposition.SetRepititionSequence(repno-1);
 			}
 			else if(p_AdditionalVar->Multi_PGFile_ID_Selector==2) {
-				long repid=long(p_AdditionalVar->IDNo_MetFile+0.2);
-				m_PG_Deposition.SetRepititionIdNo(repid);
+				long repid=long(p_AdditionalVar->IDNo_MetFile-0.99);
+				m_PG_Deposition.SetRepititionIdNo(repid-1);
 			}
 
 		}

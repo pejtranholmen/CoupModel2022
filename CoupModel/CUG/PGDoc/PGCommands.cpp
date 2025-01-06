@@ -268,6 +268,7 @@ if (sheet < 9) {
 		if (pCPG != nullptr) {
 			pCPG->ReOpen();
 			string newname = pCPG->GetFileName();
+			pCPG->SetRepititionSequence(0);
 			if (item == 7002) {
 				auto irecmiss = pCPG->RemoveMissingRecords();
 				
@@ -280,7 +281,7 @@ if (sheet < 9) {
 			}
 			else {
 				if (pCPG->pg.Shape.NumRepetitions > 1) {
-					for (size_t i = 1; i <= pCPG->pg.Shape.NumRepetitions; i++) {
+					for (size_t i = 0; i < pCPG->pg.Shape.NumRepetitions; i++) {
 						if (pCPG->ReCalculateMinMax(i));
 						else {
 							pCPG->ReOpen();
@@ -295,7 +296,7 @@ if (sheet < 9) {
 						pCPG->ReCalculateMinMax();
 					}
 				}
-				pCPG->SaveAs(newname);
+				//pCPG->SaveAs(newname); File 
 			}
 		}
 

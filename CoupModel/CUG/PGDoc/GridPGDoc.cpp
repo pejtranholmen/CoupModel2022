@@ -213,7 +213,11 @@ bool GridPGDoc::Make_PGFileSheet()
 		}
 
 	if(pCPG!=nullptr)	{
-		pCPG->CheckDescriptors();
+		if (!pCPG->CheckDescriptors()) {
+
+			return false;
+
+		};
 		NumLines=1;
 		SetNumberRows(NumLines+newpglines+2);
 		SetTopHeadingLines();
@@ -254,8 +258,8 @@ bool GridPGDoc::Make_PGFileSheet()
 
 			auto nrep=pCPG->GetNumRepititions();
 			auto actrep=pCPG->GetRepititionSequence();
-			actrep = max(1, actrep);
-			m_RepOptionsCombo.Text = FUtil::STD_ItoAscii(actrep);
+			actrep = max(0, actrep);
+			m_RepOptionsCombo.Text = FUtil::STD_ItoAscii(actrep+1);
 			m_RepOptionsCombo.VectorNames.clear();
 			for(size_t i1=0; i1<nrep; i1++) {
 				m_RepOptionsCombo.VectorNames.push_back(FUtil::STD_ItoAscii(i1+1));
@@ -654,7 +658,7 @@ bool GridPGDoc::Make_Description(int ifile)
 					QuickSetNumber(-2,ind,i+1);
 					GetCell(0,ind,&cell);
 					cell.SetCellType(UGCT_CHECKBOX);
-					cell.SetLabelText(CString(pCPG->GetVarName(j+1,i+1).c_str()));
+					cell.SetLabelText(CString(pCPG->GetVarName(j+1,i).c_str()));
 					if(pCPG->GetPickedMean(j+1+i*nvar))
 						cell.SetBool(TRUE);
 					else
@@ -665,13 +669,13 @@ bool GridPGDoc::Make_Description(int ifile)
 					if(m_ShowDetails) {
 						GetCell(1,ind,&cell);
 						cell.SetCellType(UGCT_NORMAL);
-						test=pCPG->GetVarCountry(j+1,i+1).c_str();
+						test=pCPG->GetVarCountry(j+1,i).c_str();
 						cell.SetText(test);
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarStation(j+1,i+1).c_str());
+						cell.SetText(pCPG->GetVarStation(j+1,i).c_str());
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
@@ -686,17 +690,17 @@ bool GridPGDoc::Make_Description(int ifile)
 					}
 					else {
 						GetCell(1,ind,&cell);
-						cell.SetText(pCPG->GetVarUnit(j+1,i+1).c_str());
+						cell.SetText(pCPG->GetVarUnit(j+1,i).c_str());
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarId(j+1,i+1).c_str());
+						cell.SetText(pCPG->GetVarId(j+1,i).c_str());
 						cell.SetParam(2000);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
 						JoinCells(3,ind,4,ind);
-						v=pCPG->GetVarMin(j+1,i+1);
+						v=pCPG->GetVarMin(j+1,i);
 						GetCell(5,ind,&cell);
 						if(validrepplot) {
 							cell.SetCellType(UGCT_CHECKBOX);
@@ -716,7 +720,7 @@ bool GridPGDoc::Make_Description(int ifile)
 							if(v<0.5E38)	cell.SetNumber(v);
 						}
 						SetCell(5,ind,&cell);
-						v=pCPG->GetVarMax(j+1,i+1);
+						v=pCPG->GetVarMax(j+1,i);
 						GetCell(6,ind,&cell);
 						if(validrepplot) {
 							cell.SetCellType(UGCT_CHECKBOX);
@@ -734,9 +738,9 @@ bool GridPGDoc::Make_Description(int ifile)
 							if(v<0.5E38)	cell.SetNumber(v);
 						}
 						SetCell(6,ind,&cell);
-						size_t jjj=pCPG->GetVarMissing(j+1,i+1);
+						size_t jjj=pCPG->GetVarMissing(j+1,i);
 						QuickSetNumber(7,ind,jjj);
-						jjj=pCPG->GetVarSubstituted(j+1,i+1);
+						jjj=pCPG->GetVarSubstituted(j+1,i);
 						QuickSetNumber(8,ind,jjj);
 					}
 
@@ -751,7 +755,7 @@ bool GridPGDoc::Make_Description(int ifile)
 					QuickSetNumber(-2,ind,i+1);
 					GetCell(0,ind,&cell);
 					cell.SetCellType(UGCT_CHECKBOX);
-					cell.SetLabelText(pCPG->GetVarName(j+1,i+1).c_str());
+					cell.SetLabelText(pCPG->GetVarName(j+1,i).c_str());
 					if(pCPG->GetPicked(j+1+i*nvar))
 						cell.SetBool(TRUE);
 					else
@@ -761,12 +765,12 @@ bool GridPGDoc::Make_Description(int ifile)
 
 					if(m_ShowDetails) {
 						GetCell(1,ind,&cell);
-						cell.SetText(pCPG->GetVarCountry(j+1,i+1).c_str());
+						cell.SetText(pCPG->GetVarCountry(j+1,i).c_str());
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarStation(j+1,i+1).c_str());
+						cell.SetText(pCPG->GetVarStation(j+1,i).c_str());
 						cell.SetParam(2000);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
@@ -781,12 +785,12 @@ bool GridPGDoc::Make_Description(int ifile)
 					}
 					else {
 						GetCell(1,ind,&cell);
-						cell.SetText(pCPG->GetVarUnit(j+1,i+1).c_str());
+						cell.SetText(pCPG->GetVarUnit(j+1,i).c_str());
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarId(j+1,i+1).c_str());
+						cell.SetText(pCPG->GetVarId(j+1,i).c_str());
 						cell.SetParam(2000);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
@@ -795,9 +799,9 @@ bool GridPGDoc::Make_Description(int ifile)
 						if(v<0.5E38)	QuickSetNumber(5,ind,v);
 						v=pCPG->GetVarMax(j+1,i+1);
 						if(v>-1.E38)	QuickSetNumber(6,ind,v);
-						size_t jjj=pCPG->GetVarMissing(j+1,i+1);
+						size_t jjj=pCPG->GetVarMissing(j+1,i);
 						QuickSetNumber(7,ind,jjj);
-						jjj=pCPG->GetVarSubstituted(j+1,i+1);
+						jjj=pCPG->GetVarSubstituted(j+1,i);
 						QuickSetNumber(8,ind,jjj);
 					}
 
@@ -3338,9 +3342,9 @@ int GridPGDoc::OnMenuStart(int col, long row, int section)
 				else {
 					if (m_pPG->GetNumRepititions() > 1) {
 						int irep = m_pPG->GetNumVariables();
-						int arep = row / irep + 1;
-						int num = row%irep + 1;
-						str = FUtil::STD_ItoAscii(num) + " Repetition No:" + FUtil::STD_ItoAscii(arep);
+						int arep = row / irep;
+						int num = row%irep;
+						str = FUtil::STD_ItoAscii(num+1) + " Repetition No:" + FUtil::STD_ItoAscii(arep+1);
 					}
 					else
 						str = FUtil::STD_ItoAscii(row + 1);
@@ -3349,9 +3353,9 @@ int GridPGDoc::OnMenuStart(int col, long row, int section)
 
 					if (m_pPG->GetNumRepititions() > 1) {
 						int irep = m_pPG->GetNumVariables();
-						int arep = row / irep + 1;
-						int num = row%irep + 1;
-						str = FUtil::STD_ItoAscii(num) + " and all Repetitions";
+						int arep = row / irep;
+						int num = row%irep;
+						str = FUtil::STD_ItoAscii(num+1) + " and all Repetitions";
 						AddMenuItem(1704, "Add New Variable based on Variable No:" + str);
 						AddMenuItem(1705, "Replace existing variable No:" + str);
 
@@ -3804,7 +3808,7 @@ void GridPGDoc::Make_DescriptionHeader()
 	if (pCPG == nullptr) return;
 	m_Repit = pCPG->GetNumRepititions();
 
-	if (m_Repit>0)
+	if (m_Repit>1)
 		pCPG->SetRepititionMode(true, m_Repit);
 
 
@@ -3986,7 +3990,7 @@ void GridPGDoc::OnPGHeaderUpdate(int col, long row, BOOL data, BOOL wide, long r
 		if (m_Repit>1)
 			pPG->SetRepititionMode(true, m_Repit);
 		else
-			pPG->SetRepititionMode(false, 1);
+			pPG->SetRepititionMode(false, 0);
 		Make_DataHeader();
 	}
 	else
@@ -4019,7 +4023,7 @@ bool GridPGDoc::OnGetFileDataFillGrid(CPG *pCPG)
 	}
 	else if (!pCPG->IsOpen()) {
 		pCPG->ReOpen();
-		if (!pCPG->SetRepititionSequence(1, true)) return false;
+		if (!pCPG->SetRepititionSequence(0, true)) return false;
 	}
 		m_NumVariables = m_col - 1;
 		size_t num_buff = pCPG->GetNumBuffers();
@@ -4048,7 +4052,7 @@ bool GridPGDoc::OnGetFileDataFillGrid(CPG *pCPG)
 		int icol;
 		for (size_t nrep = 0; nrep<m_Repit; nrep++) {
 			if (m_Repit>1) {
-				if (!pCPG->SetRepititionSequence(nrep + 1, false))
+				if (!pCPG->SetRepititionSequence(nrep, false))
 					return FALSE;
 				//pCPG->SetActBufferReset();
 				irow = 3;
@@ -4056,14 +4060,14 @@ bool GridPGDoc::OnGetFileDataFillGrid(CPG *pCPG)
 
 			for (int ii = rec_start; ii<rec_end; ii++) {
 				if (nrep == 0) {
-					auto vtest = pCPG->GetVarValue(1,1);
+					auto vtest = pCPG->GetVarValue(1,1, nrep);
 					QuickSetText(0, irow, pCPG->GetDate(ii + 1));
 				}
 				for (size_t ind = 0; ind<pCPG->GetNumToView(); ind++) {
 					if (pCPG->GetViewRepetition(ind) == nrep + 1) {
 						ivarno = pCPG->GetViewVariable(ind);
 						icol = ind + 1;
-						float v = pCPG->GetVarValue(ivarno, ii + 1);
+						float v = pCPG->GetVarValue(ivarno, ii + 1, nrep);
 						if (v>-0.8E38) {
 							GetCell(icol, irow, &cell);
 							int alin = cell.GetAlignment();
@@ -4132,32 +4136,32 @@ bool GridPGDoc::OnGetFileDescriptionFillGrid(CPG *pCPG)
 				SetCell(colc, ind, &cell);
 			}
 
-			QuickSetText(2, ind, pCPG->GetVarName(i + 1, nrep + 1),false);
-			QuickSetText(3, ind, pCPG->GetVarUnit(i + 1, nrep + 1),false);
-			QuickSetText(4, ind, pCPG->GetVarId(i + 1, nrep + 1),false);
-			QuickSetText(5, ind, pCPG->GetVarPos(i + 1, nrep + 1),false);
+			QuickSetText(2, ind, pCPG->GetVarName(i + 1, nrep),false);
+			QuickSetText(3, ind, pCPG->GetVarUnit(i + 1, nrep),false);
+			QuickSetText(4, ind, pCPG->GetVarId(i + 1, nrep),false);
+			QuickSetText(5, ind, pCPG->GetVarPos(i + 1, nrep),false);
 			float v;
-			v = pCPG->GetVarMin(i + 1, nrep + 1);
+			v = pCPG->GetVarMin(i + 1, nrep);
 			if (v<0.5E38)	QuickSetNumber(6, ind, v);
-			v = pCPG->GetVarMax(i + 1, nrep + 1);
+			v = pCPG->GetVarMax(i + 1, nrep);
 			if (v>-0.5E37)	QuickSetNumber(7, ind, v);
 			QuickSetNumber(8, ind, pCPG->GetNumberofMissing(ind + 1));
 			if (pCPG->IsAddInfoSet()) {
-				QuickSetText(9, ind, pCPG->GetVarCountry(i + 1, nrep + 1),false);
-				QuickSetText(10, ind, pCPG->GetVarStation(i + 1, nrep + 1),false);
-				QuickSetNumber(11, ind, pCPG->GetVarAlt(i + 1, nrep + 1),false);
-				QuickSetNumber(12, ind, pCPG->GetVarLat(i + 1, nrep + 1),false);
-				QuickSetNumber(13, ind, pCPG->GetVarLong(i + 1, nrep + 1),false);
+				QuickSetText(9, ind, pCPG->GetVarCountry(i + 1, nrep),false);
+				QuickSetText(10, ind, pCPG->GetVarStation(i + 1, nrep),false);
+				QuickSetNumber(11, ind, pCPG->GetVarAlt(i + 1, nrep),false);
+				QuickSetNumber(12, ind, pCPG->GetVarLat(i + 1, nrep),false);
+				QuickSetNumber(13, ind, pCPG->GetVarLong(i + 1, nrep),false);
 
 				m_ElementTypeVariables.Row = ind;
-				elements elem = pCPG->GetVarElement(i + 1, nrep + 1);
+				elements elem = pCPG->GetVarElement(i + 1, nrep);
 				if (elem >= m_ElementTypeVariables.VectorNames.size())
 							elem= GENERAL;
 				m_ElementTypeVariables.Text = p_ModelInfo->ElementName(elem);
 				SetCellClickButton(m_ElementTypeVariables);
 
 				m_UnitTypeVariables.Row = ind;
-				UNIT_TYPES unit = pCPG->GetVarUnitType(i + 1, nrep + 1);
+				UNIT_TYPES unit = pCPG->GetVarUnitType(i + 1, nrep);
 				vector<string> previous = m_UnitTypeVariables.VectorNames;
 				vector<UNIT_TYPES> types = GetUnitOptions(elem);
 				if (types.size() > 0) m_UnitTypeVariables.VectorNames = p_ModelInfo->GetSelectedStringBasedUnits(types);
@@ -4204,7 +4208,7 @@ bool GridPGDoc::OnWriteGridDataToFile(CPG *pCPG)
 		MFC_Util m;
 
 		for (long irep = 0; irep<num_Repit; irep++) {
-			status = pCPG->SetRepititionSequence(irep + 1, true);
+			status = pCPG->SetRepititionSequence(irep, true);
 
 			if (pCPG->GetNumBuffers()>1) {
 				if (pCPG->GetPrevBuffer() == 0) {
@@ -4236,7 +4240,7 @@ bool GridPGDoc::OnWriteGridDataToFile(CPG *pCPG)
 					pCPG->SetDate(RecordNo, cell.GetStdText());
 				}
 				for (size_t ind = 0; ind<pCPG->GetNumToView(); ind++) {
-					if (pCPG->GetViewRepetition(ind) == irep + 1) {
+					if (pCPG->GetViewRepetition(ind) == irep) {
 						int ivarno = pCPG->GetViewVariable(ind);
 						int icol = ind + 1;
 						GetCell(icol, irow, &cell);
@@ -4284,18 +4288,18 @@ bool GridPGDoc::OnWriteGridDataToFile(CPG *pCPG)
 				}
 				else {
 					if (pCPG->GetNumRepititions()!=string::npos)
-						status = pCPG->WriteNewBuffer(irep + 1);
+						status = pCPG->WriteNewBuffer(irep);
 
 					if (!status) return false;
 					m.SetPaneMessage("Result saved in first buffer of PG file");
 
 				}
-				if (irep + 1 == num_Repit) {
+				if (irep == num_Repit) {
 					pCPG->WritePGFileStartHeader(pCPG->GetNumRecords(), num_Repit);
 					m.SetPaneMessage("Start Header saved in buffer of PG file");
 				}
 
-				pCPG->ReCalculateMinMax(irep + 1);
+				pCPG->ReCalculateMinMax(irep);
 
 			}
 
@@ -4324,36 +4328,36 @@ bool GridPGDoc::OnWriteGridDescriptionToFile(CPG *pCPG)
 				line = irep*pCPG->GetNumVariables() + i;
 				GetCell(2, line, &cell);
 				string str = cell.GetStdText();
-				pCPG->SetVarName(i + 1, str, irep + 1);
+				pCPG->SetVarName(i + 1, str, irep);
 				GetCell(3, line, &cell);
 				str = cell.GetStdText();
-				pCPG->SetVarUnit(i + 1, str, irep + 1);
+				pCPG->SetVarUnit(i + 1, str, irep);
 				GetCell(4, line, &cell);
 				str = cell.GetStdText();
-				pCPG->SetVarId(i + 1, str, irep + 1);
+				pCPG->SetVarId(i + 1, str, irep);
 				GetCell(5, line, &cell);
 				str = cell.GetStdText();
-				pCPG->SetVarPos(i + 1, str, irep + 1);
+				pCPG->SetVarPos(i + 1, str, irep);
 				if (line < m_row) {
 					GetCell(9, line, &cell);
 					str = cell.GetStdText();
-					pCPG->SetVarCountry(i + 1, str, irep + 1);
+					pCPG->SetVarCountry(i + 1, str, irep);
 
 					GetCell(10, line, &cell);
 					str = cell.GetStdText();
-					pCPG->SetVarStation(i + 1, str, irep + 1);
+					pCPG->SetVarStation(i + 1, str, irep);
 
 					GetCell(11, line, &cell);
 					double f = cell.GetNumber();
-					pCPG->SetVarAlt(i + 1, f, irep + 1);
+					pCPG->SetVarAlt(i + 1, f, irep);
 
 					GetCell(12, line, &cell);
 					f = cell.GetNumber();
-					pCPG->SetVarLat(i + 1, f, irep + 1);
+					pCPG->SetVarLat(i + 1, f, irep);
 
 					GetCell(13, line, &cell);
 					f = cell.GetNumber();
-					pCPG->SetVarLong(i + 1, f, irep + 1);
+					pCPG->SetVarLong(i + 1, f, irep);
 				}
 
 			}

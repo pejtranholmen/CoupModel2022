@@ -166,7 +166,7 @@ PGPOS CPGFile::GetPos(size_t minut, size_t varno )
 void* CPGFile::GetRecordPointer(size_t var_rec, size_t rep)
 {
 
-	std::streamsize newpos=std::streamsize(pg.Shape.RecordSize)*var_rec+(rep-1)*pg.Shape.RecordSize_Repetion*4;
+	std::streamsize newpos=std::streamsize(pg.Shape.RecordSize)*var_rec+(rep)*pg.Shape.RecordSize_Repetion*4;
 	m_MainPGStreamReadWrite.seekg(newpos,ios::beg);
 	m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0],pg.Shape.RecordSize);
 	if(m_MainPGStreamReadWrite.good())
@@ -179,7 +179,7 @@ vector<float> CPGFile::GetRecordDataVector(size_t var_rec, size_t rep)
 {
 	vector<float> vfloat;
 
-	std::streamsize newpos = std::streamsize(pg.Shape.RecordSize) * var_rec + (rep - 1) * pg.Shape.RecordSize_Repetion * 4;
+	std::streamsize newpos = std::streamsize(pg.Shape.RecordSize) * var_rec + rep * pg.Shape.RecordSize_Repetion * 4;
 	m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
 	m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0], pg.Shape.RecordSize);
 	for (size_t i = 0; i <= pg.Shape.NumVar; i++)
@@ -557,7 +557,7 @@ string CPGFile::ExportToFile(string filename, bool split, bool secondhalf)
 	ReOpen();
 	bool failure=false;
 	for(size_t nrep=0;nrep<pg.Shape.NumRepetitions;nrep++) {
-		SetRepititionSequence(nrep+1);
+		SetRepititionSequence(nrep);
 		for(size_t i=0;i<Num_To_Save;i++) {
 			if(!failure) str=GetDate(i+1);
 			if(str==""||failure) {
@@ -728,7 +728,7 @@ bool CPGFile::SetRepititionIdNo(size_t Id, bool ResetIndex)
 		FUtil::trim(str);
 		test=AtoInt(str);
 		if(test==Id) {
-			sequence=i+1;
+			sequence=i;
 			return SetRepititionSequence(sequence, ResetIndex);
 		}
 	}
@@ -809,19 +809,19 @@ bool CPGFile::RemoveRepetition(size_t repno)
 		for (size_t k=0; k<pg.Shape.NumRepetitions+1; k++) {
 			for (size_t i=0; i<pg.Shape.NumRecords; i++) {
 				m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0], pg.Shape.RecordSize);
-				if(k!=repno-1)
+				if(k!=repno)
 					m_ExtraPGStreamWrite.write((char*)&pg.Var.v[0], pg.Shape.RecordSize);
 			}
 		}
 		auto koll=m_ExtraPGStreamWrite.tellg();
-		pg.Des.base.Name.erase(pg.Des.base.Name.begin()+(repno-1)*pg.Shape.NumVar,pg.Des.base.Name.begin()+(repno)*pg.Shape.NumVar);
-		pg.Des.base.Unit.erase(pg.Des.base.Unit.begin()+(repno-1)*pg.Shape.NumVar,pg.Des.base.Unit.begin()+(repno)*pg.Shape.NumVar);
-		pg.Des.base.Id.erase(pg.Des.base.Id.begin()+(repno-1)*pg.Shape.NumVar	,pg.Des.base.Id.begin()+(repno)*pg.Shape.NumVar);
-		pg.Des.base.Pos.erase(pg.Des.base.Pos.begin()+(repno-1)*pg.Shape.NumVar	,pg.Des.base.Pos.begin()+(repno)*pg.Shape.NumVar);
-		pg.Des.base.var_min.erase(pg.Des.base.var_min.begin()+(repno-1)*pg.Shape.NumVar,pg.Des.base.var_min.begin()+(repno)*pg.Shape.NumVar);
-		pg.Des.base.var_max.erase(pg.Des.base.var_max.begin()+(repno-1)*pg.Shape.NumVar,pg.Des.base.var_max.begin()+(repno)*pg.Shape.NumVar);
+		pg.Des.base.Name.erase(pg.Des.base.Name.begin()+repno*pg.Shape.NumVar,pg.Des.base.Name.begin()+(repno)*pg.Shape.NumVar);
+		pg.Des.base.Unit.erase(pg.Des.base.Unit.begin()+repno*pg.Shape.NumVar,pg.Des.base.Unit.begin()+(repno)*pg.Shape.NumVar);
+		pg.Des.base.Id.erase(pg.Des.base.Id.begin()+repno*pg.Shape.NumVar	,pg.Des.base.Id.begin()+(repno)*pg.Shape.NumVar);
+		pg.Des.base.Pos.erase(pg.Des.base.Pos.begin()+repno*pg.Shape.NumVar	,pg.Des.base.Pos.begin()+(repno)*pg.Shape.NumVar);
+		pg.Des.base.var_min.erase(pg.Des.base.var_min.begin()+repno*pg.Shape.NumVar,pg.Des.base.var_min.begin()+(repno)*pg.Shape.NumVar);
+		pg.Des.base.var_max.erase(pg.Des.base.var_max.begin()+repno*pg.Shape.NumVar,pg.Des.base.var_max.begin()+(repno)*pg.Shape.NumVar);
 		if(pg.Des.addinfo.size()>=(repno+1)*pg.Shape.NumVar) {
-				pg.Des.addinfo.erase(pg.Des.addinfo.begin()+(repno-1)*pg.Shape.NumVar,pg.Des.addinfo.begin()+repno*pg.Shape.NumVar);
+				pg.Des.addinfo.erase(pg.Des.addinfo.begin()+repno*pg.Shape.NumVar,pg.Des.addinfo.begin()+repno*pg.Shape.NumVar);
 		}
 
 
@@ -914,7 +914,7 @@ bool CPGFile::RemoveRepetition(size_t repno)
 			return false;
 		
 	}
-	else if(repno<=pg.Shape.NumRepetitions&&pg.Shape.NumRepetitions>1) {
+	else if(repno<pg.Shape.NumRepetitions&&pg.Shape.NumRepetitions>1) {
 		SetRepititionSequence(repno);
 		size_t ind=(pg.status.a.LocalStartRecord)*pg.Shape.NumVar;
 		pg.Var.v.erase(pg.Var.v.begin()+ind,pg.Var.v.begin()+ind+pg.Shape.NumRecords*pg.Shape.NumVar);
@@ -961,7 +961,7 @@ bool CPGFile::AddRepetition(size_t repno)
 
 string CPGFile::GetVarDes(size_t index, size_t repit)
 {   size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(index>0)
 		return pg.Des.base.Name[index-1]+"\t"+pg.Des.base.Unit[index-1]+"\t"+pg.Des.base.Id[index-1]+"\t"+pg.Des.base.Pos[index-1];
@@ -970,7 +970,7 @@ string CPGFile::GetVarDes(size_t index, size_t repit)
 }
 string CPGFile::GetVarName(size_t index, size_t repit)
 {   size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(index>0&&pg.Des.base.Name.size()+1>index)
 		return pg.Des.base.Name[index-1];
@@ -979,7 +979,7 @@ string CPGFile::GetVarName(size_t index, size_t repit)
 }
 string CPGFile::GetVarUnit(size_t index, size_t repit)
 {   size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(index>0&&pg.Des.base.Unit.size()+1>index)
 		return pg.Des.base.Unit[index-1];
@@ -988,7 +988,7 @@ string CPGFile::GetVarUnit(size_t index, size_t repit)
 }
 string CPGFile::GetVarId(size_t index, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(index>0&&pg.Des.base.Id.size()+1>index)
 		return pg.Des.base.Id[index-1];
@@ -997,7 +997,7 @@ string CPGFile::GetVarId(size_t index, size_t repit)
 }
 string CPGFile::GetVarPos(size_t index, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(index>0&&index<pg.Des.base.Pos.size()+1)
 		return pg.Des.base.Pos[index-1];
@@ -1007,7 +1007,7 @@ string CPGFile::GetVarPos(size_t index, size_t repit)
 
 void CPGFile::SetVarName(size_t index, string str, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	size_t ipos=str.size();
 
@@ -1021,7 +1021,7 @@ void CPGFile::SetVarName(size_t index, string str, size_t repit)
 }
 void CPGFile::SetVarUnit(size_t index, string str, size_t repit)
 {   size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	size_t ipos=str.size();
 	for (size_t i=ipos;i<8;i++) 
@@ -1034,7 +1034,7 @@ void CPGFile::SetVarUnit(size_t index, string str, size_t repit)
 }
 void CPGFile::SetVarId(size_t index, string str, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	size_t ipos=str.size();
 	for (size_t i=ipos;i<20;i++) 
@@ -1046,7 +1046,7 @@ void CPGFile::SetVarId(size_t index, string str, size_t repit)
 }
 void CPGFile::SetVarPos(size_t index, string str, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	size_t ipos=str.size();
 	for (size_t i=ipos;i<4;i++) 
@@ -1059,7 +1059,7 @@ void CPGFile::SetVarPos(size_t index, string str, size_t repit)
 
 float CPGFile::GetVarMax(size_t index, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.base.var_max.size()>=index&&index>0)
 		return pg.Des.base.var_max[index-1];
@@ -1068,7 +1068,7 @@ float CPGFile::GetVarMax(size_t index, size_t repit)
 }
 float CPGFile::GetVarMin(size_t index, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.base.var_min.size()>=index&&index>0)
 		return pg.Des.base.var_min[index-1];
@@ -1077,13 +1077,13 @@ float CPGFile::GetVarMin(size_t index, size_t repit)
 }
 void CPGFile::SetVarMax(size_t index, float vnew, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	pg.Des.base.var_max[index-1]=vnew;
 }
 void CPGFile::SetVarMin(size_t index, float vnew, size_t repit)
 {	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	pg.Des.base.var_min[index-1]=vnew;
 }
@@ -1112,6 +1112,9 @@ bool CPGFile::ReCalculateMinMax(size_t repit)
 						vmin=vnew;
 				}
 		}
+		if (i == 1) {
+			auto koll = repit;
+		}
 		SetVarMin(i,vmin, repit);
 		SetVarMax(i,vmax, repit);
 
@@ -1128,7 +1131,7 @@ bool CPGFile::FilterTest(size_t varno, size_t var_rec, int requiredvalue) {
 float CPGFile::GetVarValue(size_t varno, size_t var_rec, size_t repit_no)
 {
 	//return *m_var[varno-1][var_rec-1];
-	if(var_rec>pg.Shape.NumRecords*repit_no)
+	if(var_rec>pg.Shape.NumRecords)
 		return MISSING;
 	if(pg.status.CompleteFileRead&&!pg.Shape.RepetitionMode)
 		return pg.Var.v[(var_rec-1)*pg.Shape.RecordIndexSize+varno];
@@ -1137,7 +1140,7 @@ float CPGFile::GetVarValue(size_t varno, size_t var_rec, size_t repit_no)
 
 
 		size_t ind=(var_rec-1+pg.status.a.LocalStartRecord)*pg.Shape.RecordIndexSize+varno;
-		size_t ind2 = (var_rec - 1 ) * pg.Shape.RecordIndexSize + varno+(repit_no-1)* pg.Shape.RecordIndexSize*pg.Shape.NumRecords;
+		size_t ind2 = (var_rec - 1 ) * pg.Shape.RecordIndexSize + varno+(repit_no)* pg.Shape.RecordIndexSize*pg.Shape.NumRecords;
 		auto koll3=pg.Var.v[ind2];
 		if(ind2<koll)
 			return pg.Var.v[ind2];
@@ -1146,7 +1149,7 @@ float CPGFile::GetVarValue(size_t varno, size_t var_rec, size_t repit_no)
 	}
 	else {
 		if(pg.Shape.RepetitionMode) {
-			if (repit_no != GetRepititionSequence()&&repit_no!=1) {
+			if (repit_no != GetRepititionSequence()&&repit_no!=0) {
 				if (!SetRepititionSequence(repit_no)) {
 					auto prof = 2;
 					m_MainPGStreamReadWrite.clear();
@@ -1169,11 +1172,16 @@ float CPGFile::GetVarValueRead(size_t varno, size_t var_rec)
 {
 	//return *m_var[varno-1][var_rec-1];
 	size_t CurrentBuf, CurrentRec;
-	CurrentBuf=(var_rec-1)/pg.status.b.buf_Size+1;
-	CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize+1;
+	CurrentBuf=(var_rec-1)/pg.status.b.buf_Size;
+	CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize;
 	
 	if(CurrentBuf!=pg.status.b.PrevBuf||m_ResetBuffer) {
-		if(!ReadNewBuffer(CurrentRec, CurrentBuf))	return MISSING;
+		if (!ReadNewBuffer(CurrentRec, CurrentBuf)) {
+			if (!m_MainPGStreamReadWrite.good()) {
+				m_MainPGStreamReadWrite.clear();
+			}
+			return MISSING;
+		}
 	/*	size_t CurrentRecRead;
 		if(CurrentBuf<pg.status.b.NumberOfBuf) 
 			CurrentRecRead=pg.status.b.buf_Size;
@@ -1191,9 +1199,11 @@ float CPGFile::GetVarValueRead(size_t varno, size_t var_rec)
 		m_ResetBuffer=false;*/
 	}
 
-	if(m_MainPGStreamReadWrite.good())
-		return pg.Var.v[varno+CurrentRec-1];
-	return MISSING;
+	//if(m_MainPGStreamReadWrite.good())
+	if(varno+CurrentRec<pg.Var.v.size())
+		return pg.Var.v[varno+CurrentRec];
+	else
+		return MISSING;
 }
 bool CPGFile::ReAllocate(size_t irec, size_t ivar, size_t repit)
 {
@@ -1303,8 +1313,8 @@ string CPGFile::GetDate(size_t var_rec)
 		size_t CurrentBuf, CurrentRec;
 		if(pg.Shape.RecordIndexSize==pg.Var.v.size()) pg.status.b.buf_Size=1;
 
-			CurrentBuf=(var_rec-1)/pg.status.b.buf_Size+1;
-			CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize+1;
+			CurrentBuf=(var_rec-1)/pg.status.b.buf_Size;
+			CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize;
 	
 			if(CurrentBuf!=pg.status.b.PrevBuf||m_ResetBuffer) {
 				if(!ReadNewBuffer(CurrentRec, CurrentBuf))
@@ -1322,7 +1332,7 @@ string CPGFile::GetDate(size_t var_rec)
 				m_ResetBuffer=false;*/
 			}	
 			if(CurrentRec<=pg.Var.v.size())
-				return PGUtil::StringDatum(*(size_t*)&pg.Var.v[CurrentRec-1]);
+				return PGUtil::StringDatum(*(size_t*)&pg.Var.v[CurrentRec]);
 			else
 				return "";
 		
@@ -1500,7 +1510,7 @@ bool CPGFile::FindKeyValues()
 void CPGFile::SetVarKey(size_t index, size_t value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].Key=value;
@@ -1508,7 +1518,7 @@ void CPGFile::SetVarKey(size_t index, size_t value, size_t repit)
 void CPGFile::SetVarLat(size_t index, double value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].Lat=value;
@@ -1516,7 +1526,7 @@ void CPGFile::SetVarLat(size_t index, double value, size_t repit)
 void CPGFile::SetVarLong(size_t index, double value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].Long=value;
@@ -1524,7 +1534,7 @@ void CPGFile::SetVarLong(size_t index, double value, size_t repit)
 void CPGFile::SetVarAlt(size_t index, double value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].Alt=value;
@@ -1532,7 +1542,7 @@ void CPGFile::SetVarAlt(size_t index, double value, size_t repit)
 void CPGFile::SetVarCountry(size_t index, string value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].CountryCode=value;
@@ -1540,7 +1550,7 @@ void CPGFile::SetVarCountry(size_t index, string value, size_t repit)
 void CPGFile::SetVarStation(size_t index, string value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].StationName=value;
@@ -1548,7 +1558,7 @@ void CPGFile::SetVarStation(size_t index, string value, size_t repit)
 void CPGFile::SetVarMissing(size_t index, size_t value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].num_missing=value;
@@ -1556,7 +1566,7 @@ void CPGFile::SetVarMissing(size_t index, size_t value, size_t repit)
 void CPGFile::SetVarSubstituted(size_t index, size_t value, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].num_substituted=value;
@@ -1569,8 +1579,8 @@ unsigned int CPGFile::GetLongTime(size_t var_rec, bool WithinBuffer)
 	else if(pg.Shape.RepetitionMode) {
 			if(pg.Var.v[0]==0) {
 				size_t CurrentBuf, CurrentRec;
-				CurrentBuf=(var_rec-1)/pg.status.b.buf_Size+1;
-				CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize+1;
+				CurrentBuf=(var_rec-1)/pg.status.b.buf_Size;
+				CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize;
 	
 				if(CurrentBuf!=pg.status.b.PrevBuf) {
 					ReadNewBuffer(CurrentRec, CurrentBuf);	
@@ -1590,14 +1600,14 @@ unsigned int CPGFile::GetLongTime(size_t var_rec, bool WithinBuffer)
 		if(!m_MainPGStreamReadWrite.good()) return string::npos;
 
 		size_t CurrentBuf, CurrentRec;
-		CurrentBuf=(var_rec-1)/pg.status.b.buf_Size+1;
-		CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize+1;
+		CurrentBuf=(var_rec-1)/pg.status.b.buf_Size;
+		CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize;
 	
 		if (CurrentBuf != pg.status.b.PrevBuf&&pg.status.b.PrevBuf != string::npos) {
 			ReadNewBuffer(CurrentRec, CurrentBuf);
 			
 		}
-		return *(unsigned int*)&pg.Var.v[CurrentRec-1];
+		return *(unsigned int*)&pg.Var.v[CurrentRec];
 	}
 }
 
@@ -1636,8 +1646,9 @@ bool CPGFile::Is_Id_FieldSensitive(){
 bool CPGFile::Is_LatLong_FieldSensitive() {
 	return m_LatLong_FieldSensitive;
 }
-void CPGFile::CheckDescriptors() {
+bool CPGFile::CheckDescriptors() {
 	m_LatLong_FieldSensitive = false;
+	if (pg.Des.base.Id.size() < pg.Shape.NumVar) return false;
 	auto IdField = pg.Des.base.Id[0];
 	double lat = 0.;
 	double longi = 0.;
@@ -1646,7 +1657,7 @@ void CPGFile::CheckDescriptors() {
 		longi = pg.Des.addinfo[0].Long;
 	}
 	m_IdField_Sensitive = false;
-	for (size_t nrep = 0; nrep < pg.Shape.NumRepetitions; nrep++)
+	for (size_t nrep = 0; nrep < pg.Shape.NumRepetitions+1; nrep++)
 		for (size_t ivar = 0; ivar < pg.Shape.NumVar; ivar++) {
 			auto index = ivar + nrep * pg.Shape.NumVar;
 			if (pg.Des.base.Id[index] != IdField) m_IdField_Sensitive = true;
@@ -1656,21 +1667,22 @@ void CPGFile::CheckDescriptors() {
 			}
 		}
 
-
+	return true;
 }
 bool CPGFile::CheckMissingNumbers()
 {	
 	float fval;
-	if(pg.Shape.NumRepetitions>1)
-		pg.Des.var_missing.resize(pg.Shape.NumVar*pg.Shape.NumRepetitions);
-	else
-		pg.Des.var_missing.resize(pg.Shape.NumVar);
-	for(size_t nrep=0;nrep<pg.Shape.NumRepetitions;nrep++)
+
+	auto num_rep = GetNumRepititions();
+
+	pg.Des.var_missing.resize(pg.Shape.NumVar*num_rep);
+
+	for(size_t nrep=0;nrep<num_rep;nrep++)
 		for(size_t i=0;i<pg.Shape.NumVar;i++)
 			pg.Des.var_missing[i+nrep*pg.Shape.NumVar]=0;
 	if(pg.status.CompleteFileRead) {
-		for(size_t nrep=0; nrep<pg.Shape.NumRepetitions;nrep++) {
-			SetRepititionSequence(nrep+1);
+		for(size_t nrep=0; nrep<num_rep;nrep++) {
+			SetRepititionSequence(nrep);
 			for(size_t ii=0;ii<pg.Shape.NumRecords;ii++) {
 				for (size_t i=0;i<pg.Shape.NumVar;i++) {
 					fval=GetVarValue(i+1,ii+1);
@@ -1680,8 +1692,8 @@ bool CPGFile::CheckMissingNumbers()
 		}
 	}
 	else {
-			for(size_t nrep=0; nrep<pg.Shape.NumRepetitions;nrep++) {
-				SetRepititionSequence(nrep+1);
+			for(size_t nrep=0; nrep<num_rep;nrep++) {
+				SetRepititionSequence(nrep);
 				for(size_t ii=0;ii<pg.Shape.NumRecords;ii++) {
 					for (size_t i=0;i<pg.Shape.NumVar;i++) {
 						fval=GetVarValue(i+1,ii+1);
@@ -1694,17 +1706,19 @@ bool CPGFile::CheckMissingNumbers()
 	}
 
 	m_MissingValueExist=false;
-	for(size_t nrep=0; nrep<pg.Shape.NumRepetitions;nrep++) {
+	if (pg.status.FileVersion == 0) SetInfoMode();
+
+
+	for(size_t nrep=0; nrep<num_rep;nrep++) {
 		for (size_t i=0;i<pg.Shape.NumVar;i++) {
 			if(pg.Des.var_missing[i+nrep*pg.Shape.NumVar]>0)
 				m_MissingValueExist=true;
-			if(pg.status.FileVersion>0)
-				SetVarMissing(i+1,pg.Des.var_missing[i+nrep*pg.Shape.NumVar], nrep+1); 
+				SetVarMissing(i+1,pg.Des.var_missing[i+nrep*pg.Shape.NumVar], nrep); 
 		}		  		
 	}
 
 	m_MissingTested=true;
-	SetRepititionSequence(1);
+	SetRepititionSequence(0);
 	return m_MissingValueExist;
 
 }
@@ -1721,8 +1735,8 @@ size_t PreviousMin, CurrentMin;
 	PreviousMin = GetLongTime(1);
 	CurrentMin = GetLongTime(2);
 	minst=CurrentMin-PreviousMin;
-	for (size_t i=1; i<pg.Shape.NumRecords;i++) {
-		CurrentMin = GetLongTime(i + 1);
+	for (size_t i=2; i<pg.Shape.NumRecords;i++) {
+		CurrentMin = GetLongTime(i);
 		if((CurrentMin-PreviousMin)!=minst) {
 			m_EquiDistance=0;
 			if(!GapProblemFinded) {
@@ -1816,7 +1830,10 @@ void CPGFile::CheckIncreaseTime()
 }
 unsigned int CPGFile::GetNumRepititions()
 {
-	return pg.Shape.NumRepetitions;
+	if (pg.Shape.RepetitionMode)
+		return pg.Shape.NumRepetitions;
+	else
+		return 1;
 }
 void CPGFile::SetNormalTimeInterval(unsigned int t)
 {

@@ -2127,7 +2127,7 @@ for(size_t irep=0; irep<pg.Shape.NumRepetitions;irep++) {
 			WriteNewBuffer(nbuf);	
 	}
 	if(!pg.status.CompleteFileRead) 
-		if(!WriteNewBuffer(irep+1)) return false;	
+		if(!WriteNewBuffer(irep)) return false;	
 }
 
 	if(!pg.status.CompleteFileRead) {
@@ -3294,7 +3294,7 @@ size_t CPG::GetNumberofMissing(size_t varno, size_t repit)
 		if(!CheckMissingNumbers())
 			return -1;
 	size_t countall;
-	size_t index=varno-1+(repit-1)*pg.Shape.NumVar;
+	size_t index=varno-1+repit*pg.Shape.NumVar;
 	countall=0;
 	if(varno<=0) {
 	for(size_t nrep=0; nrep<pg.Shape.NumRepetitions;nrep++) {
@@ -3317,7 +3317,7 @@ size_t CPG::GetNumberofMissing(size_t varno, size_t repit)
 size_t CPG::GetVarKey(size_t index, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		return pg.Des.addinfo[index-1].Key;
@@ -3329,7 +3329,7 @@ double CPG::GetVarLat(size_t index, size_t repit)
 	size_t add=0;
 	if(index==0) index=1;
 	if(repit==0) repit=1;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index&&index>0)
 		return pg.Des.addinfo[index-1].Lat;
@@ -3340,7 +3340,7 @@ double CPG::GetVarLat(size_t index, size_t repit)
 double CPG::GetVarLong(size_t index, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index&&index>0)
 		return pg.Des.addinfo[index-1].Long;
@@ -3351,7 +3351,7 @@ double CPG::GetVarLong(size_t index, size_t repit)
 double CPG::GetVarAlt(size_t index, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index&&index>0)
 		return pg.Des.addinfo[index-1].Alt;
@@ -3363,7 +3363,7 @@ string CPG::GetVarCountry(size_t index, size_t repit)
 {
 	string txt;
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index) {
 		return pg.Des.addinfo[index-1].CountryCode;
@@ -3375,7 +3375,7 @@ string CPG::GetVarCountry(size_t index, size_t repit)
 string CPG::GetVarStation(size_t index, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		return pg.Des.addinfo[index-1].StationName;
@@ -3386,7 +3386,7 @@ string CPG::GetVarStation(size_t index, size_t repit)
 elements CPG::GetVarElement(size_t index, size_t repit)
 {
 	size_t add = 0;
-	add = (repit - 1)*pg.Shape.NumVar;
+	add = repit*pg.Shape.NumVar;
 	index += add;
 	if (pg.Des.addinfo.size() >= index)
 		return pg.Des.addinfo[index - 1].Element;
@@ -3397,7 +3397,7 @@ elements CPG::GetVarElement(size_t index, size_t repit)
 UNIT_TYPES CPG::GetVarUnitType(size_t index, size_t repit)
 {
 	size_t add = 0;
-	add = (repit - 1)*pg.Shape.NumVar;
+	add = repit*pg.Shape.NumVar;
 	index += add;
 	if (pg.Des.addinfo.size() >= index)
 		return pg.Des.addinfo[index - 1].Unit;
@@ -3409,7 +3409,7 @@ UNIT_TYPES CPG::GetVarUnitType(size_t index, size_t repit)
 size_t CPG::GetVarMissing(size_t index, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		return pg.Des.addinfo[index-1].num_missing;
@@ -3419,7 +3419,7 @@ size_t CPG::GetVarMissing(size_t index, size_t repit)
 size_t CPG::GetVarSubstituted(size_t index, size_t repit)
 {
 	size_t add=0;
-	add=(repit-1)*pg.Shape.NumVar;
+	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index)
 		return pg.Des.addinfo[index-1].num_substituted;

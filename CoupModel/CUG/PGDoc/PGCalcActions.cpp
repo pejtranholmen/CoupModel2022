@@ -146,7 +146,7 @@ BOOL PGCalcActions::OnNewCalculateVar()
 	auto WriteResultofActualBuftoFile = [&](int irep, int nbuf) {
 		if (!pCPG->GetCompleteRead()) {
 			if (pCPG->GetNumRepititions()>1)
-				status = pCPG->WriteNewBuffer(irep + 1);
+				status = pCPG->WriteNewBuffer(irep);
 			else
 				status = pCPG->WriteNewBuffer(nbuf);
 
@@ -201,17 +201,17 @@ BOOL PGCalcActions::OnNewCalculateVar()
 		}
 	};
 	auto MakeTimeCalc = [&](int irep) {
-		for (size_t nbuf = 1; nbuf <= pCPG->GetNumBuffers(); nbuf++) {
+		for (size_t nbuf = 0; nbuf <= pCPG->GetNumBuffers(); nbuf++) {
 			if (pCPG->GetNumRepititions() <= 1) pCPG->SetActBuffer(nbuf);
 			if (expression == 6) {
 				if (pCPG->CalcVarTimeDerivate())
 					OnPGHeaderUpdate(pCPG->GetNumVariables() + 1, pCPG->GetNumRecords(), TRUE);
 			}
 			else if (expression == 4) {
-				pCPG->CalcTimeChange(irep + 1);
+				pCPG->CalcTimeChange(irep);
 			}
 			else
-				if (pCPG->CalcTimeChange(irep + 1));
+				if (pCPG->CalcTimeChange(irep));
 			WriteResultofActualBuftoFile(irep, nbuf);
 		}
 	};
@@ -221,7 +221,7 @@ BOOL PGCalcActions::OnNewCalculateVar()
 	pCPG->ReadFirst_Buffer();
 	for (int irep = 0; irep<pCPG->GetNumRepititions(); irep++) {
 		if (irep>0) {
-			if (!pCPG->ReadNewBuffer(irep+1)) {
+			if (!pCPG->ReadNewBuffer(irep)) {
 				m.SetPaneMessage("Read of Current Data from File Failed");
 				return FALSE;
 			}

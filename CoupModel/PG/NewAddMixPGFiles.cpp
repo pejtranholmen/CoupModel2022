@@ -204,14 +204,14 @@ CPG * NewAddMixPGFiles::MixFileToNewPGFile() {
 					CPG *pCPG;
 					pCPG = m_PGPointerVector[i];
 					numvar = pCPG->GetNumVariables();
-					float *pvar = (float*)pCPG->GetRecordPointer(j + 1, irep + 1);
+					float *pvar = (float*)pCPG->GetRecordPointer(j + 1, irep);
 					if (i == 0)
 						pPG->SetRecordPointer(pvar);
 					else
 						pPG->SetRecordPointer(pvar, icount, numvar);
 					icount += numvar;
 				}
-				pPG->WritePGFileRecord(j + 1, irep + 1);
+				pPG->WritePGFileRecord(j + 1, irep);
 
 			}
 		}
@@ -337,12 +337,12 @@ CPG * NewAddMixPGFiles::MixFileToNewPGFile() {
 					numvar = pCPG->GetNumVariables();
 
 					irec = RecordtoRead[i];
-					pCPG->ReadNewBuffer(irec, irep + 1);
+					pCPG->ReadNewBuffer(irec, irep);
 					if (irec <= MaxRecords[i]) {
-						pvar = (float*)pCPG->GetRecordPointer(irec, irep + 1);
+						pvar = (float*)pCPG->GetRecordPointer(irec, irep);
 					}
 					else
-						pvar = (float*)pCPG->GetRecordPointer(MaxRecords[i], irep + 1);
+						pvar = (float*)pCPG->GetRecordPointer(MaxRecords[i], irep);
 					if (i == 0)
 						pPG->SetRecordPointer(pvar);
 
@@ -354,7 +354,7 @@ CPG * NewAddMixPGFiles::MixFileToNewPGFile() {
 					icount += numvar;
 				}
 				pPG->SetDatePointer(&itime);
-				pPG->WritePGFileRecord(irec_count, irep + 1);
+				pPG->WritePGFileRecord(irec_count, irep);
 				if(irec_count%100==1) m.SetPaneMessage(FUtil::STD_ItoAscii(irec_count)+"("+ FUtil::STD_ItoAscii(numrec)+")");
 				for (int i = 0; i<NumLines; i++) {
 					if (Valid[i]>0) {
@@ -377,17 +377,17 @@ CPG * NewAddMixPGFiles::MixFileToNewPGFile() {
 			numvar = pCPG->GetNumVariables();
 			for (int i = 0; i<numvar; i++) {
 				icount++;
-				pPG->SetVarName(icount, pCPG->GetVarName(i + 1, irep + 1), irep + 1);
-				pPG->SetVarUnit(icount, pCPG->GetVarUnit(i + 1, irep + 1), irep + 1);
-				pPG->SetVarId(icount, pCPG->GetVarId(i + 1, irep + 1), irep + 1);
-				pPG->SetVarPos(icount, pCPG->GetVarPos(i + 1, irep + 1), irep + 1);
+				pPG->SetVarName(icount, pCPG->GetVarName(i + 1, irep), irep);
+				pPG->SetVarUnit(icount, pCPG->GetVarUnit(i + 1, irep), irep);
+				pPG->SetVarId(icount, pCPG->GetVarId(i + 1, irep), irep);
+				pPG->SetVarPos(icount, pCPG->GetVarPos(i + 1, irep), irep);
 
-				pPG->SetVarLong(icount, pCPG->GetVarLong(i + 1, irep + 1), irep + 1);
-				pPG->SetVarLat(icount, pCPG->GetVarLat(i + 1, irep + 1), irep + 1);
-				pPG->SetVarAlt(icount, pCPG->GetVarAlt(i + 1, irep + 1), irep + 1);
-				pPG->SetVarCountry(icount, pCPG->GetVarCountry(i + 1, irep + 1), irep + 1);
-				pPG->SetVarStation(icount, pCPG->GetVarStation(i + 1, irep + 1), irep + 1);
-				pPG->SetVarStation(icount, pCPG->GetVarStation(i + 1, irep + 1), irep + 1);
+				pPG->SetVarLong(icount, pCPG->GetVarLong(i + 1, irep), irep);
+				pPG->SetVarLat(icount, pCPG->GetVarLat(i + 1, irep), irep);
+				pPG->SetVarAlt(icount, pCPG->GetVarAlt(i + 1, irep), irep);
+				pPG->SetVarCountry(icount, pCPG->GetVarCountry(i + 1, irep), irep);
+				pPG->SetVarStation(icount, pCPG->GetVarStation(i + 1, irep), irep);
+				pPG->SetVarStation(icount, pCPG->GetVarStation(i + 1, irep), irep);
 			}
 		}
 
@@ -404,7 +404,7 @@ CPG * NewAddMixPGFiles::MixFileToNewPGFile() {
 	pPG->Open(pPG->GetFileName());
 	pPG->MakeFileToEnableWriting(false);
 	for (int irep = 0; irep < nrep; irep++)
-		pPG->ReCalculateMinMax(irep + 1);
+		pPG->ReCalculateMinMax(irep);
 
 	pPG->WritePGFileHeader(numrec, nrep);
 
@@ -440,7 +440,7 @@ CPG * NewAddMixPGFiles::MergeFileToNewPGFile() {
 	}
 	pPG->SaveAs(pPG->GetFileName(), true);
 	pPG->CreateNewFile(numvar, numrec, nrepetitions);
-	int count_rep = 1;
+	int count_rep = 0;
 
 	for (int i = 0; i<NumOfFilesToMerge; i++) {
 		CPG *pCPG;
@@ -455,7 +455,7 @@ CPG * NewAddMixPGFiles::MergeFileToNewPGFile() {
 		long pgend = pCPG->GetLongTimeEnd();
 		for (size_t nrep = 0; nrep<nrepit; nrep++) {
 			for (long j = 0; j<nrec; j++) {
-				float *pvar = (float*)pCPG->GetRecordPointer(j + 1, nrep + 1);
+				float *pvar = (float*)pCPG->GetRecordPointer(j + 1, nrep);
 				pPG->SetRecordPointer(pvar);
 				pPG->WritePGFileRecord(j + 1, count_rep);
 			}
@@ -464,27 +464,27 @@ CPG * NewAddMixPGFiles::MergeFileToNewPGFile() {
 				float fmin, fmax;
 				fmax = MISSING;
 				fmin = abs(MISSING);
-				pPG->SetVarName(iv + 1, pCPG->GetVarName(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarUnit(iv + 1, pCPG->GetVarUnit(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarId(iv + 1, pCPG->GetVarId(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarPos(iv + 1, pCPG->GetVarPos(iv + 1, nrep + 1), count_rep);
+				pPG->SetVarName(iv + 1, pCPG->GetVarName(iv + 1, nrep), count_rep);
+				pPG->SetVarUnit(iv + 1, pCPG->GetVarUnit(iv + 1, nrep), count_rep);
+				pPG->SetVarId(iv + 1, pCPG->GetVarId(iv + 1, nrep), count_rep);
+				pPG->SetVarPos(iv + 1, pCPG->GetVarPos(iv + 1, nrep), count_rep);
 
-				pPG->SetVarLat(iv + 1, pCPG->GetVarLat(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarLong(iv + 1, pCPG->GetVarLong(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarAlt(iv + 1, pCPG->GetVarAlt(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarKey(iv + 1, pCPG->GetVarKey(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarCountry(iv + 1, pCPG->GetVarCountry(iv + 1, nrep + 1), count_rep);
-				pPG->SetVarStation(iv + 1, pCPG->GetVarStation(iv + 1, nrep + 1), count_rep);
+				pPG->SetVarLat(iv + 1, pCPG->GetVarLat(iv + 1, nrep), count_rep);
+				pPG->SetVarLong(iv + 1, pCPG->GetVarLong(iv + 1, nrep), count_rep);
+				pPG->SetVarAlt(iv + 1, pCPG->GetVarAlt(iv + 1, nrep), count_rep);
+				pPG->SetVarKey(iv + 1, pCPG->GetVarKey(iv + 1, nrep), count_rep);
+				pPG->SetVarCountry(iv + 1, pCPG->GetVarCountry(iv + 1, nrep), count_rep);
+				pPG->SetVarStation(iv + 1, pCPG->GetVarStation(iv + 1, nrep), count_rep);
 
-				if (pCPG->GetVarMin(iv + 1, nrep + 1)<fmin)
+				if (pCPG->GetVarMin(iv + 1, nrep)<fmin)
 					fmin = pCPG->GetVarMin(iv + 1, nrep + 1);
-				if (pCPG->GetVarMax(iv + 1), nrep + 1>fmax)
-					fmax = pCPG->GetVarMax(iv + 1, nrep + 1);
+				if (pCPG->GetVarMax(iv + 1, nrep)>fmax)
+					fmax = pCPG->GetVarMax(iv + 1, nrep);
 				for (int j = 1; j<NumOfFilesToMerge - 1; j++) {
-					if (pCPG->GetVarMin(iv + 1, nrep + 1)<fmin)
-						fmin = pCPG->GetVarMin(iv + 1, nrep + 1);
-					if (pCPG->GetVarMax(iv + 1, nrep + 1)>fmax)
-						fmax = pCPG->GetVarMax(iv + 1, nrep + 1);
+					if (pCPG->GetVarMin(iv + 1, nrep)<fmin)
+						fmin = pCPG->GetVarMin(iv + 1, nrep);
+					if (pCPG->GetVarMax(iv + 1, nrep)>fmax)
+						fmax = pCPG->GetVarMax(iv + 1, nrep);
 				}
 				pPG->SetVarMin(iv + 1, fmin, count_rep);
 				pPG->SetVarMax(iv + 1, fmax, count_rep);

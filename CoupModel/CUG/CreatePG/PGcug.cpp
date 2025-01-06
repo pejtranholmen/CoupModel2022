@@ -183,7 +183,6 @@ void PGCug::UpdateGridSize(int col, long row, BOOL data, int repit)
 }
 BOOL PGCug::OnReadTime(CPG *pCPG)
 {
-
 	int m_NumVariables;
 	CUGCell cell;
 	if(m_Data) {
@@ -288,7 +287,7 @@ bool PGCug::OnReadFileDataToGrid(CPG *pCPG)
 			int icol;
 			for( size_t nrep=0;nrep<m_Repit;nrep++) {
 				if(m_Repit>1) {
-					if(!pCPG->SetRepititionSequence(nrep+1, false))
+					if(!pCPG->SetRepititionSequence(nrep, false))
 						return FALSE;
 					//pCPG->SetActBufferReset();
 					irow=0;
@@ -377,7 +376,6 @@ bool PGCug::OnReadFileDescriptionToGrid(CPG *pCPG)
 {
 
 	int m_NumVariables;
-
 	CUGCell cell;
 	m_pPG=pCPG;
 	EnableUpdate(FALSE); 
@@ -409,22 +407,22 @@ bool PGCug::OnReadFileDescriptionToGrid(CPG *pCPG)
 					SetCell(1,ind,&cell);
 
 
-					QuickSetText(2,ind,pCPG->GetVarName(i+1, nrep+1));
-					QuickSetText(3,ind,pCPG->GetVarUnit(i+1, nrep+1));
-					QuickSetText(4,ind,pCPG->GetVarId(i+1, nrep+1));
-					QuickSetText(5,ind,pCPG->GetVarPos(i+1, nrep+1));
+					QuickSetText(2,ind,pCPG->GetVarName(i+1, nrep));
+					QuickSetText(3,ind,pCPG->GetVarUnit(i+1, nrep));
+					QuickSetText(4,ind,pCPG->GetVarId(i+1, nrep));
+					QuickSetText(5,ind,pCPG->GetVarPos(i+1, nrep));
 					float v;
 					v=pCPG->GetVarMin(i+1, nrep+1);
 					if(v<0.5E38)	QuickSetNumber(6,ind,v);
 					v=pCPG->GetVarMax(i+1, nrep+1);
 					if(v>-0.5E37)	QuickSetNumber(7,ind,v);
-					QuickSetNumber(8,ind,pCPG->GetNumberofMissing(ind+1));
+					QuickSetNumber(8,ind,pCPG->GetNumberofMissing(ind));
 					if(pCPG->IsAddInfoSet()) {
-						QuickSetText(9,ind,pCPG->GetVarCountry(i+1, nrep+1));
-						QuickSetText(10,ind,pCPG->GetVarStation(i+1, nrep+1));
-						QuickSetNumber(11,ind,pCPG->GetVarAlt(i+1, nrep+1));
-						QuickSetNumber(12,ind,pCPG->GetVarLat(i+1, nrep+1));
-						QuickSetNumber(13,ind,pCPG->GetVarLong(i+1, nrep+1));
+						QuickSetText(9,ind,pCPG->GetVarCountry(i+1, nrep));
+						QuickSetText(10,ind,pCPG->GetVarStation(i+1, nrep));
+						QuickSetNumber(11,ind,pCPG->GetVarAlt(i+1, nrep));
+						QuickSetNumber(12,ind,pCPG->GetVarLat(i+1, nrep));
+						QuickSetNumber(13,ind,pCPG->GetVarLong(i+1, nrep));
 					}
 			}
 		}
@@ -442,7 +440,6 @@ bool PGCug::OnWriteGridDataToFile(CPG *pCPG)
 	CUGCell cell;
 	float v;
 	m_pPG=pCPG;
-	
 	
 		//pCPG->SetNumRecords(m_row);
 	if(m_Data&&m_TabSelected==0) {
@@ -469,7 +466,7 @@ bool PGCug::OnWriteGridDataToFile(CPG *pCPG)
 		bool status;
 
 		for (long irep=0; irep<m_Repit;irep++) {
-			status=pCPG->SetRepititionSequence(irep+1, true);
+			status=pCPG->SetRepititionSequence(irep, true);
 		
 			if(pCPG->GetNumBuffers()>1) {
 				if(pCPG->GetPrevBuffer()==0) {
@@ -539,14 +536,14 @@ bool PGCug::OnWriteGridDataToFile(CPG *pCPG)
 				}
 				else {
 					if(pCPG->GetNumRepititions()>1)
-						status=pCPG->WriteNewBuffer(irep+1);
+						status=pCPG->WriteNewBuffer(irep);
 						
 					if(!status) return false;
 				}
 				if(irep+1==m_Repit)
 				pCPG->WritePGFileStartHeader(pCPG->GetNumRecords(), m_Repit);
 
-				pCPG->ReCalculateMinMax(irep+1);
+				pCPG->ReCalculateMinMax(irep);
 			}
 			if(m_Repit>1) {
 
@@ -570,8 +567,6 @@ bool PGCug::OnWriteGridDescriptionToFile(CPG *pCPG)
 	CUGCell cell;
 	float v;
 	m_pPG=pCPG;
-	
-	
 		//pCPG->SetNumRecords(m_row);
 	if(m_Data&&m_TabSelected==0) {
 		return false;
@@ -868,7 +863,7 @@ void PGCug::Make_DescriptionHeader()
 	if(pCPG==nullptr) return;
 	m_Repit=pCPG->GetNumRepititions();
 
-	if(m_Repit>0)
+	if(m_Repit>1)
 		pCPG->SetRepititionMode(true, m_Repit);
 
 
@@ -2795,7 +2790,7 @@ BOOL PGCug::OnNewCalculateVar()
 
 		for( int irep=0; irep<pCPG->GetNumRepititions();irep++) {
 			if(pCPG->GetNumRepititions()>1) {
-				if(!pCPG->SetRepititionSequence(irep+1, false)) return FALSE;
+				if(!pCPG->SetRepititionSequence(irep, false)) return FALSE;
 			}
 			for (int ii=0; ii<pCPG->GetNumVariables();ii++){
 				expression_type=pCPG->GetVarFunctionType();

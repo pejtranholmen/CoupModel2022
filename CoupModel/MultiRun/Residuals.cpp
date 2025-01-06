@@ -615,6 +615,7 @@ bool CResiduals::ReadHeader() {
 	if(!m_ResidualFile.good()) check=false; 
 	m_ResidualFile.read((char*)&Numv,4);
 	m_NumVar=Numv;
+	if (m_RecL == 0) return false;
 	m_MaxNumRec=size_t(m_FileSize/(m_RecL*m_NumVar*4));
 	if (m_pNewMap != nullptr) {
 

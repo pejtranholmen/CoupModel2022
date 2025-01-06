@@ -4762,7 +4762,7 @@ BOOL ValidationCug::DefineNewSubPeriod()
 						}
 						
 						irep = irun % num_repitions;
-						pPG->SetRepititionSequence(irep+1, false);
+						pPG->SetRepititionSequence(irep, false);
 						meas_v = pPG->GetVarVector(ind + 1);
 
 						auto kollsimindex = ResidualIndex[FileNo - 1]+i;
