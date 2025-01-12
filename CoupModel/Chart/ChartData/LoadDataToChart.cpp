@@ -1334,7 +1334,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 					if (p_info.index_cycle != string::npos)
 						TT[i] = double(pDocAct->m_MStorage.GetValid(i, index));
 					else
-						TT[i] = double(pDocAct->m_MStorage.GetValid(i, index, p_info.index_cycle));
+						TT[i] = double(pDocAct->m_MStorage.GetValid(i, index));
 				}
 				else if (p_info.PGSection > 0)
 					TT[i] = double(pDocAct->m_MStorage.GetSplitValid(i, index, p_info.PGSection - 1));
@@ -1467,7 +1467,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 			pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
 		//}
 		if (p_info.PGSection == 0)
-			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index, p_info.index_cycle));
+			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index));
 		else if (p_info.PGSection>0)
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetSplitValid(i, p_info.Index, p_info.PGSection - 1));
 
@@ -2013,6 +2013,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		if (AcceptedCandidates.size() > p_info.Residual_Sequence) {
 			size_t runno = AcceptedCandidates[p_info.Residual_Sequence];
 			p_info.Residual_RunNo = runno;
+			m_pSimDoc->m_PlotStorage.SetValRunNo(j,runno, p_info.Residual_Sequence);
 			c_info.ResRunNo = runno;
 		}
 		else {
@@ -2060,7 +2061,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	vector<int> NumValid;
 
 	int VAL_PGindex = PGindex;
-	size_t act_rep = 1;
+	size_t act_rep = 0;
 	vector<size_t> RepHits;
 
 	auto AllMissing = [&]() {
@@ -2134,7 +2135,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		auto pSw = m_pSimDoc->GetSw("PreDefinedEnsembles");
 		if (pSw > 0) {
 			auto cycle_pair = m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
-			if (cycle_pair.first = string::npos) act_rep = cycle_pair.first + 1;
+			if (cycle_pair.first == string::npos) act_rep = cycle_pair.first + 1;
 		}
 	}
 

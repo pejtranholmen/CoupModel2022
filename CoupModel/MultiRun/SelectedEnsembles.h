@@ -177,6 +177,7 @@ public:
 
 	unsigned long GetNumSplitPeriods();
 	vector<float> GetPost_TSV_ValidPerformanceIndicatorVector(unsigned long, unsigned long split = 0);
+	vector<pair<float, size_t>> GetPost_TSV_ValidPerformanceIndicatorPairVector(unsigned long, unsigned long split = 0);
 	vector<float> GetPost_SV_ValidPerformanceIndicatorVector(size_t ivar, enum PERFORMANCE_VAR var=R2_STAT );
 
 

@@ -1436,6 +1436,8 @@ bool MR::PreDefined_Criteria_Process() {
 			if (ensemble > numens) numens = ensemble;
 		}
 
+
+
 		while (num < numens) {
 			if (m_MStorage.AddNewEnsemble(false)) {
 				num = m_MStorage.GetNumberofEnsembles();
@@ -1523,10 +1525,14 @@ bool MR::PreDefined_Criteria_Process() {
 			}
 			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
 			m_MStorage.IsMaxUpdated[i] = m_MStorage.IsMinUpdated[i] = false;
+		
+			m_MStorage.SetMinMaxOfPerformanceIndicators();
 		}
 		m_MStorage.m_ActualEnsemble = pre_actEnsemble;
 	}
 	m_MStorage.EvaluateFile(false);
+
+	
 
 	return true;
 }
@@ -1807,7 +1813,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 						for (size_t i_rep = 0; i_rep < rephits.size(); i_rep++) {
 							count = i_rep * active_points / rephits.size();
 							for (size_t irec = 0; irec < active_points/rephits.size(); irec++) {
-								size_t hit_index = (rephits[i_rep] - 1) * active_points/rephits.size() + irec;
+								size_t hit_index = (rephits[i_rep]) * active_points/rephits.size() + irec;
 								sim[count+irec] = double(meas_v[hit_index]) - double(res_v[hit_index]);
 								obs[count+irec] = double(meas_v[hit_index]);
 							}
@@ -1855,7 +1861,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 				meas_v = pPG->GetVarVector(ind + 1);
 				size_t Valid_Records = UpdateMeasuredToValidPointsOnly_ReturnNewRec(sim, obs);
 
-				if (cycle.first != string::npos) {
+				/*if (cycle.first != string::npos) {
 					for (long j = cycle.first; j < Valid_Records; j += cycle.second) {
 						if (indexmulti != string::npos && pPG->GetNumRepititions() == 0) {
 							size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
@@ -1892,7 +1898,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 						}
 
 					}
-				}
+				}*/
 				newperf = StatUtil::Get_StatComp(&sim, &obs);
 				newperf.logli = pSim->m_Simulator.m_pModelStructure->SumLikelihood(size_t(i_var_index), &sim, &obs);
 				//auto k=pSim.m_Simulator.m_pModelStructure.SumLikelihood(size_t(i_var_index), &sim, &obs);
@@ -2056,6 +2062,8 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 
 	m_MStorage.VarValidAllo();
 m_MStorage.UpdateAcceptedRuns(true);
+auto koll=m_MStorage.m_TotalNumberRuns;
+
 	string text;
 	if (cumulated%10 == 0) text = "actual values";
 	else if (cumulated%10 == 1) text = "cumulated values";
@@ -2102,7 +2110,7 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 			break;
 		}
 	}
-	size_t pg_filter_index = m_pSimDoc->m_Val_Array[Index_val].PG_FilterIndex;
+	size_t pg_filter_index = m_Val_Array[Index_val].PG_FilterIndex;
 	start_pos = string::npos;
 	if (test_value_sim != string::npos)
 		auto koll = pPGMeas->GetNumRecords();
@@ -2156,8 +2164,8 @@ vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, s
 
 	size_t valid_Value;
 	for (size_t i = 0; i < numrep; i++) {
-		if (test_value_sim == size_t(pPGMeas->GetVarValue(pg_filter_index, 1, i + 1) + 0.0001)) {
-			out.push_back(i + 1);
+		if (test_value_sim == size_t(pPGMeas->GetVarValue(pg_filter_index, 1, i) + 0.0001)) {
+			out.push_back(i);
 		}
 	}
 	return out;

@@ -359,11 +359,14 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 				int iadd=0;
 				if(datatype==DATA_TYPES::ANYDATA) 
 					iadd=0;
-				else if(datatype>DATA_TYPES::ANYDATA&&datatype<DATA_TYPES::SIM_PERFORMANCE)
-					if(ilocal>=0)
-						iadd=0;
+				else if (datatype > DATA_TYPES::ANYDATA && datatype < DATA_TYPES::SIM_PERFORMANCE) {
+					if (ilocal >= 0)
+						iadd = 0;
 					else
-						iadd=1;
+						iadd = 1;
+					if (!m_pSimDoc->m_PlotStorage.SetPGRepitNo(j, m_pProp->m_MultiSequence)) return false;
+					else return true;
+				}
 				else if(datatype== DATA_TYPES::SIM_PERFORMANCE)
 					iadd=1;
 				else if(datatype== DATA_TYPES::SIM_OUTSUM)

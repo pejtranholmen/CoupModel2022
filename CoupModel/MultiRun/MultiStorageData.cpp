@@ -765,15 +765,22 @@ float MultiStorageData::GetSplitValid(unsigned long irun, unsigned long ip, unsi
 	else
 		return v;
 }
-float MultiStorageData::GetValid(unsigned long rec, unsigned long ip, size_t i_cycle)
+float MultiStorageData::GetValid(unsigned long rec, unsigned long ip, size_t i_cycle_start, size_t i_cycle)
 {
-	if (rec % m_CyclicNumber != m_CyclicStartPos)
-		return MISSING;
-	else if (m_CyclicNumber > 0) {
-		rec=(rec/(m_CyclicNumber))*m_CyclicNumber+m_CyclicStartPos;				// removed i_cycle
+	if(i_cycle_start!=string::npos) {
+		m_CyclicStartPos = i_cycle;
 	}
+	if(i_cycle!=string::npos) {
+		m_CyclicNumber = i_cycle;
+	}
+	if (m_CyclicNumber > 0) {
+		rec = (rec / (m_CyclicNumber)) * m_CyclicNumber + m_CyclicStartPos;
+		if (rec % m_CyclicNumber != m_CyclicStartPos)
+			return MISSING;
+	}
+	if (rec*(m_NumValid+m_NumExtraValid)+ip>=m_VarValid.size()) return MISSING;
+	
 	auto index=ip+(m_NumValid+m_NumExtraValid)*rec;
-	if(index>=m_TotalNumberRuns*(m_NumValid+m_NumExtraValid)) return MISSING;
 	float v=m_VarValid[index];
 	if(v==-numeric_limits<double>::infinity( ))
 		return MISSING;
@@ -792,6 +799,14 @@ void MultiStorageData::SetAcceptedRunNo(unsigned long index, bool value)
 		m_VarMulti[index*m_NumMulti+apos]=1.;
 	else
 		m_VarMulti[index*m_NumMulti+apos]=0.;
+}
+
+bool MultiStorageData::RemoveAcceptedRunNo(unsigned long index)
+{
+
+
+
+	return false;
 }
 
 void MultiStorageData::ReAssignPerformanceandAcceptanceFromAggregation(size_t aggregate_num)
@@ -1865,26 +1880,28 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 	if (VarIndex == MaxNum) MeanOfMany = true;
 	if (ip == string::npos) return false;
+
+	vector<pair<float, size_t>> dist_pair;
 	if (MeanOfMany) {
 		dist = m_pNewMap->m_MStorage.m_MeanTSV_Accepted[Indicator];
 	}
 	else {
-		dist = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(ip, 0);
+		dist_pair = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
 	}
-	int icount = dist.size();
+	int icount = dist_pair.size();
 	if (icount <= 1) return icount;
 	if (RelativeThreshold)
 		Threshold = Threshold * icount / 100;
 	if (Threshold <= 0) return icount;
 
 	float last_valid = 0.f, first_valid;
-	StatUtil::SortArray(&dist[0], icount);
-		auto min_value = dist.front();
-		auto max_value = dist.back();
+	//StatUtil::SortArray(&dist[0], icount);
+		auto min_value = dist_pair.front().first;
+		auto max_value = dist_pair.back().first;
 		size_t n_toremove = 0;
-		if (dist.size() <= Threshold) {
+		if (dist_pair.size() <= Threshold) {
 			n_toremove = 0; Threshold = 1;}
-		else if (Indicator != ABSME_STAT) n_toremove = dist.size() - Threshold - 1;
+		else if (Indicator != ABSME_STAT) n_toremove = dist_pair.size() - Threshold - 1;
 
 		if (Indicator == ABSME_STAT || Indicator == A1_STAT) {
 			float meanvaluein, meanvalueout;
@@ -1949,11 +1966,11 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			}
 		}
 		else if (Indicator == R2_STAT || Indicator == NSE_STAT || Indicator == LOGLI_STAT) {
-			auto pos = dist.size() - Threshold;
+			auto pos = dist_pair.size() - Threshold;
 			if (pos >= 0)
-				last_valid = dist[pos];
+				last_valid = dist_pair[pos].first;
 			else
-				last_valid = dist.back() + 0.0001;
+				last_valid = dist_pair.back().first + 0.0001;
 
 		}
 		else if (Indicator == RMSE_STAT) {
@@ -1984,13 +2001,13 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		}
 
 
-		if (dist.size() > Threshold - 1) {
+		if (dist_pair.size() > Threshold - 1) {
 			if (MeanOfMany) {
 				m_pNewMap->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][LOGLI_STAT] = last_valid;
 				m_pNewMap->m_MStorage.SetMeanCriteria(LOGLI_STAT, CRITERIA_STATE::ABOVE_MIN);
 			}
 			else {
-				m_pNewMap->m_MStorage.SetCriteriaHistory(dist.size() - n_toremove, Indicator);
+				m_pNewMap->m_MStorage.SetCriteriaHistory(dist_pair.size() - n_toremove, Indicator);
 				if (Indicator == R2_STAT || Indicator == NSE_STAT || Indicator == LOGLI_STAT) {
 					//	m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
 					//	m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
@@ -2031,6 +2048,18 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 				}
 			}
+			auto pos = dist_pair.size() - Threshold;
+
+			// Remove from Accepted Runs and Set RunNo to be false:
+
+			for (size_t i = 0; i < n_toremove; i++) {
+				auto runno = dist_pair.front().second;
+				m_pNewMap->m_MStorage.SetAcceptedRunNo(runno, false);
+				dist_pair.erase(dist_pair.begin());
+			}
+			auto dist_pairprev = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+
+			m_TotalNumAccepted = m_pNewMap->m_MStorage.FindAcceptedRunsFromFlagInPar();
 			ReduceUpdateStep(Indicator);
 
 		}
@@ -2043,7 +2072,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 void MultiStorageData::ReduceUpdateStep(PERFORMANCE_VAR value)
 {
 	m_pNewMap->m_MStorage.m_SV_StatMemory.AcceptedRuns = false;
-	m_pNewMap->m_MStorage.UpdateAcceptedRuns(false, false);
+	//m_pNewMap->m_MStorage.UpdateAcceptedRuns(false, false);
 	//m_Changed = TRUE;
 	//m_SavedCriteria2File = false;
 	m_pNewMap->MR_ReCalculatePostDist(false);

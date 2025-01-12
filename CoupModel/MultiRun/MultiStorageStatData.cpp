@@ -220,7 +220,7 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 		}
 		for (size_t i = 0; i < NumEnsembles; i++) {
 			if (m_AcceptedIdString[i].size() == 0) {
-				m_AcceptedIdString[i] = "Ensemble (" + FUtil::STD_ItoAscii(i + 1) + ")";
+				m_AcceptedIdString[i] = "E(" + FUtil::STD_ItoAscii(i + 1) + ")";
 			}
 			m_EvaluationFile.wString(&m_AcceptedIdString[i]);
 			size_t num = m_AcceptedRuns[i].size();

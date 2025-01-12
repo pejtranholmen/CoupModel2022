@@ -113,7 +113,7 @@ public:
 
 	float GetMinPar(unsigned long);
 	float GetMaxPar(unsigned long);
-	float GetValid(unsigned long, unsigned long, size_t indexcycle=string::npos);
+	float GetValid(unsigned long record, unsigned long IndexValid, size_t cyclestart=string::npos, size_t cycle_length=string::npos);
 	float GetSplitValid(unsigned long irun , unsigned long ival, unsigned long split=0);
 	float GetSplitNValue(unsigned long iv, unsigned long split=0);
 	float GetValidLow(unsigned long, unsigned long split=0);
@@ -128,6 +128,8 @@ public:
 	
 	bool  GetAcceptedRunNo(unsigned long);
 	void  SetAcceptedRunNo(unsigned long, bool value);
+	bool RemoveAcceptedRunNo(unsigned long);
+
 	void  ReAssignPerformanceandAcceptanceFromAggregation(size_t aggregate_num);
 	void  CommonPerformanceFromAggregation(size_t aggregate_num);
 	void  SetCoCorValid(unsigned long, unsigned long, float, size_t actensemble=string::npos);
@@ -206,7 +208,7 @@ public:
 				case 4: txt = "Mean Dimension 1"; break;
 			}
 			if (m_Valid_TSV[i].VarTranformed > 4) {
-				txt+= " - Index "+FUtil::STD_ItoAscii(m_Valid_TSV[i].Dim1_Par_Index)+" of 1st dimension";
+				txt+= " - ("+FUtil::STD_ItoAscii(m_Valid_TSV[i].Dim1_Par_Index)+")";
 			}
 		}
 		return txt;
@@ -214,7 +216,7 @@ public:
 
 	size_t ReduceCriteria(PERFORMANCE_VAR, size_t VarIndex=0, size_t ThresholdType=0, size_t Threshold=0);
 	void ReduceUpdateStep(PERFORMANCE_VAR);
-	size_t GetNumberofEnsembles() { return m_AcceptedIdString.size(); };
+	size_t GetNumberofEnsembles() { return m_Valid_TSV.size(); };
 	vector<size_t> GetEnsemblesToPlot() {
 		vector<size_t> out;
 		for (size_t i = 0; i < m_Valid_TSV.size(); i++) {

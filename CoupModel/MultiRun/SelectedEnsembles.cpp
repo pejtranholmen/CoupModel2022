@@ -1843,13 +1843,14 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 		if (it != MapOfStoredTSV.end())
 			index_trans = (*it).second;
 
-		if (m_VarValidTransformed.size() == 0)
-			index_trans = string::npos;
-		else if (m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
-			index_trans = string::npos;
-
-
-		m_VarValidTransformed[index_trans].Dim1_index = m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
+		if (index_trans != string::npos && index_trans < m_VarValidTransformed.size()) {
+			if (m_VarValidTransformed.size() == 0)
+				index_trans = string::npos;
+			else if (m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
+				index_trans = string::npos;
+			else
+				m_VarValidTransformed[index_trans].Dim1_index = m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
+		}
 
 	}
 	if (m_AcceptedRuns.size() > m_ActualEnsemble)
@@ -1871,6 +1872,26 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 		}
 	}
 	return out;
+}
+vector<pair<float, size_t>> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorPairVector(unsigned long ip, unsigned long split)
+{
+	size_t count = 0;
+	vector<pair<float, size_t>> p;
+	
+	m_TotalNumAccepted= m_AcceptedRuns[m_ActualEnsemble].size();
+	for (size_t i = 0; i < m_AcceptedRuns[m_ActualEnsemble].size(); i++) {
+		size_t irun = m_AcceptedRuns[m_ActualEnsemble][i];
+		auto koll = GetValid(irun, ip);
+		if (koll > MISSING + 1.)
+			p.push_back(pair<float,size_t>(koll, irun));
+	}
+    
+	auto comparePairs=[&](const pair<float, size_t>& a, const pair<float, size_t>& b) {
+        return a.first < b.first;
+    };
+
+    std::sort(p.begin(), p.end(), comparePairs);
+	return p;
 }
 bool SelectedEnsembles::RemoveAddedFiles() {
 	if (m_AddedFiles.size() > 0) {

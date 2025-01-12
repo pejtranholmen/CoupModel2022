@@ -253,8 +253,8 @@ PLOTv PlotInfo::MakeOutPutChartInfo(size_t i, size_t i_doc) {
 			out.pPG=&out.pSimDoc->m_PG_MultiOutputFile;
 			filename=out.pSimDoc->GetOutputFileName(0,false, true);
 			//if(m_pProp->m_MultiSequence=)
-			out.Residual_RunNo=1;
-			out.PGRepitNo = out.Residual_RunNo;
+			out.Residual_RunNo=0;
+			out.PGRepitNo = 0;
 		}
 		else {
 			out.pPG=&out.pSimDoc->m_PG_OutPutFile;

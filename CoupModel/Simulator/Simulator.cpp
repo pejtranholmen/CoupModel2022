@@ -626,10 +626,15 @@ void Simulator::Stat_Reset()
 bool Simulator::Store_Write(bool MultiFlag, bool Final)
 {
 	size_t count=0;
+	string str;
 	if(MultiFlag) {
 		for(size_t i=0;i<Stat.size(); i++) {
 			if(Stat[i].YBin) { // YBin true corresponds to a multiRun output of Variables to MultiBin File format
-				m_pSim->m_PG_MultiOutputFile.SetVarName(count+1,m_MultiOutputs[count].pBase->GetName(),m_pModelInfo->ActualNoMulRun-1);
+				str = m_MultiOutputs[count].pBase->GetName();
+				if(m_MultiOutputs[count].pBase->Is_Vector()) {
+					str+="("+FUtil::STD_ItoAscii(m_MultiOutputs[count].TabIndex+1)+")";
+				}
+				m_pSim->m_PG_MultiOutputFile.SetVarName(count+1,str,m_pModelInfo->ActualNoMulRun-1);
 				m_pSim->m_PG_MultiOutputFile.SetVarUnit(count+1,m_MultiOutputs[count].pBase->GetUnit(),m_pModelInfo->ActualNoMulRun-1);
 				if(m_StructureModel.m_Additional.Multi_PGFile_ID_Selector==0)
 					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo),m_pModelInfo->ActualNoMulRun-1 );
