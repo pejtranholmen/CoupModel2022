@@ -509,6 +509,15 @@ vector<string> MFC_Util::GetMBinFileNames() {
 	out = GetFileNames(lpszFilter, "MBin");
 	return out;
 }
+vector<string> MFC_Util::GetSBInFileNames()
+{
+	vector<string> out;
+	LPCTSTR lpszFilter;
+	lpszFilter = _T("SBin Files (*.SBin)");
+	out = GetFileNames(lpszFilter, "SBin");
+	return out;
+
+}
 vector<string> MFC_Util::GetSimFileNames() {
 	vector<string> out;
 	LPCTSTR lpszFilter;

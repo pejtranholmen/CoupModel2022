@@ -168,10 +168,10 @@ BOOL PGCalcActions::OnNewCalculateVar()
 				pCPG->SetCalcVarNew(var_out);
 				jump = TRUE;
 			}
-			for (size_t nbuf = 1; nbuf <= pCPG->GetNumBuffers(); nbuf++) {
+			for (size_t nbuf = 0; nbuf <= pCPG->GetNumBuffers(); nbuf++) {
 				if (pCPG->GetNumRepititions() > 1&&nbuf>1) pCPG->SetActBuffer(nbuf);
 				if (expression_type == 1) {
-					if (expression == 1) pCPG->CalcVarScaling(var_in, var_out, irep+1);
+					if (expression == 1) pCPG->CalcVarScaling(var_in, var_out, irep);
 					else if (expression == 2)pCPG->CalcVarMissing(var_in, var_out);
 					else if (expression == 3) pCPG->CalcVarMissing(var_in, var_out);
 					else if (expression == 4) pCPG->CalcVarMissingSubstitute(var_in, var_out, false, nbuf);
@@ -232,7 +232,7 @@ BOOL PGCalcActions::OnNewCalculateVar()
 			else if (expression_type != 0)
 				MakeVariableCalc(ii, irep);
 		}
-		pCPG->WriteNewBuffer(irep+1);
+		pCPG->WriteNewBuffer(irep);
 		if(irep+1==pCPG->GetNumRepititions()) pCPG->SetCompleteRead(true);
 	}
 	if (pCPG->GetNumRepititions()>1) pCPG->SetRepititionSequence(actual_rep, true);

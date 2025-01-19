@@ -82,7 +82,7 @@ void CPGView::UpdateViewOrder()
 						ind=nrep*pg.Shape.NumVar+i;
 						if(pg.status.a.ToBeViewed[ind]) {
 							data.NumVar=i+1;
-							data.Repit=nrep+1;
+							data.Repit=nrep;
 							m_DataView.push_back(data);
 						}
 				}
@@ -95,7 +95,7 @@ void CPGView::UpdateViewOrder()
 						ind=nrep*pg.Shape.NumVar+i;
 						if(pg.status.a.ToBeViewed[ind]) {
 							data.NumVar=i+1;
-							data.Repit=nrep+1;
+							data.Repit=nrep;
 							m_DataView.push_back(data);
 						}
 				}

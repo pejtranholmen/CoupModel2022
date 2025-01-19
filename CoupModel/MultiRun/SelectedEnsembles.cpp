@@ -1063,15 +1063,21 @@ float SelectedEnsembles::GetMinValid(unsigned long ip, unsigned long ind_split)
 			unsigned long ind, ind_rmse, ind_a1;
 			float rmse_o, vtest;
 			
-
+			vector<float> vtestvec;
 
 			for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
 				unsigned long irun=Get_AcceptedRuns(i);
 				if(irun<0) return MISSING;
 					fval=GetValid(irun,ip);
-					if(fval<v&&fval>MISSING+1) v=fval;
+					if (fval<v && fval>MISSING + 1) {
+						v = fval;
+						vtestvec.push_back(fval);
+					}
 			}
 			m_Valid_TSV[m_ActualEnsemble].v[E_POST_MIN][ip] = v;
+			if (ip == 99&&m_ActualEnsemble==2) {
+				auto koll = vtestvec.size();
+			}
 			return v;
 		}
 		else {
@@ -1099,6 +1105,7 @@ float SelectedEnsembles::GetMaxValid(unsigned long ip, unsigned long ind_split)
 		//if (m_NumValid == 0) return MISSING;
 		//if(!IsMaxUpdated) {
 			float v=float(MISSING);
+			vector<float> vtestvec;
 			if(ind_split==0) {
 
 				for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
@@ -1106,9 +1113,15 @@ float SelectedEnsembles::GetMaxValid(unsigned long ip, unsigned long ind_split)
 					if(irun<0) return MISSING;
 						if(GetValid(irun,ip)>v/*&&GetValid(i, ind_a1)!=0*/)
 							v=GetValid(irun,ip);
+						vtestvec.push_back(GetValid(irun, ip));
 				}
 					//m_VarValidMax[ip]=v;
 				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][ip]=v;
+				if (ip == 99 && m_ActualEnsemble == 2) {
+					auto koll = vtestvec.size();
+				}
+
+
 				return v;
 			}
 			else {
@@ -1144,7 +1157,7 @@ size_t SelectedEnsembles::FindAcceptedRunsFromFlagInPar() {
 	m_TotalNumAccepted = m_AcceptedRuns[m_ActualEnsemble].size();
 	return m_TotalNumAccepted;
 }
-void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
+void SelectedEnsembles::SetMinMaxOfPerformanceIndicators(bool Only_Prior) {
 
 #ifndef COUPSTD
 	MFC_Util mfc_util;
@@ -1168,34 +1181,50 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators() {
 
 
 	for (unsigned long i = 0; i<m_NumMulti; i++) {
-		GetMinPar(i);
-		GetMaxPar(i);
-		GetMinValidPar(i);
-		GetMaxValidPar(i);
+		if (Only_Prior) {
+			GetMinPar(i);
+			GetMaxPar(i);
+		}
+		else {
+			GetMinValidPar(i);
+			GetMaxValidPar(i);
+		}
 
 	}
 	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
-			GetMinValid(i, split);
-			GetMinValidAll(i, split);
-			GetMaxValid(i, split);
-			GetMaxValidAll(i, split);
+			if(Only_Prior) {
+				GetMinValidAll(i, split);
+				GetMaxValidAll(i, split);
+			}
+			else {
+				GetMinValid(i, split);
+				GetMaxValid(i, split);
+			}
 		}
 	}
 	IsMinUpdated[m_ActualEnsemble] = true;
 	IsMeanUpdated[m_ActualEnsemble] = false;
 	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
-			GetMeanValid(i, split);
-			GetMeanValidAll(i, split);
+			if(Only_Prior) {
+				GetMeanValidAll(i, split);
+			}
+			else {
+				GetMeanValid(i, split);
+			}
 		}
 	}
 
 	IsMeanUpdated[m_ActualEnsemble] = true;
 	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
-			GetCV_Valid(i, split);
-			GetCV_ValidAll(i, split);
+			if(Only_Prior) {
+				GetCV_ValidAll(i, split);
+			}
+			else {
+				GetCV_Valid(i, split);
+			}
 		}
 	}
 	IsCVUpdated[m_ActualEnsemble] = true;

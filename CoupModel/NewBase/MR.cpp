@@ -1466,9 +1466,11 @@ bool MR::PreDefined_Criteria_Process() {
 		for (size_t i = 0; i < numens; i++) { //Reset Criteria
 			m_MStorage.m_ActualEnsemble = i;
 			m_MStorage.ResetCriteria();
-			m_MStorage.Reset_AcceptedRuns(i);
+
 			auto Transform = size_t(pTransformation->GetValue(i) + 0.0001);
 			auto Dim1_Par_Index = size_t(pDim1Index->GetValue(i) + 0.0001);
+			m_MStorage.UpdateCyclicNumbers(m_MStorage.m_ActualEnsemble, Dim1_Par_Index, Transform);
+			m_MStorage.Reset_AcceptedRuns(i);
 			EstimateNewTransformedPerformance(Transform, Dim1_Par_Index, true);
 			//m_MStorage.EvaluateFile(false);
 		}
@@ -1499,6 +1501,7 @@ bool MR::PreDefined_Criteria_Process() {
 			if (m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
 				m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
 			}
+			m_MStorage.SetMinMaxOfPerformanceIndicators(true); // Only Update the prior distributions
 
 			switch (Indicator) {
 				case 0:
@@ -1525,8 +1528,11 @@ bool MR::PreDefined_Criteria_Process() {
 			}
 			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
 			m_MStorage.IsMaxUpdated[i] = m_MStorage.IsMinUpdated[i] = false;
+			auto MaxNum = GetNumAll_TSV_ValVariables();
+			size_t ip = MaxNum * Indicator + VarIndex;
+			auto dist_pair = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
 		
-			m_MStorage.SetMinMaxOfPerformanceIndicators();
+			m_MStorage.SetMinMaxOfPerformanceIndicators(false); // Only Update the posterior distributions
 		}
 		m_MStorage.m_ActualEnsemble = pre_actEnsemble;
 	}
@@ -1637,7 +1643,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 #ifndef COUPSTD	
 			float scale;
 			scale = float(i_var_index) / float(NumValidVar);
-			p_mainframe->UpdateResidualProgress(i_var_index + 1, NumValidVar, scale, cumulated);
+			p_mainframe->UpdateResidualProgress(i_var_index + 1, NumValidVar, scale, cumulated, m_MStorage.m_ActualEnsemble);
 #endif
 
 
@@ -1742,7 +1748,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 				if (irun % 1000 == 5) {
 					float scale;
 					scale = float(i_var_index) / float(NumValidVar) + irun / m_MStorage.GetNumberOfRuns() * 1. / float(NumValidVar);
-					p_mainframe->UpdateResidualProgress(i_var_index + 1, NumValidVar, scale, cumulated);
+					p_mainframe->UpdateResidualProgress(i_var_index + 1, NumValidVar, scale, cumulated, m_MStorage.m_ActualEnsemble);
 				}
 #endif
 
@@ -2061,7 +2067,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 
 
 	m_MStorage.VarValidAllo();
-m_MStorage.UpdateAcceptedRuns(true);
+//m_MStorage.UpdateAcceptedRuns(true);
 auto koll=m_MStorage.m_TotalNumberRuns;
 
 	string text;
@@ -2080,7 +2086,7 @@ auto koll=m_MStorage.m_TotalNumberRuns;
 #ifndef COUPSTD
 	m.SetPaneMessage("Performance indicators estimated based on " + text+ "Estimated new performance");
 #endif
-	return m_MStorage.EvaluateFile(false); // Saving new indicators in file
+	return true; // m_MStorage.EvaluateFile(false); // Saving new indicators in file
 }
 pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CPG* pPGMeas, size_t Index_val)
 {

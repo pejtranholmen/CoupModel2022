@@ -25,7 +25,7 @@ MultiStorageData::MultiStorageData()
 	m_TotalNumAccepted=0;
 	m_TotalNumBayesAccepted=0;
 	m_CyclicNumber = 1;
-
+	m_CyclicStartPos=0;
 
 	m_OrigRuns=0;
 	m_OrigFirstRunNo=0;
@@ -83,17 +83,29 @@ MultiStorageData::~MultiStorageData()
 	if(m_IsOpen) m_MultiFile.close();
 	if(m_IsSplitOpen) m_SplitPeriodFile.close();
 }
-void MultiStorageData::UpdateCyclicNumbers(size_t ActualEnsemble)
+void MultiStorageData::UpdateCyclicNumbers(size_t ActualEnsemble, size_t Dim1_Value, size_t Transform_index)
 {
-	{
-		size_t Dim1Value = m_Valid_TSV[ActualEnsemble].Dim1_Par_Index;
-		if (Dim1Value == 0)
-			SetCyclicNumbers(1, 0);
+		if(Dim1_Value!=string::npos)
+			m_Valid_TSV[ActualEnsemble].Dim1_Par_Index = Dim1_Value;
+		else
+			Dim1_Value = m_Valid_TSV[ActualEnsemble].Dim1_Par_Index;
+		if (Transform_index != string::npos)
+			m_Valid_TSV[ActualEnsemble].VarTranformed = Transform_index;
+		else
+			Transform_index= m_Valid_TSV[ActualEnsemble].VarTranformed;
+
+		if (Dim1_Value == 0) {
+			if(Transform_index!=4)
+				SetCyclicNumbers(1, 0);
+			else {
+				auto koll = m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+				SetCyclicNumbers(koll, koll-1, Dim1_Value);
+			}
+		}
 		else {
 			auto koll = m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
-			SetCyclicNumbers(koll, Dim1Value - 1, Dim1Value);
+			SetCyclicNumbers(koll, Dim1_Value - 1, Dim1_Value);
 		}
-	};
 }
 bool MultiStorageData::Reset()
 {
@@ -117,14 +129,19 @@ unsigned long ipos=m_FileName.find(".MBin");
 	}
 	return "";
 }
-string MultiStorageData::GetStatFileName()
+string MultiStorageData::GetStatFileName(bool NewFile)
 {
 	string str;
 	size_t ipos = m_FileName.find(".MBin");
 	if (ipos!=string::npos) {
-		str = m_FileName.substr(0, ipos);
-		str.append(".SBin");
-
+		if (NewFile) {
+			MFC_Util m;
+			auto vec_names=m.GetSBInFileNames();
+		}
+		else {
+			str = m_FileName.substr(0, ipos);
+			str.append(".SBin");
+		}
 		return str;
 	}
 	return "";
@@ -768,13 +785,12 @@ float MultiStorageData::GetSplitValid(unsigned long irun, unsigned long ip, unsi
 float MultiStorageData::GetValid(unsigned long rec, unsigned long ip, size_t i_cycle_start, size_t i_cycle)
 {
 	if(i_cycle_start!=string::npos) {
-		m_CyclicStartPos = i_cycle;
+		m_CyclicStartPos = i_cycle_start;
 	}
 	if(i_cycle!=string::npos) {
 		m_CyclicNumber = i_cycle;
 	}
 	if (m_CyclicNumber > 0) {
-		rec = (rec / (m_CyclicNumber)) * m_CyclicNumber + m_CyclicStartPos;
 		if (rec % m_CyclicNumber != m_CyclicStartPos)
 			return MISSING;
 	}
@@ -1118,6 +1134,7 @@ unsigned long MultiStorageData::GetAdd_MultiPGFileIndex(unsigned long simRunNo)
 }
 void MultiStorageData::AllocateValid_TSV(size_t i) {
 	if (m_NumValidAdd != string::npos && m_MBinHeader.n_param != string::npos) {
+		size_t num_indicators = 7;
 
 		m_Valid_TSV[i].v[E_PRIOR_MIN].resize(m_NumValidAll);
 		m_Valid_TSV[i].v[E_PRIOR_MAX].resize(m_NumValidAll);
@@ -1130,11 +1147,24 @@ void MultiStorageData::AllocateValid_TSV(size_t i) {
 		m_Valid_TSV[i].v[E_SELECT_LOW].resize(m_NumValidAll);
 		m_Valid_TSV[i].v[E_SELECT_HIGH].resize(m_NumValidAll);
 		m_Valid_TSV[i].criteria.resize(m_NumValidAll);
-		m_Valid_TSV[i].meancriteria.resize(7);
+		m_Valid_TSV[i].meancriteria.resize(num_indicators);
 		m_Valid_TSV[i].tobe_Plotted = true;
 		m_Valid_TSV[i].is_Copar_Updated = false;
 		m_Valid_TSV[i].copar.resize(m_MBinHeader.n_param * m_MBinHeader.n_param);
 		m_Valid_TSV[i].ParDist.resize(m_MBinHeader.n_param);
+
+
+		m_Valid_TSV_Mean[i].v[E_PRIOR_MIN].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_PRIOR_MAX].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_PRIOR_MEAN].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_PRIOR_CV].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_POST_MIN].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_POST_MAX].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_POST_MEAN].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_POST_CV].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_SELECT_LOW].resize(num_indicators);
+		m_Valid_TSV_Mean[i].v[E_SELECT_HIGH].resize(num_indicators);
+
 	}
 }
 void MultiStorageData::AllocateValid_SUM(size_t i) {
@@ -1187,21 +1217,17 @@ void MultiStorageData::VarValidAllo()
 		m_ParValidMax.resize(m_MBinHeader.n_param);
 	}
 
-	/*m_VarValidMax.resize(m_NumValidAll);
-	m_VarValidMin.resize(m_NumValidAll);
-	m_VarValidMean.resize(m_NumValidAll);
-	m_VarValidCV.resize(m_NumValidAll);
-	m_VarValidCVAll.resize(m_NumValidAll);
-	m_VarValidMaxAll.resize(m_NumValidAll);
-	m_VarValidMinAll.resize(m_NumValidAll);
-	m_VarValidMeanAll.resize(m_NumValidAll);
-	m_VarValidCriteria.resize(m_NumValidAll);*/
 
 	if (m_AcceptedRuns.size() == 0) m_AcceptedRuns.resize(1);
 	if (m_Valid_TSV.size() < m_AcceptedRuns.size()) {
 		m_Valid_TSV.resize(m_AcceptedRuns.size());
 		m_pNewMap->m_MStorage.AlloMinMaxUpdated(m_AcceptedRuns.size());
 	}
+	if (m_Valid_TSV_Mean.size() < m_AcceptedRuns.size()) {
+		m_Valid_TSV_Mean.resize(m_AcceptedRuns.size());
+
+	}
+
 	for(size_t i=0; i< m_AcceptedRuns.size(); i++)	AllocateValid_TSV(i);
 	if (m_Valid_SV.size() < m_AcceptedRuns.size()) m_Valid_SV.resize(m_AcceptedRuns.size());
 	if (m_Valid_SV_Mean.size() < m_AcceptedRuns.size()) m_Valid_SV_Mean.resize(m_AcceptedRuns.size());
@@ -1280,22 +1306,9 @@ void MultiStorageData::AllocateMeanValidVar() {
 		}
 
 		
-	/*	m_VarValidMean_R2.resize(m_TotalNumberRuns);
-		m_VarValidMean_A0.resize(m_TotalNumberRuns);
-		m_VarValidMean_A1.resize(m_TotalNumberRuns);
-		
-		m_VarValidMean_AbsME.resize(m_TotalNumberRuns);
-		m_VarValidMean_RMSE.resize(m_TotalNumberRuns);
-		m_VarValidMean_NSE.resize(m_TotalNumberRuns);*/
-
 		m_ValidDynLogLi.resize(m_NumValidVar * 13 * 7 * 2);
 		m_ValidDynResiduals.resize(m_NumValidVar * 13 * 7 * 2);
 
-
-
-		//m_VarValidSumMean_AbsME.resize(m_TotalNumberRuns);
-		//m_VarValidSumMean_RMSE.resize(m_TotalNumberRuns);
-		//m_Valid.resize(m_TotalNumberRuns);
 
 		CalculateMeanValidValues();
 		CalculateMeanValidValues(true);
@@ -1894,6 +1907,11 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		Threshold = Threshold * icount / 100;
 	if (Threshold <= 0) return icount;
 
+
+	if (m_pNewMap->m_MStorage.m_ActualEnsemble == 2 && ip == 99) {
+
+		auto koll = dist_pair.size();
+	}
 	float last_valid = 0.f, first_valid;
 	//StatUtil::SortArray(&dist[0], icount);
 		auto min_value = dist_pair.front().first;
@@ -2010,7 +2028,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 				m_pNewMap->m_MStorage.SetCriteriaHistory(dist_pair.size() - n_toremove, Indicator);
 				if (Indicator == R2_STAT || Indicator == NSE_STAT || Indicator == LOGLI_STAT) {
 					//	m_pNewMap->m_MStorage.SetValidLow(ip, 0, min_value);
-					//	m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
+					m_pNewMap->m_MStorage.SetValidHigh(ip, 0, max_value);
 					m_pNewMap->m_MStorage.SetValidLow(ip, 0, last_valid);
 					if (m_pNewMap->m_MStorage.GetCriteria(ip, 0) == CRITERIA_STATE::NO_SET)
 						m_pNewMap->m_MStorage.SetCriteria(ip, CRITERIA_STATE::ABOVE_MIN);
@@ -2052,7 +2070,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 			// Remove from Accepted Runs and Set RunNo to be false:
 
-			for (size_t i = 0; i < n_toremove; i++) {
+			for (size_t i = 0; i <= n_toremove; i++) {
 				auto runno = dist_pair.front().second;
 				m_pNewMap->m_MStorage.SetAcceptedRunNo(runno, false);
 				dist_pair.erase(dist_pair.begin());
@@ -2060,13 +2078,17 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			auto dist_pairprev = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
 
 			m_TotalNumAccepted = m_pNewMap->m_MStorage.FindAcceptedRunsFromFlagInPar();
+			if (ip == 99 && m_pNewMap->m_MStorage.m_ActualEnsemble == 2) {
+
+				auto koll = dist_pair.size();
+			}
 			ReduceUpdateStep(Indicator);
 
 		}
 		else {
-			return false;
+			return string::npos;
 		}
-	return true;
+	return dist_pair.size();
 
 }
 void MultiStorageData::ReduceUpdateStep(PERFORMANCE_VAR value)
@@ -2085,7 +2107,7 @@ void MultiStorageData::ReduceUpdateStep(PERFORMANCE_VAR value)
 			pRes->m_MeanDefined = false;
 		}
 	}
-	m_pNewMap->m_MStorage.EvaluateFile(false);
+
 	//m_Changed = FALSE;
 	//m_Updated = TRUE;
 }

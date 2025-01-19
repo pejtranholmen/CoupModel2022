@@ -1634,6 +1634,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 		auto itmap = m_CheckedTimeMap.begin();
 			while(istream.good()&&CountLine<=LastLinetoRead) {
 				if (!GetLineFromStream()) return false;
+				if (CountLine > LastLinetoRead) return true;
 				size_t next_validLine = (*itmap).first+ ValidMapAdjust;
 				if (next_validLine < CountLine+1) {
 

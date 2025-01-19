@@ -267,13 +267,8 @@ void GridSimDoc::MakeParameterTablePriorMenu(int col, int row) {
 					GetCell(col,row-index-1,&cell);
 					cell.GetStdText(&Name);
 					type="Table Parameters";
-					
-					pCP=m_pSimDoc->GetPtr(type, Group, Name);
-					if(pCP==nullptr) {
-						Group="Plant";
-						pCP=m_pSimDoc->GetPtr(type, Group, Name);
-
-					}
+	
+					pCP = m_pSimDoc->GetP_Pointer(Name);
 
 					pCPt=(P*)pCP;
 					int nView=0;

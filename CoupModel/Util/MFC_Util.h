@@ -45,10 +45,11 @@ public:
 	static vector<string> GetBinTxtFileNames();
 	static vector<string> GetSimFileNames();
 	static vector<string> GetMBinFileNames();
-	static string GetBinFileName();
+	static vector<string> GetSBInFileNames();
 	static string GetTxtFileName();
 	static string GetBinTxtFileName();
 	static string GetSimFileName();
+	static string GetBinFileName();
 	static bool isHighVertResolution();
 	static string GetWindowFileDate(string filename, bool modified=false);
 	static int GetLowResFontSize(int fontsize);

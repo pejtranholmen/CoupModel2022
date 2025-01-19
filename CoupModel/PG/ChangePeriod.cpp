@@ -19,7 +19,7 @@ bool ChangePeriod::CreateNewFile(CPG *pPG, int Option)
 	auto nrep=m_pPGSource->GetNumRepititions();
 	auto nvar=m_pPGSource->GetNumVariables();
 	auto numrec=m_pPGSource->GetNumRecords();
-	m_pPGSource->ReadNewBuffer(1, 1);
+	m_pPGSource->ReadNewBuffer(0, 0);
 	size_t NewNumRec=0;
 	switch(Option) {
 		case 0:
@@ -42,24 +42,24 @@ bool ChangePeriod::CreateNewFile(CPG *pPG, int Option)
 	for(size_t rep=0; rep<nrep; rep++) {
 		string txt;
 			for(size_t i=1; i<=nvar; i++) {
-							txt=m_pPGSource->GetVarName(i,rep+1);
-							pPG_Dest->SetVarName(i, txt, rep+1);
-							txt=m_pPGSource->GetVarUnit(i, rep+1);
-							pPG_Dest->SetVarUnit(i, txt, rep+1);
-							txt=m_pPGSource->GetVarId(i, rep+1);
-							pPG_Dest->SetVarId(i, txt, rep+1);
-							txt=m_pPGSource->GetVarPos(i, rep+1);
-							pPG_Dest->SetVarPos(i, txt, rep+1);
-							double Lat=m_pPGSource->GetVarLat(i, rep+1);
-							pPG_Dest->SetVarLat(i, Lat, rep+1);
-							double Long=m_pPGSource->GetVarLong(i, rep+1);
-							pPG_Dest->SetVarLong(i, Long, rep+1);
-							double Alt=m_pPGSource->GetVarAlt(i, rep+1);
-							pPG_Dest->SetVarAlt(i, Alt, rep+1);
-							string txt=m_pPGSource->GetVarStation(i, rep+1);
-							pPG_Dest->SetVarStation(i, txt, rep+1);
-							txt=m_pPGSource->GetVarCountry(i, rep+1);
-							pPG_Dest->SetVarCountry(i, txt, rep+1);
+							txt=m_pPGSource->GetVarName(i,rep);
+							pPG_Dest->SetVarName(i, txt, rep);
+							txt=m_pPGSource->GetVarUnit(i, rep);
+							pPG_Dest->SetVarUnit(i, txt, rep);
+							txt=m_pPGSource->GetVarId(i, rep);
+							pPG_Dest->SetVarId(i, txt, rep);
+							txt=m_pPGSource->GetVarPos(i, rep);
+							pPG_Dest->SetVarPos(i, txt, rep);
+							double Lat=m_pPGSource->GetVarLat(i, rep);
+							pPG_Dest->SetVarLat(i, Lat, rep);
+							double Long=m_pPGSource->GetVarLong(i, rep);
+							pPG_Dest->SetVarLong(i, Long, rep);
+							double Alt=m_pPGSource->GetVarAlt(i, rep);
+							pPG_Dest->SetVarAlt(i, Alt, rep);
+							string txt=m_pPGSource->GetVarStation(i, rep);
+							pPG_Dest->SetVarStation(i, txt, rep);
+							txt=m_pPGSource->GetVarCountry(i, rep);
+							pPG_Dest->SetVarCountry(i, txt, rep);
 			}
 	}
 	if(!pPG_Dest->SaveAs(m_DestFileName, true)) {
@@ -94,12 +94,12 @@ bool ChangePeriod::CreateNewFile(CPG *pPG, int Option)
 				for(size_t rec=0; rec<NewNumRec; rec++) {
 					void *pFloat;void *pDate;
 					if(Option==0) {
-						pFloat=m_pPGSource->GetRecordPointer(NewNumRec+rec+1, rep+1);
-						pDate=m_pPGSource->GetRecordPointer(rec+1, rep+1);		
+						pFloat=m_pPGSource->GetRecordPointer(NewNumRec+rec+1, rep);
+						pDate=m_pPGSource->GetRecordPointer(rec+1, rep);		
 					}
 					else {
-						pFloat=m_pPGSource->GetRecordPointer(m_StartOut+rec, rep+1);
-						pDate=m_pPGSource->GetRecordPointer(m_StartOut+rec, rep+1);	
+						pFloat=m_pPGSource->GetRecordPointer(m_StartOut+rec, rep);
+						pDate=m_pPGSource->GetRecordPointer(m_StartOut+rec, rep);	
 					}
 
 					pPG_Dest->SetDatePointer((float*)pDate);
@@ -110,13 +110,13 @@ bool ChangePeriod::CreateNewFile(CPG *pPG, int Option)
 						if(max_v[i]<value) max_v[i]=value;
 					}
 					//if(pPG_Dest->SetWritePosition(rep*NewNumRec+rec+1))
-					if(!pPG_Dest->WritePGFileRecord(rec+1, rep+1)) return false;
+					if(!pPG_Dest->WritePGFileRecord(rec+1, rep)) return false;
 				;
 					//pPG_Dest->WriteNewPGFileRecord();
 				}
 				for(size_t i=0; i<nvar;i++) {
-					pPG_Dest->SetVarMin(i+1, min_v[i], rep+1);
-					pPG_Dest->SetVarMax(i+1, max_v[i], rep+1);	
+					pPG_Dest->SetVarMin(i+1, min_v[i], rep);
+					pPG_Dest->SetVarMax(i+1, max_v[i], rep);	
 				}
 
 	}

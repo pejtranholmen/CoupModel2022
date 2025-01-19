@@ -70,7 +70,7 @@ public:
 	MultiStorageData();
 	virtual ~MultiStorageData();
 	void SetCyclicNumbers(size_t CycleLength, size_t CycleStartPos = 0, size_t Dim1Value=0) { m_CyclicNumber = CycleLength; m_CyclicStartPos = CycleStartPos; m_Dim1Value = Dim1Value; };
-	void UpdateCyclicNumbers(size_t ActualEnsemble);
+	void UpdateCyclicNumbers(size_t ActualEnsemble, size_t Dim1_Value=string::npos, size_t Transform_Index=string::npos);
 
 	
 	size_t GetCyclicNumber() { return m_CyclicNumber; };
@@ -179,7 +179,7 @@ public:
 	void ResetSumCriteria();
 	
 	string GetSplitFileName();
-	string GetStatFileName();
+	string GetStatFileName(bool NewName=false);
 	void AlloSplitPerformance(unsigned long splitperiods);
 	void AlloMinMaxUpdated(size_t NumOfEnsembles);
 	void SetPerformance(unsigned long irun,  unsigned long ind_split, STAT_PERF stat);

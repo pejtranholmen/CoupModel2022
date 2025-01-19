@@ -117,6 +117,7 @@ struct DocFile2 {
 	string m_Comments;
 	string m_RunId;
 	string m_Multi_MBin_File;
+	vector<string> m_Multi_SBin_FileNames;
 };
 
 struct InformationCriteria {

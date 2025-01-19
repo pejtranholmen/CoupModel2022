@@ -585,7 +585,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 
 		out.RedNumVar = 0;
-		out.MaxVar=max(out.ValidVariables.size()+1, out.MaxVar);
+		out.MaxVar=max(out.ValidVariables.size(), out.MaxVar);
 		for (size_t i = 0; i < out.ValidVariables.size(); i++) 	if (!out.ValidVariables[i]) out.RedNumVar++;
 		
 		return DateTimeIdentified;
@@ -884,8 +884,11 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				if (nrec == 1 && varstr.find("Variable Name")==string::npos) {
 					out.FirstValidHeads.push_back(varstr);
 					Heads_Set = true;
+					out.SkipBeforeVar = 0;
 				}
-				out.SkipBeforeVar = 1;
+				else 
+					out.SkipBeforeVar = 1;
+				
 			}
 			else if (nrec < SMHI_HeadLineNo && format == SMHI_OPENDATA) {
 				numhead = nrec;
@@ -1094,13 +1097,30 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Long:") != string::npos) {
 			DescriptionType = 8;
 		}
-		else if (nrec >= 1 && nrec<9&&nrec == nhead ) {
+		else if (nrec >= 1 && nrec<=9&&nrec == nhead ) {
 			DescriptionType = nrec - 1;
 			if (varstr.find("Variable") == string::npos) {
 				if (DescriptionType == 0) out.Des.base.Name.push_back(varstr);
 				else if (DescriptionType == 1) out.Des.base.Unit.push_back(varstr);
 				else if (DescriptionType == 2) out.Des.base.Id.push_back(varstr);
 				else if (DescriptionType == 3) out.Des.base.Pos.push_back(varstr);
+				else if (DescriptionType == 4) {
+					ainfo.StationName = varstr;
+					out.Des.addinfo.push_back(ainfo);
+				}
+				else if (DescriptionType == 5) {
+					out.Des.addinfo[nvar - 2].CountryCode = varstr;
+				}
+				else if (DescriptionType == 6) {
+					if (out.Des.addinfo.size() > nvar - 2)
+						out.Des.addinfo[nvar - 2].Alt = FUtil::AtoFloat(varstr);
+					else {
+						ainfo.Alt = FUtil::AtoFloat(varstr);
+						out.Des.addinfo.push_back(ainfo);
+					}
+				}
+				else if (DescriptionType == 7) out.Des.addinfo[nvar - 2].Lat = FUtil::AtoFloat(varstr);
+				else if (DescriptionType == 8) out.Des.addinfo[nvar - 2].Long = FUtil::AtoFloat(varstr);;
 			}
 
 		}
@@ -1717,8 +1737,8 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 			}
 			else if(pg.Shape.NumRepetitions>= m_countf + 1) {
 				for (size_t j = 1; j <= pg.Shape.NumVar; j++) {
-					SetVarMin(j, m_vmin[j - 1], m_countf + 1);
-					SetVarMax(j, m_vmax[j - 1], m_countf + 1);
+					SetVarMin(j, m_vmin[j - 1], m_countf);
+					SetVarMax(j, m_vmax[j - 1], m_countf);
 				}
 			}
 		};

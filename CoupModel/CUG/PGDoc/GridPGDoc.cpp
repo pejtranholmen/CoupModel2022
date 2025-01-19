@@ -4064,7 +4064,7 @@ bool GridPGDoc::OnGetFileDataFillGrid(CPG *pCPG)
 					QuickSetText(0, irow, pCPG->GetDate(ii + 1));
 				}
 				for (size_t ind = 0; ind<pCPG->GetNumToView(); ind++) {
-					if (pCPG->GetViewRepetition(ind) == nrep + 1) {
+					if (pCPG->GetViewRepetition(ind) == nrep) {
 						ivarno = pCPG->GetViewVariable(ind);
 						icol = ind + 1;
 						float v = pCPG->GetVarValue(ivarno, ii + 1, nrep);

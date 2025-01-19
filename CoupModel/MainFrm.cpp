@@ -600,7 +600,7 @@ void CMainFrame::UpdateLocalWindowText(string text, WINDOW_NAMES wname)
 
 }
 ;
-void CMainFrame::UpdateResidualProgress(int var, int numvar, float relfrac, size_t transform) {
+void CMainFrame::UpdateResidualProgress(int var, int numvar, float relfrac, size_t transform, size_t actual_ensemble) {
 
 	CString transformtext;
 	transformtext = "";
@@ -624,7 +624,9 @@ void CMainFrame::UpdateResidualProgress(int var, int numvar, float relfrac, size
 	text+=FUtil::STD_ItoAscii(var).c_str();
 	text+="(";
 	text+=FUtil::STD_ItoAscii(numvar).c_str();
-	text += ") for transformation ";
+	text += ") for Ensemble ";
+	text +=FUtil::STD_ItoAscii(actual_ensemble + 1).c_str();
+	text+= " transformation ";
 	text += transformtext;
 	text+=FUtil::STD_FtoAscii(100*relfrac).c_str();
 	text+=" % done";

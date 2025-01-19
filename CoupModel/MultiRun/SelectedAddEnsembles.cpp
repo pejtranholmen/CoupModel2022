@@ -32,6 +32,7 @@ bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vec
 
 	/**if (cumulatedPerformance == 0)
 		return EvaluateFile(true);*/
+	//SavetoFile ej använd ????
 
 	size_t newindex;
 	VARTRANSFORMED vartrans;
@@ -62,11 +63,12 @@ bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vec
 	else {
 		m_VarValidTransformed[newindex] = vartrans;
 	}
+
 	if (transformed_index != 0)
 		m_CumulatedPerformance = transformed_index;
 	else {
 		m_ResetTransformedPerformance=true;
-		EvaluateFile(true);
+		//EvaluateFile(true);  Varför läsa från fil här -borttagen
 		m_CumulatedPerformance = 0;
 		m_ResetTransformedPerformance = false;
 	}
@@ -95,6 +97,7 @@ bool SelectedAddEnsembles::AddNewEnsemble(bool KeepPreviousCriteria) {
 	m_ActualEnsemble = m_AcceptedIdString.size() - 1;
 
 	m_Valid_TSV.resize(m_AcceptedRuns.size());
+	m_Valid_TSV_Mean.resize(m_AcceptedRuns.size());
 	m_pNewMap->m_MStorage.AlloMinMaxUpdated(m_AcceptedRuns.size());
 
 			

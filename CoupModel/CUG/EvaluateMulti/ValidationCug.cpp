@@ -390,6 +390,8 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	m_NumValidVar = m_pSimDoc->GetNumAll_TSV_ValVariables();
 	if (m_pSimDoc->m_MStorage.GetCyclicNumber() > 1&& m_NumValidVar> m_pSimDoc->m_MStorage.GetCyclicNumber())
 	//m_NumValidVar/= m_pSimDoc->m_MStorage.GetCyclicNumber();
+	m_pSimDoc->m_MStorage.UpdateCyclicNumbers(m_pSimDoc->m_MStorage.m_ActualEnsemble);
+
 
 	Type = "Tables";
 	Group = "Technical";
@@ -489,8 +491,21 @@ for(int i=0;i<m_NumValidVar;i++) {
 			allmin=double(m_pSimDoc->m_MStorage.GetMinValidAll(i+index_start, split_ind));
 			//if(allmax==allmin) continue;
 			allcv=double(m_pSimDoc->m_MStorage.GetCV_ValidAll(i+index_start, split_ind));
+
+			if ((i + index_start)==99&& m_pSimDoc->m_MStorage.m_ActualEnsemble==3) {
+				auto koll = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].v[STAT_ENSEMBLE::E_POST_MAX][i + index_start];
+
+			}
 			selmax=double(m_pSimDoc->m_MStorage.GetMaxValid(i+index_start, split_ind));
+			
+			auto koll = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].v[STAT_ENSEMBLE::E_POST_MAX][i + index_start];
+
+
+
 			selmin=double(m_pSimDoc->m_MStorage.GetMinValid(i+index_start, split_ind));
+			if (i + index_start == 99) {
+				auto koll = selmin;
+			}
 			selcv=double(m_pSimDoc->m_MStorage.GetCV_Valid(i+index_start, split_ind));
 			if(split_ind==0) {
 
@@ -662,6 +677,9 @@ if(m_NumValidVar>1) {
 		break;
 	}
 	selmin = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MIN][pervar]);
+
+
+
 	selmax = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MAX][pervar]);
 	if (selmax <= selmin) m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MAX][pervar] = m_pSimDoc->m_MStorage.m_MeanTSV_STAT[POST_MIN][pervar] + 1;
 	limit_low = double(m_pSimDoc->m_MStorage.m_MeanTSV_STAT[SELECT_LOW][pervar]);

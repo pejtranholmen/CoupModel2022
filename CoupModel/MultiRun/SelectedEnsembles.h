@@ -187,7 +187,7 @@ public:
 	bool Set_Update_ValidVar();
 	void SetAllToAcceptedRuns();
 	size_t FindAcceptedRunsFromFlagInPar();
-	void SetMinMaxOfPerformanceIndicators();
+	void SetMinMaxOfPerformanceIndicators(bool Prior=false);
 	bool SetPriorDistributions();
 	void SetValid_SUM_Criteria();
 	UPDATEMEMORY m_SV_StatMemory;

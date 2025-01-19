@@ -34,8 +34,13 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 	}
 	else if (section == UG_CORNERBUTTON) {
 		auto pSw=m_pSimDoc->GetSw("PreDefinedEnsembles");
-		if(pSw->GetIntValue()>0)
+		if (pSw->GetIntValue() > 0) {
 			AddMenuItem(1065, "Reset and ReCalculated with predefined criteria");
+			AddMenuItem(1165, "Save Current Criteria with specific file name");
+			AddMenuItem(1175, "Read Saved Criteria from Saved Files:");
+
+
+		}
 	}
 	if (section == UG_GRID && col > 9 && sheetNumber == 3) {
 		int pos = sheetNumber * m_pSimDoc->GetNumAll_TSV_ValVariables();
