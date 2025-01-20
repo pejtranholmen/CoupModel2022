@@ -162,7 +162,7 @@ bool ReadWriteTypes::ruLongArray(unsigned long* v, unsigned long n)
 
 vector<size_t> ReadWriteTypes::rsize_tArray(size_t n,  size_t line_break)
 {
-	string str;
+	string str, str_line;
 	if(line_break<n)
 		getline(m_DocFileIn, str, ',');
 
@@ -171,7 +171,7 @@ vector<size_t> ReadWriteTypes::rsize_tArray(size_t n,  size_t line_break)
 	{
 		if ((i + 1) % line_break == 0) {
 			if (i < n - 1) {
-				getline(m_DocFileIn, str);	getline(m_DocFileIn, str, ',');
+				getline(m_DocFileIn, str);	getline(m_DocFileIn, str_line, ',');
 			}
 		}
 		else
@@ -211,13 +211,13 @@ bool ReadWriteTypes::wFloatArray2(vector<float> v, size_t n, size_t line_break)
 vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break)
 {
 	vector<float> v;	v.resize(n);
-	string str;
+	string str, str_line;
 	getline(m_DocFileIn, str, ',');
 	for (size_t i = 0; i < n; i++)
 	{
 		if ((i + 1) % line_break == 0) {
 			if (i < n - 1) {
-				getline(m_DocFileIn, str);	getline(m_DocFileIn, str, ',');
+				getline(m_DocFileIn, str);	getline(m_DocFileIn, str_line, ',');
 			}
 		}
 		else

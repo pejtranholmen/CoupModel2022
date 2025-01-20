@@ -158,8 +158,10 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 
 		//getline(m_EvaluationFile.m_DocFileIn, str,':');
 		//getline(m_EvaluationFile.m_DocFileIn, str);
-		
-		getnext_str(); ifiles = stoi(str);
+		getline(m_EvaluationFile.m_DocFileIn, str, ':');
+		if(str.find("Number of Files added to Basic Run")==string::npos) return false;
+		getline(m_EvaluationFile.m_DocFileIn, str);
+		ifiles = stoi(str);
 
 
 		//good=m_EvaluationFile.ruint(&ifiles);
@@ -325,17 +327,20 @@ bool MultiStorageStatData::ReadWrite_MultiPar(bool reading) {
 bool MultiStorageStatData::ReadWrite_CoCor(bool reading) {
 	bool good;
 	if (reading) {
-		good=m_EvaluationFile.rsize_t(&m_CoCorNumValid);
+		string str;
+		getline(m_EvaluationFile.m_DocFileIn, str, ':');
+		getline(m_EvaluationFile.m_DocFileIn, str);
+		m_CoCorNumValid = stoi(str);
 		m_CoCorValid.resize(m_CoCorNumValid*m_CoCorNumValid);
 		auto num = m_CoCorValid.size();
-		if(num>0) m_CoCorValid = m_EvaluationFile.rFloatArray2(num);
+		if(num>0) m_CoCorValid = m_EvaluationFile.rFloatArray2(num, m_CoCorNumValid);
 		return m_EvaluationFile.IsFileInGood();
 	}
 	else {
 		// Writing
-		good=m_EvaluationFile.wSize_t(&m_CoCorNumValid);
+		m_EvaluationFile.m_DocFileOut << "Parameter CoCorrelation : " << m_CoCorNumValid << endl;
 		auto num = m_CoCorValid.size();
-		if(num>0) good = m_EvaluationFile.wFloatArray2(m_CoCorValid, num);
+		if(num>0) good = m_EvaluationFile.wFloatArray2(m_CoCorValid, num, m_CoCorNumValid);
 
 		return m_EvaluationFile.IsFileOutGood();
 	}

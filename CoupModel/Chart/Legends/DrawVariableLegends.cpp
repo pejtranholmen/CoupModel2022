@@ -158,10 +158,12 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 		else {
 			irun = p_info.Residual_RunNo + 1;
 			auto cycle_pair = m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
-			if (cycle_pair.first = string::npos) irun = cycle_pair.first + 1;
+			if (cycle_pair.first == string::npos) irun = cycle_pair.first + 1;
 		}
 		rephits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index, p_info.Residual_RunNo);
-		irun = rephits.front();
+		if (rephits.size() == 0) irun = 0;
+		else
+			irun = rephits.front();
 
 
 

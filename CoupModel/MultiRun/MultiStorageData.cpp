@@ -356,7 +356,15 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 	m_NumValidAll = m_NumValid + m_NumExtraValid;
 	if (m_NumValidAll == 0&&m_NumSum==0) return true;
 	if (FUtil::IsFileExisting(GetStatFileName())) {
-		if(!m_pNewMap->m_MStorage.EvaluateFile(true)) return false;
+		if (!m_pNewMap->m_MStorage.EvaluateFile(true)) {
+#ifndef COUPSTD
+			MFC_Util mfcutil;
+			if(remove(GetStatFileName().c_str())==0);
+			mfcutil.SetPaneMessage(" Reading from SBin File failed, New text based file will be created");
+#endif
+
+
+		}
 		if (m_pNewMap->m_MStorage.m_IsStatCompleteRead) {
 
 			

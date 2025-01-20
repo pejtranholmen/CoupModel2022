@@ -198,8 +198,9 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	CUGCell cell;
 	auto checkens = m_pSimDoc->m_MStorage.m_ActualEnsemble;
-//	if (!m_pSimDoc->m_MStorage.IsMaxUpdated[checkens] || !m_pSimDoc->m_MStorage.IsMinUpdated[checkens])
-	//	m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
+//
+	if (!m_pSimDoc->m_MStorage.IsMaxUpdated[checkens] || !m_pSimDoc->m_MStorage.IsMinUpdated[checkens])
+		m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators();
 
 	m_SplitPeriods = m_pSimDoc->m_MStorage.GetNumSplitPeriods();
 
@@ -3472,18 +3473,39 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			if (item == 1087) Threshold = 10;
 			else if (item == 1088) Threshold = 3;
 
-			if(isheet==0)
-				ReducebyR2(size_t(row), Threshold, SV_Variable);
+			size_t VarIndex = row;
+			size_t ThresholdType = 0;
+			size_t left;
+			if(isheet==0) 
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(R2_STAT, VarIndex, ThresholdType, Threshold);
+				//ReducebyR2(size_t(row), Threshold, SV_Variable);
+			else if(isheet==1)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(AO_STAT, VarIndex, ThresholdType, Threshold);
+				//ReducebyR2(size_t(row), Threshold, SV_Variable
 			else if(isheet==2)
-				ReducebySlopeInterval(size_t(row), Threshold, SV_Variable);
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(A1_STAT, VarIndex, ThresholdType, Threshold);
+				//ReducebySlopeInterval(size_t(row), Threshold, SV_Variable);
 			else if(isheet==3)
-				ReducebyMeanInterval(size_t(row), Threshold, SV_Variable);
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(ABSME_STAT, VarIndex, ThresholdType, Threshold);
+				//ReducebyMeanInterval(size_t(row), Threshold, SV_Variable);
 			else if(isheet==4)
-				ReducebyRMSE(size_t(row), Threshold, SV_Variable);
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(RMSE_STAT, VarIndex, ThresholdType, Threshold);
+				//ReducebyRMSE(size_t(row), Threshold, SV_Variable);
 			else if(isheet==5)
-				ReducebyLogLi(size_t(row), Threshold, SV_Variable);
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(LOGLI_STAT, VarIndex, ThresholdType, Threshold);
+				//ReducebyLogLi(size_t(row), Threshold, SV_Variable);
 			else if(isheet==6)
-				ReducebyNSE(size_t(row), Threshold, SV_Variable);
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(NSE_STAT, VarIndex, ThresholdType, Threshold);
+			//	ReducebyNSE(size_t(row), Threshold, SV_Variable);
+
+			//if (ZeroAdjust > 0.00001) left = m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
+			m_pSimDoc->m_MStorage.IsMaxUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = m_pSimDoc->m_MStorage.IsMinUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = false;
+			auto MaxNum = m_pSimDoc->GetNumAll_TSV_ValVariables();
+			size_t ip = MaxNum * isheet + VarIndex;
+			auto dist_pair = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+
+			m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators(false);
+
 
 			for (int i = 0; i < 6; i++)
 				Make_MainSheets(i);
@@ -3501,6 +3523,8 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			else
 				pCug->OnSheetSetup(6);
 
+			OnSheetSetup(isheet);
+
 		}
 		else if(item==1086) {
 			bool SV_Variable = false;
@@ -3517,27 +3541,48 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			}
 
 			
-			auto iaccept = m_pSimDoc->m_MStorage.m_AcceptedRuns[m_pSimDoc->m_MStorage.m_ActualEnsemble].size();
+			auto Threshold = m_pSimDoc->m_MStorage.m_AcceptedRuns[m_pSimDoc->m_MStorage.m_ActualEnsemble].size()/2;
+			size_t VarIndex = row;
+			size_t ThresholdType = 0;
+			size_t left;
+			if (isheet == 0)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(R2_STAT, VarIndex, ThresholdType, Threshold);
+			//ReducebyR2(size_t(row), Threshold, SV_Variable);
+			else if (isheet == 1)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(AO_STAT, VarIndex, ThresholdType, Threshold);
+			//ReducebyR2(size_t(row), Threshold, SV_Variable
+			else if (isheet == 2)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(A1_STAT, VarIndex, ThresholdType, Threshold);
+			//ReducebySlopeInterval(size_t(row), Threshold, SV_Variable);
+			else if (isheet == 3)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(ABSME_STAT, VarIndex, ThresholdType, Threshold);
+			//ReducebyMeanInterval(size_t(row), Threshold, SV_Variable);
+			else if (isheet == 4)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(RMSE_STAT, VarIndex, ThresholdType, Threshold);
+			//ReducebyRMSE(size_t(row), Threshold, SV_Variable);
+			else if (isheet == 5)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(LOGLI_STAT, VarIndex, ThresholdType, Threshold);
+			//ReducebyLogLi(size_t(row), Threshold, SV_Variable);
+			else if (isheet == 6)
+				left = m_pSimDoc->m_MStorage.ReduceCriteria(NSE_STAT, VarIndex, ThresholdType, Threshold);
+			//	ReducebyNSE(size_t(row), Threshold, SV_Variable);
 
-			if(isheet==0)
-				ReducebyR2(size_t(row), size_t(iaccept/2), SV_Variable);
-			else if(isheet==2)
-				ReducebySlopeInterval(size_t(row), size_t(iaccept/2), SV_Variable);
-			else if(isheet==3)
-				ReducebyMeanInterval(size_t(row), size_t(iaccept/2), SV_Variable);
-			else if(isheet==4)
-				ReducebyRMSE(size_t(row), size_t(iaccept/2), SV_Variable);
-			else if(isheet==5)
-				ReducebyLogLi(size_t(row), size_t(iaccept/2), SV_Variable);
-			else if(isheet==6)
-				ReducebyNSE(size_t(row), size_t(iaccept/2), SV_Variable);
-			m_pSimDoc->m_MStorage.EvaluateFile(false);
+			//if (ZeroAdjust > 0.00001) left = m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
+			m_pSimDoc->m_MStorage.IsMaxUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = m_pSimDoc->m_MStorage.IsMinUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = false;
+			auto MaxNum = m_pSimDoc->GetNumAll_TSV_ValVariables();
+			size_t ip = MaxNum * isheet + VarIndex;
+			auto dist_pair = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+
+			m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators(false);
+
 			MyCug *pCug;
 			pCug = MySingle::instance().GetCugPointer();
 			int isheet = pCug->GetSheetNumber();
 			if (isheet == 6 || isheet == 10)
 				pCug->OnSheetSetup(isheet);
 
+			OnSheetSetup(isheet);
+			m_pSimDoc->m_MStorage.EvaluateFile(false);
 
 		}
 		else if(item==1062) {
