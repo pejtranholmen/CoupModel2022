@@ -30,7 +30,7 @@ public:
 	bool EnsembleReadWrite(bool reading, string EnsembleName, string NewEnsembleName="", size_t ensembleno=string::npos);
 	bool EnsembleReadWrite(bool reading, size_t ensembleno);
 
-	bool ReadWrite_Header(bool reading);
+	bool ReadWrite_Header(bool reading, size_t ensembleno=string::npos);
 	bool ReadWrite_PriorStat();
 	bool ReadWrite_Ensemble(string EnsembleName);
 	bool OpenResidualFile(bool reading=false);

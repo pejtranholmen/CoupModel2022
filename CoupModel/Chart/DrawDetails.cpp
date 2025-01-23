@@ -701,15 +701,26 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 					//if (m_pSimDoc->m_MStorage.IsToBePlotted(i)) {
 						
 						string legend = GetEnsembleIdString(p_info.EnsembleNo);
+						if(p_info.EnsembleNo==0) 
 						count_to_plot++;
 						m_Color.ivar = m_pUtil->GetHColorLine(count_to_plot);
 						m_Symbol.isymb = count_to_plot;
-						m_Layers.pScatterLayer = pXY_Chart->addScatterLayer(m_pProp->m_timeStamps, DoubleArray(m_pProp->viewPortDataSeries[ivar + TotNumPrior*(p_info.EnsembleNo + 1)], m_ChartInfo.NumOfPoints),
-							legend.c_str(), m_Symbol.isymb, m_pUtil->m_SymbolSizePoint, m_Color.ivar);
+
+						if (p_info.EnsembleNo == 0) {
+							m_Layers.pScatterLayer = pXY_Chart->addScatterLayer(m_pProp->m_timeStamps, DoubleArray(m_pProp->viewPortDataSeries[ivar], m_ChartInfo.NumOfPoints),
+								legend.c_str(), m_Symbol.isymb, m_pUtil->m_SymbolSizePoint, m_Color.ivar);
+
+						}
+						else {
+							m_Layers.pScatterLayer = pXY_Chart->addScatterLayer(m_pProp->m_timeStamps, DoubleArray(m_pProp->viewPortDataSeries[ivar + TotNumPrior * (p_info.EnsembleNo + 1)], m_ChartInfo.NumOfPoints),
+								legend.c_str(), m_Symbol.isymb, m_pUtil->m_SymbolSizePoint, m_Color.ivar);
+						
+						}
+						
 						pDataSet = m_Layers.pScatterLayer->getDataSet(0);
 
 						if (m_pProp->m_ReShape.m_RegLine)
-							m_Layers.pTrendLayer = pXY_Chart->addTrendLayer(m_pProp->m_timeStamps, DoubleArray(m_pProp->viewPortDataSeries[ivar + TotNumPrior*(p_info.EnsembleNo + 1)], m_ChartInfo.NumOfPoints),
+							m_Layers.pTrendLayer = pXY_Chart->addTrendLayer(m_pProp->m_timeStamps, DoubleArray(m_pProp->viewPortDataSeries[ivar], m_ChartInfo.NumOfPoints),
 								m_Color.ivar);
 
 						m_DataSets.push_back(pDataSet);

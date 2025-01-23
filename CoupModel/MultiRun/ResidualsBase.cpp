@@ -93,7 +93,7 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 
 	m_NewEnsembleName = NewEnsembleName;
 
-	if (ReadWrite_Header(reading)) {
+	if (ReadWrite_Header(reading, ensembleno)) {
 		//m_IsUpdated = true;
 		if (reading) {		
 			m_EnsembleResFile.CloseFileIn();
@@ -152,214 +152,98 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 	m_Ensembles[ensembleno].EnsembleFileRead = true;
 	return true;
 }
-bool ResidualsBase::ReadWrite_Header(bool reading) {
+bool ResidualsBase::ReadWrite_Header(bool reading, size_t ensemble_no) {
 
 	bool good;
 	if(m_MeanTest.mean.size()==0) AlloResVector();
 
 	if (reading) {
 		size_t num;
-		bool hitmade=false;
-		m_EnsembleResFile.rsize_t(&num);
-	//	m_Ensembles.clear();
-		m_MapofEnsemblePositions.clear();
-		for (size_t i = 0; i < num; i++) {
-			string name;
-			m_EnsembleResFile.rString(&name);
-			size_t VarToRead = m_NumVar;
-			if (m_MeanTest.mean.size() > m_NumVar) VarToRead = m_MeanTest.mean.size();
-			for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.mean[var]=m_EnsembleResFile.rFloatArray2(m_RecL);
-			for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.min[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-			for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.max[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-			for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.std[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-			for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.p10[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-			for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.p50[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-			for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.p90[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-			good = m_EnsembleResFile.IsFileInGood();
-			if (!good) return false;
+		string str;
+		bool hitmade = false;
 
-			POS_ENSEMBLE ensemble_inf;
-			ensemble_inf.pos = i;
-			ensemble_inf.name = name;
-			ensemble_inf.valid = true;
-		//	m_Ensembles.push_back(ensemble_inf);
+		getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+		if (str != "Ensemble No ") return false;
+		getline(m_EnsembleResFile.m_DocFileIn, str);
+		num = atoi(str.c_str());
+		getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+		getline(m_EnsembleResFile.m_DocFileIn, str);
+		size_t VarToRead = atoi(str.c_str());
 
-			if (name == m_EnsembleName) {
-				if (name == "Prior")
-					m_MeanPrior = m_MeanTest;
-				else
-					m_MeanPost = m_MeanTest;
-				hitmade= true;
-				m_MeanDefined = true;
+
+		vector<float> Dump;
+		size_t cycle = 7;
+		Dump.resize(m_RecL * cycle);
+
+		
+		m_MeanPost.mean.resize(VarToRead);
+		m_MeanPost.min.resize(VarToRead);
+		m_MeanPost.max.resize(VarToRead);
+		m_MeanPost.std.resize(VarToRead);
+		m_MeanPost.p10.resize(VarToRead);
+		m_MeanPost.p50.resize(VarToRead);
+		m_MeanPost.p90.resize(VarToRead);
+
+		for (size_t i = 0; i < VarToRead; i++) {
+
+			m_MeanPost.mean[i].resize(m_RecL);
+			m_MeanPost.min[i].resize(m_RecL);
+			m_MeanPost.max[i].resize(m_RecL);
+			m_MeanPost.std[i].resize(m_RecL);
+			m_MeanPost.p10[i].resize(m_RecL);
+			m_MeanPost.p50[i].resize(m_RecL);
+			m_MeanPost.p90[i].resize(m_RecL);
+
+			getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+			getline(m_EnsembleResFile.m_DocFileIn, str);
+			size_t var = atoi(str.c_str());
+			
+
+			Dump=m_EnsembleResFile.rFloatArray2(m_RecL * cycle, cycle);
+			for (size_t i = 0; i < m_RecL; i++) {
+
+				m_MeanPost.mean[var][i] = Dump[i * cycle];
+				m_MeanPost.min[var][i] = Dump[i * cycle + 1];
+				m_MeanPost.max[var][i] = Dump[i * cycle + 2];
+				m_MeanPost.std[var][i] = Dump[i * cycle + 3];
+				m_MeanPost.p10[var][i] = Dump[i * cycle + 4];
+				m_MeanPost.p50[var][i] = Dump[i * cycle + 5];
+				m_MeanPost.p90[var][i] = Dump[i * cycle + 6];
 			}
-
 		}
-		return hitmade;
+
+		good = m_EnsembleResFile.IsFileInGood();
+		if (!good) return false;
+
+		return true;
 	}
 	else {
-		if (m_TwoFilesOpen) {
-			size_t num;
-			//	m_Ensembles.clear();
-			m_EnsembleResFile.rsize_t(&num);
-
-			m_EnsembleResFile.wSize_t(&num);
-			bool match = false;
-			for (size_t i = 0; i < num; i++) {
-				string name;
-				m_EnsembleResFile.rString(&name);
-				vector<float> kalle;
-				kalle.resize(m_RecL);
-
-
-				//m_EnsembleResFile.rFloatArray(&kalle[0], m_RecL);
-				size_t VarToRead = m_NumVar;
-				if (m_MeanTest.mean.size() > m_NumVar) VarToRead = m_MeanTest.mean.size();
-				for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.mean[var] = m_EnsembleResFile.rFloatArray2(m_RecL);;
-				for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.min[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-				for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.max[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-				for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.std[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-				for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.p10[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-				for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.p50[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-				for (size_t var = 0; var < VarToRead; var++)	m_MeanTest.p90[var] = m_EnsembleResFile.rFloatArray2( m_RecL);
-				good = m_EnsembleResFile.IsFileInGood();
-				if (!good) return false;
-				if (name == m_EnsembleName) {
-					match = true;
-					if (name == "Prior") {
-						m_EnsembleResFile.wString(&name);
-						size_t VarToWrite = m_NumVar;
-						if (m_MeanPrior.mean.size() > m_NumVar) VarToWrite = m_MeanPrior.mean.size();
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.mean[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.min[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.max[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.std[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.p10[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.p50[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.p90[var], m_RecL);
-						good = m_EnsembleResFile.IsFileOutGood();
-					}
-					else  if (m_NewEnsembleName.size() > 0) {
-						// Conditions when changing only Ensemble Name
-						m_EnsembleResFile.wString(&m_NewEnsembleName);
-						size_t VarToWrite = m_NumVar;
-						if (m_MeanTest.mean.size() > m_NumVar) VarToWrite = m_MeanTest.mean.size();
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.mean[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.min[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.max[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.std[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.p10[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.p50[var], m_RecL);
-						for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.p90[var], m_RecL);
-						good = m_EnsembleResFile.IsFileOutGood();
-
-					}
-					else {
-						m_EnsembleResFile.wString(&name);
-						for (size_t var = 0; var < m_MeanPost.min.size(); var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.mean[var], m_RecL);
-						for (size_t var = 0; var < m_MeanPost.min.size(); var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.min[var], m_RecL);
-						for (size_t var = 0; var < m_MeanPost.min.size(); var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.max[var], m_RecL);
-						for (size_t var = 0; var < m_MeanPost.min.size(); var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.std[var], m_RecL);
-						for (size_t var = 0; var < m_MeanPost.min.size(); var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p10[var], m_RecL);
-						for (size_t var = 0; var < m_MeanPost.min.size(); var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p50[var], m_RecL);
-						for (size_t var = 0; var < m_MeanPost.min.size(); var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p90[var], m_RecL);
-						good = m_EnsembleResFile.IsFileOutGood();
-					}
-				}
-				else {
-					bool namexist = false;
-					for (size_t i = 0; i < m_pNewMap->m_MStorage.m_AcceptedIdString.size(); i++) {
-						if (name == m_pNewMap->m_MStorage.m_AcceptedIdString[i]) namexist = true;
-					}
-					if (!namexist) {
-						// Set Default Name if not exist in MStorage.
-						name = "Ensemble (";
-						name += FUtil::STD_ItoAscii(m_Ensembles.size() + 1);
-						name += ")";
-						if(m_pNewMap->m_MStorage.m_AcceptedIdString.size()>m_Ensembles.size())
-								m_pNewMap->m_MStorage.m_AcceptedIdString[m_Ensembles.size()] = name;
-					}
-					m_EnsembleResFile.wString(&name);
-					size_t VarToWrite = m_NumVar;
-					if (m_MeanTest.mean.size() > m_NumVar) VarToWrite = m_MeanTest.mean.size();
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.mean[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.min[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.max[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.std[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.p10[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.p50[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanTest.p90[var], m_RecL);
-					good = m_EnsembleResFile.IsFileOutGood();
-				}
-				POS_ENSEMBLE ensemble_inf;
-				ensemble_inf.pos = i;
-				ensemble_inf.name = name;
-				ensemble_inf.valid = false;
-
-				//m_Ensembles.push_back(ensemble_inf);
-
-			}
-			if (!match) {
-				num++;
-				if (m_EnsembleName == "Prior") {
-					m_EnsembleResFile.wString(&m_EnsembleName);
-					size_t VarToWrite = m_NumVar;
-					if (m_MeanPrior.mean.size() > m_NumVar) VarToWrite = m_MeanPrior.mean.size();
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.mean[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.min[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.max[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.std[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.p10[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.p50[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPrior.p90[var], m_RecL);
-					good = m_EnsembleResFile.IsFileOutGood();
-
-				}
-				else {
-					if (m_EnsembleName.size() == 0) {
-
-
-
-					}
-					m_EnsembleResFile.wString(&m_EnsembleName);
-					size_t VarToWrite = m_NumVar;
-					if (m_MeanPost.mean.size() > m_NumVar) VarToWrite = m_MeanPost.mean.size();
-
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.mean[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.min[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.max[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.std[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p10[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p50[var], m_RecL);
-					for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p90[var], m_RecL);
-					good = m_EnsembleResFile.IsFileOutGood();
-				}
-				size_t num1 = 0;
-				if (!m_EnsembleResFile.SetPutPosition(&num1)) return false;
-				if (!m_EnsembleResFile.wSize_t(&num)) return false;
-			}
-
-			if (m_EnsembleResFile.IsFileOutGood() && m_EnsembleResFile.IsFileInGood())
-				return true;
-			else
-				return false;
-		}
-		else {
 			// New single file.
-			size_t num = 1;
-			m_EnsembleResFile.wSize_t(&num);
-			if (m_EnsembleName.size() == 0) m_EnsembleName = "Ensemble (1)";
-			m_EnsembleResFile.wString(&m_EnsembleName);
+			size_t num = ensemble_no;
+			m_EnsembleResFile.m_DocFileOut << "Ensemble No :"<<num<<endl;
 
 			size_t VarToWrite = m_NumVar * m_ScalingNumVarWithDim1;
 			if (VarToWrite > m_MeanPost.mean.size()) VarToWrite = m_NumVar;
 
-			for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.mean[var], m_RecL);
-			for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.min[var], m_RecL);
-			for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.max[var], m_RecL);
-			for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.std[var], m_RecL);
-			for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p10[var], m_RecL);
-			for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p50[var], m_RecL);
-			for (size_t var = 0; var < VarToWrite; var++)	m_EnsembleResFile.wFloatArray2(m_MeanPost.p90[var], m_RecL);
+			vector<float> Dump;
+			size_t cycle = 7;
+			Dump.resize(m_RecL * cycle);
+			m_EnsembleResFile.m_DocFileOut << "Var in File :" << VarToWrite << endl;
+
+			for (size_t var = 0; var < VarToWrite; var++) {
+				m_EnsembleResFile.m_DocFileOut << "Var No :" << var << endl;
+				for (size_t i = 0; i < m_RecL; i++) {
+					Dump[i*cycle] = m_MeanPost.mean[var][i];
+					Dump[i * cycle+1] = m_MeanPost.min[var][i];
+					Dump[i * cycle + 2] = m_MeanPost.max[var][i];
+					Dump[i * cycle + 3] = m_MeanPost.std[var][i];
+					Dump[i * cycle + 4] = m_MeanPost.p10[var][i];
+					Dump[i * cycle + 5] = m_MeanPost.p50[var][i];
+					Dump[i * cycle + 6] = m_MeanPost.p90[var][i];
+				}
+				m_EnsembleResFile.wFloatArray2(Dump, m_RecL*cycle,cycle);
+			}
+
 			good = m_EnsembleResFile.IsFileOutGood();
 
 			//m_Ensembles.clear();
@@ -372,7 +256,7 @@ bool ResidualsBase::ReadWrite_Header(bool reading) {
 
 			return good;
 		}
-	}
+
 }
 string ResidualsBase::GetXStatFileName(size_t EnsembleNo) {
 	if (m_pNewMap != nullptr) {

@@ -29,6 +29,7 @@ bool ReadWriteTypes::OpenDocFileIn(string filename)
 	}
 
 	m_FileName = filename;
+
 	return m_DocFileIn.good();
 }
 
@@ -195,7 +196,12 @@ bool ReadWriteTypes::wFloatArray2(vector<float> v, size_t n, size_t line_break)
 	size_t line_count = 1;
 	m_DocFileOut << line_count << ',';
 	for (size_t i = 0; i < n; i++) {
-		m_DocFileOut << v[i];
+		if (abs(v[i]) < 1.E37) {
+			if (abs(v[i]) < 1.E-20)
+				m_DocFileOut << 0.;
+			else
+				m_DocFileOut << v[i];
+		}
 		if ((i + 1) % line_break == 0) {
 			line_count++;
 			if (i < n - 1) {

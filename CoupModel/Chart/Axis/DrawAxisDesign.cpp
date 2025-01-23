@@ -115,7 +115,7 @@ void DrawAxisDesign::FindandSet_Labels_ForBothXandY_ContourChart()
 		m_ChartOrigInfo[m_ichart].Y_AxisTitle_Left=m_pProp->GetZLabel(m_ichart);
 
 	auto test_title = m_pProp->GetTitle();
-	if (test_title.size() == 0) test_title = m_ChartOrigInfo[m_ichart].Y_AxisTitle_Left;
+	if (test_title.size() == 0&& m_ChartOrigInfo.size()> m_ichart) test_title = m_ChartOrigInfo[m_ichart].Y_AxisTitle_Left;
 	pXY_Chart->addTitle(Chart::TopCenter, test_title.c_str(), "arialbd.ttf", m_pUtil->m_TitleSizePoint);
 	
 	if (!m_pProp->isXLabelChanged(m_ichart)) {
@@ -148,7 +148,7 @@ void DrawAxisDesign::FindandSet_Labels_ForBothXandY_ContourChart()
 
 	pXY_Chart->yAxis()->setTitle(m_Label.ytitle1.c_str(), "arialbd.ttf", m_pUtil->m_LabelSizePoint);
 
-	if (!m_pProp->isZLabelChanged(m_ichart)) {
+	if (!m_pProp->isZLabelChanged(m_ichart)&& m_ChartOrigInfo.size()>m_ichart) {
 		m_pProp->SetZLabel(m_ichart, m_ChartOrigInfo[m_ichart].varname[0]);
 		m_pProp->AddLegend1(m_ChartOrigInfo[m_ichart].varname[0]);
 	}

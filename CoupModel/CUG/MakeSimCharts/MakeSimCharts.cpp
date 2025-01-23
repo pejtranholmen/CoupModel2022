@@ -1204,7 +1204,9 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival)
 			pRes->SetOneValidationVariableIndex(ival-1);
 			pRes->ToBeUpdated();
 			if(!pRes->m_MeanDefined&&!pRes->m_Calculating)
-				AfxBeginThread(UpdateAcceptedThreadProc2,pRes);
+				//CResiduals* pObject = (CResiduals*)pParam;
+			return pRes->SmartUpdateStatistics(TRUE, nullptr);
+			//	AfxBeginThread(UpdateAcceptedThreadProc2,pRes);
 			//if(pRes!=nullptr) pRes->UpdateStatistics(true,&ScanMeanProg);
 		}
 	}

@@ -1235,6 +1235,11 @@ bool CResiduals::AddExistingFile(string AddFileName,  void *pScanner)
 
 	return true;
 }
+size_t CResiduals::GetNumberofMeanResiduals(size_t IndexVal)
+{
+	if (m_MeanPost.mean.size() <= IndexVal) return 0;
+	return m_MeanPost.mean[IndexVal].size();
+}
 float CResiduals::GetMeanResiduals( size_t iv, size_t index) {	return m_MeanPost.mean[iv][index]; }
 float CResiduals::GetMinResiduals(size_t iv, size_t index)   {	return m_MeanPost.min[iv][index]; }
 float CResiduals::GetMaxResiduals(size_t iv, size_t index)   {	return m_MeanPost.max[iv][index]; }

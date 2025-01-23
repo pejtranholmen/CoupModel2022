@@ -128,6 +128,18 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 			out.EnsembleType=ENSEMBLE_TYPE::ACCEPTED;
 			out.DataType = DATA_TYPES::SIM_VAL;
 
+
+			auto pRes=m_pSimDoc->GetResidualPointer(out.ValFileNo);
+			auto num = pRes->GetNumberofMeanResiduals(out.Residual_VarNum);
+			if (num <= 0) {
+				//Estimate mean value
+				auto koll = 1;
+				pCug->CalculateMeanOffTimeSeries(5002, out.ValFileNo);
+				//m_pSimDoc->CalculateMeanOffTimeSeries(5018, out.Index);
+
+			}
+
+
 		}
 		else {
 			out.DataType=DATA_TYPES::SIM_VAL;

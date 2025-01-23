@@ -3491,7 +3491,7 @@ bool GridPGDoc::IsMultiPGRepPlotReady() {
 		return false;
 }
 bool GridPGDoc::IsMultiPGRepPlot() {
-	if(m_pProp->GetIndepFirst()==GEO_ALT||m_pProp->GetIndepFirst()==GEO_LAT||m_pProp->GetIndepFirst()==GEO_LONG) 
+	if(m_pProp->GetIndepFirst()==GEO_ALT||m_pProp->GetIndepFirst()==GEO_LAT||m_pProp->GetIndepFirst()==GEO_LONG)
 		return true;
 	else
 		return false;

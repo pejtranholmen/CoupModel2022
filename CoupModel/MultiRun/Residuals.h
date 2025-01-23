@@ -41,6 +41,7 @@ public:
 	float GetZ_ScoreLogLiP95(size_t, size_t, bool);
 
 
+	size_t GetNumberofMeanResiduals(size_t ip);
 	float GetMeanResiduals(size_t, size_t);
 	float GetMinResiduals(size_t, size_t);
 	float GetMaxResiduals(size_t, size_t);

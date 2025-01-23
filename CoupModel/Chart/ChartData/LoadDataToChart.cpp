@@ -876,6 +876,8 @@ void LoadDataToChart::AdjustForMeanOfResiduals(double &v,CResiduals *pRes, bool 
 {
 	float meas, modelvalue;
 	if (index>0) index--;
+	if (pRes == nullptr) return;
+	if (pRes->GetNumberofMeanResiduals(IndexVal) <= index) return;
 	//if(m_pUtil->m_ResidualPlot<=1) {
 	meas = v;
 	if (TypeStat == 0) {
@@ -2645,6 +2647,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 		check = true;
 		break;
 	case PGDAY:
+		check = true;
 		m_Time.MinDate = 366;
 		m_Time.MaxDate = 1;
 		countextra = 0;
@@ -2662,6 +2665,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 
 		break;
 	case PGHOUR:
+		check = true;
 		m_Time.MinDate = 0;
 		m_Time.MaxDate = 24;
 		m_Contour.FirstMin = 0;
@@ -2674,6 +2678,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 		}
 		break;
 	case PGYEAR:
+		check = true;
 		m_Time.MinDate = 5000;
 		m_Time.MaxDate = 1;
 		for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {

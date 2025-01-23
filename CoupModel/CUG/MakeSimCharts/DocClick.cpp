@@ -1084,11 +1084,9 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 						auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(row);
 						CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 
-						if (!pRes->m_MeanDefined) {
-							MFC_Util::MessageBox("Mean value not estimated", "Right click to select action",0);
-							return -1;
+		
 
-						}
+	
 
 
 
