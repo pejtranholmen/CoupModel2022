@@ -91,6 +91,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 				m_Label.st = "("+FUtil::STD_ItoAscii(repit)+")";
 		}
 		else {
+			repit = 0;
 			if(m_pPG_Active->Is_Id_FieldSensitive())
 			m_Label.st = m_pPG_Active->GetVarId(p_info.PGFileIndex, repit) + m_pPG_Active->GetVarPos(p_info.PGFileIndex, repit);
 		}

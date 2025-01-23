@@ -1020,6 +1020,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 					vector<size_t> EnsemblesToPlot;
 					for(int j=0;j<m_NumOpenDoc;j++) {
 							for (int i = 0; i < m_pSimDoc->m_SelectOut.size(); i++) {
+								EnsemblesToPlot.clear();
 								if (m_pUtil->GetEnsembleViewOption() == 0) {
 									EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
 								}

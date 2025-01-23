@@ -41,9 +41,11 @@ bool PG_Memory::ReAllocateVarVector(){
 	if (pg.status.CompleteFileRead || pg.status.b.buf_Size >= pg.Shape.NumRecords) {
 		std::vector <float> vbuf;
 		if (pg.Shape.OldNumRecords*(pg.Shape.OldNumVar + 1) > pg.Var.v.size()) pg.Var.v.resize(pg.Shape.OldNumRecords*(pg.Shape.OldNumVar + 1));
-		vbuf.resize((pg.Shape.NumVar + 1)*pg.Shape.NumRecords*pg.Shape.NumRepetitions);
+		size_t nrepit =pg.Shape.NumRepetitions;
+		if (nrepit == 0) nrepit = 1;
+		vbuf.resize((pg.Shape.NumVar + 1)*pg.Shape.NumRecords*nrepit);
 		//float *varbuf=new float[m_recsize*pg.Shape.NumRecords];
-		for (size_t irep = 0; irep < pg.Shape.NumRepetitions; irep++) {
+		for (size_t irep = 0; irep < nrepit; irep++) {
 			localrec = pg.Shape.NumRecords*(pg.Shape.NumVar + 1)*irep;
 			localrec_old = pg.Shape.OldNumRecords*(pg.Shape.OldNumVar + 1)*irep;
 			for (size_t i = 0; i < pg.Shape.NumRecords; i++) {
