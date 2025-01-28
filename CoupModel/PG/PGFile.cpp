@@ -53,6 +53,7 @@ bool CPGFile::Check_Update_ActHit(size_t varno, size_t minut) {
 void CPGFile::ResetPos()
 {
 	m_ActRecord.clear();
+	m_ActHit.clear();
 	for (size_t i = 0; i < pg.Shape.NumVar+1; i++) {
 		m_ActRecord.push_back(1);
 		m_ActHit.push_back(1);
@@ -521,13 +522,13 @@ string CPGFile::ExportToFile(string filename, bool split, bool secondhalf)
 				add = nrep*pg.Shape.NumVar;
 				auto addindex = j+add;
 				if(i==0)
-					str+=GetVarName(j+1, nrep+1);
+					str+=GetVarName(j+1, nrep);
 				else if(i==1)
-					str+=GetVarUnit(j+1, nrep+1);
+					str+=GetVarUnit(j+1, nrep);
 				else if(i==2)
-					str+=GetVarId(j+1, nrep+1);
+					str+=GetVarId(j+1, nrep);
 				else if(i==3)
-					str+=GetVarPos(j+1, nrep+1);
+					str+=GetVarPos(j+1, nrep);
 				else if (i == 4)
 					str+= pg.Des.addinfo[addindex].StationName;
 				else if (i == 5)
@@ -556,7 +557,7 @@ string CPGFile::ExportToFile(string filename, bool split, bool secondhalf)
 	if(secondhalf) Num_To_Save=GetNumRecords()/2;
 	ReOpen();
 	bool failure=false;
-	for(size_t nrep=0;nrep<pg.Shape.NumRepetitions;nrep++) {
+	for(size_t nrep=0;nrep<pg.Shape.NumRepetitions+1;nrep++) {
 		SetRepititionSequence(nrep);
 		for(size_t i=0;i<Num_To_Save;i++) {
 			if(!failure) str=GetDate(i+1);

@@ -93,7 +93,9 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 
 	if (!ReadWrite_OptionalTSV_Valid(reading)) {
 		error = true;
+#ifndef COUPSTD
 		mfc_util.SetPaneMessage("Error when Reading TSV data");
+#endif
 		if (reading) {
 			m_EvaluationFile.CloseFileIn();
 			return true;

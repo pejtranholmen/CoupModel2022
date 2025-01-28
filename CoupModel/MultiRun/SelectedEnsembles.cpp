@@ -1234,9 +1234,10 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators(bool Only_Prior) {
 		GetMinSumValid(i);
 		GetMaxSumValid(i);
 	}
-
-	//Update_TSV_VarStat(false);
-	Update_TSV_VarStat(true);
+	if(Only_Prior)
+		Update_TSV_VarStat(false);
+	else
+		Update_TSV_VarStat(true);
 
 
 	IsMinUpdated[m_ActualEnsemble] = true;

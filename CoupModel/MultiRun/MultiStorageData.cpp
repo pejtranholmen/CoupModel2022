@@ -134,14 +134,14 @@ string MultiStorageData::GetStatFileName(bool NewFile)
 	string str;
 	size_t ipos = m_FileName.find(".MBin");
 	if (ipos!=string::npos) {
-		if (NewFile) {
+/*		if (NewFile) {
 			MFC_Util m;
 			auto vec_names=m.GetSBInFileNames();
 		}
-		else {
+		else {*/
 			str = m_FileName.substr(0, ipos);
 			str.append(".SBin");
-		}
+
 		return str;
 	}
 	return "";

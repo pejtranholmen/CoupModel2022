@@ -1949,15 +1949,15 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 					VarValidNewVector[i_var_index + 5 * NumValidVar + irun * NumValid] = newperf.logli;
 					VarValidNewVector[i_var_index + 6 * NumValidVar + irun * NumValid] = newperf.nse;
 				}
-				auto kollvectorq = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(0);
-				auto kollq = m_MStorage.GetValid(4, 0);
+				auto kollvectorq = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(99);
+				auto kollq = m_MStorage.GetValid(0, 99);
 			}
 			ResidualIndex[FileNo - 1]++;
 			pPG->CloseFile();
-			auto kollvectorw = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(0);
+			auto kollvectorw = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(99);
 			auto koll0 = m_MStorage.GetValid(0, 0);
 		}
-		auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(0);
+		auto kollvector = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(99);
 		auto koll2 = m_MStorage.GetValid(0, 0);
 		auto previous_values = VarValidNewVector;
 		for (size_t irun = 0; irun < m_MStorage.GetNumberOfRuns(); irun++) {
@@ -2064,7 +2064,11 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 		m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].Dim1_Par_Index = dim1_index;
 	}
 
+	auto kollvectorq = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(99);
 
+	auto kollvectorpair = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(99);
+	auto kollvectorpair2 = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(6);
+	auto kollvectorpair3 = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(13);
 
 	m_MStorage.VarValidAllo();
 //m_MStorage.UpdateAcceptedRuns(true);

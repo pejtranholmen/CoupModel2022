@@ -211,7 +211,7 @@ void ChartProp::MakeCumTranformation(vector<double>* pVector)
 	size_t StepInterval;
 	if (m_pPGSource->IsEquiDistance()) {
 		auto dist = m_pPGSource->GetEquiDistance();
-		AccCorrection = 1. / (1440 / dist);
+		AccCorrection = 1. / (double(1440) / double(dist));
 		StepInterval= 1440 / dist;
 	}
 	

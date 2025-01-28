@@ -855,45 +855,30 @@ bool Simulator::Valid_Check_Precise(size_t i, bool Filter) {
 	CPG* pPG_Obs=m_ValPGFile[i].file;
 
 	if (!pPG_Obs->IsOpen())	pPG_Obs->ReOpen();
-
-
-	bool changepos = pPG->Check_Update_ActHit(0, m_pModelInfo->m_ActMin);
+	bool changepos;
+	//for (size_t j = 0; j < m_ValPGFile[i].varindex.size(); j++) { //Change position for all positions in files with variables
+		changepos = pPG->Check_Update_ActHit(0, m_pModelInfo->m_ActMin);
+	//	if (!changepos) return true;
+	//}
+ 
 	if(changepos) {
 		for (size_t j = 0; j < m_ValPGFile[i].varindex.size(); j++) {
 			size_t LL = m_ValPGFile[i].val_listindex[j];
 			m_ValPGFile[i].simvalues[j] = float(GetSimValValue(LL));
-
-			if (LL == 3) {
+			if (m_StructureModel.m_Structure.PressureHeadSign == 0 && m_ShiftPointer != nullptr)
+				if (m_pValVar[LL].pBase == m_ShiftPointer) m_ValPGFile[i].simvalues[j] *= -1;
+			if (LL == 3||LL==2) {
 
 				auto koll = i;
 			}
-
-
-			if (m_StructureModel.m_Structure.PressureHeadSign == 0 && m_ShiftPointer != nullptr)
-				if (m_pValVar[LL].pBase == m_ShiftPointer) m_ValPGFile[i].simvalues[j] *= -1;
-
-			size_t ist = (pPG->GetPrevHitPos(j) - 1)*(m_ValPGFile[i].varindex.size() + 1);
-			size_t koll = pPG->GetPrevHitPos(j);
-			if (ist >= m_ValPGFile[i].FirstValidRecord)
-				pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
-			m_ValPGFile[i].ActPos = pPG->GetPrevHitPos(j) + 1;
-			if (m_ValPGFile[i].ActPos > 3) {
-				size_t currentmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - 1);
-				size_t prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - 2);
-				size_t count = 2;
-				size_t step = m_ValPGFile[i].varindex.size() + 1;
-				while (currentmin == prevmin) {
-					ist = ist - step;
-					count++;
-					pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
-					if (m_ValPGFile[i].ActPos > count)
-						prevmin = pPG->GetLongTime(m_ValPGFile[i].ActPos - count);
-					else
-						prevmin = currentmin / 2;
-				}
-			}
-
+			
 		}
+		size_t ist = (pPG->GetPrevHitPos(0) - 1) * (m_ValPGFile[i].varindex.size() + 1);
+		size_t koll = pPG->GetPrevHitPos(0);
+		if (ist >= m_ValPGFile[i].FirstValidRecord)
+			pPG->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
+		m_ValPGFile[i].ActPos = pPG->GetPrevHitPos(0) + 1;
+
 	}
 	return true;
 }
