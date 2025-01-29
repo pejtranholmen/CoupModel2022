@@ -565,7 +565,11 @@ for(int i=0;i<m_NumValidVar;i++) {
 			else
 				QuickSetText(6, line, "");
 			value=m_pSimDoc->m_MStorage.GetMeanValid(i+index_start, split_ind);
+			if (value > 0.99&&index_start==0) {
 
+				auto check = 0;
+
+			}
 			//value = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].v[E_POST_MEAN][i + index_start];
 
 			if(abs(value)<0.5E38)
@@ -2858,19 +2862,21 @@ void ValidationCug::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 				else
 					m_pSimDoc->m_MStorage.ChangeEnsembleNo(1);
 				m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
-				if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
-					m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
-				}
+			//	if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+			//		m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+			//	}
 			}
-			auto charts = m_pSimDoc->m_PlotStorage.m_PlotArray.size();
-			if (charts > 0) {
+			//auto charts = m_pSimDoc->m_PlotStorage.m_PlotArray.size();
+			/*if (charts > 0) {
 				auto pinfo = m_pSimDoc->m_PlotStorage.GetPlotInfo(charts - 1);
 				pinfo.EnsembleNo = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 				m_pSimDoc->m_PlotStorage.m_PlotArray.erase(m_pSimDoc->m_PlotStorage.m_PlotArray.begin());
 				m_pSimDoc->m_PlotStorage.m_PlotArray.push_back(pinfo);
 				auto ivar = m_pSimDoc->m_SelectMultiVal.size();
 				if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
-			}
+			}*/
+			MultiPlotClick(isheet, 0, 0, false);
+
 			OnSheetSetup(isheet);
 
 			return;
@@ -3370,8 +3376,19 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 		OnSheetSetup(isheet);
 		return;
 	}
+	if (item == 1165) {
+		//Save Criteriea
+		string fileName=MFC_Util::GetSBinFileName();
 
-	if (item == 1065) {
+		m_pSimDoc->m_MStorage.EvaluateFile(false, fileName);
+	}
+	else if (item == 1175) {
+		//Read File with new criteria
+		string fileName = MFC_Util::GetSBinFileName();
+		m_pSimDoc->m_MStorage.EvaluateFile(true, fileName);
+
+	}
+	else if (item == 1065) {
 		//Reset_All();
 		if(m_pSimDoc->PreDefined_Criteria_Process());
 
@@ -4440,7 +4457,7 @@ void ValidationCug::MakeSelectionsVisible(int Sheet) {
 		CUGCell cell;
 		for(size_t i=0; i<m_pSimDoc->m_SelectMultiVal.size();i++) {
 				if(GetMultiValPerformSheet(m_pSimDoc->m_SelectMultiVal[i].Index)==Sheet) {
-					auto col=m_pSimDoc->m_SelectMultiVal[i].col;
+					auto col=1;
 					auto row=m_pSimDoc->m_SelectMultiVal[i].row;
 					GetCell(col,row,&cell);
 					cell.SetBackColor(m_ColorEdit);
@@ -4493,6 +4510,8 @@ MultiVAL ValidationCug::GetMultiValStruct(int row, int col,int sheet, bool *Add,
 				out=m_pCUG->GetBlankMultiValStruct();
 			if(*Add) {
 				out.Index=Index;
+				if (sheet == 6) sheet = 8;
+				out.Performance_Var = SUM_PERFORMANCE(sheet);
 				out.index_cycle = 1;
 				out.row=row;
 				out.col=col;

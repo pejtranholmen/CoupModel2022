@@ -32,7 +32,7 @@ MultiStorageStatData::~MultiStorageStatData()
 
 }
 
-bool MultiStorageStatData::EvaluateFile(bool reading) {
+bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 	if (m_IsStatOpen) {
 		m_IsStatOpen = false;
 	}
@@ -40,14 +40,17 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 	MFC_Util mfc_util;
 
 
+	if (filename.size() == 0)
+		filename = GetStatFileName();
+
+
 
 	if(reading)
-		mfc_util.SetPaneMessage("Reading From Multi Statistics File:" + GetStatFileName());
+		mfc_util.SetPaneMessage("Reading From Multi Statistics File:" + filename);
 	else
-		mfc_util.SetPaneMessage("Writing to Multi Statistic File:" + GetStatFileName());
+		mfc_util.SetPaneMessage("Writing to Multi Statistic File:" + filename);
 #endif
 	if (!m_IsStatOpen) {
-		auto filename = GetStatFileName();
 		bool good;
 		if (reading)
 			good=m_EvaluationFile.OpenDocFileIn(filename);
@@ -116,9 +119,9 @@ bool MultiStorageStatData::EvaluateFile(bool reading) {
 
 #ifndef COUPSTD 
 	if (reading)
-		mfc_util.SetPaneMessage("Reading From Multi Statitics File Completed");
+		mfc_util.SetPaneMessage("Reading From Multi Statitics File "+filename+" Completed");
 	else
-		mfc_util.SetPaneMessage("Writing to Multi Statistic File Completed");
+		mfc_util.SetPaneMessage("Writing to Multi Statistic File "+filename+" Completed");
 #endif
 
 

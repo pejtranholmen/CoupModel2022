@@ -5589,6 +5589,25 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 	MultiVAL mul;
 		for(size_t i=0;i<m_pSimDoc->m_SelectMultiVal.size();i++) {
 						mul=m_pSimDoc->m_SelectMultiVal[i];
+						if (mul.type == DATA_TYPES::SIM_PERFORMANCE&&mul.col==1) {
+							auto check = mul;
+							auto indicator = mul.Index / numtsv;
+							switch (indicator) {
+								case 0:	mul.col = 7; break;
+								case 1:	mul.col = 8; break;
+								case 2:	mul.col = 9; break; 
+								case 3:	mul.col = 10; break;
+								case 4:	mul.col = 11; break;
+								case 5:	mul.col = 14; break;
+								case 6:	mul.col = 15; break;
+
+
+
+
+
+							}
+
+						}
 						GetCell(mul.col,mul.row,&cell);
 						cell.SetBool(true);
 						//cell.SetBackColor(m_NoColor);

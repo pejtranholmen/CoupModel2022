@@ -18,7 +18,7 @@ public:
 	bool ReadWrite_OptionalTSV_Valid(bool reading);
 	bool ReadWrite_OptionalSUM_Valid(bool reading);
 	bool ReadWrite_Parameters(bool reading);
-	bool EvaluateFile(bool reading);
+	bool EvaluateFile(bool reading, string filename="");
 
 	float GetMeanValid_R2(unsigned long rec) {
 		if (m_VarValidMean_R2.size() <= rec)

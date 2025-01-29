@@ -46,6 +46,7 @@ public:
 	static vector<string> GetSimFileNames();
 	static vector<string> GetMBinFileNames();
 	static vector<string> GetSBInFileNames();
+	static string GetSBinFileName();
 	static string GetTxtFileName();
 	static string GetBinTxtFileName();
 	static string GetSimFileName();
