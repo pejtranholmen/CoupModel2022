@@ -125,6 +125,7 @@ public:
 
 	size_t GetChart(size_t index);
 	size_t GetCurrentChart();
+	SUM_PERFORMANCE GetPerformance_type(size_t index);
 	CHART_TYPES GetChartType(size_t index);
 	size_t GetNumberofCharts();
 	size_t GetNumberofDocuments();

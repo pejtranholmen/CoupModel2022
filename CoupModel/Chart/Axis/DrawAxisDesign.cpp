@@ -317,7 +317,7 @@ void DrawAxisDesign::X_Axis_Scale() {
 		m_pProp->m_CommonScale.LeftMax = pXY_Chart->yAxis()->getMaxValue();
 		}
 	}
-	else if ((m_pProp->m_ChartType ==CHART_TYPES::FREQUENCE || m_pProp->m_ChartType ==CHART_TYPES::CUM_FREQUENCE) && (m_ChartInfo.DataType == 7|| m_ChartInfo.DataType == 8)) {
+	else if ((m_pProp->m_ChartType ==CHART_TYPES::FREQUENCE || m_pProp->m_ChartType ==CHART_TYPES::CUM_FREQUENCE) && (DATA_TYPES(m_ChartInfo.DataType) == DATA_TYPES::SIM_PERFORMANCE|| m_ChartInfo.DataType == 8)) {
 		//pXY_Chart->xAxis()->setLogScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX);
 		pXY_Chart->xAxis()->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint);
 		pXY_Chart->yAxis()->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint);

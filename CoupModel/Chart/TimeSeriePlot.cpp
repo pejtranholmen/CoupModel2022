@@ -839,15 +839,30 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 	size_t start_varindex= string::npos;
 	size_t max_numvar=0;
 
+
 	int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0 % TotNumPrior);
 	auto datatype = m_pSimDoc->m_PlotStorage.GetDataType(j);
+	auto perf_type = m_pSimDoc->m_PlotStorage.GetPerformance_type(j);
+	bool can_be_common = true;
 	bool commonx_scale = false;
-	if (datatype == DATA_TYPES::SIM_PERFORMANCE&&(m_pProp->m_ChartType == CHART_TYPES::FREQUENCE || m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE)) {
+	// Check if performance indicators differs 
+	// if more than one data type
+	for (size_t i = 0; i < TotNumPrior; i++) {
+
+		int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, i % TotNumPrior);
+		if (m_pSimDoc->m_PlotStorage.GetPerformance_type(j) != perf_type) can_be_common = false;
+	}
+
+
+
+
+	if (DATA_TYPES(datatype) == DATA_TYPES::SIM_PERFORMANCE&&can_be_common&&(m_pProp->m_ChartType == CHART_TYPES::FREQUENCE || m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE)) {
 		commonx_scale = true;
 		m_pProp->m_TimeScale.MaxX = m_pProp->GetCommonXDistMax();
 		m_pProp->m_TimeScale.MinX = m_pProp->GetCommonXDistMin();
 		m_pProp->SetDistScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX, false);
 	}
+
 
 
 
@@ -920,8 +935,10 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 					int ilocal=m_pSimDoc->m_PlotStorage.GetLocalIndex(j);
 					m_pProp->SetDistScale(m_pSimDoc->MR_GetMin(ilocal), m_pSimDoc->MR_GetMax(ilocal), m_pSimDoc->MR_GetLogDist(ilocal));
 				}
-				if (commonx_scale) {
-
+				else if(!commonx_scale) {
+					auto min = m_pProp->GetXDistMin(i%TotNumPrior);
+					auto max = m_pProp->GetXDistMax(i%TotNumPrior);
+					m_pProp->SetDistScale(min, max, false);
 
 
 				}

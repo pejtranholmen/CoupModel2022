@@ -918,6 +918,12 @@ size_t CPlotStorage::GetCurrentChart()
 	else
 		return m_PlotArray[index].Chart;
 }
+SUM_PERFORMANCE CPlotStorage::GetPerformance_type(size_t index)
+{
+	if (index < m_PlotArray.size())
+		return m_PlotArray[index].Performance_Var;
+	return SUM_PERFORMANCE::SUM_NOVALUE;
+}
 CHART_TYPES CPlotStorage::GetChartType(size_t index)
 {	if(index>=0&&index!=string::npos)
 		return m_PlotArray[index].ChartType;
