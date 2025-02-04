@@ -11,12 +11,14 @@ PFSheets::PFSheets()
 	//UGXPThemes::CleanUp();
 	m_pDoc=nullptr;
 	m_pDB = NULL;
+
 }
 
 
 PFSheets::~PFSheets()
 {
 	//UGXPThemes::CleanUp();
+	p_PFCurve = &PlotpF::GetPointer();
 }
 void PFSheets::MakeBaseSheet(bool ExtraBase, bool NewProfile)
 {
@@ -338,6 +340,7 @@ void PFSheets::MakeSimpleTextureSheet()
 void PFSheets::MakePFCurveSheet()
 {
 		CUGCell cell; 
+		auto koll= &PlotpF::GetPointer();
 		long nrow=p_PFCurve->m_ActProfile.NumLayers;
 
 		vector<float> pressure;

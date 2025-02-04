@@ -272,7 +272,7 @@ string ResidualsBase::GetXStatFileName(size_t EnsembleNo) {
 	return "";
 }
 bool ResidualsBase::AlloResVector() {
-	if (m_RecL == 0 || m_NumRec == 0 || m_NumVar == 0) return false;
+	if (m_RecL == 0 || m_NumVar == 0) return false; 
 
 	m_Residuals.resize(m_RecL);
 	m_Mean.resize(m_NumVar*m_RecL);

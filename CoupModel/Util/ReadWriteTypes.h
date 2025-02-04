@@ -5,7 +5,7 @@ class ReadWriteTypes
 public:
 	ReadWriteTypes(void);
 	~ReadWriteTypes(void);
-	bool OpenDocFileIn(std::string filename);
+	bool OpenDocFileIn(std::string filename, bool binary_type=false);
 	bool OpenDocFileout(std::string filename);
 	bool IsFileInGood() {return m_DocFileIn.good();};
 	bool IsFileOutGood()  {return m_DocFileOut.good();};
@@ -64,5 +64,6 @@ private :
 	char m_cbuf[4000];
 	int m_FileVersionNumberRead;
 	bool m_ShortTimeRead;
+	bool m_binary;
 };
 

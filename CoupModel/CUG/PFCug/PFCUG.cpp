@@ -10,7 +10,7 @@
 #include "..\ChartProperties\ChartCug.h"
 #include "..\..\NewBase\Doc.h"
 #include ".\SoilData.h"
-#include "..\..\SoilData\GetSoilStorage.h"
+//#include "..\..\SoilData\GetSoilStorage.h"
 //#include "..\PlotPF\PlotPF\PFCurve.h"
 //#include "..\ParameterPlotDlg.h"
 
@@ -1187,13 +1187,17 @@ bool PFCug::IniDataBase() {
 	if(!p_PFCurve->IsOpen()) {
 	  string directory;
 	  directory=MFC_Util::GetProfileStringStd("DataBaseDirectory", directory);
+	 
 	 if(!p_PFCurve->OpenMainFile(directory+"PfProf")) {
 		 return false;
 	 }
-	 
-	}
+	 p_PFCurve->SetDataBaseDirectory(directory);
+	 auto koll = p_PFCurve->GetDataBaseDirectory();
+	 }
 	if(p_PFCurve->NewFormatFile()) {
+		auto koll = p_PFCurve->GetDataBaseDirectory();
 		p_PFCurve->ReadHeaderFile();
+		
 		m_ActHeader=p_PFCurve->GetHeader(0);
 		p_PFCurve->SetHeader(0);
 		return true;

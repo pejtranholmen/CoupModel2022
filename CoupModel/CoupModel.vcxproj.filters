@@ -1322,12 +1322,6 @@
     <ClInclude Include="SoilData\PlotPF\PFCurve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SoilData\GetSoilStorage.h">
-      <Filter>Source Files\SoilData</Filter>
-    </ClInclude>
-    <ClInclude Include="SoilData\SoilStorage.h">
-      <Filter>Source Files\SoilData</Filter>
-    </ClInclude>
     <ClInclude Include="Model\SOIL_NC\Functors\NC_GasFluxFunctors.h">
       <Filter>Source Files\Model\Soil_NC\Functors</Filter>
     </ClInclude>
@@ -2277,12 +2271,6 @@
     </ClCompile>
     <ClCompile Include="Model\SOIL_NC\P_Mineral_Functions.cpp">
       <Filter>Source Files\Model\Soil_NC</Filter>
-    </ClCompile>
-    <ClCompile Include="SoilData\GetSoilStorage.cpp">
-      <Filter>Source Files\SoilData</Filter>
-    </ClCompile>
-    <ClCompile Include="SoilData\SoilStorage.cpp">
-      <Filter>Source Files\SoilData</Filter>
     </ClCompile>
     <ClCompile Include="SoilData\PlotPF\Geodesi.cpp">
       <Filter>Source Files\SoilData\PlotPF</Filter>

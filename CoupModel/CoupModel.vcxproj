@@ -543,8 +543,6 @@
     <ClInclude Include="Util\Constants.h" />
     <ClInclude Include="Validation\SmartFlexibleValidation.h" />
     <ClInclude Include="SoilDataWnd.h" />
-    <ClInclude Include="SoilData\GetSoilStorage.h" />
-    <ClInclude Include="SoilData\SoilStorage.h" />
     <ClInclude Include="SP\SP_EXCHANGE1.h" />
     <ClInclude Include="SP\SP_Export.h" />
     <ClInclude Include="SP\SP_ImportDlg.h" />
@@ -893,8 +891,6 @@
     <ClCompile Include="Util\Constants.cpp" />
     <ClCompile Include="Validation\SmartFlexibleValidation.cpp" />
     <ClCompile Include="SoilDataWnd.cpp" />
-    <ClCompile Include="SoilData\GetSoilStorage.cpp" />
-    <ClCompile Include="SoilData\SoilStorage.cpp" />
     <ClCompile Include="SP\SP_EXCHANGE1.cpp" />
     <ClCompile Include="SP\SP_Export.cpp" />
     <ClCompile Include="SP\SP_ImportDlg.cpp" />

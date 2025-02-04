@@ -75,7 +75,7 @@ bool PFStorage::OpenMainFile(string name,  bool write)
 		else {
 			if (!FUtil::IsFileExisting(testname_db)) 
 				m_RwNewHeader.OpenDocFileout(testname_db);
-			m_RwNewHeader.OpenDocFileIn(testname_db);
+			m_RwNewHeader.OpenDocFileIn(testname_db, true);
 		}
 
 	}
@@ -160,18 +160,30 @@ bool PFStorage::OpenEditExtraDataBase()
 bool PFStorage::ReadWrite_NewHeaderLine(bool read)
 {
 	if (read) {
-		m_RwNewHeader.rsize_t(&m_ActProfile.KeyProf);
-		m_RwNewHeader.rString(&m_ActProfile.Name);
-		m_RwNewHeader.rString(&m_ActProfile.Country);
-		m_RwNewHeader.rString(&m_ActProfile.County);
+		bool check;
+		auto koll = m_RwNewHeader.m_DocFileIn.tellg();
+		check=m_RwNewHeader.rsize_t(&m_ActProfile.KeyProf);
+	
+		check = m_RwNewHeader.rString(&m_ActProfile.Name);
+
+		check = m_RwNewHeader.rString(&m_ActProfile.Country);
+		check = m_RwNewHeader.rString(&m_ActProfile.County);
 		m_RwNewHeader.rFloat(&m_ActProfile.Lat);
 		m_RwNewHeader.rFloat(&m_ActProfile.Long);
+
+
+		
 		m_RwNewHeader.rFloat(&m_ActProfile.Upper_Clay);
+
 		m_RwNewHeader.rFloat(&m_ActProfile.Upper_Sand);
+
 		m_RwNewHeader.rFloat(&m_ActProfile.Upper_Org);
+
 		m_RwNewHeader.rFloat(&m_ActProfile.Lower_Clay);
+
 		m_RwNewHeader.rFloat(&m_ActProfile.Lower_Sand);
 		m_RwNewHeader.rFloat(&m_ActProfile.Lower_Org);
+
 		m_RwNewHeader.ruint(&m_ActProfile.NumLayers);
 		m_RwNewHeader.ruint(&m_ActProfile.LowDepth);
 		m_RwNewHeader.ruint(&m_ActProfile.Year);

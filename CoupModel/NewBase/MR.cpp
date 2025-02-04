@@ -22,7 +22,7 @@
 
 #include "codecogs/stats/moments/mean.h"
 
-#include "../SoilData/GetSoilStorage.h"
+
 #ifndef COUPSTD
 #include "../MainFrm.h"
 

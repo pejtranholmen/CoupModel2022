@@ -13,7 +13,7 @@
 #include ".\Model\FunctionProperties.h"
 #include ".\SoilData\PlotPF\PFCurve.h"
 #include ".\DB\DB_Header.h"
-#include ".\SoilData\GetSoilStorage.h"
+
 #include "PFWnd.h"
 #include "SoilDataWnd.h"
 
@@ -41,8 +41,8 @@ public:
    void SetNoDocumentValid(bool value=false);
    bool IsDocumentValid();
    FunctionProperties m_Func;
-   PFCurve m_PlotPF;
-   GetSoilStorage m_SoilStorage;
+   //PFCurve m_PlotPF;
+   //GetSoilStorage m_SoilStorage;
    DB_Header m_DB;
 protected:
 	CDocument* m_ActDoc;

@@ -12,6 +12,7 @@ ReadWriteTypes::ReadWriteTypes(void)
 {
 	m_FileVersionNumberRead = 51;
 	m_ShortTimeRead = true;
+	m_binary = false;
 }
 
 
@@ -19,16 +20,79 @@ ReadWriteTypes::~ReadWriteTypes(void)
 {
 }
 
-bool ReadWriteTypes::OpenDocFileIn(string filename)
+bool ReadWriteTypes::OpenDocFileIn(string filename, bool binary_type )
 {
-	m_DocFileIn.open(filename);
+	if (binary_type) {
+		m_DocFileIn.open(filename, ios_base::in|ios_base::binary);
+		m_binary = true;
+	}
+	else {
+		m_DocFileIn.open(filename, ios_base::in);
+		m_binary = false;
+
+	}
 	if (!m_DocFileIn.good())
 	{
 		m_DocFileIn.clear();
 		m_DocFileIn.open(filename);
 	}
+	/*
+	m_DocFileIn.seekg(0, ios::end);
+	auto end=m_DocFileIn.tellg();
+
+	m_DocFileIn.seekg(0, ios::beg);
+	char buffer[40000] = { 0 };
+	char buf[1000] = {0 };
+	vector<size_t> bufm;
+
+	char byte;
+	size_t count=0;
+	size_t all = 0;
+	m_DocFileIn.seekg(0, ios::beg);
+	auto pos_prior = m_DocFileIn.tellg();
+
+
+	signed char il;
+
+	m_DocFileIn.read((char*)(&il), 1);
+
+
+
+
+
+	m_DocFileIn.read(buf, 100);
+	auto pos_post = m_DocFileIn.tellg();
+	pos_post -= 1;
+	m_DocFileIn.seekg(pos_post, ios::beg);
+
+	
+	while (m_DocFileIn.good()) {
+		all++;
+		m_DocFileIn.read((char*)(&il), 1);
+		//m_DocFileIn.read(&byte, 1);
+		auto pos_post = m_DocFileIn.tellg();
+		auto pos_prior = pos_post;
+		bufm.push_back(size_t(pos_post));
+		buffer[all - 1] = il;
+	}
+
+
+
+	vector<size_t> kollpos;
+	for (size_t i = 0; i < all; i++) {
+		if (buffer[i] == 83 && buffer[i + 1] == 69) {
+			kollpos.push_back(i);
+		}
+	}
+
+
+	m_DocFileIn.seekg(0, ios::beg);*/
+
+
+
 
 	m_FileName = filename;
+
 
 	return m_DocFileIn.good();
 }
@@ -67,17 +131,83 @@ bool ReadWriteTypes::wString(string* str)
 
 bool ReadWriteTypes::rString(string* str)
 {
-	size_t il;
-	string s;
-	m_DocFileIn >> s;
+	if (m_binary) {
+		unsigned char il;
+		size_t ic;
+		char cc;
+		auto s = m_DocFileIn.tellg();
+		if (s < 0) return false;
+		m_DocFileIn.read((char*)(&il), 1);
+		cc = il;
+		if (il == 255) {
+			char s1, s2;
+			m_DocFileIn.read((char*)(&s1), 1);
+			m_DocFileIn.read((char*)(&s2), 1);
+			ic = 255 + s2;
+			m_DocFileIn.seekg(s, ios::beg);
+			s = m_DocFileIn.tellg();
+			m_DocFileIn.read((char*)(&il), 1);
+			m_DocFileIn.read((char*)&ic, 2);
 
 
-	if (il > 0)
-	{
-		char* buffer = new char[il];
-		m_DocFileIn.getline(buffer, il + 1);
-		*str = buffer;
-		delete[] buffer;
+		}
+		else if (cc < 0xFF) {
+			ic = il;
+
+		}
+		else if (cc == 0xFF) {
+			char s1, s2;
+			s = m_DocFileIn.tellg();
+			m_DocFileIn.read((char*)(&s1), 1);
+			m_DocFileIn.read((char*)(&s2), 1);
+			ic = 255 + s2;
+			//	m_DocFileIn.read((char*)&ic, 2);
+
+		}
+		else {
+			m_DocFileIn.read((char*)&ic, 2);
+
+
+		}
+
+		//m_DocFileIn.read((char*)(&ic),sizeof(ic));
+		if (il == 0xfffe) {
+			int ivv;
+			m_DocFileIn.read((char*)&ivv, 2);
+
+			str->clear();
+			long long s = m_DocFileIn.tellg();
+			if (s < 0) {
+				return false;
+
+			}
+		}
+		else if (il == 0xffff) {
+			int ivv;
+			m_DocFileIn.read((char*)&ivv, 4);
+
+
+		}
+		else {
+			m_DocFileIn.read(m_cbuf, ic);
+			str->clear();
+			if (ic > 0)
+				str->assign(&m_cbuf[0], ic);
+		}
+	}
+	else {
+		size_t il;
+		string s;
+		m_DocFileIn >> s;
+		il = s.size();
+
+		if (il > 0)
+		{
+			char* buffer = new char[il];
+			m_DocFileIn.getline(buffer, il + 1);
+			*str = buffer;
+			delete[] buffer;
+		}
 	}
 
 	return true;
@@ -91,19 +221,38 @@ bool ReadWriteTypes::rInt(int* iv)
 
 bool ReadWriteTypes::rsize_t(size_t* iv)
 {
-	m_DocFileIn >> *iv;
+	if (m_binary) {
+		unsigned int i;
+		auto prior = m_DocFileIn.tellg();
+		m_DocFileIn.read((char*)(&i), 4);
+		auto post = m_DocFileIn.tellg();
+		if (post - prior != 4) {
+			prior += 4;
+			m_DocFileIn.seekg(prior);
+		    post = m_DocFileIn.tellg();
+
+
+		}
+		*iv = i;
+	}
+	else 
+		m_DocFileIn >> *iv;
 	return m_DocFileIn.good();
 }
 
 bool ReadWriteTypes::ruint(unsigned int* iv)
 {
-	m_DocFileIn >> *iv;
+	if (m_binary) {
+		m_DocFileIn.read(reinterpret_cast<char*>(&*iv), sizeof(unsigned int));
+	}
+	else
+		m_DocFileIn >> *iv;
 	return m_DocFileIn.good();
 }
 
 bool ReadWriteTypes::SetGetPosition(size_t* iv)
 {
-	m_DocFileIn.seekg(*iv);
+	m_DocFileIn.seekg(*iv, ios::beg);
 	return true;
 }
 
@@ -143,7 +292,27 @@ bool ReadWriteTypes::ruLong(unsigned long* iv)
 
 bool ReadWriteTypes::rFloat(float* f)
 {
-	m_DocFileIn >> *f;
+	if (m_binary) {
+		float v;
+		auto prior = m_DocFileIn.tellg();
+		m_DocFileIn.read((char*)&v, 4);
+		auto post = m_DocFileIn.tellg();
+		if (m_DocFileIn.fail()) {
+			std::cerr << "Read error or EOF reached!" << std::endl;
+			m_DocFileIn.clear();  // Clear error state
+			m_DocFileIn.seekg(prior);  // Reset position
+		}
+		else if (post - prior != 4) {
+			std::cerr << "Unexpected read size! Read: " << (post - prior) << " bytes" << std::endl;
+		}
+
+		*f = v;
+		//m_DocFileIn.read(reinterpret_cast<char*>(&*f), sizeof(float));
+
+	}
+	else {
+		m_DocFileIn >> *f;
+	}
 	return true;
 }
 

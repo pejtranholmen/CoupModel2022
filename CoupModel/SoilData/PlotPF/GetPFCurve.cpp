@@ -31,6 +31,7 @@ GetPFCurve::~GetPFCurve(void)
 }
 void GetPFCurve::ReadHeaderFile()
 {
+	
 	m_HeaderFile.seekg(0,ios::end);
 	auto n=m_HeaderFile.tellg();
 
@@ -87,17 +88,20 @@ void GetPFCurve::ReadHeaderFile()
 		}
 
 	}
-
+	m_RwNewHeader.m_DocFileIn.clear();
 	if (m_RwNewHeader.IsFileInGood()) {
 		m_AllProfiles.clear();
 
 		m_Records.clear();
 		m_HeaderRec.clear();
 		size_t start = 0;
+		size_t version, numprof;
 		m_RwNewHeader.SetGetPosition(&start);
-		size_t  numprof, version;
+
 		m_RwNewHeader.rsize_t(&version);
+	
 		m_RwNewHeader.rsize_t(&numprof);
+
 
 		while (m_RwNewHeader.IsFileInGood() &&count<numprof) {
 			ReadWrite_NewHeaderLine(true);
@@ -173,6 +177,7 @@ void GetPFCurve::ReadHeaderFile()
 		}
 		IsNewFormatFile = false;
 	}
+	auto koll = GetDataBaseDirectory();
 //	int profnum=(str[0]);
 }
 bool GetPFCurve::SaveNewFormat()
@@ -665,6 +670,9 @@ string GetPFCurve::GetComments()
 	//CFileException perror, perror2;
 
 	string m_comdetails;
+
+	auto v = this;
+	auto koll=GetDataBaseDirectory();
 
 	bool copy;
 	copy=false;

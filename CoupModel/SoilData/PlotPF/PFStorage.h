@@ -49,7 +49,8 @@ public:
 
 	bool IsOpen() {return IsMainEditOpen;};
 	bool NewFormatFile() {return IsNewFormatFile;};
-	std::string GetDataBaseDirectory() {return m_DataBaseDir;};
+	std::string GetDataBaseDirectory() {
+		return m_DataBaseDir;};
 	void SetDataBaseDirectory(std::string dir) {m_DataBaseDir=dir;};
 	std::string GetMainDataBaseName(bool OnlyTitle) {
 		if(OnlyTitle) {

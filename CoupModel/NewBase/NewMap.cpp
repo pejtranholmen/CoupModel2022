@@ -11,7 +11,6 @@
 #include <nlohmann/json.hpp>
 #include "./NewMap.h"
 #include "../ModelTypes/NewModelType.h"
-#include "../SoilData/GetSoilStorage.h"
 #include "../Util/CoupSim_XML.h"
 
 #ifndef COUPSTD
@@ -3020,60 +3019,6 @@ bool NewMap::Info_Files(bool reading)
 					rString(&filename);
 					filename = GetExistingDocFileName(filename);
 					FCSV *pCSV = dynamic_cast<FCSV*>(GetPtr(CSVFILE, fileid));
-					if (pCSV != nullptr) {
-						pCSV->SetValue(filename);
-					if (pCSV->CheckFileName(this) && fileid == "MASCUR File") {
-
-
-							if(!pGetSoil->IsOpen())
-								pGetSoil->Init(filename);
-						}
-						else {
-							string filename;
-							if (fileid == "MASCUR File") {
-								
-#ifndef COUPSTD
-								MFC_Util::MessageBox("Specify File Name for MASCUR soil File");
-								FILEDLG FileDlg = MFC_Util::GetFileDialog("*.csv", "", "Comma separated file (*.csv)|*.csv|");
-								if (FileDlg.opengood != IDOK) {
-									return false;
-								}
-								filename = FileDlg.filename;
-#else
-								cout << "Specify file Name Mascur file";
-								cin >> filename;
-
-#endif
-								pCSV->SetValue(filename);
-								if (pCSV->CheckFileName(this)) {
-										if (!pGetSoil->IsOpen()) {
-										pGetSoil->Init(filename);
-									}
-								}
-
-							}
-							else if (!pCSV->CheckFileName(this)&& fileid == "FertTable File") {
-#ifndef COUPSTD
-								MFC_Util::MessageBox("Specify File Name for Fert Table File");
-								FILEDLG FileDlg = MFC_Util::GetFileDialog("*.csv", "", "Comma separated file (*.csv)|*.csv|");
-								if (FileDlg.opengood != IDOK) {
-									return false;
-								}
-								string filename = FileDlg.filename;
-#else
-								cout << "Specify file Name Fert Table file";
-								cin >> filename;
-
-#endif
-								pCSV->SetValue(filename);
-								pCSV->CheckFileName(this);
-							}
-							else if (pCSV->CheckFileName(this) && fileid == "FertTable File") {
-
-								string filename = pCSV->GetStrValue();
-							}
-						}
-					}
 				}
 			}
 			//m_DocFileIn.read( &iv,4);
@@ -5472,7 +5417,7 @@ bool NewMap::CreateMapSvFlexFile(size_t index) {
 
 	VALSUMLINK valsumlink;
 	valsumlink = m_ValsumFlexFiles[index];
-	SoilStorage soilstorage;
+
 	ifstream sumfile;
 	sumfile.open(valsumlink.FileName, ifstream::in);
 	string line;
@@ -5556,7 +5501,7 @@ bool NewMap::CreateMapSvFlexFile(size_t index) {
 		line.resize(2000);
 
 	}
-	//soilstorage.ReadHeaderFile();
+
 
 
 

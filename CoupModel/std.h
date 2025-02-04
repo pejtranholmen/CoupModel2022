@@ -17,7 +17,7 @@
 #include <functional>
 using namespace std;
 #ifndef NOSIMMODEL
-#include "./SoilData/GetSoilStorage.h"
+//#include "./SoilData/GetSoilStorage.h"
 #include "./SoilData/Plotpf/PFCurve.h"
 #include "./SoilData/PlotPF/PFStorage.h"
 #include "./NewBase/CommonModelInfo.h"
@@ -52,8 +52,8 @@ class DBDataCug;
 class DB_BASCug;
 class PFCug;
 
-static GetSoilStorage getsoilstorage;
-static GetSoilStorage* pGetSoil = &getsoilstorage;
+//static GetSoilStorage getsoilstorage;
+//static GetSoilStorage* pGetSoil = &getsoilstorage;
 
 static CommonModelInfo modelinfo;
 static CommonModelInfo* p_ModelInfo=&modelinfo;
@@ -92,7 +92,7 @@ private:
 	DB_Header* m_pDB;
 	DB_BASCug* m_pDBBasCug;
 	DBDataCug* m_pDBDataCug;
-	PFCurve* m_PFpointer;
+	//PFCurve* m_PFpointer;
 
 public:
 	
@@ -121,8 +121,6 @@ public:
 
 	void SetPFCugPointer(PFCug* pPFCug) { m_PFCug = pPFCug; };
 	PFCug* GetPFCugPointer() { return m_PFCug; };
-
-
 
 	void SetFramePointer(CMainFrame* pFrame) { m_pFrame = pFrame; };
 	CMainFrame* GetFramePointer() { return m_pFrame; };
@@ -172,7 +170,7 @@ public:
 	void SetActDoc(CCoupModelDoc* pDoc) { m_pPrevDoc = pDoc; };
 	bool IsActDoc(CCoupModelDoc* pDoc) { if (pDoc == m_pPrevDoc) return true; else return false; };
 
-	void SetPlotPFPointer(PFCurve* pPFCurve) { m_PFpointer=pPFCurve; };
+	//void SetPlotPFPointer(PFCurve* pPFCurve) { m_PFpointer=pPFCurve; };
 
 };		
 

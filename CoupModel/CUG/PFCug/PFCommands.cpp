@@ -609,13 +609,13 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 	else if(section==UG_CORNERBUTTON) {
 		if (item == 6000) {
 			// Create new Data base
-			FILEDLG FDLG = MFC_Util::GetFileDialog("csv", "", "Comma separated file (*.csv)|*.csv|");
+/*			FILEDLG FDLG = MFC_Util::GetFileDialog("csv", "", "Comma separated file (*.csv)|*.csv|");
 			string filename;
 			if (FDLG.opengood)
 				filename = FDLG.filename;
 			else
 				filename = "";
-
+// Remover Feb 2025
 			if (pGetSoil->OpenMainFile(filename, true)) {
 				pGetSoil->CreateSimpleDataBase();
 				pGetSoil->IniNewDataBase();
@@ -631,7 +631,7 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 			}
 
 			return;
-
+*/
 
 		}
 		else if (item == 6010) {

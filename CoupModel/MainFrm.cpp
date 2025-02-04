@@ -56,7 +56,7 @@ CMainFrame::CMainFrame()
 	m_ActDoc=nullptr;
 	m_DocumentValid=false;
 	MySingle::instance().SetFunctionPointer(&m_Func);
-	MySingle::instance().SetPlotPFPointer(&m_PlotPF);
+	//MySingle::instance().SetPlotPFPointer(&m_PlotPF);
 	
 	// TODO: add member initialization code here
 }
@@ -203,7 +203,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndSoilData.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndSoilData);
 	m_wndSoilData.DockToWindow(&m_wndPF,CBRS_RIGHT);
-	MySingle::instance().SetSoilDataPointer(&m_wndSoilData.m_SoilDataGrid);
+	//MySingle::instance().SetSoilDataPointer(&m_wndSoilData.m_SoilDataGrid);
 
 	m_wndPF.m_PFgrid.SetPointerToProfile(&m_wndSoilData.m_SoilDataGrid);
 

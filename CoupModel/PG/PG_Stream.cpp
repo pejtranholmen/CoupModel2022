@@ -319,14 +319,16 @@ bool PG_Stream::ReadDescriptionsFromStream(fstream *pReadOnlyStream)
 		pg.status.a.ToBeCalc[ind] = false;
 	
 	};
-	for (size_t nrep = 0; nrep<pg.Shape.NumRepetitions+1; nrep++) {
+	auto nrepit = pg.Shape.NumRepetitions;
+	if (nrepit == 0) nrepit = 1;
+	for (size_t nrep = 0; nrep<nrepit; nrep++) {
 		pReadOnlyStream->read((char*)&buf[0], descsize);
 		actpos = pReadOnlyStream->tellg();
 		for (size_t i = 0; i<pg.Shape.NumVar; i++) {
 			SetDescriptionsFromFixBuf(i, nrep);
 		}
 	}
-	size_t firsthead = pg.Shape.NumVar*(pg.Shape.NumRepetitions+1) * 60;
+	size_t firsthead = pg.Shape.NumVar*(nrepit) * 60;
 	std::streamsize next = firsthead + pg.Shape.RecordSize + pg.Shape.RecordTotalSizeData;
 	std::streamsize actpos2 = pReadOnlyStream->tellg();
 
@@ -369,7 +371,7 @@ bool PG_Stream::ReadDescriptionsFromStream(fstream *pReadOnlyStream)
                     Add.insert(Add.begin() + ind, pg.Des.defaultAddInfo);
                 }
 			};
-			for (size_t nrep = 0; nrep < pg.Shape.NumRepetitions+1; nrep++) {
+			for (size_t nrep = 0; nrep < nrepit; nrep++) {
 				for (size_t i = 0; i < pg.Shape.NumVar; i++) {				
 					SetAddInfoValue(i, nrep);
 				}

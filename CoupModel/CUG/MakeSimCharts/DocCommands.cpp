@@ -914,9 +914,9 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 						if (!pCSV->CheckFileName(m_pSimDoc))	return -1;
 					}
 				}
-				else if (Group == "MASCUR File") {
+//Remove MASCUR opion				else if (Group == "MASCUR File") {
 
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, "MASCUR File"));
+/*					FCSV* pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, "MASCUR File"));
 					if (pCSV != nullptr) {
 						FILEDLG FileDlg = MFC_Util::GetFileDialog("*.csv", "", "Comma separated file (*.csv)|*.csv|");
 						if (FileDlg.opengood != IDOK) {
@@ -932,7 +932,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 						else
 							return false;
 					}
-				}
+				}*/
 				else if (Group.find("ParCalibrationFile") == 0) {
 
 					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, Group));
