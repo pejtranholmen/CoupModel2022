@@ -103,7 +103,10 @@ bool NC_Organic_Functions::Def() {
 		else if (j == _DIS) condition += "|Dissolved Organics >0";   
 			name = Item[jj]+ Comp[j] ;
 			pX = new X(&O_State[j][jj], pNL, SIMPROFILE, elements(jj + CARBON), STORAGE, NON_LIVING, NORMAL);
-			Define(pX, pNL, name, initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1"+condition);
+			if(jj== 0)
+				Define(pX, pNL, name, initv, UNIT_TYPES::CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1" + condition);
+			else
+				Define(pX, pNL, name, initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1"+condition);
 		}
 
 	

@@ -1396,7 +1396,7 @@ string name;
 	return -1;
 
 }
-bool MR::PreDefined_Criteria_Process() {
+bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
 	auto reset = [&]() {
 		if(m_MStorage.m_Valid_TSV.size()>0) {
 			m_MStorage.UpdateAcceptedRuns(true, true);			
@@ -1471,13 +1471,16 @@ bool MR::PreDefined_Criteria_Process() {
 			auto Dim1_Par_Index = size_t(pDim1Index->GetValue(i) + 0.0001);
 			m_MStorage.UpdateCyclicNumbers(m_MStorage.m_ActualEnsemble, Dim1_Par_Index, Transform);
 			m_MStorage.Reset_AcceptedRuns(i);
-			EstimateNewTransformedPerformance(Transform, Dim1_Par_Index, true);
+			if(!OnlyNewConstrain) 	EstimateNewTransformedPerformance(Transform, Dim1_Par_Index, true);
+			m_MStorage.SetMinMaxOfPerformanceIndicators(true);
 			//m_MStorage.EvaluateFile(false);
 		}
 
 		
 
 		if (numens == 0) return true;
+
+
 
 		for (size_t i = 0; i<pEnsemble->GetSize(); i++) {
 			auto Indicator = size_t(pIndicator->GetValue(i)+0.0001);
@@ -1501,7 +1504,6 @@ bool MR::PreDefined_Criteria_Process() {
 			if (m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
 				m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
 			}
-			m_MStorage.SetMinMaxOfPerformanceIndicators(true); // Only Update the prior distributions
 
 			switch (Indicator) {
 				case 0:
@@ -1527,11 +1529,12 @@ bool MR::PreDefined_Criteria_Process() {
 					break;
 			}
 			if (ZeroAdjust > 0.00001) left=m_MStorage.ReduceCriteria(ZERO_ADJUST, VarIndex);
-			m_MStorage.IsMaxUpdated[i] = m_MStorage.IsMinUpdated[i] = false;
+			
 			auto MaxNum = GetNumAll_TSV_ValVariables();
 			size_t ip = MaxNum * Indicator + VarIndex;
 			auto dist_pair = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
 		
+			
 			m_MStorage.SetMinMaxOfPerformanceIndicators(false); // Only Update the posterior distributions
 		}
 		m_MStorage.m_ActualEnsemble = pre_actEnsemble;

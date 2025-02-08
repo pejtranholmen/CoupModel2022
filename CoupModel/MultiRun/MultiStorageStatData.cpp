@@ -432,10 +432,10 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 						getnext_str(); m_Valid_TSV[i].History[jj].maxvalue = stof(str);
 					}
 				}
-
 				m_pNewMap->m_MStorage.IsMinUpdated[i] = true;
 				m_pNewMap->m_MStorage.IsMaxUpdated[i] = true;
-
+				m_pNewMap->m_MStorage.IsCVUpdated[i] = true;
+				m_pNewMap->m_MStorage.IsMeanUpdated[i] = true;
 			}
 
 		}

@@ -36,6 +36,7 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 		auto pSw=m_pSimDoc->GetSw("PreDefinedEnsembles");
 		if (pSw->GetIntValue() > 0) {
 			AddMenuItem(1065, "Reset and ReCalculate with predefined criteria");
+			AddMenuItem(1066, "Reset and Constrain posterior with predefined criteria");
 			AddMenuItem(1165, "Save Current Criteria with specific file name");
 			AddMenuItem(1175, "Read Saved Criteria from Saved Files:");
 

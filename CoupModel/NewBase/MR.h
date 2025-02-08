@@ -202,7 +202,7 @@ public:
 
 	bool LinkedChangeToSwitches(Sw *pSw, size_t option);
 	bool LinkedChangeToDB_Parameters(Par *pPar, size_t option);
-	bool PreDefined_Criteria_Process();
+	bool PreDefined_Criteria_Process(bool OnlyNewConstrain=false);
 	bool EstimateNewTransformedPerformance(size_t cumulated, size_t dim1Index=string::npos, bool All_New=false);
 
 	pair<size_t,size_t> StartValueofMatchingEnsembleInDim1(size_t ensembleno, CPG* pPGMeas, size_t index_val);

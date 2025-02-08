@@ -709,7 +709,7 @@ vector<float> CResiduals::GetResidualVectorSubSet(size_t RunNo, size_t NumVar, s
 	vector<float> Subset;
 	Subset.resize(ActPoints);
 	vector<float> all = GetResidualVector(RunNo, NumVar);
-	if (all.size() >= ActPoints * Section) {
+	if (all.size() >= ActPoints * Section&&all.size()>0) {
 		for (size_t i = 0; i < ActPoints; i++)
 			Subset[i] = all[ActPoints * (Section)+i];
 	}

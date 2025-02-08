@@ -1242,6 +1242,8 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators(bool Only_Prior) {
 
 	IsMinUpdated[m_ActualEnsemble] = true;
 	IsMaxUpdated[m_ActualEnsemble] = true;
+	IsCVUpdated[m_ActualEnsemble] = true;
+	IsMeanUpdated[m_ActualEnsemble] = true;
 	  //false = update of prior distribution - true =posterior
 	Update_SV_VarStat(true);	//false = update of prior distribution
 #ifndef COUPSTD
