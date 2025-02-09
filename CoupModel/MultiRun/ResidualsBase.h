@@ -30,14 +30,14 @@ public:
 	bool EnsembleReadWrite(bool reading, string EnsembleName, string NewEnsembleName="", size_t ensembleno=string::npos);
 	bool EnsembleReadWrite(bool reading, size_t ensembleno);
 
-	bool ReadWrite_Header(bool reading, size_t ensembleno=string::npos);
+	bool ReadWrite_MeanEnsembleFile(bool reading, size_t ensembleno=string::npos);
 	bool ReadWrite_PriorStat();
 	bool ReadWrite_Ensemble(string EnsembleName);
 	bool OpenResidualFile(bool reading=false);
 	bool CloseResidualFile(bool reading);
 	bool Residuals_ReadWrite_Header(bool reading);
 	bool SetNewEnsembleByNumber(size_t ensembleno);
-	bool AlloResVector();
+	bool AlloResVector(size_t ActRecl=string::npos);
 	string GetXStatFileName(size_t ensembleno=string::npos);
 	bool IsOpen(bool reading=true);
 	bool SetOneValidationVariableIndex(size_t index) { m_ValidationVarIndex = index; if (m_ValidationVarIndex < 1000) return true; else return false; };

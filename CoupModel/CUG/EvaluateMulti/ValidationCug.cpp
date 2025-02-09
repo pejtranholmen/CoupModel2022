@@ -4887,19 +4887,17 @@ BOOL ValidationCug::DefineNewSubPeriod()
 			meas_v = pPG->GetVarVector(ind + 1);
 			filter_v = pPG->GetVarVector(filter_index + 1);
 			for (long irun = 0; irun < m_pSimDoc->m_MStorage.GetNumberOfRuns(); irun++) {
-
-
-				long irun_int;
-				int ifile = m_pSimDoc->MR_GetAddedFiles(irun);
-				auto pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo);
-				if (ifile > 0) pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo, ifile);
-				if (ifile != 0) {
-					irun_int = m_pSimDoc->MR_GetInternalRunNo(irun);
-				}
-				else {
-					irun_int = irun;
-				}
-				res_v = pRes->GetResidualVector(irun_int, ResidualIndex[FileNo - 1]+i);
+			long irun_int;
+			int ifile = m_pSimDoc->MR_GetAddedFiles(irun);
+			auto pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo);
+			if (ifile > 0) pRes = (CResiduals*)m_pSimDoc->GetResidualPointer(FileNo, ifile);
+			if (ifile != 0) {
+				irun_int = m_pSimDoc->MR_GetInternalRunNo(irun);
+			}
+			else {
+				irun_int = irun;
+			}
+			res_v = pRes->GetResidualVector(irun_int, ResidualIndex[FileNo - 1]);
 				sim_v.resize(numrec);
 				for (long ii = 0; ii < numrec; ii++)
 					sim_v[ii] = meas_v[ii] - res_v[ii];

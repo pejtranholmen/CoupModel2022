@@ -1,7 +1,6 @@
 #include "../../stdafx.h"
 #include "../../std.h"
 #include "../../Util.h"
-#include "../Util/StatUtil.h"
 #include "LoadDataToChart.h"
 #include "../ChartProperties\ChartProp.h"
 #include "../../NewBase\Doc.h"
@@ -2128,10 +2127,36 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			}
 	
 		}
-		vector<float> ActiveResiduals;
+		vector<float> ActiveResiduals, Mean_Of_ResidualsValue;
 		size_t Start_SubSet_Residuals = 0;
 		if (c_info.pRes != nullptr) {
-			ActiveResiduals = c_info.pRes->GetResidualVectorSubSet(c_info.ResRunNo, Residual_VarNum, ActNoPoints, act_rep );
+			if (Mean_Of_Repititions) {
+				Mean_Of_ResidualsValue.resize(ActNoPoints);
+				
+					vector< vector<float>> ValidValue;
+					ValidValue.resize(ActNoPoints);
+					for (size_t irepit = 0; irepit < RepHits.size(); irepit++) {
+						ActiveResiduals = m_pSimDoc->GetResidualVectorForAllRuns(c_info.ResRunNo, p_info.Index, ActNoPoints, RepHits[irepit]);
+						for(size_t i=0;i<ActNoPoints;i++)
+							if (ActiveResiduals[i] > -1.E38) ValidValue[i].push_back(-ActiveResiduals[i]);
+					}
+					for (size_t irec = 0; irec < ActNoPoints; ++irec) {
+						if (ValidValue[irec].size() > 0) {
+							size_t ncheck;
+							DistStat stat;
+							vector<float> farray;
+							farray= ValidValue[irec];
+							StatUtil::SortArray(&farray[0], farray.size());
+							MeanStat(&farray[0], farray.size(), &ncheck, &stat);
+							Mean_Of_ResidualsValue[irec] = stat.Mean;
+						}
+						else
+							Mean_Of_ResidualsValue[irec] = MISSING;
+					}
+					ActiveResiduals=Mean_Of_ResidualsValue;
+
+			}
+			
 			Start_SubSet_Residuals = ActNoPoints * (act_rep);
 		}
 		else ActiveResiduals.assign(ActNoPoints, MISSING);
@@ -2204,20 +2229,26 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 						AA[icurve][i + pg_control.YearStartIndex] = GetDataFromPGFile(pg_control, i , PGindex,act_rep);
 					if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
 						if (m_ChartInfo.ResidualSource) {
-							BB_MIN[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
-							BB_MAX[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
-							BB_P10[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
-							BB_P90[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
-							BB_P50[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
-							BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+							if (abs(AA[icurve][i]) < 1.E38) {
+								BB_MIN[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+								BB_MAX[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+								BB_P10[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+								BB_P90[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+								BB_P50[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+								BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 
-							AdjustForMeanOfResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex+Start_SubSet_Residuals, 0);
-							AdjustForMeanOfResiduals(BB[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 1);
-							AdjustForMeanOfResiduals(BB_MIN[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 2);
-							AdjustForMeanOfResiduals(BB_MAX[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 3);
-							AdjustForMeanOfResiduals(BB_P10[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 4);
-							AdjustForMeanOfResiduals(BB_P90[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 5);
-							AdjustForMeanOfResiduals(BB_P50[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 6);
+								AdjustForMeanOfResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 0);
+								AdjustForMeanOfResiduals(BB[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 1);
+								AdjustForMeanOfResiduals(BB_MIN[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 2);
+								AdjustForMeanOfResiduals(BB_MAX[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 3);
+								AdjustForMeanOfResiduals(BB_P10[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 4);
+								AdjustForMeanOfResiduals(BB_P90[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 5);
+								AdjustForMeanOfResiduals(BB_P50[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 6);
+							}
+							else {
+								SetDataBandValueMissing(i_band, pg_control, i);
+							
+							}
 						}
 						else {
 

@@ -93,7 +93,7 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 
 	m_NewEnsembleName = NewEnsembleName;
 
-	if (ReadWrite_Header(reading, ensembleno)) {
+	if (ReadWrite_MeanEnsembleFile(reading, ensembleno)) {
 		//m_IsUpdated = true;
 		if (reading) {		
 			m_EnsembleResFile.CloseFileIn();
@@ -110,7 +110,7 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 				for (size_t ivar = 0; ivar < m_NumVar;ivar++) {
 					vector<size_t> koll2;
 					koll.push_back(koll2);
-					for (size_t irec = 0; irec < m_RecL; irec++) {
+					for (size_t irec = 0; irec < m_MeanPost.mean[ivar].size(); irec++) {
 						if (m_MeanPost.mean[ivar][irec] != m_MeanTest.mean[ivar][irec]) {
 							koll[ivar].push_back(irec);
 
@@ -152,11 +152,14 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 	m_Ensembles[ensembleno].EnsembleFileRead = true;
 	return true;
 }
-bool ResidualsBase::ReadWrite_Header(bool reading, size_t ensemble_no) {
+bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no) {
 
 	bool good;
-	if(m_MeanTest.mean.size()==0) AlloResVector();
+	size_t ActRecL;
+	size_t num_stat = 7;
 
+
+	
 	if (reading) {
 		size_t num;
 		string str;
@@ -167,13 +170,20 @@ bool ResidualsBase::ReadWrite_Header(bool reading, size_t ensemble_no) {
 		getline(m_EnsembleResFile.m_DocFileIn, str);
 		num = atoi(str.c_str());
 		getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+		if (str != "Ensemble Num Records ") return false;
+		getline(m_EnsembleResFile.m_DocFileIn, str);
+		ActRecL = atoi(str.c_str());
+		if (m_MeanTest.mean.size() == 0) AlloResVector(ActRecL);
+
+
+		getline(m_EnsembleResFile.m_DocFileIn, str, ':');
 		getline(m_EnsembleResFile.m_DocFileIn, str);
 		size_t VarToRead = atoi(str.c_str());
 
 
 		vector<float> Dump;
-		size_t cycle = 7;
-		Dump.resize(m_RecL * cycle);
+		
+		Dump.resize(ActRecL * num_stat);
 
 		
 		m_MeanPost.mean.resize(VarToRead);
@@ -186,29 +196,29 @@ bool ResidualsBase::ReadWrite_Header(bool reading, size_t ensemble_no) {
 
 		for (size_t i = 0; i < VarToRead; i++) {
 
-			m_MeanPost.mean[i].resize(m_RecL);
-			m_MeanPost.min[i].resize(m_RecL);
-			m_MeanPost.max[i].resize(m_RecL);
-			m_MeanPost.std[i].resize(m_RecL);
-			m_MeanPost.p10[i].resize(m_RecL);
-			m_MeanPost.p50[i].resize(m_RecL);
-			m_MeanPost.p90[i].resize(m_RecL);
+			m_MeanPost.mean[i].resize(ActRecL);
+			m_MeanPost.min[i].resize(ActRecL);
+			m_MeanPost.max[i].resize(ActRecL);
+			m_MeanPost.std[i].resize(ActRecL);
+			m_MeanPost.p10[i].resize(ActRecL);
+			m_MeanPost.p50[i].resize(ActRecL);
+			m_MeanPost.p90[i].resize(ActRecL);
 
 			getline(m_EnsembleResFile.m_DocFileIn, str, ':');
 			getline(m_EnsembleResFile.m_DocFileIn, str);
 			size_t var = atoi(str.c_str());
 			
 
-			Dump=m_EnsembleResFile.rFloatArray2(m_RecL * cycle, cycle);
-			for (size_t i = 0; i < m_RecL; i++) {
+			Dump=m_EnsembleResFile.rFloatArray2(ActRecL * num_stat, num_stat);
+			for (size_t i = 0; i < ActRecL; i++) {
 
-				m_MeanPost.mean[var][i] = Dump[i * cycle];
-				m_MeanPost.min[var][i] = Dump[i * cycle + 1];
-				m_MeanPost.max[var][i] = Dump[i * cycle + 2];
-				m_MeanPost.std[var][i] = Dump[i * cycle + 3];
-				m_MeanPost.p10[var][i] = Dump[i * cycle + 4];
-				m_MeanPost.p50[var][i] = Dump[i * cycle + 5];
-				m_MeanPost.p90[var][i] = Dump[i * cycle + 6];
+				m_MeanPost.mean[var][i] = Dump[i * num_stat];
+				m_MeanPost.min[var][i] = Dump[i * num_stat + 1];
+				m_MeanPost.max[var][i] = Dump[i * num_stat + 2];
+				m_MeanPost.std[var][i] = Dump[i * num_stat + 3];
+				m_MeanPost.p10[var][i] = Dump[i * num_stat + 4];
+				m_MeanPost.p50[var][i] = Dump[i * num_stat + 5];
+				m_MeanPost.p90[var][i] = Dump[i * num_stat + 6];
 			}
 		}
 
@@ -221,27 +231,28 @@ bool ResidualsBase::ReadWrite_Header(bool reading, size_t ensemble_no) {
 			// New single file.
 			size_t num = ensemble_no;
 			m_EnsembleResFile.m_DocFileOut << "Ensemble No :"<<num<<endl;
+			ActRecL = m_MeanPost.mean[0].size();
+			m_EnsembleResFile.m_DocFileOut << "Ensemble Num Records :" << ActRecL << endl;
 
 			size_t VarToWrite = m_NumVar * m_ScalingNumVarWithDim1;
 			if (VarToWrite > m_MeanPost.mean.size()) VarToWrite = m_NumVar;
 
 			vector<float> Dump;
-			size_t cycle = 7;
-			Dump.resize(m_RecL * cycle);
+			Dump.resize(ActRecL * num_stat);
 			m_EnsembleResFile.m_DocFileOut << "Var in File :" << VarToWrite << endl;
 
 			for (size_t var = 0; var < VarToWrite; var++) {
 				m_EnsembleResFile.m_DocFileOut << "Var No :" << var << endl;
-				for (size_t i = 0; i < m_RecL; i++) {
-					Dump[i*cycle] = m_MeanPost.mean[var][i];
-					Dump[i * cycle+1] = m_MeanPost.min[var][i];
-					Dump[i * cycle + 2] = m_MeanPost.max[var][i];
-					Dump[i * cycle + 3] = m_MeanPost.std[var][i];
-					Dump[i * cycle + 4] = m_MeanPost.p10[var][i];
-					Dump[i * cycle + 5] = m_MeanPost.p50[var][i];
-					Dump[i * cycle + 6] = m_MeanPost.p90[var][i];
+				for (size_t i = 0; i < ActRecL; i++) {
+					Dump[i*num_stat] = m_MeanPost.mean[var][i];
+					Dump[i * num_stat+1] = m_MeanPost.min[var][i];
+					Dump[i * num_stat + 2] = m_MeanPost.max[var][i];
+					Dump[i * num_stat + 3] = m_MeanPost.std[var][i];
+					Dump[i * num_stat + 4] = m_MeanPost.p10[var][i];
+					Dump[i * num_stat + 5] = m_MeanPost.p50[var][i];
+					Dump[i * num_stat + 6] = m_MeanPost.p90[var][i];
 				}
-				m_EnsembleResFile.wFloatArray2(Dump, m_RecL*cycle,cycle);
+				m_EnsembleResFile.wFloatArray2(Dump, ActRecL*num_stat,num_stat);
 			}
 
 			good = m_EnsembleResFile.IsFileOutGood();
@@ -271,10 +282,11 @@ string ResidualsBase::GetXStatFileName(size_t EnsembleNo) {
 	}
 	return "";
 }
-bool ResidualsBase::AlloResVector() {
-	if (m_RecL == 0 || m_NumVar == 0) return false; 
+bool ResidualsBase::AlloResVector(size_t ActRecL) {
+	if (m_NumVar == 0) return false; 
+	if(ActRecL==string::npos) ActRecL = m_RecL;
 
-	m_Residuals.resize(m_RecL);
+	m_Residuals.resize(ActRecL);
 	m_Mean.resize(m_NumVar*m_RecL);
 	m_MeanPrior.mean.resize(m_NumVar*m_ScalingNumVarWithDim1);
 	m_MeanPrior.min.resize(m_NumVar*m_ScalingNumVarWithDim1);
@@ -301,31 +313,31 @@ bool ResidualsBase::AlloResVector() {
 	m_MeanTest.p90.resize(m_NumVar*m_ScalingNumVarWithDim1);
 	
 	for (size_t i = 0; i < m_NumVar*m_ScalingNumVarWithDim1; i++) {
-		m_MeanPrior.mean[i].resize(m_RecL);
-		m_MeanPrior.min[i].resize(m_RecL);
-		m_MeanPrior.max[i].resize(m_RecL);
-		m_MeanPrior.std[i].resize(m_RecL);
-		m_MeanPrior.p10[i].resize(m_RecL);
-		m_MeanPrior.p50[i].resize(m_RecL);
-		m_MeanPrior.p90[i].resize(m_RecL);
+		m_MeanPrior.mean[i].resize(ActRecL);
+		m_MeanPrior.min[i].resize(ActRecL);
+		m_MeanPrior.max[i].resize(ActRecL);
+		m_MeanPrior.std[i].resize(ActRecL);
+		m_MeanPrior.p10[i].resize(ActRecL);
+		m_MeanPrior.p50[i].resize(ActRecL);
+		m_MeanPrior.p90[i].resize(ActRecL);
 
-		m_MeanPost.mean[i].resize(m_RecL);
-		m_MeanPost.min[i].resize(m_RecL);
-		m_MeanPost.max[i].resize(m_RecL);
-		m_MeanPost.std[i].resize(m_RecL);
-		m_MeanPost.p10[i].resize(m_RecL);
-		m_MeanPost.p50[i].resize(m_RecL);
-		m_MeanPost.p90[i].resize(m_RecL);
+		m_MeanPost.mean[i].resize(ActRecL);
+		m_MeanPost.min[i].resize(ActRecL);
+		m_MeanPost.max[i].resize(ActRecL);
+		m_MeanPost.std[i].resize(ActRecL);
+		m_MeanPost.p10[i].resize(ActRecL);
+		m_MeanPost.p50[i].resize(ActRecL);
+		m_MeanPost.p90[i].resize(ActRecL);
 		
-		m_MeanTest.mean[i].resize(m_RecL);
-		m_MeanTest.min[i].resize(m_RecL);
-		m_MeanTest.max[i].resize(m_RecL);
-		m_MeanTest.std[i].resize(m_RecL);
-		m_MeanTest.p10[i].resize(m_RecL);
-		m_MeanTest.p50[i].resize(m_RecL);
-		m_MeanTest.p90[i].resize(m_RecL);
+		m_MeanTest.mean[i].resize(ActRecL);
+		m_MeanTest.min[i].resize(ActRecL);
+		m_MeanTest.max[i].resize(ActRecL);
+		m_MeanTest.std[i].resize(ActRecL);
+		m_MeanTest.p10[i].resize(ActRecL);
+		m_MeanTest.p50[i].resize(ActRecL);
+		m_MeanTest.p90[i].resize(ActRecL);
 	}
-	m_SizeOfMeanVector = m_NumVar*m_RecL;
+	m_SizeOfMeanVector = m_NumVar*ActRecL;
 	return true;
 }
 

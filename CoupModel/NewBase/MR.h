@@ -105,6 +105,7 @@ public:
 	void SetMBinFileName(string value);
 	void Set_ReReadMStorageFile();
 	void MR_Reset_MeanResiduals();
+	vector<float> GetResidualVectorForAllRuns(size_t RunNo, size_t ResVarNo, size_t ActPoints, size_t Section=0);
 	size_t MR_GetSimTimeLeft(size_t);
 	size_t m_TimeOneRun;
 	void MR_SetSimTimeUsed();

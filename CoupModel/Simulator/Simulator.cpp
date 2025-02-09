@@ -1074,7 +1074,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			if (m_ValPGFile[i].file->GetNumRepititions() == 0)
 				recl = m_ValPGFile[i].file->GetNumRecords();
 			else
-				recl=m_ValPGFile[i].file->GetNumRecords() * (m_ValPGFile[i].file->GetNumRepititions()+1);
+				recl=m_ValPGFile[i].file->GetNumRecords() * (m_ValPGFile[i].file->GetNumRepititions());
 			auto numvar=m_ValPGFile[i].varindex.size();
 			auto totrec=numvar*m_pModelInfo->TotalNoMulRun;
 			if(m_ValPGFile[i].pRes!=nullptr) // One residual Xbin file for entire Multirun

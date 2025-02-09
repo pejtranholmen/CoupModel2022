@@ -3585,7 +3585,7 @@ void GridPGDoc::Make_DataHeader()
 			str = "R:" + FUtil::STD_ItoAscii(pCPG->GetViewRepetition(i));
 			if (Complete) {
 				string s;
-				s = pCPG->GetVarId(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i));
+				s = pCPG->GetVarId(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i)-1);
 				FUtil::trim(s);
 				str += "-"; str += s.c_str();
 			}
@@ -3594,7 +3594,7 @@ void GridPGDoc::Make_DataHeader()
 		auto GetVarString = [&](size_t i) {
 			str = "V:" + FUtil::STD_ItoAscii(pCPG->GetViewVariable(i));
 			string s;
-			s = pCPG->GetVarName(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i));
+			s = pCPG->GetVarName(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i)-1);
 			FUtil::trim(s); 
 			if (RepModelLayout) {
 				str += "-"; str += s.c_str();
@@ -4064,7 +4064,7 @@ bool GridPGDoc::OnGetFileDataFillGrid(CPG *pCPG)
 					QuickSetText(0, irow, pCPG->GetDate(ii + 1));
 				}
 				for (size_t ind = 0; ind<pCPG->GetNumToView(); ind++) {
-					if (pCPG->GetViewRepetition(ind) == nrep) {
+					if (pCPG->GetViewRepetition(ind) == nrep+1) {
 						ivarno = pCPG->GetViewVariable(ind);
 						icol = ind + 1;
 						float v = pCPG->GetVarValue(ivarno, ii + 1, nrep);

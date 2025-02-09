@@ -397,7 +397,11 @@ vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break)
 		}
 		else
 			getline(m_DocFileIn,str,',');
-		auto value=atof(str.c_str());
+		float value;
+		if(str.size()>0)		
+			value = atof(str.c_str());
+		else
+			value=MISSING;
 		v[i]=value;
 	}
 	return v;

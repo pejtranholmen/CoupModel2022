@@ -3139,6 +3139,31 @@ void MR::MR_Reset_MeanResiduals()
 		m_ResidualFileVector[ifile][i]->m_IsUpdated=false;
 	}
 }
+vector<float> MR::GetResidualVectorForAllRuns(size_t RunNo, size_t VarNo, size_t ActPoints, size_t section)
+{
+	vector<float> All_residuals;
+
+	long irun_int;
+
+	auto FileNo = m_ValidationData.GetValFileNumber(VarNo);
+		int ifile = MR_GetAddedFiles(RunNo);
+
+		auto pRes = (CResiduals*)GetResidualPointer(FileNo,ifile);
+		pRes = (CResiduals*)m_pSimDoc->GetValidResidualPointer(FileNo, ifile);
+		if (pRes == nullptr) m_pSimDoc->MR_XBin_IsOpen(FileNo, ifile);
+
+		if (ifile != 0) {
+			irun_int = m_pSimDoc->MR_GetInternalRunNo(RunNo);
+		}
+		else {
+			irun_int = RunNo;
+		}
+		auto res_v = pRes->GetResidualVector(irun_int, 0);
+		All_residuals.insert(All_residuals.begin(), res_v.begin()+section*ActPoints, res_v.begin()+(section+1)*ActPoints);
+
+
+return All_residuals;
+}
 bool MR::MR_Storage_OpenPrevious()
 {
 		return m_MStorage.OpenFile(m_PreviousMultiMBinFile.c_str(), false);

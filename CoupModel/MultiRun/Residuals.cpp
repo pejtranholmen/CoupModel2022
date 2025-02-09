@@ -902,6 +902,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 	auto pSw = m_pNewMap->GetSw("UseFilterParameters");
 	auto pSw2 = m_pNewMap->GetSw("PreDefinedEnsembles");
 	size_t n_cycle_withinPGFile=1;
+	size_t max_RecL_ObsFile = string::npos;
 	CPG* pPG_ObsFile;
 
 	if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
@@ -911,9 +912,13 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 			pPG_ObsFile=pF->GetPointer();
 			pPG_ObsFile->ReOpen();
 			n_cycle_withinPGFile=pPG_ObsFile->GetCycleWithCommonTime();
+			max_RecL_ObsFile = pPG_ObsFile->GetNumRecords() * pPG_ObsFile->GetNumRepititions();
+
 		}
 	}
 
+	auto Act_RecL = m_RecL;
+	if(Act_RecL>max_RecL_ObsFile) Act_RecL=max_RecL_ObsFile;
 	for (size_t iens = 0; iens < m_pNewMap->m_MStorage.m_AcceptedRuns.size(); iens++) {
 		m_IsUpdated = true;
 		for (size_t i = 0; i < m_Ensembles.size(); i++) {
@@ -970,7 +975,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 						}
 					}
 					if (n_cycle_withinPGFile > 1) {
-						for (size_t index = 0; index < m_RecL; index++) {
+						for (size_t index = 0; index < Act_RecL; index++) {
 							m_MeanPost.mean[ii][index] = float(MISSING);
 							m_MeanPost.min[ii][index] = float(MISSING);
 							m_MeanPost.max[ii][index] = float(MISSING);
@@ -989,7 +994,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 
 
 						for (size_t i = 0; i < m_NumAccepted / inc_step; i += m_ScalingNumVarWithDim1) {
-							AcceptedResiduals[i].resize(m_RecL);
+							
 							size_t iaccept = i * inc_step;
 							size_t irun = m_pNewMap->m_MStorage.m_AcceptedRuns[iens][iaccept] + startvalue;
 							ifile = m_pNewMap->MR_GetAddedFiles(irun);
@@ -1003,10 +1008,11 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 								if (m_ScalingNumVarWithDim1 > 1) run_to_read = (irun_int / m_ScalingNumVarWithDim1) * m_ScalingNumVarWithDim1 + ii % m_ScalingNumVarWithDim1;
 								AcceptedResiduals[i] = pRes->GetResidualVector(run_to_read, var_to_read);
 							}
+							AcceptedResiduals[i].resize(Act_RecL);
 						}
 
 
-						for (size_t index = startvalue; index < m_RecL; index += n_cycle_withinPGFile) {
+						for (size_t index = startvalue; index < Act_RecL; index += n_cycle_withinPGFile) {
 							if (index % 200 == 0) {
 #ifndef COUPSTD	
 								float scale;
@@ -1023,8 +1029,8 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 								if (abs(value) < abs(MISSING))
 									FArray.push_back(value);
 							}
-							if (m_MeanPost.mean.size() <= ii) {
-								AlloResVector();
+							if (m_MeanPost.mean.size() <= ii|| m_MeanPost.mean[ii].size()!=Act_RecL) {
+								AlloResVector(Act_RecL);
 							}
 							if (FArray.size() >= 3) {
 								//BAYESIANCALIB_mp_DIST();

@@ -76,13 +76,14 @@ void CPGView::UpdateViewOrder()
 		m_DataView.clear();
 		DataView data;
 		size_t ind;
+		size_t maxrepit = max(size_t(1), pg.Shape.NumRepetitions);
 		if(m_RepetitionsFirst) {
 			for (size_t i=0;i<pg.Shape.NumVar;i++) {
-				for (size_t nrep=0; nrep<pg.Shape.NumRepetitions+1; nrep++) {
+				for (size_t nrep=0; nrep<maxrepit; nrep++) {
 						ind=nrep*pg.Shape.NumVar+i;
 						if(pg.status.a.ToBeViewed[ind]) {
 							data.NumVar=i+1;
-							data.Repit=nrep;
+							data.Repit=nrep+1;
 							m_DataView.push_back(data);
 						}
 				}
@@ -90,12 +91,13 @@ void CPGView::UpdateViewOrder()
 
 		}
 		else {
-			for (size_t nrep=0; nrep<pg.Shape.NumRepetitions+1; nrep++) {
+
+			for (size_t nrep=0; nrep<maxrepit; nrep++) {
 				for (size_t i=0;i<pg.Shape.NumVar;i++) {
 						ind=nrep*pg.Shape.NumVar+i;
 						if(pg.status.a.ToBeViewed[ind]) {
 							data.NumVar=i+1;
-							data.Repit=nrep;
+							data.Repit=nrep+1;
 							m_DataView.push_back(data);
 						}
 				}
