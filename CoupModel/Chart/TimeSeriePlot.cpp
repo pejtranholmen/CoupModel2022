@@ -519,18 +519,15 @@ void*  TimeSeriePlot::CreateXYChart()
 	createlegend=m_pUtil->MakeLegends();
 
 	if(m_ChartSize.yrow==0&&m_ChartSize.xcol==0) {
+			m_pProp->m_MakeChartTitle = true;
 			if(m_pProp->m_NumMultiChartX==1&&m_pProp->m_NumMultiChartY==1) {
 				pXY_Chart = new  XYChart(m_ChartSize.xplotwidth+xleft+xright, m_ChartSize.yplotheight+ytop+ybottom, m_pUtil->m_ColorBackground);
-				m_pProp->m_MakeChartTitle=true;
 			}
 			else if(m_pProp->m_NumMultiChartY==1) {
 				pXY_Chart = new  XYChart(m_ChartSize.xplotwidth+xleft+m_ChartSize.xdiff2, m_ChartSize.yplotheight+ytop+ybottom, m_pUtil->m_ColorBackground);
-				m_pProp->m_MakeChartTitle=true;
 			}
 			else if(m_pProp->m_NumMultiChartX==1){
-				pXY_Chart = new  XYChart(m_ChartSize.xplotwidth+xleft+xright, m_ChartSize.yplotheight+ytop+m_ChartSize.ydiff2, m_pUtil->m_ColorBackground);
-				m_pProp->m_NoXAxisScale=true;
-				m_pProp->m_MakeChartTitle=true;
+				pXY_Chart = new  XYChart(m_ChartSize.xplotwidth+xleft+xright, m_ChartSize.yplotheight+ytop+m_ChartSize.ydiff2, m_pUtil->m_ColorBackground);			
 			}
 			else {
 				pXY_Chart = new  XYChart(m_ChartSize.xplotwidth+xleft+m_ChartSize.xdiff, m_ChartSize.yplotheight+ytop+m_ChartSize.ydiff2, m_pUtil->m_ColorBackground);
@@ -554,14 +551,14 @@ void*  TimeSeriePlot::CreateXYChart()
 				pXY_Chart->addLegend(legendposX+m_ChartSize.xdiff, legendposY+ytop, vertical_legends, "arialbd.ttf", m_pUtil->m_LegendSizePoint)->setBackground(m_pUtil->m_ColorLegendBackground, m_pUtil->m_ColorLegendBackgroundFrame);
 		}
 		else if(m_ChartSize.yrow==0) {
+			m_pProp->m_MakeChartTitle = true;
 			if(m_pProp->m_NumMultiChartY==1)
 				pXY_Chart = new  XYChart(m_ChartSize.xplotwidth+m_ChartSize.xdiff, m_ChartSize.yplotheight+ytop+ybottom, m_pUtil->m_ColorBackground);
 			else {
 				pXY_Chart = new  XYChart(m_ChartSize.xplotwidth+m_ChartSize.xdiff, m_ChartSize.yplotheight+ytop+m_ChartSize.ydiff2, m_pUtil->m_ColorBackground);
 				m_pProp->m_NoXAxisScale=true;
 			}
-			if(m_ChartSize.xcol==m_pProp->m_NumMultiChartX/2)
-				m_pProp->m_MakeChartTitle=true;
+				
 			m_pProp->m_NoYAxisScale=true;
 			pXY_Chart->setPlotArea(m_ChartSize.xdiff1, ytop, m_ChartSize.xplotwidth , m_ChartSize.yplotheight, 0xffffff, -1, -1, 0xcccccc, 0xcccccc);
 			if(createlegend)

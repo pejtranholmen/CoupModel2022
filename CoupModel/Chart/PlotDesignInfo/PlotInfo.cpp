@@ -451,7 +451,7 @@ PLOTv PlotInfo::MakeMultiParChart(size_t i, size_t i_doc) {
 	out.Index=m_pSimDoc->m_SelectMultiPar[i].Index;
 	out.DataType = DATA_TYPES::SIM_PAR;
 	out.pBase=m_pSimDoc->m_SelectMultiPar[i].pBase;
-	out.TabIndex=m_pSimDoc->m_SelectMultiPar[i].LIndex-1;
+	out.TabIndex=m_pSimDoc->m_SelectMultiPar[i].LIndex;
 	if(m_pSimDoc->m_SelectedDocuments.size()<=1)
 		out.pSimDoc=m_pSimDoc;
 	else if(i_doc<m_pSimDoc->m_SelectedDocuments.size()) {

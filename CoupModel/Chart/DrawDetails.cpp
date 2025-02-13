@@ -884,7 +884,7 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 
 				CheckIfRightAxis(p_info.DataType, ivar, curve_count);
 
-				if (curve_count==0) {
+				if (curve_count==0&& m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) {
 					m_Label.ytitle1 = m_Label.test+ " ("+m_Label.unit+")";
 					m_CurrentChartInfo.Y_AxisTitle_Left = m_Label.ytitle1;
 				}

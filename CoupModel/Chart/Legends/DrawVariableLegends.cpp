@@ -458,8 +458,11 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 			m_Label.st = p_info.pBase->GetName();
 			m_Label.unit = p_info.pBase->GetUnit();
 			m_Label.test = p_info.pBase->GetName();
-			if (p_info.pBase->Is_Vector())
+			if (p_info.pBase->Is_PTable()) {
 				m_Label.test += "(" + FUtil::STD_ItoAscii(p_info.TabIndex + 1) + ")";
+				m_Label.st= m_Label.test;
+			}
+
 		}
 
 		if (m_pProp->IsFirstIndepSet()) {
