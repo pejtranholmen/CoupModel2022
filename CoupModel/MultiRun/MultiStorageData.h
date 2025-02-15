@@ -272,7 +272,8 @@ public:
 
 	vector<VALSUM> m_ValSumValues_Stored;
 	vector<STAT> m_PriorSumVar, m_PostSumVar;
-
+	vector<size_t> m_AddedFirstRunNo;
+	vector<string> m_AddedFiles;
 	
 protected:
 	size_t m_CyclicNumber, m_CyclicStartPos, m_Dim1Value;
@@ -305,8 +306,7 @@ protected:
 	//CUIntArray m_RunNo, m_Accepted;
 	string m_FileName;
 	vector<size_t> m_AddedNumRuns;
-	vector<size_t> m_AddedFirstRunNo;
-	vector<string> m_AddedFiles;
+
 	char filestr;
 	vector<unsigned long> m_RunNo, m_Accepted;
 

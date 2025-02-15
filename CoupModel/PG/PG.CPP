@@ -2953,7 +2953,7 @@ bool CPG::EstimateWithinYearStatistics(Doc *pDoc)
 		return false;
 }
 
-bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t EnsembleNo)
+bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t EnsembleNo,vector<string> *addedfilenames, vector<size_t> *addedfirstRunNo)
 {
 	if(!pg.Shape.RepetitionMode) return false;
 	if (m_UpdatedMultiAccepted.size() <= EnsembleNo) return false;
@@ -2971,10 +2971,14 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 		v_accepted[EnsembleNo].resize(size);
 	}
 
-	
+	string origpgfilename=pg.status.FileName;
+	auto pos= origpgfilename.find_last_of(".Bin");
+	string pgfilenamebase=origpgfilename.substr(0,pos-9);
 
 	size_t rep;
+	size_t FirstRunNo=0;
 	size_t n_count; // number of valid points within the ensemble
+	size_t TotalNumberOfRuns= pg.Shape.NumRepetitions;
 	for(size_t rec=0;rec<pg.Shape.NumRecords;rec++) {
 		size_t i;
 		if(all) {
@@ -2986,6 +2990,7 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 			i=0;
 		}
 		n_count=0;
+		size_t n_files=0;
 		vector<vector<float> > MDF(pg.Shape.NumVar);
 		DistStat stat;
 
@@ -2995,18 +3000,49 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 			else
 				MDF[i].resize(acceptedruns->size()) ;
 		}
-		
-		while(rep<pg.Shape.NumRepetitions) {
-			std::streamsize newpos=pg.Shape.RecordSize*(rec+1+rep*pg.Shape.NumRecords);
-			m_MainPGStreamReadWrite.seekg(newpos,ios::beg);
-			if(!m_MainPGStreamReadWrite.good()) {
-				ReOpen();
-				m_MainPGStreamReadWrite.seekg(newpos,ios::beg);
-				if(!m_MainPGStreamReadWrite.good()) return false;
+		// Summation of all values
+
+		if (addedfirstRunNo != nullptr && addedfirstRunNo->size() > 0) {
+			TotalNumberOfRuns+=addedfirstRunNo->at(addedfirstRunNo->size()-1);
+			string firstfile = addedfilenames->at(0);
+			auto pos = firstfile.find_last_of(".MBin");
+			string number = firstfile.substr(pos - 10, 6);
+			FirstRunNo = atoi(number.c_str())- pg.Shape.NumRepetitions;
+
+		}
+		while(rep<TotalNumberOfRuns) {
+			if (rep < pg.Shape.NumRepetitions) {
+				std::streamsize newpos = pg.Shape.RecordSize * (rec + 1 + rep * pg.Shape.NumRecords);
+				m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
+				if (!m_MainPGStreamReadWrite.good()) {
+					ReOpen();
+					m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
+					if (!m_MainPGStreamReadWrite.good()) return false;
+
+				}
+				newpos = m_MainPGStreamReadWrite.tellg();
+				m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0], pg.Shape.RecordSize);
+
 
 			}
-			newpos=m_MainPGStreamReadWrite.tellg();
-			m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0],pg.Shape.RecordSize);		
+			else {
+				while(rep>=(addedfirstRunNo->at(n_files)-FirstRunNo)) {
+					n_files++;
+				}
+				auto filename = addedfilenames->at(n_files-1);
+
+				auto pos = filename.find_last_of(".MBin");
+				string number = filename.substr(pos - 10, 6);
+				filename= pgfilenamebase + number + ".Bin";
+
+				fstream file;
+				file.open(filename, ios::in | ios::binary);
+				size_t lrepinfile = rep - (addedfirstRunNo->at(n_files-1)-FirstRunNo);
+				std::streamsize newpos = pg.Shape.RecordSize * (rec + 1 + lrepinfile * pg.Shape.NumRecords);
+				file.seekg(newpos,ios::beg);
+				file.read((char*)&pg.Var.v[0], pg.Shape.RecordSize);
+
+			}
 
 			for(size_t n=0;n<pg.Shape.NumVar;n++) {
 				MDF[n][n_count]=pg.Var.v[n+1];
@@ -3015,7 +3051,7 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 			n_count++;
 			if(!all) {
 				if(i>=acceptedruns->size())
-					rep=pg.Shape.NumRepetitions;
+					rep= TotalNumberOfRuns;
 				else
 					rep=acceptedruns->at(i);
 			}

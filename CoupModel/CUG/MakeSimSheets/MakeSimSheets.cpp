@@ -755,6 +755,9 @@ bool MakeSimSheets::Make_RunInfoSheet()
 								str="";
 								for(int i=0;i<ifiles;i++) {
 									str+=m_pSimDoc->m_MStorage.GetNameAddedFiles(i);
+
+
+
 									str+="\n";
 								}
 								cell.SetCellType(UGCT_DROPLIST);

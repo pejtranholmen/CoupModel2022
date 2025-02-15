@@ -179,8 +179,26 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			if (ifiles > 0) getline(m_EvaluationFile.m_DocFileIn, str);
 			size_t num, numensembles, num_accepted;
 			for (unsigned long i = 0; i < ifiles; i++) {
-				getline(m_EvaluationFile.m_DocFileIn, str, ',');
+				getline(m_EvaluationFile.m_DocFileIn, str, ','); 
+				{ 
+					bool exist = FUtil::IsFileExisting(str);
+					if (!exist) {
+						string UserDirectory = "";
+						UserDirectory = FUtil::GetProfileStringStd("UserDirectory", UserDirectory);
+						int ipos = str.find("\\");
+						while (ipos >= 0) {
+							str = str.substr(ipos + 1);
+							ipos = str.find("\\");
+						}
+						string testname = UserDirectory + str;
+						str= testname;
+					}
+
+
+
 					m_AddedFiles.push_back(str);
+
+				}
 				getline(m_EvaluationFile.m_DocFileIn, str, ','); num = stoi(str);
 					m_AddedNumRuns.push_back(num);
 				getline(m_EvaluationFile.m_DocFileIn, str);	num = stoi(str);

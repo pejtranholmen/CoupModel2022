@@ -540,7 +540,7 @@ CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
 							p_info.EnsembleNo;
 							bool multivalid = m_pSimDoc->MR_Storage_Open();
 							if (m_pSimDoc->m_MStorage.m_AcceptedRuns.size()>0) {
-									out.pPG1->EstimateMultiStatistics(false, &m_pSimDoc->m_MStorage.m_AcceptedRuns[p_info.EnsembleNo], p_info.EnsembleNo);
+									out.pPG1->EstimateMultiStatistics(false, &m_pSimDoc->m_MStorage.m_AcceptedRuns[p_info.EnsembleNo], p_info.EnsembleNo, &m_pSimDoc->m_MStorage.m_AddedFiles, &m_pSimDoc->m_MStorage.m_AddedFirstRunNo);
 							}
 							else {
 								out.pPG1 = nullptr;
