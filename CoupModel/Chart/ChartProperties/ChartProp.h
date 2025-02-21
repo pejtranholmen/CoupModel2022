@@ -105,7 +105,11 @@ public:
 	bool SetChartType(int chart_type);
 	bool SetChartType(CHART_TYPES chart_type);
 	bool SetChartType(string chart_type_string);
+	void ResetChartType() {
+		SetChartType(m_PreviousChartType);
+	};
 	vector<string> GetChartTypeOptions(bool Complete = true);
+	CHART_TYPES GetChartTypeIndex() const noexcept;
 	string GetCurrentChartTypeOption() { return m_ChartTypesOptions[size_t(m_ChartType)].typtext; };
 	string GetChartTypeString();
 
@@ -127,9 +131,8 @@ public:
 	TimeScale m_TimeScale;
 	bool ChangeChartTypeForward();
 	
-	CHART_TYPES GetChartTypeIndex();
 
-	CHART_TYPES m_ChartType;
+	CHART_TYPES m_ChartType, m_PreviousChartType;
 
 	int m_MultiSequence;
 	int m_multi_ResidualSequence;

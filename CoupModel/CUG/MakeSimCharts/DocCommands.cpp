@@ -2573,7 +2573,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 		return true;
 	}
 	else if(item==5019) {
-			m_pProp->m_ChartType= CHART_TYPES::TIME_SERIE;
+			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 
 			if(m_pSimDoc->IsMultiSimulation())
 				m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);

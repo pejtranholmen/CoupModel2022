@@ -161,7 +161,7 @@ void ChartFileSave::OnReDraw(bool reload, Doc *pSimDoc)
 		pChartCug->m_TableView.DrawTablePlot(pViewer);
 	}
 	else if(reload) {
-		if(pChartCug->m_TimeSeriePlot.LoadTimeSerieData()&&(!pUtil->m_RealTimeMode
+		if(pChartCug->m_TimeSeriePlot.LoadTimeSerieData(true)&&(!pUtil->m_RealTimeMode
 			&&!pUtil->m_ParameterPlotMode&&!pUtil->m_TablePlotMode)) {
 		//OnInit(&m_pView->m_ChartViewer);
 			//pChartCug->m_TimeSeriePlot.LoadTimeSerieData();

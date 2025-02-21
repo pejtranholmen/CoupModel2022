@@ -16,6 +16,7 @@ ChartProp::ChartProp(void)
 	m_ActualMultiSheet=-1;
 	m_AggregateTime = true;
 	m_ChartType= CHART_TYPES::TIME_SERIE;
+	m_PreviousChartType = CHART_TYPES::TIME_SERIE;
 	CHART_TYPES_OPTIONS o;
 	o.typ = CHART_TYPES::SCATTER; o.typtext = "Scatter chart";
 	m_ChartTypesOptions.push_back(o);
@@ -324,19 +325,19 @@ string ChartProp::GetChartTypeString()
 {
 	string str;
 	switch (m_ChartType) {
-	case 0:
+	case CHART_TYPES::SCATTER:
 		str = "Scatter:";
 		break;
-	case 1:
+	case CHART_TYPES::TIME_SERIE:
 		str = "Time Serie:";
 		break;
-	case 2:
+	case CHART_TYPES::FREQUENCE:
 		str = "Distribution:";
 		break;
-	case 3:
+	case CHART_TYPES::CUM_FREQUENCE:
 		str = "Cumulative Dist:";
 		break;
-	case 4:
+	case CHART_TYPES::CONTOUR_CHART:
 		str = "Contour:";
 		break;
 	}
@@ -351,7 +352,7 @@ vector<string> ChartProp::GetChartTypeOptions(bool Complete)
 		for (size_t i = 1; i < 4; i++)	out.push_back(m_ChartTypesOptions[i].typtext);
 	return out;
 }
-CHART_TYPES ChartProp::GetChartTypeIndex()
+CHART_TYPES ChartProp::GetChartTypeIndex() const noexcept
 {
 	return m_ChartType;
 }

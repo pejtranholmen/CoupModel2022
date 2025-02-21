@@ -465,6 +465,7 @@ int DocClick::OutPutVarClick(int col, int row) {
 							out.pBase=pSw;
 							out.LIndex=Index;
 							out.row=row;
+							out.col = col;
 							if(col==3)
 								out.MeanIndicator= ENSEMBLE_TYPE::NO;
 							else {
@@ -605,6 +606,7 @@ int DocClick::OutPutVarClick(int col, int row) {
 	}
 	else if(col>=7) {
 		pSw=nullptr;
+		auto koll = m_pProp->m_ChartType;
 		//int nselV=m_pSimDoc->m_ValidationData.GetNumberSelectedTSV_Val();
 		if(m_pSimDoc->IsFinishedSimulation()&&m_pSimDoc->IsMultiSimulation()) {
 			GetCell(col,row, &cell);

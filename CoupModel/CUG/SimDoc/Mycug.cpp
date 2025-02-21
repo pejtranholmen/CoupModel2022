@@ -834,6 +834,7 @@ void MyCug::SortAndJoin(int col, int isheet)
 												out.pBase=pSw;
 												out.LIndex=1;
 												out.row=i;
+//												out.col=
 												out.IType=p_ModelInfo->GetTypeIndex(Type)-3;
 												out.MeanIndicator=ENSEMBLE_TYPE::NO;
 												out.subchart=m_CurrentSubChart;

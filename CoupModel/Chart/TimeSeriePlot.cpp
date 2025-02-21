@@ -155,6 +155,7 @@ bool TimeSeriePlot::MakeTimeSeriePlot()
 			//m_ChartViewer=&m_pView->m_ChartViewer;
 			if (!m_pUtil->m_Displayed)
 				DrawTimeSeriePlot(&m_pView->m_ChartViewer);
+			m_pProp->ResetChartType();
 			return true;
 		}
 		else
@@ -983,8 +984,12 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 	}
 
 
-
-	for(int i=0; i<m_ChartInfo.NumVariableBands;i++) {
+	size_t loopsize = m_ChartInfo.NumVariableBands;
+	if (loopsize > NUM_BAND) {
+		loopsize = NUM_BAND;
+		m_ChartInfo.NumVariableBands = NUM_BAND;
+	}
+	for(int i=0; i<loopsize;i++) {
 		if(m_pProp->viewPortDataSeriesB[i]!=nullptr) delete [] m_pProp->viewPortDataSeriesB[i];
 		m_pProp->viewPortDataSeriesB[i] = new double[m_ChartInfo.NumOfPoints];
 		memcpy(m_pProp->viewPortDataSeriesB[i], m_dataSeriesB[i].data + m_Agg.StartIndex, m_Agg.ArraySizeInBytes);

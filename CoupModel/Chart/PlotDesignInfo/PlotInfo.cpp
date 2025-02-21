@@ -247,8 +247,9 @@ PLOTv PlotInfo::MakeOutPutChartInfo(size_t i, size_t i_doc) {
 	out.TabIndex=m_pSimDoc->m_SelectOut[i].LIndex-1;
 	out.EnsembleType=m_pSimDoc->m_SelectOut[i].MeanIndicator;
 
-
-	out.ChartType = m_pProp->m_ChartType;
+	if (m_pSimDoc->m_SelectOut[i].col == 3 || m_pSimDoc->m_SelectOut[i].col == 4) out.ChartType = CHART_TYPES::TIME_SERIE;
+	else
+		out.ChartType = m_pProp->m_ChartType; //previous choice
 	
 	if(m_pSimDoc->m_SelectedDocuments.size()<=1)
 		out.pSimDoc=m_pSimDoc;
@@ -384,12 +385,14 @@ PLOTv PlotInfo::MakeMultiSumChart(size_t i, size_t i_doc) {
 	}
 	else
 		out.pSimDoc=m_pSimDoc;
-	if(m_pProp->IsFirstIndepSet()&&m_pProp->GetIndepFirst()!=DATEAXIS&&!m_pProp->IsSecondIndepSet())
-		out.ChartType= CHART_TYPES::SCATTER;
-	else if(m_pProp->IsSecondIndepSet())
-		out.ChartType= CHART_TYPES::CONTOUR_CHART;
+	if (m_pProp->IsFirstIndepSet() && m_pProp->GetIndepFirst() != DATEAXIS && !m_pProp->IsSecondIndepSet())
+		out.ChartType = CHART_TYPES::SCATTER;
+	else if (m_pProp->IsSecondIndepSet())
+		out.ChartType = CHART_TYPES::CONTOUR_CHART;
+	else if (m_pProp->GetIndepFirst() == MULTIRUN_NUM)
+		out.ChartType = CHART_TYPES::CUM_FREQUENCE;
 	else
-		out.ChartType= CHART_TYPES::TIME_SERIE;
+		out.ChartType = m_pProp->m_ChartType;
 
 	out.SubChart_No=m_pSimDoc->m_SelectMultiSum[i].subchart;//m_SelectedChartValIndex.GetAt(ii);
 	
@@ -425,6 +428,8 @@ PLOTv PlotInfo::MakeMultiValChart(size_t i, size_t i_doc) {
 		out.ChartType= CHART_TYPES::SCATTER;
 	else if(m_pProp->IsSecondIndepSet())
 		out.ChartType= CHART_TYPES::CONTOUR_CHART;
+	else if (m_pProp->GetIndepFirst() == MULTIRUN_NUM)
+		out.ChartType = CHART_TYPES::CUM_FREQUENCE;
 	else
 		out.ChartType= CHART_TYPES::TIME_SERIE;
 	out.Performance_Var=m_pSimDoc->m_SelectMultiVal[i].Performance_Var;;
@@ -464,6 +469,8 @@ PLOTv PlotInfo::MakeMultiParChart(size_t i, size_t i_doc) {
 		out.ChartType= CHART_TYPES::SCATTER;
 	else if(m_pProp->IsSecondIndepSet())
 		out.ChartType= CHART_TYPES::CONTOUR_CHART;
+	else if (m_pProp->GetIndepFirst() == MULTIRUN_NUM)
+		out.ChartType = CHART_TYPES::CUM_FREQUENCE;
 	else
 		out.ChartType= CHART_TYPES::TIME_SERIE;
 

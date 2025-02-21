@@ -21,7 +21,7 @@ LoadDataToChart::LoadDataToChart(void)
 LoadDataToChart::~LoadDataToChart(void)
 {
 }
-bool LoadDataToChart::LoadTimeSerieData()
+bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 {
 
 	if (m_pSimDoc == nullptr) return false;
@@ -66,6 +66,19 @@ bool LoadDataToChart::LoadTimeSerieData()
 	size_t ncurves = m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber);
 	int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0);
  	p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
+	// make sure the ChartType corresponds to the correct data Type
+	auto previous_ChartType = m_pProp->m_ChartType;
+	if (!ForcedNewChartType) {
+		if (p_info.ChartType == CHART_TYPES::TIME_SERIE) {
+			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
+			m_pProp->m_PreviousChartType = previous_ChartType;
+		}
+		else if (p_info.ChartType == CHART_TYPES::CUM_FREQUENCE) {
+			m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
+			m_pProp->m_PreviousChartType = previous_ChartType;
+		}
+	}
+
 
 
 	size_t n_factor = 2;
@@ -281,6 +294,7 @@ bool LoadDataToChart::LoadTimeSerieData()
 		m_pProp->ResetDistScale();
 	m_pUtil->m_Displayed = false;
 	m_EstimateNewDist = true;
+
 	return true;
 }
 CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
@@ -512,7 +526,7 @@ CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
 						long mruno = p_info.Residual_RunNo;
 						simrunNo += mruno;
 						int index = m_pSimDoc->m_MStorage.GetAdd_MultiPGFileIndex(simrunNo);
-						if (out.pPG1->pg.Shape.NumRepetitions > 1) {
+						if (out.pPG1->pg.Shape.NumRepetitions > 1&& m_pSimDoc->m_MStorage.m_AddedFiles.size() == 0) {
 							if (index > 0) {
 								out.pPG1->SetRepititionMode(true, m_pSimDoc->m_MStorage.GetNumberOfAddedRuns(index - 1));
 								long PrevRuns = m_pSimDoc->MR_Get_NumberofRuns();
@@ -2551,8 +2565,12 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 	size_t countextra;
 
 	index = m_pProp->GetFirstIndepIndex();
+	auto koll = m_pProp->GetIndepFirst();
+
+
 	switch (m_pProp->GetIndepFirst()) {
 
+	case NO_USE:
 	case DATEAXIS:
 		m_Time.MinDate = TT[0];
 		m_Time.MaxDate = TT[m_ChartInfo.NumOfPoints - 1];

@@ -71,7 +71,7 @@ class LoadDataToChart :public DistributionCurves
 		LoadDataToChart(void);
 		~LoadDataToChart(void);
 
-		bool LoadTimeSerieData();
+		bool LoadTimeSerieData(bool ForcedNewChartType=false);
 		CONTOURCHART m_Contour;
 		BOXCOX m_BoxCox;
 		AGGREGATING m_Agg;

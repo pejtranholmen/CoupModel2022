@@ -1311,7 +1311,7 @@ if(item==5018||(item>=6010&&item<6020)) {
 
 		}
 		else if(item>=6015&&item<=6017) {
-			m_pProp->m_ChartType= CHART_TYPES::TIME_SERIE;
+			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 			m_pProp->SetFirstIndepSet(enum vartype(m_pProp->GetIndepFirst()), false);
 			m_pProp->SetFirstIndepVarType(NO_USE);
 			return true;
@@ -1394,7 +1394,7 @@ else if(item==5020) {
 		return true;
 	}
 	else if(item==5019) {
-			m_pProp->m_ChartType= CHART_TYPES::TIME_SERIE;
+			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 			m_pProp->SetFirstIndepVarType(DATEAXIS);
 
 			m_pProp->SetFirstIndepString(var,"");
@@ -1450,7 +1450,7 @@ else if(item==5020) {
 			m_pProp->ResetZScale();
 		}
 		else if(item>=6025&&item<=6027) {
-			m_pProp->m_ChartType= CHART_TYPES::TIME_SERIE;
+			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 			m_pProp->SetSecondIndepSet(enum vartype(m_pProp->GetIndepSecond()), false);
 			m_pProp->SetSecondIndepVarType(NO_USE);
 			m_pProp->ResetXScale();

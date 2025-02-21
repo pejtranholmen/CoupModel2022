@@ -180,7 +180,7 @@ bool MakeSimCharts::ManagePlotWindows(int item, int sheet, bool multisum)
 					text="Scatter plot mode";		
 				}
 			else if(item==4003) {
-					m_pProp->m_ChartType= CHART_TYPES::TIME_SERIE;
+					m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 					if(m_newChart) m_CurrentChart++;
 					m_newChart=false;
 					text="Time Serie plot mode";					
@@ -596,7 +596,7 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 					m_pProp->m_ChartType = CHART_TYPES::CONTOUR_CHART;
 				}
 				else if (m_pProp->GetIndepFirst() == DATEAXIS || m_pProp->GetIndepFirst() == MULTIRUN_NUM) {
-					m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
+					//m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 					m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
 					m_pProp->SetSecondIndepVarType(NO_USE);
 				}

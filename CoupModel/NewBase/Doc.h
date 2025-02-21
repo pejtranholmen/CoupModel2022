@@ -28,6 +28,7 @@ struct SelectOUT
 	int IType;
 	int LIndex;
 	int row;
+	int col;
 	int subchart;
 	enum  ENSEMBLE_TYPE MeanIndicator;
 };

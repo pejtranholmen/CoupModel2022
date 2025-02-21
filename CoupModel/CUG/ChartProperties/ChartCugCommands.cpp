@@ -78,7 +78,7 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 					m_pProp->ResetYRightScale();
 					m_pProp->ResetZScale();
 					if(After=="TimeSerie") {
-						m_pProp->m_ChartType= CHART_TYPES::TIME_SERIE;
+						m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 						m_pProp->SetFirstIndepSet(PGDEPTH,false);
 						m_pProp->SetSecondIndepSet(DATEAXIS, false);
 					}

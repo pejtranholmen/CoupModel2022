@@ -3026,7 +3026,7 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 
 			}
 			else {
-				while(rep>=(addedfirstRunNo->at(n_files)-FirstRunNo)) {
+				while(n_files<addedfirstRunNo->size()&&rep>=(addedfirstRunNo->at(n_files)-FirstRunNo)) {
 					n_files++;
 				}
 				auto filename = addedfilenames->at(n_files-1);

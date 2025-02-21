@@ -500,12 +500,15 @@ DataSet* DrawDetails::TimeSerieChart( int ivar,int TotNumPrior, bool accept_type
 				m_Layers.pBandLayer = pXY_Chart->addLineLayer();
 				m_Color.box=m_pProp->GetBoxDimmer()+m_Color.ivar;
 				string labelmulti;
-				labelmulti=FUtil::STD_ItoAscii(p_info.EnsembleNo+1);
+				size_t numensembles = 1;
+				numensembles = m_pSimDoc->m_MStorage.m_AcceptedRuns.size();
+				if(numensembles>p_info.EnsembleNo) 
+				labelmulti = m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
 				
 	
 //ArrayMath(DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints )).add(DoubleArray(m_pProp->viewPortDataSeriesB[ivarBand], m_ChartInfo.NumOfPoints))
 				if(m_pProp->m_ChartError==2) {
-					labelmulti = "Mean +- StD";
+					labelmulti += " Mean +- StD";
 					m_Layers.pBandLayer->addDataSet(ArrayMath(DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints ))
 						.sub(DoubleArray(m_pProp->viewPortDataSeriesB[ivarBand], m_ChartInfo.NumOfPoints)),m_Color.ivar);	
 					m_Layers.pBandLayer->addDataSet(ArrayMath(DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints ))
@@ -513,14 +516,15 @@ DataSet* DrawDetails::TimeSerieChart( int ivar,int TotNumPrior, bool accept_type
 									
 				}
 				if(m_pProp->m_ChartError==3) {
+					labelmulti += " Mean +- 90 % ";
 					m_Layers.pBandLayer->addDataSet(ArrayMath(DoubleArray(m_pProp->viewPortDataSeriesP90[ivarBand],m_ChartInfo.NumOfPoints ))
 						,m_Color.ivar);	
 					m_Layers.pBandLayer->addDataSet(ArrayMath(DoubleArray(m_pProp->viewPortDataSeriesP10[ivarBand],m_ChartInfo.NumOfPoints ))
-						,m_Color.ivar, "90 % Interval");	
+						,m_Color.ivar, labelmulti.c_str());	
 									
 				}
 				else {
-					labelmulti = "";
+					labelmulti += "";
 					m_Layers.pBandLayer->addDataSet(DoubleArray(m_pProp->viewPortDataSeriesMax[ivarBand],m_ChartInfo.NumOfPoints )
 					,m_Color.ivar, labelmulti.c_str());	
 					m_Layers.pBandLayer->addDataSet(DoubleArray(m_pProp->viewPortDataSeriesMin[ivarBand],m_ChartInfo.NumOfPoints ),m_Color.ivar);	
