@@ -10,6 +10,7 @@ class CPG;
 class MyCug;
 class Doc;
 struct MultiVAL;
+class ChartUtil;
 //#include "..\Chart\ZoomScrollDemoDlg.h"
 
 
@@ -112,6 +113,7 @@ protected:
 	int m_newcolst;
 	Sw *m_pSw1, *m_pSw2;
 	P *m_pCPt1, *m_pCPt2, *m_pCPtError1,*m_pCPtError2;
+	ChartUtil* m_pUtil;
 
 
 

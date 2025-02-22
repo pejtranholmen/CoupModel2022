@@ -89,6 +89,7 @@ ValidationCug::ValidationCug()
 	m_pPlotInfo=nullptr;
 	m_SavedCriteria2File=false;
 	m_OnGoingUpdate=false;
+	m_pUtil = MySingle::instance().GetChartUtilPointer();
 
 
 }
@@ -344,9 +345,10 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 		
 		GetCell(1, -2, &cell);
 		cell.SetBackColor(m_ColorClick);
-		if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) txt = "serie";
-		else if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) txt = "frequence";
-		else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) txt = "cumulated";
+		//if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) txt = "serie";
+		//else if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) txt = "frequence";
+		//else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) ;
+		txt = "cumulated";
 		cell.SetText(txt);
 		SetCell(1, -2, &cell);
 	}
@@ -1303,7 +1305,8 @@ void ValidationCug::Make_SplitPeriodSheet()
 	SetNumberRows ( rows+2+m_pSimDoc->m_MStorage.m_AcceptedRuns.size() );
 	SetColWidth(0,250);
 	SetColWidth(1,160);
-	SetColWidth(2, 120);
+	SetColWidth(2, 80);
+	SetColWidth(3, 100);
 	SetColWidth(4, 180);
 	SetColWidth(-1,0);
 	QuickSetText(0,-1,"Item");
@@ -1314,11 +1317,38 @@ void ValidationCug::Make_SplitPeriodSheet()
 	QuickSetNumber(1,1,m_NumberNewSplitPeriods,false);
 	QuickSetText(0, rows, "Actual Ensemble");
 	QuickSetBackColor(0, rows, m_ColorHeading);
-	GetCell(1, rows, &cell);
-	JoinCells(2, -1, 4, 2);
 
-	cell.SetCellType(UGCT_DROPLIST);
 	string optionlist;
+	
+	QuickSetText(2, 0, "Ensemble Time Charts options");
+	QuickSetBackColor(2, 0, m_ColorHeading);
+	GetCell(2, 1, &cell);
+	cell.SetCellType(UGCT_DROPLIST);
+	optionlist = "Show One Selected Ensemble \n";
+	optionlist += "Show All marked Ensembles \n";
+	optionlist += "Show All Ensemble \n";
+	m_pUtil->m_EnsembleViewOption = m_pUtil->GetEnsembleViewOption();
+	string selected_str = FUtil::GetOptionString(optionlist, m_pUtil->m_EnsembleViewOption);
+
+	cell.SetText(selected_str.c_str());
+	cell.SetLabelText(optionlist.c_str());
+
+	SetCell(2, 1, &cell);
+
+	GetCell(2, 2, &cell);
+	string txt="Update Chart";
+	cell.SetText(txt.c_str());
+	cell.SetBackColor(m_ColorClick);
+	SetCell(2, 2, &cell);
+
+
+	JoinCells(2, 0, 3, 0);
+	JoinCells(2, 1, 3, 1);
+	JoinCells(2, 2, 3, 2);
+	GetCell(1, rows, &cell);
+	cell.SetCellType(UGCT_DROPLIST);
+	optionlist = "";
+
 	for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedIdString.size(); i++) 
 		optionlist += m_pSimDoc->m_MStorage.m_AcceptedIdString[i] + '\n';
 	cell.SetLabelText(optionlist.c_str());
@@ -2692,6 +2722,12 @@ void ValidationCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point
 			
 		}
 	}
+	if (col == 2 && row == 2 && updn) {
+		auto charts = m_pSimDoc->m_PlotStorage.m_PlotArray.size();
+		if (charts > 0) {
+			m_pCUG->CreateZoomPlotWindow(true);
+		}
+	}
 
 
 }
@@ -2742,10 +2778,10 @@ void ValidationCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 	if (updn && row == -2 && col == 1) {
 		if (m_Distribution_As_Independent) {
 			m_pProp->SetFirstIndepSet(PARVAR, false);
-			if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
-			else if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->m_ChartType = CHART_TYPES::FREQUENCE;
-			else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
-			else if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
+			//if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
+			//else if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->m_ChartType = CHART_TYPES::FREQUENCE;
+			//else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
+			//else if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
 			if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->SetFirstIndepVarType(NO_USE);
 			auto ivar = m_pSimDoc->m_SelectMultiVal.size();
 			if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
@@ -3085,6 +3121,12 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 
 			MultiPlotClick(sheetNumber, col, row_of_par, false);
 			OnSheetSetup(0);
+
+		}
+		if (col == 2 && sheetNumber == 12) {
+			auto iopt = FUtil::GetOptionIndex(optionlist, m_After);
+			m_pUtil->SetEnsembleViewOption(iopt);
+			OnSheetSetup(12);
 
 		}
 		else if(row==m_NumLines+1) {

@@ -1786,7 +1786,7 @@ void ChartCugSheets::Make_Sheet1_General()
 		QuickSetNumber(6,2,m_pProp->m_GapMargin, false);
 		QuickSetNumber(7,2,m_pUtil->m_GapHFraction*100, false);
 		QuickSetNumber(8,2,m_pUtil->m_GapHorLeftFraction*100, false);
-		QuickSetNumber(9,2,m_pUtil->m_GapVertTopFraction*100), false;
+		QuickSetNumber(9,2,m_pUtil->m_GapVertTopFraction*100, false);
 
 
 
