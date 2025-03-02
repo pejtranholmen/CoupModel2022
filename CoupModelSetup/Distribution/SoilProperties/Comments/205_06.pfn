@@ -1,0 +1,31 @@
+Profile  205,6  Lund  	                 B.Espeby, M. Eriksson
+
+In order to prepare and fitt the pF-curve, an expression given by Brooks & Corey
+(1964) was used.
+New values of the porosity and saturated conductivity were given for one layer.
+
+Layer     Porosity	 Sat.con. (SATC)
+	Old	New	Old	  New    
+(nr)	    (%)		   (cm/min)
+-----	------------	------------------
+5	39.5	30.0	92.59E-9  180.2E-6
+
+
+CHANGE MEASURED PF-CURVE
+------------------------
+Water content (%) at different tensions       N=new value  O=old value
+
+Layer                              Tension (m)
+          50.0   6.0   3.0   1.0    0.50   0.20   0.10   0.05   0.00
+          ----------------------------------------------------------
+
+5          7.3   13.7  15.4  24.6   25.9   27.4   28.1   29.1   32.3   N
+          17.3   23.7  25.4  34.6   35.9   37.4   38.1   39.1   43.3   O
+
+
+Upper limit for the Brooks & Corey fitting: 10 m
+
+A more detailed description on this profile is given in B. Espeby, 1989, 
+Water flow in a till slope - Field studies and physically based modelling.
+Report Trita-Kut 1052, Dept. of Land and Water Resources,
+Royal Institute of Technology (KTH), Stockholm, Sweden.

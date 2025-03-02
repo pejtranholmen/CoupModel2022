@@ -1,0 +1,25 @@
+Glacial till areas
+Soil properties for one of the hydrogeological environments described in Lundmark, A., 
+2008. Monitoring transport and fate of de-icing salt in the roadside environment - Modelling 
+and field measurements. Doctoral thesis in Land and Water Resources Engineering, 
+TRITA-LWR PHD 1038. KTH Architecture and the Built Environment.
+
+Conceptual description:
+The till is very heterogeneous both with depth and across the landscape. The 
+composition is mainly sandy-silty and the thickness is usually less than 4-5 m, except for 
+depressions where the thickness can be larger. The groundwater level is generally close 
+to the ground surface due to low hydraulic conductivity. Typical depth to groundwater is 
+1-3 m, with an annual fluctuation that can be a couple of meters. The soil is mostly 
+overgrown by coniferous forest, which is assumed to be dominated by spruce. 
+
+Soil profile:
+Glacial till 0-4 m depth
+Bedrock >4 m depth
+
+Brooks and Corey parameters for till represent effective parameters 
+reported in Lundmark & Jansson: Generic soil descriptions for modelling water and chloride
+dynamics in the unsaturated zone based on Swedish soils. Submitted December 2007 to
+Geoderma. 
+
+2008-03-17 Annika Lundmark 
+ 

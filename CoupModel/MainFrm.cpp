@@ -51,6 +51,19 @@ static UINT indicators[] =
 
 // CMainFrame construction/destruction
 
+
+void CMainFrame::LoadWindowSettings()
+{
+	CWinAppEx* pApp = (CWinAppEx*)AfxGetApp();
+
+	int x = pApp->GetProfileInt(_T("WindowPositions"), _T("MainWindowX"), 200);
+	int y = pApp->GetProfileInt(_T("WindowPositions"), _T("MainWindowY"), 150);
+	int width = pApp->GetProfileInt(_T("WindowPositions"), _T("MainWindowWidth"), 2000);
+	int height = pApp->GetProfileInt(_T("WindowPositions"), _T("MainWindowHeight"), 1400);
+
+	MoveWindow(x, y, width, height, TRUE);
+}
+
 CMainFrame::CMainFrame()
 {
 	m_ActDoc=nullptr;
@@ -122,6 +135,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
 	EnableDocking(CBRS_ALIGN_ANY);
+	CDockingManager::SetDockingMode(DT_SMART);
+	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+
+
+
+
 	DockPane(&m_wndMenuBar);
 	DockPane(&m_wndToolBar);
 
@@ -139,6 +158,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	m_wndModel.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndModel);
+
+
 
 		
 	CString strOutputWnd2;
@@ -190,6 +211,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndPF.EnableDocking(CBRS_ALIGN_ANY);
 	
 	DockPane(&m_wndPF);
+	//if (!m_wndPF.IsAutoHideMode()) {
+	//	m_wndPF.ToggleAutoHide();
+	//}
+
+
+
 	MySingle::instance().SetPFCugPointer(&m_wndPF.m_PFgrid);
 
 	CString strSoilDataWnd;
@@ -203,6 +230,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndSoilData.EnableDocking(CBRS_ALIGN_ANY);
 	DockPane(&m_wndSoilData);
 	m_wndSoilData.DockToWindow(&m_wndPF,CBRS_RIGHT);
+
+	if (!m_wndSoilData.IsAutoHideMode())	m_wndSoilData.ToggleAutoHide();
+	LoadDockingLayout();
 	//MySingle::instance().SetSoilDataPointer(&m_wndSoilData.m_SoilDataGrid);
 
 	m_wndPF.m_PFgrid.SetPointerToProfile(&m_wndSoilData.m_SoilDataGrid);
@@ -322,6 +352,8 @@ BOOL CMainFrame::CreateDockingWindows()
 		TRACE0("Failed to create Class View window\n");
 		return FALSE; // failed to create
 	}
+
+
 
 	// Create file view
 	CString strFileView;
@@ -531,6 +563,42 @@ void CMainFrame::UpdateProgress(int pane_number, float relfrac) {
 
 
 };
+void CMainFrame::SaveWindowSettings()
+{
+	CWinAppEx* pApp = (CWinAppEx*)AfxGetApp();
+
+	CRect rect;
+	GetWindowRect(&rect);
+
+	pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowX"), rect.left);
+	pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowY"), rect.top);
+	pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowWidth"), rect.Width());
+	pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowHeight"), rect.Height());
+}
+
+void CMainFrame::SaveDockingLayout()
+{
+	CWinApp* pApp = AfxGetApp();
+	CString strSection = _T("DockingState");
+
+	// Save layout state
+	//SaveState(strSection);
+}
+
+void CMainFrame::LoadDockingLayout()
+{
+	CWinApp* pApp = AfxGetApp();
+	CString strSection = _T("DockingState");
+
+	// Load layout state
+	//LoadState(strSection);
+}
+
+void CMainFrame::OnClose()
+{
+	SaveWindowSettings();
+	CMDIFrameWndEx::OnClose();
+}
 
 void CMainFrame::UpdatePaneText(int pane_number, string text) {
 	if (pane_number > 0) {

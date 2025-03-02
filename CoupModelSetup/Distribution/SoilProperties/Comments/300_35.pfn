@@ -1,0 +1,18 @@
+Soil properties for generic roadside verge.  
+
+Soil profile:
+Clay 0-0.2 m depth
+Crushed rock 0.2-0.8 m depth
+Sand 0.8-3 m depth
+Clay 3-3.5 m depth
+Till 3.5-5 m depth
+Bedrock >5 m depth
+
+Brooks and Corey parameters for clay, till and sand represent effective parameters 
+reported in Lundmark & Jansson: Generic soil descriptions for modelling water and chloride
+dynamics in the unsaturated zone based on Swedish soils. Submitted December 2007 to
+Geoderma. Parameters for crushed rock are taken from Jansson et al. (2006) Heat 
+balance of an asphalt surface: observations and physically-based simulations. 
+Meteorological Applications 13, 203-212.
+ 
+2008-03-17 Annika Lundmark 

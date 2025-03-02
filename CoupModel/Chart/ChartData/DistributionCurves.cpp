@@ -27,6 +27,14 @@ size_t DistributionCurves::GetAdjustedVariableIndex(size_t org_index)
 }
 void DistributionCurves::Frequence_SetTime()
 {
+	if (m_pProp == nullptr) {
+
+		m_pProp = MySingle::instance().GetChartPropPointer();
+
+
+	}
+
+	auto koll = m_ChartInfo;
 		if (m_pProp->IsDistScaleValidSet()) {
 			m_pProp->m_TimeScale.MinX = m_pProp->GetActualDistMin();
 			m_pProp->m_TimeScale.MaxX = m_pProp->GetActualDistMax();

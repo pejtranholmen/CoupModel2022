@@ -6976,6 +6976,9 @@ void MakeSimSheets::Multi_Post_NormalList() {
 				QuickSetCellType(ifn, icount, UGCT_NORMAL);
 				if (ifn == 1) {
 					test = m_pSimDoc->MR_GetParGroup(i + 1, ii + 1).c_str();
+					auto pPar= m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
+					auto GroupNo = pPar->GetGroupNo();
+					QuickSetBackColor(1, icount, MFC_Util::GetGroupColor(GroupNo));
 					QuickSetBackColor(1, icount, MFC_Util::GetGroupColor(p_ModelInfo->GetGroupCategory(CT2A(test).m_psz)));
 
 				}
@@ -7262,7 +7265,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						cell.SetReadOnly(FALSE);
 
 					}
-					cell.SetBackColor(scale_color);
+					if(ifn==10)	cell.SetBackColor(scale_color);
 
 					SetCell(ifn, icount, &cell);
 

@@ -1,0 +1,27 @@
+Peatlands
+Soil properties for one of the hydrogeological environments described in Lundmark, A., 
+2008. Monitoring transport and fate of de-icing salt in the roadside environment - Modelling 
+and field measurements. Doctoral thesis in Land and Water Resources Engineering, 
+TRITA-LWR PHD 1038. KTH Architecture and the Built Environment.
+
+Conceptual description:
+Peatland consists of organic soils (peat) that are often underlain by clay. These areas are 
+generally located in low points in the terrain, but can also be found in areas located at 
+discharge points from eskers and in depressions higher up in the terrain. The groundwater 
+level is typically shallow, with a depth of about 0-1 m. Peatlands can be divided into fens 
+and peat bogs. Fens are by definition discharge areas and the bogs are usually drained to
+nearby ditches. The peat bogs usually consist of peat with a thickness of >2 m, whereas 
+the fens are usually relatively thin, having a peat thickness of at the most 1-2 m.
+
+Soil profile:
+Peat 0-4 m depth
+Clay 4-6 m depth
+Till 6-7 m depth
+Bedrock >7 m depth
+
+Brooks and Corey parameters for clay and till represent effective parameters 
+reported in Lundmark & Jansson: Generic soil descriptions for modelling water and chloride
+dynamics in the unsaturated zone based on Swedish soils. Submitted December 2007 to
+Geoderma. Parameters for peat are taken from profile 513:1 Falköping.
+
+2008-03-17 Annika Lundmark 

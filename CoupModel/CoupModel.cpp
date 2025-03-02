@@ -83,6 +83,27 @@ END_MESSAGE_MAP()
 
 // CCoupModelApp construction
 
+
+void CCoupModelApp::EnsureInitialWindowSettings()
+{
+	CWinAppEx* pApp = this;
+
+	// Kontrollera om värden redan finns
+	if (pApp->GetProfileInt(_T("WindowPositions"), _T("MainWindowX"), -1) == -1)
+	{
+		// Sätt dina egna standardvärden
+		pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowX"), 200);
+		pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowY"), 150);
+		pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowWidth"), 2500);
+		pApp->WriteProfileInt(_T("WindowPositions"), _T("MainWindowHeight"), 1200);
+	}
+}
+
+
+
+
+
+
 CCoupModelApp::CCoupModelApp()
 {
 	EnableHtmlHelp();
@@ -94,6 +115,8 @@ CCoupModelApp::CCoupModelApp()
 		 //AFX_RESTART_MANAGER_REOPEN_PREVIOUS_FILES
 		m_dwRestartManagerSupportFlags =0x00;//AFX_RESTART_MANAGER_SUPPORT_NO_AUTOSAVE	;
 	//m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
+		//m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
+
 #ifdef _MANAGED
 	// If the application is built using Common Language Runtime support (/clr):
 	//     1) This additional setting is needed for Restart Manager support to work properly.
@@ -103,7 +126,7 @@ CCoupModelApp::CCoupModelApp()
 
 	// TODO: replace application ID string below with unique ID string; recommended
 	// format for string is CompanyName.ProductName.SubProduct.VersionInformation
-	SetAppID(_T("PEJ.CoupModel.Sim.5.4.4.0"));
+	//SetAppID(_T("PEJ.CoupModel.Sim.5.4.4.0"));
 
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
@@ -114,8 +137,51 @@ CCoupModelApp::CCoupModelApp()
 
 CCoupModelApp theApp;
 
+// Kontrollera om det är första körningen
+bool CCoupModelApp::CheckIfFirstRun() {
+	CString userPath;
+	SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, userPath.GetBuffer(MAX_PATH));
+	userPath.ReleaseBuffer();
+
+	CString flagFile = userPath + _T("\\CoupModel\\first_coup_run_flag.txt");
+	std::ifstream file(flagFile);
+
+	if (file.good()) {
+		return false; // Filen finns, alltså har skriptet redan körts
+	}
+	else {
+		std::ofstream flagFileOut(flagFile);
+		flagFileOut << "Script executed";
+		flagFileOut.close();
+		return true; // Det är första körningen
+	}
+}
+/*
+// Kör PowerShell-skriptet för att kopiera exempeldata
+void CCoupModelApp::RunPowerShellScript() {
+	// Skapa en skrivbar buffer
+	LPCTSTR psCommand = _T("powershell.exe -ExecutionPolicy Bypass -File \"C:\\Program Files (x86)\\PEJ\\CopyExampleData.ps1\"");
+
+	// Skapa en skrivbar buffer
+	TCHAR psScript[512];  // Se till att bufferten är tillräckligt stor
+	_tcscpy_s(psScript, psCommand);  // Kopiera kommandot till bufferten
+
+	// Startinfo och processinfo
+	STARTUPINFO si = { sizeof(si) };
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&pi, sizeof(pi));  // Nollställ struktur
 
 
+	if (CreateProcess(NULL, (LPTSTR)psScript, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		WaitForSingleObject(pi.hProcess, INFINITE);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
+	else {
+		AfxMessageBox(_T("Misslyckades att köra PowerShell-skriptet!"), MB_ICONERROR);
+	}
+}
+*/
 // CCoupModelApp initialization
 
 BOOL CCoupModelApp::InitInstance()
@@ -140,7 +206,13 @@ BOOL CCoupModelApp::InitInstance()
 
 
 	CWinAppEx::InitInstance();
+
+	/*if (CheckIfFirstRun()) {
+		RunPowerShellScript();
+	}*/
+
 	MFC_Util::MFC_Util();
+
 
 	
 
@@ -193,6 +265,9 @@ BOOL CCoupModelApp::InitInstance()
 	ContHelp=MFC_Util::GetProfileIntNo("ContinuousHelp", ContHelp);
 	if(ContHelp!=0) m_Setup.ContinuousHelp=true;
 
+
+
+	EnsureInitialWindowSettings(); // Se till att registret har initiala värden
 
 	InitContextMenuManager();
 	InitShellManager();
@@ -380,6 +455,8 @@ BOOL CCoupModelApp::InitInstance()
 	//if(!ProcessShellCommand(cmdInfo))
 		//return FALSE;
 	// The main window has been initialized, so show and update it
+	if(CheckIfFirstRun())	pMainFrame->LoadWindowSettings(); // Använd registryvärdena för placering
+
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
 	pMainFrame->m_wndFileView.FillFileView();

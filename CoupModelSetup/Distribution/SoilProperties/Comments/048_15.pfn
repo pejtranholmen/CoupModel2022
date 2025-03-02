@@ -1,0 +1,18 @@
+Renamed from Nontuna nr 2 1956 in original report.
+Profile 48,15   	M. Eriksson 880504 
+Layer 	B&C low 	B&C high	Ait entry	Res wat cont 
+(nr)  	(m water) 	(m water)	(%) 
+----- 	------------------------	---------	------------ 
+1-12 	0.1 	12 
+13 	1.0 	12 	0.5 	4.0 
+14,15 	0.4 	12 
+Upper limit for B & C fitting (m water): 12 
+CHANGE MEASURED PF-CURVE 
+Layer 	Tension  	Water content 
+	         	Old value	New value 
+(nr) 	(m water) 	  (%) 
+----- 	---------       ------------------------- 
+5 	0.05 	40.6 	44.0 
+12 	0.05 	35.7 	42.0 
+13 	0.05 	40.2 	44.8 
+		0.00(poro)	43.0		44.8 

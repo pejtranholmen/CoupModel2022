@@ -51,6 +51,7 @@ class PGFileArchive;
 class CCoupModelApp : public CWinAppEx
 {
 public:
+	void EnsureInitialWindowSettings();
 	CCoupModelApp();
 	CString m_AppString;
 	Setup m_Setup;
@@ -81,6 +82,8 @@ public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 
+	bool CheckIfFirstRun(); // Kontrollera om det är första körningen
+	void RunPowerShellScript(); // Kör PowerShell-skriptet vid första start
 // Implementation
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;

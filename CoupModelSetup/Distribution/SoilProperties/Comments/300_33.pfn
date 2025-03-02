@@ -1,0 +1,23 @@
+Glaciofluvial deposits
+Soil properties for one of the hydrogeological environments described in Lundmark, A., 
+2008. Monitoring transport and fate of de-icing salt in the roadside environment - Modelling 
+and field measurements. Doctoral thesis in Land and Water Resources Engineering, 
+TRITA-LWR PHD 1038. KTH Architecture and the Built Environment.
+
+Conceptual description:
+Glaciofluvial deposits occur mainly as eskers and consist of sand and gravel with varying 
+thickness, but is typically 15-20 m. This coarse-grained soil is very permeable why the 
+depth to groundwater can be large, up to 10-20 m. The vegetation is mainly coniferous 
+forest, which is assumed to be dominated by pine, but farmland can also occur.
+
+Soil profile:
+Sand 0-2 m depth
+Sand and gravel 2-20 m depth
+Bedrock >20 m depth
+
+Brooks and Corey parameters for sand represent effective parameters 
+reported in Lundmark & Jansson: Generic soil descriptions for modelling water and chloride
+dynamics in the unsaturated zone based on Swedish soils. Submitted December 2007 to
+Geoderma. 
+
+2008-03-17 Annika Lundmark 

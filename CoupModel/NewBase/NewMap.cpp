@@ -2574,7 +2574,7 @@ bool NewMap::Info_Header(bool reading)
 		}
 		else { //kk
 			string ExeDate; 
-			ExeDate="Version 6.3.0, ";
+			ExeDate="Version 6.3.1, ";
 #ifndef COUPSTD
 			CWinApp *pApp;
 			pApp=AfxGetApp();

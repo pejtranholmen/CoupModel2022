@@ -1,0 +1,24 @@
+Clay-covered areas
+Soil properties for one of the hydrogeological environments described in Lundmark, A., 
+2008. Monitoring transport and fate of de-icing salt in the roadside environment - Modelling 
+and field measurements. Doctoral thesis in Land and Water Resources Engineering, 
+TRITA-LWR PHD 1038. KTH Architecture and the Built Environment.
+
+Conceptual description:
+These areas are generally situated in valleys and underlain by glacial till or glaciofluvial 
+deposits. The thickness of the clay layer varies between 5 and 30 m. The retention time 
+of water can be long. Macropores may nevertheless be present, which enhance the 
+transport of water and solutes to deeper levels. Typical depth to groundwater is 0.5-2 m. 
+The clay and silt soils are usually used as arable land and are often drained.
+
+Soil profile:
+Clay 0-9 m depth
+Till 9-11 m depth
+Bedrock >11 m depth
+
+Brooks and Corey parameters for clay and till represent effective parameters 
+reported in Lundmark & Jansson: Generic soil descriptions for modelling water and chloride
+dynamics in the unsaturated zone based on Swedish soils. Submitted December 2007 to
+Geoderma. 
+
+2008-03-17 Annika Lundmark 

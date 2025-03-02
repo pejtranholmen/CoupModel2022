@@ -2076,7 +2076,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			auto pos = dist_pair.size() - Threshold;
 
 			// Remove from Accepted Runs and Set RunNo to be false:
-			if (Indicator == ABSME_STAT || Indicator == A1_STAT | Indicator == AO_STAT) {
+			if (Indicator == ABSME_STAT || Indicator == A1_STAT || Indicator == AO_STAT) {
 
 					while (dist_pair.front().first < first_valid) {
 						auto runno = dist_pair.front().second;

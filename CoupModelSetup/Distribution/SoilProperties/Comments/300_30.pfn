@@ -1,0 +1,27 @@
+Wave-washed deposits
+Soil properties for one of the hydrogeological environments described in Lundmark, A., 
+2008. Monitoring transport and fate of de-icing salt in the roadside environment - Modelling 
+and field measurements. Doctoral thesis in Land and Water Resources Engineering, 
+TRITA-LWR PHD 1038. KTH Architecture and the Built Environment.
+
+Conceptual description:
+These deposits are situated below the highest marine shoreline and are composed of 
+wave-washed secondary deposits, which are mainly sandy, but can also consist of gravel.
+They occur laterally on eskers, often underlain by clay soils, or along hillslopes where the 
+till has been wave-washed. The thickness is usually 1-2 m. The groundwater level is often 
+close to the ground surface as the deposits are underlain by clay that prevents further 
+percolation of the water. The areas can be overgrown by coniferous forest, assumed 
+dominated by pine, or used as arable land.
+
+Soil profile:
+Sand 0-2 m depth
+Clay 2-7 m depth
+Sand and gravel 7-10 m depth
+Bedrock >10 m depth
+
+Brooks and Corey parameters for sand, till and clay represent effective parameters
+reported in Lundmark & Jansson: Generic soil descriptions for modelling water and chloride
+dynamics in the unsaturated zone based on Swedish soils. Submitted December 2007 to
+Geoderma. 
+
+2008-03-17 Annika Lundmark

@@ -76,7 +76,7 @@ void CPGView::UpdateViewOrder()
 		m_DataView.clear();
 		DataView data;
 		size_t ind;
-		size_t maxrepit = max(size_t(1), pg.Shape.NumRepetitions);
+		size_t maxrepit = max(size_t(1), size_t(pg.Shape.NumRepetitions));
 		if(m_RepetitionsFirst) {
 			for (size_t i=0;i<pg.Shape.NumVar;i++) {
 				for (size_t nrep=0; nrep<maxrepit; nrep++) {

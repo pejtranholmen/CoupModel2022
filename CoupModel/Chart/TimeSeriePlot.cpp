@@ -777,58 +777,60 @@ bool TimeSeriePlot::UpdateViewPortTime()
 void TimeSeriePlot::UpdateDataDist()
 {
 
-	if(!m_pProp->isXDistSet(m_ChartInfo.NumVariables-1)) {
-		
-			vector<size_t> IndexSub;
-			
-			for(size_t i=0;i<m_ChartInfo.NumVariables;i++) {
-					double xmin=1.E38, xmax=-1E38;
+	if (!m_pProp->isXDistSet(m_ChartInfo.NumVariables - 1)) {
 
-					for(int j=0;j<m_ChartInfo.NumOfPoints;j++) {
+		vector<size_t> IndexSub;
 
-							if(m_dataSeriesA[i][j]>xmax&&m_dataSeriesA[i][j]!=Chart::NoValue)
-									xmax=m_dataSeriesA[i][j];
-							if(m_dataSeriesA[i][j]<xmin&&m_dataSeriesA[i][j]!=Chart::NoValue) 
-									xmin=m_dataSeriesA[i][j];
-					}
-					m_pProp->m_TimeScale.MinX=xmin;
-					m_pProp->m_TimeScale.MaxX=xmax;
-					Frequence_Set_MinMaxNumberOfStepsDistType(i);
+		for (size_t i = 0; i < m_ChartInfo.NumVariables; i++) {
+			double xmin = 1.E38, xmax = -1E38;
 
+			for (int j = 0; j < m_ChartInfo.NumOfPoints; j++) {
+
+				if (m_dataSeriesA[i][j] > xmax && m_dataSeriesA[i][j] != Chart::NoValue)
+					xmax = m_dataSeriesA[i][j];
+				if (m_dataSeriesA[i][j] < xmin && m_dataSeriesA[i][j] != Chart::NoValue)
+					xmin = m_dataSeriesA[i][j];
 			}
-			if(!m_pProp->IsSecondIndepSet()) {
-				for (m_ichart=0; m_ichart<m_pProp->m_NumMultiChart;m_ichart++) {
-					double xmin=1.E38, xmax=-1E38;
-					IndexSub.clear();
+			if (xmin < xmax) {
+				m_pProp->m_TimeScale.MinX = xmin;
+				m_pProp->m_TimeScale.MaxX = xmax;
+				Frequence_Set_MinMaxNumberOfStepsDistType(i);
+			}
+		}
 
-					for(int i=0;i<m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber);i++) {
-						int j=m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, i);
-						int isubchart0;
-						int isubchart=m_pSimDoc->m_PlotStorage.GetSubChart(j);
-						if(isubchart<=0)
-							isubchart0=0;
-						else
-							isubchart0=isubchart-1;
-						if(m_ichart==isubchart0) {
-							IndexSub.push_back(i);
-							if(xmin>m_pProp->GetXDistMin(i))
-								xmin=m_pProp->GetXDistMin(i);	
-							if(xmax<m_pProp->GetXDistMax(i))
-								xmax=m_pProp->GetXDistMax(i);	
-	
-						}
-					}
-					for(int i=0;i<IndexSub.size();i++) {
-						int ind=IndexSub.at(i);
-					//	m_pProp->SetXDistMin(ind, xmin);
-					//	m_pProp->SetXDistMax(ind, xmax);
+		if (!m_pProp->IsSecondIndepSet()) {
+			for (m_ichart = 0; m_ichart < m_pProp->m_NumMultiChart; m_ichart++) {
+				double xmin = 1.E38, xmax = -1E38;
+				IndexSub.clear();
+
+				for (int i = 0; i < m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber); i++) {
+					int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, i);
+					int isubchart0;
+					int isubchart = m_pSimDoc->m_PlotStorage.GetSubChart(j);
+					if (isubchart <= 0)
+						isubchart0 = 0;
+					else
+						isubchart0 = isubchart - 1;
+					if (m_ichart == isubchart0) {
+						IndexSub.push_back(i);
+						if (xmin > m_pProp->GetXDistMin(i))
+							xmin = m_pProp->GetXDistMin(i);
+						if (xmax < m_pProp->GetXDistMax(i))
+							xmax = m_pProp->GetXDistMax(i);
+
 					}
 				}
+				for (int i = 0; i < IndexSub.size(); i++) {
+					int ind = IndexSub.at(i);
+					//	m_pProp->SetXDistMin(ind, xmin);
+					//	m_pProp->SetXDistMax(ind, xmax);
+				}
 			}
-			m_pChartCug->OnUpdate();
+		}
+		m_pChartCug->OnUpdate();
 	}
-
 }
+
 void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 {
 	if (m_ChartInfo.NumOfPoints == 0) return;
