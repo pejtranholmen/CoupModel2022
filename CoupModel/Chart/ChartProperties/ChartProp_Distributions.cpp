@@ -69,7 +69,7 @@ bool ChartProp_Distributions::SetXDistLog(int index, bool value)
 }
 bool ChartProp_Distributions::SetXDistSteps(int index, int value)
 {
-	if (m_XDistSteps.size()>index&&index >= 0)
+	if (m_XDistSteps.size() > index && index >= 0)
 		m_XDistSteps[index] = value;
 	else
 		return false;

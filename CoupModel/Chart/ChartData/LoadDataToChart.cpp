@@ -761,6 +761,8 @@ void LoadDataToChart::AddExtraValidSerie(size_t icurve) {
 	if (allensembles)
 		numensembles = m_pSimDoc->m_MStorage.m_AcceptedRuns.size();
 
+
+
 	for (size_t iens = 0; iens < numensembles; iens++) {
 		int firstnum = 0;
 		bool firstvalid = false;
@@ -770,25 +772,40 @@ void LoadDataToChart::AddExtraValidSerie(size_t icurve) {
 			m_pSimDoc->m_MStorage.m_ActualEnsemble = plot.EnsembleNo;
 
 		m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
+		if (plot.DataType == DATA_TYPES::SIM_PAR|| plot.DataType == DATA_TYPES::SIM_OUTSUM|| plot.DataType == DATA_TYPES::SIM_PERFORMANCE) {
+			/*for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) {
+				validv = pDocAct->m_MStorage.GetMultiP(i, m_pSimDoc->MR_Get_NumTotalPar()); //indicator to check if accepted
 
-		for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) {
-			validv = pDocAct->m_MStorage.GetMultiP(i, m_pSimDoc->MR_Get_NumTotalPar());
-			if (validv > 0.1) {
-				AA[numvar*(iens + 1) + icurve][i] = AA[icurve][i];
-				if (!firstvalid) firstnum = i;
-				firstvalid = true;
+				if (validv > 0.1) {
+					AA[numvar * (iens + 1) + icurve][i] = AA[icurve][i];
+					if (!firstvalid) firstnum = i;
+					firstvalid = true;
+				}
+				else if (firstvalid&&plot.DataType != DATA_TYPES::SIM_PERFORMANCE)
+					AA[numvar * (iens + 1) + icurve][i] = AA[numvar * (iens + 1) + icurve][i - 1];
+				else
+					AA[numvar * (iens + 1) + icurve][i] = Chart::NoValue;
+
+			}*/
+			for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) AA[numvar * (iens + 1) + icurve][i] = Chart::NoValue;
+			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns[iens].size(); i++) {
+				auto koll1= AA[icurve][m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i]];
+				auto koll2 = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i];
+				AA[numvar * (iens + 1) + icurve][i] = AA[icurve][m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i]];
 			}
-			else if (firstvalid)
-				AA[numvar*(iens + 1) + icurve][i] = AA[numvar*(iens + 1) + icurve][i - 1];
-			else
-				AA[numvar*(iens + 1) + icurve][i] = Chart::NoValue;
 
-		}
-		for (int i = firstnum - 1; i >= 0; i--) {
-			AA[numvar*(iens + 1) + icurve][i] = AA[numvar*(iens + 1) + icurve][i + 1];
-		}
-		m_dataSeriesA[numvar*(iens + 1) + icurve] = DoubleArray(&AA[numvar*(iens + 1) + icurve][0], m_ChartInfo.NumOfPoints);
 
+			/*
+
+			if(plot.DataType != DATA_TYPES::SIM_PERFORMANCE) {
+				for (int i = firstnum - 1; i >= 0; i--) {
+					AA[numvar * (iens + 1) + icurve][i] = AA[numvar * (iens + 1) + icurve][i + 1];
+				}
+			}*/
+			
+		}
+
+		m_dataSeriesA[numvar * (iens + 1) + icurve] = DoubleArray(&AA[numvar * (iens + 1) + icurve][0], m_ChartInfo.NumOfPoints);
 	}
 	m_pProp->m_PointType[icurve] = true;
 	m_pSimDoc->m_MStorage.m_ActualEnsemble = save_ens;
@@ -902,8 +919,10 @@ void LoadDataToChart::AdjustForMeanOfResiduals(double &v,CResiduals *pRes, bool 
 
 			v = double(modelvalue) - meas;
 		}
-		else if (!AllAccepted)
+		else if (!AllAccepted) {
+			auto koll= pRes->GetMeanResiduals(IndexVal, index);
 			v = -pRes->GetMeanResiduals(IndexVal, index);
+		}
 		else if (m_BoxCox.use) {
 			modelvalue = v + pRes->GetMeanAllResiduals(IndexVal, index);
 			meas = m_pSimDoc->m_Simulator.m_StructureModel.m_Structure.boxcox(meas, m_BoxCox.box_power, m_BoxCox.box_offset);
@@ -1480,10 +1499,14 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		//if (p_info.EnsembleNo = 0) {
 
 			//pDocAct->m_MStorage.m_ActualEnsemble = p_info.EnsembleNo;
-			pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
+		//	pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
+		// Changed to include all values independent of actual ensemble  
 		//}
+//else 
+		//auto current_ens=pDocAct->m_MStorage.m_ActualEnsemble;
+
 		if (p_info.PGSection == 0)
-			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index));
+			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index,0,1));
 		else if (p_info.PGSection>0)
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetSplitValid(i, p_info.Index, p_info.PGSection - 1));
 
@@ -2141,18 +2164,37 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			}
 	
 		}
-		vector<float> ActiveResiduals, Mean_Of_ResidualsValue;
+		vector<float> ActiveResiduals, Mean_Of_ResidualsValue, Mean_Of_Mean_ResidualsValue[7];
 		size_t Start_SubSet_Residuals = 0;
 		if (c_info.pRes != nullptr) {
 			if (Mean_Of_Repititions) {
 				Mean_Of_ResidualsValue.resize(ActNoPoints);
+				if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+					for(size_t i=0;i<6;i++)	Mean_Of_Mean_ResidualsValue[i].resize(ActNoPoints);
+				}
 				
-					vector< vector<float>> ValidValue;
+					vector< vector<float>> ValidValue, ValidMeanValue[7];
 					ValidValue.resize(ActNoPoints);
+					for (size_t i_stat = 0; i_stat < 7; i_stat++) 	ValidMeanValue[i_stat].resize(ActNoPoints);
+
 					for (size_t irepit = 0; irepit < RepHits.size(); irepit++) {
-						ActiveResiduals = m_pSimDoc->GetResidualVectorForAllRuns(c_info.ResRunNo, p_info.Index, ActNoPoints, RepHits[irepit]);
-						for(size_t i=0;i<ActNoPoints;i++)
-							if (ActiveResiduals[i] > -1.E38) ValidValue[i].push_back(-ActiveResiduals[i]);
+						ActiveResiduals = m_pSimDoc->GetResidualVectorForAllRuns(c_info.ResRunNo, p_info.Index, p_info.Residual_VarNum, ActNoPoints, RepHits[irepit]);
+						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+							for (size_t i_stat = 0; i_stat < 7; i_stat++) {
+								Mean_Of_Mean_ResidualsValue[i_stat] = m_pSimDoc->GetMeanResidualVectorForAllRuns(p_info.Index,p_info.Residual_VarNum, ActNoPoints, RepHits[irepit], true, STAT_INDICATOR(i_stat));
+							}
+						}
+
+						for (size_t i = 0; i < ActNoPoints; i++){
+							if (ActiveResiduals[i] > -1.E38) {
+								ValidValue[i].push_back(-ActiveResiduals[i]);
+								if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+									for (size_t i_stat = 0; i_stat < 7; i_stat++) {
+										ValidMeanValue[i_stat][i].push_back(Mean_Of_Mean_ResidualsValue[i_stat][i]);
+									}
+								}
+							}
+						}
 					}
 					for (size_t irec = 0; irec < ActNoPoints; ++irec) {
 						if (ValidValue[irec].size() > 0) {
@@ -2163,9 +2205,26 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							StatUtil::SortArray(&farray[0], farray.size());
 							MeanStat(&farray[0], farray.size(), &ncheck, &stat);
 							Mean_Of_ResidualsValue[irec] = stat.Mean;
+							if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+								for (size_t i_stat = 0; i_stat < 7; i_stat++) {
+									farray = ValidMeanValue[i_stat][irec];
+									StatUtil::SortArray(&farray[0], farray.size());
+									MeanStat(&farray[0], farray.size(), &ncheck, &stat);
+									Mean_Of_Mean_ResidualsValue[i_stat][irec] = stat.Mean;
+								}
+
+							}
+
 						}
-						else
+						else {
 							Mean_Of_ResidualsValue[irec] = MISSING;
+							if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+								for (size_t i_stat = 0; i_stat < 7; i_stat++) {
+									Mean_Of_Mean_ResidualsValue[i_stat][irec] = MISSING;
+								}
+							}
+
+						}
 					}
 					ActiveResiduals=Mean_Of_ResidualsValue;
 
@@ -2250,14 +2309,34 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 								BB_P90[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 								BB_P50[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 								BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+								if (m_pUtil->m_ResidualPlot == 0) {
+									AA[icurve][i + pg_control.YearStartIndex]= Mean_Of_Measured_Value[i]- Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MEAN_VALUE)][i]; 
+									BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+									BB_MIN[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MIN_VALUE)][i];
+									BB_MAX[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MAX_VALUE)][i];
+									BB_P10[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P10_VALUE)][i];
+									BB_P90[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P90_VALUE)][i];
+									BB_P50[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P50_VALUE)][i];
 
-								AdjustForMeanOfResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 0);
-								AdjustForMeanOfResiduals(BB[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 1);
-								AdjustForMeanOfResiduals(BB_MIN[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 2);
-								AdjustForMeanOfResiduals(BB_MAX[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 3);
-								AdjustForMeanOfResiduals(BB_P10[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 4);
-								AdjustForMeanOfResiduals(BB_P90[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 5);
-								AdjustForMeanOfResiduals(BB_P50[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 6);
+								}
+								else if (m_pUtil->m_ResidualPlot == 1) {
+									AA[icurve][i + pg_control.YearStartIndex] = Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MEAN_VALUE)][i];
+									BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
+									BB_MIN[i_band][i + pg_control.YearStartIndex] =Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MIN_VALUE)][i];
+									BB_MAX[i_band][i + pg_control.YearStartIndex] =Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MAX_VALUE)][i];
+									BB_P10[i_band][i + pg_control.YearStartIndex] = Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P10_VALUE)][i];
+									BB_P90[i_band][i + pg_control.YearStartIndex] = Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P90_VALUE)][i];
+									BB_P50[i_band][i + pg_control.YearStartIndex] = Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P50_VALUE)][i];
+								}
+								else {
+									AdjustForMeanOfResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 0);
+									AdjustForMeanOfResiduals(BB[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 1);
+									AdjustForMeanOfResiduals(BB_MIN[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 2);
+									AdjustForMeanOfResiduals(BB_MAX[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 3);
+									AdjustForMeanOfResiduals(BB_P10[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 4);
+									AdjustForMeanOfResiduals(BB_P90[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 5);
+									AdjustForMeanOfResiduals(BB_P50[i_band][i + pg_control.YearStartIndex], c_info.pRes, c_info.MeanOfAll, Residual_VarNum, LogLiVersion, i + pg_control.StartIndex + Start_SubSet_Residuals, 6);
+								}
 							}
 							else {
 								SetDataBandValueMissing(i_band, pg_control, i);

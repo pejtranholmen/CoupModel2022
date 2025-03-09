@@ -3139,7 +3139,7 @@ void MR::MR_Reset_MeanResiduals()
 		m_ResidualFileVector[ifile][i]->m_IsUpdated=false;
 	}
 }
-vector<float> MR::GetResidualVectorForAllRuns(size_t RunNo, size_t VarNo, size_t ActPoints, size_t section)
+vector<float> MR::GetResidualVectorForAllRuns(size_t RunNo, size_t VarNo, size_t ResVarNo, size_t ActPoints, size_t section)
 {
 	vector<float> All_residuals;
 
@@ -3158,11 +3158,20 @@ vector<float> MR::GetResidualVectorForAllRuns(size_t RunNo, size_t VarNo, size_t
 		else {
 			irun_int = RunNo;
 		}
-		auto res_v = pRes->GetResidualVector(irun_int, 0);
+		auto res_v = pRes->GetResidualVector(irun_int, ResVarNo);
 		All_residuals.insert(All_residuals.begin(), res_v.begin()+section*ActPoints, res_v.begin()+(section+1)*ActPoints);
 
 
 return All_residuals;
+}
+vector<float> MR::GetMeanResidualVectorForAllRuns(size_t valVarNo, size_t ResVarNo, size_t ActPoints, size_t Section, bool Accepted, STAT_INDICATOR stat_ind)
+{
+	auto FileNo = m_ValidationData.GetValFileNumber(valVarNo);
+	auto pRes = (CResiduals*)GetResidualPointer(FileNo);
+
+	auto res_v = pRes->GetMeanResidualVector(ResVarNo, ActPoints, Section, Accepted,stat_ind);
+
+	return res_v;
 }
 bool MR::MR_Storage_OpenPrevious()
 {

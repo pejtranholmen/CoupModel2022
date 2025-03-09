@@ -827,22 +827,22 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 			int ichart=m_pSimDoc->m_PlotStorage.GetChart(j);
   			if(p_info.DataType==DATA_TYPES::MEASURED_VAL&&m_pSimDoc->m_PlotStorage.IsValidIndepPGVar()) continue;
   			DataSet *pDataSet=nullptr;
-			if(m_pProp->m_ChartType >=CHART_TYPES::FREQUENCE&&m_pProp->m_ChartType >=CHART_TYPES::CUM_FREQUENCE&&p_info.DataType== DATA_TYPES::SIM_PAR&&m_ichart==p_info.SubChart_No-1) {				
-					m_pProp->SetDistScale(float(m_pSimDoc->MR_GetMin(p_info.Index)), float(m_pSimDoc->MR_GetMax(p_info.Index)), m_pSimDoc->MR_GetLogDist(p_info.Index));
-					Frequence_SetTime();
+			if (m_pProp->m_ChartType >= CHART_TYPES::FREQUENCE && m_pProp->m_ChartType >= CHART_TYPES::CUM_FREQUENCE && p_info.DataType == DATA_TYPES::SIM_PAR && m_ichart == p_info.SubChart_No - 1) {
+				m_pProp->SetDistScale(float(m_pSimDoc->MR_GetMin(p_info.Index)), float(m_pSimDoc->MR_GetMax(p_info.Index)), m_pSimDoc->MR_GetLogDist(p_info.Index));
+				Frequence_SetTime();
 
-					m_pProp->m_timeStamps=DoubleArray(m_pProp->viewPortTimeStamps, m_ChartInfo.NumOfDistPoints);
-					m_dataSeriesA[var_index]=DoubleArray(m_pProp->viewPortDataSeries[var_index],m_ChartInfo.NumOfDistPoints);
-					size_t iens = 0;
+				m_pProp->m_timeStamps = DoubleArray(m_pProp->viewPortTimeStamps, m_ChartInfo.NumOfDistPoints);
+				m_dataSeriesA[var_index] = DoubleArray(m_pProp->viewPortDataSeries[var_index], m_ChartInfo.NumOfDistPoints);
+				size_t iens = 0;
 
-					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns.size(); i++) {
-						if ((m_pSimDoc->m_MStorage.IsToBePlotted(i)&& m_pUtil->GetEnsembleViewOption()==1)||i== m_pSimDoc->m_MStorage.m_ActualEnsemble) {
-							iens++;
-							m_dataSeriesA[iens*ivar+var_index] = DoubleArray(m_pProp->viewPortDataSeries[iens*ivar+var_index], m_ChartInfo.NumOfDistPoints);
-						}
+				for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns.size(); i++) {
+					if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
+						iens++;
+						m_dataSeriesA[iens * ivar + var_index] = DoubleArray(m_pProp->viewPortDataSeries[iens * ivar + var_index], m_ChartInfo.NumOfDistPoints);
 					}
+				}
 			}
-			else if(m_pProp->m_ChartType >=CHART_TYPES::FREQUENCE&&m_pProp->m_ChartType <=CHART_TYPES::CUM_FREQUENCE&&m_ichart==p_info.SubChart_No-1) {
+			else if (m_pProp->m_ChartType >= CHART_TYPES::FREQUENCE && m_pProp->m_ChartType <= CHART_TYPES::CUM_FREQUENCE && p_info.DataType == DATA_TYPES::SIM_PERFORMANCE && m_ichart == p_info.SubChart_No - 1) {
 					m_pProp->m_TimeScale.MinX=m_pProp->GetXDistMin(var_index%TotNumPrior);
 					m_pProp->m_TimeScale.MaxX = m_pProp->GetXDistMax(var_index % TotNumPrior);
 					//m_pProp->m_TimeScale.MaxX=m_pProp->GetCommonXDistMax();
@@ -853,13 +853,13 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 					Frequence_SetTime();
 					m_pProp->m_timeStamps=DoubleArray(m_pProp->viewPortTimeStamps, m_ChartInfo.NumOfDistPoints);
 					m_dataSeriesA[var_index*ivar] = DoubleArray(m_pProp->viewPortDataSeries[var_index], m_ChartInfo.NumOfDistPoints);
-					/*size_t iens = 0;
+					size_t iens = 0;
 					for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns.size(); i++) {
 						if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {
 							iens++;
 							m_dataSeriesA[iens*ivar + var_index] = DoubleArray(m_pProp->viewPortDataSeries[iens*ivar + var_index], m_ChartInfo.NumOfDistPoints);
 						}
-					}*/
+					}
 
 			}
 			int PGindex=m_pSimDoc->m_PlotStorage.GetVar_Index(j);

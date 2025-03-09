@@ -65,6 +65,18 @@ void DistributionCurves::Frequence_EstimateDataDist(size_t icurve, size_t TotNum
 		for(int j=0;j<m_ChartInfo.NumOfPoints;j++)
 			m_pProp->viewPortDataSeries[icurve][j]=0.;
 		size_t istep=0;
+		auto koll = m_dataSeriesA[icurve][0];
+
+		auto koll1 = m_pProp->viewPortDataSeries[icurve][istep * 2];
+		auto koll2 = m_pProp->viewPortDataSeries[icurve][istep * 2 + 1];
+		auto max = m_pProp->m_TimeScale.MaxX;
+		auto min = m_pProp->m_TimeScale.MinX;
+		size_t count=0;
+
+
+
+
+
 		size_t numsteps=m_pProp->GetXDistSteps(icurve%TotNumPrior);
 		for(int j=0;j<m_ChartInfo.NumOfPoints;j++) {
 			if(m_dataSeriesA[icurve][j]!=Chart::NoValue&&abs(m_dataSeriesA[icurve][j])<1.E38) {
@@ -81,8 +93,15 @@ void DistributionCurves::Frequence_EstimateDataDist(size_t icurve, size_t TotNum
 				m_pProp->viewPortDataSeries[icurve][istep*2]++;
 				m_pProp->viewPortDataSeries[icurve][istep*2+1]++;
 			}
-			//else if(m_pProp->viewPortDataSeries[icurve][index]>0)
-			//	m_pProp->viewPortDataSeries[icurve][index]++;
+			else {
+				koll = m_dataSeriesA[icurve][j];
+
+				koll1=m_pProp->viewPortDataSeries[icurve][istep * 2];
+				koll2=m_pProp->viewPortDataSeries[icurve][istep * 2 + 1];
+				auto koll4 = 0;
+				count++;
+
+			}
 		}
 		if(m_pProp->m_ChartType ==CHART_TYPES::CUM_FREQUENCE) {
 			for(int j=1;j<numsteps;j++) {
@@ -110,6 +129,8 @@ void DistributionCurves::Frequence_Set_MinMaxNumberOfStepsDistType(size_t icurve
 		point_set=10;
 	else
 		point_set=5;
+	if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) point_set = 200;
+
 
 	m_pProp->SetXDistSteps(icurve,point_set);
 	m_pProp->SetXDistLog(icurve, false);

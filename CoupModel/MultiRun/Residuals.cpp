@@ -1259,7 +1259,66 @@ float CResiduals::GetMaxAllResiduals(size_t iv, size_t index){	return m_MeanPrio
 float CResiduals::GetStdAllResiduals(size_t iv,size_t index) {	return m_MeanPrior.std[iv][index];}
 float CResiduals::GetP10AllResiduals(size_t iv,size_t index) {	return m_MeanPrior.p10[iv][index];}
 float CResiduals::GetP90AllResiduals(size_t iv,size_t index) {	return m_MeanPrior.p90[iv][index];}
+vector<float> CResiduals::GetMeanResidualVector(size_t ResVarNo, size_t ActPoints, size_t Section, bool Accepted, STAT_INDICATOR stat)
+{
+	vector<float> res_v, selected;
+	if (Accepted) {
+		switch (stat) {
+		case::STAT_INDICATOR::MEAN_VALUE:
+			res_v=m_MeanPost.mean[ResVarNo];
+			break;
+		case::STAT_INDICATOR::MIN_VALUE:
+			res_v = m_MeanPost.min[ResVarNo];
+			break;
+		case::STAT_INDICATOR::MAX_VALUE:	
+			res_v=m_MeanPost.max[ResVarNo];
+			break;
+		case::STAT_INDICATOR::STD_VALUE:
+			res_v=m_MeanPost.std[ResVarNo];
+			break;
+		case::STAT_INDICATOR::P10_VALUE:
+			res_v=m_MeanPost.p10[ResVarNo];
+			break;
+		case::STAT_INDICATOR::P50_VALUE:
+			res_v=m_MeanPost.p50[ResVarNo];
+			break;
+		case::STAT_INDICATOR::P90_VALUE:	
+			res_v=m_MeanPost.p90[ResVarNo];
+			break;		
+		}
+	}
+	else {
+		switch (stat) {
+		case::STAT_INDICATOR::MEAN_VALUE:
+			res_v=m_MeanPrior.mean[ResVarNo];
+			break;
+		case::STAT_INDICATOR::MIN_VALUE:
+			res_v = m_MeanPrior.min[ResVarNo];
+			break;
+		case::STAT_INDICATOR::MAX_VALUE:
+			res_v=m_MeanPrior.max[ResVarNo];
+			break;
+		case::STAT_INDICATOR::STD_VALUE:
+			res_v=m_MeanPrior.std[ResVarNo];
+			break;
+		case::STAT_INDICATOR::P10_VALUE:
+			res_v=m_MeanPrior.p10[ResVarNo];
+			break;
+		case::STAT_INDICATOR::P50_VALUE:
+			res_v=m_MeanPrior.p50[ResVarNo];
+			break;
+		case::STAT_INDICATOR::P90_VALUE:
+			res_v=m_MeanPrior.p90[ResVarNo];
+			break;
+		}
+	}
+	
+	selected.insert(selected.begin(), res_v.begin() + Section * ActPoints, res_v.begin() + (Section + 1) * ActPoints);
+	
+	return selected;
+}
 float CResiduals::GetP50AllResiduals(size_t iv,size_t index) {	return m_MeanPrior.p50[iv][index];}
+
 bool CResiduals::ToBeUpdated()
 {
 	bool hit = false;

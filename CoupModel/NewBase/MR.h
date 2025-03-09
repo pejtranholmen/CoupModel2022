@@ -18,6 +18,7 @@ struct PAR_OPTIONS
 enum class NelderMeadOjective{ SSE,AIC, BIC };
 
 
+
 class MR : public BayesStatistics,public NelderMeadOptimizer, public SmartFlexibleValidation
 {
 	
@@ -105,7 +106,8 @@ public:
 	void SetMBinFileName(string value);
 	void Set_ReReadMStorageFile();
 	void MR_Reset_MeanResiduals();
-	vector<float> GetResidualVectorForAllRuns(size_t RunNo, size_t ResVarNo, size_t ActPoints, size_t Section=0);
+	vector<float> GetResidualVectorForAllRuns(size_t RunNo, size_t ValVarIndex, size_t ResVarNo, size_t ActPoints, size_t Section=0);
+	vector<float> GetMeanResidualVectorForAllRuns(size_t valVarIndex, size_t ResVarNo, size_t ActPoints, size_t Section, bool Accepted, STAT_INDICATOR=STAT_INDICATOR::MEAN_VALUE);
 	size_t MR_GetSimTimeLeft(size_t);
 	size_t m_TimeOneRun;
 	void MR_SetSimTimeUsed();

@@ -1956,30 +1956,19 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 			endloop = false;
 
 			while ((distout.size() < Threshold && !endloop)) {
-				while (meanvalueout > goal && distout.size() < Threshold && !endlow&&nposlow>0) {
+				while (meanvalueout > goal && distout.size() < Threshold && nposlow>1) {
 					nposlow--;
-					if (nposlow >= 0)distout.push_back(dist[nposlow]);
-					else endlow = true;
-					if (distout.size() >= Threshold) {
-						endlow = true;
-					}
+					distout.push_back(dist[nposlow]);
 					meanvalueout = StatUtil::mean(distout);
 
 				}
-				while ((meanvalueout < goal && distout.size() < Threshold && !endhigh) && !endloop) {
+				while (meanvalueout < goal && distout.size() < Threshold && nposhigh<dist.size()-2) {
 					nposhigh++;
-					auto prevmeanvalueout = meanvalueout;
-					if (nposhigh < dist.size()) distout.push_back(dist[nposhigh]);
-					else {
-						endhigh = true;
-
-						if (distout.size() < Threshold)
-							distout.push_back(dist[nposhigh - 1]);
-					}
+					distout.push_back(dist[nposhigh]);
 					meanvalueout = StatUtil::mean(distout);
-					if (prevmeanvalueout == meanvalueout) endloop = true;
 				}
-				if (endlow && endhigh) endloop = true;
+				if (distout.size() >= Threshold) endloop = true;
+				if (meanvalueout>goal&&nposlow==1||meanvalueout<goal&&nposhigh==dist.size()-2) endloop = true;
 			}
 			StatUtil::SortArray(&distout[0], distout.size());
 			dist = distout;

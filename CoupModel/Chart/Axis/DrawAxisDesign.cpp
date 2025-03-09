@@ -323,12 +323,12 @@ void DrawAxisDesign::X_Axis_Scale() {
 		pXY_Chart->yAxis()->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint);
 		if (m_pProp->m_ChartType ==CHART_TYPES::CUM_FREQUENCE) {
 			pXY_Chart->yAxis()->setLinearScale(0, 1, .2);
-			if (m_pProp->IsActualDistLogScale())
+			/*if (m_pProp->IsActualDistLogScale())
 				pXY_Chart->xAxis()->setLogScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX);
 			else
-				pXY_Chart->xAxis()->setLinearScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX);
+				pXY_Chart->xAxis()->setLinearScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX);*/
 		}
-		else {
+		/*else {
 			//if (m_pProp->IsDistScaleValidSet()) {
 				if (m_pProp->IsActualDistLogScale())
 					pXY_Chart->xAxis()->setLogScale(m_pProp->GetXDistMin(m_ichart), m_pProp->GetXDistMax(m_ichart));
@@ -340,7 +340,16 @@ void DrawAxisDesign::X_Axis_Scale() {
 				}
 			//}
 
+		}*/
+		if (m_pProp->IsActualDistLogScale())
+			pXY_Chart->xAxis()->setLogScale(m_pProp->GetXDistMin(m_ichart), m_pProp->GetXDistMax(m_ichart));
+		else {
+			pXY_Chart->xAxis()->setRounding(false, false);
+
+
+			pXY_Chart->xAxis()->setLinearScale(m_pProp->GetXDistMin(m_ichart), m_pProp->GetXDistMax(m_ichart));
 		}
+
 		pXY_Chart->xAxis()->setLabelFormat("{value|G}");
 
 		//m_pProp->m_TimeScale.MinX = pXY_Chart->xAxis()->getMinValue();

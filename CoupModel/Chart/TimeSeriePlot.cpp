@@ -928,7 +928,7 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 
 			if(m_pProp->viewPortDataSeries[i]!=nullptr) delete [] m_pProp->viewPortDataSeries[i];
 			m_pProp->viewPortDataSeries[i] = new double[m_ChartInfo.NumOfPoints];
-			if((m_pProp->m_ChartType== CHART_TYPES::FREQUENCE||m_pProp->m_ChartType== CHART_TYPES::CUM_FREQUENCE)&&m_EstimateNewDist) {
+			if((m_pProp->m_ChartType== CHART_TYPES::FREQUENCE||m_pProp->m_ChartType== CHART_TYPES::CUM_FREQUENCE)/* && m_EstimateNewDist*/) {
 					// Get Distribution of data Array
 
 				if(j>=0&&datatype==DATA_TYPES::SIM_PAR) {

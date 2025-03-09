@@ -1,11 +1,13 @@
 #pragma once
 
 #include "../std.h"
+
+
 #include "./ResidualsBase.h"
 
 // CResiduals command target
 class NewMap;
-
+enum class STAT_INDICATOR { MEAN_VALUE, STD_VALUE, MIN_VALUE, MAX_VALUE, P10_VALUE, P90_VALUE, P50_VALUE };
 
 class CResiduals : public ResidualsBase
 {
@@ -57,6 +59,8 @@ public:
 	float GetP10AllResiduals(size_t, size_t);
 	float GetP50AllResiduals(size_t, size_t);
 	float GetP90AllResiduals(size_t, size_t);
+
+	vector<float> GetMeanResidualVector(size_t ResVarNo, size_t ActPoints, size_t Section, bool Accepted, STAT_INDICATOR stat=STAT_INDICATOR::MEAN_VALUE);
 
 	size_t  GetNumAccepted();
 	void SetAccepted(size_t, bool);
