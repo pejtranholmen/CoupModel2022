@@ -58,7 +58,7 @@ public:
 	void SetXDistMin(size_t index, float v) ;
 	void SetXDistMax(size_t index, float v) ;
 	bool SetXDistLog(int index, bool value); 
-	bool SetXDistSteps(int index, int value);
+	bool SetXDistSteps(int index, size_t value);
 	void ClearAndResetValuesForDistributionToChartVariables(size_t chartnumindex, size_t NumVar = 0);
 	bool AreDistributionsFunctionNotAllocatedForTheNumber(size_t NumVariables) { if (m_XDistMax.size() < NumVariables) return true; return  false; };
 

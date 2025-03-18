@@ -1614,10 +1614,6 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 						To_Convert.push_back(pair<size_t, double>(nvar, 86400.));
 						pg.Des.base.Unit[nvar] = "J/m2/day";
 					}
-					else if (input.Des.base.Unit[i].find("k") != string::npos) {
-						To_Convert.push_back(pair<size_t, double>(nvar, .27778));
-						pg.Des.base.Unit[nvar] = "m/s";
-					}
 					else if (input.Des.base.Unit[i].find("mm") != string::npos) {
 						To_Convert.push_back(pair<size_t, double>(nvar, 24.));
 						pg.Des.base.Unit[nvar] = "mm/day";

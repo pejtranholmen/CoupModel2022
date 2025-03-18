@@ -49,7 +49,10 @@ void DistributionCurves::Frequence_SetTime()
 				}
 			}
 			else {
+				auto koll=m_pProp->viewPortTimeStamps;
+
 				double dist=2*(m_pProp->m_TimeScale.MaxX-m_pProp->m_TimeScale.MinX)/m_ChartInfo.NumOfDistPoints;
+				auto koll2= m_ChartInfo.NumOfDistPoints;
 				for (size_t i=0;i<m_ChartInfo.NumOfDistPoints/2;i++) {
 					m_pProp->viewPortTimeStamps[i*2]=m_pProp->m_TimeScale.MinX+dist*i;
 					m_pProp->viewPortTimeStamps[i*2+1]=m_pProp->m_TimeScale.MinX+dist*i+dist;
@@ -120,7 +123,7 @@ void DistributionCurves::Frequence_Set_MinMaxNumberOfStepsDistType(size_t icurve
 	m_pProp->SetXDistMin(icurve, m_pProp->m_TimeScale.MinX);	
 	m_pProp->SetXDistMax(icurve, m_pProp->m_TimeScale.MaxX);
 
-	int point_set;
+	size_t point_set;
 	if(m_ChartInfo.NumOfPoints>=1000)
 		point_set=100;
 	else if(m_ChartInfo.NumOfPoints>=200)
@@ -129,7 +132,10 @@ void DistributionCurves::Frequence_Set_MinMaxNumberOfStepsDistType(size_t icurve
 		point_set=10;
 	else
 		point_set=5;
-	if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) point_set = 200;
+	if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) {
+		point_set = 200;
+		if(point_set>m_ChartInfo.NumOfPoints/2) point_set=m_ChartInfo.NumOfPoints/2;
+	}
 
 
 	m_pProp->SetXDistSteps(icurve,point_set);

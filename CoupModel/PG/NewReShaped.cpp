@@ -7,11 +7,11 @@ NewReShaped::NewReShaped()
 {
 	treatment_convert.push_back(pair<string, int>("C", 10));
 	treatment_convert.push_back(pair<string, int>("F", 20));
-	treatment_convert.push_back(pair<string, int>("I", 30));
+	treatment_convert.push_back(pair<string, int>("I", 60));
 	treatment_convert.push_back(pair<string, int>("IL", 40));
 	treatment_convert.push_back(pair<string, int>("AN", 50));
-	treatment_convert.push_back(pair<string, int>("G(F-Mg)", 12));
-	treatment_convert.push_back(pair<string, int>("G(F-P)", 12));
+	treatment_convert.push_back(pair<string, int>("F-Mg", 20));
+	treatment_convert.push_back(pair<string, int>("F-P", 20));
 	treatment_convert.push_back(pair<string, int>("GC", 11));
 	treatment_convert.push_back(pair<string, int>("Pond", 20));
 
@@ -21,7 +21,7 @@ NewReShaped::NewReShaped()
 
 
 
-	P_Cutting30 = {3,8,12,17, 18,20, 24,28,32, };
+	P_Cutting30 = {3, 8,12,17, 18, 24,28,32 };
 	P_Cutting60 = { 2, 5, 26,30};
 	P_Cutting100 = {11, 19,22,23,27 };
 }
@@ -127,7 +127,7 @@ NewReShaped::~NewReShaped()
 	
 	pPG_Dest->ReOpen();
 
-	if(m_RepetitionOutputStyle)  pPG_Dest=CreateRepitionsStructure(pPG_Dest);
+	if(m_RepetitionOutputStyle)  pPG_Dest=CreateRepitionsStructure(pPG_Dest, m_pPGSource,  VarNamePos);
 	
 	return pPG_Dest;
 }
@@ -265,7 +265,7 @@ NewReShaped::~NewReShaped()
 	 return nullptr;
  }
 
- CPG* NewReShaped::CreateRepitionsStructure(CPG* pPGSource)
+ CPG* NewReShaped::CreateRepitionsStructure(CPG* pPGSource, CPG* pOrigSource, vector<vector<size_t>> VarNamePos)
  {
 	 // Input File any PG-file with repeated number of variables with common time points.
 	 pPGSource->CloseFile();
@@ -315,7 +315,7 @@ NewReShaped::~NewReShaped()
 		 for (size_t irep = 0; irep < numcommontime; irep++) {
 			 pPG_Dest->SetRepititionSequence(irep, false);
 
-			 auto kollv = pPGSource->GetRecordDataVector(irec + irep+1, 1);
+			 auto kollv = pPGSource->GetRecordDataVector(irec + irep+1, 0);
 			 for(size_t iivar=0; iivar<kollv.size(); iivar++) 
 				  if (!pPG_Dest->WritePGFileVarValue(iivar, count_iout, kollv[iivar], irep)) { 
 					 auto error8 = 0;
@@ -328,33 +328,51 @@ NewReShaped::~NewReShaped()
 	 string txt;
 	 auto test_cycle=m_pPGSource->GetCycleWithCommonTime();
 	 auto ivar_test = m_pPGSource->GetNumVariables();
-	 for (size_t irep = 1; irep <= numcommontime; irep++) {
-		 for (size_t i = 1; i <= ivar; i++) {
-			 txt = pPGSource->GetVarName(i, 1);
-			 pPG_Dest->SetVarName(i, txt, irep);
-			 txt = pPGSource->GetVarUnit(i, 1);
-			 pPG_Dest->SetVarUnit(i, txt, irep);
-			 size_t indexkol = i % (ivar-m_NewIdVar)+i/(ivar-m_NewIdVar+1);
-			 if (ivar <= 2||indexkol==0) indexkol = 1;
-			 if(irep>1) indexkol+=(irep - 1) * (ivar-m_NewIdVar);
-			 txt = m_pPGSource->GetVarId(indexkol, 1);
-			 pPG_Dest->SetVarId(i, txt, irep);
-			 txt = pPGSource->GetVarPos(i, 1);
-			 pPG_Dest->SetVarPos(i, txt, irep);
-			 double Lat = pPGSource->GetVarLat(i, 1);
-			 pPG_Dest->SetVarLat(i, Lat, irep);
-			 double Long = pPGSource->GetVarLong(i, 1);
-			 pPG_Dest->SetVarLong(i, Long, irep);
-			 double Alt = pPGSource->GetVarAlt(i, 1);
-			 pPG_Dest->SetVarAlt(i, Alt, irep);
-			 string txt = pPGSource->GetVarStation(i, 1);
-			 pPG_Dest->SetVarStation(i, txt, irep);
-			 txt = pPGSource->GetVarCountry(i, 1);
-			 pPG_Dest->SetVarCountry(i, txt, irep);
-		 }
+	 for (size_t inames = 0; inames < VarNamePos.size()+m_NewIdVar; inames++) {
+		 size_t numrepit = VarNamePos[0].size();
+		 if(inames<VarNamePos.size()) numrepit = VarNamePos[inames].size();
+		 for (size_t i = 0; i < numrepit; i++) {
+			 if (inames == VarNamePos.size()) {
+				 txt = "Treatment";
+				 pPG_Dest->SetVarName(inames + 1, txt, i);
+			 }
+			 else if (inames == VarNamePos.size() + 1) {
+				 txt = "SpecialTreatment";
+				 pPG_Dest->SetVarName(inames + 1, txt, i);
+			 }
+			 else if (inames == VarNamePos.size() + 2){
+				 txt = "ParcNo";
+				 pPG_Dest->SetVarName(inames + 1, txt, i);
+			}
+			else {
+				txt = pOrigSource->GetVarName(VarNamePos[inames][i]);
+				 pPG_Dest->SetVarName(inames + 1, txt, i);
+				 txt = pOrigSource->GetVarUnit(VarNamePos[inames][i]);
+					 pPG_Dest->SetVarUnit(inames + 1, txt, i);
+					 txt = pOrigSource->GetVarId(VarNamePos[inames][i]);
+					 pPG_Dest->SetVarId(inames + 1, txt, i);
+					 txt = pPGSource->GetVarPos(VarNamePos[inames][i]);
+					 pPG_Dest->SetVarPos(inames + 1, txt, i);
+			 }
+	
+				
+				 //else
+	
+	
+				 double Lat = pPGSource->GetVarLat(VarNamePos[0][i]);
+				 pPG_Dest->SetVarLat(inames+1, Lat, i);
+				 double Long = pPGSource->GetVarLong(VarNamePos[0][i]);
+				 pPG_Dest->SetVarLong(inames+1, Long, i);
+				 double Alt = pPGSource->GetVarAlt(VarNamePos[0][i]);
+				 pPG_Dest->SetVarAlt(inames+1, Alt, i);
+				 string txt = pPGSource->GetVarStation(VarNamePos[0][i]);
+				 pPG_Dest->SetVarStation(inames+1, txt, i);
+				 txt = pPGSource->GetVarCountry(VarNamePos[0][i]);
+				 pPG_Dest->SetVarCountry(inames+1, txt, i);
+			 }
 
 	 }
-	 for(size_t irep=1; irep<=pPG_Dest->GetNumRepititions(); irep++)
+	 for(size_t irep=0; irep<pPG_Dest->GetNumRepititions(); irep++)
 		pPG_Dest->ReCalculateMinMax(irep);
 
 	 pPG_Dest->WritePGFile();
@@ -415,6 +433,7 @@ int NewReShaped::GetParcell(string idkod)
 	if (idkod.find("IL30") == 0 || idkod.find("IL50") == 0) Isplit = 4;
 	if (idkod.find("IL30M") == 0|| idkod.find("IL50M") == 0) Isplit = 5;
 	if (idkod.find("IH") == 0) Isplit = 2;
+	if (idkod.find("Ih") == 0) Isplit = 2;
 	if (idkod.find("ILH") == 0) Isplit = 3;
 	if (idkod.find("ILHMor") == 0) Isplit = 6;
 	if (idkod.find("IHMor") == 0) Isplit = 5;
@@ -431,6 +450,7 @@ int NewReShaped::GetParcell(string idkod)
 		auto IposB = idkod.find(Parcell_Stop[1]);
 		if (IposB == 1) IRuta = FUtil::AtoInt(idkod.substr(0, 1));
 		else if (IposB == 2) IRuta = FUtil::AtoInt(idkod.substr(0, 2));
+		else if (IposB == 3) IRuta = FUtil::AtoInt(idkod.substr(1, 3));
 		else if (IposB==string::npos) return 0;
 		IRuta += Parcell_Add[0];
 	}

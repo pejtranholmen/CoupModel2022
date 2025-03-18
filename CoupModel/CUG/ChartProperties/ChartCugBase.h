@@ -219,7 +219,7 @@ public:
 		CCoupModelView *m_pView;
 		Doc *m_pSimDoc;
 		bool m_MultiPGFilePlot;
-		ChartProp *m_pProp;
+		ChartProp *m_pProp=nullptr;
 		ChartUtil *m_pUtil;
 		ZoomTimeSerie *m_pZoomTimeSerie;
 			

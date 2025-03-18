@@ -787,6 +787,7 @@ void LoadDataToChart::AddExtraValidSerie(size_t icurve) {
 					AA[numvar * (iens + 1) + icurve][i] = Chart::NoValue;
 
 			}*/
+			auto koll = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
 			for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) AA[numvar * (iens + 1) + icurve][i] = Chart::NoValue;
 			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns[iens].size(); i++) {
 				auto koll1= AA[icurve][m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i]];
@@ -1504,9 +1505,14 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		//}
 //else 
 		//auto current_ens=pDocAct->m_MStorage.m_ActualEnsemble;
+		vector<float> kollperformance;
+		size_t n = m_ChartInfo.NumOfPoints;
 
 		if (p_info.PGSection == 0)
-			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index,0,1));
+			for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) {
+				AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index, 0, 1));
+				kollperformance.push_back(AA[icurve][i]);
+			}
 		else if (p_info.PGSection>0)
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetSplitValid(i, p_info.Index, p_info.PGSection - 1));
 
@@ -2106,7 +2112,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	bool Mean_Of_Repititions = false;
 	vector<double> Mean_Of_Measured_Value;
 	if (p_info.pPG_MeasValFile != nullptr) {
-		if (p_info.pPG_MeasValFile->GetNumRepititions() > 0) {
+		if (p_info.pPG_MeasValFile->GetNumRepititions() > 1) {
 			auto rephits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index, p_info.Residual_RunNo);
 			RepHits = rephits;
 			if (rephits.size() > 0) act_rep = rephits.front();
@@ -2309,7 +2315,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 								BB_P90[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 								BB_P50[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 								BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
-								if (m_pUtil->m_ResidualPlot == 0) {
+								if (m_pUtil->m_ResidualPlot == 0&&Mean_Of_Repititions) {
 									AA[icurve][i + pg_control.YearStartIndex]= Mean_Of_Measured_Value[i]- Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MEAN_VALUE)][i]; 
 									BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 									BB_MIN[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MIN_VALUE)][i];
@@ -2319,7 +2325,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 									BB_P50[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P50_VALUE)][i];
 
 								}
-								else if (m_pUtil->m_ResidualPlot == 1) {
+								else if (m_pUtil->m_ResidualPlot == 1&&Mean_Of_Repititions) {
 									AA[icurve][i + pg_control.YearStartIndex] = Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MEAN_VALUE)][i];
 									BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 									BB_MIN[i_band][i + pg_control.YearStartIndex] =Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MIN_VALUE)][i];
@@ -2360,9 +2366,12 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							auto resno = c_info.ResRunNo + act_rep - 1;
 							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, resno, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 						}
-						else {
+						else if(Mean_Of_Repititions){
 							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], ActiveResiduals[i + pg_control.YearStartIndex], c_info.ResRunNo, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 
+						}
+						else {
+							AdjustForResiduals(AA[icurve][i + pg_control.YearStartIndex], c_info.pRes, c_info.ResRunNo, Residual_VarNum, LogLiVersion, act_rec + pg_control.StartIndex - 1, c_info.MeasuredAsSource);
 						}
 					}
 					else if (!m_ChartInfo.ResidualSource&&datatype == DATA_TYPES::SIM_VAL) {

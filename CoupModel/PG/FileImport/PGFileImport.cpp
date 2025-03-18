@@ -840,9 +840,8 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		}
 		else if (format == OPEN_METEO) {
 			out.DateColumn = 1;
-			
 			//string txt=out.InputfileName.find("open-meteo")
-			if (nrec == 1) {
+			if (nrec == 1||nrec==3) {
 				numhead = 4;
 
 			}
@@ -853,6 +852,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					case 3:	out.dec_cord.z = FUtil::AtoFloat(varstr); break;
 
 				}
+				numhead = 4;
 			}
 			else if (nrec == 4) {
 				out.FirstValidHeads.push_back(varstr);
@@ -1019,7 +1019,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					out.Des.base.Id.push_back("Open Meteo");
 				}
 				else {
-					enum VarId {TEMP, REL, PREC, WIND, SHORT, NONE };
+					enum VarId {TEMP, REL, PREC, WIND, SHORT, NONE, SNOW };
 					auto var = VarId::NONE;
 					auto unitpos_st = varstr.find("(")+1;
 					auto unitpos_end = varstr.find(")")+1;
@@ -1030,6 +1030,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					auto prec_pos = varstr.find("precipitation"); if (prec_pos != string::npos) var = VarId::PREC;
 					auto wind_pos = varstr.find("wind_speed"); if (wind_pos != string::npos) var = VarId::WIND;
 					auto short_pos = varstr.find("shortwave_radiation"); if (short_pos != string::npos) var = VarId::SHORT;
+					auto snow_pos = varstr.find("snow_depth"); if (snow_pos != string::npos) var = VarId::SNOW;
 					switch (var) {
 						case VarId::TEMP:
 							out.Des.base.Name.push_back("Temperature");
@@ -1053,6 +1054,11 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 							break;
 						case VarId::SHORT:
 							out.Des.base.Name.push_back("Global Radiation");
+							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
+							out.Des.base.Id.push_back("Open Meteo");
+							break;
+						case VarId::SNOW:
+							out.Des.base.Name.push_back("Snow Depth");
 							out.Des.base.Unit.push_back(varstr.substr(unitpos_st, unitpos_end - unitpos_st - 1));
 							out.Des.base.Id.push_back("Open Meteo");
 							break;
@@ -1663,7 +1669,7 @@ vector<string> PGFileImport::CreatePGFileFromDefinedInputFiles()
 
 	Input = GetFileInfo(Input, 0);
 	m_time_red = 0;
-	if (Input.NumHeads == 0 || m_format == STANDARD || m_format == SEPARATED_YMDH || m_format == SEPARATED_YMD || m_format == SMHI_OPENDATA || m_format == SEPARATED_YMDHM || m_format == YMD_HM || m_format == SWISS || m_format == CZECH_COL_TRANS || m_format == MONTH_COL_TRANS || m_format == PROFOUND) {
+	if (Input.NumHeads == 0 || m_format == STANDARD || m_format == SEPARATED_YMDH || m_format == SEPARATED_YMD || m_format == SMHI_OPENDATA || m_format == SEPARATED_YMDHM || m_format == YMD_HM || m_format == SWISS || m_format == CZECH_COL_TRANS || m_format == MONTH_COL_TRANS || m_format == PROFOUND || m_format == OPEN_METEO) {
 		m_time_red = 0;
 		if (Input.MaxVar - Input.ValidVariables.size() > 0) {
 			

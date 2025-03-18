@@ -2384,6 +2384,7 @@ bool GridPGDoc::Make_ReShape_Prior(bool update) {
 
 	pCPG = (CPG*)m_pPGArchive->GetPGFile(m_IndexSource);
 	m_pGSource = pCPG;
+	auto name= pCPG->GetFileName();
 	auto irec = pCPG->GetNumRecords();
 	auto ivar = pCPG->GetNumVariables();
 	auto count_names = 0;
@@ -2455,6 +2456,8 @@ bool GridPGDoc::Make_ReShape_Prior(bool update) {
 
 	SetCodeTranslateInfo(m_TranslationListButton, m_ReShaped_Actions.treatment_convert, m_ReShaped_Actions.Parcell_Stop, m_ReShaped_Actions.Parcell_Add, hits_map, parc_hit_map);
 
+	name = m_pGSource->GetFileName();
+	name = pCPG->GetFileName();
 	m_AddMix_Actions.m_pPGReshape_Out = m_ReShaped_Actions.CreateNewReShapedFile(m_pGSource, unique_names, num_repof_names, VarNamePos, treatmentkod, specialtreatmentkod, parcelNo);	
 
 	SetPGFileColumnsInfo(m_pGSource, 0, 6, 0, false, true);

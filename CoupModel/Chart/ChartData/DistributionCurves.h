@@ -46,9 +46,9 @@ class DistributionCurves: public ChartData
 		void Frequence_SetNumberOfPoint_LogScale(size_t icurve);
 
 
-		ChartCug *m_pChartCug;
-		ChartProp *m_pProp;
-		ChartUtil *m_pUtil;
+		ChartCug *m_pChartCug=nullptr;
+		ChartProp *m_pProp=nullptr;
+		ChartUtil *m_pUtil=nullptr;
 
 
 };

@@ -5,7 +5,7 @@
 #define NUM_BAND 100
 #define NUM_TIME 50
 #endif
-
+#include <mutex>
 #include <vector>
 #include <string>
 #include <map>
@@ -173,5 +173,6 @@ public:
 	//void SetPlotPFPointer(PFCurve* pPFCurve) { m_PFpointer=pPFCurve; };
 
 };		
+
 
 #endif

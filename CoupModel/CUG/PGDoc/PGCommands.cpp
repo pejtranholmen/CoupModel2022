@@ -607,7 +607,8 @@ else {
 			bool allrep = false;
 			size_t SeqNo;
 			size_t ivar = pPG->GetViewVariable(col - 1);
-			size_t irep = pPG->GetViewRepetition(col - 1);
+			size_t irep=0;
+			if(pPG->GetNumRepititions()>1)	irep = pPG->GetViewRepetition(col - 1);
 			SeqNo = ivar + pPG->GetNumVariables()*irep;
 			if (item == 1703 || item == 1705) newvar = false;
 			if (item == 1704 || item == 1705) allrep = true;
