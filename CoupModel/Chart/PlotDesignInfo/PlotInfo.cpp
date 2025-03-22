@@ -425,7 +425,7 @@ PLOTv PlotInfo::MakeMultiValChart(size_t i, size_t i_doc) {
 	else
 		out.pSimDoc=m_pSimDoc;
 	if(m_pProp->IsFirstIndepSet()&&!m_pProp->IsSecondIndepSet())
-		out.ChartType= CHART_TYPES::SCATTER;
+		out.ChartType= CHART_TYPES::CUM_FREQUENCE;
 	else if(m_pProp->IsSecondIndepSet())
 		out.ChartType= CHART_TYPES::CONTOUR_CHART;
 	else if (m_pProp->GetIndepFirst() == MULTIRUN_NUM)

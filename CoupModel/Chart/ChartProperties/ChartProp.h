@@ -127,6 +127,7 @@ public:
 	bool m_MakeChartTitle,m_NoXAxisScale,m_NoYAxisScale;
 	
 	COMMONSCALE m_CommonScaleValues;
+	vector<COMMONSCALE> m_CommonScaleValuesVector;
 
 	TimeScale m_TimeScale;
 	bool ChangeChartTypeForward();

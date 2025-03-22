@@ -7,25 +7,25 @@ class CPG;
 
 struct CHARTINFO
 {
-	size_t NumVariables;
-	size_t NumPriorVariables;
-	size_t NumVariableBands;
-	size_t NumOfPoints;
-	size_t NumOfCommonPoints;
-	size_t NumBands;
-	size_t NumOfYears;
-	size_t NumOfDistPoints;
-	size_t WithinDayRepresentation;
-	size_t YearRepresentation;
-	size_t HourRepresentation;
-	size_t NumExtraPointFreq;
-	CPG *pPGFirst;
-	bool ResidualSource;
-	bool MultiPGMode;
-	bool MultiValMode;
-	bool PGRepitMode;
-	size_t DataType;
-	bool RepitDataType;
+	size_t NumVariables=0;
+	size_t NumPriorVariables=0;
+	size_t NumVariableBands=0;
+	size_t NumOfPoints=0;
+	size_t NumOfCommonPoints=0;
+	size_t NumBands=0;
+	size_t NumOfYears=0;
+	size_t NumOfDistPoints=0;
+	size_t WithinDayRepresentation=0;
+	size_t YearRepresentation=0;
+	size_t HourRepresentation=0;
+	size_t NumExtraPointFreq=0;
+	CPG *pPGFirst=nullptr;
+	bool ResidualSource=false;
+	bool MultiPGMode=false;
+	bool MultiValMode=false;
+	bool PGRepitMode=false;
+	size_t DataType=0;
+	bool RepitDataType=false;
 };
 
 

@@ -225,15 +225,15 @@ void DrawAxisDesign::SetCommonScaleTo_Y_or_Z_Axis()
 		}
 		else {
 			if (!m_pProp->isLeftYScaleChanged(m_ichart)) {
-				// m_pProp->SetLeftYScaleChanged(m_ichart);
-				m_pProp->SetYLeftmin(m_ichart, m_pProp->m_CommonScaleValues.min);
-				m_pProp->SetYLeftmax(m_ichart, m_pProp->m_CommonScaleValues.max);
-				m_pProp->SetYLeftInterv(m_ichart,m_pProp->m_CommonScaleValues.interv);
-				if (m_pProp->m_ChartType == CHART_TYPES::SCATTER&& m_pProp->m_SyncAxis) {
+				m_pProp->SetLeftYScaleChanged(m_ichart);
+				m_pProp->SetYLeftmin(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].min);
+				m_pProp->SetYLeftmax(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].max);
+				m_pProp->SetYLeftInterv(m_ichart,m_pProp->m_CommonScaleValuesVector[m_ichart].interv);
+				if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) {
 					m_pProp->SetXScaleChanged(m_ichart);
-					m_pProp->SetXmin(m_ichart, m_pProp->m_CommonScaleValues.min);
-					m_pProp->SetXmax(m_ichart, m_pProp->m_CommonScaleValues.max);
-					m_pProp->SetXInterv(m_ichart, m_pProp->m_CommonScaleValues.interv);
+					m_pProp->SetXmin(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].min);
+					m_pProp->SetXmax(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].max);
+					m_pProp->SetXInterv(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].interv);
 
 				}
 			}
@@ -248,7 +248,22 @@ bool DrawAxisDesign::CheckIfCommonScaleCanBeSet()
 	double max_value = MISSING;
 	double interv_value = MISSING;
 	bool test = false;
+	vector<double> v_min, v_max, v_interv;
+
+	v_min.resize(m_pProp->m_NumMultiChart);
+	m_pProp->m_CommonScaleValuesVector.resize(m_pProp->m_NumMultiChart);
+
+	v_max= v_min;v_interv = v_min;
+
+
 	for (m_ichart = 0; m_ichart < m_pProp->m_NumMultiChart; m_ichart++) {
+
+		v_min[m_ichart] = -MISSING;
+		v_max[m_ichart] = MISSING;
+		v_interv[m_ichart] = MISSING;
+
+
+
 		if (m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART) {
 			if (m_pProp->GetZmin(m_ichart) < min_value)  min_value = m_pProp->GetZmin(m_ichart);
 			if (m_pProp->GetZmax(m_ichart) > max_value) max_value = m_pProp->GetZmax(m_ichart);
@@ -258,12 +273,27 @@ bool DrawAxisDesign::CheckIfCommonScaleCanBeSet()
 			if (m_pProp->GetYLeftmin(m_ichart) < min_value)  min_value = m_pProp->GetYLeftmin(m_ichart);
 			if (m_pProp->GetYLeftmax(m_ichart) > max_value) max_value = m_pProp->GetYLeftmax(m_ichart);
 			if (m_pProp->GetYLeftInterv(m_ichart) > interv_value) interv_value = m_pProp->GetYLeftInterv(m_ichart);
-			if (m_pProp->m_ChartType == CHART_TYPES::SCATTER&& m_pProp->m_SyncAxis) {
+			if (m_pProp->GetYLeftmin(m_ichart) < v_min[m_ichart])  v_min[m_ichart] = m_pProp->GetYLeftmin(m_ichart);
+			if (m_pProp->GetYLeftmax(m_ichart) > v_max[m_ichart]) v_max[m_ichart] = m_pProp->GetYLeftmax(m_ichart);
+			if (m_pProp->GetYLeftInterv(m_ichart) > v_interv[m_ichart]) v_interv[m_ichart] = m_pProp->GetYLeftInterv(m_ichart);
+
+
+
+			if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) {
 				if (m_pProp->GetXmin(m_ichart) < min_value)  min_value = m_pProp->GetXmin(m_ichart);
 				if (m_pProp->GetXmax(m_ichart) > max_value) max_value = m_pProp->GetXmax(m_ichart);
 				if (m_pProp->GetXInterv(m_ichart) > interv_value) interv_value = m_pProp->GetXInterv(m_ichart);
+				if (m_pProp->GetXmin(m_ichart) < v_min[m_ichart])  v_min[m_ichart] = m_pProp->GetXmin(m_ichart);
+				if (m_pProp->GetXmax(m_ichart) > v_max[m_ichart]) v_max[m_ichart] = m_pProp->GetXmax(m_ichart);
+				if (m_pProp->GetXInterv(m_ichart) > v_interv[m_ichart]) v_interv[m_ichart] = m_pProp->GetXInterv(m_ichart);
+				test = true;
+				m_pProp->m_SyncAxis = true;	
 			}
 		}
+		m_pProp->m_CommonScaleValuesVector[m_ichart].min = v_min[m_ichart];
+		m_pProp->m_CommonScaleValuesVector[m_ichart].max = v_max[m_ichart];
+		m_pProp->m_CommonScaleValuesVector[m_ichart].interv = v_interv[m_ichart];
+
 	}
 	for (m_ichart = 0; m_ichart < m_pProp->m_NumMultiChart; m_ichart++) {
 		if (m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART) {
@@ -280,6 +310,7 @@ bool DrawAxisDesign::CheckIfCommonScaleCanBeSet()
 	m_pProp->m_CommonScaleValues.min = min_value;
 	m_pProp->m_CommonScaleValues.max = max_value;
 	m_pProp->m_CommonScaleValues.interv = interv_value;
+
 
 	return test;
 
@@ -386,6 +417,7 @@ void DrawAxisDesign::Y_Axis_Scale() {
 	pTextBox = pXY_Chart->yAxis()->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint, m_pUtil->m_ColorBackground);
 	if (m_pProp->m_ChartType ==CHART_TYPES::SCATTER) {
 
+	
 	}
 	else if ((m_pProp->m_ChartType ==CHART_TYPES::FREQUENCE || m_pProp->m_ChartType ==CHART_TYPES::CUM_FREQUENCE) && m_ChartInfo.DataType == 7) {
 		DoubleArray YaxisTicks, Yaxis2Ticks;
@@ -812,16 +844,10 @@ void DrawAxisDesign::X_Axis_SetScaleValueForChartPropArchive() {
 
 }
 void DrawAxisDesign::X_Axis_GetScale() {
-		if (m_pProp->IsFirstIndepSet()) {
-			m_pProp->m_TimeScale.MinX = m_pProp->GetXmin(0);
-			m_pProp->m_TimeScale.MaxX = m_pProp->GetXmax(0);
-			m_pProp->m_TimeScale.IntervX = m_pProp->GetXInterv(0);
-		}
-		else {
-			m_pProp->m_TimeScale.MinX = m_pProp->GetXmin(m_ichart);
-			m_pProp->m_TimeScale.MaxX = m_pProp->GetXmax(m_ichart);
-			m_pProp->m_TimeScale.IntervX = m_pProp->GetXInterv(m_ichart);
-		}
+
+		m_pProp->m_TimeScale.MinX = m_pProp->GetXmin(m_ichart);
+		m_pProp->m_TimeScale.MaxX = m_pProp->GetXmax(m_ichart);
+		m_pProp->m_TimeScale.IntervX = m_pProp->GetXInterv(m_ichart);
 
 
 

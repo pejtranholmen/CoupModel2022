@@ -2257,6 +2257,9 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				}
 				else
 					Mean_Of_Measured_Value[irec] = MISSING;
+				if (TT_Indep.size() > icurve) {
+					TT_Indep[icurve][irec] = Mean_Of_Measured_Value[irec];
+				}
 			}
 		}
 
@@ -2618,16 +2621,30 @@ bool LoadDataToChart::SetIndependentMeasuredValidVar(PLOTv p_info, CURVEINFO c_i
 	pPG_Measured->ReOpen();
 	pPG_Measured->CheckAndEstimateRepetions();
 	pPG_Measured->SetRepititionMode(true);
+	// Check number of repitions
+
+	auto numrep=pPG_Measured->GetNumRepititions();
+
+
 	for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) {
 		auto rec = i%pPG_Measured->GetNumRecords();
-		auto irep = i / pPG_Measured->GetNumRecords()+1;
+		auto irep = i / pPG_Measured->GetNumRecords();
 		if (pPG_Measured->SetRepititionSequence(irep)) {
 			val = pPG_Measured->GetVarValue(PGFileMeasuredIndex, rec + 1);
 			if (val == MISSING) val = Chart::NoValue;
 		}
 		else
 			val = Chart::NoValue;
+
+
+
+		auto val= TT_Indep[icurve][i];
+
+		if(val== MISSING) val = Chart::NoValue;
 		TT_Indep[icurve][i] = val;
+
+
+		//TT_Indep[icurve][i] = val;
 	}
 		//pPG_Measured->GetVarValue(PGFileMeasuredIndex, i + 1);
 

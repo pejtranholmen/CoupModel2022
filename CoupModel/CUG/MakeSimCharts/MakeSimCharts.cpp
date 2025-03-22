@@ -966,7 +966,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 									}
 							}
 							vector<size_t> EnsemblesToPlot;
-	
+							
 							
 							m_pProp->SetFirstIndepVarType(DATEAXIS);
 							m_pProp->SetSecondIndepVarType(NO_USE);
@@ -981,6 +981,9 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 								}
 								else
 									EnsemblesToPlot.push_back(0);
+							}
+							if(EnsemblesToPlot.size()>0) {
+								m_pUtil->m_MultiRunPlot=true;
 							}
 
 							for (size_t i = 0; i<EnsemblesToPlot.size(); i++) {

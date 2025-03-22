@@ -254,7 +254,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 				else
 					m_Label.st = "Mean of Accepted ";
 				if(p_info.EnsembleNo>=0&& p_info.EnsembleNo< m_pSimDoc->m_MStorage.m_AcceptedIdString.size())
-				m_Label.st += m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
+				m_Label.st = m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
 			}
 			else {
 				if (LogLiVersion != 3)
@@ -262,7 +262,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 				else
 					m_Label.st = "Mean of Accepted - ";
 				if (p_info.EnsembleNo>=0 && p_info.EnsembleNo < m_pSimDoc->m_MStorage.m_AcceptedIdString.size())
-					m_Label.st += m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
+					m_Label.st = m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
 
 			}
 		}
@@ -736,7 +736,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 size_t DrawVariableLegends::GetNumberOfEnsembles()
 {
 	size_t numensembles = 1;
-	if (m_pUtil->m_MultiRunPlot) {
+	if (m_pUtil->m_MultiRunPlot||m_pSimDoc->IsMultiSimulation()) {
 		numensembles = m_pSimDoc->m_MStorage.m_AcceptedRuns.size();
 		if (m_pSimDoc->m_ValidationData.IsSomeValidationMade())
 			return numensembles;
@@ -800,8 +800,11 @@ void DrawVariableLegends::SetLegendInfo()
 			} */
 			else {// PG File
 				if (m_ChartOrigInfo[index_chart].legends.size() > i) {
-					m_DataSets[i]->setDataName(m_ChartOrigInfo[index_chart].legends[i].c_str());
-					m_pProp->SetLegend1(i + index_start, m_ChartOrigInfo[index_chart].legends[i]);
+					auto koll= m_ChartOrigInfo[index_chart].legends[i];
+					if (koll.size() > 0) {
+						m_DataSets[i]->setDataName(m_ChartOrigInfo[index_chart].legends[i].c_str());
+						m_pProp->SetLegend1(i + index_start, m_ChartOrigInfo[index_chart].legends[i]);
+					}
 				}
 			}
 		}
