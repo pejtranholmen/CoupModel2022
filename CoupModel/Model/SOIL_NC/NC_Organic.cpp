@@ -500,8 +500,13 @@ auto AbioticResponseOnDecomposition = [&]() {
 				if (O_State[j][_C_][i] > 0.) {
 					if (m_pModelStructure->m_NumActPlantElements <= 2) {	   // When C and N are the only elements
 						OrgTurnOver a = f_TurnOver_CN[j](Response.Temp_Theta[i] *O_State[j][_C_][i], Org_CarbonRatio[j][_N_ - 1][i], SoilAmmonium[i]);
-						O_RespRate[j][i] = a.Respiration;	O_Mineralisation[j][_N_ - 1][i] = a.N_Mineralisation;
-						O_Transform[j][_C_][i] = a.Trans_Org;	O_Transform[j][_N_][i] = a.N_Trans_Conv;
+						O_RespRate[j][i] = a.Respiration;	
+						if (O_State[j][_N_][i] < 0.01|| Org_CarbonRatio[j][_N_ - 1][i]>500.) {
+							O_Transform[j][_C_][i] = 0;	O_Transform[j][_N_][i] = 0.; O_Mineralisation[j][_N_ - 1][i]=0.;
+						}
+						else {
+							O_Transform[j][_C_][i] = a.Trans_Org; O_Transform[j][_N_][i] = a.N_Trans_Conv; O_Mineralisation[j][_N_ - 1][i] = a.N_Mineralisation;
+						}
 					}
 					else {
 						// When also P exist, Note that the f_Turnover_CNP[j]
