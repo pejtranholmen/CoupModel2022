@@ -526,7 +526,7 @@ DataSet* DrawDetails::TimeSerieChart( int ivar,int TotNumPrior, bool accept_type
 				else {
 					labelmulti += "";
 					m_Layers.pBandLayer->addDataSet(DoubleArray(m_pProp->viewPortDataSeriesMax[ivarBand],m_ChartInfo.NumOfPoints )
-					,m_Color.ivar, labelmulti.c_str());	
+					,m_Color.ivar);	
 					m_Layers.pBandLayer->addDataSet(DoubleArray(m_pProp->viewPortDataSeriesMin[ivarBand],m_ChartInfo.NumOfPoints ),m_Color.ivar);	
 
 
@@ -662,11 +662,14 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 	int xVar=0;
 	size_t numensembles = 1;
 	string legend;
+	auto save_regline = m_pProp->m_ReShape.m_RegLine;
+	m_pProp->SetSyncAxis(false);
 	if(m_pProp->GetFirstIndepIndex()==string::npos||m_pProp->IsFirstIndepSet()||(xVar==ivar&&m_pUtil->m_MultiRunPlot)) {
 		if (m_pProp->GetIndepFirst() == PGVARVALID || (m_pProp->GetIndepFirst() == VALVARSUM && m_pUtil->m_AutoShiftFirstIndep)) {
 
 
 			size_t count_to_plot = 0;
+			if (m_pProp->GetIndepFirst() == PGVARVALID&&p_info.DataType==DATA_TYPES::SIM_VAL) m_pProp->SetSyncAxis(true);
 
 			if (p_info.EnsembleType>ENSEMBLE_TYPE::NO) {
 				size_t nbands = m_pSimDoc->m_PlotStorage.GetNumVarBands(m_pProp->m_ChartNumber);
@@ -692,7 +695,7 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 								m_Label.st.c_str(), m_Symbol.isymb, m_pUtil->m_SymbolSizePoint, m_Color.ivar);
 							pDataSet = m_Layers.pScatterLayer->getDataSet(0);
 
-							if (m_pProp->m_ReShape.m_RegLine)
+							//if (m_pProp->m_ReShape.m_RegLine)
 								m_Layers.pTrendLayer = pXY_Chart->addTrendLayer(m_pProp->m_IndepX[ivar], DoubleArray(m_pProp->viewPortDataSeries[ivar], m_ChartInfo.NumOfPoints),
 									m_Color.ivar);
 
@@ -847,7 +850,7 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 		}
 	}
 
-
+	m_pProp->m_ReShape.m_RegLine=save_regline;
 	return pDataSet;
 }
 bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
@@ -927,6 +930,8 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 				FindIdForVariablesToPlot(j, p_info, PGindex);
 				if (p_info.RepitDataType) SetMultiSequenceInfo();
 				FUtil::trim(m_Label.test);
+				auto koll= m_Label.test;
+				auto koll3=m_CurrentChartInfo.legends.size();	
 				m_CurrentChartInfo.legends.push_back(m_Label.st);
 				m_CurrentChartInfo.varname.push_back(m_Label.test);
 				m_CurrentChartInfo.varunit.push_back(m_Label.unit);

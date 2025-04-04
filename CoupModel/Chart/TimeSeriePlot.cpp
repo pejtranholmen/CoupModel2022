@@ -146,8 +146,8 @@ bool TimeSeriePlot::InitMultiRunPlot(Doc *pSimDoc,int chartnum, CHART_TYPES char
 
 bool TimeSeriePlot::MakeTimeSeriePlot()
 {
-
-	m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), true);
+	
+	m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), false);
 
 	if (LoadTimeSerieData()) {
 

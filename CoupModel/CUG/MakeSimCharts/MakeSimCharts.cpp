@@ -583,12 +583,17 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 		m_NumOpenDoc=max(1,m_pSimDoc->m_SelectedDocuments.size());
 
 		int ivar=0;
+		auto SaveIndepFirst = m_pProp->GetIndepFirst();
 		for(auto j=0;j<m_NumOpenDoc;j++) {
 			if(m_NumOpenDoc<=1)
 				pDoc=m_pSimDoc;
 			else
 				pDoc=m_pSimDoc->m_SelectedDocuments[j];
 			if(sheet==5) {
+			
+				if(m_pProp->GetIndepFirst()==PGVARVALID) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+
+
 				if (m_pProp->IsFirstIndepSet()&& m_pProp->GetIndepFirst()!=DATEAXIS && !m_pProp->IsSecondIndepSet()) {
 					m_pProp->m_ChartType = CHART_TYPES::SCATTER;
 				}
@@ -611,6 +616,7 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 				ivar=m_pSimDoc->m_SelectMultiSum.size();
 			}
 			else if(sheet==6) {
+				if (m_pProp->GetIndepFirst() == PGVARVALID) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
 				if (m_pProp->GetIndepFirst()==DATEAXIS) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
 				for(int ii=0;ii<m_pSimDoc->m_SelectMultiVal.size();ii++) {
 					if(pDoc->IsMultiSimulation()&&pDoc->IsFinishedSimulation()) {
@@ -623,6 +629,8 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 				ivar=m_pSimDoc->m_SelectMultiVal.size();
 			}
 			else if(sheet==10) {
+
+				if (m_pProp->GetIndepFirst() == PGVARVALID) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
 				if (m_pProp->GetIndepFirst() == DATEAXIS) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
 				for(int ii=0;ii<m_pSimDoc->m_SelectMultiPar.size();ii++) {
 					if(pDoc->IsMultiSimulation()&&pDoc->IsFinishedSimulation()) {
@@ -643,8 +651,10 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 				return false;
 		}
 
+		auto OK=MakeMultiPlot(sheet, col, row);
+		m_pProp->SetFirstIndepVarType(vartype(SaveIndepFirst));
 
-		return MakeMultiPlot(sheet, col, row);
+		return OK;
 
 }
 bool MakeSimCharts::MultiPlotVectorClick( vector<int> row_vector, size_t col)

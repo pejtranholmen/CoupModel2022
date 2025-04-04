@@ -229,12 +229,17 @@ void DrawAxisDesign::SetCommonScaleTo_Y_or_Z_Axis()
 				m_pProp->SetYLeftmin(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].min);
 				m_pProp->SetYLeftmax(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].max);
 				m_pProp->SetYLeftInterv(m_ichart,m_pProp->m_CommonScaleValuesVector[m_ichart].interv);
-				if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) {
+				if (m_pProp->m_ChartType == CHART_TYPES::SCATTER&&m_pProp->m_SyncAxis) {
 					m_pProp->SetXScaleChanged(m_ichart);
 					m_pProp->SetXmin(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].min);
 					m_pProp->SetXmax(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].max);
 					m_pProp->SetXInterv(m_ichart, m_pProp->m_CommonScaleValuesVector[m_ichart].interv);
-
+				}
+				else if(m_pProp->m_ChartType == CHART_TYPES::SCATTER) {
+					m_pProp->SetXScaleChanged(0);
+					m_pProp->SetXmin(0, m_pProp->m_CommonScaleValues.min);
+					m_pProp->SetXmax(0, m_pProp->m_CommonScaleValues.max);
+					m_pProp->SetXInterv(0, m_pProp->m_CommonScaleValues.interv);
 				}
 			}
 		}
@@ -279,7 +284,7 @@ bool DrawAxisDesign::CheckIfCommonScaleCanBeSet()
 
 
 
-			if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) {
+			if (m_pProp->m_ChartType == CHART_TYPES::SCATTER&&m_pProp->m_SyncAxis) {
 				if (m_pProp->GetXmin(m_ichart) < min_value)  min_value = m_pProp->GetXmin(m_ichart);
 				if (m_pProp->GetXmax(m_ichart) > max_value) max_value = m_pProp->GetXmax(m_ichart);
 				if (m_pProp->GetXInterv(m_ichart) > interv_value) interv_value = m_pProp->GetXInterv(m_ichart);
@@ -287,7 +292,6 @@ bool DrawAxisDesign::CheckIfCommonScaleCanBeSet()
 				if (m_pProp->GetXmax(m_ichart) > v_max[m_ichart]) v_max[m_ichart] = m_pProp->GetXmax(m_ichart);
 				if (m_pProp->GetXInterv(m_ichart) > v_interv[m_ichart]) v_interv[m_ichart] = m_pProp->GetXInterv(m_ichart);
 				test = true;
-				m_pProp->m_SyncAxis = true;	
 			}
 		}
 		m_pProp->m_CommonScaleValuesVector[m_ichart].min = v_min[m_ichart];
@@ -377,6 +381,8 @@ void DrawAxisDesign::X_Axis_Scale() {
 		else {
 			pXY_Chart->xAxis()->setRounding(false, false);
 
+			auto koll = m_pProp->GetXDistMin(m_ichart);
+			auto koll2 = m_pProp->GetXDistMax(m_ichart);	
 
 			pXY_Chart->xAxis()->setLinearScale(m_pProp->GetXDistMin(m_ichart), m_pProp->GetXDistMax(m_ichart));
 		}
@@ -391,6 +397,10 @@ void DrawAxisDesign::X_Axis_Scale() {
 
 	else if (m_pProp->m_ChartType ==CHART_TYPES::CUM_FREQUENCE) {
 		pXY_Chart->yAxis()->setLinearScale(0, 1.1, .2);
+		auto koll =m_pProp->m_TimeScale.MinX;
+		auto koll2 =m_pProp->m_TimeScale.MaxX;
+
+
 		pXY_Chart->xAxis()->setLinearScale(m_pProp->m_TimeScale.MinX, m_pProp->m_TimeScale.MaxX);
 	}
 	else if (m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART) {
@@ -715,12 +725,12 @@ void DrawAxisDesign::Adjust_Legends_Axis_Labels()
 
 		common = true;
 		for (size_t index = 0; index < m_ChartOrigInfo[i].legends.size(); index++) {
-			if (index == 00) koll = m_ChartOrigInfo[i].varname[index];
-			else if (koll == m_ChartOrigInfo[i].varname[index]) common = false;
+			if (index == 0) koll = m_ChartOrigInfo[i].varname[index];
+			else if (koll != m_ChartOrigInfo[i].varname[index]) common = false;
 		}
 		bool titlevariable_substituted = false;
 		if (common && m_ChartOrigInfo[i].legends.size() > 2) {
-			m_ChartOrigInfo[i].Y_AxisTitle_Left = "Variable ()";
+			m_ChartOrigInfo[i].Y_AxisTitle_Left = m_ChartOrigInfo[i].varname[0];
 			titlevariable_substituted = true;
 		}
 		else if (common && m_ChartOrigInfo[i].legends.size() > 1) {
@@ -734,14 +744,14 @@ void DrawAxisDesign::Adjust_Legends_Axis_Labels()
 	
 		for (size_t index = 0; index < m_ChartOrigInfo[i].legends.size(); index++) {
 			if (index == 0) {
-   				if(titlevariable_substituted) m_ChartOrigInfo[i].legends[index]= m_ChartOrigInfo[i].varname[index];
+   				if(!titlevariable_substituted) m_ChartOrigInfo[i].legends[index]= m_ChartOrigInfo[i].varname[index];
 			}
 			else if (title_right.size() > 0 && index == 1) {
 				m_ChartOrigInfo[i].legends[index] = m_ChartOrigInfo[i].varname[index] +" "+ m_ChartOrigInfo[i].legends[index];
 
 			}
 			else {
-				if(title_left.find(m_ChartOrigInfo[i].varname[index])==string::npos)
+				if(title_left.find(m_ChartOrigInfo[i].varname[index])==string::npos&&!common)
 				m_ChartOrigInfo[i].legends[index] = m_ChartOrigInfo[i].varname[index] + " " + m_ChartOrigInfo[i].legends[index];
 			};
 		 }

@@ -2243,16 +2243,16 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 		if (Mean_Of_Repititions) {
 			Mean_Of_Measured_Value.resize(ActNoPoints);
-			for (size_t irec = 0; irec < ActNoPoints; ++irec)	{
+			for (size_t irec = 0; irec < ActNoPoints; ++irec) {
 				vector<float> ValidValue;
 				for (size_t irepit = 0; irepit < RepHits.size(); irepit++) {
-					auto value=p_info.pPG_MeasValFile->GetVarValue(PGindex, irec+1, RepHits[irepit]);
+					auto value = p_info.pPG_MeasValFile->GetVarValue(PGindex, irec + 1, RepHits[irepit]);
 					if (value > -1.E38) ValidValue.push_back(value);
 				}
 				if (ValidValue.size() > 0) {
 					size_t ncheck;
 					DistStat stat;
-					MeanStat(&ValidValue[0], ValidValue.size(), &ncheck, &stat);									
+					MeanStat(&ValidValue[0], ValidValue.size(), &ncheck, &stat);
 					Mean_Of_Measured_Value[irec] = stat.Mean;
 				}
 				else
@@ -2262,6 +2262,15 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				}
 			}
 		}
+		else {
+			for (size_t irec = 0; irec < ActNoPoints; ++irec) {
+				if (TT_Indep.size() > icurve) {
+					TT_Indep[icurve][irec] = p_info.pPG_MeasValFile->GetVarValue(PGindex, irec + 1);
+				}
+			}
+
+
+		};
 
 
 

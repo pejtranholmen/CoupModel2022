@@ -101,6 +101,7 @@ public:
 	void SetMultiRepititions(int value);
 	void SetCommonYear(bool value);
 	void SetCommonDay(bool value);
+	void SetSyncAxis(bool value) {m_SyncAxis=value;};
 
 	bool SetChartType(int chart_type);
 	bool SetChartType(CHART_TYPES chart_type);
