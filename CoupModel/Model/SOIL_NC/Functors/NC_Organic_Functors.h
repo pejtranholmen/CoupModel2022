@@ -13,7 +13,7 @@ enum class OrganicUptake_Sw { off, on, on_with_threshold };
 enum class InitialCarbonConditions_Sw { As_Nitrogen, As_Nitogen_and_Carbon };
 enum class InitialPhosphorusConditions_Sw { As_Carbon, As_CP_ratio_and_Carbon };
 enum class Measured_Organic_Table_Sw { As_model_layers, As_measured_layers };
-enum class DisplacementOrganicLayers_Sw { Static, At_Year_Shift, At_Year_shift_Delay, At_week_Shift_At_week_shift_Delay };
+enum class DisplacementOrganicLayers_Sw { Static, At_Year_Shift, At_Year_shift_TopLayerOnly, At_Week_Shift, At_Week_shift_TopLayerOnly };
 
 class turnover {
 public:

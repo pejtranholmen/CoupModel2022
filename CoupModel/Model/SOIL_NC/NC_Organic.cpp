@@ -764,17 +764,17 @@ auto AbioticResponseOnDecomposition = [&]() {
 
 // Shift of Organic Growth of Layers
 	size_t cycle;
-	if(DisplacementOrganicLayers<3)
+	if(DisplacementOrganicLayers_Sw(DisplacementOrganicLayers)< DisplacementOrganicLayers_Sw::At_Week_Shift)
 		cycle=366;
 	else
 		cycle=7;
 
 
-	if(int(m_pModelInfo->JDayNum)%cycle==1&&DisplacementOrganicLayers>0&&!m_DisplacementDone) {
-		if(DisplacementOrganicLayers==1||DisplacementOrganicLayers==3)
-			MakeDisplacement();
+	if(int(m_pModelInfo->JDayNum)%cycle==1&& DisplacementOrganicLayers_Sw(DisplacementOrganicLayers)> DisplacementOrganicLayers_Sw::Static&&!m_DisplacementDone) {
+		if(DisplacementOrganicLayers_Sw(DisplacementOrganicLayers)== DisplacementOrganicLayers_Sw::At_Year_Shift|| DisplacementOrganicLayers_Sw(DisplacementOrganicLayers)== DisplacementOrganicLayers_Sw::At_Week_Shift)
+			MakeDisplacement(false);
 		else
-			MakeDisplacement2();
+			MakeDisplacement(true);
 		m_DisplacementDone=true;
 	}
 	else if (int(m_pModelInfo->JDayNum)%cycle==2)

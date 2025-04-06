@@ -171,8 +171,8 @@ vector<double> OrgTotLayer;
 ;
 
 ;
-bool MakeDisplacement();
-bool MakeDisplacement2();
+bool MakeDisplacement(bool OnlyTopLayer=true);
+
 
 
 function<OrgTurnOver(double, double, double)> f_TurnOver_CN[4];

@@ -80,7 +80,7 @@ bool NC_Organic_Functions::Def() {
 
 	pSw= new Sw(&DisplacementOrganicLayers,  SIMPROFILE,ORGANIC, TRANSPORT,NOBPROC, NORMAL);
 
-	Define(pSw, "Displacement of organics between layers", 0,"Static|At Year Shift|At Year shift Delay|At week Shift|At week shift Delay","Nitrogen and Carbon > 0|Initial Soil Organic=0");
+	Define(pSw, "Displacement of organics between layers", 0,"Static|At Year Shift |At Year shift only top Layer|At Week Shift|At Week shift only top Layer","Nitrogen and Carbon > 0");
 
 // State Variables
 	vector<double> initv;
@@ -282,30 +282,34 @@ bool NC_Organic_Functions::Def() {
 
 
 		if (jj >= _N_) {//fixed the error of using N for P org uptake by HH
+			condition = "";
+			if (jj == _P_) condition = "|Phosphorus>0";
+		
 			name = Item[jj] + "Litter1Upt";
 			pT = new T(&O_Transform[L1_PLANTUPTAKE][jj], pNL, SIMPROFILE, elements(CARBON + jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);
-			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0");
+			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0"+condition);
 			name = Item[jj] + "Litter1FungiUpt";
 			pT = new T(&O_Transform[L1_FUNGIUPTAKE][jj], pNL, SIMPROFILE, elements(CARBON + jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);
-			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0|Mycorrhiza Fungal Growth>0");//HH
+			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0|Mycorrhiza Fungal Growth>0"+condition);//HH
 
 			name = Item[jj] + "HumusUpt";
 			pT = new T(&O_Transform[H_PLANTUPTAKE][jj], pNL, SIMPROFILE, elements(CARBON + jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);
-			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0");
+			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0"+condition);
 			name = Item[jj] + "HumusFungiUpt";
 			pT = new T(&O_Transform[H_FUNGIUPTAKE][jj], pNL, SIMPROFILE, elements(CARBON + jj), TRANSPORT, ORGANICTRANSFORMATION, NORMAL);
-			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0|Mycorrhiza Fungal Growth>0");
+			Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Organic Uptake>0|Mycorrhiza Fungal Growth>0"+condition);
 
 		}
 		else if (jj == _C_) {
 			for (size_t j = _L1; j <= _MIC; j++) {
 				condition = "";
+				if (jj == _P_) condition = "|Phosphorus>0";
 				if (j == _L2) condition += "|LitterPools > 0";
 				else if (j == _F) condition += "|FaecesPool >0";
 				else if (j == _MIC) condition += "|Microbes >0";
 				name = Item[jj] + Comp[j] + "RespRate";
 				pT = new T(&O_RespRate[j], pNL, SIMPROFILE, CARBON , NOFPROC, RESPIRATION, NORMAL);
-				Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes = 0");
+				Define(pT, pNL, name, initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1"+condition);
 			}
 		}
 		for (size_t j = _L1; j <= _DIS; j++) {
@@ -1202,63 +1206,20 @@ vector<double> Init_L1_N_Meas, Init_L2_N_Meas, Init_F_N_Meas, Init_M_N_Meas, Ini
 }
 
 
-bool NC_Organic_Functions::MakeDisplacement2() {
 
-	double  deltaCtot; //C decides about movement (main mass), N follows according C:N ratio
-	double  actCtot;
-
-
-	for(size_t i=0; i<O_State[_L1][_N_].size()-1; i++) {    //go through all layers, start with uppermost, stop one before lowest
-
-                //		   deltaCLitter1                     deltaCLitter2                     deltaCMicrobes                   deltaCHumus
-        deltaCtot = (O_State[_L1][_C_][i]-Prev_O_State[_L1][_C_][i]) + (O_State[_L2][_C_][i]- Prev_O_State[_L1][_C_][i]) + 
-			(O_State[_MIC][_C_][i]- Prev_O_State[_MIC][_C_][i]) + (O_State[_H][_C_][i]- Prev_O_State[_H][_C_][i]);
-
-		if(deltaCtot >= 0)    //accumulation => move from current layer to lower layer
-			actCtot = O_State[_L1][_C_][i]+O_State[_L2][_C_][i]+O_State[_MIC][_C_][i]+O_State[_H][_C_][i];
-		else    //loss => move from lower layer to current layer
-			actCtot = O_State[_L1][_C_][i+1]+O_State[_L2][_C_][i+1]+O_State[_MIC][_C_][i+1]+O_State[_H][_C_][i+1];
-	
-		O_State[_L1][_C_][i]-=deltaCtot * O_State[_L1][_C_][i] / actCtot; 
-		O_State[_L1][_C_][i+1]+=deltaCtot * O_State[_L1][_C_][i] / actCtot;
-
-		O_State[_L2][_C_][i]-=deltaCtot * O_State[_L2][_C_][i] / actCtot; 
-		O_State[_L2][_C_][i+1]+=deltaCtot * O_State[_L2][_C_][i] / actCtot;
-
-		O_State[_MIC][_C_][i]-=deltaCtot * O_State[_MIC][_C_][i] / actCtot; 
-		O_State[_MIC][_C_][i+1]+=deltaCtot * O_State[_MIC][_C_][i] / actCtot;
-
-		O_State[_H][_C_][i]-=deltaCtot * O_State[_H][_C_][i] / actCtot; 
-		O_State[_H][_C_][i+1]+=deltaCtot * O_State[_H][_C_][i] / actCtot;
-
-			
-		// shift in N =              shift in C               *        N/C ratio
-		for (size_t j = 0; j < NUM_ORG_FORMS; j++) {
-			for (size_t jj = 1; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-				if (O_State[j][jj][i] > (deltaCtot * O_State[j][_C_][i] / actCtot * O_State[j][jj][i] / O_State[j][_C_][i])) {
-					O_State[j][jj][i] -= (deltaCtot * O_State[j][_C_][i] / actCtot)  * O_State[j][jj][i] / O_State[j][_C_][i];
-					O_State[j][jj][i + 1] += (deltaCtot * O_State[j][_C_][i] / actCtot)  * O_State[j][jj][i] / O_State[j][_C_][i];
-				}
-			}
-		}
-		
-	}
-	for (size_t j = 0; j < NUM_ORG_FORMS; j++) {
-		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
-			Prev_O_State[j][jj].assign(O_State[j][jj].begin(), O_State[j][jj].end());
-	}
-
-	return true;
-
-}
-bool NC_Organic_Functions::MakeDisplacement() {
+bool NC_Organic_Functions::MakeDisplacement(bool TopLayerOnly) {
 	double shift;
+	size_t imaxmove=  O_State[0][0].size()-1;
+	if(TopLayerOnly) imaxmove=1;
 	for (size_t j = 0; j < NUM_ORG_FORMS; j++) {
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
-			for (size_t i = 0; i < O_State[j][jj].size() - 1; i++) {
+			for (size_t i = 0; i < imaxmove; i++) {
 				shift = O_State[j][jj][i] - Prev_O_State[j][jj][i];
-				O_State[j][jj][i] -= shift;
-				O_State[j][jj][i + 1] += shift;
+				if ((shift > 0 && O_State[j][jj][i] > shift) || (shift < 0 && O_State[j][jj][i + 1]>abs(shift))) {
+					O_State[j][jj][i] -= shift;
+					O_State[j][jj][i + 1] += shift;
+				}
+				else break;
 			}
 	}
 	return true;
