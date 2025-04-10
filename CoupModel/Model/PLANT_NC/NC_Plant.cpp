@@ -1697,6 +1697,7 @@ auto Growth_Stage = [&](size_t index) {
 				if (GrowingStage.size() == index + 1) ISowingCount++;
 				GrowingSum[index] = 0.;
 				Emergence_Done[index] = false;
+				Grain_Develop_Done[index] = false;
 				out = 0.;
 			}
 		}
@@ -1706,6 +1707,7 @@ auto Growth_Stage = [&](size_t index) {
 			if (f_emergence(m_pModelInfo->JYearNum, m_pModelInfo->JDayNum)) {
 				out = 1;
 				Emergence_Done[index] = false;
+				Grain_Develop_Done[index] = false;
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
@@ -1713,6 +1715,7 @@ auto Growth_Stage = [&](size_t index) {
 			if (int(m_pModelInfo->JDayNum) == int(EmergenceDayNo[index])) {
 				out = 1.;
 				Emergence_Done[index] = false;
+				Grain_Develop_Done[index] = false;
 				GrowingStage[index] = 1.;
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
@@ -1725,6 +1728,7 @@ auto Growth_Stage = [&](size_t index) {
 
 				m_YearTest = true;
 				Emergence_Done[index] = false;
+				Grain_Develop_Done[index] = false;
 				if (m_pModelInfo->JYearNum == int(m_StartYears[m_CountStartYear]) && m_StartYears.size() > m_CountStartYear + 1) {
 					m_CountStartYear++;
 				}

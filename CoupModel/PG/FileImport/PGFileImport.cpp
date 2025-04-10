@@ -509,7 +509,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		bool DateTimeIdentified = false;
 		m_ProFoundOption = 0;
 		out.HourColumn = out.TimeColumn = out.MinuteColumn = out.DayColumn = out.DayNumberColumn = out.MonthColumn = out.YearColumn = out.DateColumn = string::npos;
-		if (m_format == STANDARD) {
+		if (m_format == STANDARD||(out.FirstValidHeads.size()==out.UnitsFromHead.size())) {
 			out.DateColumn = 1;
 			out.CopyMode = true;
 			DateTimeIdentified = true;
@@ -750,6 +750,9 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				out.UnitsFromHead.push_back(varstr);
 				return nrec;
 			}
+			else if (nrec == 4) {
+
+			}
 			
 			return numhead;
 
@@ -881,10 +884,22 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			if (nrec <= 9 && varstr.find("Variable") != string::npos||(format==STANDARD||format==PROFOUND)) {
 				numhead = min(9, nrec);
 				out.DateColumn = 1;
-				if (nrec == 1 && varstr.find("Variable Name")==string::npos) {
+				if (nrec == 1 && varstr.find("Variable Name")==string::npos&&varstr.size()>0) {
 					out.FirstValidHeads.push_back(varstr);
 					Heads_Set = true;
 					out.SkipBeforeVar = 0;
+				}
+				else if (nrec == 2 && nvar>1) {
+					out.UnitsFromHead.push_back(varstr);
+
+				}
+				else if (nrec == 3 && nvar > 1) {
+					out.IdFromHead.push_back(varstr);
+
+				}
+				else if (nrec == 4 && nvar > 1) {
+					out.PosFromHead.push_back(varstr);
+					if(out.PosFromHead.size()==out.IdFromHead.size()) out.SkipBeforeVar=1;
 				}
 				else 
 					out.SkipBeforeVar = 1;
@@ -971,7 +986,11 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 	
 			if (UnitsHeaderFind&& nrec==2)	 out.UnitsFromHead.push_back(varstr);
-			else if (numhead != 0 && nrec ==numhead  && format != SMHI_OPENDATA&&format!=STANDARD&&!Heads_Set) 	out.FirstValidHeads.push_back(varstr);
+			else if (out.UnitsFromHead.size() > 0||nrec==2) {
+
+
+			}
+			else if (numhead != 0 && nrec ==numhead  && format != SMHI_OPENDATA&&format!=STANDARD&&!Heads_Set&&varstr.size()>0) 	out.FirstValidHeads.push_back(varstr);
 			else if (format == SMHI_OPENDATA && nrec == SMHI_HeadLineNo&& nvar>= SMHI_TidPosStart &&varstr!=""&&varstr!="Tidsutsnitt:"&&!Heads_Set) out.FirstValidHeads.push_back(varstr);
 		}
 		return numhead;
@@ -1105,7 +1124,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		}
 		else if (nrec >= 1 && nrec<=9&&nrec == nhead ) {
 			DescriptionType = nrec - 1;
-			if (varstr.find("Variable") == string::npos) {
+			if ((varstr.find("Variable") == string::npos&&varstr.find("Date")==string::npos) && varstr.size()>0) {
 				if (DescriptionType == 0) out.Des.base.Name.push_back(varstr);
 				else if (DescriptionType == 1) out.Des.base.Unit.push_back(varstr);
 				else if (DescriptionType == 2) out.Des.base.Id.push_back(varstr);

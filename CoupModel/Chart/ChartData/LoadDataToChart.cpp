@@ -2170,18 +2170,19 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			}
 	
 		}
-		vector<float> ActiveResiduals, Mean_Of_ResidualsValue, Mean_Of_Mean_ResidualsValue[7];
+		size_t const NumStatPoints=7;
+		vector<float> ActiveResiduals, Mean_Of_ResidualsValue, Mean_Of_Mean_ResidualsValue[NumStatPoints];
 		size_t Start_SubSet_Residuals = 0;
 		if (c_info.pRes != nullptr) {
 			if (Mean_Of_Repititions) {
 				Mean_Of_ResidualsValue.resize(ActNoPoints);
 				if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
-					for(size_t i=0;i<6;i++)	Mean_Of_Mean_ResidualsValue[i].resize(ActNoPoints);
+					for(size_t i=0;i<NumStatPoints;i++)	Mean_Of_Mean_ResidualsValue[i].resize(ActNoPoints);
 				}
 				
-					vector< vector<float>> ValidValue, ValidMeanValue[7];
+					vector< vector<float>> ValidValue, ValidMeanValue[NumStatPoints];
 					ValidValue.resize(ActNoPoints);
-					for (size_t i_stat = 0; i_stat < 7; i_stat++) 	ValidMeanValue[i_stat].resize(ActNoPoints);
+					for (size_t i_stat = 0; i_stat < NumStatPoints; i_stat++) 	ValidMeanValue[i_stat].resize(ActNoPoints);
 
 					for (size_t irepit = 0; irepit < RepHits.size(); irepit++) {
 						ActiveResiduals = m_pSimDoc->GetResidualVectorForAllRuns(c_info.ResRunNo, p_info.Index, p_info.Residual_VarNum, ActNoPoints, RepHits[irepit]);
@@ -2195,7 +2196,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							if (ActiveResiduals[i] > -1.E38) {
 								ValidValue[i].push_back(-ActiveResiduals[i]);
 								if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
-									for (size_t i_stat = 0; i_stat < 7; i_stat++) {
+									for (size_t i_stat = 0; i_stat < NumStatPoints; i_stat++) {
 										ValidMeanValue[i_stat][i].push_back(Mean_Of_Mean_ResidualsValue[i_stat][i]);
 									}
 								}
@@ -2212,7 +2213,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 							MeanStat(&farray[0], farray.size(), &ncheck, &stat);
 							Mean_Of_ResidualsValue[irec] = stat.Mean;
 							if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
-								for (size_t i_stat = 0; i_stat < 7; i_stat++) {
+								for (size_t i_stat = 0; i_stat < NumStatPoints; i_stat++) {
 									farray = ValidMeanValue[i_stat][irec];
 									StatUtil::SortArray(&farray[0], farray.size());
 									MeanStat(&farray[0], farray.size(), &ncheck, &stat);
@@ -2225,7 +2226,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 						else {
 							Mean_Of_ResidualsValue[irec] = MISSING;
 							if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
-								for (size_t i_stat = 0; i_stat < 7; i_stat++) {
+								for (size_t i_stat = 0; i_stat < NumStatPoints; i_stat++) {
 									Mean_Of_Mean_ResidualsValue[i_stat][irec] = MISSING;
 								}
 							}

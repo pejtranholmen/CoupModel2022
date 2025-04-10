@@ -1135,11 +1135,15 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 		else m_ValPGFile[i].FirstValidRecord=0;
 		//if(!First) {
 			if(pos.first>1) {
+				auto koll2 = m_ValPGFile[i].simvalues.size();
+				auto koll = m_ValPGFile[i].simvalues[0];
 				size_t ist; /// Set Missing values in validation file if validation data is outside simulated period
 					for (size_t j = 0; j < m_ValPGFile[i].simvalfile->GetNumRecords(); j++) {
 						ist = j * (m_ValPGFile[i].varindex.size() + 1);
-						m_ValPGFile[i].simvalfile->SetRecordPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
-						m_ValPGFile[i].simvalfile->SetMissingValueRecordPointer(ist, m_ValPGFile[i].varindex.size());
+						if (koll2 >= m_ValPGFile[i].varindex.size()) {
+							m_ValPGFile[i].simvalfile->SetVarPointer(&m_ValPGFile[i].simvalues[0], ist, m_ValPGFile[i].varindex.size());
+							m_ValPGFile[i].simvalfile->SetMissingValueRecordPointer(ist, m_ValPGFile[i].varindex.size());
+						}
 
 					}
 				m_ValPGFile[i].FirstValidRecord=pos.first*(m_ValPGFile[i].varindex.size()+1);
