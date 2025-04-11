@@ -79,6 +79,7 @@ class LoadDataToChart :public DistributionCurves
 	protected:
 		TIMEDATA m_Time;
 		Doc *m_pSimDoc;
+		
 		CPG *m_pPG_Active;
 		void AdjustForResiduals(double &v, CResiduals *pRes, long ResRunNo, int IndexVal, int LogLiVersion, long index, bool MeasuredAsSource=false);
 		void AdjustForResiduals(double& v, float ResValue, long ResRunNo, int IndexVal, int LogLiVersion, long index, bool MeasuredAsSource);

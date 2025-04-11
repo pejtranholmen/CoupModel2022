@@ -2110,8 +2110,9 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 		act_rep = 0;
 
 	bool Mean_Of_Repititions = false;
-	vector<double> Mean_Of_Measured_Value;
-	if (p_info.pPG_MeasValFile != nullptr) {
+	vector<double> Mean_Of_Measured_Value, Simulated_SingleRunValue;
+
+	if (p_info.pPG_MeasValFile != nullptr&&m_pSimDoc->IsMultiSimulation()) {
 		if (p_info.pPG_MeasValFile->GetNumRepititions() > 1) {
 			auto rephits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index, p_info.Residual_RunNo);
 			RepHits = rephits;
@@ -2125,6 +2126,19 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 				if (cycle_pair.first == string::npos) act_rep = cycle_pair.first + 1;
 			}
 		}
+	}
+	else if(p_info.pPG_MeasValFile !=nullptr) { // Single Run Case
+	
+			if (p_info.pPG_MeasValFile->GetNumRepititions() > 1) {
+				auto rephits = m_pSimDoc->ActualRepetitionInMeasFile(string::npos, p_info.pPG_MeasValFile, p_info.Index);
+				RepHits = rephits;
+				if (rephits.size() > 0) act_rep = rephits.front();
+				Mean_Of_Repititions = true;
+			}
+			else {
+				act_rep = 0;
+				Mean_Of_Repititions = false;
+			}	
 	}
 
 	vector<float> points;
@@ -2239,7 +2253,19 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			
 			Start_SubSet_Residuals = ActNoPoints * (act_rep);
 		}
-		else ActiveResiduals.assign(ActNoPoints, MISSING);
+		else {
+			if (!m_pSimDoc->IsMultiSimulation()&& p_info.DataType == DATA_TYPES::SIM_VAL) {
+				Simulated_SingleRunValue.resize(ActNoPoints);
+				
+				for (size_t i = 0; i < ActNoPoints; i++) {
+					Simulated_SingleRunValue[i]= p_info.pPG->GetVarValue(p_info.PGFileIndex,i+1);
+				}
+
+
+			}
+			else 
+			ActiveResiduals.assign(ActNoPoints, MISSING);
+		}
 		
 
 		if (Mean_Of_Repititions) {
@@ -2291,8 +2317,9 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 					if (m_pPG_Active->GetVarValue(PGindex, act_rec + pg_control.StartIndex) > -1.E38) break;
 				}
 			}
-			else if(m_ChartInfo.ResidualSource&& NumRepit > 1){
-
+			else if(!m_ChartInfo.ResidualSource&& p_info.DataType == DATA_TYPES::SIM_VAL){
+				AA[icurve][i] =Simulated_SingleRunValue[i];
+				continue;
 	
 			}
 

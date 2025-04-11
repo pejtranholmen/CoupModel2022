@@ -1348,8 +1348,13 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 					size_t SeqnoDim1 = m_pSim->MR_GetDimCounter(0);
 					pPG_Obs->SetRepititionSequence(SeqnoDim1-1, false);
 				}
-
-
+			}
+			else if(pPG_Obs->GetNumRepititions() > 1) {
+				pPG_Obs->SetRepititionMode(true);
+				pPG_Obs->SetCompleteRead(true);
+				pPG_Obs->CloseFile();
+				pPG_Obs->Open(pPG_Obs->GetFileName());
+				pPG_Obs->SetRepititionSequence(0, false);
 			}
 			bool ValidNewFile = false;
 			for(size_t j=0; j<m_ValPGFile[i].val_listindex.size(); j++) {
@@ -1448,9 +1453,19 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 
 							
 						}*/ //Removed Filter index for all with predefined criteria
-						sim.push_back(double(Sim[ii]));
-						obs.push_back(double(Obs[ii]));
-						Residual[ii] = Obs[ii] - Sim[ii];
+						if ((!MultiFlag && (FilterPGIndex == 0 || Filter_Values[ii] == FilterTestValue)
+							&& (QualityPGIndex == 0 || Quality_Values[ii] > QualityTestValue))) {
+							
+							sim.push_back(double(Sim[ii]));
+							obs.push_back(double(Obs[ii]));
+							Residual[ii] = Obs[ii] - Sim[ii];
+						}
+						else if(MultiFlag) {
+							sim.push_back(double(Sim[ii]));
+							obs.push_back(double(Obs[ii]));
+							Residual[ii] = Obs[ii] - Sim[ii];
+						}
+
 					}
 				}
 				if(m_ValPGFile[i].pRes!=nullptr) {

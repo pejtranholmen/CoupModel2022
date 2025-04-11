@@ -2142,35 +2142,30 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, size_t index_val, size_t RunNo)
 {
 	vector<size_t> out;
-	size_t Dim1Value = m_MStorage.m_Valid_TSV[ensembleno].Dim1_Par_Index;
-	//if(Dim1Value==0) return out;
 	size_t test_value_sim{ string::npos };
-	P* pKoll = GetP("Filter Var Value");
 
-	for (int i2 = 0; i2 < MR_Get_NumberOfParametersWithinDim(0 + 1); i2++) {
-		auto test = MR_GetParName(1, i2 + 1);
+	if (ensembleno == string::npos) {
+		test_value_sim= m_Val_Array[index_val].PG_FilterValue;
+	}
+	else {
+		size_t Dim1Value = m_MStorage.m_Valid_TSV[ensembleno].Dim1_Par_Index;
+		//if(Dim1Value==0) return out;
 
-		auto ptest = MR_Get_PAR(1, i2 + 2);
-		if (ptest.pBase == pKoll && index_val == ptest.TabIndex) {
-			auto indexmulti = i2 + 1;
-			if (Dim1Value > 0)
-				test_value_sim = size_t(m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001); // Wrong value
-			else
-				test_value_sim = size_t(m_MStorage.GetMultiP(RunNo, indexmulti) + 0.001);
-			break;
+		P* pKoll = GetP("Filter Var Value");
+
+		for (int i2 = 0; i2 < MR_Get_NumberOfParametersWithinDim(0 + 1); i2++) {
+			auto test = MR_GetParName(1, i2 + 1);
+
+			auto ptest = MR_Get_PAR(1, i2 + 2);
+			if (ptest.pBase == pKoll && index_val == ptest.TabIndex) {
+				auto indexmulti = i2 + 1;
+				if (Dim1Value > 0)
+					test_value_sim = size_t(m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001); // Wrong value
+				else
+					test_value_sim = size_t(m_MStorage.GetMultiP(RunNo, indexmulti) + 0.001);
+				break;
+			}
 		}
-
-		/*
-
-		if (test == "Filter Var Value") {
-			auto indexmulti = i2 + 1;
-			if(Dim1Value>0)
-				test_value_sim = size_t(m_MStorage.GetMultiP(Dim1Value - 1, indexmulti) + 0.001); // Wrong value
-			else
-				test_value_sim = size_t(m_MStorage.GetMultiP(RunNo, indexmulti) + 0.001);
-
-			break;
-		}*/
 	}
 	size_t pg_filter_index = m_Val_Array[index_val].PG_FilterIndex;
 	auto numrep = pPGMeas->GetNumRepititions();

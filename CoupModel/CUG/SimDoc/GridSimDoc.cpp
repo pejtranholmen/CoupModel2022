@@ -1234,7 +1234,7 @@ void GridSimDoc::MakeChartMenu(int col, int row, int sheet)
 					}
 
 				
-					if(col>=1&&col<=3&&m_pSimDoc->IsMultiSimulation()&&row<=icountTot&&!m_ShowValidRes) {
+					if(col>=1&&col<=3&&row<=icountTot&&!m_ShowValidRes) {
 						AddMenuItem(5001,"Plot Mean of All MultiRuns");
 						//AddMenuItem(5002,"Plot Mean of Accepted Runs");
 						if(!m_pSimDoc->m_PlotStorage.IsValidIndepPGVar())

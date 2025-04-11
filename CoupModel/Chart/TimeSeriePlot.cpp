@@ -97,6 +97,8 @@ bool TimeSeriePlot::InitMultiRunPlot(Doc *pSimDoc,int chartnum, CHART_TYPES char
 	m_pSimDoc->m_PlotStorage.Init(m_pSimDoc);
 
 	if(m_pSimDoc!=nullptr) {
+
+	
 			// Check and open MultiRunFile
 		if(m_pSimDoc->MR_Storage_Open()) {
 			m_pUtil->m_MultiRunPlot=true;
@@ -111,7 +113,9 @@ bool TimeSeriePlot::InitMultiRunPlot(Doc *pSimDoc,int chartnum, CHART_TYPES char
 				m_pProp->m_MultiValid.AddOnlyValidRuns=true;
 			m_pProp->m_ChartNumber=chartnum;
 			m_pProp->m_ChartType=charttype;
-			m_pView=m_pSimDoc->GetModelView();
+
+
+			m_pView = m_pSimDoc->GetModelView();
 			m_pChartViewer=&m_pView->m_ChartViewer;
 			m_pChartCug=MySingle::instance().GetChartCugPointer();
 

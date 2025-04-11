@@ -1534,6 +1534,19 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 			pMySimDoc->m_Val_Array.clear();
 			pMySimDoc->m_Val_Array=m_pSimDoc->m_Val_Array;
 		}
+		else if (!m_pSimDoc->IsMultiSimulation() && !m_ShowValidRes) {
+			if (item == 5010) {
+			// Independent Variable settings
+				m_pSimDoc->m_PlotStorage.SetValidIndepPGVar(true);
+				TimeSerieChartClick(col, row, 6);
+			}
+			else if (item == 5011) {
+				m_pSimDoc->m_PlotStorage.SetValidIndepPGVar(false);
+				TimeSerieChartClick(col, row, 6);
+			}
+
+
+		}
 		else if(m_pSimDoc->IsMultiSimulation()&&!m_ShowValidRes) {
 				GetCell(3,row, &cell);
 				if(m_pSimDoc->IsFinishedSimulation())
