@@ -8,7 +8,12 @@ struct UPDATEMEMORY {
 	bool AcceptedRuns;
 };
 
-
+struct SimpleStatistics {
+	float Mean;
+	float CV;
+	float Min;
+	float Max;
+};
 class SelectedEnsembles : public SelectedAddEnsembles
 {
 public:
@@ -56,14 +61,6 @@ public:
 	float GetMinSumValidAll(unsigned long);
 	float GetMeanSumValidAll(unsigned long);
 	float GetCVSumValidAll(unsigned long);
-	float GetMeanValidAll(unsigned long, unsigned long split = 0);
-	float GetMinValidAll(unsigned long, unsigned long split = 0);
-	float GetMaxValidAll(unsigned long, unsigned long split = 0);
-	float GetCV_ValidAll(unsigned long, unsigned long split = 0);
-
-
-
-
 
 	
 	float GetMinMeanValidAll_R2();
@@ -136,14 +133,11 @@ public:
 	float GetSumV_Selected(unsigned long, unsigned long);
 	unsigned long GetNumAccepted();
 	unsigned long GetNumBayesAccepted(unsigned long num_burn_in);
-	
-	float GetMinValid(unsigned long, unsigned long split=0);
-	float GetMaxValid(unsigned long, unsigned long split=0);
-	float GetMeanValid(unsigned long, unsigned long split=0);
-	float GetCV_Valid(unsigned long, unsigned long split=0);
 
+	SimpleStatistics GetValidStat(unsigned long ip, bool post = true, size_t actualensemble=string::npos, unsigned long split = 0) const;
+	void SetValidStat(unsigned long ip, bool post = true, size_t actualEnsemble=string::npos, unsigned long split = 0);
 	
-	
+
 	float GetMinSumValid(unsigned long);
 	float GetMeanSumValid(unsigned long);
 
@@ -177,7 +171,7 @@ public:
 
 	unsigned long GetNumSplitPeriods();
 	vector<float> GetPost_TSV_ValidPerformanceIndicatorVector(unsigned long, unsigned long split = 0);
-	vector<pair<float, size_t>> GetPost_TSV_ValidPerformanceIndicatorPairVector(unsigned long, unsigned long split = 0);
+	vector<pair<float, size_t>> Get_ValidPerformanceIndicatorPairVector(bool posterior, unsigned long, unsigned long split = 0);
 	vector<float> GetPost_SV_ValidPerformanceIndicatorVector(size_t ivar, enum PERFORMANCE_VAR var=R2_STAT );
 
 

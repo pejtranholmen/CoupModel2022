@@ -773,9 +773,14 @@ bool MakeSimCharts::MakeMultiPlot(int sheet, int col, int row) {
 			}
 			else if(m_pProp->m_ChartType ==CHART_TYPES::SCATTER)
 				cell.SetBackColor(RGB(255,40,255));
-			else
-				cell.SetBackColor(RGB(240,0,0));
-				
+			else {
+			
+			
+
+				cell.SetBackColor(RGB(240, 0, 0));
+				pChart->MakeTextPlot("No Valid Variables selected");
+				return false;
+			}
 
 			UpdatePlotStatusBar(sheet, true);
 

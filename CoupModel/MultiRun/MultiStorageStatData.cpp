@@ -755,7 +755,7 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 				m_EvaluationFile.m_DocFileOut << "Dim1 Index : " << m_VarValidTransformed[i].Dim1_index << endl;
 				num = m_VarValidTransformed[i].VarValidVector.size();
 				m_EvaluationFile.m_DocFileOut << "VarValid Entire Vector : " << num<< endl;
-				
+				TRACE("VarValid Entire Vector : %d\n", num);
 				m_EvaluationFile.wFloatArray2(m_VarValidTransformed[i].VarValidVector, num, m_NumValidAll);
 			}
 

@@ -3398,23 +3398,25 @@ bool MakeSimSheets::Make_ValidationSheet()
 						}	
 						
 						for(int i=0; i<ncol;i++) {
+							auto stat_all = m_pSimDoc->m_MStorage.GetValidStat(ind, false, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+							auto stat_post = m_pSimDoc->m_MStorage.GetValidStat(ind, false, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
 							if(ii==0)
-								QuickSetNumber(ncol_extra+ind,1,double(m_pSimDoc->m_MStorage.GetMinValid(ind))); 
+								QuickSetNumber(ncol_extra+ind,1,double(stat_post.Min)); 
 							else if(ii==1)
-								QuickSetNumber(ncol_extra+ind,2,double(m_pSimDoc->m_MStorage.GetMaxValid(ind))); 
+								QuickSetNumber(ncol_extra+ind,2,double(stat_post.Max)); 
 							else if(ii==2&&!locked) {
 								QuickSetNumber(ncol_extra+ind,3,double(m_pSimDoc->m_MStorage.GetValidLow(ind))); 
-								if(m_pSimDoc->m_MStorage.GetMinValidAll(ind)!=m_pSimDoc->m_MStorage.GetValidLow(ind))
+								if(stat_all.Min!=m_pSimDoc->m_MStorage.GetValidLow(ind))
 									QuickSetBackColor(ncol_extra+ind,3,m_ColorChanged);
 							}
 							else if(ii==3&&!locked) {
 								QuickSetNumber(ncol_extra+ind,4,double(m_pSimDoc->m_MStorage.GetValidHigh(ind))); 
-								if(m_pSimDoc->m_MStorage.GetMaxValidAll(ind)!=m_pSimDoc->m_MStorage.GetValidHigh(ind))
+								if(stat_all.Max!=m_pSimDoc->m_MStorage.GetValidHigh(ind))
 									QuickSetBackColor(ncol_extra+ind,4,m_ColorChanged);
 							}
-							else if(ii==4&&!locked) {
-								range=(m_pSimDoc->m_MStorage.GetMaxValid(ind)-m_pSimDoc->m_MStorage.GetMinValid(ind))/
-										(m_pSimDoc->m_MStorage.GetMaxValidAll(ind)-m_pSimDoc->m_MStorage.GetMinValidAll(ind));
+							else if(ii==4&&!locked&&stat_all.Max>stat_all.Min) {
+								range=(stat_post.Max-stat_post.Min)/
+										(stat_all.Max-stat_all.Min);
 								QuickSetNumber(ncol_extra+ind,5, double(range));
 								QuickSetBackColor(ncol_extra+ind,ii+1, m_ColorHeading);
 							}
@@ -5188,6 +5190,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 
 					GetCell(6,i,&cell);	
 
+					SimpleStatistics stat_post;
 					if (m_pSimDoc->m_ValSum_Array.size() > 0) {
 						auto n = sumv.n_RegMulti;
 						string str;
@@ -5217,6 +5220,16 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 							cell.SetText("1");
 					}
 					else {
+						if (m_pSimDoc->IsMultiSimulation()) {
+							stat_post = m_pSimDoc->m_MStorage.GetValidStat(i, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+							if(stat_post.Mean==MISSING)
+								cell.SetText("0");
+							else
+								cell.SetNumber(m_pSimDoc->m_ValidationData.GetValn(i));
+
+
+						}
+						else
 							cell.SetNumber(m_pSimDoc->m_ValidationData.GetValn(i));
 
 					}
@@ -5227,14 +5240,23 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 
 					SetCell(6,i,&cell);
 
-
+					bool ValidToPlot = false;
 					GetCell(7,i,&cell);
-					fvalue=m_pSimDoc->m_ValidationData.GetValR2(i);
-					if(fvalue>-0.9e38)
-						txt=MFC_Util::FtoAscii(fvalue);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = stat_post.Mean;
+					
+					}
+					else
+						fvalue=m_pSimDoc->m_ValidationData.GetValR2(i);
+
+					if (fvalue > -0.9e38) {
+						txt = MFC_Util::FtoAscii(fvalue);
+						ValidToPlot = true;
+					}
 					else
 						txt=_T("");
-					if(multivalid) {
+					if(multivalid&&ValidToPlot) {
 						cell.SetCellType(UGCT_CHECKBOX);
 						cell.SetBool(FALSE);
 						cell.SetLabelText(txt);
@@ -5243,21 +5265,21 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 						cell.SetCellType(UGCT_NORMAL);
 						cell.SetText(txt);
 					}
-					if(i>0) {
-						if(m_pSimDoc->m_ValidationData.GetValR2(i-1)==m_pSimDoc->m_ValidationData.GetValR2(i)) {
-							float vf=m_pSimDoc->m_ValidationData.GetValR2(i-1);
-						}
-					}
 					SetCell(7,i,&cell);	
 
 
 					GetCell(8,i,&cell);	
-					fvalue=m_pSimDoc->m_ValidationData.GetValA0(i);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i+numtsv, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = stat_post.Mean;
+					}
+					else
+						fvalue=m_pSimDoc->m_ValidationData.GetValA0(i);
 					if(fvalue>-0.9e38)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
 						txt=_T("");
-					if(multivalid) {
+					if(multivalid && ValidToPlot) {
 						cell.SetCellType(UGCT_CHECKBOX);
 						cell.SetBool(FALSE);
 						cell.SetLabelText(txt);
@@ -5269,12 +5291,17 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					SetCell(8,i,&cell);	
 
 					GetCell(9,i,&cell);	
-					fvalue=m_pSimDoc->m_ValidationData.GetValA1(i);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i + 2*numtsv, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = stat_post.Mean;
+					}
+					else
+						fvalue=m_pSimDoc->m_ValidationData.GetValA1(i);
 					if(fvalue>-0.9e38)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
 						txt=_T("");
-					if(multivalid) {
+					if(multivalid && ValidToPlot) {
 						cell.SetCellType(UGCT_CHECKBOX);
 						cell.SetBool(FALSE);
 						cell.SetLabelText(txt);
@@ -5286,13 +5313,18 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					SetCell(9,i,&cell);	
 
 					GetCell(10,i,&cell);
-					fvalue=m_pSimDoc->m_ValidationData.GetValME(i);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i + 3 * numtsv, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = stat_post.Mean;
+					}
+					else
+						fvalue=m_pSimDoc->m_ValidationData.GetValME(i);
 					if(fvalue>-0.9e38)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
 						txt=_T("");
 
-					if(multivalid) {
+					if(multivalid && ValidToPlot) {
 						cell.SetCellType(UGCT_CHECKBOX);
 						cell.SetBool(FALSE);
 						cell.SetLabelText(txt);
@@ -5304,12 +5336,17 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					SetCell(10,i,&cell);	
 
 					GetCell(11,i,&cell);
-					fvalue=m_pSimDoc->m_ValidationData.GetValRMSE(i);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i + 4 * numtsv, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = stat_post.Mean;
+					}
+					else
+						fvalue=m_pSimDoc->m_ValidationData.GetValRMSE(i);
 					if(fvalue>-0.9e38)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
 						txt=_T("");
-					if(multivalid) {
+					if(multivalid && ValidToPlot) {
 						cell.SetCellType(UGCT_CHECKBOX);
 						cell.SetBool(FALSE);
 						cell.SetLabelText(txt);
@@ -5322,15 +5359,25 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 
 					GetCell(12,i,&cell);
 					fvalue=m_pSimDoc->m_ValidationData.GetValMSIM(i);
-					if(fvalue>-0.9e38)
+					if(fvalue>-0.9e38 && ValidToPlot)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
 						txt=_T("");
 					cell.SetText(txt);
+
 					SetCell(12,i,&cell);	
 
 					GetCell(13,i,&cell);
-					fvalue=m_pSimDoc->m_ValidationData.GetValMVAL(i);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i + 3 * numtsv, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = m_pSimDoc->m_ValidationData.GetValMSIM(i);
+						if (stat_post.Mean > -0.9E38)
+							fvalue -= stat_post.Mean;
+						else
+							fvalue = MISSING;
+					}
+					else
+						fvalue=m_pSimDoc->m_ValidationData.GetValMVAL(i);
 					if(fvalue>-0.9e38)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
@@ -5339,13 +5386,18 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					SetCell(13,i,&cell);	
 					
 					GetCell(14,i,&cell);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i + 5 * numtsv, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = stat_post.Mean;
+					}
+					else
 					fvalue=m_pSimDoc->m_ValidationData.GetValLogLi(i);
 					if(fvalue>-0.9e38)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
 						txt=_T("");
 					
-					if(multivalid) {
+					if(multivalid && ValidToPlot) {
 						cell.SetCellType(UGCT_CHECKBOX);
 						cell.SetBool(FALSE);
 						cell.SetLabelText(txt);
@@ -5356,13 +5408,18 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					}
 					SetCell(14,i,&cell);	
 
-					GetCell(15,i,&cell);	
-					fvalue=m_pSimDoc->m_ValidationData.GetValNSE(i);
+					GetCell(15,i,&cell);
+					if (m_pSimDoc->IsMultiSimulation()) {
+						stat_post = m_pSimDoc->m_MStorage.GetValidStat(i + 6 * numtsv, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+						fvalue = stat_post.Mean;
+					}
+					else
+						fvalue=m_pSimDoc->m_ValidationData.GetValNSE(i);
 					if(fvalue>-0.9e38)
 						txt=MFC_Util::FtoAscii(fvalue);
 					else
 						txt=_T("");
-					if(multivalid) {
+					if(multivalid && ValidToPlot) {
 						cell.SetCellType(UGCT_CHECKBOX);
 						cell.SetBool(FALSE);
 						cell.SetLabelText(txt);

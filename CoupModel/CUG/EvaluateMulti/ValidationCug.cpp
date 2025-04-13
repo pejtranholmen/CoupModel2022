@@ -184,10 +184,9 @@ void ValidationCug::OnSetup()
 
 
 bool ValidationCug::IsAcceptedEstimated() {
-	auto selmax=m_pSimDoc->m_MStorage.GetMaxValid(0, 0);
-	auto selmin=m_pSimDoc->m_MStorage.GetMinValid(0,0);
-	//if(m_pSimDoc->m_MStorage.GetValidLow(0,0)>=m_pSimDoc->m_MStorage.GetValidHigh(0,0)) return false;
-	if(selmax>selmin) return true;
+	auto stat_post = m_pSimDoc->m_MStorage.GetValidStat(0, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
+
+	if(stat_post.Max>stat_post.Min) return true;
 	return m_pSimDoc->m_MStorage.m_AcceptedUpdated;
 
 }
@@ -437,13 +436,13 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	int FileNo, ind, index_start;
 	index_start = SheetNumber*m_NumValidVar;
 	double allmax, allmin, selmax, selmin, allcv, selcv;
+	SimpleStatistics stat_all, stat_post;
 	int criteria;
 	int line;
 	if (m_NumValidVar > 0) {
-		allmax = double(m_pSimDoc->m_MStorage.GetMaxValidAll(0, 0));
-		allmin = double(m_pSimDoc->m_MStorage.GetMinValidAll(0, 0));
-		if (allmax == allmin) {
-			m_pSimDoc->m_MStorage.SetPriorDistributions();
+		stat_all= m_pSimDoc->m_MStorage.GetValidStat(0, false);
+		if (stat_all.Max == stat_all.Min) {
+			m_pSimDoc->m_MStorage.SetPriorDistributions(); //Dumm
 		}
 	}
 	SetTopRow(m_CurrentTopRow);
@@ -490,26 +489,12 @@ for(int i=0;i<m_NumValidVar;i++) {
 			auto vname = FUtil::STD_ItoAscii(i + 1) + ":" + test;
 			QuickSetText(0,line, vname);
 			criteria=m_pSimDoc->m_MStorage.GetCriteria(i+index_start, split_ind);
-			allmax=double(m_pSimDoc->m_MStorage.GetMaxValidAll(i+index_start, split_ind));
-			allmin=double(m_pSimDoc->m_MStorage.GetMinValidAll(i+index_start, split_ind));
-			//if(allmax==allmin) continue;
-			allcv=double(m_pSimDoc->m_MStorage.GetCV_ValidAll(i+index_start, split_ind));
+			stat_all= m_pSimDoc->m_MStorage.GetValidStat(i+index_start, false, m_pSimDoc->m_MStorage.m_ActualEnsemble, split_ind);
+			stat_post = m_pSimDoc->m_MStorage.GetValidStat(i + index_start, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, split_ind);
 
-			if ((i + index_start)==99&& m_pSimDoc->m_MStorage.m_ActualEnsemble==3) {
-				auto koll = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].v[STAT_ENSEMBLE::E_POST_MAX][i + index_start];
-
-			}
-			selmax=double(m_pSimDoc->m_MStorage.GetMaxValid(i+index_start, split_ind));
-			
-			auto koll = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].v[STAT_ENSEMBLE::E_POST_MAX][i + index_start];
-
-
-
-			selmin=double(m_pSimDoc->m_MStorage.GetMinValid(i+index_start, split_ind));
-			if (i + index_start == 99) {
-				auto koll = selmin;
-			}
-			selcv=double(m_pSimDoc->m_MStorage.GetCV_Valid(i+index_start, split_ind));
+			selmax=double(stat_all.Max);	
+			selmin=double(stat_all.Min);
+			selcv=double(stat_all.CV);
 			if(split_ind==0) {
 
 					if (act_ensemble > 0) {
@@ -523,20 +508,25 @@ for(int i=0;i<m_NumValidVar;i++) {
 					QuickSetText(-1, line, ">");
 					QuickSetBackColor(-1, line, m_ColorClick);
 					
-
-				
-
-			
-				QuickSetNumber(2,line,m_pSimDoc->m_ValidationData.GetValn(i));
+				if (abs(stat_all.Mean) < 1.E38)		
+					QuickSetNumber(2,line,m_pSimDoc->m_ValidationData.GetValn(i));
+				else
+					QuickSetNumber(2, line, 0);
 				GetCell(1,line,&cell);
 				cell.SetCellType(UGCT_CHECKBOX);
 				cell.SetText("");
-				cell.SetBool(FALSE);
+				cell.SetReadOnly(TRUE);
+				if (abs(stat_all.Mean) < 1.E38)
+					cell.SetReadOnly(FALSE);
+				cell.SetBool(FALSE);	
 				SetCell(1,line,&cell);
 			}
 			else {
 				//QuickSetNumber(1,line, split_ind);
-				QuickSetNumber(2,line,m_pSimDoc->m_MStorage.GetSplitNValue(i,split_ind-1));
+				if (abs(stat_all.Mean) < 1.E38)
+					QuickSetNumber(2,line,m_pSimDoc->m_MStorage.GetSplitNValue(i,split_ind-1));
+				else
+					QuickSetText(2, line, "0");
 				GetCell(1,line,&cell);
 				cell.SetCellType(UGCT_CHECKBOX);
 				cell.SetBool(FALSE);
@@ -548,69 +538,34 @@ for(int i=0;i<m_NumValidVar;i++) {
 				JoinCells(0,line-m_SplitPeriods,0,line);
 				JoinCells(-1,line-m_SplitPeriods,-1,line);
 			}
-			float value;
-			value=m_pSimDoc->m_MStorage.GetMeanValidAll(i+index_start, split_ind);
-			if(abs(value)<1.E38)
-				QuickSetNumber(3,line,value);
-			else
-				QuickSetText(3, line, "");
-			if(abs(allcv)<1.E38)
-				QuickSetNumber(4,line,allcv); 
-			else
-				QuickSetText(4, line, "");
-			if(abs(allmin)<0.5E38)
-				QuickSetNumber(5,line,allmin); 
-			else
-				QuickSetText(5, line, "");
-			if(abs(allmax)<0.5E38)
-				QuickSetNumber(6,line,allmax);
-			else
-				QuickSetText(6, line, "");
-			value=m_pSimDoc->m_MStorage.GetMeanValid(i+index_start, split_ind);
-			if (value > 0.99&&index_start==0) {
-
-				auto check = 0;
-
-			}
-			//value = m_pSimDoc->m_MStorage.m_Valid_TSV[m_pSimDoc->m_MStorage.m_ActualEnsemble].v[E_POST_MEAN][i + index_start];
-
-			if(abs(value)<0.5E38)
-				QuickSetNumber(7,line,value); 
-			else
-				QuickSetText(7, line, "");
-			if(abs(selcv)<0.5E38)
-				QuickSetNumber(8,line,selcv);
-						else
-				QuickSetText(8, line, "");
-			if(abs(selmin)<0.5E38)
-				QuickSetNumber(9,line,selmin); 
-						else
-				QuickSetText(9, line, "");
-			if(abs(selmax)<0.5E38)
-				QuickSetNumber(10,line,selmax); 
-			else
-				QuickSetText(10, line, "");
+			if(abs(stat_all.Mean)<1.E38) QuickSetNumber(3,line,stat_all.Mean);	else QuickSetText(3, line, "");
+			if(abs(stat_all.CV)<1.E38)	 QuickSetNumber(4,line,stat_all.CV); else QuickSetText(4, line, "");
+			if(abs(stat_all.Min)<0.5E38) QuickSetNumber(5,line,stat_all.Min); else QuickSetText(5, line, "");
+			if(abs(stat_all.Max)<0.5E38) QuickSetNumber(6,line,stat_all.Max); else QuickSetText(6, line, "");
+	
+			if(abs(stat_post.Mean)<0.5E38)	QuickSetNumber(7,line,stat_post.Mean); 	else QuickSetText(7, line, "");
+			if(abs(stat_post.CV)<0.5E38)	QuickSetNumber(8,line,stat_post.CV);	else QuickSetText(8, line, "");
+			if(abs(stat_post.Min)<0.5E38)	QuickSetNumber(9,line,stat_post.Min); 	else QuickSetText(9, line, "");
+			if(abs(stat_post.Max)<0.5E38)	QuickSetNumber(10,line,stat_post.Max); 	else QuickSetText(10, line, "");
 			double rangef;
-			if(allmax-allmin>0&&abs(allmax)<1.E38&&abs(selmin)<0.5e38) {
-				rangef=(selmax-selmin)/(allmax-allmin);
-				QuickSetNumber(11,line,rangef);
+			if(stat_all.Max-stat_all.Min>0&&abs(stat_all.Max)<1.E38&&abs(stat_all.Min)<0.5e38) {
+				rangef=(selmax-selmin)/(stat_all.Max-stat_all.Min);	QuickSetNumber(11,line,rangef);
 				if (rangef == 0) {
 
-					if (m_pSimDoc->m_MStorage.GetValidHigh(i + index_start, 0) > allmax) {
-						value = m_pSimDoc->m_MStorage.GetValidHigh(i + index_start, split_ind);
-						allmax = double(m_pSimDoc->m_MStorage.GetMaxValidAll(i + index_start, split_ind));
-						allmin = double(m_pSimDoc->m_MStorage.GetMinValidAll(i + index_start, split_ind));
-						m_pSimDoc->m_MStorage.SetValidHigh(i + index_start, 0, allmax);
+					if (stat_post.Max > stat_all.Max) {
+						m_pSimDoc->m_MStorage.SetValidHigh(i + index_start, 0, stat_post.Max);
 					
 					}
-					if (m_pSimDoc->m_MStorage.GetValidLow(i + index_start, 0) < allmin) {
-						m_pSimDoc->m_MStorage.SetValidLow(i + index_start,0,allmin);
+					if (m_pSimDoc->m_MStorage.GetValidLow(i + index_start, 0) < stat_all.Min) {
+						m_pSimDoc->m_MStorage.SetValidLow(i + index_start,0,stat_all.Min);
 
 					}
 				}
 			}
+			else if(abs(stat_all.Mean)>0.5E38) 
+				QuickSetText(11, line, "");
 			else
-				QuickSetNumber(11,line,1.0);
+				QuickSetNumber(11, line, 1.0);
 
 			if(criteria==10) {
 
@@ -905,7 +860,6 @@ if (NumLinesSV > 0)
 		QuickSetNumber(5, line, m_pSimDoc->m_MStorage.m_Valid_SV_Mean[ActualEnsemble].v[E_PRIOR_MIN][pervar]);
 		QuickSetNumber(6, line, m_pSimDoc->m_MStorage.m_Valid_SV_Mean[ActualEnsemble].v[E_PRIOR_MAX][pervar]);
 	
-		//QuickSetNumber(5,i,double(m_pSimDoc->m_MStorage.GetMeanValid(i+index_start))); 
 		if (SheetNumber >= 0 && SheetNumber < 7) {
 			QuickSetText(0, line, VarText);
 
@@ -2684,8 +2638,8 @@ Return:
 ****************************************************/
 void ValidationCug::OnSelectionChanged(int startCol,long startRow,int endCol,long endRow,int blockNum)
 {
-	TRACE("ValidationCug::OnSelectionChanged called with startCol = %ld, startRow = %ld, endCol = %ld, endRow = %ld, blockNum = %ld.\n",
-				startCol, startRow, endCol,	endRow, blockNum );
+	/*TRACE("ValidationCug::OnSelectionChanged called with startCol = %ld, startRow = %ld, endCol = %ld, endRow = %ld, blockNum = %ld.\n",
+				startCol, startRow, endCol,	endRow, blockNum );*/
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3563,7 +3517,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			m_pSimDoc->m_MStorage.IsMaxUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = m_pSimDoc->m_MStorage.IsMinUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = false;
 			auto MaxNum = m_pSimDoc->GetNumAll_TSV_ValVariables();
 			size_t ip = MaxNum * isheet + VarIndex;
-			auto dist_pair = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+			auto dist_pair = m_pSimDoc->m_MStorage.Get_ValidPerformanceIndicatorPairVector(true, ip, 0);
 
 			m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators(false);
 
@@ -3632,7 +3586,7 @@ void ValidationCug::OnMenuCommand(int col,long row,int section,int item)
 			m_pSimDoc->m_MStorage.IsMaxUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = m_pSimDoc->m_MStorage.IsMinUpdated[m_pSimDoc->m_MStorage.m_ActualEnsemble] = false;
 			auto MaxNum = m_pSimDoc->GetNumAll_TSV_ValVariables();
 			size_t ip = MaxNum * isheet + VarIndex;
-			auto dist_pair = m_pSimDoc->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+			auto dist_pair = m_pSimDoc->m_MStorage.Get_ValidPerformanceIndicatorPairVector(true, ip, 0);
 
 			m_pSimDoc->m_MStorage.SetMinMaxOfPerformanceIndicators(false);
 

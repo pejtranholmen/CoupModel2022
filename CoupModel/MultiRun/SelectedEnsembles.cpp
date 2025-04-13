@@ -261,7 +261,8 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 #ifndef COUPSTD
 		mfc_util.SetPaneMessage("Find Posterior ensemble of accepted runs using TSV Criteria " + FUtil::STD_ItoAscii(iv + 1) + " (" + FUtil::STD_ItoAscii(size_t(m_NumValid + m_NumExtraValid)) + ")");
 #endif
-		if (GetValidLow(iv, isplit) > GetMinValidAll(iv, isplit) || GetValidHigh(iv, isplit) < GetMaxValidAll(iv, isplit)) {
+		auto stat_all = GetValidStat(iv, false, string::npos, isplit);
+		if (GetValidLow(iv, isplit) > stat_all.Min || GetValidHigh(iv, isplit) < stat_all.Max) {
 			if (isplit == 0) {
 
 				for (unsigned long i = 0; i < m_TotalNumberRuns; i++) {
@@ -671,6 +672,60 @@ unsigned long SelectedEnsembles::GetNumBayesAccepted(unsigned long num_burn_in)
 	return m_TotalNumBayesAccepted;
 }
 
+SimpleStatistics SelectedEnsembles::GetValidStat(unsigned long ip, bool post, size_t actualensemble, unsigned long split) const
+{
+	if (actualensemble == string::npos) actualensemble = m_ActualEnsemble;
+	if(post) return { m_Valid_TSV[actualensemble].v[E_POST_MEAN][ip], m_Valid_TSV[actualensemble].v[E_POST_CV][ip], m_Valid_TSV[actualensemble].v[E_POST_MIN][ip], m_Valid_TSV[actualensemble].v[E_POST_MAX][ip] };
+	else return { m_Valid_TSV[actualensemble].v[E_PRIOR_MEAN][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_CV][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_MIN][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_MAX][ip] };
+
+}
+
+void SelectedEnsembles::SetValidStat(unsigned long ip, bool post, size_t actualensemble, unsigned long split)
+{
+	if(actualensemble==string::npos) actualensemble = m_ActualEnsemble;
+		vector<float> values;
+		DistStat stat;
+		size_t ncheck;
+		auto dist_pair = Get_ValidPerformanceIndicatorPairVector(post, ip, split);
+		values.resize(dist_pair.size());
+		for (size_t i = 0; i < dist_pair.size(); i++) {
+			values[i]=dist_pair[i].first;
+		};
+		
+
+		if (values.size() > 0) {
+			MeanStat(&values[0], values.size(), &ncheck, &stat);
+			if(post) {
+				m_Valid_TSV[actualensemble].v[E_POST_MEAN][ip] = stat.Mean;
+				if(stat.Mean!=0)
+					m_Valid_TSV[actualensemble].v[E_POST_CV][ip] = stat.Std/stat.Mean;
+				m_Valid_TSV[actualensemble].v[E_POST_MIN][ip] = stat.Min;
+				m_Valid_TSV[actualensemble].v[E_POST_MAX][ip] = stat.Max;
+			}
+			else {
+				m_Valid_TSV[actualensemble].v[E_PRIOR_MEAN][ip] = stat.Mean;
+				if (stat.Mean != 0)
+					m_Valid_TSV[actualensemble].v[E_PRIOR_CV][ip] = stat.Std / stat.Mean;
+				m_Valid_TSV[actualensemble].v[E_PRIOR_MIN][ip] = stat.Min;
+				m_Valid_TSV[actualensemble].v[E_PRIOR_MAX][ip] = stat.Max;
+			}
+		}
+		else {
+			if(post) {
+				m_Valid_TSV[actualensemble].v[E_POST_MEAN][ip] = MISSING;
+				m_Valid_TSV[actualensemble].v[E_POST_CV][ip] = MISSING;
+				m_Valid_TSV[actualensemble].v[E_POST_MIN][ip] = MISSING;
+				m_Valid_TSV[actualensemble].v[E_POST_MAX][ip] = MISSING;
+			}
+			else {
+				m_Valid_TSV[actualensemble].v[E_PRIOR_MEAN][ip] = MISSING;
+				m_Valid_TSV[actualensemble].v[E_PRIOR_CV][ip] = MISSING;
+				m_Valid_TSV[actualensemble].v[E_PRIOR_MIN][ip] = MISSING;
+				m_Valid_TSV[actualensemble].v[E_PRIOR_MAX][ip] = MISSING;
+			}
+		}
+}
+
 float SelectedEnsembles::GetMinValidPar(unsigned long ip)
 {
 	if (m_ParValidMin.size() == 0) return 0.;
@@ -705,44 +760,7 @@ float SelectedEnsembles::GetMaxValidPar(unsigned long ip)
 		return m_ParValidMax[ip];
 
 }
-float SelectedEnsembles::GetMinValidAll(unsigned long ip, unsigned long ind_split)
-{
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN].size()==0) return 0.;
-	if (m_NumValid == 0) return MISSING;
-	//if (!IsMinUpdated) {
-		float v = 1.1E38f;
-		if (ind_split == 0) {
-			
-			for (unsigned long i = 0; i < m_TotalNumberRuns; i++) {
-				if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0 && m_Dim1Value == 0)) {
-					auto koll= GetValid(i, ip);
-					if (koll > MISSING + 1&& koll < v)	v = koll;
-				}
 
-			}
-			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][ip] = v;
-			return v;
-		}
-		else {
-			size_t numruns = m_TotalNumberRuns;
-			for (unsigned long irun = 0; irun < numruns; irun++) {
-				if (irun % m_NumSplitPeriod == ind_split - 1) {
-					if (GetSplitValid(irun / m_NumSplitPeriod, ip, ind_split - 1) < v)
-						v = GetSplitValid(irun / m_NumSplitPeriod, ip, ind_split - 1);
-				}
-			}
-			m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][ip + ind_split*(m_NumValid + m_NumExtraValid)]  = v;
-			return v;
-
-		}
-	//}
-	//else
-	//	return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][ip + ind_split*(m_NumValid + m_NumExtraValid)];
-		//return m_VarValidMinAll[ip+ind_split*(m_NumValid+m_NumExtraValid)];
-
-
-}
 CRITERIA_STATE SelectedEnsembles::GetMeanCriteria(unsigned long index)
 {
 	if (m_Valid_TSV.size() <= m_ActualEnsemble) return CRITERIA_STATE::NO_SET;
@@ -816,327 +834,9 @@ void SelectedEnsembles::ResetSumCriteria()
 			 m_Valid_SV_Mean[m_ActualEnsemble].criteria[i] = CRITERIA_STATE::NO_SET;
 	 }
 }
-float SelectedEnsembles::GetMaxValidAll(unsigned long ip, unsigned long ind_split)
-{
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-		if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX].size()<=ip) return 0.;
-		if (m_NumValid == 0) return MISSING;
-		if(!IsMaxUpdated[m_pNewMap->m_MStorage.m_ActualEnsemble]) {
-			float v=float(MISSING);
-			if(ind_split==0) {
-				size_t numruns = m_TotalNumberRuns;
-				for(unsigned long i=0;i<numruns;i++) {
-					if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0 && m_Dim1Value == 0)) {
-						auto koll = GetValid(i, ip);
-						if (koll > MISSING + 1.&&koll > v) v = koll;
-					}
-				}
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip] = v;
-				return v;
-			}
-			else {
-				size_t numruns = m_TotalNumberRuns;
-				for(unsigned long irun =0;irun<numruns;irun++) {
-					if (irun % m_NumSplitPeriod == ind_split - 1) {
-						if (GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1) > v)
-							v = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
-					}
-				}
-
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip + ind_split*(m_NumValid + m_NumExtraValid)] = v;
-				return v;
-			}
-		}
-		else
-			return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][ip + ind_split*(m_NumValid + m_NumExtraValid)];
 
 
-}
-float SelectedEnsembles::GetMeanValidAll(unsigned long ip, unsigned long ind_split)
-{
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN].size()<=ip) return 0.;
-	unsigned long count=0;
-	if(!IsMeanUpdated[m_ActualEnsemble]) {
-		float v=1.1E38f;
-		double sum=0.;
-		if(ind_split==0) {
-			size_t numruns = m_TotalNumberRuns;
-			for(unsigned long i=0;i<numruns;i++) {
-				if (i % m_CyclicNumber == m_CyclicStartPos|| (m_CyclicStartPos==0&&m_Dim1Value==0)) {
-					auto koll= GetValid(i, ip);
-					if (koll > MISSING + 1.) {
-						count++;
-						sum += koll;
-					}
-				}
 
-			}
-			if(count>0)	m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip ]= float(sum / count);
-			return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip ];
-		}
-		else {
-			double sum=0.;
-			unsigned long count=0;
-			float value;
-			size_t numruns = m_TotalNumberRuns;
-
-
-			for (unsigned long i = 0; i < numruns; i++) {
-				unsigned long irun = i;
-				if (m_NumSplitPeriod > 0) {
-					if (irun % m_NumSplitPeriod == ind_split - 1) {
-						value = GetSplitValid(irun / m_NumSplitPeriod, ip, ind_split - 1);
-						if (abs(value) < 0.9E38) {
-							sum += value;
-							count++;
-						}
-					}
-				}
-			}
-			if(count>0) 
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip + ind_split*(m_NumValid + m_NumExtraValid)] = float(sum / count);
-
-			else
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip + ind_split*(m_NumValid + m_NumExtraValid)]= float(MISSING);
-
-		}
-	}
-	else
-		return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][ip + ind_split*(m_NumValid + m_NumExtraValid)];
-	return MISSING;
-}
-float SelectedEnsembles::GetMeanValid(unsigned long ip, unsigned long ind_split)
-{
-	//if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN].size()<=ip) return 0.;
-	//if(!IsMeanUpdated) {
-
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-		float v=1.1E38f;
-		double sum=0.;
-		if(ind_split==0) {
-			float fval;
-			size_t count=0;
-			for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
-				unsigned long irun=Get_AcceptedRuns(i);
-				fval=GetValid(irun,ip);
-				if(fval>MISSING) {
-					sum+=GetValid(irun,ip);
-					count++;
-				}
-			}
-			if(count>0) 
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN][ip]=float(sum/m_TotalNumAccepted);
-			else
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN][ip]=float(MISSING);
-		}
-		else {
-			double sum=0.;
-			unsigned long count=0;
-			float value;
-
-			for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
-				unsigned long irun=Get_AcceptedRuns(i);
-				if (m_NumSplitPeriod > 0) {
-					if (irun % m_NumSplitPeriod == ind_split - 1) {
-						value = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
-						if (abs(value) < 0.9E38) {
-							sum += value;
-							count++;
-						}
-					}
-				}		
-			}
-			if(count>0)
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN][ip+ind_split*(m_NumValid+m_NumExtraValid)]=float(sum/count);
-			else
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN][ip+ind_split*(m_NumValid+m_NumExtraValid)]=float(MISSING);
-
-		}
-		return m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN][ip+ind_split*(m_NumValid+m_NumExtraValid)];
-//	}
-//	else
-//		return m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN][ip+ind_split*(m_NumValid+m_NumExtraValid)];
-}
-float SelectedEnsembles::GetCV_Valid(unsigned long ip, unsigned long ind_split)
-{
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-	if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV].size() <=ip) return 0.;
-	if (m_NumValid == 0) return MISSING;
-	if (!IsCVUpdated[m_ActualEnsemble]) {
-		float v = 1.1E38f;
-		double sum = 0.;
-		unsigned long count = 0;
-		if (ind_split == 0) {
-			for (unsigned long i = 0; i < m_TotalNumAccepted; i++) {
-				unsigned long irun = Get_AcceptedRuns(i);
-				if (irun < 0) return MISSING;
-				count++;
-				sum += pow(GetValid(irun, ip) - GetMeanValid(ip), 2);
-
-			}
-			if (count >= 2 && abs(GetMeanValid(ip))>0) {
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip] = float(sqrt(sum / (count - 1))) / abs(GetMeanValid(ip));
-
-			}
-			else if(count<2) {
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip] = 0.;
-			}
-
-			return m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip];
-		}
-		else {
-
-			for (unsigned long i = 0; i < m_TotalNumAccepted; i++) {
-				unsigned long irun = Get_AcceptedRuns(i);
-				if (m_pNewMap->m_MultiFileSplitMode && m_NumSplitPeriod > 0)
-					irun = i / m_NumSplitPeriod;
-				count++;
-				sum += pow(GetSplitValid(irun, ip, ind_split - 1) - GetMeanValid(ip, ind_split), 2);
-
-			}
-			if (count > 2 && abs(GetMeanValid(ip, ind_split)) > 0)
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip + ind_split*(m_NumValid + m_NumExtraValid)]= float(sqrt(sum / (count - 1)) / abs(GetMeanValid(ip, ind_split)));
-			else
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip + ind_split*(m_NumValid + m_NumExtraValid)] = float(MISSING);
-		}
-	}
-	else
-		return m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][ip + ind_split*(m_NumValid + m_NumExtraValid)];
-		//return m_VarValidCV[ip+ind_split*(m_NumValid+m_NumExtraValid)];
-	return MISSING;
-}
-float SelectedEnsembles::GetCV_ValidAll(unsigned long ip, unsigned long ind_split)
-{
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-	if(m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV].size() <=ip) return 0.;
-	if (m_NumValid == 0) return MISSING;
-	if(!IsCVUpdated[m_ActualEnsemble]) {
-		double sum=0.;
-		unsigned long count=0;
-		if(ind_split==0) {
-			for(unsigned long i=0;i<m_TotalNumberRuns;i++) {
-				if (i % m_CyclicNumber == m_CyclicStartPos || (m_CyclicStartPos == 0&&m_Dim1Value == 0)) {
-					auto koll = GetValid(i, ip);
-					if (koll > MISSING + 1) {
-						count++;
-						sum += pow(GetValid(i, ip) - GetMeanValidAll(ip), 2);
-					}
-				}
-			}
-			if(count>2&&abs(GetMeanValidAll(ip))>0)
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][ip]=float(sqrt(sum/(count-1)))/abs(GetMeanValidAll(ip));
-			else
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][ip]=0.f;
-
-			return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][ip];
-		}
-		else {
-			size_t numruns = m_TotalNumberRuns;
-			if (m_NumSplitPeriod != 0) numruns /= m_NumSplitPeriod;
-			for (unsigned long i = 0; i < numruns; i++) {
-				if(GetSplitValid(i, ip, ind_split - 1) !=0) {
-					count++;
-					sum+=pow(GetSplitValid(i,ip,  ind_split-1)-GetMeanValid(ip, ind_split),2);
-				}
-			}
-			if(count>2&&abs(GetMeanValid(ip, ind_split))>0)
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][ip+ind_split*(m_NumValid+m_NumExtraValid)]=float(sqrt(sum/(count-1)))/abs(GetMeanValid(ip, ind_split));
-			else
-				m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][ip+ind_split*(m_NumValid+m_NumExtraValid)]=float(MISSING);
-
-		}
-	}
-	else
-		return m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][ip+ind_split*(m_NumValid+m_NumExtraValid)];
-	return MISSING;
-}
-float SelectedEnsembles::GetMinValid(unsigned long ip, unsigned long ind_split)
-{
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-	if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_MIN].size()<=ip) return 0.;
-	//if(!IsMinUpdated) {
-		float fval;
-		float v=1.1E38f;
-		if (m_NumValid == 0) return MISSING;
-		if(ind_split==0) {
-			unsigned long ind, ind_rmse, ind_a1;
-			float rmse_o, vtest;
-			
-			vector<float> vtestvec;
-
-			for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
-				unsigned long irun=Get_AcceptedRuns(i);
-				if(irun<0) return MISSING;
-					fval=GetValid(irun,ip);
-					if (fval<v && fval>MISSING + 1) {
-						v = fval;
-						vtestvec.push_back(fval);
-					}
-			}
-			m_Valid_TSV[m_ActualEnsemble].v[E_POST_MIN][ip] = v;
-			if (ip == 99&&m_ActualEnsemble==2) {
-				auto koll = vtestvec.size();
-			}
-			return v;
-		}
-		else {
-			size_t numruns = m_TotalNumberRuns;
-
-			for (unsigned long i = 0; i < numruns; i++) {
-				unsigned long irun=Get_AcceptedRuns(i);	
-				if (irun % m_NumSplitPeriod == ind_split-1) {
-					fval = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
-					if (fval<v && fval>MISSING)
-						v = fval;
-				}
-			
-			}
-			m_Valid_TSV[m_ActualEnsemble].v[E_POST_MIN][ip] = v;
-			return v;
-
-		}
-
-}
-float SelectedEnsembles::GetMaxValid(unsigned long ip, unsigned long ind_split)
-{
-	if (m_Valid_TSV.size() <= m_ActualEnsemble) return 0.;
-		if(m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX].size()<=ip) return 0.;
-		//if (m_NumValid == 0) return MISSING;
-		//if(!IsMaxUpdated) {
-			float v=float(MISSING);
-			vector<float> vtestvec;
-			if(ind_split==0) {
-
-				for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
-					unsigned long irun=Get_AcceptedRuns(i);
-					if(irun<0) return MISSING;
-						if(GetValid(irun,ip)>v/*&&GetValid(i, ind_a1)!=0*/)
-							v=GetValid(irun,ip);
-						vtestvec.push_back(GetValid(irun, ip));
-				}
-					//m_VarValidMax[ip]=v;
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][ip]=v;
-				if (ip == 99 && m_ActualEnsemble == 2) {
-					auto koll = vtestvec.size();
-				}
-
-
-				return v;
-			}
-			else {
-				for(unsigned long i=0;i<m_TotalNumAccepted;i++) {
-					unsigned long irun = Get_AcceptedRuns(i);
-					if (irun % m_NumSplitPeriod == ind_split - 1) {
-						auto fval = GetSplitValid(irun/m_NumSplitPeriod, ip, ind_split - 1);
-						if ( fval> v)
-							v = fval;
-					}
-				}
-				m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][ip]=v;
-				return v;
-			}
-}
 size_t SelectedEnsembles::FindAcceptedRunsFromFlagInPar() {
 
 	m_TotalNumAccepted = 0;
@@ -1191,43 +891,31 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators(bool Only_Prior) {
 		}
 
 	}
+	auto numvalidvar = m_pNewMap->GetNumAll_TSV_ValVariables();
 	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
-			if(Only_Prior) {
-				GetMinValidAll(i, split);
-				GetMaxValidAll(i, split);
+			if (m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][i % numvalidvar] == MISSING) {
+					m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MAX][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_POST_MEAN][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_POST_MIN][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_POST_MAX][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_LOW][i] = MISSING;
+					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][i] = MISSING;
 			}
 			else {
-				GetMinValid(i, split);
-				GetMaxValid(i, split);
-			}
-		}
-	}
-	IsMinUpdated[m_ActualEnsemble] = true;
-	IsMeanUpdated[m_ActualEnsemble] = false;
-	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
-		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
-			if(Only_Prior) {
-				GetMeanValidAll(i, split);
-			}
-			else {
-				GetMeanValid(i, split);
+				if (Only_Prior) SetValidStat(i, false, split);
+				else SetValidStat(i, true, split);
+				
 			}
 		}
 	}
 
-	IsMeanUpdated[m_ActualEnsemble] = true;
-	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
-		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
-			if(Only_Prior) {
-				GetCV_ValidAll(i, split);
-			}
-			else {
-				GetCV_Valid(i, split);
-			}
-		}
-	}
-	IsCVUpdated[m_ActualEnsemble] = true;
+
+
 
 
 	for (unsigned long i = 0; i<m_NumSumValid; i++) {
@@ -1905,17 +1593,26 @@ vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(uns
 	}
 	return out;
 }
-vector<pair<float, size_t>> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorPairVector(unsigned long ip, unsigned long split)
+vector<pair<float, size_t>> SelectedEnsembles::Get_ValidPerformanceIndicatorPairVector(bool posterior, unsigned long ip, unsigned long split)
 {
 	size_t count = 0;
 	vector<pair<float, size_t>> p;
-	
-	m_TotalNumAccepted= m_AcceptedRuns[m_ActualEnsemble].size();
-	for (size_t i = 0; i < m_AcceptedRuns[m_ActualEnsemble].size(); i++) {
-		size_t irun = m_AcceptedRuns[m_ActualEnsemble][i];
-		auto koll = GetValid(irun, ip);
-		if (koll > MISSING + 1.)
-			p.push_back(pair<float,size_t>(koll, irun));
+
+	if (posterior) {
+		m_TotalNumAccepted = m_AcceptedRuns[m_ActualEnsemble].size();
+		for (size_t i = 0; i < m_AcceptedRuns[m_ActualEnsemble].size(); i++) {
+			size_t irun = m_AcceptedRuns[m_ActualEnsemble][i];
+			auto koll = GetValid(irun, ip);
+			if (koll > MISSING + 1.)
+				p.push_back(pair<float, size_t>(koll, irun));
+		}
+	}
+	else {
+		for (unsigned long i = 0; i < m_TotalNumberRuns; i++) {
+			auto koll = GetValid(i, ip);
+			if (koll > MISSING + 1.)
+				p.push_back(pair<float, size_t>(koll, i));
+		}
 	}
     
 	auto comparePairs=[&](const pair<float, size_t>& a, const pair<float, size_t>& b) {

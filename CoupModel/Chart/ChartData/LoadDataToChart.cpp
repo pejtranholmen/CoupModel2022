@@ -773,36 +773,20 @@ void LoadDataToChart::AddExtraValidSerie(size_t icurve) {
 
 		m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
 		if (plot.DataType == DATA_TYPES::SIM_PAR|| plot.DataType == DATA_TYPES::SIM_OUTSUM|| plot.DataType == DATA_TYPES::SIM_PERFORMANCE) {
-			/*for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) {
-				validv = pDocAct->m_MStorage.GetMultiP(i, m_pSimDoc->MR_Get_NumTotalPar()); //indicator to check if accepted
+			auto koll = m_pSimDoc->m_MStorage.m_Valid_TSV[iens].v[E_PRIOR_MEAN][plot.Index];
 
-				if (validv > 0.1) {
-					AA[numvar * (iens + 1) + icurve][i] = AA[icurve][i];
-					if (!firstvalid) firstnum = i;
-					firstvalid = true;
-				}
-				else if (firstvalid&&plot.DataType != DATA_TYPES::SIM_PERFORMANCE)
-					AA[numvar * (iens + 1) + icurve][i] = AA[numvar * (iens + 1) + icurve][i - 1];
-				else
-					AA[numvar * (iens + 1) + icurve][i] = Chart::NoValue;
+			
 
-			}*/
-			auto koll = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens];
+
 			for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) AA[numvar * (iens + 1) + icurve][i] = Chart::NoValue;
-			for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns[iens].size(); i++) {
-				auto koll1= AA[icurve][m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i]];
-				auto koll2 = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i];
-				AA[numvar * (iens + 1) + icurve][i] = AA[icurve][m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i]];
+			if (m_pSimDoc->m_MStorage.m_Valid_TSV[iens].v[E_PRIOR_MEAN][plot.Index] > -0.9E38) {
+				for (size_t i = 0; i < m_pSimDoc->m_MStorage.m_AcceptedRuns[iens].size(); i++) {
+					auto koll1 = AA[icurve][m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i]];
+					auto koll2 = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i];
+					AA[numvar * (iens + 1) + icurve][i] = AA[icurve][m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][i]];
+				}
 			}
 
-
-			/*
-
-			if(plot.DataType != DATA_TYPES::SIM_PERFORMANCE) {
-				for (int i = firstnum - 1; i >= 0; i--) {
-					AA[numvar * (iens + 1) + icurve][i] = AA[numvar * (iens + 1) + icurve][i + 1];
-				}
-			}*/
 			
 		}
 
@@ -1508,11 +1492,18 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		vector<float> kollperformance;
 		size_t n = m_ChartInfo.NumOfPoints;
 
-		if (p_info.PGSection == 0)
+		if (p_info.PGSection == 0) {
+
+			auto stat_prior = m_pSimDoc->m_MStorage.GetValidStat(p_info.Index, false, p_info.EnsembleNo, 0);
+			if (stat_prior.Mean < -0.9E38) {
+				return false;
+			}
+
 			for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) {
 				AA[icurve][i] = double(pDocAct->m_MStorage.GetValid(i, p_info.Index, 0, 1));
 				kollperformance.push_back(AA[icurve][i]);
 			}
+		}
 		else if (p_info.PGSection>0)
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) AA[icurve][i] = double(pDocAct->m_MStorage.GetSplitValid(i, p_info.Index, p_info.PGSection - 1));
 

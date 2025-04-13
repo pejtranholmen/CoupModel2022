@@ -1907,7 +1907,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		dist = m_pNewMap->m_MStorage.m_MeanTSV_Accepted[Indicator];
 	}
 	else {
-		dist_pair = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+		dist_pair = m_pNewMap->m_MStorage.Get_ValidPerformanceIndicatorPairVector(true, ip, 0);
 	}
 	int icount = dist_pair.size();
 	if (icount <= 1) return icount;
@@ -2085,7 +2085,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 					dist_pair.erase(dist_pair.begin());
 				}
 			}
-			auto dist_pairprev = m_pNewMap->m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+			auto dist_pairprev = m_pNewMap->m_MStorage.Get_ValidPerformanceIndicatorPairVector(true, ip, 0);
 
 			m_TotalNumAccepted = m_pNewMap->m_MStorage.FindAcceptedRunsFromFlagInPar();
 			if (ip == 99 && m_pNewMap->m_MStorage.m_ActualEnsemble == 2) {

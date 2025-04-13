@@ -1472,6 +1472,7 @@ bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
 			m_MStorage.UpdateCyclicNumbers(m_MStorage.m_ActualEnsemble, Dim1_Par_Index, Transform);
 			m_MStorage.Reset_AcceptedRuns(i);
 			if(!OnlyNewConstrain) 	EstimateNewTransformedPerformance(Transform, Dim1_Par_Index, true);
+
 			m_MStorage.SetMinMaxOfPerformanceIndicators(true);
 			//m_MStorage.EvaluateFile(false);
 		}
@@ -1532,7 +1533,17 @@ bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
 			
 			auto MaxNum = GetNumAll_TSV_ValVariables();
 			size_t ip = MaxNum * Indicator + VarIndex;
-			auto dist_pair = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(ip, 0);
+			auto dist_pair = m_MStorage.Get_ValidPerformanceIndicatorPairVector(true, ip, 0);
+
+			for(size_t ikoll=0; ikoll<MaxNum; ikoll++) {
+				auto dist_pair = m_MStorage.Get_ValidPerformanceIndicatorPairVector(true, ikoll, 0);
+				if (dist_pair.size() == 0) {
+					m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].v[E_PRIOR_MEAN][ikoll] = MISSING;
+					m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].v[E_POST_MEAN][ikoll] = MISSING;
+				}
+			}
+
+
 		
 			
 			m_MStorage.SetMinMaxOfPerformanceIndicators(false); // Only Update the posterior distributions
@@ -2068,10 +2079,6 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 	}
 
 	auto kollvectorq = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorVector(99);
-
-	auto kollvectorpair = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(99);
-	auto kollvectorpair2 = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(6);
-	auto kollvectorpair3 = m_MStorage.GetPost_TSV_ValidPerformanceIndicatorPairVector(13);
 
 	m_MStorage.VarValidAllo();
 //m_MStorage.UpdateAcceptedRuns(true);

@@ -45,8 +45,8 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 	}
 	if (section == UG_GRID && col > 9 && sheetNumber == 3) {
 		int pos = sheetNumber * m_pSimDoc->GetNumAll_TSV_ValVariables();
-		auto value = m_pSimDoc->m_MStorage.GetMeanValid(row + pos, 0);
-		if (value < 0)
+		auto stat_post = m_pSimDoc->m_MStorage.GetValidStat(row + pos, true);
+		if (stat_post.Mean < 0)
 			AddMenuItem(1075, "Remove Smallest of posterior candidates until reaching zero shift of mean values");
 		else
 			AddMenuItem(1075, "Remove Largest of posterior candidates until reaching zero shift of mean values");
