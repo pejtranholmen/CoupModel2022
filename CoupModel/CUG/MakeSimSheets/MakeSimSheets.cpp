@@ -13,7 +13,7 @@
 UINT UpdateAcceptedThreadProc( LPVOID pParam )
 {
     CResiduals* pObject = (CResiduals*)pParam;
-	pObject->SmartUpdateStatistics(TRUE, nullptr);
+	pObject->SmartUpdateTimeSerieEnsembleStatistic(TRUE, nullptr);
 
     // do something with 'pObject'
 
@@ -5097,12 +5097,13 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 	for(int i=0;i<numtsv;i++) {
 					if(many_ensembles)
 					sideheader(i);
-					test=FUtil::STD_ItoAscii(i+1);
+					size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(i);
+					test= FUtil::STD_ItoAscii(FileNo)+":"+ FUtil::STD_ItoAscii(i + 1);
 					QuickSetText(0, i, test);
 					sumv = m_pSimDoc->GetValSumStruct(i);
 					int ind=m_pSimDoc->m_ValidationData.GetValFileIndex(i);
 					//if(DynamicIndexValFile) ind= m_pSimDoc->m_MStorage.GetMultiP(i, DynamicIndexPos)-1;
-					size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(i);
+					
 					if (m_pSimDoc->m_Val_Array[i].Sum_of_Others.size() > 0) {
 						test = "See Id for Pos :";
 						for (size_t i3 = 0; i3 < m_pSimDoc->m_Val_Array[i].Sum_of_Others.size(); i3++) {

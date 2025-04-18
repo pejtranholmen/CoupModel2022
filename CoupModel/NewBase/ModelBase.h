@@ -25,7 +25,7 @@ public:
 
 class VALv{
 public:
-	size_t	ValidationFileIndex;
+	size_t	ValidationFileIndex;  // index in the validation pG-file for the specific variable
 	size_t	OutputType;
 	string	Group;
 	string	Name;

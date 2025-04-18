@@ -1609,9 +1609,10 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 				else if(item==5002||item==5004) {
 					int ival;
 					ival=m_pSimDoc->m_ValidationData.GetValFileNumber(row);
+					auto valindex_document = row;// m_pSimDoc->m_ValidationData.GetValFileIndex(row);
 	
 					BeginWaitCursor();
-					CalculateMeanOffTimeSeries(item, ival);
+					CalculateMeanOffTimeSeries(item, ival,valindex_document );
 					EndWaitCursor();
 					return -1;
 

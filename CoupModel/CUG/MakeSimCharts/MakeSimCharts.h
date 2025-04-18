@@ -16,7 +16,7 @@ public:
 	void TimeSerieChartClick(long col, long row, long isheet, SimB *pSw=nullptr, int Index=0, int VariableType=0, string Type="", int ValFileNo=1, int RepitNo=1);
 	void TimeSerieChart(int isheet);
 	void CleanChartsMade();
-	bool CalculateMeanOffTimeSeries(long item, int ival);
+	bool CalculateMeanOffTimeSeries(long item, int ival_file, size_t ival_index=string::npos);
 	MultiVAL GetBlankMultiValStruct();
 	~MakeSimCharts(void);
 

@@ -275,7 +275,7 @@ string ResidualsBase::GetXStatFileName(size_t EnsembleNo) {
 		auto ipos = m_pNewMap->m_DocFile2.m_Multi_MBin_File.find(".MBin");
 		if (ipos != string::npos) {
 			str = m_pNewMap->m_DocFile2.m_Multi_MBin_File.substr(0, ipos);
-			str += "_V" + FUtil::STD_ItoAscii(m_FileNo)+"_Eno"+ FUtil::STD_ItoAscii(EnsembleNo+1);
+			str += "_V" + FUtil::STD_ItoAscii(m_ResidualFileNo)+"_Eno"+ FUtil::STD_ItoAscii(EnsembleNo+1);
 			str += ".SXBin";
 			return str;
 		}

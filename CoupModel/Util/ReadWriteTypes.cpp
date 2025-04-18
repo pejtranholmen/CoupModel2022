@@ -351,6 +351,14 @@ vector<size_t> ReadWriteTypes::rsize_tArray(size_t n,  size_t line_break)
 	}
 	return v;
 }
+bool ReadWriteTypes::wFloatArray(const vector<float> &f) 
+{
+	for (size_t i = 0; i < f.size(); i++)
+		m_DocFileOut << f[i] << " ";
+	m_DocFileOut << endl;
+	return m_DocFileOut.good();
+}
+
 
 bool ReadWriteTypes::wFloatArray(float* f, size_t n)
 {
@@ -360,7 +368,7 @@ bool ReadWriteTypes::wFloatArray(float* f, size_t n)
 	return m_DocFileOut.good();
 }
 
-bool ReadWriteTypes::wFloatArray2(vector<float> v, size_t n, size_t line_break)
+bool ReadWriteTypes::wFloatArray2(const vector<float> &v, size_t n, size_t line_break)
 {
 	size_t line_count = 1;
 	m_DocFileOut << line_count << ',';
@@ -383,7 +391,31 @@ bool ReadWriteTypes::wFloatArray2(vector<float> v, size_t n, size_t line_break)
 	return m_DocFileOut.good();
 }
 
-vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break)
+bool ReadWriteTypes::wFloatArray2(const vector<float>& v, size_t line_break) 
+{
+	size_t line_count = 1;
+	m_DocFileOut << line_count << ',';
+	for (size_t i = 0; i < v.size(); i++) {
+		if (abs(v[i]) < 1.E37) {
+			if (abs(v[i]) < 1.E-20)
+				m_DocFileOut << 0.;
+			else
+				m_DocFileOut << v[i];
+		}
+		if ((i + 1) % line_break == 0) {
+			line_count++;
+			if (i < v.size() - 1) {
+				m_DocFileOut << endl << line_count << ',';
+			}
+		}
+		else m_DocFileOut << ",";
+	}
+	m_DocFileOut << endl;
+	return m_DocFileOut.good();
+}
+
+
+vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break) 
 {
 	vector<float> v;	v.resize(n);
 	string str, str_line;
@@ -407,7 +439,7 @@ vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break)
 	return v;
 }
 
-bool ReadWriteTypes::wuLongArray(unsigned long* v, size_t n)
+bool ReadWriteTypes::wuLongArray(const vector<unsigned long> &v, size_t n)
 {
 	for (size_t i = 0; i < n; i++)
 		m_DocFileOut << v[i] << " ";
@@ -415,13 +447,14 @@ bool ReadWriteTypes::wuLongArray(unsigned long* v, size_t n)
 	return m_DocFileOut.good();
 }
 
-bool ReadWriteTypes::wsize_tArray(vector<size_t>* v, size_t n, size_t line_break)
+bool ReadWriteTypes::wsize_tArray(const vector<size_t> &v, size_t n, size_t line_break)
 {
 	size_t line_count = 1;
+	if (n == string::npos) n = v.size();
 	if(line_break<n)
 		m_DocFileOut << line_count<<',';
 	for (size_t i = 0; i < n; i++) {
-		m_DocFileOut << v->at(i);
+		m_DocFileOut << v[i];
 		if (i + 1 % line_break == 0) {
 			line_count++;
 			if(i<n-1) {

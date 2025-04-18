@@ -1552,7 +1552,31 @@ bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
 	}
 	m_MStorage.EvaluateFile(false);
 
+	for (size_t ifile = 1; ifile <= m_NumValidFiles; ifile++) {
+
+		size_t ValFileIndex=string::npos;
+		for(size_t ivalindex=0; ivalindex<m_Val_Array.size();++ivalindex) {
+			if (ifile == m_Val_Array[ivalindex].ValidationFileNumber) {
+				ValFileIndex = ivalindex;
+				break;
+			}
+		}
+
+
+		CResiduals* pRes = GetValidResidualPointer(ifile);
+		if (pRes != nullptr && !pRes->m_MeanDefined) {
+			pRes->SetOneValidationVariableIndex(ValFileIndex);
+			pRes->ToBeUpdated();
+			pRes->SmartUpdateTimeSerieEnsembleStatistic(TRUE, nullptr);
+		}
+
+
+
+	}
 	
+
+
+
 
 	return true;
 }

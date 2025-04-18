@@ -25,7 +25,7 @@ public:
 	bool ResidualFile_SetNumAttachedFiles(size_t num);
 
 	vector< vector<CResiduals*>> m_ResidualFileVector;
-
+	
 
 protected:
 	size_t m_NumValidFiles;

@@ -45,14 +45,16 @@ public:
 	void CloseFileIn();
 	void CloseFileOut();
 	bool rFloatArray(float *f, size_t num);
+	bool wFloatArray(const vector<float> &f);
 	bool wFloatArray(float *f, size_t num);
-    std::vector<float> rFloatArray2( size_t num, size_t linebreak_cycle = string::npos);
-	bool wFloatArray2(std::vector<float> f, size_t num, size_t linebreak_cycle=string::npos);
+    std::vector<float> rFloatArray2( size_t num, size_t linebreak_cycle = string::npos) ;
+	bool wFloatArray2(const std::vector<float> &f, size_t num, size_t linebreak_cycle=string::npos) ;
+	bool wFloatArray2(const std::vector<float> &f, size_t linebreak_cycle = string::npos) ;
 
 	bool ruLongArray(unsigned long *v,unsigned long num);
-	bool wuLongArray(unsigned long *v, size_t num);
+	bool wuLongArray(const vector<unsigned long> &v, size_t num);
 
-	bool wsize_tArray(std::vector<size_t>  *v, size_t num, size_t linebreak_cycle = string::npos);
+	bool wsize_tArray(const std::vector<size_t>  &v, size_t num=string::npos, size_t linebreak_cycle = string::npos);
 	std::vector<size_t> rsize_tArray(size_t num, size_t linebreak_cycle = string::npos);
 	std::streamsize GetStdInputFileSize();
 	std::fstream m_DocFileIn;

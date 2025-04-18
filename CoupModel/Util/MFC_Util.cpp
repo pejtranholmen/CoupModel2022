@@ -504,9 +504,10 @@ vector<string> MFC_Util::GetBinTxtFileNames() {
 }
 vector<string> MFC_Util::GetMBinFileNames() {
 	vector<string> out;
-	LPCTSTR lpszFilter;
+	LPCTSTR lpszFilter, lpszType;
 	lpszFilter = _T("Muli Storage Sim Files (*.MBin)|*.MBin");
-	out = GetFileNames(lpszFilter, "MBin");
+	lpszType = _T("MBin Files (*.MBin)|*.MBin|");
+	out = GetFileNames(lpszFilter, lpszType);
 	return out;
 }
 vector<string> MFC_Util::GetSBInFileNames()

@@ -13,10 +13,8 @@ ModelFiles::ModelFiles() {
 	m_NumValidFiles = 0;
 	m_ResidualFileVector.resize(m_NumValidFiles+1);
 	for (size_t i = 0; i < m_ResidualFileVector.size(); i++) {
-		for (size_t ii = 0; ii < 1; ii++) {
 			CResiduals *pNew = new CResiduals;
 			m_ResidualFileVector[i].push_back(pNew);
-		}
 	}
 }
 ModelFiles::~ModelFiles() {

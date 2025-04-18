@@ -91,7 +91,7 @@ CResiduals::~CResiduals()
 void CResiduals::InitDoc(NewMap *pMap, int file)
 {
 	m_pNewMap=pMap;
-	m_FileNo=file;
+	m_ResidualFileNo=file;
 
 }
 void CResiduals::ExitSortedResidualFile()
@@ -859,7 +859,7 @@ bool CResiduals::ReadMeanValues()
 
 }
 
-bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
+bool CResiduals::SmartUpdateTimeSerieEnsembleStatistic(bool AcceptedOnly, void *pScanner)
 {
  	if (m_Calculating) return false;
 #ifndef COUPSTD	
@@ -906,15 +906,15 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 	CPG* pPG_ObsFile;
 
 	if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
-		if (m_ValidationVarIndex != string::npos) {
-			auto valfileindex=m_pNewMap->m_Val_Array[m_ValidationVarIndex].ValidationFileNumber;
-			F* pF = m_pNewMap->ValidationFilePointer(valfileindex);
+		//if (m_ValidationFileIndex != string::npos) {
+			//auto valfileindex=m_pNewMap->m_Val_Array[m_ValidationVarIndex].ValidationFileNumber;
+			F* pF = m_pNewMap->ValidationFilePointer(m_ResidualFileNo);
 			pPG_ObsFile=pF->GetPointer();
 			pPG_ObsFile->ReOpen();
 			n_cycle_withinPGFile=pPG_ObsFile->GetCycleWithCommonTime();
 			max_RecL_ObsFile = pPG_ObsFile->GetNumRecords() * pPG_ObsFile->GetNumRepititions();
 
-		}
+		//}
 	}
 
 	auto Act_RecL = m_RecL;
@@ -965,11 +965,11 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 
 						startvalue = (Dim1Value - 1) % n_cycle_withinPGFile;
 						if (pPG_ObsFile->GetNumRepititions() > 0){
-							auto vector_rep = m_pNewMap->ActualRepetitionInMeasFile(iens, pPG_ObsFile, m_ValidationVarIndex);
+							auto vector_rep = m_pNewMap->ActualRepetitionInMeasFile(iens, pPG_ObsFile, m_ValidationFileIndex);
 							if (vector_rep.size() == 0) startvalue = MISSING;
 						}
 						else {
-							auto koll = m_pNewMap->StartValueofMatchingEnsembleInDim1(iens, pPG_ObsFile, m_ValidationVarIndex);
+							auto koll = m_pNewMap->StartValueofMatchingEnsembleInDim1(iens, pPG_ObsFile, m_ValidationFileIndex);
 							startvalue = koll.first;
 							n_cycle_withinPGFile = koll.second;
 						}
@@ -1002,7 +1002,7 @@ bool CResiduals::SmartUpdateStatistics(bool AcceptedOnly, void *pScanner)
 							if (ifile == 0)
 								AcceptedResiduals[i] = GetResidualVector(run_to_read, var_to_read);
 							else {
-								pRes = m_pNewMap->GetValidResidualPointer(m_FileNo, ifile);
+								pRes = m_pNewMap->GetValidResidualPointer(m_ResidualFileNo, ifile);
 								irun_int = m_pNewMap->MR_GetInternalRunNo(irun);
 								run_to_read = irun_int;
 								if (m_ScalingNumVarWithDim1 > 1) run_to_read = (irun_int / m_ScalingNumVarWithDim1) * m_ScalingNumVarWithDim1 + ii % m_ScalingNumVarWithDim1;
@@ -1312,8 +1312,23 @@ vector<float> CResiduals::GetMeanResidualVector(size_t ResVarNo, size_t ActPoint
 			break;
 		}
 	}
+	if (res_v.size() < ActPoints * (Section + 1)) {
+		TRACE("Selected mean residuals ActPoints= %d, Section= %d\n",  ActPoints, Section);
+
+	}
 	
-	selected.insert(selected.begin(), res_v.begin() + Section * ActPoints, res_v.begin() + (Section + 1) * ActPoints);
+	selected.resize(ActPoints);
+	size_t count=0;
+	for (size_t i = Section * ActPoints; i < (Section + 1) * ActPoints; ++i) {
+		selected[count] = res_v[i];
+		count++;
+	}
+	vector<float> selected2;
+	
+
+	//lected.assign
+
+	selected2.insert(selected2.begin(), res_v.begin() + Section * ActPoints, res_v.begin() + (Section + 1) * ActPoints);
 	
 	return selected;
 }

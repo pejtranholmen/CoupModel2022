@@ -11,7 +11,7 @@
 UINT UpdateAcceptedThreadProc2( LPVOID pParam )
 {
     CResiduals* pObject = (CResiduals*)pParam;
-	pObject->SmartUpdateStatistics(TRUE, nullptr);
+	pObject->SmartUpdateTimeSerieEnsembleStatistic(TRUE, nullptr);
 
 
     // do something with 'pObject'
@@ -1180,7 +1180,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 
 	}
 }
-bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival)
+bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival_file, size_t ival_documentIndex)
 {
 	CCoupModelApp* pApp;
 	pApp = (CCoupModelApp*)AfxGetApp();
@@ -1201,30 +1201,31 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival)
  //   ScanMeanProg.ShowWindow(SW_SHOW);
 
 	if(item==5001||item==5003) {
-		m_OutAllMulti_Defined[ival]=true;
+		m_OutAllMulti_Defined[ival_file]=true;
 		
-		if (m_pSimDoc->MR_Storage_Open()&&m_pSimDoc->MR_XBin_IsOpen(ival)) {
+		if (m_pSimDoc->MR_Storage_Open()&&m_pSimDoc->MR_XBin_IsOpen(ival_file)) {
 			
-			CResiduals *pRes=m_pSimDoc->GetValidResidualPointer(ival);
+			CResiduals *pRes=m_pSimDoc->GetValidResidualPointer(ival_file);
 			if(!pRes->m_MeanDefined)
 				AfxBeginThread(UpdateAcceptedThreadProc2,pRes);
 			//if(pRes!=nullptr) pRes->UpdateStatistics(false,&ScanMeanProg);
 		}
 	}
 	else if(item==5002||item==5004) {
-		m_OutSelectedMulti_Defined[ival]=true;
-		if(m_pSimDoc->MR_Storage_Open()&&m_pSimDoc->MR_XBin_IsOpen(ival)) {
-			CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(ival);
+		m_OutSelectedMulti_Defined[ival_file]=true;
+		if(m_pSimDoc->MR_Storage_Open()&&m_pSimDoc->MR_XBin_IsOpen(ival_file)) {
+			CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(ival_file);
 			if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
 				//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
 				//auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			//	pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
 			}
-			pRes->SetOneValidationVariableIndex(ival-1);
+
+			pRes->SetOneValidationVariableIndex(ival_documentIndex);
 			pRes->ToBeUpdated();
 			if(!pRes->m_MeanDefined&&!pRes->m_Calculating)
 				//CResiduals* pObject = (CResiduals*)pParam;
-			return pRes->SmartUpdateStatistics(TRUE, nullptr);
+			return pRes->SmartUpdateTimeSerieEnsembleStatistic(TRUE, nullptr);
 			//	AfxBeginThread(UpdateAcceptedThreadProc2,pRes);
 			//if(pRes!=nullptr) pRes->UpdateStatistics(true,&ScanMeanProg);
 		}

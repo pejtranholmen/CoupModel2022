@@ -14,8 +14,9 @@ class CResiduals : public ResidualsBase
 public:
 	CResiduals();
 	virtual ~CResiduals();
-	bool OpenFile(string, bool);
+	bool OpenFile(string filename, bool SetFileName);
 	bool CreateFile(string filename, size_t NumRec, size_t RecL, size_t NumV);
+	void SetValListIndexVector(vector<size_t> ValListIndex) { m_ValListIndex = ValListIndex; };
 	bool AddResiduals(float *pFloat);
 	bool SaveMeanValues();
 	bool ReadMeanValues();
@@ -66,7 +67,7 @@ public:
 	void SetAccepted(size_t, bool);
 	bool GetAccepted(size_t);
 	void CloseFile();
-	bool SmartUpdateStatistics(bool AcceptedOnly = false, void *pScanner = nullptr);
+	bool SmartUpdateTimeSerieEnsembleStatistic(bool AcceptedOnly = false, void *pScanner = nullptr);
 	bool ToBeUpdated();
 	bool AddExistingFile(string, void *pScanner=nullptr);
 	bool ReWriteExistingFile(size_t);
@@ -113,6 +114,7 @@ protected:
 	bool m_NewLogLiFileExist, m_NewLogLiFileOpen;
 	float *m_SortedResiduals;
 	bool m_SortedFileExist, m_SortedFileOpen;
+	vector<size_t> m_ValListIndex;
 
 
 

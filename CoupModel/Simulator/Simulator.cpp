@@ -1079,6 +1079,12 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			auto totrec=numvar*m_pModelInfo->TotalNoMulRun;
 			if(m_ValPGFile[i].pRes!=nullptr) // One residual Xbin file for entire Multirun
 				if(!m_ValPGFile[i].pRes->CreateFile(((NewMap*)m_pSim)->GetXBinFileName(int(i+1)),totrec, recl, numvar )) m_ValPGFile[i].pRes=nullptr;
+			if (m_ValPGFile[i].pRes != nullptr) { // Index for the from the val_list
+
+				m_ValPGFile[i].pRes->SetValListIndexVector(m_ValPGFile[i].val_listindex);
+			} 
+
+
 		}
 		m_ValPGFile[i].simvalues.resize(m_ValPGFile[i].varindex.size());
 		m_ValPGFile[i].simvalues.assign(m_ValPGFile[i].varindex.size(), 0.);

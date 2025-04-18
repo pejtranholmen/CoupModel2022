@@ -2191,7 +2191,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 					for (size_t irepit = 0; irepit < RepHits.size(); irepit++) {
 						ActiveResiduals = m_pSimDoc->GetResidualVectorForAllRuns(c_info.ResRunNo, p_info.Index, p_info.Residual_VarNum, ActNoPoints, RepHits[irepit]);
-						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {
+						if (p_info.EnsembleType > ENSEMBLE_TYPE::NO) {   //RepHits is zero based ?
 							for (size_t i_stat = 0; i_stat < 7; i_stat++) {
 								Mean_Of_Mean_ResidualsValue[i_stat] = m_pSimDoc->GetMeanResidualVectorForAllRuns(p_info.Index,p_info.Residual_VarNum, ActNoPoints, RepHits[irepit], true, STAT_INDICATOR(i_stat));
 							}

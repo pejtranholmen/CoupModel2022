@@ -40,12 +40,13 @@ public:
 	bool AlloResVector(size_t ActRecl=string::npos);
 	string GetXStatFileName(size_t ensembleno=string::npos);
 	bool IsOpen(bool reading=true);
-	bool SetOneValidationVariableIndex(size_t index) { m_ValidationVarIndex = index; if (m_ValidationVarIndex < 1000) return true; else return false; };
+	bool SetOneValidationVariableIndex(size_t index) { m_ValidationFileIndex = index; if (m_ValidationFileIndex < 1000) return true; else return false; };
 	bool EnableEstimatesMade(size_t enableno=0);
 	bool m_IsUpdated, m_IsUpdated_Extra;
 	bool ShiftEnsembleName(string oldname, string newname);
 	void SetResidualBaseFileNumVarScaling(size_t NumVarScaling) { m_ScalingNumVarWithDim1 = NumVarScaling; };
 	bool m_MeanDefined;
+	size_t m_ValidationFileIndex{ string::npos };
 
 protected:
 	NewMap *m_pNewMap;
@@ -59,9 +60,9 @@ protected:
 	string m_FileName, m_ExtraFileName, m_SortedFileName;
 	bool m_IsOpen, m_NewPrior;
 	bool m_EnsembleFileRead;
-	int m_FileNo;
+	int m_ResidualFileNo;
 	string m_NewEnsembleName;
-	size_t m_ValidationVarIndex{ string::npos };
+	
 
 private :
 	ReadWriteTypes m_EnsembleResFile, m_ResidualFile, m_ExtraFile, m_SortedFile;
