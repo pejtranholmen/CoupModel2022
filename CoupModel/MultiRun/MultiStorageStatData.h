@@ -1,10 +1,11 @@
 #pragma once
 #include "../ModelTypes/NewModelType.h"
 #include "../Util/ReadWriteTypes.h"
+#include "../Util/CWinAPIFileHandler.h"
 class MR;
 struct STAT_PERF;
 #include "MultiStorageData.h"
-
+class CWinAPIFileHandler;
 
 class MultiStorageStatData : public MultiStorageData
 {
@@ -108,7 +109,7 @@ protected:
 
 
 private :
-	ReadWriteTypes m_EvaluationFile;
+	CWinAPIFileHandler m_EFile;
 	size_t m_PosOptional_TSV_Start;
 	size_t m_PosOptional_SUM_Start;
 };

@@ -252,6 +252,10 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 					Dump[i * num_stat + 5] = m_MeanPost.p50[var][i];
 					Dump[i * num_stat + 6] = m_MeanPost.p90[var][i];
 				}
+				if (num == 7&&ActRecL==8000) {
+					auto koll = var;
+					auto v = Dump;
+				}
 				m_EnsembleResFile.wFloatArray2(Dump, ActRecL*num_stat,num_stat);
 			}
 
@@ -340,10 +344,36 @@ bool ResidualsBase::AlloResVector(size_t ActRecL) {
 	m_SizeOfMeanVector = m_NumVar*ActRecL;
 	return true;
 }
+std::streamsize ResidualsBase::GetFileSizeFromHandle() {
+	LARGE_INTEGER size;
+	if (GetFileSizeEx(m_ResidualFile.GetHandle(), &size))
+		return static_cast<std::streamsize>(size.QuadPart);
+	return 0;
+}
+
 
 bool ResidualsBase::OpenResidualFile(bool reading) {
+	std::wstring wfilename(m_FileName.begin(), m_FileName.end());
+
+	bool opened = reading ?
+		m_ResidualFile.OpenRead(wfilename) :
+		m_ResidualFile.OpenWrite(wfilename);
+
+	if (!opened) return false;
 
 	if (reading) {
+		m_FileSize = GetFileSizeFromHandle(); // du kan göra en hjälpfunktion
+		if (m_FileSize == 0 || m_FileSize == string::npos)
+			return false;
+
+		Residuals_ReadWrite_Header(true);
+		m_Residuals.resize(m_RecL);
+		if (m_pNewMap->m_FileVersionNumberRead < 65)
+			AlloResVector();
+	}
+
+	return true;
+	/*if (reading) {
 		if (!m_ResidualFile.OpenDocFileIn(m_FileName)) return false;
 		m_FileSize = m_ResidualFile.GetStdInputFileSize();
 		if (m_FileSize == 0 || m_FileSize == string::npos) {
@@ -359,13 +389,13 @@ bool ResidualsBase::OpenResidualFile(bool reading) {
 	else
 		if (!m_ResidualFile.OpenDocFileout(m_FileName)) return false;
 	
-	return true;
+	return true;*/
 }
 bool ResidualsBase::Residuals_ReadWrite_Header(bool reading) {
 	if (reading) {
-		if (!m_ResidualFile.rsize_t(&m_NumRec)) return false;
-		if (!m_ResidualFile.rsize_t(&m_RecL)) return false;
-		if (!m_ResidualFile.rsize_t(&m_NumVar)) return false;
+		if (!m_ResidualFile.ReadBinary(&m_NumRec,sizeof(size_t))) return false;
+		if (!m_ResidualFile.ReadBinary(&m_RecL, sizeof(size_t))) return false;
+		if (!m_ResidualFile.ReadBinary(&m_NumVar,sizeof(size_t))) return false;
 		m_MaxNumRec = size_t(m_FileSize / (m_RecL*m_NumVar * 4));
 		if (m_pNewMap != nullptr) {
 			if (m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension < m_NumRec) {
@@ -394,34 +424,22 @@ bool ResidualsBase::Residuals_ReadWrite_Header(bool reading) {
 		}
 	}
 	else {
-		if (!m_ResidualFile.wSize_t(&m_NumRec)) return false;
-		if (!m_ResidualFile.wSize_t(&m_RecL)) return false;
-		if (!m_ResidualFile.wSize_t(&m_NumVar)) return false;
+		if (!m_ResidualFile.WriteBinary(&m_NumRec, sizeof(size_t))) return false;
+		if (!m_ResidualFile.WriteBinary(&m_RecL, sizeof(size_t))) return false;
+		if (!m_ResidualFile.WriteBinary(&m_NumVar, sizeof(size_t))) return false;
 	}
 	return true;
 }
 bool ResidualsBase::CloseResidualFile(bool reading) {
 
-	if (reading)
-		m_ResidualFile.CloseFileIn();
-	else
-		m_ResidualFile.CloseFileOut();
+		m_ResidualFile.Close();
 
 	return true;
 }
 bool ResidualsBase::IsOpen(bool reading) {
-	if (reading) {
-		if (m_ResidualFile.IsFileInGood() && m_IsOpen)
-			return true;
-		else
-			return false;
-	}
-	else {
-		if (m_ResidualFile.IsFileOutGood() && m_IsOpen)
-			return true;
-		else
-			return false;
-	}
+
+	return m_ResidualFile.IsOpen() && m_IsOpen;
+
 }
 bool ResidualsBase::SetNewEnsembleByNumber(size_t EnsembleNo) {
 	if (EnsembleNo < m_pNewMap->m_MStorage.m_AcceptedRuns.size())

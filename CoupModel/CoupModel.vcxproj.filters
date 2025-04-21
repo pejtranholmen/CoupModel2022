@@ -1472,6 +1472,9 @@
     <ClInclude Include="PG\NewReShaped.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Util\CWinAPIFileHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoupModel.cpp">
@@ -2504,6 +2507,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PG\NewReShaped.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\CWinAPIFileHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

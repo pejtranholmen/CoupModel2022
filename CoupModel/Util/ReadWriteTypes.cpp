@@ -370,9 +370,16 @@ bool ReadWriteTypes::wFloatArray(float* f, size_t n)
 
 bool ReadWriteTypes::wFloatArray2(const vector<float> &v, size_t n, size_t line_break)
 {
+	std::ofstream debug("debug_log.txt", std::ios::app);
+
+
+
+
 	size_t line_count = 1;
 	m_DocFileOut << line_count << ',';
 	for (size_t i = 0; i < n; i++) {
+		debug << "Failed at i=" << i << ", tellp=" << m_DocFileOut.tellp() << endl;
+		if (!m_DocFileOut.good()) return false;
 		if (abs(v[i]) < 1.E37) {
 			if (abs(v[i]) < 1.E-20)
 				m_DocFileOut << 0.;
@@ -380,12 +387,21 @@ bool ReadWriteTypes::wFloatArray2(const vector<float> &v, size_t n, size_t line_
 				m_DocFileOut << v[i];
 		}
 		if ((i + 1) % line_break == 0) {
+			if(m_DocFileOut.good() && m_DocFileOut.tellp() > 0) // Check if the stream is good and not at the end
+			{
+				m_DocFileOut << endl << line_count << ',';
+			}
+			else
+			{
+				cerr << "Error writing to file." << endl;
+				return false; // Return false if there was an error writing to the file
+			}
 			line_count++;
 			if (i < n - 1) {
 				m_DocFileOut << endl << line_count << ',';
 			}
 		}
-		else m_DocFileOut << ",";
+		else m_DocFileOut << ',';
 	}
 	m_DocFileOut << endl;
 	return m_DocFileOut.good();

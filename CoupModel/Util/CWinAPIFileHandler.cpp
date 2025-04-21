@@ -1,0 +1,390 @@
+#include "CWinAPIFileHandler.h"
+
+CWinAPIFileHandler::CWinAPIFileHandler() : m_Handle(INVALID_HANDLE_VALUE) {}
+
+CWinAPIFileHandler::~CWinAPIFileHandler() {
+    Close();
+}
+
+bool CWinAPIFileHandler::OpenRead(const std::wstring& filename) {
+    Close();
+    m_Handle = CreateFileW(filename.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    return m_Handle != INVALID_HANDLE_VALUE;
+}
+
+bool CWinAPIFileHandler::OpenWrite(const std::wstring& filename) {
+    Close();
+    m_Handle = CreateFileW(filename.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    return m_Handle != INVALID_HANDLE_VALUE;
+}
+
+bool CWinAPIFileHandler::WriteBinary(const void* data, size_t size) {
+    if (!IsOpen()) return false;
+    DWORD written;
+    return WriteFile(m_Handle, data, static_cast<DWORD>(size), &written, nullptr);
+}
+
+bool CWinAPIFileHandler::ReadBinary(void* data, size_t size) {
+    if (!IsOpen()) return false;
+    DWORD read;
+    return ReadFile(m_Handle, data, static_cast<DWORD>(size), &read, nullptr);
+}
+std::int64_t CWinAPIFileHandler::GetFilePosition() const {
+	if (!IsOpen()) return -1;
+	LARGE_INTEGER li;
+	if (SetFilePointerEx(m_Handle, { 0, 0 }, &li, FILE_CURRENT)) {
+		return li.QuadPart;
+	}
+	return -1;
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line) {
+
+    size_t Dummy = 0;
+    std::vector<float> floats;
+    std::vector<int> ints;
+    return ReadTextLine(line, Dummy, floats, ints);
+
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line, bool &valid) {
+
+    size_t Dummy = 0;
+    std::vector<float> floats;
+    std::vector<int> ints;
+    bool good= ReadTextLine(line, Dummy, floats, ints);
+    if(Dummy==0) valid=true;
+	else valid=false;
+    return good;
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line, float& fvalue) {
+
+    size_t Dummy = 0;
+    std::vector<float> floats;
+    std::vector<int> ints;
+    bool good = ReadTextLine(line, Dummy, floats, ints);
+    if (line.find(":") != std::string::npos) {
+        auto pos = line.find(":");
+        auto str2 = line.substr(pos + 1);
+        try {
+            fvalue = std::stof(str2);
+        }
+        catch (const std::invalid_argument&) {
+			fvalue = -1.1E38f;
+		}
+    }
+ 
+    return good;
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line, size_t &num) {
+
+    std::vector<float> floats;
+    std::vector<int> ints;
+    return ReadTextLine(line, num, floats, ints);
+
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line, std::vector<float>& floats, std::vector<int>& ints) {
+
+    size_t Dummy=0;
+    return ReadTextLine(line, Dummy, floats, ints);
+    
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::vector<float>& floats, std::vector<int>& ints) {
+    if (!IsOpen()) return false;
+
+    const size_t bufferSize = 8192;
+    char buffer[bufferSize];
+    DWORD bytesRead = 0;
+    std::string lineBuffer;
+    size_t recordIndex = 0;
+    ints.clear();
+    floats.clear();
+    aftercol = std::string::npos;
+   
+    // Sök efter radslut i bufferten vi sparade från förra läsningen
+    size_t pos;
+    while ((pos = m_LineBuffer.find('\n')) == std::string::npos) {
+        // Läs nytt block från filen
+        if (!ReadFile(m_Handle, buffer, bufferSize, &bytesRead, nullptr) || bytesRead == 0) {
+            // Inget mer att läsa
+            if (!m_LineBuffer.empty()) {
+                // returnera sista raden utan \n
+                line = m_LineBuffer;
+                m_LineBuffer.clear();
+                return true;
+            }
+            return false;
+        }
+        m_LineBuffer.append(buffer, bytesRead);
+    }
+    // Plocka ut en hel rad
+    line = m_LineBuffer.substr(0, pos);
+    m_LineBuffer.erase(0, pos + 1);
+
+    // Ta bort \r om den finns
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+
+    if (!line.empty()) {
+        if (line.find(',') != std::string::npos) {
+ 
+            std::vector<std::string> tokens;
+            size_t start = 0;
+            size_t end = 0;
+            bool isFloat = false;
+
+            while ((end = line.find(',', start)) != std::string::npos) {
+                std::string token = line.substr(start, end - start);
+                if (token.find('.') != std::string::npos) isFloat = true;
+                tokens.push_back(token);
+                start = end + 1;
+            }
+            std::string last = line.substr(start);
+            if(last.size()>0) tokens.push_back(last);
+            if (isFloat) {
+                // Split vector
+  
+                floats.resize(tokens.size());
+                for(size_t i = 0; i < tokens.size(); ++i) {
+					try {
+						floats[i] = std::stof(tokens[i]);
+					}
+					catch (const std::invalid_argument&) {
+						floats[i]=-1.1E38f;
+					}
+				}
+            }
+            else {
+                // Split vector
+ 
+                ints.resize(tokens.size());
+                for (size_t i = 0; i < tokens.size(); ++i) {
+                    try {
+                        ints[i] = std::stoi(tokens[i]);
+                    }
+                    catch (const std::invalid_argument&) {
+                        ints[i] = -99999;
+                    }
+                }
+            }
+        }
+        else if (line.find(":") != std::string::npos) {
+            auto pos=line.find(":");
+            auto str = line.substr(pos + 1);
+            try {
+                aftercol = stoul(str);
+            }
+			catch (const std::invalid_argument&) {
+				aftercol = std::string::npos;
+			}
+        }
+
+    }
+    return true;
+}
+
+bool CWinAPIFileHandler::ReadTextLine(std::string& line, std::vector<float>& floats, std::vector<size_t>& sizets) {
+
+    size_t Dummy = 0;
+    return ReadTextLine(line, Dummy, floats, sizets);
+
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line, size_t& aftercol, std::vector<float>& floats, std::vector<size_t>& sizets) {
+    if (!IsOpen()) return false;
+
+    const size_t bufferSize = 8192;
+    char buffer[bufferSize];
+    DWORD bytesRead = 0;
+    std::string lineBuffer;
+    size_t recordIndex = 0;
+    sizets.clear();
+    floats.clear();
+    aftercol = std::string::npos;
+
+    // Sök efter radslut i bufferten vi sparade från förra läsningen
+    size_t pos;
+    while ((pos = m_LineBuffer.find('\n')) == std::string::npos) {
+        // Läs nytt block från filen
+        if (!ReadFile(m_Handle, buffer, bufferSize, &bytesRead, nullptr) || bytesRead == 0) {
+            // Inget mer att läsa
+            if (!m_LineBuffer.empty()) {
+                // returnera sista raden utan \n
+                line = m_LineBuffer;
+                m_LineBuffer.clear();
+                return true;
+            }
+            return false;
+        }
+        m_LineBuffer.append(buffer, bytesRead);
+    }
+    // Plocka ut en hel rad
+    line = m_LineBuffer.substr(0, pos);
+    m_LineBuffer.erase(0, pos + 1);
+
+    // Ta bort \r om den finns
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+
+    if (!line.empty()) {
+        if (line.find(',') != std::string::npos) {
+
+            std::vector<std::string> tokens;
+            size_t start = 0;
+            size_t end = 0;
+            bool isFloat = false;
+
+            while ((end = line.find(',', start)) != std::string::npos) {
+                std::string token = line.substr(start, end - start);
+                if (token.find('.') != std::string::npos) isFloat = true;
+                tokens.push_back(token);
+                start = end + 1;
+            }
+            std::string last = line.substr(start);
+            if (last.size() > 0) tokens.push_back(last);
+            if (isFloat) {
+                // Split vector
+
+                floats.resize(tokens.size());
+                for (size_t i = 0; i < tokens.size(); ++i) {
+                    try {
+                        floats[i] = std::stof(tokens[i]);
+                    }
+                    catch (const std::invalid_argument&) {
+                        floats[i] = -1.1E38f;
+                    }
+                }
+            }
+            else {
+                // Split vector
+
+                sizets.resize(tokens.size());
+                for (size_t i = 0; i < tokens.size(); ++i) {
+                    try {
+                        sizets[i] = std::stoul(tokens[i]);
+                    }
+                    catch (const std::invalid_argument&) {
+                        sizets[i] = std::string::npos;
+                    }
+                }
+            }
+        }
+        else if (line.find(":") != std::string::npos) {
+            auto pos = line.find(":");
+            auto str = line.substr(pos + 1);
+            try {
+                aftercol = stoul(str);
+            }
+            catch (const std::invalid_argument&) {
+                aftercol = std::string::npos;
+            }
+        }
+
+    }
+    return true;
+}
+
+bool CWinAPIFileHandler::IsOpen() const {
+    return m_Handle != INVALID_HANDLE_VALUE;
+}
+bool CWinAPIFileHandler::WriteTextLine(const std::vector<float>& floats, size_t num_row)
+{
+    if (!IsOpen()) return false;
+    std::string line;
+    bool rowbreak = true;
+    DWORD written;
+    if(num_row==std::string::npos) {
+		rowbreak = false;
+	}
+    size_t count_row=1;
+    line += std::to_string(count_row)+":";
+    for (size_t i = 0; i < floats.size(); ++i) {
+        if (floats[i] > -1.E38f) {
+			line += std::to_string(floats[i]);
+		}
+        if (rowbreak&&(i + 1) % num_row==0) {
+            line += "\r\n";
+            WriteFile(m_Handle, line.c_str(), static_cast<DWORD>(line.size()), &written, nullptr);
+            line.clear();
+            count_row++;
+            line += std::to_string(count_row)+":";
+        }
+        else if (i < floats.size() - 1) line += ",";
+    }
+    line += "\r\n";
+   
+    return WriteFile(m_Handle, line.c_str(), static_cast<DWORD>(line.size()), &written, nullptr);
+}
+
+bool CWinAPIFileHandler::WriteTextLine(const std::vector<int>& ints)
+{
+    if (!IsOpen()) return false;
+    std::string line;
+    for (size_t i = 0; i < ints.size(); ++i) {
+        line += std::to_string(ints[i]);
+        if (i < ints.size() - 1) line += ",";
+    }
+    line += "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, line.c_str(), static_cast<DWORD>(line.size()), &written, nullptr);
+}
+bool CWinAPIFileHandler::WriteTextLine(const std::vector<size_t>& ints)
+{
+    if (!IsOpen()) return false;
+    std::string line;
+    for (size_t i = 0; i < ints.size(); ++i) {
+        line += std::to_string(ints[i]);
+        if (i < ints.size() - 1) line += ",";
+    }
+    line += "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, line.c_str(), static_cast<DWORD>(line.size()), &written, nullptr);
+}
+bool CWinAPIFileHandler::WriteTextLine(const std::string& line)
+{
+    if (!IsOpen()) return false;
+    std::string out = line + "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, out.c_str(), static_cast<DWORD>(out.size()), &written, nullptr);
+}
+bool CWinAPIFileHandler::WriteTextLine(const std::string& line, const float &floatvalue)
+{
+    if (!IsOpen()) return false;
+    std::string out = line +":"+std::to_string(floatvalue)+ "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, out.c_str(), static_cast<DWORD>(out.size()), &written, nullptr);
+}
+
+bool CWinAPIFileHandler::WriteTextLine(const std::string& line, const std::string&str)
+{
+    if (!IsOpen()) return false;
+    std::string out = line + ":"+str+ "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, out.c_str(), static_cast<DWORD>(out.size()), &written, nullptr);
+}
+
+bool CWinAPIFileHandler::WriteTextLine(const std::string& key, const size_t &value)
+{
+    if (!IsOpen()) return false;
+    std::string out = key + ":" + std::to_string(value) + "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, out.c_str(), static_cast<DWORD>(out.size()), &written, nullptr);
+}
+bool CWinAPIFileHandler::WriteTextLine(const std::string& key, const bool& value)
+{
+    if (!IsOpen()) return false;
+    std::string out = key + ":" + std::to_string(value) + "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, out.c_str(), static_cast<DWORD>(out.size()), &written, nullptr);
+}
+
+bool CWinAPIFileHandler::WriteTextLine(const std::string& key, const size_t &value1, const size_t &value2)
+{
+    if (!IsOpen()) return false;
+    std::string out = key + ":" + std::to_string(value1)+ "," +std::to_string(value2)+ "\r\n";
+    DWORD written;
+    return WriteFile(m_Handle, out.c_str(), static_cast<DWORD>(out.size()), &written, nullptr);
+}
+
+void CWinAPIFileHandler::Close() {
+    if (IsOpen()) {
+        CloseHandle(m_Handle);
+        m_Handle = INVALID_HANDLE_VALUE;
+    }
+}
+

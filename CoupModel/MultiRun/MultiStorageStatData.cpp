@@ -51,11 +51,13 @@ bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 		mfc_util.SetPaneMessage("Writing to Multi Statistic File:" + filename);
 #endif
 	if (!m_IsStatOpen) {
+		auto wfile = m_EFile.ToWString(filename);
 		bool good;
-		if (reading)
-			good=m_EvaluationFile.OpenDocFileIn(filename);
+		if (reading) {
+			good = m_EFile.OpenRead(wfile);
+		}
 		else
-			good=m_EvaluationFile.OpenDocFileout(filename);
+			good=m_EFile.OpenWrite(wfile);
 		if (!good) { 
 #ifndef COUPSTD
 			if (reading)
@@ -100,7 +102,7 @@ bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 		mfc_util.SetPaneMessage("Error when Reading TSV data");
 #endif
 		if (reading) {
-			m_EvaluationFile.CloseFileIn();
+			m_EFile.Close();
 			return true;
 		}
 
@@ -128,20 +130,13 @@ bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 
 	if (reading) {
 		m_IsStatCompleteRead = true;
-		auto pos = m_EvaluationFile.GetCurrentInPosition();
+		auto pos = m_EFile.GetFilePosition();
 		auto actpos = m_MultiFile.tellg();
 
 	}
 
-	if (reading) {
-		m_EvaluationFile.CloseFileIn();
-	
+	m_EFile.Close();
 
-	}
-	else {
-		m_EvaluationFile.CloseFileOut();
-	
-	}
 
 	return true;
 }
@@ -151,35 +146,29 @@ bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 
 	string str;
-	bool good;
-	//if (!m_EvaluationFile.good()) return false;
-	if (reading) {
-		good = true;
-		unsigned int ifiles;
-		auto getnext_str= [&]() {
-			getline(m_EvaluationFile.m_DocFileIn, str, ':');
-			getline(m_EvaluationFile.m_DocFileIn, str);
-		};
+	bool good=m_EFile.IsGood();
+	vector<float> floats;
+	vector<int> ints;
+	vector<size_t> sizets;
+	size_t Aftercol;
+	if(reading) {
 
-		//getline(m_EvaluationFile.m_DocFileIn, str,':');
-		//getline(m_EvaluationFile.m_DocFileIn, str);
-		getline(m_EvaluationFile.m_DocFileIn, str, ':');
-		if(str.find("Number of Files added to Basic Run")==string::npos) return false;
-		getline(m_EvaluationFile.m_DocFileIn, str);
-		ifiles = stoi(str);
+		//while (m_EFile.ReadTextLine(str,Aftercol,floats, ints)) {
+		//	auto koll = str;
+		//}
 
-
-		//good=m_EvaluationFile.ruint(&ifiles);
 		if (good) {
+			size_t ifiles;
+			m_EFile.ReadTextLine(str, ifiles, floats, ints); // Number of files
 			m_pNewMap->ResidualFile_SetNumAttachedFiles(ifiles);
 			m_AddedFiles.clear();
 			m_AddedFiles.resize(0);
 			m_AddedNumRuns.resize(0);
 			m_AddedFirstRunNo.resize(0);
-			if (ifiles > 0) getline(m_EvaluationFile.m_DocFileIn, str);
+			if (ifiles > 0) m_EFile.ReadTextLine(str);
 			size_t num, numensembles, num_accepted;
 			for (unsigned long i = 0; i < ifiles; i++) {
-				getline(m_EvaluationFile.m_DocFileIn, str, ','); 
+				m_EFile.ReadTextLine( str, num, floats, ints); 
 				{ 
 					bool exist = FUtil::IsFileExisting(str);
 					if (!exist) {
@@ -199,28 +188,29 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 					m_AddedFiles.push_back(str);
 
 				}
-				getline(m_EvaluationFile.m_DocFileIn, str, ','); num = stoi(str);
-					m_AddedNumRuns.push_back(num);
-				getline(m_EvaluationFile.m_DocFileIn, str);	num = stoi(str);
-					m_AddedFirstRunNo.push_back(num); 
+
+				m_AddedNumRuns.push_back(ints[0]);
+				m_AddedFirstRunNo.push_back(ints[1]);
 			}
-			getnext_str(); numensembles = stoi(str);
-			getnext_str(); m_ActualEnsemble = stoi(str);
 
-
+			m_EFile.ReadTextLine(str,numensembles);
+			good=m_EFile.ReadTextLine(str, m_ActualEnsemble);
 			if (good) {
 				if (m_AcceptedRuns.size() < numensembles) {
 					m_AcceptedIdString.resize(numensembles);
 					m_AcceptedRuns.resize(numensembles);
 				}
 				for (size_t i = 0; i < numensembles; i++) {
-					getnext_str(); m_AcceptedIdString[i] = str;
-					getnext_str(); num_accepted = stoi(str);
-
+					m_EFile.ReadTextLine(str);
+					str=str.substr(str.find(":")+1);
+					 m_AcceptedIdString[i] = str;
+					// num_accepted = stoi(str);
+					 m_EFile.ReadTextLine(str, num_accepted);
 					if (good) {
 						m_AcceptedRuns[i].resize(num_accepted);
 						if (num_accepted > 0) {
-							m_AcceptedRuns[i] = m_EvaluationFile.rsize_tArray(num_accepted);
+							m_EFile.ReadTextLine(str, num_accepted, floats, sizets);
+							m_AcceptedRuns[i] = sizets;
 						}
 					}
 					else
@@ -238,32 +228,30 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			}
 		}
 
-		return m_EvaluationFile.IsFileInGood();
+		return m_EFile.IsGood();
 	}
 	else {
 		//Writing to fil
-		str = "Number of Files added to Basic Run : ";
-		//m_EvaluationFile.wString(&str);
 		unsigned int ifiles = m_AddedFiles.size();
 
-		m_EvaluationFile.m_DocFileOut << str<<ifiles<<endl;
-		//m_EvaluationFile.wInt(&ifiles);
+		m_EFile.WriteTextLine("Number of Files added to Basic Run ", ifiles);
+
 		unsigned int num, num_first;
 		if(ifiles>0) {
-			m_EvaluationFile.m_DocFileOut << "File name : , Added Runs , First Added " << endl;		
+			m_EFile.WriteTextLine("File name :  Added Runs , First Added ");
 		}
 		for (unsigned int i = 0; i < ifiles; i++) {
             string addfile = GetNameAddedFiles(i);
 			num = GetNumberOfAddedRuns(i);
 			num_first = GetFirstRunNoAddedRuns(i);
-			m_EvaluationFile.m_DocFileOut << addfile <<',' << num <<','<< num_first << endl;
+			m_EFile.WriteTextLine(addfile, num , num_first);
 		}
 	
 		size_t NumEnsembles = m_AcceptedRuns.size();
 		NumEnsembles = max(size_t(1), NumEnsembles);
 
-		m_EvaluationFile.m_DocFileOut << "Number of Ensembles : " << NumEnsembles<<endl;
-		m_EvaluationFile.m_DocFileOut << "Actual Ensemble : "<< m_ActualEnsemble<<endl;
+		m_EFile.WriteTextLine("Number of Ensembles ", NumEnsembles);
+		m_EFile.WriteTextLine("Actual Ensemble ",m_ActualEnsemble);
 
 		size_t NumCheck = m_AcceptedIdString.size();
 		if (NumCheck != NumEnsembles) {
@@ -274,7 +262,7 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			if (m_AcceptedIdString[i].size() == 0) {
 				m_AcceptedIdString[i] = "E(" + FUtil::STD_ItoAscii(i + 1) + ")";
 			}
-			m_EvaluationFile.m_DocFileOut << "Ensemble Id : "<< m_AcceptedIdString[i] <<endl;
+			m_EFile.WriteTextLine("Ensemble Id ", m_AcceptedIdString[i]);
 
 			size_t num = m_AcceptedRuns[i].size();
 			if (m_TotalNumberRuns == string::npos) {
@@ -290,24 +278,26 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			}
 
 			if (num > 0) {
-				m_EvaluationFile.m_DocFileOut << "Accepted Runs : " << num << endl;
-				good = m_EvaluationFile.wsize_tArray(m_AcceptedRuns[i], num);
+				m_EFile.WriteTextLine("Accepted Runs ", num);
+				m_EFile.WriteTextLine(m_AcceptedRuns[i]);
 
 			}
 		}
 
 
-		return m_EvaluationFile.IsFileOutGood();
+		return m_EFile.IsGood();
 	}
 	return true;
-}
+
+};
 bool MultiStorageStatData::ReadWrite_MultiPar(bool reading) {
-	bool good;
 	string str;
-	auto getnext_str = [&]() {
-		getline(m_EvaluationFile.m_DocFileIn, str, ':');
-		getline(m_EvaluationFile.m_DocFileIn, str);
-		};
+	bool good = m_EFile.IsGood();
+	vector<float> floats;
+	vector<int> ints;
+	vector<size_t> sizets;
+	size_t Aftercol;
+
 	if (reading) {
 		if (m_MBinHeader.n_param > 0) {
 			if (m_ParMin.size() != m_MBinHeader.n_param) {
@@ -316,17 +306,19 @@ bool MultiStorageStatData::ReadWrite_MultiPar(bool reading) {
 				m_ParValidMin.resize(m_MBinHeader.n_param);
 				m_ParValidMax.resize(m_MBinHeader.n_param);
 			}
-			getnext_str();
-			m_ParMin =m_EvaluationFile.rFloatArray2( m_MBinHeader.n_param);
-			getnext_str();
-			m_ParMax =m_EvaluationFile.rFloatArray2( m_MBinHeader.n_param);
-			getnext_str();
-			m_ParValidMin =m_EvaluationFile.rFloatArray2( m_MBinHeader.n_param);
-			getnext_str();
-			m_ParValidMax =m_EvaluationFile.rFloatArray2(m_MBinHeader.n_param);
+			m_EFile.ReadTextLine(str, Aftercol, m_ParMin, ints);
+			
+			m_EFile.ReadTextLine(str, Aftercol, m_ParMax, ints);
+			m_EFile.ReadTextLine(str, Aftercol, m_ParValidMin, ints);
+			m_EFile.ReadTextLine(str, Aftercol, m_ParValidMax, ints);
+
+			if (unsigned long(m_ParMin.size()) != m_MBinHeader.n_param) good = false;
+			if (unsigned long(m_ParMax.size()) != m_MBinHeader.n_param) good = false;
+			if (unsigned long(m_ParValidMin.size()) != m_MBinHeader.n_param) good = false;
+			if (unsigned long(m_ParValidMax.size()) != m_MBinHeader.n_param) good = false;
 
 		}
-		good=m_EvaluationFile.IsFileInGood();
+		if(good) good=m_EFile.IsGood();
 	}
 	else {
 		// Writing
@@ -336,119 +328,107 @@ bool MultiStorageStatData::ReadWrite_MultiPar(bool reading) {
 			m_ParValidMin.resize(m_MBinHeader.n_param);
 			m_ParValidMax.resize(m_MBinHeader.n_param);
 		}
-		m_EvaluationFile.m_DocFileOut << "Parameter Min Values : " << m_MBinHeader.n_param << endl;
-		good=m_EvaluationFile.wFloatArray2(m_ParMin);
-		good = m_EvaluationFile.wFloatArray2(m_ParMin);
-		m_EvaluationFile.m_DocFileOut << "Parameter Max Values : " << m_MBinHeader.n_param << endl;
-		good=m_EvaluationFile.wFloatArray2(m_ParMax);
-		m_EvaluationFile.m_DocFileOut << "Valid Min Values : " << m_MBinHeader.n_param << endl;
-		good=m_EvaluationFile.wFloatArray2(m_ParValidMin);
-		m_EvaluationFile.m_DocFileOut << "Valid Max Values : " << m_MBinHeader.n_param << endl;
-		good=m_EvaluationFile.wFloatArray2(m_ParValidMax);
+		size_t n_param = m_MBinHeader.n_param;
+		m_EFile.WriteTextLine("Parameter Min Values ", n_param); // Number of files
+		good=m_EFile.WriteTextLine(m_ParMin);
+		m_EFile.WriteTextLine("Parameter Max Values ", n_param);
+		good=m_EFile.WriteTextLine(m_ParMax);
+		m_EFile.WriteTextLine("Valid Min Values ", n_param);
+		good=m_EFile.WriteTextLine(m_ParValidMin);
+		m_EFile.WriteTextLine("Valid Max Values ", n_param);
+		good=m_EFile.WriteTextLine(m_ParValidMax);
 	}
 
-	return good;
+	return true;
 }
 bool MultiStorageStatData::ReadWrite_CoCor(bool reading) {
-	bool good;
+	bool good=true;
+	/*
 	if (reading) {
 		string str;
-		getline(m_EvaluationFile.m_DocFileIn, str, ':');
-		getline(m_EvaluationFile.m_DocFileIn, str);
+		getline(m_EFile.m_DocFileIn, str, ':');
+		getline(m_EFile.m_DocFileIn, str);
 		m_CoCorNumValid = stoi(str);
 		m_CoCorValid.resize(m_CoCorNumValid*m_CoCorNumValid);
 		auto num = m_CoCorValid.size();
-		if(num>0) m_CoCorValid = m_EvaluationFile.rFloatArray2(num, m_CoCorNumValid);
-		return m_EvaluationFile.IsFileInGood();
+		if(num>0) m_CoCorValid = m_EFile.rFloatArray2(num, m_CoCorNumValid);
+		return m_EFile.IsFileInGood();
 	}
 	else {
 		// Writing
-		m_EvaluationFile.m_DocFileOut << "Parameter CoCorrelation : " << m_CoCorNumValid << endl;
+		m_EFile.WriteTextLine( << "Parameter CoCorrelation : " << m_CoCorNumValid << endl;
 		auto num = m_CoCorValid.size();
-		if(num>0) good = m_EvaluationFile.wFloatArray2(m_CoCorValid, num, m_CoCorNumValid);
+		if(num>0) good = m_EFile.wFloatArray2(m_CoCorValid, num, m_CoCorNumValid);
 
-		return m_EvaluationFile.IsFileOutGood();
+		return m_EFile.IsFileOutGood();
 	}
-	
+	*/
+	return good;
 }
 bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
-	bool good=true;
 	size_t num;
 	size_t num_indicators = 7;
+	bool good = m_EFile.IsGood();
+	vector<float> floats;
+	vector<int> ints;
+	vector<size_t> sizets;
+	size_t Aftercol;
 	if (reading) {
 		string str;
-		auto getnext_str = [&]() {
-			getline(m_EvaluationFile.m_DocFileIn, str, ':');
-			getline(m_EvaluationFile.m_DocFileIn, str);
-		};
-
 		VarValidAllo();
 		if (m_NumValidAll != 0) {
-			getnext_str(); num = stoi(str);
+				m_EFile.ReadTextLine(str, num);
 			for (size_t i = 0; i < num; i++) {
-				getnext_str();
-				size_t num2;
-				getnext_str(); num2 = stoi(str);
+				size_t num2;	
+				m_EFile.ReadTextLine(str, num2);
 				if (num2 > 0) {
-					m_Valid_TSV_Mean[i].v[E_SELECT_LOW] = m_EvaluationFile.rFloatArray2(num2);
-					getnext_str(); num2 = stoi(str);
-					m_Valid_TSV_Mean[i].v[E_SELECT_HIGH] = m_EvaluationFile.rFloatArray2(num2);
-					getnext_str(); num2 = stoi(str);
-					m_Valid_TSV_Mean[i].v[E_POST_MIN] = m_EvaluationFile.rFloatArray2(num2);
-					getnext_str(); num2 = stoi(str);
-					m_Valid_TSV_Mean[i].v[E_POST_MAX] = m_EvaluationFile.rFloatArray2(num2);
-					getnext_str(); num2 = stoi(str);
-					m_Valid_TSV_Mean[i].v[E_POST_MEAN] = m_EvaluationFile.rFloatArray2(num2);
+					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_SELECT_LOW], ints);
+					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_SELECT_HIGH], ints);
+					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_POST_MIN], ints);
+					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_POST_MAX], ints);
+					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_POST_MEAN], ints);
 				}
 			}
-			getnext_str(); num = stoi(str);
+			m_EFile.ReadTextLine(str, num);
 			size_t num_all;
 			for (size_t i = 0; i < num; i++) {
 
-					getnext_str(); 
-					getnext_str(); num_all = stoi(str);	if(num_all== m_NumValidAll)
-						m_Valid_TSV[i].v[E_SELECT_LOW] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_SELECT_HIGH] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_POST_MIN] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_POST_MAX] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_POST_MEAN] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_POST_CV] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_PRIOR_MIN] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_PRIOR_MAX] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_PRIOR_MEAN] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
-					getnext_str(); num_all = stoi(str);	if (num_all == m_NumValidAll)
-						m_Valid_TSV[i].v[E_PRIOR_CV] = m_EvaluationFile.rFloatArray2(num_all, m_NumValidAll / num_indicators);
+				
+					m_EFile.ReadTextLine(str, num_all);
+					if(num_all== m_NumValidAll)
 
-					getnext_str(); m_Valid_TSV[i].tobe_Plotted = stoi(str);
-					getnext_str(); m_Valid_TSV[i].is_Updated = stoi(str);
-					getnext_str(); m_Valid_TSV[i].VarTranformed = stoi(str);
-					getnext_str(); m_Valid_TSV[i].Dim1_Par_Index = stoi(str);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_SELECT_LOW],ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_SELECT_HIGH], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_MIN], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_MAX], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_MEAN], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_CV], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_MIN], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_MAX], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_MEAN], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_CV], ints);
+					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_SELECT_LOW], ints);
+
+					m_EFile.ReadTextLine(str, m_Valid_TSV[i].tobe_Plotted);
+					m_EFile.ReadTextLine(str, m_Valid_TSV[i].is_Updated);
+					m_EFile.ReadTextLine(str, m_Valid_TSV[i].VarTranformed);
+					m_EFile.ReadTextLine(str, m_Valid_TSV[i].Dim1_Par_Index);
 
 				//History of Criteria Setting
 				size_t numhistory;
-				getnext_str(); numhistory = stoi(str);
+				m_EFile.ReadTextLine(str, numhistory);
 				if (numhistory < 10000) {
 					m_Valid_TSV[i].History.resize(numhistory);
 
 					for (size_t jj = 0; jj < numhistory; jj++) {
-						int item1;
-						int item2;
-						getnext_str(); item1 = stoi(str);
-						m_Valid_TSV[i].History[jj].criteria = CRITERIA_STATE(item1);
-						getnext_str(); item2 = stoi(str);
-						m_Valid_TSV[i].History[jj].stat_indicator = PERFORMANCE_VAR(item2);
-						getnext_str(); m_Valid_TSV[i].History[jj].n_post = stoi(str);
-						getnext_str(); m_Valid_TSV[i].History[jj].VarIndex = stoi(str);
-						getnext_str(); m_Valid_TSV[i].History[jj].minvalue = stof(str);
-						getnext_str(); m_Valid_TSV[i].History[jj].maxvalue = stof(str);
+						size_t item1;
+						size_t item2;
+						m_EFile.ReadTextLine(str, item1); m_Valid_TSV[i].History[jj].criteria=CRITERIA_STATE(item1); // CRITERIA_STATE(item1);
+						m_EFile.ReadTextLine(str, item2); m_Valid_TSV[i].History[jj].stat_indicator = PERFORMANCE_VAR(item2);
+						m_EFile.ReadTextLine(str, m_Valid_TSV[i].History[jj].n_post);
+						m_EFile.ReadTextLine(str, m_Valid_TSV[i].History[jj].VarIndex);
+						m_EFile.ReadTextLine(str, m_Valid_TSV[i].History[jj].minvalue);
+						m_EFile.ReadTextLine(str, m_Valid_TSV[i].History[jj].maxvalue);
 					}
 				}
 				m_pNewMap->m_MStorage.IsMinUpdated[i] = true;
@@ -458,56 +438,56 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 			}
 
 		}
-		if (m_pNewMap->m_ValSum_Array.size() > 0) {
-			m_EvaluationFile.rsize_t(&num);
+		/*if (m_pNewMap->m_ValSum_Array.size() > 0) {
+			m_EFile.rsize_t(&num);
 			if (num != m_Valid_SV.size()) m_Valid_SV.resize(num);
 			for (size_t i = 0; i < m_Valid_SV.size(); i++) {
-				m_EvaluationFile.rsize_t(&num);
+				m_EFile.rsize_t(&num);
 				if (num == 0) {
 					m_Valid_SV.resize(num);
 					continue;
 				}
 				AllocateValid_SUM(i);
-				auto values = m_EvaluationFile.rsize_tArray(num);
+				auto values = m_EFile.rsize_tArray(num);
 				m_Valid_TSV[i].criteria.resize(values.size());
 				for (size_t j = 0; j < values.size(); j++) m_Valid_SV[i].criteria[j] = CRITERIA_STATE(values[j]);
 
-				m_Valid_SV[i].v[E_SELECT_LOW] = m_EvaluationFile.rFloatArray2(num);
-				m_Valid_SV[i].v[E_SELECT_HIGH] = m_EvaluationFile.rFloatArray2(num);
-				m_Valid_SV[i].v[E_POST_MIN] = m_EvaluationFile.rFloatArray2(num);
-				m_Valid_SV[i].v[E_POST_MAX] = m_EvaluationFile.rFloatArray2(num);
-				m_Valid_SV[i].v[E_POST_MEAN] = m_EvaluationFile.rFloatArray2(num);
-				m_Valid_SV[i].v[E_POST_CV] = m_EvaluationFile.rFloatArray2(num);
-				m_EvaluationFile.rbool(&m_Valid_SV[i].tobe_Plotted);
-				m_EvaluationFile.rbool(&m_Valid_SV[i].is_Updated);
-				m_EvaluationFile.rsize_t(&m_Valid_SV[i].VarTranformed);
-				m_EvaluationFile.rsize_t(&num);
+				m_Valid_SV[i].v[E_SELECT_LOW] = m_EFile.rFloatArray2(num);
+				m_Valid_SV[i].v[E_SELECT_HIGH] = m_EFile.rFloatArray2(num);
+				m_Valid_SV[i].v[E_POST_MIN] = m_EFile.rFloatArray2(num);
+				m_Valid_SV[i].v[E_POST_MAX] = m_EFile.rFloatArray2(num);
+				m_Valid_SV[i].v[E_POST_MEAN] = m_EFile.rFloatArray2(num);
+				m_Valid_SV[i].v[E_POST_CV] = m_EFile.rFloatArray2(num);
+				m_EFile.rbool(&m_Valid_SV[i].tobe_Plotted);
+				m_EFile.rbool(&m_Valid_SV[i].is_Updated);
+				m_EFile.rsize_t(&m_Valid_SV[i].VarTranformed);
+				m_EFile.rsize_t(&num);
 				m_pNewMap->m_MStorage.m_SV_StatMemory.AcceptedRuns = true;
 
 				if (m_Valid_SV[i].criteria.size() > 7 && num == 7) {
 					m_Valid_SV_Mean[i].criteria.resize(num);
 
-					auto values = m_EvaluationFile.rsize_tArray(m_NumValidAll);
+					auto values = m_EFile.rsize_tArray(m_NumValidAll);
 					m_Valid_SV_Mean[i].criteria.resize(values.size());
 					for (size_t j = 0; j < values.size(); j++) m_Valid_SV_Mean[i].criteria[j] = CRITERIA_STATE(values[j]);
-					m_Valid_SV_Mean[i].v[E_SELECT_LOW] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[i].v[E_SELECT_HIGH] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[i].v[E_POST_MIN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[i].v[E_POST_MAX] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[i].v[E_POST_MEAN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[i].v[E_POST_CV] = m_EvaluationFile.rFloatArray2(num);
+					m_Valid_SV_Mean[i].v[E_SELECT_LOW] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[i].v[E_SELECT_HIGH] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[i].v[E_POST_MIN] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[i].v[E_POST_MAX] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[i].v[E_POST_MEAN] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[i].v[E_POST_CV] = m_EFile.rFloatArray2(num);
 				}
 			}
 
 			// Prior statistics for all runs similar for all ensembles
 			if (m_Valid_SV.size() > 0) {
 				size_t SV_VarNum = m_Valid_SV[0].criteria.size();
-				m_EvaluationFile.rsize_t(&num);
-				if (m_EvaluationFile.IsFileInGood() && SV_VarNum == num) {
-					m_Valid_SV[0].v[E_PRIOR_MIN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV[0].v[E_PRIOR_MAX] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV[0].v[E_PRIOR_MEAN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV[0].v[E_PRIOR_CV] = m_EvaluationFile.rFloatArray2(num);
+				m_EFile.rsize_t(&num);
+				if (m_EFile.IsFileInGood() && SV_VarNum == num) {
+					m_Valid_SV[0].v[E_PRIOR_MIN] = m_EFile.rFloatArray2(num);
+					m_Valid_SV[0].v[E_PRIOR_MAX] = m_EFile.rFloatArray2(num);
+					m_Valid_SV[0].v[E_PRIOR_MEAN] = m_EFile.rFloatArray2(num);
+					m_Valid_SV[0].v[E_PRIOR_CV] = m_EFile.rFloatArray2(num);
 					for (size_t i = 1; i < m_Valid_SV.size(); i++) {
 						m_Valid_SV[i].v[E_PRIOR_MIN] = m_Valid_SV[0].v[E_PRIOR_MIN];
 						m_Valid_SV[i].v[E_PRIOR_MAX] = m_Valid_SV[0].v[E_PRIOR_MAX];
@@ -519,12 +499,12 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 			}
 
 			if (m_pNewMap->m_ValSum_Array.size() > 1) {
-				m_EvaluationFile.rsize_t(&num);
+				m_EFile.rsize_t(&num);
 				if (num == 7) {
-					m_Valid_SV_Mean[0].v[E_PRIOR_MIN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[0].v[E_PRIOR_MAX] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[0].v[E_PRIOR_MEAN] = m_EvaluationFile.rFloatArray2(num);
-					m_Valid_SV_Mean[0].v[E_PRIOR_CV] = m_EvaluationFile.rFloatArray2(num);
+					m_Valid_SV_Mean[0].v[E_PRIOR_MIN] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[0].v[E_PRIOR_MAX] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[0].v[E_PRIOR_MEAN] = m_EFile.rFloatArray2(num);
+					m_Valid_SV_Mean[0].v[E_PRIOR_CV] = m_EFile.rFloatArray2(num);
 
 
 
@@ -537,215 +517,185 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 					m_pNewMap->m_MStorage.m_SV_StatMemory.AllRuns = true;
 				}
 			}
-		}
+		}*/
 
-		return m_EvaluationFile.IsFileInGood();
+		return m_EFile.IsGood();
 	}
 	else {
 
 		unsigned int num;
 		if (m_NumValidAll != 0) {
 			num = m_Valid_TSV_Mean.size();
-			m_EvaluationFile.m_DocFileOut << "Number of Ensembles : " <<  num<< endl;
+			m_EFile.WriteTextLine("Number of Ensembles ", num);
 			for (size_t i = 0; i < num; i++) {
 				if (good && m_NumValidAll > 0) {
-					m_EvaluationFile.m_DocFileOut << "Ensemble No : " << i+1 << endl;
-					auto num2=m_Valid_TSV_Mean[i].v[E_SELECT_LOW].size();
-					m_EvaluationFile.m_DocFileOut << "Low Mean Criteria : " << num2 << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV_Mean[i].v[E_SELECT_LOW]);
-					m_EvaluationFile.m_DocFileOut << "High Mean Criteria : " << num2 << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV_Mean[i].v[E_SELECT_HIGH]);
-					m_EvaluationFile.m_DocFileOut << "Posterior Min of Mean Value : " << num2 << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV_Mean[i].v[E_POST_MIN]);
-					m_EvaluationFile.m_DocFileOut << "Posterior Max of Mean Value : " << num2 << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV_Mean[i].v[E_POST_MAX]);
-					m_EvaluationFile.m_DocFileOut << "Posterior mean of Mean Value : " << num2 << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV_Mean[i].v[E_POST_MEAN]);
+					m_EFile.WriteTextLine("Ensemble No  ", i + 1);
+					m_EFile.WriteTextLine("Low Mean Criteria ", num);
+					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_SELECT_LOW]);
+					m_EFile.WriteTextLine("High Mean Criteria ", num);
+					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_SELECT_HIGH]);
+					m_EFile.WriteTextLine("Posterior Min Mean Criteria ", num);
+					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_POST_MIN]);
+					m_EFile.WriteTextLine("Posterior High Mean Criteria ", num);
+					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_POST_MAX]);
+					m_EFile.WriteTextLine("Posterior mean of Mean Value", num);
+					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_POST_MEAN]);
 				}
 
 			}
 
 			num = m_Valid_TSV.size();
-			// Posterior statistics for all variables and all accepted Ensembles
-			m_EvaluationFile.m_DocFileOut << "Number of Ensembles : " << num << endl;
-
+			m_EFile.WriteTextLine("Number of Ensembles ", num);
+			size_t row_size = m_NumValidAll / num_indicators;
+			size_t NumValidAll = m_NumValidAll;
 			for (size_t i = 0; i < num; i++) {
-				size_t koll = m_NumValidAll;
-				good = m_EvaluationFile.wSize_t(&koll);
 				if (good&&m_NumValidAll > 0) {
-					m_EvaluationFile.m_DocFileOut << "Ensemble No : " << i + 1 << endl;
-					m_EvaluationFile.m_DocFileOut << "Low Criteria : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_SELECT_LOW], m_NumValidAll, m_NumValidAll/num_indicators);
-					m_EvaluationFile.m_DocFileOut << "High Criteria : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_SELECT_HIGH], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Posterior Min of Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_POST_MIN], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Posterior Max of Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_POST_MAX], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Posterior Mean of Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_POST_MEAN], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Posterior CV of Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_POST_CV], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Prior Min of Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_PRIOR_MIN], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Prior Max of Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_PRIOR_MAX], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Prior Mean of Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_PRIOR_MEAN], m_NumValidAll, m_NumValidAll / num_indicators);
-					m_EvaluationFile.m_DocFileOut << "Prior CV Value : " << m_NumValidAll << endl;
-					m_EvaluationFile.wFloatArray2(m_Valid_TSV[i].v[E_PRIOR_CV], m_NumValidAll, m_NumValidAll / num_indicators);
+					m_EFile.WriteTextLine("Ensemble No  ", i + 1);
+					m_EFile.WriteTextLine("Low Criteria ", NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_SELECT_LOW],  row_size); m_EFile.WriteTextLine("High Criteria ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_SELECT_HIGH], row_size); m_EFile.WriteTextLine( "Posterior Min of Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_POST_MIN],row_size); m_EFile.WriteTextLine( "Posterior Max of Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_POST_MAX],row_size); m_EFile.WriteTextLine("Posterior Mean of Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_POST_MEAN],row_size); m_EFile.WriteTextLine("Posterior CV of Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_POST_CV],row_size); m_EFile.WriteTextLine("Prior Min of Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_PRIOR_MIN],row_size); m_EFile.WriteTextLine("Prior Max of Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_PRIOR_MAX],row_size); m_EFile.WriteTextLine("Prior Mean of Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_PRIOR_MEAN],row_size);	m_EFile.WriteTextLine("Prior CV Value ",NumValidAll);
+					m_EFile.WriteTextLine(m_Valid_TSV[i].v[E_PRIOR_CV],row_size);
 				}
-				m_EvaluationFile.m_DocFileOut << "Enable for plotting : " << m_Valid_TSV[i].tobe_Plotted << endl;
-				m_EvaluationFile.m_DocFileOut << "Is Updated : " << m_Valid_TSV[i].is_Updated << endl;
-				m_EvaluationFile.m_DocFileOut << "Transformed Variables Indicator : " << m_Valid_TSV[i].VarTranformed << endl;
-				m_EvaluationFile.m_DocFileOut << "Dimension 1 Index : " << m_Valid_TSV[i].Dim1_Par_Index << endl;
-			/*	m_EvaluationFile.wbool(&m_Valid_TSV[i].tobe_Plotted);
-				m_EvaluationFile.wbool(&m_Valid_TSV[i].is_Updated);
-				m_EvaluationFile.wSize_t(&m_Valid_TSV[i].VarTranformed);
-				m_EvaluationFile.wSize_t(&m_Valid_TSV[i].Dim1_Par_Index);*/
-
+				m_EFile.WriteTextLine("Enable for plotting  ", m_Valid_TSV[i].tobe_Plotted);
+				m_EFile.WriteTextLine("Is Updated ",m_Valid_TSV[i].is_Updated);
+				m_EFile.WriteTextLine("Transformed Variables Indicator ", m_Valid_TSV[i].VarTranformed);
+				m_EFile.WriteTextLine("Dimension 1 Index  ", m_Valid_TSV[i].Dim1_Par_Index);
 				//History of Criteria Setting
 				size_t numhistory = m_Valid_TSV[i].History.size();
-				m_EvaluationFile.m_DocFileOut << "Number of History : " << numhistory << endl;
+				m_EFile.WriteTextLine("Number of History  ", numhistory);
 				for (size_t jj = 0; jj < numhistory; jj++) {
-					m_EvaluationFile.m_DocFileOut << "Criteria : " << m_Valid_TSV[i].History[jj].criteria << endl;
-					m_EvaluationFile.m_DocFileOut << "Statistical Performance Indicator : " << m_Valid_TSV[i].History[jj].stat_indicator << endl;
-					m_EvaluationFile.m_DocFileOut << "Remaining runs : " << m_Valid_TSV[i].History[jj].n_post << endl;
-					m_EvaluationFile.m_DocFileOut << "Var Index : " << m_Valid_TSV[i].History[jj].VarIndex << endl;
-					m_EvaluationFile.m_DocFileOut << "Min value : " << m_Valid_TSV[i].History[jj].minvalue << endl;
-					m_EvaluationFile.m_DocFileOut << "Max value : " << m_Valid_TSV[i].History[jj].maxvalue << endl;
+					bool f_valid = m_Valid_TSV[i].History[jj].criteria;
+					m_EFile.WriteTextLine( "Criteria ", f_valid);
+					size_t f_ind= m_Valid_TSV[i].History[jj].stat_indicator;
+					m_EFile.WriteTextLine( "Statistical Performance Indicator : ", f_ind);
+					m_EFile.WriteTextLine( "Remaining runs : ", m_Valid_TSV[i].History[jj].n_post);
+					m_EFile.WriteTextLine( "Var Index : ", m_Valid_TSV[i].History[jj].VarIndex);
+					m_EFile.WriteTextLine( "Min value  ", m_Valid_TSV[i].History[jj].minvalue);
+					m_EFile.WriteTextLine(  "Max value  ", m_Valid_TSV[i].History[jj].maxvalue);
 				}
 				
 
 			}
-		}
+		}/*
 		num = m_Valid_SV.size();
 		if (m_pNewMap->m_ValSum_Array.size() > 0) {
-			good = m_EvaluationFile.wInt(&num);
+			good = m_EFile.wInt(&num);
 			for (size_t i = 0; i < num; i++) {
 				size_t SV_VarNum = m_Valid_SV[i].criteria.size();
-				m_EvaluationFile.wSize_t(&SV_VarNum);
+				m_EFile.wSize_t(&SV_VarNum);
 				size_t numval = 7;
-				if (m_EvaluationFile.IsFileOutGood() && SV_VarNum > 0) {
+				if (m_EFile.IsFileOutGood() && SV_VarNum > 0) {
 
 					vector<size_t> values;
 					values.resize(m_Valid_SV[i].criteria.size());
 					for (size_t j = 0; j < values.size(); j++) values[j] = size_t(m_Valid_SV[i].criteria[j]);
-					m_EvaluationFile.wsize_tArray(values, m_NumValidAll);
-					//m_EvaluationFile.wsize_tArray(&m_Valid_SV[i].criteria, SV_VarNum);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV[i].v[E_SELECT_LOW]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV[i].v[E_SELECT_HIGH]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV[i].v[E_POST_MIN]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV[i].v[E_POST_MAX]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV[i].v[E_POST_MEAN]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV[i].v[E_POST_CV]);
-					m_EvaluationFile.wbool(&m_Valid_SV[i].tobe_Plotted);
-					m_EvaluationFile.wbool(&m_Valid_SV[i].is_Updated);
-					m_EvaluationFile.wSize_t(&m_Valid_SV[i].VarTranformed);
-					m_EvaluationFile.wSize_t(&numval);
+					m_EFile.wsize_tArray(values, m_NumValidAll);
+					//m_EFile.wsize_tArray(&m_Valid_SV[i].criteria, SV_VarNum);
+					m_EFile.wFloatArray2(m_Valid_SV[i].v[E_SELECT_LOW]);
+					m_EFile.wFloatArray2(m_Valid_SV[i].v[E_SELECT_HIGH]);
+					m_EFile.wFloatArray2(m_Valid_SV[i].v[E_POST_MIN]);
+					m_EFile.wFloatArray2(m_Valid_SV[i].v[E_POST_MAX]);
+					m_EFile.wFloatArray2(m_Valid_SV[i].v[E_POST_MEAN]);
+					m_EFile.wFloatArray2(m_Valid_SV[i].v[E_POST_CV]);
+					m_EFile.wbool(&m_Valid_SV[i].tobe_Plotted);
+					m_EFile.wbool(&m_Valid_SV[i].is_Updated);
+					m_EFile.wSize_t(&m_Valid_SV[i].VarTranformed);
+					m_EFile.wSize_t(&numval);
 				}
 				if (SV_VarNum > 7) {
-					if (m_EvaluationFile.IsFileOutGood()) {
+					if (m_EFile.IsFileOutGood()) {
 
 						vector<size_t> values;
 						values.resize(m_Valid_SV_Mean[i].criteria.size());
 						for (size_t j = 0; j < values.size(); j++) values[j] = size_t(m_Valid_SV_Mean[i].criteria[j]);
-						m_EvaluationFile.wsize_tArray(values, m_NumValidAll);
+						m_EFile.wsize_tArray(values, m_NumValidAll);
 
-						//m_EvaluationFile.wsize_tArray(&m_Valid_SV_Mean[i].criteria, numval);
-						m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_SELECT_LOW]);
-						m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_SELECT_HIGH]);
-						m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_MIN]);
-						m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_MAX]);
-						m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_MEAN]);
-						m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_CV]);
+						//m_EFile.wsize_tArray(&m_Valid_SV_Mean[i].criteria, numval);
+						m_EFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_SELECT_LOW]);
+						m_EFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_SELECT_HIGH]);
+						m_EFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_MIN]);
+						m_EFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_MAX]);
+						m_EFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_MEAN]);
+						m_EFile.wFloatArray2(m_Valid_SV_Mean[i].v[E_POST_CV]);
 					}
 				}
 			}
 
 			// Prior statistics for all runs similar for all ensembles
 			size_t SV_VarNum = m_Valid_SV[0].criteria.size();
-			m_EvaluationFile.wSize_t(&SV_VarNum);
-			if (m_EvaluationFile.IsFileOutGood() && SV_VarNum > 0) {
-				m_EvaluationFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_MIN]);
-				m_EvaluationFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_MAX]);
-				m_EvaluationFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_MEAN]);
-				m_EvaluationFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_CV]);
+			m_EFile.wSize_t(&SV_VarNum);
+			if (m_EFile.IsFileOutGood() && SV_VarNum > 0) {
+				m_EFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_MIN]);
+				m_EFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_MAX]);
+				m_EFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_MEAN]);
+				m_EFile.wFloatArray2(m_Valid_SV[0].v[E_PRIOR_CV]);
 			}
 			size_t  ivar = m_pNewMap->m_ValSum_Array.size();
 			if (ivar > 1) {
 				size_t numval = 7;
-				m_EvaluationFile.wSize_t(&numval);
-				if (m_EvaluationFile.IsFileOutGood()) {
-					m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_MIN]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_MAX]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_MEAN]);
-					m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_CV]);
+				m_EFile.wSize_t(&numval);
+				if (m_EFile.IsFileOutGood()) {
+					m_EFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_MIN]);
+					m_EFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_MAX]);
+					m_EFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_MEAN]);
+					m_EFile.wFloatArray2(m_Valid_SV_Mean[0].v[E_PRIOR_CV]);
 				}
 			}
 		}
 
 		// Writing
 
-		return m_EvaluationFile.IsFileOutGood();
+		return m_EFile.IsFileOutGood();
 
-
+		*/
 	}
+return true;
 }
 bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
+	size_t num;
+	size_t num_indicators = 7;
+	bool good = m_EFile.IsGood();
+	vector<float> floats;
+	vector<int> ints;
+	vector<size_t> sizets;
+	size_t Aftercol;
 	if(m_NumValidAll>0)
 		
 		if (reading) {
 			string str;
-			auto getnext_str = [&]() {
-				getline(m_EvaluationFile.m_DocFileIn, str, ':');
-				getline(m_EvaluationFile.m_DocFileIn, str);
-			};
 
-
-
-			getnext_str(); m_CumulatedPerformance = stoi(str);
-			//m_EvaluationFile.rsize_t(&m_CumulatedPerformance);
-			size_t num;
-			//m_VarValidTransformed.resize(0);
+			m_EFile.ReadTextLine(str, m_CumulatedPerformance);
 			if (m_CumulatedPerformance > 100) return false;
-
-			getnext_str(); num = stoi(str);
-			TRACE("MultiStorage  num = %ld, str = %s \n",  num, str.c_str());
-			//if(!m_EvaluationFile.rsize_t(&num)) return false;
+			m_EFile.ReadTextLine(str, num);
 			VARTRANSFORMED add;
+			size_t koll;
+			size_t numrow;
 			for(size_t i = 0; i < num; i++) {
-				
-				getnext_str();  if (str == "\n") continue;  auto ikoll = stoi(str);
-				TRACE("MultiStorage i = %ld, num = %ld, str = %s , ikoll = %ld \n", i, num, str.c_str(), ikoll);
-
-				getnext_str(); add.Transformed_index = stoi(str);
-				TRACE("MultiStorage  str = %s\n", str.c_str());
-				//if(!m_EvaluationFile.rsize_t(&add.Transformed_index)) return false;
+				m_EFile.ReadTextLine(str, koll);
+				m_EFile.ReadTextLine(str, add.Transformed_index);
+				m_EFile.ReadTextLine(str, add.Dim1_index);
 				size_t numvector;
-				//if (m_New7_Stat&&!m_EvaluationFile.rsize_t(&add.Dim1_index)) return false;
-				getnext_str(); add.Dim1_index= stoi(str);
-				if (!m_EvaluationFile.IsFileInGood()) return false;
-
-				getnext_str(); numvector = stoi(str);
-				TRACE("MultiStorage  numvector = %s\n", str.c_str());
-				//if(!m_EvaluationFile.rsize_t(&numvector)) return false;
-				if (numvector == string::npos||numvector>5000000) return false;
-				add.VarValidVector.resize(numvector);
-
-				add.VarValidVector=m_EvaluationFile.rFloatArray2(numvector, m_NumValidAll);
+				m_EFile.ReadTextLine(str, numvector);
+				numrow=numvector/m_NumValidAll;
+				m_EFile.ReadTextLine(str, add.VarValidVector,ints);
 				m_VarValidTransformed.push_back(add);
 				MapOfStoredTSV.insert(pair<size_t,size_t>(add.Transformed_index, m_VarValidTransformed.size() - 1));
 			}
-			return m_EvaluationFile.IsFileInGood();
+			return m_EFile.IsGood();
 		}
 		else {
-			m_EvaluationFile.m_DocFileOut << "Cumulated Performance : " <<m_CumulatedPerformance << endl;
-			//m_EvaluationFile.wSize_t(&m_CumulatedPerformance);
-			size_t num;
+			m_EFile.WriteTextLine("Cumulated Performance ",m_CumulatedPerformance);
+				size_t num;
 			num = m_VarValidTransformed.size();
-			m_EvaluationFile.m_DocFileOut << "Number of Transformed Ensembles : " << num << endl;
-			//m_EvaluationFile.wSize_t(&num);
+			m_EFile.WriteTextLine("Number of Transformed Ensembles ",num);
+			//m_EFile.wSize_t(&num);
 			if (num == 0 && m_CumulatedPerformance == 0&& m_VarValid.size()>0) {
 				//Original Performance indicators to archive
 				VARTRANSFORMED vartrans;
@@ -757,25 +707,28 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 //         Check if VarValidVector has same size as m_VarValid
 
 			for (size_t i = 0; i < m_VarValidTransformed.size(); i++) {
-				m_EvaluationFile.m_DocFileOut << "Transformed Ensemble : " << i+1 << endl;
-				m_EvaluationFile.m_DocFileOut << "Transform Index : " << m_VarValidTransformed[i].Transformed_index << endl;
-				m_EvaluationFile.m_DocFileOut << "Dim1 Index : " << m_VarValidTransformed[i].Dim1_index << endl;
+				m_EFile.WriteTextLine("Transformed Ensemble ",i+1);
+				m_EFile.WriteTextLine("Transform Index ",m_VarValidTransformed[i].Transformed_index);
+				m_EFile.WriteTextLine("Dim1 Index ",m_VarValidTransformed[i].Dim1_index);
 				num = m_VarValidTransformed[i].VarValidVector.size();
-				m_EvaluationFile.m_DocFileOut << "VarValid Entire Vector : " << num<< endl;
-				m_EvaluationFile.wFloatArray2(m_VarValidTransformed[i].VarValidVector, num, m_NumValidAll);
+				m_EFile.WriteTextLine("VarValid Entire Vector ",num);
+				if (!m_EFile.WriteTextLine(m_VarValidTransformed[i].VarValidVector, m_NumValidAll)) {
+					TRACE("MultiStorage  Error in writing VarValid Entire Vector &d \n", i);
+				};
 			}
 
-			return m_EvaluationFile.IsFileOutGood();
+			return m_EFile.IsGood();
 		}
-	return m_EvaluationFile.IsFileInGood();
+	return m_EFile.IsGood();
 
+	return true;
 }
 bool MultiStorageStatData::ReadWrite_OptionalSUM_Valid(bool reading) {
-
+	/*
 	bool good;
 	size_t totnumruns;
 	if (reading) {
-		good = m_EvaluationFile.rsize_t(&totnumruns);
+		good = m_EFile.rsize_t(&totnumruns);
 		if(good)
 			for (size_t i = 0; i < m_pNewMap->m_ValSum_Array.size(); i++) {
 				auto valsum = m_pNewMap->GetValSumStruct(i);
@@ -789,16 +742,16 @@ bool MultiStorageStatData::ReadWrite_OptionalSUM_Valid(bool reading) {
 				valsum.SimValueVector.resize(totnumruns);
 				valsum.ObsValueVector.resize(totnumruns);
 
-				valsum.ME = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.R2_Multi = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.InterCept_Multi = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.Slope_Multi = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.RMSE = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.NSE = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.LogLi = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.SimValueVector = m_EvaluationFile.rFloatArray2(totnumruns);
-				valsum.ObsValueVector = m_EvaluationFile.rFloatArray2(totnumruns);
-				m_EvaluationFile.rInt(&valsum.n_RegMulti);
+				valsum.ME = m_EFile.rFloatArray2(totnumruns);
+				valsum.R2_Multi = m_EFile.rFloatArray2(totnumruns);
+				valsum.InterCept_Multi = m_EFile.rFloatArray2(totnumruns);
+				valsum.Slope_Multi = m_EFile.rFloatArray2(totnumruns);
+				valsum.RMSE = m_EFile.rFloatArray2(totnumruns);
+				valsum.NSE = m_EFile.rFloatArray2(totnumruns);
+				valsum.LogLi = m_EFile.rFloatArray2(totnumruns);
+				valsum.SimValueVector = m_EFile.rFloatArray2(totnumruns);
+				valsum.ObsValueVector = m_EFile.rFloatArray2(totnumruns);
+				m_EFile.rInt(&valsum.n_RegMulti);
 				m_pNewMap->SetValSum(i, valsum);
 			}
 			m_pNewMap->CalculateMeanPerformanceAndSetValues();
@@ -808,7 +761,7 @@ bool MultiStorageStatData::ReadWrite_OptionalSUM_Valid(bool reading) {
 
 				for (size_t ivar = 0; ivar < 7; ivar++) {
 					if (m_Valid_SV_Mean[0].MeanPerFomanceIndicators[ivar].size() != totnumruns) m_Valid_SV_Mean[0].MeanPerFomanceIndicators[ivar].resize(totnumruns);
-					m_Valid_SV_Mean[0].MeanPerFomanceIndicators[ivar] = m_EvaluationFile.rFloatArray2(totnumruns);
+					m_Valid_SV_Mean[0].MeanPerFomanceIndicators[ivar] = m_EFile.rFloatArray2(totnumruns);
 				}
 				for (size_t i = 1; i < m_Valid_SV_Mean.size(); i++) {
 					for (size_t ivar = 0; ivar < 7; ivar++) {
@@ -821,7 +774,7 @@ bool MultiStorageStatData::ReadWrite_OptionalSUM_Valid(bool reading) {
 			}
 
 
-		return true;// m_EvaluationFile.IsFileInGood();
+		return true;// m_EFile.IsFileInGood();
 	}
 	else {
 		if (m_pNewMap->m_ValSum_Array.size() > 0) {
@@ -839,32 +792,33 @@ bool MultiStorageStatData::ReadWrite_OptionalSUM_Valid(bool reading) {
 
 
 			}
-			m_EvaluationFile.wSize_t(&totnumruns);
+			m_EFile.wSize_t(&totnumruns);
 			for (size_t i = 0; i < m_pNewMap->m_ValSum_Array.size(); i++) {
 				auto valsum = m_pNewMap->GetValSumStruct(i);
-				m_EvaluationFile.wFloatArray2(valsum.ME);
-				m_EvaluationFile.wFloatArray2(valsum.R2_Multi);
-				m_EvaluationFile.wFloatArray2(valsum.InterCept_Multi);
-				m_EvaluationFile.wFloatArray2(valsum.Slope_Multi);
-				m_EvaluationFile.wFloatArray2(valsum.RMSE);
-				m_EvaluationFile.wFloatArray2(valsum.NSE);
-				m_EvaluationFile.wFloatArray2(valsum.LogLi);
-				m_EvaluationFile.wFloatArray2(valsum.SimValueVector);
-				m_EvaluationFile.wFloatArray2(valsum.ObsValueVector);
+				m_EFile.wFloatArray2(valsum.ME);
+				m_EFile.wFloatArray2(valsum.R2_Multi);
+				m_EFile.wFloatArray2(valsum.InterCept_Multi);
+				m_EFile.wFloatArray2(valsum.Slope_Multi);
+				m_EFile.wFloatArray2(valsum.RMSE);
+				m_EFile.wFloatArray2(valsum.NSE);
+				m_EFile.wFloatArray2(valsum.LogLi);
+				m_EFile.wFloatArray2(valsum.SimValueVector);
+				m_EFile.wFloatArray2(valsum.ObsValueVector);
 
-				m_EvaluationFile.wInt(&valsum.n_RegMulti);
+				m_EFile.wInt(&valsum.n_RegMulti);
 			}
 			if (m_pNewMap->m_ValSum_Array.size() > 1) {
 				for (size_t ivar = 0; ivar < 7; ivar++)
-					m_EvaluationFile.wFloatArray2(m_Valid_SV_Mean[0].MeanPerFomanceIndicators[ivar]);
+					m_EFile.wFloatArray2(m_Valid_SV_Mean[0].MeanPerFomanceIndicators[ivar]);
 				
 			}
 
 		}
 
 
-		return m_EvaluationFile.IsFileOutGood();
-	}
+		return m_EFile.IsFileOutGood();
+	}*/
+	return true;
 }
 bool MultiStorageStatData::ReadWrite_Parameters(bool reading) {
 	if (reading) {
@@ -874,9 +828,9 @@ bool MultiStorageStatData::ReadWrite_Parameters(bool reading) {
 	else {
 
 
-		return m_EvaluationFile.IsFileOutGood();
+		return m_EFile.IsGood();
 	}
-	return m_EvaluationFile.IsFileInGood();
+	return m_EFile.IsGood();
 
 }
 bool MultiStorageStatData::CompleteProcessingOfInputFiles_MultiStorage() {

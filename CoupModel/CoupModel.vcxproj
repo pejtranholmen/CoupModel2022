@@ -279,6 +279,7 @@
     <ClInclude Include="CUG\ugxpthemes.h" />
     <ClInclude Include="CUG\utbstrop.h" />
     <ClInclude Include="CUG\UTMaskedEdit.h" />
+    <ClInclude Include="Util\CWinAPIFileHandler.h" />
     <ClInclude Include="DBDataWnd.h" />
     <ClInclude Include="DBWnd.h" />
     <ClInclude Include="DB\DB_Header.h" />
@@ -671,6 +672,7 @@
     <ClCompile Include="CUG\ugvscrol.cpp" />
     <ClCompile Include="CUG\UGXPThemes.cpp" />
     <ClCompile Include="CUG\UTBStrOp.cpp" />
+    <ClCompile Include="Util\CWinAPIFileHandler.cpp" />
     <ClCompile Include="DBDataWnd.cpp" />
     <ClCompile Include="DBWnd.cpp" />
     <ClCompile Include="DB\DB_Header.cpp" />

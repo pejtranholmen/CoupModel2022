@@ -1741,6 +1741,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 			long irun_int;
 			int ifile;
 			string filename;
+			fpos_t EndPosResFile;
 
 
 			auto ReadVector = [&]() { // from residuals
@@ -1763,15 +1764,36 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 				stream.read((char*)&recl, 4);
 				stream.read((char*)&numv, 4);
 				fpos_t newpos = size_t(irun_int) * (recl * numv) + ResidualIndex[FileNo - 1] * recl + recl;
+
+	
+				if (irun_int == 0) {
+					stream.seekg(0, ios::end);
+					EndPosResFile = stream.tellg();
+
+				}
+				auto pos = stream.tellg();
+
+
 				newpos = newpos * 4;
 				stream.seekg(newpos, ios::beg);
 
 				res_v.resize(recl);
 
-
-				stream.read((char*)&res_v[0], recl * 4);
+				if(newpos<EndPosResFile) stream.read((char*)&res_v[0], recl * 4);
+				else {
+					res_v.assign(recl, MISSING);
+				}
 				if (!stream.good()) {
-					string koll = "Error reading :";
+
+					stream.clear();
+
+					stream.open(filename, ios::binary | ios::in);
+
+					stream.seekg(0, ios::end);
+					auto pos = stream.tellg();
+
+					string koll = "Error reading :"+ FUtil::STD_ItoAscii(size_t(newpos)) +":"+ FUtil::STD_ItoAscii(size_t(irun_int));
+					koll += " : " + FUtil::STD_ItoAscii(size_t(pos));
 					koll += filename + '\n';
 #ifndef COUPSTD
 					MFC_Util::MessageBox(koll, "Errors Reading Residual File", MB_OK);
