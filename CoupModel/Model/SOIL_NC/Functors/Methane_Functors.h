@@ -148,7 +148,7 @@ public:
 	atm_conc(atm_conc), // mg/L or g/m3
 	aere_scale(aere_scale),
 	diffuscoef(diffus_aere) {
-		diffus_aere * 1.E-4 * Fix::SECPERDAY;
+		diffuscoef=diffuscoef* 1.E-4 * Fix::SECPERDAY;
 	} // cm2/s to m2/day
 
 	double operator()(double ch4_conc, double TempSurface, double rootfr, double z, double ra, double lai, double npp, double porostill, double nppratio,double rob) noexcept {
@@ -179,7 +179,7 @@ public:
 		atm_conc(atm_conc), // mg/L or g/m3
 		aere_scale(aere_scale),
 		diffuscoef(diffus_aere) {
-		diffus_aere * 1.E-4 * Fix::SECPERDAY;
+		diffuscoef=diffuscoef* 1.E-4 * Fix::SECPERDAY;
 	} // cm2/s to m2/day
 
 	double operator()(double o2_conc, double TempSurface, double rootfr, double z, double ra, double lai, double npp, double porostill, double nppratio, double rob) noexcept {

@@ -74,28 +74,37 @@ bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 
 
 
-	if (!ReadWrite_Accepted(reading)) return false;
+
 #ifndef COUPSTD 
 	if (reading)
-		mfc_util.SetPaneMessage("Reading Accepted Run Completed");
+		mfc_util.SetPaneMessage("Reading Accepted Runs ...");
 	else
-		mfc_util.SetPaneMessage("Writing Accepted Runs Completed");
+		mfc_util.SetPaneMessage("Writing Accepted Runs ...");
+
+
 #endif
+	if (!ReadWrite_Accepted(reading)) return false;
+
 	if (!ReadWrite_MultiPar(reading)) return false;
 	if (!ReadWrite_CoCor(reading)) return false;
 
-
-
-	if (!ReadWrite_Criteria(reading)) return false;
 #ifndef COUPSTD 
 	if (reading)
-		mfc_util.SetPaneMessage("Reading Criteria settings Completed");
+		mfc_util.SetPaneMessage("Reading Criteria settings ...");
 	else
-		mfc_util.SetPaneMessage("Writing Criteria settings Completed");
+		mfc_util.SetPaneMessage("Writing Criteria settings ...");
 #endif
 
-	bool error = false;
+	if (!ReadWrite_Criteria(reading)) return false;
 
+
+	bool error = false;
+#ifndef COUPSTD 
+	if (reading)
+		mfc_util.SetPaneMessage("Reading TSV data ...");
+	else
+		mfc_util.SetPaneMessage("Writing TSV data ...");
+#endif
 	if (!ReadWrite_OptionalTSV_Valid(reading)) {
 		error = true;
 #ifndef COUPSTD
@@ -108,13 +117,6 @@ bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 
 	}
 		
-#ifndef COUPSTD 
-	if (reading) 
-		mfc_util.SetPaneMessage("Reading TSV data Completed");
-	else
-		mfc_util.SetPaneMessage("Writing TSV data Completed");
-#endif
-
 
 
 	if (!ReadWrite_OptionalSUM_Valid(reading)) return false;
@@ -306,10 +308,18 @@ bool MultiStorageStatData::ReadWrite_MultiPar(bool reading) {
 				m_ParValidMin.resize(m_MBinHeader.n_param);
 				m_ParValidMax.resize(m_MBinHeader.n_param);
 			}
+			m_EFile.ReadTextLine(str, Aftercol);
 			m_EFile.ReadTextLine(str, Aftercol, m_ParMin, ints);
-			
+
+
+			m_EFile.ReadTextLine(str, Aftercol);
 			m_EFile.ReadTextLine(str, Aftercol, m_ParMax, ints);
+
+			m_EFile.ReadTextLine(str, Aftercol);
 			m_EFile.ReadTextLine(str, Aftercol, m_ParValidMin, ints);
+
+
+			m_EFile.ReadTextLine(str, Aftercol);
 			m_EFile.ReadTextLine(str, Aftercol, m_ParValidMax, ints);
 
 			if (unsigned long(m_ParMin.size()) != m_MBinHeader.n_param) good = false;
@@ -382,32 +392,36 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 				size_t num2;	
 				m_EFile.ReadTextLine(str, num2);
 				if (num2 > 0) {
-					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_SELECT_LOW], ints);
-					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_SELECT_HIGH], ints);
-					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_POST_MIN], ints);
-					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_POST_MAX], ints);
-					m_EFile.ReadTextLine(str, num2, m_Valid_TSV_Mean[i].v[E_POST_MEAN], ints);
+					m_EFile.ReadTextLine(str, num_indicators);
+					m_EFile.ReadTextLine(str, num_indicators, m_Valid_TSV_Mean[i].v[E_SELECT_LOW], ints);
+					m_EFile.ReadTextLine(str, num_indicators);
+					m_EFile.ReadTextLine(str, num_indicators, m_Valid_TSV_Mean[i].v[E_SELECT_HIGH], ints);
+					m_EFile.ReadTextLine(str, num_indicators);
+					m_EFile.ReadTextLine(str, num_indicators, m_Valid_TSV_Mean[i].v[E_POST_MIN], ints);
+					m_EFile.ReadTextLine(str, num_indicators);
+					m_EFile.ReadTextLine(str, num_indicators, m_Valid_TSV_Mean[i].v[E_POST_MAX], ints);
+					m_EFile.ReadTextLine(str, num_indicators);
+					m_EFile.ReadTextLine(str, num_indicators, m_Valid_TSV_Mean[i].v[E_POST_MEAN], ints);
 				}
 			}
 			m_EFile.ReadTextLine(str, num);
-			size_t num_all;
+			size_t num_all, kollens;
 			for (size_t i = 0; i < num; i++) {
 
 				
+					m_EFile.ReadTextLine(str, kollens);
 					m_EFile.ReadTextLine(str, num_all);
-					if(num_all== m_NumValidAll)
+					if (num_all == m_NumValidAll) { m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_SELECT_LOW], ints); m_EFile.ReadTextLine(str, num_all); };
 
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_SELECT_LOW],ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_SELECT_HIGH], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_MIN], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_MAX], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_MEAN], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_POST_CV], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_MIN], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_MAX], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_MEAN], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_PRIOR_CV], ints);
-					m_EFile.ReadTextLine(str, num_all, m_Valid_TSV[i].v[E_SELECT_LOW], ints);
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_SELECT_HIGH], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_POST_MIN], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_POST_MAX], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_POST_MEAN], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_POST_CV], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_PRIOR_MIN], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_PRIOR_MAX], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_PRIOR_MEAN], ints); m_EFile.ReadTextLine(str, num_all);};
+					if (num_all == m_NumValidAll) {m_EFile.ReadTextLines(num_indicators, str, num_all, m_Valid_TSV[i].v[E_PRIOR_CV], ints);};
 
 					m_EFile.ReadTextLine(str, m_Valid_TSV[i].tobe_Plotted);
 					m_EFile.ReadTextLine(str, m_Valid_TSV[i].is_Updated);
@@ -530,15 +544,15 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 			for (size_t i = 0; i < num; i++) {
 				if (good && m_NumValidAll > 0) {
 					m_EFile.WriteTextLine("Ensemble No  ", i + 1);
-					m_EFile.WriteTextLine("Low Mean Criteria ", num);
+					m_EFile.WriteTextLine("Low Mean Criteria ", num_indicators);
 					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_SELECT_LOW]);
-					m_EFile.WriteTextLine("High Mean Criteria ", num);
+					m_EFile.WriteTextLine("High Mean Criteria ", num_indicators);
 					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_SELECT_HIGH]);
-					m_EFile.WriteTextLine("Posterior Min Mean Criteria ", num);
+					m_EFile.WriteTextLine("Posterior Min Mean Criteria ", num_indicators);
 					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_POST_MIN]);
-					m_EFile.WriteTextLine("Posterior High Mean Criteria ", num);
+					m_EFile.WriteTextLine("Posterior High Mean Criteria ", num_indicators);
 					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_POST_MAX]);
-					m_EFile.WriteTextLine("Posterior mean of Mean Value", num);
+					m_EFile.WriteTextLine("Posterior mean of Mean Value", num_indicators);
 					m_EFile.WriteTextLine(m_Valid_TSV_Mean[i].v[E_POST_MEAN]);
 				}
 
@@ -666,6 +680,10 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 	vector<int> ints;
 	vector<size_t> sizets;
 	size_t Aftercol;
+
+#ifndef COUPSTD
+	MFC_Util mfc_util;
+#endif
 	if(m_NumValidAll>0)
 		
 		if (reading) {
@@ -677,16 +695,27 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			VARTRANSFORMED add;
 			size_t koll;
 			size_t numrow;
+			m_Ensembles.resize(num);
 			for(size_t i = 0; i < num; i++) {
+				m_Ensembles[i].valid = true;
+				m_Ensembles[i].EnsembleFileRead = true;	
 				m_EFile.ReadTextLine(str, koll);
 				m_EFile.ReadTextLine(str, add.Transformed_index);
 				m_EFile.ReadTextLine(str, add.Dim1_index);
 				size_t numvector;
 				m_EFile.ReadTextLine(str, numvector);
 				numrow=numvector/m_NumValidAll;
-				m_EFile.ReadTextLine(str, add.VarValidVector,ints);
+#ifndef COUPSTD
+				auto act = FUtil::STD_ItoAscii(i + 1);
+				auto tot = FUtil::STD_ItoAscii(num);
+				mfc_util.SetPaneMessage("Reading Ensembles " + act + "(" + tot + ")");
+
+#endif
+
+				m_EFile.ReadTextLines(numrow, str, numvector, add.VarValidVector,ints);
 				m_VarValidTransformed.push_back(add);
 				MapOfStoredTSV.insert(pair<size_t,size_t>(add.Transformed_index, m_VarValidTransformed.size() - 1));
+
 			}
 			return m_EFile.IsGood();
 		}
@@ -694,7 +723,7 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 			m_EFile.WriteTextLine("Cumulated Performance ",m_CumulatedPerformance);
 				size_t num;
 			num = m_VarValidTransformed.size();
-			m_EFile.WriteTextLine("Number of Transformed Ensembles ",num);
+	
 			//m_EFile.wSize_t(&num);
 			if (num == 0 && m_CumulatedPerformance == 0&& m_VarValid.size()>0) {
 				//Original Performance indicators to archive
@@ -704,9 +733,19 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 				m_VarValidTransformed.push_back(vartrans);
 				MapOfStoredTSV.insert(pair<size_t, size_t>(vartrans.Transformed_index, 0));
 			}
+			num = m_VarValidTransformed.size();
+			m_EFile.WriteTextLine("Number of Transformed Ensembles ", num);
 //         Check if VarValidVector has same size as m_VarValid
 
 			for (size_t i = 0; i < m_VarValidTransformed.size(); i++) {
+
+#ifndef COUPSTD
+				auto act=FUtil::STD_ItoAscii(i + 1);
+				auto tot=FUtil::STD_ItoAscii(num);
+				mfc_util.SetPaneMessage("Writing Ensembles " + act + "("+tot + ")");
+
+#endif
+
 				m_EFile.WriteTextLine("Transformed Ensemble ",i+1);
 				m_EFile.WriteTextLine("Transform Index ",m_VarValidTransformed[i].Transformed_index);
 				m_EFile.WriteTextLine("Dim1 Index ",m_VarValidTransformed[i].Dim1_index);

@@ -329,35 +329,38 @@ public:
 private:
 	UptakeResults GetNitrate(vector<double> &DistWithDepth, double N_DemandPlant, double N_Tot_Demand,
 		vector<double> &Dist_Tot, vector<double> &SoilNitrate, UptakeResults &out) {
+		double plant_ratio = N_DemandPlant / N_Tot_Demand;
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
 
-				double Demand = Ratio[ii] * Dist_Tot[ii] * N_Tot_Demand;
+				double Demand = Ratio[ii] * Dist_Tot[ii] * N_Tot_Demand;   // Ratio NO3/NO3+NH4
+
 				// Nitrate Uptake of actual Plant in actual Layer: 
 				auto s = f_Avail(Demand, SoilNitrate[ii] * ScaledAvail[ii]);
 				if (s.all) {
-					out.UptNO3[ii] = s.upt;
+					out.UptNO3[ii] = s.upt*plant_ratio;
 					out.RemainFrac += DistWithDepth[ii] * Ratio[ii];
 				}
 				else if (SoilNitrate[ii] > 0.)
-					out.UptNO3[ii] = s.upt;
+					out.UptNO3[ii] = s.upt*plant_ratio;
 		}
 		return out;
 	};
 	UptakeResults GetAdditionalCompUptake(vector<double> &DistWithDepth, double N_DemandPlant, double N_Tot_Demand,
 		vector<double> &Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, double ScaleComp, UptakeResults &out) {
+		double plant_ratio = N_DemandPlant / N_Tot_Demand;
 		for (size_t ii = 0; ii < out.UptNH4.size(); ii++) {
 			if (Dist_Tot[ii] * N_Tot_Demand > 0.) {
 				double Demand = Ratio[ii] * Dist_Tot[ii] * N_Tot_Demand;
 				// Nitrate Uptake of actual Plant in actual Layer: 
 				auto s = f_Avail(Demand, SoilNitrate[ii] * ScaledAvail[ii]);
 				if (s.all) {
-					out.UptNO3[ii]+= max(0., min(s.upt*ScaleComp, FracAvail*SoilNitrate[ii]));
+					out.UptNO3[ii]+= max(0., min(s.upt*ScaleComp, FracAvail*SoilNitrate[ii]))*plant_ratio;
 				}
 				Demand = (1-Ratio[ii]) * Dist_Tot[ii] * N_Tot_Demand;
 				// Nitrate Uptake of actual Plant in actual Layer: 
 				s = f_Avail(Demand, SoilAmmonium[ii]);
 				if (s.all) {
-					out.UptNH4[ii] += max(0., min(s.upt*ScaleComp, FracAvail*SoilAmmonium[ii]));
+					out.UptNH4[ii] += max(0., min(s.upt*ScaleComp, FracAvail*SoilAmmonium[ii])*plant_ratio);
 				}
 
 			}
@@ -368,16 +371,17 @@ private:
 	UptakeResults GetAmmonium(vector<double> &DistWithDepth,  double N_DemandPlant, double N_Tot_Demand,
 		vector<double> &Dist_Tot, vector<double> &SoilAmmonium, UptakeResults &out) {
 		double Demand;
+		double plant_ratio = N_DemandPlant / N_Tot_Demand;
 
 		for (size_t ii = 0; ii < out.UptNH4.size(); ii++) {
 			Demand = (1-Ratio[ii]) * Dist_Tot[ii] * N_Tot_Demand;
 			auto s = f_Avail(Demand, SoilAmmonium[ii] * ScaledAvail[ii]);
 			if (s.all) {
-				out.UptNH4[ii] = s.upt;
+				out.UptNH4[ii] = s.upt*plant_ratio;
 				out.RemainFrac += DistWithDepth[ii] * (1 - Ratio[ii]);
 			}
 			else if (SoilAmmonium[ii] > 0.)
-				out.UptNH4[ii] = s.upt;
+				out.UptNH4[ii] = s.upt*plant_ratio;
 		}
 		return out;
 	};

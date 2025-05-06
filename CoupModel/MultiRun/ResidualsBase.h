@@ -3,7 +3,8 @@
 #include <windows.h>
 #include "../std.h"
 #include "../Util/ReadWriteTypes.h"
-
+#include "../Util/CWinAPIFileHandler.h"
+class CWinAPIFileHandler;
 // ResidualsBase command target
 class NewMap;
 
@@ -68,51 +69,9 @@ protected:
 	
 
 private :
-	ReadWriteTypes m_EnsembleResFile,  m_ExtraFile, m_SortedFile;
+	ReadWriteTypes  m_ResidualFile, m_ExtraFile, m_SortedFile;
 
-	class WinAPIFileHandler {
-	public:
-		bool OpenWrite(const std::wstring& filename) {
-			hFile = CreateFileW(filename.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
-			return hFile != INVALID_HANDLE_VALUE;
-		}
-
-		bool OpenRead(const std::wstring& filename) {
-			hFile = CreateFileW(filename.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-			return hFile != INVALID_HANDLE_VALUE;
-		}
-
-		bool WriteBinary(const void* data, size_t size) {
-			DWORD written;
-			return WriteFile(hFile, data, static_cast<DWORD>(size), &written, nullptr);
-		}
-
-		bool ReadBinary(void* data, size_t size) {
-			DWORD read;
-			return ReadFile(hFile, data, static_cast<DWORD>(size), &read, nullptr);
-		}
-
-		void Close() {
-			if (hFile != INVALID_HANDLE_VALUE) {
-				CloseHandle(hFile);
-				hFile = INVALID_HANDLE_VALUE;
-			}
-		}
-
-		bool IsOpen() const {
-			return hFile != INVALID_HANDLE_VALUE;
-		}
-		HANDLE GetHandle() const {
-			return hFile;
-		}
-
-
-
-	private:
-		HANDLE hFile = INVALID_HANDLE_VALUE;
-	};
-
-	WinAPIFileHandler m_ResidualFile;
+	CWinAPIFileHandler  m_EnsembleResFile;
 
 	bool meanValid;
 	size_t m_MaxNumRec;

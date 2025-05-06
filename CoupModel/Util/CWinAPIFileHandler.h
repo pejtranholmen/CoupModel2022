@@ -18,6 +18,7 @@ public:
     bool ReadTextLine(std::string& line, float& floataftercol);
     bool ReadTextLine(std::string& line, size_t& intaftercol);
     bool ReadTextLine(std::string &line, size_t &intaftercol, std::vector<float>& floats, std::vector<int>& ints);
+    bool ReadTextLines(size_t rows, std::string& line, size_t& intaftercol, std::vector<float>& floats, std::vector<int>& ints);
     bool ReadTextLine(std::string& line, std::vector<float>& floats, std::vector<int>& ints);
     bool ReadTextLine(std::string& line, size_t& intaftercol, std::vector<float>& floats, std::vector<size_t>& ints);
     bool ReadTextLine(std::string& line, std::vector<float>& floats, std::vector<size_t>& ints);
@@ -45,6 +46,7 @@ public:
     std::wstring ToWString(const std::string& str) {
         return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(str);
     };
+    HANDLE GetHandle() const { return m_Handle; };
 
 private:
     HANDLE m_Handle;

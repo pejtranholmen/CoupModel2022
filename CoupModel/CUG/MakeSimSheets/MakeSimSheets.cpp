@@ -5164,13 +5164,15 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 									cell.SetReadOnly(FALSE);
 								}
 							}
-							else if (pRes->m_MeanDefined) {
-								cell.SetBackColor(m_ColorClick);
-								cell.SetReadOnly(FALSE);
-							}
 							else {
-								cell.SetReadOnly(TRUE);
-								cell.SetBackColor(m_NoColor);
+								if (pRes->m_MeanDefined) {
+									cell.SetBackColor(m_ColorClick);
+									cell.SetReadOnly(FALSE);
+								}
+								else {
+									cell.SetReadOnly(TRUE);
+									cell.SetBackColor(m_NoColor);
+								}
 							}
 						}
 						cell.SetParam(2100);

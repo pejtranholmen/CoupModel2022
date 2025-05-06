@@ -1864,7 +1864,7 @@ auto EmergenceAndRelatedUpdates = [&](size_t i) {
 	}
 	else {
 		C_Seed_Avail = C_Seed[i];
-		C_Seed_Added = C_Seed_Avail;
+		C_Seed_Added += C_Seed_Avail;
 		Emergence_Done[i] = true;
 	}
 
@@ -1887,8 +1887,8 @@ auto EmergenceAndRelatedUpdates = [&](size_t i) {
 	P_added = P_State[_ROOT][_P_][i] + P_State[_COARSE_ROOT][_P_][i] + P_State[_LEAF][_P_][i] + P_State[_STEM][_P_][i];
 
 	if (AddSeed) {
-		N_Seed_Added =  N_added;
-		P_Seed_Added =  P_added;
+		N_Seed_Added +=  N_added;
+		P_Seed_Added +=  P_added;
 	}
 
 };

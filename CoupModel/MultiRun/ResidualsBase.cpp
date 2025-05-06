@@ -64,11 +64,12 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, size_t ensembleno) {
 }
 bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string NewEnsembleName, size_t ensembleno) {
 	auto filename = GetXStatFileName(ensembleno);
+	auto wfile = m_EnsembleResFile.ToWString(filename);
 	bool good;
 	m_EnsembleName = EnsembleName;
 	if (reading) {
 
-		good = m_EnsembleResFile.OpenDocFileIn(filename);
+		good = m_EnsembleResFile.OpenRead(wfile);
 
 		if (!good) {
 			return false;
@@ -79,13 +80,14 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 
 		if (FUtil::IsFileExisting(filename)) {
 			m_TempOutFile = filename.substr(0, filename.find(".SXBin")) + ".XXBin";
-			good = m_EnsembleResFile.OpenDocFileIn(filename);
-			good = m_EnsembleResFile.OpenDocFileout(m_TempOutFile);
+			auto XXfile = m_EnsembleResFile.ToWString(m_TempOutFile);
+			good = m_EnsembleResFile.OpenRead(wfile);
+			good = m_EnsembleResFile.OpenWrite(XXfile);
 			m_TwoFilesOpen = true;
 		}
 		else {
 			m_TempOutFile.clear();
-			good = m_EnsembleResFile.OpenDocFileout(filename);
+			good = m_EnsembleResFile.OpenWrite(wfile);
 			m_TwoFilesOpen = false;
 		}
 	}
@@ -96,13 +98,13 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 	if (ReadWrite_MeanEnsembleFile(reading, ensembleno)) {
 		//m_IsUpdated = true;
 		if (reading) {		
-			m_EnsembleResFile.CloseFileIn();
+			m_EnsembleResFile.Close();
 
 		}
 		else {
 			if (m_TwoFilesOpen) {
-				m_EnsembleResFile.CloseFileIn();
-				m_EnsembleResFile.CloseFileOut();
+				m_EnsembleResFile.Close();
+				m_EnsembleResFile.Close();
 				remove(filename.c_str());
 				vector< vector<size_t>> koll;
 				float value = m_MeanPost.mean[0][0];
@@ -124,7 +126,7 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 				if (!rename(m_TempOutFile.data(), filename.data())) return false;
 			}
 			else {
-				m_EnsembleResFile.CloseFileOut();
+				m_EnsembleResFile.Close();
 			}
 		}
 
@@ -132,16 +134,16 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 	}
 	else {
 		if(reading)
-			m_EnsembleResFile.CloseFileIn();
+			m_EnsembleResFile.Close();
 
 		else {
 
 			if (m_TwoFilesOpen) {
-				m_EnsembleResFile.CloseFileIn();
-				m_EnsembleResFile.CloseFileOut();
+				m_EnsembleResFile.Close();
+				m_EnsembleResFile.Close();
 			}
 			else
-				m_EnsembleResFile.CloseFileOut();
+				m_EnsembleResFile.Close();
 		}
 
 
@@ -157,7 +159,9 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 	bool good;
 	size_t ActRecL;
 	size_t num_stat = 7;
-
+#ifndef COUPSTD
+	MFC_Util mfc_util;
+#endif
 
 	
 	if (reading) {
@@ -165,22 +169,24 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 		string str;
 		bool hitmade = false;
 
-		getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+		/*getline(m_EnsembleResFile.m_DocFileIn, str, ':');
 		if (str != "Ensemble No ") return false;
 		getline(m_EnsembleResFile.m_DocFileIn, str);
-		num = atoi(str.c_str());
-		getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+		num = atoi(str.c_str());*/
+		m_EnsembleResFile.ReadTextLine(str, num);
+		/*getline(m_EnsembleResFile.m_DocFileIn, str, ':');
 		if (str != "Ensemble Num Records ") return false;
 		getline(m_EnsembleResFile.m_DocFileIn, str);
-		ActRecL = atoi(str.c_str());
+		ActRecL = atoi(str.c_str());*/
+		m_EnsembleResFile.ReadTextLine(str, ActRecL);
 		if (m_MeanTest.mean.size() == 0) AlloResVector(ActRecL);
 
 
-		getline(m_EnsembleResFile.m_DocFileIn, str, ':');
-		getline(m_EnsembleResFile.m_DocFileIn, str);
-		size_t VarToRead = atoi(str.c_str());
+	/*	getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+		getline(m_EnsembleResFile.m_DocFileIn, str);*/
+		size_t VarToRead;
 
-
+		m_EnsembleResFile.ReadTextLine(str, VarToRead);
 		vector<float> Dump;
 		
 		Dump.resize(ActRecL * num_stat);
@@ -204,12 +210,21 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 			m_MeanPost.p50[i].resize(ActRecL);
 			m_MeanPost.p90[i].resize(ActRecL);
 
-			getline(m_EnsembleResFile.m_DocFileIn, str, ':');
-			getline(m_EnsembleResFile.m_DocFileIn, str);
-			size_t var = atoi(str.c_str());
+			/*getline(m_EnsembleResFile.m_DocFileIn, str, ':');
+			getline(m_EnsembleResFile.m_DocFileIn, str);*/
+			size_t var;
+			m_EnsembleResFile.ReadTextLine(str, var);
 			
 
-			Dump=m_EnsembleResFile.rFloatArray2(ActRecL * num_stat, num_stat);
+			//Dump=m_EnsembleResFile.rFloatArray2(ActRecL * num_stat, num_stat);
+			size_t vectorsize = ActRecL * num_stat;
+			vector<int> ints;
+			m_EnsembleResFile.ReadTextLines(ActRecL, str, vectorsize, Dump, ints);
+#ifndef COUPSTD
+			mfc_util.SetPaneMessage("Reading Mean of Time Serie data var: "+ FUtil::STD_ItoAscii(var+1)+" Ensemble :"+ FUtil::STD_ItoAscii(ensemble_no+1));
+#endif
+
+
 			for (size_t i = 0; i < ActRecL; i++) {
 
 				m_MeanPost.mean[var][i] = Dump[i * num_stat];
@@ -222,7 +237,7 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 			}
 		}
 
-		good = m_EnsembleResFile.IsFileInGood();
+		good = m_EnsembleResFile.IsGood();
 		if (!good) return false;
 
 		return true;
@@ -230,19 +245,19 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 	else {
 			// New single file.
 			size_t num = ensemble_no;
-			m_EnsembleResFile.m_DocFileOut << "Ensemble No :"<<num<<endl;
+			m_EnsembleResFile.WriteTextLine("Ensemble No ",num);
 			ActRecL = m_MeanPost.mean[0].size();
-			m_EnsembleResFile.m_DocFileOut << "Ensemble Num Records :" << ActRecL << endl;
+			m_EnsembleResFile.WriteTextLine("Ensemble Num Records ",ActRecL);
 
 			size_t VarToWrite = m_NumVar * m_ScalingNumVarWithDim1;
 			if (VarToWrite > m_MeanPost.mean.size()) VarToWrite = m_NumVar;
 
 			vector<float> Dump;
 			Dump.resize(ActRecL * num_stat);
-			m_EnsembleResFile.m_DocFileOut << "Var in File :" << VarToWrite << endl;
+			m_EnsembleResFile.WriteTextLine("Var in File ", VarToWrite);
 
 			for (size_t var = 0; var < VarToWrite; var++) {
-				m_EnsembleResFile.m_DocFileOut << "Var No :" << var << endl;
+				m_EnsembleResFile.WriteTextLine("Var No ",var);
 				for (size_t i = 0; i < ActRecL; i++) {
 					Dump[i*num_stat] = m_MeanPost.mean[var][i];
 					Dump[i * num_stat+1] = m_MeanPost.min[var][i];
@@ -256,10 +271,10 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 					auto koll = var;
 					auto v = Dump;
 				}
-				m_EnsembleResFile.wFloatArray2(Dump, ActRecL*num_stat,num_stat);
+				m_EnsembleResFile.WriteTextLine(Dump, num_stat);
 			}
 
-			good = m_EnsembleResFile.IsFileOutGood();
+			good = m_EnsembleResFile.IsGood();
 
 			//m_Ensembles.clear();
 			POS_ENSEMBLE ensemble_inf;
@@ -346,34 +361,16 @@ bool ResidualsBase::AlloResVector(size_t ActRecL) {
 }
 std::streamsize ResidualsBase::GetFileSizeFromHandle() {
 	LARGE_INTEGER size;
-	if (GetFileSizeEx(m_ResidualFile.GetHandle(), &size))
+	if (GetFileSizeEx(m_EnsembleResFile.GetHandle(), &size))
 		return static_cast<std::streamsize>(size.QuadPart);
 	return 0;
 }
 
 
 bool ResidualsBase::OpenResidualFile(bool reading) {
-	std::wstring wfilename(m_FileName.begin(), m_FileName.end());
 
-	bool opened = reading ?
-		m_ResidualFile.OpenRead(wfilename) :
-		m_ResidualFile.OpenWrite(wfilename);
-
-	if (!opened) return false;
 
 	if (reading) {
-		m_FileSize = GetFileSizeFromHandle(); // du kan göra en hjälpfunktion
-		if (m_FileSize == 0 || m_FileSize == string::npos)
-			return false;
-
-		Residuals_ReadWrite_Header(true);
-		m_Residuals.resize(m_RecL);
-		if (m_pNewMap->m_FileVersionNumberRead < 65)
-			AlloResVector();
-	}
-
-	return true;
-	/*if (reading) {
 		if (!m_ResidualFile.OpenDocFileIn(m_FileName)) return false;
 		m_FileSize = m_ResidualFile.GetStdInputFileSize();
 		if (m_FileSize == 0 || m_FileSize == string::npos) {
@@ -389,13 +386,13 @@ bool ResidualsBase::OpenResidualFile(bool reading) {
 	else
 		if (!m_ResidualFile.OpenDocFileout(m_FileName)) return false;
 	
-	return true;*/
+	return true;
 }
 bool ResidualsBase::Residuals_ReadWrite_Header(bool reading) {
 	if (reading) {
-		if (!m_ResidualFile.ReadBinary(&m_NumRec,sizeof(size_t))) return false;
-		if (!m_ResidualFile.ReadBinary(&m_RecL, sizeof(size_t))) return false;
-		if (!m_ResidualFile.ReadBinary(&m_NumVar,sizeof(size_t))) return false;
+		if (!m_ResidualFile.rsize_t(&m_NumRec)) return false;
+		if (!m_ResidualFile.rsize_t(&m_RecL)) return false;
+		if (!m_ResidualFile.rsize_t(&m_NumVar)) return false;
 		m_MaxNumRec = size_t(m_FileSize / (m_RecL*m_NumVar * 4));
 		if (m_pNewMap != nullptr) {
 			if (m_pNewMap->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension < m_NumRec) {
@@ -424,22 +421,34 @@ bool ResidualsBase::Residuals_ReadWrite_Header(bool reading) {
 		}
 	}
 	else {
-		if (!m_ResidualFile.WriteBinary(&m_NumRec, sizeof(size_t))) return false;
-		if (!m_ResidualFile.WriteBinary(&m_RecL, sizeof(size_t))) return false;
-		if (!m_ResidualFile.WriteBinary(&m_NumVar, sizeof(size_t))) return false;
+		if (!m_ResidualFile.wSize_t(&m_NumRec)) return false;
+		if (!m_ResidualFile.wSize_t(&m_RecL)) return false;
+		if (!m_ResidualFile.wSize_t(&m_NumVar)) return false;
 	}
 	return true;
 }
 bool ResidualsBase::CloseResidualFile(bool reading) {
 
-		m_ResidualFile.Close();
+	if (reading)
+		m_ResidualFile.CloseFileIn();
+	else
+		m_ResidualFile.CloseFileOut();
 
 	return true;
 }
 bool ResidualsBase::IsOpen(bool reading) {
-
-	return m_ResidualFile.IsOpen() && m_IsOpen;
-
+	if (reading) {
+		if (m_ResidualFile.IsFileInGood() && m_IsOpen)
+			return true;
+		else
+			return false;
+	}
+	else {
+		if (m_ResidualFile.IsFileOutGood() && m_IsOpen)
+			return true;
+		else
+			return false;
+	}
 }
 bool ResidualsBase::SetNewEnsembleByNumber(size_t EnsembleNo) {
 	if (EnsembleNo < m_pNewMap->m_MStorage.m_AcceptedRuns.size())

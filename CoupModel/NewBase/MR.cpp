@@ -2420,7 +2420,7 @@ void MR::MR_CheckCalibMethod() {
 }
 bool MR::MR_CheckIndexForFilterMode()
 {
-	for (auto valv : m_pSimDoc->m_Val_Array) {
+	for (auto valv : m_Val_Array) {
 		auto test_index = valv.Name.find("Filter_Id");
 		if (test_index != string::npos) return true;
 	}
@@ -3197,10 +3197,12 @@ vector<float> MR::GetResidualVectorForAllRuns(size_t RunNo, size_t VarNo, size_t
 		int ifile = MR_GetAddedFiles(RunNo);
 
 		auto pRes = (CResiduals*)GetResidualPointer(FileNo,ifile);
-		pRes = (CResiduals*)m_pSimDoc->GetValidResidualPointer(FileNo, ifile);
-		if (pRes == nullptr) m_pSimDoc->MR_XBin_IsOpen(FileNo, ifile);
-
-		if (ifile != 0) {
+		
+		if (pRes == nullptr&&m_pSimDoc!=nullptr) {
+			pRes = (CResiduals*)m_pSimDoc->GetValidResidualPointer(FileNo, ifile);
+			m_pSimDoc->MR_XBin_IsOpen(FileNo, ifile);
+		}
+		if (ifile != 0 && m_pSimDoc != nullptr) {
 			irun_int = m_pSimDoc->MR_GetInternalRunNo(RunNo);
 		}
 		else {
