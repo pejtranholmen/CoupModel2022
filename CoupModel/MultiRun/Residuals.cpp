@@ -1313,8 +1313,9 @@ vector<float> CResiduals::GetMeanResidualVector(size_t ResVarNo, size_t ActPoint
 		}
 	}
 	if (res_v.size() < ActPoints * (Section + 1)) {
+#ifndef COUPSTD
 		TRACE("Selected mean residuals ActPoints= %d, Section= %d\n",  ActPoints, Section);
-
+#endif
 	}
 	
 	selected.resize(ActPoints);

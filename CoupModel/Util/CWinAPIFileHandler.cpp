@@ -108,6 +108,102 @@ bool CWinAPIFileHandler::ReadTextLines(size_t num_rows, std::string& line, size_
     }
     return true;
 }
+bool CWinAPIFileHandler::ReadTextLines(size_t num_rows, std::string& line, size_t& aftercol, std::vector<float>& floats) {
+    std::vector<float> row_floats;
+    std::vector<int> row_ints;
+    floats.clear(); 
+
+    for (size_t i = 0; i < num_rows; ++i) {
+        if (!ReadTextLine(line, row_floats)) return false;
+        if (row_floats.size() != 0) {
+            floats.insert(floats.end(), row_floats.begin(), row_floats.end());
+        }
+
+    }
+    if (floats.size() != aftercol) {
+
+        std::string txt = "Error: Number of floats read does not match expected count.";;
+        return false;
+    }
+    return true;
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line,  std::vector<float>& floats) {
+    if (!IsOpen()) return false;
+
+    const size_t bufferSize = 8192;
+    char buffer[bufferSize];
+    DWORD bytesRead = 0;
+    std::string lineBuffer;
+    size_t recordIndex = 0;
+    floats.clear();
+
+    //aftercol = std::string::npos;
+
+    // Sök efter radslut i bufferten vi sparade från förra läsningen
+    size_t pos;
+    while ((pos = m_LineBuffer.find('\n')) == std::string::npos) {
+        // Läs nytt block från filen
+        if (!ReadFile(m_Handle, buffer, bufferSize, &bytesRead, nullptr) || bytesRead == 0) {
+            // Inget mer att läsa
+            if (!m_LineBuffer.empty()) {
+                // returnera sista raden utan \n
+                line = m_LineBuffer;
+                m_LineBuffer.clear();
+                return true;
+            }
+            return false;
+        }
+        m_LineBuffer.append(buffer, bytesRead);
+    }
+    // Plocka ut en hel rad
+    line = m_LineBuffer.substr(0, pos);
+    m_LineBuffer.erase(0, pos + 1);
+
+    // Ta bort \r om den finns
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+
+    if (!line.empty()) {
+        if (line.find(',') != std::string::npos) {
+
+            std::vector<std::string> tokens;
+            size_t start = 0;
+            size_t end = 0;
+
+
+            if (line.rfind(":") != std::string::npos) {
+                auto pos = line.rfind(":");
+                start = pos + 1;
+            }
+
+            while ((end = line.find(',', start)) != std::string::npos) {
+                std::string token = line.substr(start, end - start);
+                tokens.push_back(token);
+                start = end + 1;
+            }
+            std::string last = line.substr(start);
+            tokens.push_back(last);
+ 
+                floats.resize(tokens.size());
+                for (size_t i = 0; i < tokens.size(); ++i) {
+                    try {
+                        floats[i] = std::stof(tokens[i]);
+                    }
+                    catch (const std::invalid_argument&) {
+                        floats[i] = -1.1E38f;
+                    }
+                }
+
+        }
+
+
+    }
+    pos = line.rfind(":");
+    if (pos != std::string::npos) {
+        line = line.substr(0, pos);
+    }
+
+    return true;
+}
 bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::vector<float>& floats, std::vector<int>& ints) {
     if (!IsOpen()) return false;
 
@@ -118,6 +214,7 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
     size_t recordIndex = 0;
     ints.clear();
     floats.clear();
+    bool isFloat = false;
     //aftercol = std::string::npos;
    
     // Sök efter radslut i bufferten vi sparade från förra läsningen
@@ -149,10 +246,10 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
             std::vector<std::string> tokens;
             size_t start = 0;
             size_t end = 0;
-            bool isFloat = false;
 
-            if(line.find(":") != std::string::npos) {
-				auto pos = line.find(":");
+
+            if(line.rfind(":") != std::string::npos) {
+				auto pos = line.rfind(":");
                 start=pos+1;
 			}
 
@@ -192,7 +289,7 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
             }
         }
         else if (line.find(":") != std::string::npos) {
-            auto pos=line.find(":");
+            auto pos=line.rfind(":");
             auto str = line.substr(pos + 1);
             try {
                 aftercol = stoul(str);
@@ -203,6 +300,11 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
         }
 
     }
+    pos = line.rfind(":");
+    if (pos != std::string::npos) {
+	    line = line.substr(0,pos);
+	}
+ 
     return true;
 }
 

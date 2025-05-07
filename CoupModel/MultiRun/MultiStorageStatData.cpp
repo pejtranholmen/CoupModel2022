@@ -234,7 +234,7 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 	}
 	else {
 		//Writing to fil
-		unsigned int ifiles = m_AddedFiles.size();
+		size_t ifiles = m_AddedFiles.size();
 
 		m_EFile.WriteTextLine("Number of Files added to Basic Run ", ifiles);
 
@@ -537,7 +537,7 @@ bool MultiStorageStatData::ReadWrite_Criteria(bool reading) {
 	}
 	else {
 
-		unsigned int num;
+		size_t num;
 		if (m_NumValidAll != 0) {
 			num = m_Valid_TSV_Mean.size();
 			m_EFile.WriteTextLine("Number of Ensembles ", num);
@@ -752,7 +752,9 @@ bool MultiStorageStatData::ReadWrite_OptionalTSV_Valid(bool reading) {
 				num = m_VarValidTransformed[i].VarValidVector.size();
 				m_EFile.WriteTextLine("VarValid Entire Vector ",num);
 				if (!m_EFile.WriteTextLine(m_VarValidTransformed[i].VarValidVector, m_NumValidAll)) {
+#ifndef COUPSTD
 					TRACE("MultiStorage  Error in writing VarValid Entire Vector &d \n", i);
+#endif
 				};
 			}
 

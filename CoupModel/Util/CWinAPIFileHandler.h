@@ -19,9 +19,11 @@ public:
     bool ReadTextLine(std::string& line, size_t& intaftercol);
     bool ReadTextLine(std::string &line, size_t &intaftercol, std::vector<float>& floats, std::vector<int>& ints);
     bool ReadTextLines(size_t rows, std::string& line, size_t& intaftercol, std::vector<float>& floats, std::vector<int>& ints);
+    bool ReadTextLines(size_t rows, std::string& line, size_t& intaftercol, std::vector<float>& floats);
     bool ReadTextLine(std::string& line, std::vector<float>& floats, std::vector<int>& ints);
     bool ReadTextLine(std::string& line, size_t& intaftercol, std::vector<float>& floats, std::vector<size_t>& ints);
     bool ReadTextLine(std::string& line, std::vector<float>& floats, std::vector<size_t>& ints);
+    bool ReadTextLine(std::string& line, std::vector<float>& floats);
     std::int64_t GetFilePosition() const;
     bool SetFilePosition(std::int64_t position) {
 		if (!IsOpen()) return false;

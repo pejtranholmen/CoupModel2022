@@ -219,7 +219,7 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 			//Dump=m_EnsembleResFile.rFloatArray2(ActRecL * num_stat, num_stat);
 			size_t vectorsize = ActRecL * num_stat;
 			vector<int> ints;
-			m_EnsembleResFile.ReadTextLines(ActRecL, str, vectorsize, Dump, ints);
+			m_EnsembleResFile.ReadTextLines(ActRecL, str, vectorsize, Dump);
 #ifndef COUPSTD
 			mfc_util.SetPaneMessage("Reading Mean of Time Serie data var: "+ FUtil::STD_ItoAscii(var+1)+" Ensemble :"+ FUtil::STD_ItoAscii(ensemble_no+1));
 #endif

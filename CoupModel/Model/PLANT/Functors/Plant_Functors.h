@@ -81,6 +81,7 @@ public: PlantHeight(vector<double> PlantMaxHeight, vector<double> PlantHeightC1,
 		}
 
 private:
+
 	vector<double> Max, c1, c2, c3, c4;
 };
 
