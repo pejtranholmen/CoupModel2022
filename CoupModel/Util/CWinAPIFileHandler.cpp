@@ -45,6 +45,51 @@ bool CWinAPIFileHandler::ReadTextLine(std::string& line) {
     return ReadTextLine(line, Dummy, floats, ints);
 
 }
+bool CWinAPIFileHandler::ReadLineBuffer(std::string& line) {
+    const size_t bufferSize = 8192;
+    char buffer[bufferSize];
+    DWORD bytesRead = 0;
+    std::string lineBuffer;
+    size_t recordIndex = 0;
+    // Sök efter radslut i bufferten vi sparade från förra läsningen
+    size_t pos;
+    while ((pos = m_LineBuffer.find('\n')) == std::string::npos) {
+        // Läs nytt block från filen
+        if (!ReadFile(m_Handle, buffer, bufferSize, &bytesRead, nullptr) || bytesRead == 0) {
+            // Inget mer att läsa
+            if (!m_LineBuffer.empty()) {
+                // returnera sista raden utan \n
+                line = m_LineBuffer;
+                m_LineBuffer.clear();
+                return true;
+            }
+            return false;
+        }
+        m_LineBuffer.append(buffer, bytesRead);
+    }
+    // Plocka ut en hel rad
+    line = m_LineBuffer.substr(0, pos);
+    m_LineBuffer.erase(0, pos + 1);
+    // Ta bort \r om den finns
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+
+    return true;
+}
+bool CWinAPIFileHandler::ReadTextLine(std::string& line, std::string& txt) {
+
+    auto good = ReadLineBuffer(line);
+    if (good) {
+        size_t pos = line.find(":");
+        if (pos != std::string::npos) {
+            txt = line.substr(pos + 1);
+            line = line.substr(0, pos);
+        }
+        else {
+            txt = "";
+        }
+    }
+    return good;
+}
 bool CWinAPIFileHandler::ReadTextLine(std::string& line, bool &valid) {
 
     size_t Dummy = 0;

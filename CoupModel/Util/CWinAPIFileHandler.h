@@ -13,7 +13,9 @@ public:
     bool OpenWrite(const std::wstring& filename);
     bool WriteBinary(const void* data, size_t size);
     bool ReadBinary(void* data, size_t size);
+    bool ReadLineBuffer(std::string& line);
     bool ReadTextLine(std::string& line);
+    bool ReadTextLine(std::string& line, std::string& txt);
     bool ReadTextLine(std::string& line, bool& boolaftercol);
     bool ReadTextLine(std::string& line, float& floataftercol);
     bool ReadTextLine(std::string& line, size_t& intaftercol);

@@ -2070,7 +2070,9 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 		save_ensemble_no = m_pSimDoc->m_MStorage.m_ActualEnsemble;
 		// Set the correct ensemble using number....
-		if (!pResAct->SetNewEnsembleByNumber(p_info.EnsembleNo)) {
+		auto num = pResAct->GetNumberofMeanResiduals(0);
+
+		if (num==0) {
 			// Error when shiftning to new ensemble
 			int i = 0;
 			MFC_Util::MessageBoxW("Error No mean value estimated");

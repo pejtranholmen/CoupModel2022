@@ -13,6 +13,7 @@ enum class SpatialPlantDist_Sw {Random_Within, Fixed_Within, Fixed_UnRestricted}
 enum class SLA_Dynamic_Sw {off, on};
 enum class AboveTable_Sw {No, Yes};
 enum class MultiPlantWaterUptakeFunction_Sw{Common, Plant_Specific};
+enum class PlantHeighFunction_Sw { Default, Tree_Type_Biometri };
 
 
 
@@ -75,8 +76,10 @@ public: PlantHeight(vector<double> PlantMaxHeight, vector<double> PlantHeightC1,
 	:Max(PlantMaxHeight), c1(PlantHeightC1), c2(PlantHeightC2), c3(PlantHeightC3), c4(PlantHeightC4) {}
 		double operator() (size_t index, double MassAboveGround, double Age, double MassGrain) {
 			MassAboveGround = max(0., min(1.E10, MassAboveGround));
-			double out = Max[index] * (1 - exp(-c1[index] * MassAboveGround))*(1 - exp(-c2[index] * Age))
-				*(c4[index] + (1 - c4[index])*exp(-c3[index] * MassGrain));
+			double age_coef = 1 - exp(-c2[index] * Age);
+			double mass_coef= 1 - exp(-c1[index] * MassAboveGround);
+			double grain_max = c4[index] + (1 - c4[index])* exp(-c3[index] * MassGrain);
+			double out = Max[index] * mass_coef * age_coef*grain_max;
 			return max(0.001, out);
 		}
 

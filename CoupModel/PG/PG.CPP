@@ -3002,13 +3002,17 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 		}
 		// Summation of all values
 
-		if (addedfirstRunNo != nullptr && addedfirstRunNo->size() > 0) {
-			TotalNumberOfRuns+=addedfirstRunNo->at(addedfirstRunNo->size()-1);
-			string firstfile = addedfilenames->at(0);
-			auto pos = firstfile.find_last_of(".MBin");
-			string number = firstfile.substr(pos - 10, 6);
-			FirstRunNo = atoi(number.c_str())- pg.Shape.NumRepetitions;
+		string firstfile = addedfilenames->at(0);
+		auto pos = firstfile.find_last_of(".MBin");
+		string number = firstfile.substr(pos - 10, 6);
 
+		size_t start= addedfirstRunNo->size()-1;
+
+		FirstRunNo = atoi(number.c_str()) - pg.Shape.NumRepetitions;
+		if(addedfirstRunNo->size()>0) TotalNumberOfRuns+= pg.Shape.NumRepetitions;
+		while (addedfirstRunNo != nullptr && start> 0) {
+			TotalNumberOfRuns+=addedfirstRunNo->at(start)- addedfirstRunNo->at(start-1);
+			start--;
 		}
 		while(rep<TotalNumberOfRuns) {
 			if (rep < pg.Shape.NumRepetitions) {
@@ -3029,6 +3033,7 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 				while(n_files<addedfirstRunNo->size()&&rep>=(addedfirstRunNo->at(n_files)-FirstRunNo)) {
 					n_files++;
 				}
+				n_files=max(1, n_files); // n_files=0 if no added files, n_files=1 if one added file, n_files=2 if two added files (addedfirstRunNo->size()=2
 				auto filename = addedfilenames->at(n_files-1);
 
 				auto pos = filename.find_last_of(".MBin");

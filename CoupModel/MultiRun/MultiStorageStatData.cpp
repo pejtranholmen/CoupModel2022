@@ -147,7 +147,7 @@ bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
 
 bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 
-	string str;
+	string str, line;
 	bool good=m_EFile.IsGood();
 	vector<float> floats;
 	vector<int> ints;
@@ -203,11 +203,10 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 					m_AcceptedRuns.resize(numensembles);
 				}
 				for (size_t i = 0; i < numensembles; i++) {
-					m_EFile.ReadTextLine(str);
-					str=str.substr(str.find(":")+1);
+					m_EFile.ReadTextLine(line, str);
 					 m_AcceptedIdString[i] = str;
 					// num_accepted = stoi(str);
-					 m_EFile.ReadTextLine(str, num_accepted);
+					 m_EFile.ReadTextLine(line, num_accepted);
 					if (good) {
 						m_AcceptedRuns[i].resize(num_accepted);
 						if (num_accepted > 0) {

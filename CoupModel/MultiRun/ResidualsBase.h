@@ -31,6 +31,7 @@ public:
 	virtual ~ResidualsBase();
 	bool EnsembleReadWrite(bool reading, string EnsembleName, string NewEnsembleName="", size_t ensembleno=string::npos);
 	bool EnsembleReadWrite(bool reading, size_t ensembleno);
+	bool EnsembleReadWriteCheckFileOnly(size_t ensembleno);
 
 	bool ReadWrite_MeanEnsembleFile(bool reading, size_t ensembleno=string::npos);
 	bool ReadWrite_PriorStat();

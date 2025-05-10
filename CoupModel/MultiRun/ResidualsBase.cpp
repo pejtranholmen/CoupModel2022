@@ -62,6 +62,19 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, size_t ensembleno) {
 	 }
 	 return false;
 }
+bool ResidualsBase::EnsembleReadWriteCheckFileOnly(size_t ensembleno)
+{
+	auto filename = GetXStatFileName(ensembleno);
+	auto wfile = m_EnsembleResFile.ToWString(filename);
+	auto good = m_EnsembleResFile.OpenRead(wfile);
+	if (!good) {
+		return false;
+	}
+	else {
+		m_EnsembleResFile.Close();
+		return true;
+	}
+}
 bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string NewEnsembleName, size_t ensembleno) {
 	auto filename = GetXStatFileName(ensembleno);
 	auto wfile = m_EnsembleResFile.ToWString(filename);
@@ -470,18 +483,28 @@ bool ResidualsBase::ShiftEnsembleName(string oldname, string newname) {
 
 	return out;
 }
-bool ResidualsBase::EnableEstimatesMade(size_t enableno) {
-	if (enableno < m_Ensembles.size()) {
+bool ResidualsBase::EnableEstimatesMade(size_t ens_no) {
+	if (ens_no < m_Ensembles.size()) {
 		bool made = true;
 		for (size_t i = 0; i < m_Ensembles.size(); i++)
-			if (!m_Ensembles[enableno].EnsembleFileRead) made = false;
+		if (!m_Ensembles[ens_no].EnsembleFileRead) made = false;
 		return made;
 
 
 	}
-	else if (m_pNewMap->m_MStorage.m_AcceptedRuns.size() >= enableno) {
+	else if (m_pNewMap->m_MStorage.m_AcceptedRuns.size() >= ens_no) {
 		m_Ensembles.resize(m_pNewMap->m_MStorage.m_AcceptedRuns.size());
-		return false;
+		bool good{ false };
+		for(size_t i=0; i<m_Ensembles.size(); i++) {
+			good=EnsembleReadWriteCheckFileOnly(i);
+			if(good) {
+				m_Ensembles[i].valid = true;
+				m_Ensembles[i].EnsembleFileRead = true;
+			}
+			
+		}
+
+		return good;
 
 
 	}

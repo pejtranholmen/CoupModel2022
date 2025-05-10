@@ -419,7 +419,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						auto n=pSw->GetNumOptions();
 						for(size_t j=0;j<n;j++) {
 							auto str = pSw->GetOption(j);
-							if (str.size() == 0) exit;
+							if (str.size() == 0) break;
 							optionlist+=str;
 							optionlist+="\n";
 						}
@@ -5140,13 +5140,13 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 						if (!validMBinFile) {
 							if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() == 0) {
 								m_pSimDoc->m_MStorage.OpenFile(m_pSimDoc->m_DocFile2.m_Multi_MBin_File);
-								if (!m_pSimDoc->m_MStorage.EvaluateFile(true)) {
+								/*if (!m_pSimDoc->m_MStorage.EvaluateFile(true)) {
 
 									if (!m_pSimDoc->m_MStorage.EvaluateFile(false)) return;
 									if (!m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage()) return;
 
 								}
-								m_pSimDoc->m_MStorage.UpdateAcceptedRuns(true, true);
+								m_pSimDoc->m_MStorage.UpdateAcceptedRuns(true, true);*/
 						}
 							validMBinFile = true;
 						}
@@ -5156,13 +5156,13 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 						CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 						if (pRes != nullptr) {
 							if (!pRes->EnableEstimatesMade()) {
-								if (pRes->EnsembleReadWrite(true, string::npos)) {
+								/*if (pRes->EnsembleReadWrite(true, string::npos)) {
 									cell.SetBackColor(m_ColorClick);
 									cell.SetReadOnly(FALSE);
 								}
-								else {
+								else {*/
 									cell.SetReadOnly(FALSE);
-								}
+								//}
 							}
 							else {
 								if (pRes->m_MeanDefined) {

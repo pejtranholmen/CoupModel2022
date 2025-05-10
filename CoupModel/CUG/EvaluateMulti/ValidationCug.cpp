@@ -4655,7 +4655,7 @@ BOOL ValidationCug::DefineNewSubPeriod()
 						for (auto val : m_FilterCase) {
 							if (test == val) {
 								koll = true;
-								exit;
+								break;
 							}
 						}
 						if (!koll) m_FilterCase.push_back(test);

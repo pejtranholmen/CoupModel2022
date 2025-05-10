@@ -1185,50 +1185,56 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival_file, size_t 
 	CCoupModelApp* pApp;
 	pApp = (CCoupModelApp*)AfxGetApp();
 
-	string UserDirectory="";
-	UserDirectory=MFC_Util::GetProfileStringStd("UserDirectory", UserDirectory);
-	int numo=UserDirectory.size();
-	if(UserDirectory.rfind('\\')!=numo-1) 
-			UserDirectory+="\\";
-	string NewFolder=m_pSimDoc->GetCurrentSimFile();
-	int ipp=NewFolder.find('_');
-	int ipm=NewFolder.find("_Multi");
-	if(ipm>0) ipp=ipm;
-	UserDirectory+=NewFolder.substr(ipp);
-	UserDirectory+="\\";
+	string UserDirectory = "";
+	UserDirectory = MFC_Util::GetProfileStringStd("UserDirectory", UserDirectory);
+	int numo = UserDirectory.size();
+	if (UserDirectory.rfind('\\') != numo - 1)
+		UserDirectory += "\\";
+	string NewFolder = m_pSimDoc->GetCurrentSimFile();
+	int ipp = NewFolder.find('_');
+	int ipm = NewFolder.find("_Multi");
+	if (ipm > 0) ipp = ipm;
+	UserDirectory += NewFolder.substr(ipp);
+	UserDirectory += "\\";
 	CFileScanner ScanMeanProg(nullptr);
-//	ScanMeanProg.Create(IDD_PROGRESS,nullptr);
- //   ScanMeanProg.ShowWindow(SW_SHOW);
+	//	ScanMeanProg.Create(IDD_PROGRESS,nullptr);
+	 //   ScanMeanProg.ShowWindow(SW_SHOW);
 
-	if(item==5001||item==5003) {
-		m_OutAllMulti_Defined[ival_file]=true;
-		
-		if (m_pSimDoc->MR_Storage_Open()&&m_pSimDoc->MR_XBin_IsOpen(ival_file)) {
-			
-			CResiduals *pRes=m_pSimDoc->GetValidResidualPointer(ival_file);
-			if(!pRes->m_MeanDefined)
-				AfxBeginThread(UpdateAcceptedThreadProc2,pRes);
+	if (item == 5001 || item == 5003) {
+		m_OutAllMulti_Defined[ival_file] = true;
+
+		if (m_pSimDoc->MR_Storage_Open() && m_pSimDoc->MR_XBin_IsOpen(ival_file)) {
+
+			CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(ival_file);
+			if (!pRes->m_MeanDefined)
+				AfxBeginThread(UpdateAcceptedThreadProc2, pRes);
 			//if(pRes!=nullptr) pRes->UpdateStatistics(false,&ScanMeanProg);
 		}
 	}
-	else if(item==5002||item==5004) {
-		m_OutSelectedMulti_Defined[ival_file]=true;
-		if(m_pSimDoc->MR_Storage_Open()&&m_pSimDoc->MR_XBin_IsOpen(ival_file)) {
-			CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(ival_file);
-			if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
-				//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
-				//auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
-			//	pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
-			}
+	else if (item == 5002 || item == 5004) {
+		if (!m_OutSelectedMulti_Defined[ival_file]) {
+			if (m_pSimDoc->MR_Storage_Open() && m_pSimDoc->MR_XBin_IsOpen(ival_file)) {
+				CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(ival_file);
+				if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
+					//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
+					//auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+				//	pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
+				}
 
-			pRes->SetOneValidationVariableIndex(ival_documentIndex);
-			pRes->ToBeUpdated();
-			if(!pRes->m_MeanDefined&&!pRes->m_Calculating)
+				pRes->SetOneValidationVariableIndex(ival_documentIndex);
+				pRes->ToBeUpdated();
+				m_OutSelectedMulti_Defined[ival_file] = true;
+				if (!pRes->m_MeanDefined && !pRes->m_Calculating)
 				//CResiduals* pObject = (CResiduals*)pParam;
-			return pRes->SmartUpdateTimeSerieEnsembleStatistic(TRUE, nullptr);
-			//	AfxBeginThread(UpdateAcceptedThreadProc2,pRes);
-			//if(pRes!=nullptr) pRes->UpdateStatistics(true,&ScanMeanProg);
+					return pRes->SmartUpdateTimeSerieEnsembleStatistic(TRUE, nullptr);
+
+			}
+			else {
+				m_OutSelectedMulti_Defined[ival_file] = false;
+				return false;
+			}
 		}
+		else return true;
 	}
 	else if(item==1602) {
 
