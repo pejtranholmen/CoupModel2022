@@ -2349,13 +2349,13 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 								BB_P50[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 								BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
 								if (m_pUtil->m_ResidualPlot == 0&&Mean_Of_Repititions) {
-									AA[icurve][i + pg_control.YearStartIndex]= Mean_Of_Measured_Value[i]- Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MEAN_VALUE)][i]; 
+									AA[icurve][i + pg_control.YearStartIndex]= Mean_Of_Measured_Value[i]+ Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MEAN_VALUE)][i]; 
 									BB[i_band][i + pg_control.YearStartIndex] = AA[icurve][i + pg_control.YearStartIndex];
-									BB_MIN[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MIN_VALUE)][i];
-									BB_MAX[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MAX_VALUE)][i];
-									BB_P10[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P10_VALUE)][i];
-									BB_P90[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P90_VALUE)][i];
-									BB_P50[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] - Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P50_VALUE)][i];
+									BB_MIN[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] + Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MIN_VALUE)][i];
+									BB_MAX[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] + Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::MAX_VALUE)][i];
+									BB_P10[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] + Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P10_VALUE)][i];
+									BB_P90[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] + Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P90_VALUE)][i];
+									BB_P50[i_band][i + pg_control.YearStartIndex] = Mean_Of_Measured_Value[i] + Mean_Of_Mean_ResidualsValue[size_t(STAT_INDICATOR::P50_VALUE)][i];
 
 								}
 								else if (m_pUtil->m_ResidualPlot == 1&&Mean_Of_Repititions) {
