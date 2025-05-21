@@ -260,6 +260,11 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 			size_t num = ensemble_no;
 			m_EnsembleResFile.WriteTextLine("Ensemble No ",num);
 			ActRecL = m_MeanPost.mean[0].size();
+			if (ActRecL == 0) {
+
+				TRACE("Ensemble No = %d \n", num);
+
+			}
 			m_EnsembleResFile.WriteTextLine("Ensemble Num Records ",ActRecL);
 
 			size_t VarToWrite = m_NumVar * m_ScalingNumVarWithDim1;

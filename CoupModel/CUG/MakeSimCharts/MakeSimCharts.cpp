@@ -482,30 +482,24 @@ void MakeSimCharts::UpdatePlotStatusBar(int ichoice, BOOL update)
 
 	}
 
-
-
-
-	
 	string text2, text1;
 	if(m_newChart)
 		text1="Add to previous chart mode";
 	else
 		text1="New chart mode";
 	switch(m_pProp->m_ChartType) {
-		case 0:
-
+		case CHART_TYPES::SCATTER:
 			text2="Scatter plot mode";
 			break;
-		case 1:
+		case CHART_TYPES::TIME_SERIE:
 			text2="Time serie plot mode";
 			break;
-		case 2:
+		case CHART_TYPES::FREQUENCE:
 			text2="Distribution Frecquency mode";
 			break;
-		case 3:
+		case CHART_TYPES::CUM_FREQUENCE:
 			text2="Acc Frequency  mode";
 			break;
-
 	}
 	m_pFrame->UpdatePaneText(1, text1);
 	//m_pFrame->UpdatePaneText(6, text2);
@@ -650,6 +644,14 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 				pChart->MakeTextPlot("No Variables selected");
 				return false;
 		}
+#ifndef COUPSTD
+		MFC_Util mfc_util;
+		mfc_util.SetPaneMessage("Preparation for creating of Charts started");
+		
+#endif
+
+
+
 
 		auto OK=MakeMultiPlot(sheet, col, row);
 		m_pProp->SetFirstIndepVarType(vartype(SaveIndepFirst));

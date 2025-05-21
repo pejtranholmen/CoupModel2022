@@ -230,12 +230,10 @@ bool CWinAPIFileHandler::ReadTextLine(std::string& line,  std::vector<float>& fl
  
                 floats.resize(tokens.size());
                 for (size_t i = 0; i < tokens.size(); ++i) {
-                    try {
+                    if(tokens[i].size() > 0) 
                         floats[i] = std::stof(tokens[i]);
-                    }
-                    catch (const std::invalid_argument&) {
-                        floats[i] = -1.1E38f;
-                    }
+                    else
+                          floats[i] = -1.1E38f;
                 }
 
         }
@@ -311,12 +309,12 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
   
                 floats.resize(tokens.size());
                 for(size_t i = 0; i < tokens.size(); ++i) {
-					try {
+					if(tokens[i].size()>0) {
 						floats[i] = std::stof(tokens[i]);
 					}
-					catch (const std::invalid_argument&) {
+                    else
 						floats[i]=-1.1E38f;
-					}
+					
 				}
             }
             else {
@@ -324,12 +322,11 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
  
                 ints.resize(tokens.size());
                 for (size_t i = 0; i < tokens.size(); ++i) {
-                    try {
-                        ints[i] = std::stoi(tokens[i]);
-                    }
-                    catch (const std::invalid_argument&) {
-                        ints[i] = -99999;
-                    }
+                    if (tokens[i].size() > 0)
+							ints[i] = std::stoi(tokens[i]);
+                        else    
+							ints[i] = -99999;
+
                 }
             }
         }
@@ -415,12 +412,11 @@ bool CWinAPIFileHandler::ReadTextLine(std::string& line, size_t& aftercol, std::
 
                 floats.resize(tokens.size());
                 for (size_t i = 0; i < tokens.size(); ++i) {
-                    try {
+                    if(tokens[i].size() > 0) 
                         floats[i] = std::stof(tokens[i]);
-                    }
-                    catch (const std::invalid_argument&) {
+                    else 
                         floats[i] = -1.1E38f;
-                    }
+
                 }
             }
             else {
@@ -428,12 +424,11 @@ bool CWinAPIFileHandler::ReadTextLine(std::string& line, size_t& aftercol, std::
 
                 sizets.resize(tokens.size());
                 for (size_t i = 0; i < tokens.size(); ++i) {
-                    try {
+                    if(tokens[i].size()>0) 
                         sizets[i] = std::stoul(tokens[i]);
-                    }
-                    catch (const std::invalid_argument&) {
+                    else 
                         sizets[i] = std::string::npos;
-                    }
+              
                 }
             }
         }

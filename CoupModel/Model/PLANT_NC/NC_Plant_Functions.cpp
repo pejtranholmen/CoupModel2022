@@ -177,9 +177,15 @@ bool NC_Plant_Functions::Def()
 	pSw = new Sw(&CanopyCO2_Storage, PLANT, GENERAL, NOFPROC, PHOTOSYNTHESIS, NORMAL);
 	Define(pSw, "CanopyCO2_Storage", 0, "Static|Dynamic", "Nitrogen and Carbon > 0|Growth >3");  //Hidden Switch
 
+	pSw = new Sw(&AccLitterFall_ResetOptions, PLANT,GENERAL, NOFPROC, NOBPROC, NORMAL);
+	Define(pSw, "LitterFallReset", 0, "start|PG - FileSpecified", "Nitrogen and Carbon > 0 | Growth >2");
+
 	F* pF;
 	pF = new F(&m_PG_Zadok, PLANT, WATER, FYS_SHAPE, PHENOLOGY, NORMAL);
 	Define(pF, "Zadok Forcing", "ZadokInput.bin", "ZadokFocingFromFileInput >= 1");
+
+	pF = new F(&m_PG_LitterFallResetDates, PLANT, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	Define(pF, "LitterFall Reset Dates", "LitterFallResetDates.bin", "Nitrogen and Carbon > 0| Growth >2 |LitterFallReset > 0");
 
 
 	vector<double> initv;	initv.assign(p_Plant->NumPlants, 0.);
@@ -1270,7 +1276,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 	mTab_GSI.push_back(pP);
 	
 	pP = new P(&GSI_PostHarvest, pNumPlants, PLANT, CARBON, TRANSPORT, PHENOLOGY, NORMAL); initv.assign(p_Plant->NumPlants, 1.);
-	Define(pP, pNumPlants, "GSI Post Harvest", initv, "#", "Nitrogen and Carbon >= 1|Growth > 1|Reset GSI at Harvest>0", 0., 4.);
+	Define(pP, pNumPlants, "GSI Post Harvest", initv, "#", "Nitrogen and Carbon >= 1|Growth > 1|Reset GSI at Harvest>0", -1., 4.);
 	mTab_GSI.push_back(pP);
 	pTab = new Tab(&mTab_GSI, PLANT, CARBON, TRANSPORT, PHENOLOGY, NORMAL);
 	Define(pTab, "Plant Behaviour", "Min GSI|Max GSI|Initial GSI|Max Leaf Lifetime|Max Plant Lifetime|Shoot Coef|Mobile Allo Coef|GSI Post Harvest", "Nitrogen and Carbon > 0|Growth > 1");//HH

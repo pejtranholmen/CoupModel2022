@@ -3001,14 +3001,20 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 				MDF[i].resize(acceptedruns->size()) ;
 		}
 		// Summation of all values
+		size_t start;
+		if (addedfilenames->size() > 0) {
+			string firstfile = addedfilenames->at(0);
+			auto pos = firstfile.find_last_of(".MBin");
+			string number = firstfile.substr(pos - 10, 6);
 
-		string firstfile = addedfilenames->at(0);
-		auto pos = firstfile.find_last_of(".MBin");
-		string number = firstfile.substr(pos - 10, 6);
+			start = addedfirstRunNo->size() - 1;
+			FirstRunNo = atoi(number.c_str()) - pg.Shape.NumRepetitions;
+		}
+		else {
+			start = 0;
+		}
 
-		size_t start= addedfirstRunNo->size()-1;
-
-		FirstRunNo = atoi(number.c_str()) - pg.Shape.NumRepetitions;
+		
 		if(addedfirstRunNo->size()>0) TotalNumberOfRuns+= pg.Shape.NumRepetitions;
 		while (addedfirstRunNo != nullptr && start> 0) {
 			TotalNumberOfRuns+=addedfirstRunNo->at(start)- addedfirstRunNo->at(start-1);
@@ -3029,7 +3035,7 @@ bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t
 
 
 			}
-			else {
+			else if(addedfirstRunNo->size()>0) {
 				while(n_files<addedfirstRunNo->size()&&rep>=(addedfirstRunNo->at(n_files)-FirstRunNo)) {
 					n_files++;
 				}

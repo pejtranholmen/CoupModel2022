@@ -595,14 +595,17 @@ bool CResiduals::ReadHeader() {
 	size_t RecL, NumRec, Numv;
 
 	if (m_FileSize == -1) {
-		m_ResidualFile.read((char*)&NumRec, 4);
+		return false;
+		//m_ResidualFile.read((char*)&NumRec, 4);
 	}
 	bool check=true;
 
 	m_ResidualFile.seekg(0, ios::end);
 
 	m_FileSize=m_ResidualFile.tellg();//koll.seekpos;
-	if (m_FileSize == 0) return false;
+	if (m_FileSize == 0 || m_FileSize == -1) {
+		return false;
+	}
 
 	m_ResidualFile.seekg(0, ios::beg);
 
@@ -682,19 +685,21 @@ vector<float> CResiduals::GetResidualVector(size_t irun, size_t iv)
 		}
 		if(newpos<=m_FileSize) {
 			m_ResidualFile.seekg(newpos,ios::beg);
+			if(v.size()!= m_RecL)	v.resize(m_RecL);
 			m_ResidualFile.read((char*)&v[0],m_RecL*4);
 
 		}
 		else {
 			ReOpenFile(true);
-			v.resize(0);
+			v.resize(m_RecL);
 			return v;
 		}
 
 		if(!m_ResidualFile.good()) {
 			ReOpenFile(true);
+			v.resize(m_RecL);
 			m_ResidualFile.seekg(newpos,ios::beg);
-			v.resize(0);
+
 		};
 		
 		m_PrevVar=iv;

@@ -11,6 +11,7 @@ class NC_SoilManagement_Functions : public NC_GasFlux
 
    size_t SurfaceCultivation, Ploughing;
    double SurfaceCultDay, SurfaceCultDepth, PloughingDepth, PloughingDay;
+   size_t PloughingYear;
 
    bool	Do_Ploughing;
    vector<double> DistFrac;

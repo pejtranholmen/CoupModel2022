@@ -134,7 +134,11 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 	case DATA_TYPES::SIM_T:
 	case DATA_TYPES::SIM_G:
 	case DATA_TYPES::SIM_D:
-		m_Label.st = m_pPG_Active->GetVarId(PGindex, m_pSimDoc->m_PlotStorage.GetPGRepitNo(Index_In_PlotArray)) + m_pPG_Active->GetVarPos(PGindex);
+		if (p_info.EnsembleType != ENSEMBLE_TYPE::NO) {
+			m_Label.st = "Ensemble "+ FUtil::STD_ItoAscii(p_info.EnsembleNo+1);
+		}
+		else 
+			m_Label.st = m_pPG_Active->GetVarId(PGindex, m_pSimDoc->m_PlotStorage.GetPGRepitNo(Index_In_PlotArray)) + m_pPG_Active->GetVarPos(PGindex);
 		FUtil::trim(m_Label.st);
 
 		m_Label.test = m_pPG_Active->GetVarName(PGindex);
@@ -145,9 +149,9 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 				if(m_Label.st.size()==0) m_Label.st += FUtil::STD_ItoAscii(m_pSimDoc->m_PlotStorage.GetPGRepitNo(Index_In_PlotArray) + 1) + "(" + FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
 			}
 			else if (SelBand || p_info.EnsembleType == ENSEMBLE_TYPE::ACCEPTED)
-				m_Label.st += "Mean of Accepted " + FUtil::STD_ItoAscii(int(m_pSimDoc->m_MStorage.GetNumAccepted())) + "(" + FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
+				m_Label.st += " Mean of Accepted " + FUtil::STD_ItoAscii(int(m_pSimDoc->m_MStorage.GetNumAccepted())) + "(" + FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
 			else
-				m_Label.st += "Mean of All (" +  FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
+				m_Label.st += " Mean of All (" +  FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
 			FUtil::trim(m_Label.st);
 		}
 		break;

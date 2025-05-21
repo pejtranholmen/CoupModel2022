@@ -167,7 +167,7 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			m_AddedFiles.resize(0);
 			m_AddedNumRuns.resize(0);
 			m_AddedFirstRunNo.resize(0);
-			if (ifiles > 0) m_EFile.ReadTextLine(str);
+			if (ifiles > 0) m_EFile.ReadLineBuffer(str);
 			size_t num, numensembles, num_accepted;
 			for (unsigned long i = 0; i < ifiles; i++) {
 				m_EFile.ReadTextLine( str, num, floats, ints); 

@@ -80,10 +80,11 @@ size_t InitialPlantConditions, Grazing, GrazingClosure, InitialPlantPConditions;
 size_t TerminatingHarvest, ResetGSI_AtHarvest;
 size_t Sowing_Switch,Emergence_Switch, StartSeasonTableExist;
 size_t Seedling_Management;
+size_t AccLitterFall_ResetOptions;
 
 size_t ZadokScale, ZadokForcingFromFileInput;
 size_t CanopyCO2_Storage;
-CPG m_PG_Zadok;
+CPG m_PG_Zadok, m_PG_LitterFallResetDates;
 
 // State variables;
 

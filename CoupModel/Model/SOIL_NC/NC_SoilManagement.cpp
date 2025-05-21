@@ -12,6 +12,7 @@ void NC_SoilManagement::setNC_SoilManagement(ModelInfo* pInfo, ModelMap* pMap, S
 	m_pModelInfo = pInfo; m_pModelMap = pMap; m_pModelStructure = pStruc;
 	pT_Step = &m_pModelInfo->T_Step;
 	T_Step = *pT_Step;
+	PloughingYear = 0;
 }
 NC_SoilManagement::NC_SoilManagement(void)
 {
@@ -43,6 +44,7 @@ bool NC_SoilManagement::Ini()	{
 			if (m_pModelInfo->m_ActMin < IPloughingDates[i]) IPloughingCount = i;
 
 		PloughingDay = PGUtil::DayNumFunction(IPloughingDates[IPloughingCount]);
+		PloughingYear = PGUtil::YearNumFunction(IPloughingDates[IPloughingCount]);
 		m_PG_Deep_Ploughing.CloseFile();
 	}
 	if (SurfaceCultivation_Sw(SurfaceCultivation) == SurfaceCultivation_Sw::PG_File_Specified) {
@@ -76,6 +78,8 @@ bool NC_SoilManagement::IniFunctors() {
 			if (m_pModelInfo->m_ActMin < IPloughingDates[i]) IPloughingCount = i;
 
 		PloughingDay = PGUtil::DayNumFunction(IPloughingDates[IPloughingCount]);
+		PloughingYear = PGUtil::YearNumFunction(IPloughingDates[IPloughingCount]);
+		
 		m_PG_Deep_Ploughing.CloseFile();
 	}
 
@@ -119,6 +123,8 @@ Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 			if (m_pModelInfo->m_ActMin >= IPloughingDates[IPloughingCount]-3000) {
 				Do_Ploughing = true;
 				PloughingDay = int(PGUtil::DayNumFunction(IPloughingDates[IPloughingCount]));
+				PloughingYear = PGUtil::YearNumFunction(IPloughingDates[IPloughingCount]);
+
 				IPloughingCount++;
 				
 			}

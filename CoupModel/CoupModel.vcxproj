@@ -102,10 +102,11 @@
       <PreprocessorDefinitions>WIN32;COUP2013;MS_CODE;HAVE_EXPM1;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnablePREfast>false</EnablePREfast>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>chartDir50.lib;NetCdf.lib;HtmlHelp.lib;xlnt.lib;%(AdditionalDependencies)</AdditionalDependencies>

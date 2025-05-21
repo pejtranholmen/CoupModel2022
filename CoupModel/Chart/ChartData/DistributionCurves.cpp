@@ -111,6 +111,9 @@ void DistributionCurves::Frequence_EstimateDataDist(size_t icurve, size_t TotNum
 				m_pProp->viewPortDataSeries[icurve][j*2]+=m_pProp->viewPortDataSeries[icurve][(j-1)*2];
 				m_pProp->viewPortDataSeries[icurve][j*2+1]=m_pProp->viewPortDataSeries[icurve][j*2];
 			}
+			if(m_pProp->viewPortDataSeries[icurve][(numsteps - 1) * 2 + 1]==0){
+				m_pProp->viewPortDataSeries[icurve][(numsteps - 1) * 2 + 1]=1;
+			}
 			for(int j=0;j<numsteps*2;j++) 
 				m_pProp->viewPortDataSeries[icurve][j]=m_pProp->viewPortDataSeries[icurve][j]/m_pProp->viewPortDataSeries[icurve][(numsteps-1)*2+1];				
 

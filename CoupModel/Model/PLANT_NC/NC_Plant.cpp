@@ -1642,8 +1642,9 @@ for (size_t jj = 1; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 };
 auto Growth_Stage = [&](size_t index) {
 	double out;
-
+	double diff;
 	out = GrowthStageIndex[index]; // Keep previous value as default
+	diff = out;
 	if (GrowthStageIndex[index]<0 && Max_GSI[index]>-1.) {  //// -1 Seed not in soil
 
 		if (m_pModelInfo->JYearNum > int(m_StartYears[m_CountStartYear]) && m_StartYears.size() > m_CountStartYear + 1) {
@@ -1690,15 +1691,17 @@ auto Growth_Stage = [&](size_t index) {
 		else if (Sowing_Switch_Sw(Sowing_Switch) == Sowing_Switch_Sw::PG_File_specified) {
 			if(ISowingCount<ISowingDates.size())
 			if (m_pModelInfo->m_ActMin >= ISowingDates[ISowingCount]) {
+				//if (index==0) {
 				m_LatestSowingDay = m_pModelInfo->JDayNum;
-				auto day = PGUtil::DayNumFunction(ISowingDates[ISowingCount]);
-				auto day2 = PGUtil::DayNumFunction(m_pModelInfo->m_ActMin);
-				auto year=PGUtil::YearFunction(m_pModelInfo->JDayNum);
-				if (GrowingStage.size() == index + 1) ISowingCount++;
-				GrowingSum[index] = 0.;
-				Emergence_Done[index] = false;
-				Grain_Develop_Done[index] = false;
-				out = 0.;
+					auto day = PGUtil::DayNumFunction(ISowingDates[ISowingCount]);
+					auto day2 = PGUtil::DayNumFunction(m_pModelInfo->m_ActMin);
+					auto year = PGUtil::YearFunction(m_pModelInfo->JDayNum);
+					if(index==GrowthStageIndex.size()-1||GrowthStageIndex[GrowthStageIndex.size()-1]>=0) ISowingCount++;
+					GrowingSum[index] = 0.;
+					Emergence_Done[index] = false;
+					Grain_Develop_Done[index] = false;
+					out = 0.;
+				//}
 			}
 		}
 	}
@@ -1761,7 +1764,7 @@ auto Growth_Stage = [&](size_t index) {
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
-		else if ((Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Temperature_Sum|| Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on )&&DormingStartDayNum[index]<1.) {
+		else if (Emergence_Switch_Sw(Emergence_Switch) == Emergence_Switch_Sw::Temperature_Sum|| (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on&&DormingTempSum[index]<1.)) {
 			out = max(0., Min_GSI[index]) + f_EmergenceWithMoistControl_Reset(false,  index, NDrivTAir, NDrivTheta[0], T_Step);
 			if (out >= 1.) {
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
@@ -1784,12 +1787,12 @@ auto Growth_Stage = [&](size_t index) {
 		     Emergence_Done[index] = false;
 	}
 	else if (GrowthStageIndex[index]<2.&&Max_GSI[index]>1&&Emergence_Done[index]) { //
-		if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
-			out = Min_GSI[index];
+		/*if (Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::on && DormingStartDayNum[index] > 1.) {
+			out = 0.; //Changed from Min_GSI[index] to fixed value of 0.;
 			SpringDevDayNum[index] = 0.;
 			GrowingStage[index] = 0.;
-		}
-		else if (!Grain_Develop_Done[index]) {
+		}*/
+		if (!Grain_Develop_Done[index]) {
 			out = 1. + f_GrainStartWithReset(false, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			if (out >= 2 && Max_GSI[index] > 2) {
 				Emergence_Done[index] = false;
@@ -1830,6 +1833,13 @@ auto Growth_Stage = [&](size_t index) {
 				f_Harvest = PlantTempSum(T_Thres_Ripening, T_Sum_Ripening);
 			}
 		}
+	}
+	if (out < 0. && diff >= 0) {
+		
+		auto koll = 1;
+	}
+	else if (diff < 0) {
+		auto koll2= 1;	
 	}
 	return out;
 };
@@ -2432,9 +2442,13 @@ void NC_Plant::Cleaning_Harvest_Events() {
 		}
 
 		if (m_pModelInfo->JDayNum == int(pNCSoil->PloughingDay)) {
-			MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
-			OK = KillBelowGroundPlant(i_plant);
-			HarvestPloughingMade = true;
+
+
+			if (pNCSoil->PloughingYear == 0 || pNCSoil->PloughingYear == PGUtil::YearNumFunction(m_pModelInfo->m_ActMin)) {
+				MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
+				OK = KillBelowGroundPlant(i_plant);
+				HarvestPloughingMade = true;
+			}
 
 		}
 

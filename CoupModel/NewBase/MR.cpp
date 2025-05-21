@@ -1567,6 +1567,7 @@ bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
 		if (pRes != nullptr && !pRes->m_MeanDefined) {
 			pRes->SetOneValidationVariableIndex(ValFileIndex);
 			pRes->ToBeUpdated();
+			pRes->ReOpenFile(true);	
 			pRes->SmartUpdateTimeSerieEnsembleStatistic(TRUE, nullptr);
 		}
 
@@ -1924,7 +1925,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 				else if (cumulated == 3) resetindex = ((PGCalc*)pPG)->GetDayStartIndex();
 				size_t first = 0;
 				double AccSimOrg = 0, AccMeasOrg = 0;
-				meas_v = pPG->GetVarVector(ind + 1);
+				//meas_v = pPG->GetVarVector(ind + 1);
 				size_t Valid_Records = UpdateMeasuredToValidPointsOnly_ReturnNewRec(sim, obs);
 
 				/*if (cycle.first != string::npos) {
@@ -3197,19 +3198,33 @@ vector<float> MR::GetResidualVectorForAllRuns(size_t RunNo, size_t VarNo, size_t
 		int ifile = MR_GetAddedFiles(RunNo);
 
 		auto pRes = (CResiduals*)GetResidualPointer(FileNo,ifile);
+
 		
-		if (pRes == nullptr&&m_pSimDoc!=nullptr) {
-			pRes = (CResiduals*)m_pSimDoc->GetValidResidualPointer(FileNo, ifile);
-			m_pSimDoc->MR_XBin_IsOpen(FileNo, ifile);
+		if (pRes == nullptr) {
+			pRes = (CResiduals*)GetValidResidualPointer(FileNo, ifile);
+			bool good=MR_XBin_IsOpen(FileNo, ifile);
 		}
-		if (ifile != 0 && m_pSimDoc != nullptr) {
-			irun_int = m_pSimDoc->MR_GetInternalRunNo(RunNo);
+		else {
+			bool good = MR_XBin_IsOpen(FileNo, ifile);
+			if (!good) {
+
+				return All_residuals;
+			}
+		
+		}
+		if (ifile != 0 ) {
+			irun_int = MR_GetInternalRunNo(RunNo);
 		}
 		else {
 			irun_int = RunNo;
 		}
-		auto res_v = pRes->GetResidualVector(irun_int, ResVarNo);
-		All_residuals.insert(All_residuals.begin(), res_v.begin()+section*ActPoints, res_v.begin()+(section+1)*ActPoints);
+		if (pRes != nullptr) {
+			auto res_v = pRes->GetResidualVector(irun_int, ResVarNo);
+			if(res_v.size() == 0) {
+				return All_residuals;
+			}
+			All_residuals.insert(All_residuals.begin(), res_v.begin() + section * ActPoints, res_v.begin() + (section + 1) * ActPoints);
+		}
 
 
 return All_residuals;

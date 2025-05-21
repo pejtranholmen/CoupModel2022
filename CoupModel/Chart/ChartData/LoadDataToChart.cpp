@@ -1484,7 +1484,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		//if (p_info.EnsembleNo = 0) {
 
 			//pDocAct->m_MStorage.m_ActualEnsemble = p_info.EnsembleNo;
-		//	pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
+		pDocAct->m_MStorage.SetActualPerformanceVector_TSV_Variables(pDocAct->m_MStorage.GetActualTransformation(p_info.EnsembleNo));
 		// Changed to include all values independent of actual ensemble  
 		//}
 //else 
@@ -2224,7 +2224,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 									farray = ValidMeanValue[i_stat][irec];
 									StatUtil::SortArray(&farray[0], farray.size());
 									MeanStat(&farray[0], farray.size(), &ncheck, &stat);
-									Mean_Of_Mean_ResidualsValue[i_stat][irec] = stat.Mean;
+									Mean_Of_Mean_ResidualsValue[i_stat][irec] = -stat.Mean;
 								}
 
 							}
