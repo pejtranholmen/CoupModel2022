@@ -47,21 +47,21 @@ public:
 	
 	};
 	void trim_xml(string& str);
-	void SetCommandLineMode(bool value) {m_CommandInfo=value;};
-	bool GetCommandLineMode() {return m_CommandInfo;};
-	bool IsRunning() {return m_RunInfo.Running;};
-	void SetRunning(bool value) {m_RunInfo.Running=value;};
-	bool IsMultiRunning() {	return m_RunInfo.MultiRunning;	};
-	void SetMultiRunning(bool value) {	m_RunInfo.MultiRunning=value;};
-	bool IsStartMode() {return m_RunInfo.StartMode;};
-	void SetStartMode(bool value) {m_RunInfo.StartMode=value;};
-	bool IsReady() {return m_RunInfo.ReadyToSimulate;};
-	void SetReady(bool value) {m_RunInfo.ReadyToSimulate=value;};
-	void SetRunDoc(Sim* pSim) {m_pRunDoc=pSim;};
-	int GetViewStatus() {return m_RunInfo.ViewStatus;};
-	void SetViewStatus(int value) {m_RunInfo.ViewStatus=value;};
-	bool GetNoSingleRun() {return m_RunInfo.NoSingleRunSimFile;};
-	void SetNoSingleRun(bool value) {m_RunInfo.NoSingleRunSimFile=value;};
+	void SetCommandLineMode(bool value)  noexcept {m_CommandInfo=value;};
+	bool GetCommandLineMode()  noexcept {return m_CommandInfo;};
+	bool IsRunning()  noexcept {return m_RunInfo.Running;};
+	void SetRunning(bool value)  noexcept {m_RunInfo.Running=value;};
+	bool IsMultiRunning()  noexcept {	return m_RunInfo.MultiRunning;	};
+	void SetMultiRunning(bool value)  noexcept {	m_RunInfo.MultiRunning=value;};
+	bool IsStartMode()  noexcept {return m_RunInfo.StartMode;};
+	void SetStartMode(bool value)  noexcept {m_RunInfo.StartMode=value;};
+	bool IsReady()  noexcept {return m_RunInfo.ReadyToSimulate;};
+	void SetReady(bool value)  noexcept {m_RunInfo.ReadyToSimulate=value;};
+	void SetRunDoc(Sim* pSim)  noexcept {m_pRunDoc=pSim;};
+	int GetViewStatus()  noexcept {return m_RunInfo.ViewStatus;};
+	void SetViewStatus(int value)  noexcept {m_RunInfo.ViewStatus=value;};
+	bool GetNoSingleRun()  noexcept {return m_RunInfo.NoSingleRunSimFile;};
+	void SetNoSingleRun(bool value) noexcept {m_RunInfo.NoSingleRunSimFile=value;};
 	string getOrigName(string txt) {
 		auto it = changed_names.find(txt);
 		if (it != changed_names.end())
@@ -90,7 +90,7 @@ public:
 		}
 		return out;
 	}
-	size_t GetNumberOfElements() { return m_ElementSorted.size(); };
+	size_t GetNumberOfElements()  noexcept { return m_ElementSorted.size(); };
 	std::string GetStringOfElement(elements elem);
 	elements GetElementFromString(std::string str);
 	fysprocess GetPhysProcFromString(std::string str);
@@ -98,7 +98,7 @@ public:
 
 
 
-	Sim *GetRunDoc() {return m_pRunDoc;};
+	Sim *GetRunDoc()  noexcept {return m_pRunDoc;};
 	std::vector<SimB*> SortSimB_ByGroup(vector<SimB*> v);
 	std::vector<SimB*> SortSimB_ByCategory(vector<SimB*> v);
 	std::map<std::string, std::string> changed_names;

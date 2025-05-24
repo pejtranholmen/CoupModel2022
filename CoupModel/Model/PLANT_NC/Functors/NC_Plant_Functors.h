@@ -44,6 +44,7 @@ enum class ZadokScale_Sw { 	off, on, withOutPut2File, withOutPut3File};
 enum class Seedling_Management_Sw {	off, After_Final_Harvest, Specific_Years};
 enum class CanopyCO2_Storage_Sw {Static, Dynamic};
 enum class ZadokForcingFromFileInput_Sw{off, on};
+enum class AccLitterFall_ResetOptions_Sw{off, on};
 
 
 #include "./BiomassDescription/BioMass.h"

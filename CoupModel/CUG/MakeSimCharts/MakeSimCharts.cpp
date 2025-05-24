@@ -966,7 +966,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 
 						for(int ii=0;ii<m_pSimDoc->m_SelectValTime.size();ii++) {
 
-							if (col == 4) { // To check if Mean value is calculated
+						/*	if (col == 4) { // To check if Mean value is calculated
 								GetCell(4, row, &cell);
 								if (cell.GetBool() == false) {
 									cell.SetBool(FALSE);
@@ -981,7 +981,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 										OnSheetSetup(6);
 										return;			// Return without plot if not estimated					
 									}
-							}
+							}*/
 							vector<size_t> EnsemblesToPlot;
 							
 							

@@ -14,12 +14,12 @@ class OutSingle :
 		//string GetUnit() {return _unit;};
 		//void SetUnit(string str) {_unit=str;};
 		void SetStoreFlag(int value) {_out.StoreFlag=value;};
-		void SetMultiStoreFlag(bool value) {_multi_storeflag=value;};
-		void SetAcceptMeanFlag(bool value) {_AcceptMeanFlag=value;};
+		void SetMultiStoreFlag(bool value)  noexcept {_multi_storeflag=value;};
+		void SetAcceptMeanFlag(bool value)   noexcept {_AcceptMeanFlag=value;};
 		void SetValue(double value) {*_ptarget=value;};
 		
 		bool IsFlagSet() const {return _storeflag;};
-		double GetValue() { return *_ptarget;};
+		double GetValue()  noexcept { return *_ptarget;};
 		size_t GetNumberOfSelectedFlags(bool multi=false) {if(_out.StoreFlag>0) return 1; return 0;};
 		OUTPUT GetSumList() {return _out;};
 
@@ -41,18 +41,18 @@ class OutSingle :
 
 		float   GetInitial() const {return _out.Initial;};
 		float   GetFinal() const {return _out.Final;};
-		void   SetInitial(double value)  { _out.Initial=value; };
-		void   SetFinal(double value) {  _out.Final=value; };
+		void   SetInitial(double value) noexcept { _out.Initial= float(value); };
+		void   SetFinal(double value) {  _out.Final=float(value); };
 		float   GetMin() const{return _out.Min;};
 		float   GetMax() const{return _out.Max;};
 		float   GetMean() const{return _out.Mean;};
 		float   GetAccumulated() const{return _out.Accumulated;};
-		size_t	GetValidFlagIndex() const{ return _out.ValidFlagIndex;};
+		size_t	GetValidFlagIndex() const  noexcept { return _out.ValidFlagIndex;};
 		size_t	GetStoreFlag() const{ return _out.StoreFlag;};
 		bool    GetMultiStoreFlag() {return _multi_storeflag;};
 		bool    GetAcceptMeanFlag() {return _AcceptMeanFlag;};
 
-		bool	SetAnnimateChart(int value, int seq) { m_Annimate.ichart=value; m_Annimate.sequence=seq;return true;};
+		bool	SetAnnimateChart(int value, int seq)  noexcept { m_Annimate.ichart=value; m_Annimate.sequence=seq;return true;};
 		int		GetAnnimateChart() {return m_Annimate.ichart;};
 		int		GetAnnimateSequence() {return m_Annimate.sequence;};
 

@@ -20,7 +20,7 @@ public:
 	void SetCurrentName_SimNo(int simno);
 	void SetCurrentFileName(string);
 
-	bool OnCommandLine(string str) {return false;};
+	bool OnCommandLine(string str) noexcept {return false;};
 
 	bool OnSimStart();
 	bool FixSumIndex();

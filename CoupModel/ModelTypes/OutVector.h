@@ -15,7 +15,7 @@ class OutVector :
 		//string GetUnit() {return _unit;};
 		//void SetUnit(string str) {_unit=str;};
 	//	void SetStoreFlag(int value) { for(auto i=_storeflag.begin(); i!=_storeflag.end(); *i=value, i++);};
-		void SetMultiStoreFlag(bool value) { for(auto i=_multi_storeflag.begin(); i!=_multi_storeflag.end(); *i=value, i++);};
+		void SetMultiStoreFlag(bool value)  noexcept { for(auto i=_multi_storeflag.begin(); i!=_multi_storeflag.end(); *i=value, i++);};
 		int GetStoreFlag(size_t i) const;// {if(i<SumList.size.size()) return SumList[i].StoreFlag;else return 0; };
 		OUTPUT GetSumList(size_t index) const {if(index<SumList.size()) return SumList[index]; return miss;};
 		bool SetFlags(string flagString, int value);
@@ -24,8 +24,8 @@ class OutVector :
 		void SetValue(vector<double> value) { *_ptarget=value;};
 		void SetStoreFlag(size_t i, int value) { if(SumList.size()>i) SumList[i].StoreFlag=value;};
 		void SetAllStoreFlags(int value) {for(size_t i=0; i<SumList.size();i++) SumList[i].StoreFlag=value;}; 
-		void SetMultiStoreFlag(size_t i, bool value) { if(_multi_storeflag.size()>i) _multi_storeflag[i]=value;};
-		void SetMeanAcceptFlag(size_t i, bool value) { if(_AcceptMeanFlag.size()>i) _AcceptMeanFlag[i]=value;};
+		void SetMultiStoreFlag(size_t i, bool value)  noexcept { if(_multi_storeflag.size()>i) _multi_storeflag[i]=value;};
+		void SetMeanAcceptFlag(size_t i, bool value)  noexcept { if(_AcceptMeanFlag.size()>i) _AcceptMeanFlag[i]=value;};
 		
 		
 		bool AreAllFlagsSet();
@@ -34,7 +34,7 @@ class OutVector :
 		bool IsFlagsSet(bool multi=false);
 
 		void SetValue(size_t i, double value) {_ptarget->at(i)=value;};
-		double GetValue(size_t index) { if(index<_ptarget->size()) return _ptarget->at(index); else if(_ptarget->size()==1) return _ptarget->at(0);else return MISSING; };
+		double GetValue(size_t index) noexcept { if(index<_ptarget->size()) return _ptarget->at(index); else if(_ptarget->size()==1) return _ptarget->at(0);else return MISSING; };
 		size_t GetNumVector() {return _ptarget->size();};
 
 		bool    AddSumVar(size_t, float, float, float, float, float, float, int, int, int StoreFlag=0);
@@ -53,7 +53,7 @@ class OutVector :
    		void    CleanSumVarList();
 		size_t		GetLocalIndex(size_t) const;
 		size_t    GetSelectedLocalIndex(size_t, bool multi=false) const;
-		size_t     GetValidFlagIndex(size_t) const;
+		size_t     GetValidFlagIndex(size_t) const  noexcept;
 		bool    SetValidFlagIndex(size_t, size_t);
 
 
@@ -67,7 +67,7 @@ class OutVector :
 		float   GetAccumulated(size_t) const;
 		NE*		GetNEPointer() { return pNE; };
 
-		bool	SetAnnimateChart(size_t index, int value, int seq) {if(index>=m_AnnimateVector.size()) return false;m_AnnimateVector[index].ichart=value; m_AnnimateVector[index].sequence=seq;return true;};
+		bool	SetAnnimateChart(size_t index, int value, int seq)  noexcept {if(index>=m_AnnimateVector.size()) return false;m_AnnimateVector[index].ichart=value; m_AnnimateVector[index].sequence=seq;return true;};
 		int		GetAnnimateChart(size_t index) {if(index>=m_AnnimateVector.size()) return -1;return m_AnnimateVector[index].ichart;};
 		int		GetAnnimateSequence(size_t index) {if(index>=m_AnnimateVector.size()) return -1;return m_AnnimateVector[index].sequence;};
 		bool	GetAcceptMeanFlag(size_t index) { if (index < _AcceptMeanFlag.size()) return _AcceptMeanFlag[index]; return 0; };

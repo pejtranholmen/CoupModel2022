@@ -35,7 +35,7 @@ public:
 	double GetValue(double x, double y);
 	double GetValue(double x, double y, double z);
 	double GetValue(double x, double y, double z, double zz);
-	double GetValue(size_t);
+	double GetValue(size_t)  noexcept;
 	double GetValue(size_t, double x);
 	double GetValue(size_t, double x, double y);
 	double GetValue(size_t, double x, double y, double z, bool check=false);

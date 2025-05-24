@@ -1374,7 +1374,6 @@ bool CResiduals::ToBeUpdated()
 		}
 	}
 
-	m_MeanDefined = false;
 	m_IsUpdated=false;
 	return true;
 }

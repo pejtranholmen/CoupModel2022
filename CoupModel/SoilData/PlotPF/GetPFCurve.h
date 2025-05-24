@@ -71,15 +71,15 @@ public:
 	const size_t GetKey(int nump, int numr);
 	const size_t GetKey() { return m_ActProfile.KeyProf; };
 	const std::string GetCountry() { return m_ActProfile.County; };
-	const size_t GetRecLayers() { return m_ActProfile.RecLayers; };
+	const size_t GetRecLayers() noexcept { return m_ActProfile.RecLayers; };
 
 	const size_t GetNewKey(std::string oldkey);
 	const size_t GetRecord(size_t key);
 	const size_t GetHeaderRecord(size_t key);
-	const size_t GetNumLayers() {return m_ActProfile.NumLayers;};
-	const size_t GetNumPF_Pressures() {return m_NumMeasured_PFSteps;}; 
+	const size_t GetNumLayers() noexcept {return m_ActProfile.NumLayers;};
+	const size_t GetNumPF_Pressures() noexcept {return m_NumMeasured_PFSteps;};
 	const std::streampos GetInsertRecord(size_t rec);
-	bool IsProfile() {if(m_ActProfile.KeyProf>0) return true; else return false;};
+	bool IsProfile() noexcept {if(m_ActProfile.KeyProf>0) return true; else return false;};
 	bool InitNewScan(bool Extra=false);
 	bool ScanNewHeaders(NEWHEADER *head, bool Extra=false);
 	NEWHEADER GetHeader(std::streampos rec, bool Extra=false);
@@ -97,8 +97,8 @@ public:
 		return true;
 		}
 		else return false;};
-	void SetTopRow(int toprow) {m_TopRow=toprow;};
-	int GetTopRow() {return m_TopRow;};
+	void SetTopRow(int toprow) noexcept {m_TopRow=toprow;};
+	int GetTopRow() noexcept {return m_TopRow;};
 	const string GetName();
 	BC_ESTIMATE Estimate_BC(std::vector<double>* Theta,std::vector<double>* Psi,  double ThetaMax, double FixResidual);
 	BC_ESTIMATE Estimate_BC_Texture(double sand, double clay, double poro);

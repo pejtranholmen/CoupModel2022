@@ -14,7 +14,7 @@ class P : public Par
 		~P(void);
 		P(void) {P();};
 		void SetValue(vector<double> vec) {*_ptarget=vec;};
-		double GetValue(size_t index) { if (_ptarget->size() > index) return _ptarget->at(index); else return MISSING; };
+		double GetValue(size_t index)  noexcept { if (_ptarget->size() > index) return _ptarget->at(index); else return MISSING; };
 		vector<double> GetVector() { return *_ptarget;}
 		void SetSize(size_t NRow) {if(pNE!=nullptr) ((NE*)pNE)->ReSizeValue(NRow);};
 		size_t  GetSize() noexcept {return _ptarget->size();};
@@ -46,23 +46,23 @@ class P : public Par
 
 		void SetMinValue(size_t index, double v) {_min[index]=v;};
 		void SetMinValue(double v) { for(size_t i=0; i<_min.size(); i++) _min[i]=v; };
-		double GetMinValue(size_t index) { if (_min.size() > index) return _min[index]; else return MISSING; };
+		double GetMinValue(size_t index)  noexcept { if (_min.size() > index) return _min[index]; else return MISSING; };
 		void SetMaxValue(size_t index, double v) {_max[index]=v;};
 		void SetMaxValue(double v) { for(size_t i=0; i<_max.size(); i++) _max[i]=v; };
-		double GetMaxValue(size_t index) { if (_max.size() > index) return _max[index]; else return MISSING; };
+		double GetMaxValue(size_t index)  noexcept { if (_max.size() > index) return _max[index]; else return MISSING; };
 		void SetWarnMinValue(size_t index, double v) {_wmin[index]=v;};
 		void SetWarnMinValue(double v) { for(size_t i=0; i<_wmin.size(); i++) _wmin[i]=v; };
-		double GetWarnMinValue(size_t index) {return _wmin[index];};
-		void SetWarnMaxValue(size_t index, double v) {_wmax[index]=v;};
+		double GetWarnMinValue(size_t index)  noexcept {return _wmin[index];};
+		void SetWarnMaxValue(size_t index, double v)  noexcept {_wmax[index]=v;};
 		void SetWarnMaxValue(double v) { for(size_t i=0; i<_wmax.size(); i++) _wmax[i]=v; };
-		double GetWarnMaxValue(size_t index) {return _wmax[index];};
+		double GetWarnMaxValue(size_t index)  noexcept {return _wmax[index];};
 
-		int MR_Get_Dim(size_t index) {return _mr[index].Dimension;};
+		int MR_Get_Dim(size_t index)  noexcept {return _mr[index].Dimension;};
 		double MR_Get_Min(size_t index) {return _mr[index].Min;};
 		double MR_Get_Max(size_t index) {return _mr[index].Max;};
 		double MR_Get_Start(size_t index) {return _mr[index].Start;};
 		double MR_Get_RelChange(size_t index) {return _mr[index].RelChange;};
-		enum MR_METHOD MR_Get_Method(size_t index) {return _mr[index].Method;};
+		enum MR_METHOD MR_Get_Method(size_t index)  noexcept {return _mr[index].Method;};
 		SimB *Get_MR_ParDependence(size_t index) {return _mr[index].MR_Dependent.pBase;};
 		size_t Get_MR_ParDependenceIndex(size_t index) {return _mr[index].MR_Dependent.TabIndex;};
 		SIMB Get_MR_PAR_Dependence(size_t index) {return _mr[index].MR_Dependent;};

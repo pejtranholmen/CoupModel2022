@@ -19,13 +19,13 @@ public:
 			return ""; 
 	};
 	size_t GetNumOptions();
-	bool IsOldValue() {return _IsOldValue;};
+	bool IsOldValue() noexcept {return _IsOldValue;};
 	size_t SetStrValue(string str);
 	size_t SetDBStrValue(string str);
 	std::string GetName() {return SimB::GetName();};
-	void SetDBIntValue(size_t value) {_DBIntValue=value; };
-	size_t GetDBIntValue() {return _DBIntValue;};
-	size_t GetOldIntValue() {return old_value;};
+	void SetDBIntValue(size_t value) noexcept {_DBIntValue=value; };
+	size_t GetDBIntValue()  noexcept {return _DBIntValue;};
+	size_t GetOldIntValue()  noexcept {return old_value;};
 protected:
 	size_t *_ptarget;
 	size_t org_value;

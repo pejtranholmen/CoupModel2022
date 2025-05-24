@@ -187,12 +187,12 @@ void CDB::MR_Set_Dim(int value)
    m_MR_Dimension=value;
 }
 
-MR_METHOD CDB::MR_Get_Method()
+MR_METHOD CDB::MR_Get_Method() noexcept
 {
 	return m_MR_Method;
 }
 
-int CDB::MR_Get_Dim()
+int CDB::MR_Get_Dim() noexcept
 {
 	return m_MR_Dimension;
 

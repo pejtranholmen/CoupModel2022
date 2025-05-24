@@ -31,212 +31,212 @@ struct Photo{
 
 class NC_Plant_Functions : public NC_Drivings
 {
-	public:
-		NC_Plant_Functions(void);
-		~NC_Plant_Functions(void);
-		bool Def();
-		bool Def_GrowthStages();
-		bool Def_PhotoSynthesis();
-		bool Def_Allocation();
-		bool Def_LitterFall();
-		bool Def_Respiration();
-		bool Def_Fungi();
+public:
+	NC_Plant_Functions(void);
+	~NC_Plant_Functions(void);
+	bool Def();
+	bool Def_GrowthStages();
+	bool Def_PhotoSynthesis();
+	bool Def_Allocation();
+	bool Def_LitterFall();
+	bool Def_Respiration();
+	bool Def_Fungi();
 
-		void Def_Grazing();
-		void Def_WoodEating();
-		void Def_NFixation();
-		bool FunctionDef();
-
-
+	void Def_Grazing();
+	void Def_WoodEating();
+	void Def_NFixation();
+	bool FunctionDef();
 
 
 
 
-	
- Soil_Frost *p_Soil_WaterF; // Soil Water Flow module
- SimModule *mp_Plant;
+
+
+
+	Soil_Frost* p_Soil_WaterF; // Soil Water Flow module
+	SimModule* mp_Plant;
 
 
 
 
- /*Use Plant, only		: LeafAreaFunctionL, RootDepthFunctionL, PlantAlbedoFunctionL, PlantHeightFunctionL, LAI, PlantHeight, RootF
-use Plant, only		: SimPlantHeight, SimLeafAreaIndex, SimRootDepth, SimPlantAlbedo, SimRootLength, RootLengthFunctionL
-Use PotTranspiration, only	: MC_ResSurfVar, MC_DisplVar, MC_ResAir, Lohammar_L
-Use Radiation, only	: DistributeRad, RntLAIv
-Use NC_Drivings, only	: NDrivWaterStress, NDrivTranspiration, NDrivRadInShort, NDrivTAir, NDrivSaltStress
-Use NC_Organic, only	: CTotSoilRespRate, LitterPools
-Use Salt
-//, Only		: TraceElementUptake, TE_ActiveUptake, TE_UptPassiveReset,TE_UptActiveReset, SaltPlantUptake, TE_UptReset
-//Use Salt, Only		: TE_PlantLeafUptake, TE_PlantRootUptake, TE_PlantStemUptake, ActiveUptake*/
+	/*Use Plant, only		: LeafAreaFunctionL, RootDepthFunctionL, PlantAlbedoFunctionL, PlantHeightFunctionL, LAI, PlantHeight, RootF
+   use Plant, only		: SimPlantHeight, SimLeafAreaIndex, SimRootDepth, SimPlantAlbedo, SimRootLength, RootLengthFunctionL
+   Use PotTranspiration, only	: MC_ResSurfVar, MC_DisplVar, MC_ResAir, Lohammar_L
+   Use Radiation, only	: DistributeRad, RntLAIv
+   Use NC_Drivings, only	: NDrivWaterStress, NDrivTranspiration, NDrivRadInShort, NDrivTAir, NDrivSaltStress
+   Use NC_Organic, only	: CTotSoilRespRate, LitterPools
+   Use Salt
+   //, Only		: TraceElementUptake, TE_ActiveUptake, TE_UptPassiveReset,TE_UptActiveReset, SaltPlantUptake, TE_UptReset
+   //Use Salt, Only		: TE_PlantLeafUptake, TE_PlantRootUptake, TE_PlantStemUptake, ActiveUptake*/
 
-size_t Root_Allocation_Combination, Growth, Resp_Temp_Response, FungalGrowth, Root_Density_Influence;      
-; //, Grain_Development;
-size_t Root_Alloc_TotMass, Root_Alloc_N_Leaf, Root_Alloc_WaterStress, Leaf_Alloc_TotMass, Root_Alloc_P_Leaf;
-size_t GrainFillAllocation;
-size_t N_Fixation, Harvest_Day, LitterFall_Dynamics;		// LK removed Growth_Start 020828
-size_t Winter_Regulation, Salinity_Stress, PlantStress, PhoSaturation;
-size_t PlantRespiration, N_Fixed_Supply, GrowthResponseVar, RadInterception, PhotoInput, N_ReAllocation, Phos_ReAllocation; //// new ReAllocation 30/11 05
-size_t InitialPlantConditions, Grazing, GrazingClosure, InitialPlantPConditions;
-size_t TerminatingHarvest, ResetGSI_AtHarvest;
-size_t Sowing_Switch,Emergence_Switch, StartSeasonTableExist;
-size_t Seedling_Management;
-size_t AccLitterFall_ResetOptions;
+	size_t Root_Allocation_Combination, Growth, Resp_Temp_Response, FungalGrowth, Root_Density_Influence;
+	; //, Grain_Development;
+	size_t Root_Alloc_TotMass, Root_Alloc_N_Leaf, Root_Alloc_WaterStress, Leaf_Alloc_TotMass, Root_Alloc_P_Leaf;
+	size_t GrainFillAllocation;
+	size_t N_Fixation, Harvest_Day, LitterFall_Dynamics;		// LK removed Growth_Start 020828
+	size_t Winter_Regulation, Salinity_Stress, PlantStress, PhoSaturation;
+	size_t PlantRespiration, N_Fixed_Supply, GrowthResponseVar, RadInterception, PhotoInput, N_ReAllocation, Phos_ReAllocation; //// new ReAllocation 30/11 05
+	size_t InitialPlantConditions, Grazing, GrazingClosure, InitialPlantPConditions;
+	size_t TerminatingHarvest, ResetGSI_AtHarvest;
+	size_t Sowing_Switch, Emergence_Switch, StartSeasonTableExist;
+	size_t Seedling_Management;
+	size_t AccLitterFall_ResetOptions;
 
-size_t ZadokScale, ZadokForcingFromFileInput;
-size_t CanopyCO2_Storage;
-CPG m_PG_Zadok, m_PG_LitterFallResetDates;
+	size_t ZadokScale, ZadokForcingFromFileInput;
+	size_t CanopyCO2_Storage;
+	CPG m_PG_Zadok, m_PG_LitterFallResetDates;
 
-// State variables;
-
-
-vector<double> GrowthStageIndex, SimPlantAge;
+	// State variables;
 
 
-vector<double> P_State[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM]; // Changed to Num_plant_fungi_com Okt 2024
-vector<double> P_Respiration[NUM_PLANT_FUNGI_COMP];
-vector<double> P_LitterFall[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];
-vector<double> P_Harvest[NUM_PLANT_COMP][NUM_BIOELEM];
-vector<double> P_ReAllocation[NUM_REALLOCATION][NUM_BIOELEM];
-AlloNewMobile P_CarbonAlloNewMobile;
-AlloNewMobile P_UptakeNewMobile[NUM_BIOELEM - 1];
-vector<double> P_Uptake[NUM_UPTAKE][NUM_BIOELEM-1];
-double AccFungiRespiration, AccFungiLitterFall, AccFungiGrowth;
-double TotalFungiResp;
-
-//Moved from Additional Biotic
-
-double AccHarvest[NUM_BIOELEM];
-double AccAboveLitter[NUM_BIOELEM], AccBelowLitter[NUM_BIOELEM], AccPlantLitter[NUM_BIOELEM];
-double IniPlant[NUM_BIOELEM], TotalDiffPlant[NUM_BIOELEM];
-double AccTotPlantUptake[NUM_BIOELEM];
-double AccSeedInputs[NUM_BIOELEM];
-double Plant_BalanceCheck[NUM_BIOELEM];
-
-double TotalPhotoSynt;
-double AccPhotosyntheses,   AccPlantRespiration, PlantPhotoSynt, PlantResp ;
-
-vector<bool> RemovedCompAtHarvest;
+	vector<double> GrowthStageIndex, SimPlantAge;
 
 
-vector<double> P_State_IniValue[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];  //Parameters
-vector<double> P_State_IniCarbonRatio[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM - 1]; //Parameters
-vector<double> P_State_CarbonRatio[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM - 1];// Auxiliary
+	vector<double> P_State[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM]; // Changed to Num_plant_fungi_com Okt 2024
+	vector<double> P_Respiration[NUM_PLANT_FUNGI_COMP];
+	vector<double> P_LitterFall[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];
+	vector<double> P_Harvest[NUM_PLANT_COMP][NUM_BIOELEM];
+	vector<double> P_ReAllocation[NUM_REALLOCATION][NUM_BIOELEM];
+	AlloNewMobile P_CarbonAlloNewMobile;
+	AlloNewMobile P_UptakeNewMobile[NUM_BIOELEM - 1];
+	vector<double> P_Uptake[NUM_UPTAKE][NUM_BIOELEM - 1];
+	double AccFungiRespiration, AccFungiLitterFall, AccFungiGrowth;
+	double TotalFungiResp;
+
+	//Moved from Additional Biotic
+
+	double AccHarvest[NUM_BIOELEM];
+	double AccAboveLitter[NUM_BIOELEM], AccBelowLitter[NUM_BIOELEM], AccPlantLitter[NUM_BIOELEM];
+	double IniPlant[NUM_BIOELEM], TotalDiffPlant[NUM_BIOELEM];
+	double AccTotPlantUptake[NUM_BIOELEM];
+	double AccSeedInputs[NUM_BIOELEM];
+	double Plant_BalanceCheck[NUM_BIOELEM];
+
+	double TotalPhotoSynt;
+	double AccPhotosyntheses, AccPlantRespiration, PlantPhotoSynt, PlantResp;
+
+	vector<bool> RemovedCompAtHarvest;
 
 
-vector<double> P_SumPlant[NUM_SUM_STATES][NUM_BIOELEM], C_RatioPlant[NUM_BIOELEM - 1];//HH
-
-double P_AllPlants[NUM_SUM_STATES][NUM_BIOELEM];
-double AllFungi[NUM_BIOELEM];
-
-
-pair<int, int> P_ReLink[NUM_REALLOCATION];
-string P_StateCompName[NUM_PLANT_FUNGI_COMP];
-string P_BioElementName[NUM_BIOELEM];
-
-// Flow variables;
-vector<double> NPlantAddSupply;
-vector<double> AtmNewMobile;//, CNewMobileLeaf,CNewMobileStem, CNewMobileRoots, CNewMobileCoarseRoots;
-vector<double> COSAtmNewMobile;
-vector<double> COSSoilNewMobile, SIF_GPPreg;
+	vector<double> P_State_IniValue[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM];  //Parameters
+	vector<double> P_State_IniCarbonRatio[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM - 1]; //Parameters
+	vector<double> P_State_CarbonRatio[NUM_PLANT_FUNGI_COMP][NUM_BIOELEM - 1];// Auxiliary
 
 
-vector<double>  CNewMobileFungi;
-//vector<double> CStemAtm, CLeafAtm, CRootsAtm, CGrainAtm;
-vector<double> CStemOldStem, CLeafOldLeaf;
-//vector<double> COldStemAtm, COldLeafAtm, COldRootsAtm;
-vector<double>   NFungiPlant, PFungiPlant;
-vector<double> CRootsLeaf, NRootsLeaf, COldRootsLitter, NOldRootsLitter; // Reallocation During conditions of small leaf Christine;
-;
+	vector<double> P_SumPlant[NUM_SUM_STATES][NUM_BIOELEM], C_RatioPlant[NUM_BIOELEM - 1];//HH
+
+	double P_AllPlants[NUM_SUM_STATES][NUM_BIOELEM];
+	double AllFungi[NUM_BIOELEM];
 
 
-vector<double> CLeafGrazing, COldLeafGrazing, CStemGrazing;
-vector<double> NLeafGrazing, NOldLeafGrazing, NStemGrazing;
-vector<double> PLeafGrazing, POldLeafGrazing, PStemGrazing;
+	pair<int, int> P_ReLink[NUM_REALLOCATION];
+	string P_StateCompName[NUM_PLANT_FUNGI_COMP];
+	string P_BioElementName[NUM_BIOELEM];
+
+	// Flow variables;
+	vector<double> NPlantAddSupply;
+	vector<double> AtmNewMobile;//, CNewMobileLeaf,CNewMobileStem, CNewMobileRoots, CNewMobileCoarseRoots;
+	vector<double> COSAtmNewMobile;
+	vector<double> COSSoilNewMobile, SIF_GPPreg;
+
+
+	vector<double>  CNewMobileFungi;
+	//vector<double> CStemAtm, CLeafAtm, CRootsAtm, CGrainAtm;
+	vector<double> CStemOldStem, CLeafOldLeaf;
+	//vector<double> COldStemAtm, COldLeafAtm, COldRootsAtm;
+	vector<double>   NFungiPlant, PFungiPlant;
+	vector<double> CRootsLeaf, NRootsLeaf, COldRootsLitter, NOldRootsLitter; // Reallocation During conditions of small leaf Christine;
+	;
+
+
+	vector<double> CLeafGrazing, COldLeafGrazing, CStemGrazing;
+	vector<double> NLeafGrazing, NOldLeafGrazing, NStemGrazing;
+	vector<double> PLeafGrazing, POldLeafGrazing, PStemGrazing;
 
 
 
 
-vector<double> CCoarseRootsAtm, COldCoarseRootsAtm;
-vector<double> CCoarseRootsHarvest, COldCoarseRootsHarvest;
-vector<double> NCoarseRootsHarvest, NOldCoarseRootsHarvest;
-vector<double> SimPlantYearAge;
-;
-vector<double> CCoarseRootsGrain, COldCoarseRootsGrain,CCoarseRootsOldRoots;
-;
-;
-vector<double> NCoarseRootsGrain, NOldCoarseRootsGrain, CRootsLitter;
-vector<double> NRootsLitter, NCoarseRootsLitter, CCoarseRootsLitter, NOldCoarseRootsLitter, COldCoarseRootsLitter;
-;
-vector<double> Cflux;
-double GrazingRespiration, C_GrazingRate, N_GrazingRate, P_GrazingRate;
-// New Flows 8 nov 00;
-vector<double> NMobileLeaf, CMobileLeaf, NFixationPlant;
-vector<double> NLeafReturnMobile, CLeafReturnMobile, NOldLeafReturnMobile,COldLeafReturnMobile;
-;
-// New Flow 30 nov 05;
-vector<double> NLeafMobile;
-vector<double> NStemMobile;
-vector<double> NRootsMobile;
-vector<double> NCoarseRootsMobile;
-vector<double> NOldLeafMobile;
-vector<double> NOldStemMobile;
-vector<double> NOldRootsMobile;
-vector<double> NOldCoarseRootsMobile;
+	vector<double> CCoarseRootsAtm, COldCoarseRootsAtm;
+	vector<double> CCoarseRootsHarvest, COldCoarseRootsHarvest;
+	vector<double> NCoarseRootsHarvest, NOldCoarseRootsHarvest;
+	vector<double> SimPlantYearAge;
+	;
+	vector<double> CCoarseRootsGrain, COldCoarseRootsGrain, CCoarseRootsOldRoots;
+	;
+	;
+	vector<double> NCoarseRootsGrain, NOldCoarseRootsGrain, CRootsLitter;
+	vector<double> NRootsLitter, NCoarseRootsLitter, CCoarseRootsLitter, NOldCoarseRootsLitter, COldCoarseRootsLitter;
+	;
+	vector<double> Cflux;
+	double GrazingRespiration, C_GrazingRate, N_GrazingRate, P_GrazingRate;
+	// New Flows 8 nov 00;
+	vector<double> NMobileLeaf, CMobileLeaf, NFixationPlant;
+	vector<double> NLeafReturnMobile, CLeafReturnMobile, NOldLeafReturnMobile, COldLeafReturnMobile;
+	;
+	// New Flow 30 nov 05;
+	vector<double> NLeafMobile;
+	vector<double> NStemMobile;
+	vector<double> NRootsMobile;
+	vector<double> NCoarseRootsMobile;
+	vector<double> NOldLeafMobile;
+	vector<double> NOldStemMobile;
+	vector<double> NOldRootsMobile;
+	vector<double> NOldCoarseRootsMobile;
 
-;
-// New flow June 17 2007;
-vector<double> CLeafStem, NLeafStem;
-;
-vector<double> Mobile_Plant_Flux[NUM_BIOELEM];
-double Mobile_TotPlant_Flux[NUM_BIOELEM];
+	;
+	// New flow June 17 2007;
+	vector<double> CLeafStem, NLeafStem;
+	;
+	vector<double> Mobile_Plant_Flux[NUM_BIOELEM];
+	double Mobile_TotPlant_Flux[NUM_BIOELEM];
 
-vector<double>FungiRootCover, factNSupplyFungi, factPSupplyFungi ;//HH
+	vector<double>FungiRootCover, factNSupplyFungi, factPSupplyFungi;//HH
 
 
-/*
-double N_Mobile_TotPlant_Flux;
+	/*
+	double N_Mobile_TotPlant_Flux;
 
-;
-;
+	;
+	;
 
-;
-;
-vector<double> P_ReAllocation[NEWMOBILE_LEAF][_N_], P_ReAllocation[NEWMOBILE_STEM][_N_], N_NewMobileRoots,P_ReAllocation[NEWMOBILE_COARSEROOT][_N_];
-;
-vector<double> NStemGrain, NLeafGrain, NRootsGrain;
-vector<double> NStemHarvest, NLeafHarvest, NGrainHarvest, NRootsHarvest;
-vector<double> NOldStemHarvest, NOldLeafHarvest, NOldRootsHarvest;
-vector<double> P_LitterFall[_LEAF][_N_],NStemSurfaceLitter, NGrainSurfaceLitter, N_NewMobileSurfaceLitter,NMobileSurfaceLitter,
-vector<double> P_ReAllocation[_OLD_LEAF][_N_], COldLeafSurfaceLitter;
-vector<double> NOldStemSurfaceLitter, P_LitterFall[_OLD_STEM][_C_];
-vector<double> P_ReAllocation[STEM_OLD_STEM][_N_], P_ReAllocation[LEAF_OLD_LEAF][_N_], P_ReAllocation[ROOT_OLD_ROOT][_N_];
-v*/
-vector<double>  NPlantUptake, NRootUptake, PPlantUptake, PRootUptake;
-;
-// Auxiliary variable;
-;
-DemandUptakeSoil DemandUptake[2], DemandFungiUptake[2];
-double C_RatioTotPlant[NUM_BIOELEM-1], C_RatioTotRoots[NUM_BIOELEM - 1];
-vector<double>  RadPlantAdsorbed,  CP_RatioLeaf;
-vector<double> GrowthTempSum, DormingTempSum,  CP_RatioGrain, CP_RatioStem, CP_RatioRoots, CP_RatioCoarseRoots;
-vector<double>  ZadokIndex, CP_RatioFungi;
-vector<double> SpringDevDayNum, DormingStartDayNum, GrowingStage;
+	;
+	;
+	vector<double> P_ReAllocation[NEWMOBILE_LEAF][_N_], P_ReAllocation[NEWMOBILE_STEM][_N_], N_NewMobileRoots,P_ReAllocation[NEWMOBILE_COARSEROOT][_N_];
+	;
+	vector<double> NStemGrain, NLeafGrain, NRootsGrain;
+	vector<double> NStemHarvest, NLeafHarvest, NGrainHarvest, NRootsHarvest;
+	vector<double> NOldStemHarvest, NOldLeafHarvest, NOldRootsHarvest;
+	vector<double> P_LitterFall[_LEAF][_N_],NStemSurfaceLitter, NGrainSurfaceLitter, N_NewMobileSurfaceLitter,NMobileSurfaceLitter,
+	vector<double> P_ReAllocation[_OLD_LEAF][_N_], COldLeafSurfaceLitter;
+	vector<double> NOldStemSurfaceLitter, P_LitterFall[_OLD_STEM][_C_];
+	vector<double> P_ReAllocation[STEM_OLD_STEM][_N_], P_ReAllocation[LEAF_OLD_LEAF][_N_], P_ReAllocation[ROOT_OLD_ROOT][_N_];
+	v*/
+	vector<double>  NPlantUptake, NRootUptake, PPlantUptake, PRootUptake;
+	;
+	// Auxiliary variable;
+	;
+	DemandUptakeSoil DemandUptake[2], DemandFungiUptake[2];
+	double C_RatioTotPlant[NUM_BIOELEM - 1], C_RatioTotRoots[NUM_BIOELEM - 1];
+	vector<double>  RadPlantAdsorbed, CP_RatioLeaf;
+	vector<double> GrowthTempSum, DormingTempSum, CP_RatioGrain, CP_RatioStem, CP_RatioRoots, CP_RatioCoarseRoots;
+	vector<double>  ZadokIndex, CP_RatioFungi;
+	vector<double> SpringDevDayNum, DormingStartDayNum, GrowingStage;
 
-;
-vector<double> UptDeficit_1[2], UptDeficit_2[2], UptFungiDeficit_1[2], UptFungiDeficit_2[2],factCNFungi,  factNdemandFungi, factNavailFungi, factCPFungi, factPdemandFungi, factPavailFungi;//HH
-vector<double> UptakeFracCoefDef, Root_NoduleRatio, StemLeaf_NoduleRatio;
-vector<double> SpecificMaxNFixation,SpecificMinNFixation, NFixationSensitivity;
-;
-double TotHarvest[NUM_BIOELEM], TotPlantLitter[NUM_BIOELEM], TotFungiLitter[NUM_BIOELEM];
-;
-vector<double> C_Roots, N_Roots, C_Plant, N_Plant, C_AllLeaf, N_AllLeaf, C_Leaf, N_Leaf;
-double Tot_PlantUptake[NUM_BIOELEM-1], Tot_FungiUptake[NUM_BIOELEM - 1];
-vector<double> CPlantAtm,  CPlantAtm_AboveG;
+	;
+	vector<double> UptDeficit_1[2], UptDeficit_2[2], UptFungiDeficit_1[2], UptFungiDeficit_2[2], factCNFungi, factNdemandFungi, factNavailFungi, factCPFungi, factPdemandFungi, factPavailFungi;//HH
+	vector<double> UptakeFracCoefDef, Root_NoduleRatio, StemLeaf_NoduleRatio;
+	vector<double> SpecificMaxNFixation, SpecificMinNFixation, NFixationSensitivity;
+	;
+	double TotHarvest[NUM_BIOELEM], TotPlantLitter[NUM_BIOELEM], TotFungiLitter[NUM_BIOELEM];
+	;
+	vector<double> C_Roots, N_Roots, C_Plant, N_Plant, C_AllLeaf, N_AllLeaf, C_Leaf, N_Leaf;
+	double Tot_PlantUptake[NUM_BIOELEM - 1], Tot_FungiUptake[NUM_BIOELEM - 1];
+	vector<double> CPlantAtm, CPlantAtm_AboveG;
 
-vector<double> TotalPlantLitterFall[NUM_BIOELEM];
+	vector<double> TotalPlantLitterFall[NUM_BIOELEM];
 
-double TotAbovePlantLitter[NUM_BIOELEM];
-;
+	double TotAbovePlantLitter[NUM_BIOELEM], TotLitterFall_Tree[NUM_BIOELEM];
+
 // Parameters;
 vector<double> UptakeStart, UptakeEnd, UptakeACoef, UptakeBCoef, UptakeCCoef, UptakeCNRatio;
 vector<double> SowingDayNo, EmergenceDayNo, C_Seed;
@@ -480,6 +480,8 @@ vector<size_t> ISowingDates, IEmergenceDates;
 size_t ISowingCount, IEmergenceCount;
 size_t ISowingIndex, IEmergenceIndex;
 
+vector<size_t> ILitterfallResetDates;
+size_t ILitterfallResetCount, ILitterfallResetIndex;
 
 ;
 size_t HarvestStyle;

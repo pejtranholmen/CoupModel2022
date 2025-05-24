@@ -50,7 +50,7 @@ public:
     std::wstring ToWString(const std::string& str) {
         return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(str);
     };
-    HANDLE GetHandle() const { return m_Handle; };
+    HANDLE GetHandle() const  noexcept { return m_Handle; };
 
 private:
     HANDLE m_Handle;

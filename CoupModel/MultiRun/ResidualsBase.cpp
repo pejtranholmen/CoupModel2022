@@ -72,6 +72,7 @@ bool ResidualsBase::EnsembleReadWriteCheckFileOnly(size_t ensembleno)
 	}
 	else {
 		m_EnsembleResFile.Close();
+		m_MeanDefined = true;
 		return true;
 	}
 }
@@ -261,9 +262,9 @@ bool ResidualsBase::ReadWrite_MeanEnsembleFile(bool reading, size_t ensemble_no)
 			m_EnsembleResFile.WriteTextLine("Ensemble No ",num);
 			ActRecL = m_MeanPost.mean[0].size();
 			if (ActRecL == 0) {
-
+#ifndef COUPSTD	
 				TRACE("Ensemble No = %d \n", num);
-
+#endif
 			}
 			m_EnsembleResFile.WriteTextLine("Ensemble Num Records ",ActRecL);
 

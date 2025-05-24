@@ -13,9 +13,9 @@ public:
 	string GetStringValue();
 	string GetName();
 	void SetName(string);
-	int MR_Get_Dim();
+	int MR_Get_Dim()  noexcept;
 	void MR_Set_Dim(int);
-	MR_METHOD MR_Get_Method();
+	MR_METHOD MR_Get_Method()  noexcept;
 	void MR_Set_Method(MR_METHOD );
 	bool SetValue(string str);
 	size_t GetLastSelectedRepetition() {return m_LastSelectedRepetition;};

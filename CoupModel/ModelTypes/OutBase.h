@@ -12,11 +12,11 @@ class OutBase: public SimB
 	~OutBase(void);
 	OutBase(enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 	bool AreAllFlagsSet();
-	virtual size_t GetNumberOfSelectedFlags(bool multi=false) const {return 0;};
+	virtual size_t GetNumberOfSelectedFlags(bool multi=false) const  noexcept {return 0;};
 	size_t GetNumberOfFlags() const;
 
-	virtual double	GetValue(size_t) {return MISSING;};
-	virtual double	GetValue() {return MISSING;};
+	virtual double	GetValue(size_t)  noexcept {return MISSING;};
+	virtual double	GetValue()  noexcept {return MISSING;};
 	void	ReSize(size_t);
 	bool	Reallocate();			// set values to tmpval
 	void	Reset();			// resets tmpvalues to values

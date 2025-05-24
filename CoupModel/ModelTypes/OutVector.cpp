@@ -178,7 +178,7 @@ size_t OutVector::GetSelectedLocalIndex(size_t index, bool multi) const
 	return string::npos;
 
 }
-size_t OutVector::GetValidFlagIndex(size_t index) const
+size_t OutVector::GetValidFlagIndex(size_t index) const noexcept
 { 
 
 	if(SumList.size()>index)

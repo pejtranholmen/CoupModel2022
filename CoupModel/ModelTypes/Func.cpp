@@ -301,17 +301,6 @@ bool Func::MakeOperation() {
 		return ((Soil_Drainage_Functions*)m_Class)->SetDrainageFunctors();
 
 	}
-
-	
-	switch(GetGroupNo()) {
-
-		//case 4:	return ((Profile_Functions*)m_Class)->GetFunctionValue(m_Opt);
-		//case 5:	return ((Hydraulic_Functions*)m_Class)->GetFunctionValue(m_Opt);
-	//	case 6:	return ((Thermal_Functions*)m_Class)->GetFunctionValue(m_Opt);
-	//	case 12: return ((Radiation_Functions*)m_Class)->GetFunctionValue(m_Opt);
-		//case 25: return ((NC_Organic_Functions*)m_Class)->GetFunctionValue(m_Opt);
-
-	}
 	return false;
 }
 double Func::GetValue( double x1, bool check) {
@@ -398,7 +387,7 @@ double Func::GetValue(double x1, double x2, double x3, double x4) {
 	}
 	return MISSING;
 }
-double Func::GetValue(size_t index) {
+double Func::GetValue(size_t index) noexcept {
 	switch(GetGroupNo()) {
 	//case 7: return ((Meteorological_Data_Functions*)m_Class)->GetFunctionValue(m_Opt, index);
 	//case 14: return ((SnowPack_Functions*)m_Class)->GetFunctionValue(m_Opt, index);

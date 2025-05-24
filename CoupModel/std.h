@@ -105,70 +105,70 @@ public:
 	
 
 
-	void SetDBDataPointer(DBDataCug* pDBData) { m_pDBDataCug = pDBData; };
-	DBDataCug* GetDBDataPointer() { return m_pDBDataCug; };
+	void SetDBDataPointer(DBDataCug* pDBData) noexcept { m_pDBDataCug = pDBData; };
+	DBDataCug* GetDBDataPointer()  noexcept { return m_pDBDataCug; };
 
-	void SetDBBasPointer(DB_BASCug* pDBBas) { m_pDBBasCug = pDBBas; };
-	DB_BASCug* GetDBBasPointer() { return m_pDBBasCug; };
-
-
-	void SetSoilDataPointer(SoilData* pSoilData) { m_SoilData = pSoilData; };
-	SoilData* GetSoilDataPointer() { return m_SoilData; };
-
-	void SetDB_HeaderPointer(DB_Header* pDB) { m_pDB = pDB; };
-	DB_Header* GetDB_HeaderPointer() { return m_pDB; };
+	void SetDBBasPointer(DB_BASCug* pDBBas)  noexcept { m_pDBBasCug = pDBBas; };
+	DB_BASCug* GetDBBasPointer() noexcept { return m_pDBBasCug; };
 
 
-	void SetPFCugPointer(PFCug* pPFCug) { m_PFCug = pPFCug; };
-	PFCug* GetPFCugPointer() { return m_PFCug; };
+	void SetSoilDataPointer(SoilData* pSoilData)  noexcept { m_SoilData = pSoilData; };
+	SoilData* GetSoilDataPointer()  noexcept { return m_SoilData; };
 
-	void SetFramePointer(CMainFrame* pFrame) { m_pFrame = pFrame; };
-	CMainFrame* GetFramePointer() { return m_pFrame; };
+	void SetDB_HeaderPointer(DB_Header* pDB)  noexcept { m_pDB = pDB; };
+	DB_Header* GetDB_HeaderPointer() noexcept { return m_pDB; };
 
-	void SetModelPointer(CClassView* pClass) { m_pClassView = pClass; };
-	CClassView* GetClassViewPointer() { return m_pClassView; };
 
-	void SetFilePointer(CFileView* pFile) { m_pFileView = pFile; };
-	CFileView* GetFileViewPointer() { return m_pFileView; };
+	void SetPFCugPointer(PFCug* pPFCug)  noexcept { m_PFCug = pPFCug; };
+	PFCug* GetPFCugPointer()  noexcept { return m_PFCug; };
 
-	void SetCugPointer(MyCug* pCug) { m_pCug = pCug; };
-	MyCug* GetCugPointer() { return m_pCug; };
+	void SetFramePointer(CMainFrame* pFrame)  noexcept { m_pFrame = pFrame; };
+	CMainFrame* GetFramePointer()  noexcept { return m_pFrame; };
 
-	void SetPGCugPointer(MyPGCug* pCug) { m_pPGCug = pCug; };
-	MyPGCug* GetPGCugPointer() { return m_pPGCug; };
+	void SetModelPointer(CClassView* pClass)  noexcept { m_pClassView = pClass; };
+	CClassView* GetClassViewPointer()  noexcept { return m_pClassView; };
 
-	void SetPGFileArchivePointer(PGFileArchive* pArchive) { m_pPGArchive = pArchive; };
-	PGFileArchive* GetPGFileArchivePointer() { return m_pPGArchive; };
+	void SetFilePointer(CFileView* pFile) noexcept { m_pFileView = pFile; };
+	CFileView* GetFileViewPointer() noexcept { return m_pFileView; };
 
-	void SetSimArchivePointer(SimArchive* pArchive) { m_pSimArchive = pArchive; };
-	SimArchive* GetSimArchivePointer() { return m_pSimArchive; };
+	void SetCugPointer(MyCug* pCug)  noexcept { m_pCug = pCug; };
+	MyCug* GetCugPointer()  noexcept { return m_pCug; };
 
-	void SetChartCugPointer(ChartCug* pCug) { m_pChartCug = pCug; };
-	ChartCug* GetChartCugPointer() { return m_pChartCug; };
+	void SetPGCugPointer(MyPGCug* pCug) noexcept { m_pPGCug = pCug; };
+	MyPGCug* GetPGCugPointer() noexcept { return m_pPGCug; };
 
-	void SetFunctionPointer(FunctionProperties* pFunc) { m_pFunc = pFunc; };
-	FunctionProperties* GetFunctionPointer() { return m_pFunc; };
+	void SetPGFileArchivePointer(PGFileArchive* pArchive)  noexcept { m_pPGArchive = pArchive; };
+	PGFileArchive* GetPGFileArchivePointer() noexcept { return m_pPGArchive; };
 
-	void SetChartPropPointer(ChartProp* pProp) { m_pChartProp = pProp; };
-	ChartProp* GetChartPropPointer() { return m_pChartProp; };
+	void SetSimArchivePointer(SimArchive* pArchive)  noexcept { m_pSimArchive = pArchive; };
+	SimArchive* GetSimArchivePointer()  noexcept { return m_pSimArchive; };
 
-	void SetPlotInfoPointer(PlotInfo* pProp) { m_pPlotInfo = pProp; };
-	PlotInfo* GetPlotInfoPointer() { return m_pPlotInfo; };
+	void SetChartCugPointer(ChartCug* pCug) noexcept { m_pChartCug = pCug; };
+	ChartCug* GetChartCugPointer()  noexcept { return m_pChartCug; };
 
-	void SetChartUtilPointer(ChartUtil* pUtil) { m_pChartUtil = pUtil; };
-	ChartUtil* GetChartUtilPointer() { return m_pChartUtil; };
+	void SetFunctionPointer(FunctionProperties* pFunc)  noexcept { m_pFunc = pFunc; };
+	FunctionProperties* GetFunctionPointer() noexcept { return m_pFunc; };
 
-	void SetChartZoomPointer(ZoomTimeSerie* pZoom) { m_pZoomTimeSerie = pZoom; };
-	ZoomTimeSerie* GetChartZoomPointer() { return m_pZoomTimeSerie; };
+	void SetChartPropPointer(ChartProp* pProp)  noexcept { m_pChartProp = pProp; };
+	ChartProp* GetChartPropPointer() noexcept { return m_pChartProp; };
 
-	void SetRegisterPointer(Register* pReg) { m_pRegister = pReg; };
-	Register* GetRegisterPointer() { return m_pRegister; };
+	void SetPlotInfoPointer(PlotInfo* pProp) noexcept { m_pPlotInfo = pProp; };
+	PlotInfo* GetPlotInfoPointer()  noexcept { return m_pPlotInfo; };
 
-	void SetExtraChartWndPointer(CChartWnd* pExtraChart) { m_pExtraChartWnd = pExtraChart; };
-	CChartWnd* GetExtraChartWndPointer() { return m_pExtraChartWnd; };
+	void SetChartUtilPointer(ChartUtil* pUtil)  noexcept { m_pChartUtil = pUtil; };
+	ChartUtil* GetChartUtilPointer()  noexcept { return m_pChartUtil; };
 
-	void SetActDoc(CCoupModelDoc* pDoc) { m_pPrevDoc = pDoc; };
-	bool IsActDoc(CCoupModelDoc* pDoc) { if (pDoc == m_pPrevDoc) return true; else return false; };
+	void SetChartZoomPointer(ZoomTimeSerie* pZoom)  noexcept { m_pZoomTimeSerie = pZoom; };
+	ZoomTimeSerie* GetChartZoomPointer()  noexcept { return m_pZoomTimeSerie; };
+
+	void SetRegisterPointer(Register* pReg)  noexcept { m_pRegister = pReg; };
+	Register* GetRegisterPointer() noexcept { return m_pRegister; };
+
+	void SetExtraChartWndPointer(CChartWnd* pExtraChart)  noexcept { m_pExtraChartWnd = pExtraChart; };
+	CChartWnd* GetExtraChartWndPointer()  noexcept { return m_pExtraChartWnd; };
+
+	void SetActDoc(CCoupModelDoc* pDoc)  noexcept { m_pPrevDoc = pDoc; };
+	bool IsActDoc(CCoupModelDoc* pDoc)  noexcept { if (pDoc == m_pPrevDoc) return true; else return false; };
 
 	//void SetPlotPFPointer(PFCurve* pPFCurve) { m_PFpointer=pPFCurve; };
 

@@ -192,95 +192,95 @@ class SimB
 		SimB(enum simtype, definitions);
 		SimB(enum simtype);
 		virtual ~SimB(void);
-		void SetEnable(bool value) {_enabled=value;};
-		void SetDBEnable(bool value) {_DBenabled=value;};
-		void SetChildChange(bool value) { m_ChildChange = value; };
-		bool IsChildChanged() { return m_ChildChange; };
-		void SetModuleNo(size_t value) {_ModuleNo=value;};
+		void SetEnable(bool value) noexcept {_enabled=value;};
+		void SetDBEnable(bool value) noexcept {_DBenabled=value;};
+		void SetChildChange(bool value) noexcept { m_ChildChange = value; };
+		bool IsChildChanged() noexcept { return m_ChildChange; };
+		void SetModuleNo(size_t value) noexcept {_ModuleNo=value;};
 		void SetName(string str) {_name=str;};
-		void SetConditions(string str) {cond=str;};
-		void SetUnit(string str) {_unit=str;};
+		void SetConditions(string str)  {cond=str;};
+		void SetUnit(string str)  {_unit=str;};
 		//void SetDefValue(double value) { _orgFValue=value;};
-		virtual bool IsEnabled() {if(_enabled) return false; return true;};
-		bool IsDBEnabled() {return _DBenabled;};
-		bool Is_PTable() {if(_stype==PAR_TABLE) return true; return false;};
-		bool Is_DB() {if(_stype==DB) return true; return false;};
-		bool Is_P() {if(_stype==PAR_SINGLE) return true; return false;};
-		bool Is_Vector() {if (int(_stype)<=4) return true; return false;};
-		size_t GetType() {return size_t(_stype);};
+		virtual bool IsEnabled() noexcept {if(_enabled) return false; return true;};
+		bool IsDBEnabled() noexcept {return _DBenabled;};
+		bool Is_PTable() noexcept {if(_stype==PAR_TABLE) return true; return false;};
+		bool Is_DB() noexcept {if(_stype==DB) return true; return false;};
+		bool Is_P() noexcept {if(_stype==PAR_SINGLE) return true; return false;};
+		bool Is_Vector() noexcept {if (int(_stype)<=4) return true; return false;};
+		size_t GetType() noexcept {return size_t(_stype);};
 		string GetTypeName() const;
-		int  GetUserLevel() const {return int(_def.ulev);};
-		size_t  GetGroupNo() const {return _ModuleNo;};
-		virtual bool IsOldValue() {return false;};
-		virtual int GetIntValue() {return -1;};
+		int  GetUserLevel() const noexcept {return int(_def.ulev);};
+		size_t  GetGroupNo() const noexcept {return _ModuleNo;};
+		virtual bool IsOldValue() noexcept {return false;};
+		virtual int GetIntValue() noexcept {return -1;};
 		virtual string GetOption(size_t ) {return "";};
 		virtual string GetName() {return _name;};
-		virtual void SetDBIntValue(size_t value) {_DBIntValue=value;};
-		virtual size_t GetDBIntValue() {return _DBIntValue;}; 
-		virtual int MR_Get_Dim() {return -1;};
-		virtual int MR_Get_Dim(size_t ) {return -1;};
-		virtual MR_METHOD MR_Get_Method() {return STOCHASTIC_LIN_CHANGE;};
-		virtual MR_METHOD MR_Get_Method(size_t ) {return STOCHASTIC_LIN_CHANGE;};
-		virtual double GetMinValue() {return MISSING;};
-		virtual double GetMinValue(size_t ) {return MISSING;};
-		virtual double GetWarnMinValue() {return MISSING;};
-		virtual double GetWarnMinValue(size_t ) {return MISSING;};
-		virtual double GetWarnMaxValue() {return -MISSING;};
-		virtual double GetWarnMaxValue(size_t ) {return -MISSING;};
-		virtual double GetMaxValue() {return -MISSING;};
-		virtual double GetMaxValue(size_t ) {return -MISSING;};
-		virtual double GetValue() {return MISSING;};
-		virtual double GetValue(size_t ) {return MISSING;};
-		virtual double GetDBValue() {return MISSING;};
-		virtual double GetDBValue(size_t) {return MISSING;};
-		virtual size_t GetPgFileIndex(size_t ) {return 0;};
+		virtual void SetDBIntValue(size_t value) noexcept {_DBIntValue=value;};
+		virtual size_t GetDBIntValue() noexcept {return _DBIntValue;};
+		virtual int MR_Get_Dim() noexcept {return -1;};
+		virtual int MR_Get_Dim(size_t ) noexcept {return -1;};
+		virtual MR_METHOD MR_Get_Method() noexcept {return STOCHASTIC_LIN_CHANGE;};
+		virtual MR_METHOD MR_Get_Method(size_t ) noexcept {return STOCHASTIC_LIN_CHANGE;};
+		virtual double GetMinValue() noexcept {return MISSING;};
+		virtual double GetMinValue(size_t ) noexcept {return MISSING;};
+		virtual double GetWarnMinValue() noexcept {return MISSING;};
+		virtual double GetWarnMinValue(size_t ) noexcept {return MISSING;};
+		virtual double GetWarnMaxValue() noexcept  {return -MISSING;};
+		virtual double GetWarnMaxValue(size_t ) noexcept {return -MISSING;};
+		virtual double GetMaxValue() noexcept {return -MISSING;};
+		virtual double GetMaxValue(size_t ) noexcept {return -MISSING;};
+		virtual double GetValue() noexcept {return MISSING;};
+		virtual double GetValue(size_t ) noexcept {return MISSING;};
+		virtual double GetDBValue() noexcept {return MISSING;};
+		virtual double GetDBValue(size_t) noexcept {return MISSING;};
+		virtual size_t GetPgFileIndex(size_t )noexcept  {return 0;};
 
-		virtual size_t GetValidFlagIndex(size_t ) const {return string::npos;};
-		virtual size_t GetValidFlagIndex() const {return string::npos;};
+		virtual size_t GetValidFlagIndex(size_t ) const noexcept {return string::npos;};
+		virtual size_t GetValidFlagIndex() const noexcept {return string::npos;};
 
-		virtual void SetStoreFlag(bool) {};
-		virtual void SetMultiStoreFlag(bool) {};
-		virtual void SetStoreFlag(size_t , bool) {};
-		virtual void SetMultiStoreFlag(size_t, bool) {};
-		virtual bool GetStoreFlag(size_t ) {return false;};
-		virtual bool GetMultiStoreFlag(size_t ) {return false;};
-		virtual size_t GetNumberOfSelectedFlags(bool ) const {return 0;};
-		virtual size_t GetNumberOfFlags(bool ) const {return 0;};
+		virtual void SetStoreFlag(bool) noexcept {};
+		virtual void SetMultiStoreFlag(bool) noexcept {};
+		virtual void SetStoreFlag(size_t , bool) noexcept {};
+		virtual void SetMultiStoreFlag(size_t, bool) noexcept {};
+		virtual bool GetStoreFlag(size_t ) noexcept {return false;};
+		virtual bool GetMultiStoreFlag(size_t ) noexcept {return false;};
+		virtual size_t GetNumberOfSelectedFlags(bool ) const  noexcept {return 0;};
+		virtual size_t GetNumberOfFlags(bool ) const  noexcept {return 0;};
 		virtual int GetOriginalIntValue() {return _orgIntValue;};
-		void SetGroupNo(size_t value) { _ModuleNo = value; };
+		void SetGroupNo(size_t value)  noexcept { _ModuleNo = value; };
 
-		virtual double GetOriginalValue() {return MISSING;};
+		virtual double GetOriginalValue()  noexcept {return MISSING;};
 		
-		virtual double GetOriginalValue(size_t index) {if(index<_orgFVector.size()) return _orgFVector[index]; return MISSING;};
-		size_t GetOriginalSize() {return _orgFVector.size();};
+		virtual double GetOriginalValue(size_t index)  noexcept {if(index<_orgFVector.size()) return _orgFVector[index]; return MISSING;};
+		size_t GetOriginalSize()  noexcept {return _orgFVector.size();};
 		//int GetGroupCategory() {return ::GetGroupCategory(GetGroup());};
-		size_t GetFysProcess() {return _def.fproc;};
-		size_t GetBioProcess() {return _def.bproc;};
-		string GetFysProcessName() const;
+		size_t GetFysProcess()  noexcept {return _def.fproc;};
+		size_t GetBioProcess()  noexcept {return _def.bproc;};
+		string GetFysProcessName() const ;
 		string GetBioProcessName() const;
 
-		enum elements GetElement() { return _def.elem; };
-		enum datatype GetDataType() {return _def.data;};
+		enum elements GetElement()   noexcept { return _def.elem; };
+		enum datatype GetDataType() noexcept {return _def.data;};
 
 		string GetDepName(size_t) const;
 		virtual string GetUnit() const {return _unit;};		
-		UNIT_TYPES GetUnitType() const { return _def.unittype; };
+		UNIT_TYPES GetUnitType() const  noexcept { return _def.unittype; };
 		string GetDepUnit(size_t) const;	   			// Get name of dependent variables 
 		string GetGroup();
 		string GetProcessName() const;
 		string GetElementName() const;
 
-		enum simtype GetSim() {return _stype;};
-		void SetSimType(enum simtype value) {_stype=value;};
+		enum simtype GetSim()   noexcept {return _stype;};
+		void SetSimType(enum simtype value)  noexcept {_stype=value;};
 		bool	IsTrue(size_t) const;	
 		virtual void	Notice();
-		virtual void	SetIsOriginalValue(){m_IsNotOriginal=false;};	
-		virtual void	SetNotOriginalValue(){m_IsNotOriginal=true;};			// Sets the original value to the current value
-		virtual void SetOriginalValue(double ) {;};
-		void SetOriginalValue(vector<double> value) {_orgFVector.resize(value.size()); for(size_t i=0; i<value.size();i++) {_orgFVector[i]=value[i];};};
+		virtual void	SetIsOriginalValue()  noexcept {m_IsNotOriginal=false;};
+		virtual void	SetNotOriginalValue()  noexcept {m_IsNotOriginal=true;};			// Sets the original value to the current value
+		virtual void SetOriginalValue(double )  noexcept {;};
+		void SetOriginalValue(vector<double> value)  noexcept {_orgFVector.resize(value.size()); for(size_t i=0; i<value.size();i++) {_orgFVector[i]=value[i];};};
 
-		virtual bool	IsNotOriginalValue() const {return m_IsNotOriginal;};	
-		void SetBackOriginalValue() {m_IsNotOriginal=false;};
+		virtual bool	IsNotOriginalValue() const  noexcept {return m_IsNotOriginal;};
+		void SetBackOriginalValue()  noexcept {m_IsNotOriginal=false;};
 
 		string GetCondition(size_t) const;
 		void	AddToNoticeList(SimB*); 
@@ -288,18 +288,18 @@ class SimB
 
 		void AddHistoryIndex(size_t value) {m_HistoryIndex[0].push_back(value); };
 		void AddHistoryIndex(size_t index, size_t value) { if(index<100) m_HistoryIndex[index].push_back(value);};
-		size_t GetHistoryIndex(size_t index) {	if(index<100) return m_HistoryIndex[0][index];	return 0; };
-		size_t GetHistoryIndex(size_t index1, size_t index2) {	if(index2<m_HistoryIndex[index1].size()) return m_HistoryIndex[index1][index2]; return 0; };
-		size_t GetNumOfHistoryIndex() {	return m_HistoryIndex[0].size();};
-		size_t GetNumOfHistoryIndex(size_t index1) { if(index1<100)	return m_HistoryIndex[index1].size(); return 0;};
-		void SetReadOnly(bool value) { m_ReadOnly = value; };
-		bool IsReadOnly() { return m_ReadOnly; };
+		size_t GetHistoryIndex(size_t index)  noexcept {	if(index<100) return m_HistoryIndex[0][index];	return 0; };
+		size_t GetHistoryIndex(size_t index1, size_t index2) noexcept {	if(index2<m_HistoryIndex[index1].size()) return m_HistoryIndex[index1][index2]; return 0; };
+		size_t GetNumOfHistoryIndex()  noexcept {	return m_HistoryIndex[0].size();};
+		size_t GetNumOfHistoryIndex(size_t index1)  noexcept { if(index1<100)	return m_HistoryIndex[index1].size(); return 0;};
+		void SetReadOnly(bool value)  noexcept { m_ReadOnly = value; };
+		bool IsReadOnly()  noexcept { return m_ReadOnly; };
 
 
-		virtual bool SetAnnimateChart(int , int ) {return false;};
-		virtual bool SetAnnimateChart(size_t , int , int) {return false;};
-		CommonModelInfo* getCommonModelPointer() { return m_pCommonModelInfo; };
-		void setCommonModelPointer(CommonModelInfo* p) { m_pCommonModelInfo = p; };
+		virtual bool SetAnnimateChart(int , int )  noexcept {return false;};
+		virtual bool SetAnnimateChart(size_t , int , int)  noexcept {return false;};
+		CommonModelInfo* getCommonModelPointer() noexcept { return m_pCommonModelInfo; };
+		void setCommonModelPointer(CommonModelInfo* p) noexcept { m_pCommonModelInfo = p; };
 		vector<Condition> GetArrayConditions() { return conditions_Array; };
 	protected:
 

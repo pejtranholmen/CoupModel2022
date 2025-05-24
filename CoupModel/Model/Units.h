@@ -11,7 +11,7 @@ class Units {
 public:
 	Units();
 	~Units();
-	size_t GetNumUnits() { return m_TypeBasedUnits.size();};
+	size_t GetNumUnits()  noexcept { return m_TypeBasedUnits.size();};
 	string GetUnitString(UNIT_TYPES key, bool withparanthesis=false) {
 		auto it = m_TypeBasedUnits.find(key);
 		if (it != m_TypeBasedUnits.end()) {

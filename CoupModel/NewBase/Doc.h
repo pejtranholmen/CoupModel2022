@@ -90,7 +90,7 @@ public:
 	int m_SumIndicator;
 	int m_NumValidValFiles;
 	int GetNumValidValFiles();
-	size_t GetDocumentType() {return m_DocumentType;};
+	size_t GetDocumentType() noexcept {return m_DocumentType;};
 
 	string GetMultiBinFileName();
 	bool IsOutputBinFileValid();

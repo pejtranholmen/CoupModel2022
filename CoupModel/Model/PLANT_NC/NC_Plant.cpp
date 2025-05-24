@@ -262,7 +262,22 @@ bool NC_Plant::Ini()	{
 
 
 	}
+	if(AccLitterFall_ResetOptions_Sw(AccLitterFall_ResetOptions)==AccLitterFall_ResetOptions_Sw::on) {
+		string filename = m_PG_LitterFallResetDates.GetFileName();
+		size_t LL = filename.rfind("_");
+		m_PG_Zadok.ReOpen();
+		auto numrec = m_PG_LitterFallResetDates.GetNumRecords();
+		auto numvar = m_PG_LitterFallResetDates.GetNumVariables();
+		ILitterfallResetDates.resize(numrec);
+		for (size_t irec = 0; irec < numrec; irec++) 
+			ILitterfallResetDates[irec] = m_PG_LitterFallResetDates.GetLongTime(irec+1)+2000;
+		for (int i = numrec - 1; i >= 0; i--)
+			if (m_pModelInfo->m_ActMin < ILitterfallResetDates[i]) ILitterfallResetCount = i;
 
+		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) TotLitterFall_Tree[jj] = 0.0;
+
+	}
+	
 
 
 	NC_Drivings::Ini();
@@ -1503,9 +1518,12 @@ void NC_Plant::Integ()
 			if(m_pModelStructure->m_NumActPlantElements>_N_)	InFlow(AccTotPlantUptake[_P_], Tot_PlantUptake[_P_ - 1]);
 
 
+
+			if (AccLitterFall_ResetOptions_Sw(AccLitterFall_ResetOptions) == AccLitterFall_ResetOptions_Sw::on) 
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 
 				InFlow(AccBelowLitter[jj], TotPlantLitter[jj] - TotAbovePlantLitter[jj]);
+
 				InFlow(AccAboveLitter[jj], TotAbovePlantLitter[jj]);
 				InFlow(AccPlantLitter[jj], TotPlantLitter[jj]);
 
@@ -3528,6 +3546,15 @@ void NC_Plant::Summation_Fluxes() {
 		}
 
 		TotPlantLitter[jj] = sum(P_LitterFall[_NEWMOBILE][jj]);
+		if (AccLitterFall_ResetOptions_Sw(AccLitterFall_ResetOptions) == AccLitterFall_ResetOptions_Sw::on) {
+			double sumflow = P_LitterFall[_LEAF][jj][0] + P_LitterFall[_OLD_LEAF][jj][0] +
+			P_LitterFall[_STEM][jj][0] + P_LitterFall[_OLD_STEM][jj][0];
+			TotLitterFall_Tree[jj] += sumflow*T_Step;
+			if (m_pModelInfo->m_ActMin > ILitterfallResetDates[ILitterfallResetCount]) {
+				TotLitterFall_Tree[jj] = 0.;
+				if (jj == m_pModelStructure->m_NumActPlantElements - 1) ILitterfallResetCount++;
+			}
+		}
 		TotalPlantLitterFall[jj] = P_LitterFall[_NEWMOBILE][jj];
 		for (size_t j = 1; j <= _OLD_COARSE_ROOT; j++) {
 			TotPlantLitter[jj] += sum(P_LitterFall[j][jj]);

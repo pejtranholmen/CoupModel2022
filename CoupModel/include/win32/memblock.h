@@ -17,8 +17,8 @@ class MemBlock
 public :
 	int len;
 	const char *data;
-	MemBlock() : len(0), data(0) {}
-	MemBlock(const char *data, int len) : len(len), data(data) {}
+	MemBlock()  noexcept : len(0), data(0)   {}
+	MemBlock(const char *data, int len)  noexcept : len(len), data(data) {}
 	char operator[](int i) const { return data[i]; }
 };
 
@@ -27,9 +27,9 @@ class StringArray
 public :
 	int len;
 	const char * const *data;
-	StringArray() : len(0), data(0) {}
-	StringArray(const char * const *data, int len) : len(len), data(data) {}
-	const char *operator[](int i) const { return data[i]; }
+	StringArray()  noexcept : len(0), data(0) {}
+	StringArray(const char * const *data, int len)  noexcept : len(len), data(data) {}
+	const char *operator[](int i) const  noexcept { return data[i]; }
 };
 
 class DoubleArray

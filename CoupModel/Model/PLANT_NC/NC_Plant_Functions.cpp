@@ -583,6 +583,10 @@ bool NC_Plant_Functions::Def()
 		Define(pGs, P_BioElementName[jj] + "Total PlantLitter", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
 		pGs = new Gs(&TotAbovePlantLitter[jj], PLANT, elements(jj + CARBON), TRANSPORT, LITTERFALL, NORMAL);
 		Define(pGs, P_BioElementName[jj] + "Total AbovePLitter", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0" + conditions);
+		pGs = new Gs(&TotLitterFall_Tree[jj], PLANT, elements(jj + CARBON), TRANSPORT, LITTERFALL, NORMAL);
+		Define(pGs, P_BioElementName[jj] + "Total AboveTreeLitter", 0.0, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|LitterFallReset >0" + conditions);
+
+
 		pGs = new Gs(&TotFungiLitter[jj], PLANT, elements(jj + CARBON), TRANSPORT, LITTERFALL, NORMAL);
 		Define(pGs, P_BioElementName[jj] + "Total FungiLitter", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Mycorrhiza Fungal Growth>0" + conditions);
 		pGs = new Gs(&YearGrainHarvest[jj], PLANT,  elements(jj + CARBON), TRANSPORT, HARVEST, NORMAL);

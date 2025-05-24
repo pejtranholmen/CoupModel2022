@@ -22,7 +22,7 @@ public:
 	bool ReadMeanValues();
 	bool ReOpenFile(bool ReadOnly=false);
 	bool ReadHeader();
-	size_t GetMaxNumRec() {return m_MaxNumRec;};
+	size_t GetMaxNumRec()  noexcept {return m_MaxNumRec;};
 
 	float GetResiduals(size_t, size_t, size_t);
 	vector<float> GetResidualVector(size_t RunNo, size_t NumValues);
@@ -85,7 +85,7 @@ public:
 	void ResetSortedResidualFile();
 	bool IsSortedResidualFile();
 	int	 AddSortedResiduals(float *, size_t);
-	void ForcedUpdateofIndicators() {m_IsUpdated_Extra=m_IsAllUpdated_Extra=false;};
+	void ForcedUpdateofIndicators()  noexcept {m_IsUpdated_Extra=m_IsAllUpdated_Extra=false;};
 
 	bool UpdateStatisticsOfIndicators(bool AcceptedOnly=false, void *pScanner=nullptr);
 	

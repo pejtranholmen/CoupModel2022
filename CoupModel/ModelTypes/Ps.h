@@ -21,38 +21,38 @@ class Ps :	public Par
 		void SetNotOldValue() {_IsOldValue=false;};
 		void SetDBValue(double v) {_DBvalue=v;};
 		double GetDBValue() const {return _DBvalue;};
-		void SetMinValue(double v) {_min=v;};
-		double GetMinValue() {return _min;};
+		void SetMinValue(double v)  noexcept {_min=v;};
+		double GetMinValue()  noexcept {return _min;};
 		void SetMaxValue(double v) {_max=v;};
-		double GetMaxValue() {return _max;};
+		double GetMaxValue()  noexcept {return _max;};
 		void SetWarnMinValue(double v) {_wmin=v;};
-		double GetWarnMinValue() {return _wmin;};
+		double GetWarnMinValue() noexcept {return _wmin;};
 		void SetWarnMaxValue(double v) {_wmax=v;};
-		double GetWarnMaxValue() {return _wmax;};
+		double GetWarnMaxValue()  noexcept {return _wmax;};
 		void Apply() {;};
 		void EditApply() {;};
-		virtual double GetOriginalValue() {return _orgFValue;};
-		void SetOriginalValue(double value) {_orgFValue=value;};
+		virtual double GetOriginalValue()  noexcept {return _orgFValue;};
+		void SetOriginalValue(double value)  noexcept {_orgFValue=value;};
 		//double GetOriginalValue() {return _orgFValue;};
 		
-		int MR_Get_Dim() {return _mr.Dimension;};
-		double MR_Get_Min() {return _mr.Min;};
-		double MR_Get_Max() {return _mr.Max;};
-		double MR_Get_Start() {return _mr.Start;};
-		double MR_Get_RelChange() {return _mr.RelChange;};
-		enum MR_METHOD MR_Get_Method() {return _mr.Method;};
-		SIMB Get_MR_PAR_Dependence() {return _mr.MR_Dependent;};
-		SimB *Get_MR_ParDependence() {return _mr.MR_Dependent.pBase;};
-		size_t Get_MR_ParDependenceIndex() {return _mr.MR_Dependent.TabIndex;};
-		void MR_Set_Dim(int value) {_mr.Dimension=value;};
-		void MR_Set_Min(double value) {_mr.Min=value;};
-		void MR_Set_Max(double value) {_mr.Max=value;};
-		void MR_Set_Start(double value) {_mr.Start=value;};
-		void MR_Set_Method(enum MR_METHOD value) {_mr.Method=value;};
-		void MR_Set_RelChange(double value) { _mr.RelChange=value;};
-		void Set_MR_ParDependence(SimB *pSimB, size_t depIndex=-1) {_mr.MR_Dependent.pBase=pSimB;_mr.MR_Dependent.TabIndex=depIndex;};
-		void Set_MR_ParDependenceIndex(size_t index) {_mr.MR_Dependent.TabIndex=index;};
-		void Set_MR_PAR_Dependence(SIMB value) {  _mr.MR_Dependent=value;};
+		int MR_Get_Dim()  noexcept {return _mr.Dimension;};
+		double MR_Get_Min()  noexcept {return _mr.Min;};
+		double MR_Get_Max()  noexcept {return _mr.Max;};
+		double MR_Get_Start()  noexcept {return _mr.Start;};
+		double MR_Get_RelChange()  noexcept {return _mr.RelChange;};
+		enum MR_METHOD MR_Get_Method()  noexcept {return _mr.Method;};
+		SIMB Get_MR_PAR_Dependence() noexcept {return _mr.MR_Dependent;};
+		SimB *Get_MR_ParDependence()  noexcept {return _mr.MR_Dependent.pBase;};
+		size_t Get_MR_ParDependenceIndex() noexcept {return _mr.MR_Dependent.TabIndex;};
+		void MR_Set_Dim(int value)  noexcept {_mr.Dimension=value;};
+		void MR_Set_Min(double value)  noexcept {_mr.Min=value;};
+		void MR_Set_Max(double value) noexcept {_mr.Max=value;};
+		void MR_Set_Start(double value)  noexcept {_mr.Start=value;};
+		void MR_Set_Method(enum MR_METHOD value)  noexcept {_mr.Method=value;};
+		void MR_Set_RelChange(double value) noexcept { _mr.RelChange=value;};
+		void Set_MR_ParDependence(SimB *pSimB, size_t depIndex=-1) noexcept {_mr.MR_Dependent.pBase=pSimB;_mr.MR_Dependent.TabIndex=depIndex;};
+		void Set_MR_ParDependenceIndex(size_t index) noexcept {_mr.MR_Dependent.TabIndex=index;};
+		void Set_MR_PAR_Dependence(SIMB value) noexcept {  _mr.MR_Dependent=value;};
 
 		
 		size_t MR_GetSizeTable() {return _mr_Tab_Value.size();};
@@ -65,7 +65,7 @@ class Ps :	public Par
 		void def(int ModuleNo, string name, double init, string unit, string conditions, 
 			double errormin, double errormax, double warningmin, double warningmax,
 			int recalc=0,  int view=0);
-		bool IsOldValue() {return _IsOldValue;};
+		bool IsOldValue()  noexcept {return _IsOldValue;};
 
 		string GetProcess() {return _Process;};
 

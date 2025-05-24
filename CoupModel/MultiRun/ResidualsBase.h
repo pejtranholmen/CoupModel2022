@@ -43,11 +43,11 @@ public:
 	bool AlloResVector(size_t ActRecl=string::npos);
 	string GetXStatFileName(size_t ensembleno=string::npos);
 	bool IsOpen(bool reading=true);
-	bool SetOneValidationVariableIndex(size_t index) { m_ValidationFileIndex = index; if (m_ValidationFileIndex < 1000) return true; else return false; };
+	bool SetOneValidationVariableIndex(size_t index)  noexcept { m_ValidationFileIndex = index; if (m_ValidationFileIndex < 1000) return true; else return false; };
 	bool EnableEstimatesMade(size_t enableno=0);
 	bool m_IsUpdated, m_IsUpdated_Extra;
 	bool ShiftEnsembleName(string oldname, string newname);
-	void SetResidualBaseFileNumVarScaling(size_t NumVarScaling) { m_ScalingNumVarWithDim1 = NumVarScaling; };
+	void SetResidualBaseFileNumVarScaling(size_t NumVarScaling) noexcept { m_ScalingNumVarWithDim1 = NumVarScaling; };
 	bool m_MeanDefined;
 	size_t m_ValidationFileIndex{ string::npos };
 	std::streamsize ResidualsBase::GetFileSizeFromHandle();

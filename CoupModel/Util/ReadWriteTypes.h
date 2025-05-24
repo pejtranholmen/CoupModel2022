@@ -7,8 +7,8 @@ public:
 	~ReadWriteTypes(void);
 	bool OpenDocFileIn(std::string filename, bool binary_type=false);
 	bool OpenDocFileout(std::string filename);
-	bool IsFileInGood() {return m_DocFileIn.good();};
-	bool IsFileOutGood()  {return m_DocFileOut.good();};
+	bool IsFileInGood() noexcept {return m_DocFileIn.good();};
+	bool IsFileOutGood() noexcept  {return m_DocFileOut.good();};
 	bool SetGetPosition(size_t iv);
 	bool wInt(int *iv);
 	bool wSize_t(size_t *iv);

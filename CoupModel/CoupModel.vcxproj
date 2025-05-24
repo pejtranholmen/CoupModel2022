@@ -25,7 +25,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -594,7 +594,11 @@
     <ClCompile Include="Chart\PlotDesignInfo\PlotStorage.cpp" />
     <ClCompile Include="Chart\RealTime.cpp" />
     <ClCompile Include="Chart\TableView.cpp" />
-    <ClCompile Include="Chart\TimeSeriePlot.cpp" />
+    <ClCompile Include="Chart\TimeSeriePlot.cpp">
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EditAndContinue</DebugInformationFormat>
+      <SupportJustMyCode Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</SupportJustMyCode>
+      <DisableAnalyzeExternal Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DisableAnalyzeExternal>
+    </ClCompile>
     <ClCompile Include="Chart\ZoomUtil\ZoomTimeSerie.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />

@@ -44,14 +44,14 @@ public:
 	void CloseMainDataBase();
 	void CloseExtraDataBase();
 
-	bool IsMainWriteEnabled() {return IsMainEditOpen;};
-	bool IsExtraWriteEnabled() {return IsMainEditOpen;};
+	bool IsMainWriteEnabled() noexcept {return IsMainEditOpen;};
+	bool IsExtraWriteEnabled() noexcept {return IsMainEditOpen;};
 
-	bool IsOpen() {return IsMainEditOpen;};
-	bool NewFormatFile() {return IsNewFormatFile;};
+	bool IsOpen() noexcept {return IsMainEditOpen;};
+	bool NewFormatFile() noexcept {return IsNewFormatFile;};
 	std::string GetDataBaseDirectory() {
 		return m_DataBaseDir;};
-	void SetDataBaseDirectory(std::string dir) {m_DataBaseDir=dir;};
+	void SetDataBaseDirectory(std::string dir) noexcept {m_DataBaseDir=dir;};
 	std::string GetMainDataBaseName(bool OnlyTitle) {
 		if(OnlyTitle) {
 			size_t pos=m_MainStoreName.rfind("\\");
@@ -72,7 +72,7 @@ public:
 		}
 		else		
 			return m_ExtraStoreName;};
-	size_t GetNumProfiles() {return m_HeaderRec.size();};
+	size_t GetNumProfiles() noexcept {return m_HeaderRec.size();};
 	NEWHEADER GetProfile(size_t index) {if(m_AllProfiles.size()>index) return m_AllProfiles[index]; 
 		else if(m_AllProfiles.size()>0) return m_AllProfiles[0]; 
 		else return m_IniHeader;};

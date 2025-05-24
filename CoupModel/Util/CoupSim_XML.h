@@ -23,7 +23,7 @@ public:
         if (!m_register.is_open()) OpenRegister();
     };
 
-    ~Sim_Xml() { OpenRegister(false); };
+    ~Sim_Xml()  noexcept { OpenRegister(false); };
 
     bool OpenRegister(bool read = true) {
 
@@ -41,7 +41,7 @@ public:
         return true;
     };
 
-    bool WriteRegisterFile() {
+    bool WriteRegisterFile()  noexcept {
 
         return false;
     }
@@ -56,7 +56,7 @@ public:
             }*/
     }
 
-    int GetInt(const char *module, const char *type, string name, int default_value) {
+    int GetInt(const char *module, const char *type, string name, int default_value)   noexcept  {
 /*		auto child3 = getLevel3(module, type, name);
 		if (child3 == nullptr) {
 			child3 = getLevel2(module, type)->createNewChildElement(name);
@@ -102,7 +102,7 @@ public:
             return child->getstringAttribute("Value").toStdstring();*/
     };
 
-    vector<pair<string, string>> getAllCurrentListstring() {
+    vector<pair<string, string>> getAllCurrentListstring()  noexcept {
         vector<pair<string, string>> out;
         /*	pair<string, string> node;
             auto num = currentList->getNumChildElements();
@@ -115,7 +115,7 @@ public:
         return out;
     }
 
-    void setValue(const char *name, string newvalue) {
+    void setValue(const char *name, string newvalue)  noexcept {
         /*	auto child = currentList->getChildByName(name);
             if (child == nullptr) {
                 child = currentList->createNewChildElement(name);
@@ -125,7 +125,7 @@ public:
                 child->setAttribute("Value", newvalue);*/
     };
 
-    void setTextValue(const char *name, string newvalue) {
+    void setTextValue(const char *name, string newvalue)  noexcept {
         /*	auto child = currentList->getChildByName(name);
             if (child == nullptr) {
                 child = currentList->createNewChildElement("Text");
@@ -180,7 +180,7 @@ public:
             auto child = currentList.child(name);
         };
         void setTable(const char *module, const char *type, const char *name, vector<string> colnames,
-                      vector<vector<double>> values) {
+                      vector<vector<double>> values)  noexcept {
 
            /* auto child3 = getLevel3(module, type, name);
             if (child3 == nullptr) {
@@ -201,7 +201,7 @@ public:
         }
 
         void setOutPutRow(const char *module, const char *type, const char *name, int index_output, int storeflag,
-                          vector<double> values) {
+                          vector<double> values)  noexcept {
 
           /*  auto child3 = getLevel3(module, type, name);
             if (child3 == nullptr) {
@@ -220,7 +220,7 @@ public:
             child4->setAttribute(string(output_col_names[7]), storeflag);
             child3->addChildElement(child4);*/
         }
-        vector<Output_InXml> getOutputs(const char *type) {
+        vector<Output_InXml> getOutputs(const char *type)  noexcept {
             vector<Output_InXml> out;
 /*            Output_InXml node;
             auto child = demoData->getChildByName(type);
@@ -262,32 +262,32 @@ public:
         vector<Multi_InXml> getMultiRunRows();
 
 
-        bool IsRegisterOpen() { return m_IsOpen; };
+        bool IsRegisterOpen()  noexcept { return m_IsOpen; };
         void setModelGroup(vector<SimB *>, CommonModelInfo *);
         void setModelItems(vector<SimB *>, CommonModelInfo *);
         void setModelNE_All(vector<NE *>);
 
-        void setRegister(const string tag, const int value) {
+        void setRegister(const string tag, const int value)  noexcept {
             /*auto child = dataList.node(tag);
             if (child != nullptr)
                 child->setAttribute("Value", value);*/
         };
-        void setRegister(const string tag, const string value) {
+        void setRegister(const string tag, const string value)  noexcept {
             //dataList->getChildByName(tag)->setAttribute("Value", value);
         };
-        void setRegister(const string tag, const double value) {
+        void setRegister(const string tag, const double value)  noexcept {
             //	dataList->getChildByName(tag)->setAttribute("Value", value);
         };
-        int getIntRegister(const string tag) {
+        int getIntRegister(const string tag)  noexcept {
             //	return dataList->getChildByName(tag)->getIntAttribute("Value");
         };
-        string getstringRegister(const string tag) {
+        string getstringRegister(const string tag)  noexcept {
             //	return dataList->getChildByName(tag)->getstringAttribute("Value");
         };
-        double getDoubleRegister(const string tag) {
+        double getDoubleRegister(const string tag)  noexcept {
             //	return dataList->getChildByName(tag)->getDoubleAttribute("Value");
         };
-        void setHiddenData(const string tag, const int value) {
+        void setHiddenData(const string tag, const int value)  noexcept {
             /*	auto child = dataStore->getChildByName(tag);
                 if (child != nullptr)
                     child->setAttribute("Value", value);
@@ -296,7 +296,7 @@ public:
                     child->setAttribute("Value", value);
                 }*/
         };
-        void setHiddenData(const string tag, const string value) {
+        void setHiddenData(const string tag, const string value)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                  child->setAttribute("Value", value);
@@ -305,7 +305,7 @@ public:
               child->setAttribute("Value", value);
             }*/
         };
-        void setHiddenData(const string tag, const double value) {
+        void setHiddenData(const string tag, const double value) noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 child->setAttribute("Value", value);
@@ -314,7 +314,7 @@ public:
                 child->setAttribute("Value", value);
             }*/
         };
-        void setHiddenChildData(const string tag, const double value) {
+        void setHiddenChildData(const string tag, const double value)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 child->setAttribute("Value", value);
@@ -325,7 +325,7 @@ public:
                         child2->setAttribute("Value", value);
             }*/
         };
-        int getHiddenIntData(const string tag) {
+        int getHiddenIntData(const string tag)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 return child->getIntAttribute("Value");
@@ -333,14 +333,14 @@ public:
                 return 0;*/
         };
 
-        string getHiddenstringData(const string tag) {
+        string getHiddenstringData(const string tag)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 return child->getstringAttribute("Value");
             else
                 return "";*/
         };
-        double getHiddenDoubleData(const string tag) {
+        double getHiddenDoubleData(const string tag) noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 return child->getDoubleAttribute("Value");
@@ -348,7 +348,7 @@ public:
                 return double(MISSING);*/
         };
 
-        bool setFileName(const char *name) {
+        bool setFileName(const char *name)  noexcept {
 //            if (name.find(":") == string::npos)
   //              return false;
           

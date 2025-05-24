@@ -521,6 +521,8 @@ void*  TimeSeriePlot::CreateXYChart()
 	int legendposX, legendposY;
 	legendposX=m_pUtil->GetLegendXPos();
 	legendposY=m_pUtil->GetLegendYPos();
+	auto koll1 = legendposX;
+
 	createlegend=m_pUtil->MakeLegends();
 
 	if(m_ChartSize.yrow==0&&m_ChartSize.xcol==0) {
@@ -764,6 +766,8 @@ bool TimeSeriePlot::UpdateViewPortTime()
 	if(m_pProp->viewPortTimeStamps2!=nullptr) delete [] m_pProp->viewPortTimeStamps2;
 	m_pProp->viewPortTimeStamps = new double[m_ChartInfo.NumOfPoints];
 	m_pProp->viewPortTimeStamps2 = new double[m_ChartInfo.NumOfPoints];
+
+	auto koll = m_ChartInfo.NumOfPoints;
 
 	m_Agg.ArraySizeInBytes = m_ChartInfo.NumOfPoints * sizeof(double);
 	if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE || m_pProp->m_ChartType == CHART_TYPES::CONTOUR_CHART || m_pProp->m_ChartType == CHART_TYPES::SCATTER) {
@@ -1330,9 +1334,8 @@ void TimeSeriePlot::ShowChartonScreen_OptionallyCreateFile(MultiChart *mc) {
 	else {
 		BaseChart *co;
 		co=m_pChartViewer->getChart();
-	//	if(co!=nullptr)
-	//		delete co;
-	//m_ChartViewer.setChart(mc);
+		//if(co!=nullptr)
+		//	delete co;
 		m_pView->MakeChart(mc);
 	}
 	if(m_pUtil->m_FileSave.m_SaveFile)
