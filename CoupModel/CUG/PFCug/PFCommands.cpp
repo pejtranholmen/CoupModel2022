@@ -623,7 +623,7 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 
 				SOILHEADER header = pGetSoil->GetSoilHeaderByNum(0);
 				vector<float> values;
-				if (header.NumLayers != string::npos)
+				if (header.NumLayers != std::string::npos)
 					for (size_t layer = 0; layer<header.NumLayers; layer++)
 						values = pGetSoil->GetSoilData(header.KeyProf, header.NumProf, layer);
 
@@ -644,14 +644,14 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 			if (FDLG.opengood) {
 				filename = FDLG.filename;
 				size_t pos = filename.find(".dba");
-				if (pos == string::npos) pos = filename.find(".DBA");
-				if (pos != string::npos)
+				if (pos == std::string::npos) pos = filename.find(".DBA");
+				if (pos != std::string::npos)
 					filename = filename.substr(0, pos);
 				else {
 					pos = filename.find(".dbn");
-					if (pos == string::npos) pos = filename.find(".DBN");
+					if (pos == std::string::npos) pos = filename.find(".DBN");
 
-					if (pos != string::npos)
+					if (pos != std::string::npos)
 						filename = filename.substr(0, pos);
 				}
 
@@ -799,7 +799,7 @@ string PFCommands::EstimateHydraulicCondByTexture(size_t Layer, bool All) {
 
 	return str;
 }
-bool PFCommands::EditOfProfileInfo(int row, string str) {
+bool PFCommands::EditOfProfileInfo(int row, std::string str) {
 
 	size_t nc;
 	size_t nkol;
@@ -874,7 +874,7 @@ bool PFCommands::EditOfProfileInfo(int row, string str) {
 
 
 }
-bool PFCommands::EditOfLayerInfo(int col, int row, string str) {
+bool PFCommands::EditOfLayerInfo(int col, int row, std::string str) {
 	CUGCell cell;
 	int isheet=GetSheetNumber();
 		int prof1=p_PFCurve->m_ActProfile.KeyProf/100;

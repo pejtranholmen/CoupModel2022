@@ -95,7 +95,7 @@ bool Plant::Def()
 	ps_vec.push_back(pPs);
 	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::ROOTDEPTH_EXP_DISTRIBUTION; functorprop.Arg = MyArgType::D2;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Depth Exp Function";
 
 	Define(pFunc, functorprop, funcname, ps_vec);
@@ -155,7 +155,7 @@ bool Plant::Def()
 
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::ROOTDEPTH_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Depth Day Number Function";
 
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -171,7 +171,7 @@ bool Plant::Def()
 
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::ROOTLENGTH_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Length Day Number Function";
 
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -221,7 +221,7 @@ bool Plant::Def()
 	p_vec.push_back(mTab_Above_t[1]);
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::LAI_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Leaf Area Index Day of year function";
 
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -238,14 +238,14 @@ bool Plant::Def()
 
 
 	functorprop.FuncName = MyFunc::ALBEDO_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Albedo Day of year function";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
 	p_vec.erase(p_vec.end() - 1);  p_vec.push_back(mTab_Above_t[3]);
 
 	functorprop.FuncName = MyFunc::CANOPYHEIGHT_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Height Day of year function";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -267,7 +267,7 @@ bool Plant::Def()
 	p_vec.push_back(pP);
 
 	functorprop.FuncName = MyFunc::LEAFAREAINDEX_PER_MASS; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Leaf Area Index - per mass";
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_Points = 100;
@@ -473,7 +473,7 @@ bool Plant::Def()
 
 
 	functorprop.FuncName = MyFunc::LEAFAREAINDEX_SEASON; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Leaf Area Index - with season";
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 365;
@@ -507,7 +507,7 @@ bool Plant::Def()
 	p_vec.push_back(pP);
 	mTab_Height.push_back(pP);
 	functorprop.FuncName = MyFunc::CANOPYHEIGHT_SEASON; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Height - with season";
 	plotpar.Y_Label = "Height (m)";
 	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
@@ -541,7 +541,7 @@ bool Plant::Def()
 
 	pTab = new Tab(&mTab_Albedo, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::ALBEDOVEG_SEASON; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Albedo Vegetation - with season";
 	plotpar.Y_Label = "Albedo (%)";
 	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
@@ -576,7 +576,7 @@ bool Plant::Def()
 	p_vec.push_back(pP);
 	mTab_RootDepth.push_back(pP);
 	functorprop.FuncName = MyFunc::ROOTDEPTH_SEASON; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Depth - with season";
 	plotpar.Y_Label = "Depth (m)";
 	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
@@ -608,7 +608,7 @@ bool Plant::Def()
 	mTab_RootLength.push_back(pP);
 	p_vec.push_back(pP);
 	functorprop.FuncName = MyFunc::ROOTLENGTH_SEASON; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Length - with season";
 	plotpar.Y_Label = "Length ";	  plotpar.Y_Label += +"()";
 	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
@@ -635,7 +635,7 @@ bool Plant::Def()
 	Define(pTab, "Surface canopy cover - multiple canopies", "Max Cover|Area kExp", "PlantType > 2");
 
 	functorprop.FuncName = MyFunc::CANOPYCOVER; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Cover Function";
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 5;
@@ -733,7 +733,7 @@ bool Plant::Ini()	{
 		if(LAIInput==3) {
 			filename=m_PG_Crop.GetFileName();
 			size_t LL=filename.rfind("_");
-			 if(LL!=string::npos) {
+			 if(LL!= std::string::npos) {
 				string newname, num;
 				num=STD_ItoAscii(int(PlantDynamic_IndexFile));
 				newname= filename.substr(0,LL+1)+num;
@@ -1052,15 +1052,15 @@ bool Plant::CheckEcoDriv2()
 
    PlantExtraPosIvar.resize(NumPlants);
    for(size_t i=0; i<m_PG_Crop.GetNumVariables(); i++) {
-		 string name=m_PG_Crop.GetVarName(i+1);
-		 string Id=m_PG_Crop.GetVarId(i+1);
+		 std::string name=m_PG_Crop.GetVarName(i+1);
+		 std::string Id=m_PG_Crop.GetVarId(i+1);
 
 		 for(size_t ii=0; ii<20;ii++) {
 			if(int(name[ii])>=97) {
 				name[ii]=char(int(name[ii])-32);
 			}
 		 }           
-		if(name.find("LAI")!=string::npos) {
+		if(name.find("LAI")!= std::string::npos) {
 			  CountLAI+=1;
 			  if(CountLAI==PlantV_Index) {
 				  LAI_Ipos.ivar=i+1;
@@ -1070,7 +1070,7 @@ bool Plant::CheckEcoDriv2()
 				  PlantExtraPosIvar[CountLAI-1]=i+1-LAI_Ipos.ivar;
 			  }
 		}  
-		else if(name.find("LEAF")!=string::npos) {
+		else if(name.find("LEAF")!= std::string::npos) {
 			  CountLAI+=1;
 			  if(CountLAI==PlantV_Index)  {
 					LAI_Ipos.ivar=i+1;
@@ -1080,24 +1080,24 @@ bool Plant::CheckEcoDriv2()
 				  PlantExtraPosIvar[CountLAI-1]=i+1-LAI_Ipos.ivar;
 			  }
 		}
-  		else if(name.find("ROUGH")!=string::npos&&RoughIpos.ivar==0) 
+  		else if(name.find("ROUGH")!= std::string::npos&&RoughIpos.ivar==0) 
 			  RoughIpos.ivar=i+1;
-		else if(name.find("DISPL")!=string::npos&&DisplIpos.ivar==0)
+		else if(name.find("DISPL")!= std::string::npos&&DisplIpos.ivar==0)
 			  DisplIpos.ivar=i+1;
-		else if(name.find("HEIGHT")!=string::npos) {
+		else if(name.find("HEIGHT")!= std::string::npos) {
 			  CountHeight+=1;
 			  if(CountHeight==PlantV_Index) 
 					HeightIpos.ivar=i+1;
 		}
-		else if(name.find("ROOT")!=string::npos&&RootIpos.ivar==0)
+		else if(name.find("ROOT")!= std::string::npos&&RootIpos.ivar==0)
 			  RootIpos.ivar=i+1;
-		else if(name.find("LROOT")!=string::npos&&RootLengthIpos.ivar==0) 
+		else if(name.find("LROOT")!= std::string::npos&&RootLengthIpos.ivar==0) 
 			  RootLengthIpos.ivar=i+1;
-		else if(name.find("ALBEDO")!=string::npos&&AlbedoVegIpos.ivar==0)
+		else if(name.find("ALBEDO")!= std::string::npos&&AlbedoVegIpos.ivar==0)
 			  AlbedoVegIpos.ivar=i+1;
-		else if(name.find("RESSURF")!=string::npos&&ResSurfIpos.ivar==0) 
+		else if(name.find("RESSURF")!= std::string::npos&&ResSurfIpos.ivar==0) 
 			ResSurfIpos.ivar=i+1;
-		else if(name.find("                    ")!=string::npos) {
+		else if(name.find("                    ")!= std::string::npos) {
 			 Imiss=Imiss+1;
 			 CountLAI+=1;
 			  if(CountLAI==PlantV_Index) {

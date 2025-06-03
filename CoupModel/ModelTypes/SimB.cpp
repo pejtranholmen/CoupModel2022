@@ -21,7 +21,7 @@ SimB::SimB()
 	_def.fproc = fysprocess::STORAGE;
 	_def.bproc = bioprocess::NOBPROC;
 	_def.ulev = userlevel::NORMAL;
-	_ModuleNo = string::npos;
+	_ModuleNo = std::string::npos;
 	m_ChildChange = false;
 
 }
@@ -118,11 +118,11 @@ void SimB::Decode(string ConditionString) {
 	bool		is_value;
 	int			i = 0, lenght;
 	//conditions.clear();
-	//If he string is empty there are no conditions to be parsed
+	//If he std::string is empty there are no conditions to be parsed
 	if (ConditionString.size() == 0) return;
-	//lenght=length of condition string
+	//lenght=length of condition std::string
 	lenght = ConditionString.size();
-	//Step through the whole condition string
+	//Step through the whole condition std::string
 	while (i < lenght) {
 		Condition	store;
 		//temporary strings
@@ -132,8 +132,8 @@ void SimB::Decode(string ConditionString) {
 		//Jump over the sign |
 		if (i < lenght && ConditionString[i] == '|') { i++; continue; }
 		//While ConditionString[i] is a character or a space
-		//and while the whole string isnt processed
-		//add ConditionString[i] to the temporary string var
+		//and while the whole std::string isnt processed
+		//add ConditionString[i] to the temporary std::string var
 		while (i < lenght && (ConditionString[i] == ' ' ||
 			(ConditionString[i] >= 'A' && ConditionString[i] <= 'Z') ||
 			(ConditionString[i] >= 'a' && ConditionString[i] <= 'z')))
@@ -156,7 +156,7 @@ void SimB::Decode(string ConditionString) {
 
 		//Here the operator is read into oper
 		//while ConditionString[i] is either =,<,> or /
-		//and while the whole string hasnt been processed
+		//and while the whole std::string hasnt been processed
 		while (i < lenght &&
 			(ConditionString[i] == '=' || ConditionString[i] == '<'
 				|| ConditionString[i] == '>' || ConditionString[i] == '/'))
@@ -196,7 +196,7 @@ void SimB::Decode(string ConditionString) {
 		//then add this condition to the conditions array
 		if (store.variable != nullptr && store.op != SIMB_COMP::NOVALUE)
 			conditions_Array.push_back(store);
-		//If theres left of the string and ConditionString[i]==| then
+		//If theres left of the std::string and ConditionString[i]==| then
 		//Why is there a continue here. It shouldnt be needed
 		if (i < lenght && ConditionString[i] == '|')
 		{
@@ -209,7 +209,7 @@ int SimB::ValDecode(string ValueString) const{
 	return FUtil::AtoInt(ValueString);
 }
 
-//Function for decoding an operand stored in a string
+//Function for decoding an operand stored in a std::string
 //if the operands corresponds to values then
 //true is returned, else false is returned
 SIMB_COMP SimB::OpDecode(string OperandString,bool *BoolValue) const{    

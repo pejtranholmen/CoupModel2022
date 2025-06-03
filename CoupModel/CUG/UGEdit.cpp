@@ -127,7 +127,7 @@ void CUGEdit::CalcEditRect()
 	if(!m_tempAutoSize || !m_ctrl->m_GI->m_enableCellOverLap)
 		return;
 	
-	CString string;
+	CString std::string;
 	RECT	editRect;
 	RECT	parentRect;
 	RECT	fmtRect;
@@ -148,7 +148,7 @@ void CUGEdit::CalcEditRect()
 	fmtRect.right = parentRect.right;
 	fmtRect.left +=2;
 
-//	if (!UGXPThemes::GetTextExtent(m_hWnd, *dc, XPCellTypeData, ThemeStateNormal, string.GetBuffer(string.GetLength()), string.GetLength(), DT_LEFT | DT_WORDBREAK, &fmtRect))
+//	if (!UGXPThemes::GetTextExtent(m_hWnd, *dc, XPCellTypeData, ThemeStateNormal, std::string.GetBuffer(string.GetLength()), std::string.GetLength(), DT_LEFT | DT_WORDBREAK, &fmtRect))
 	{
 		if(GetFont() != nullptr)
 			oldFont = (CFont *)dc->SelectObject(GetFont());

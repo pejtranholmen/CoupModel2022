@@ -8,7 +8,7 @@ public:
 
 	~X();
 
-	void Def(size_t module_no, string varname, vector<double> initv, string unit, string conditions);  
+	void Def(size_t module_no, std::string varname, std::vector<double> initv, std::string unit, std::string conditions);  
 
 protected:
 

@@ -95,7 +95,7 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 					else if(After=="Contour Chart") {
 						m_pProp->m_ChartType= CHART_TYPES::CONTOUR_CHART;
 						if(m_pUtil->m_MultiRunPlot) {
-							if(m_pProp->GetFirstIndepIndex()==m_pProp->GetSecondIndepIndex()&&m_pProp->GetSecondIndepIndex()==string::npos) 
+							if(m_pProp->GetFirstIndepIndex()==m_pProp->GetSecondIndepIndex()&&m_pProp->GetSecondIndepIndex()== std::string::npos) 
 								m_pProp->SetSecondIndepIndex(PARVAR,1);
 							OnUpdate();
 

@@ -24,7 +24,7 @@ public:
 	bool ResidualFile_AddAttachedFiles(size_t num);
 	bool ResidualFile_SetNumAttachedFiles(size_t num);
 
-	vector< vector<CResiduals*>> m_ResidualFileVector;
+	vector< std::vector<CResiduals*>> m_ResidualFileVector;
 	
 
 protected:

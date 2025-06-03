@@ -55,7 +55,7 @@ bool P_Mineral_Functions::Def()
 		ps_vec.clear();
 		Tab *pTab;
 
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		functorprop.pModelInfo = m_pModelInfo;
 
 		PLOT_PARAM plotpar;
@@ -273,7 +273,7 @@ double P_Mineral_Functions::FungiPUptMaxAvailFrac_Function(double RootDensity, s
 	return out;
 }
 
-Plant_Uptake  P_Mineral_Functions::PUptake(vector<double> Dist, size_t NUM, size_t index, double P_Demand, double P_Tot_Demand, vector<double> Dist_Tot, double factPdemandFungi, double FungiPhosphateUptpot, double P_FungiDemand, double P_Tot_FungiDemand) {
+Plant_Uptake  P_Mineral_Functions::PUptake(vector<double> Dist, size_t NUM, size_t index, double P_Demand, double P_Tot_Demand, std::vector<double> Dist_Tot, double factPdemandFungi, double FungiPhosphateUptpot, double P_FungiDemand, double P_Tot_FungiDemand) {
 
 	SoilModel* p_Soil = (SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 	Soil_Frost* pSoil = &p_Soil->m_SoilFrost;

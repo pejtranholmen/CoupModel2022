@@ -51,7 +51,7 @@ public:
 	double Weath_pH_Response(double value);
 	double PUptMaxAvailFrac_Function(double RootDensity, size_t PlantIndex);
 	double FungiPUptMaxAvailFrac_Function(double RootDensity, size_t PlantIndex, bool LPhosphate);
-	Plant_Uptake PUptake(vector<double> Dist, size_t NUM, size_t index, double P_demand, double P_Tot_Demand, vector<double> Dist_Tot, double factPdemandFungi, double FungiPhosphateUptpot, double P_FungiDemand, double P_Tot_FungiDemand);
+	Plant_Uptake PUptake(vector<double> Dist, size_t NUM, size_t index, double P_demand, double P_Tot_Demand, std::vector<double> Dist_Tot, double factPdemandFungi, double FungiPhosphateUptpot, double P_FungiDemand, double P_Tot_FungiDemand);
 	void PhosphorusUptakeResetForAllSoilLayers();
 
 	function<double(double)> f_FirstOrder, f_pH_Response, f_Adsorption, f_PSurfaceRunoff_Conc;

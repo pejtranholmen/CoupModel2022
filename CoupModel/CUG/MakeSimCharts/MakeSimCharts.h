@@ -11,12 +11,12 @@ public:
 	MakeSimCharts(void);
 	bool ManagePlotWindows(int, int, bool multisum=false);
 	void UpdateCurrentChart(bool multi=false);
-	bool CreateZoomPlotWindow(bool multi=false, string FileName="");
+	bool CreateZoomPlotWindow(bool multi=false, std::string FileName="");
 	void UpdatePlotStatusBar(int, BOOL clean=false);
-	void TimeSerieChartClick(long col, long row, long isheet, SimB *pSw=nullptr, int Index=0, int VariableType=0, string Type="", int ValFileNo=1, int RepitNo=1);
+	void TimeSerieChartClick(long col, long row, long isheet, SimB *pSw=nullptr, int Index=0, int VariableType=0, std::string Type="", int ValFileNo=1, int RepitNo=1);
 	void TimeSerieChart(int isheet);
 	void CleanChartsMade();
-	bool CalculateMeanOffTimeSeries(long item, int ival_file, size_t ival_index=string::npos);
+	bool CalculateMeanOffTimeSeries(long item, int ival_file, size_t ival_index= std::string::npos);
 	MultiVAL GetBlankMultiValStruct();
 	~MakeSimCharts(void);
 
@@ -33,14 +33,14 @@ protected:
 	vector<Tab*> GetTabVectorByCategory(int category);
 	bool Make_ParameterChart(SimB* pSimB, Tab *pTAB=nullptr, size_t index=0, size_t FuncNo=0);
 	bool Make_TableChart(Tab* pTab, P *pCPt = nullptr);
-	bool Make_SwitchChart(Sw *pSw=nullptr, string Group="");
+	bool Make_SwitchChart(Sw *pSw=nullptr, std::string Group="");
 
 	bool MultiPlotClick(int isheet, int col,  int row, bool Add=true, int Indep=0);
-	bool MultiPlotVectorClick(vector<int> row_vector, size_t col=string::npos);
+	bool MultiPlotVectorClick(vector<int> row_vector, size_t col= std::string::npos);
 
 	bool MakeMultiPlot(int isheet, int col, int row);
-	bool CreateChart(CHART_TYPES charttype, int chartnum, enum class DATA_TYPES dtype, string file="");
-//	void TimeSerieChartClick(long col, long row, long isheet, CPG *pSw, int Index, int VariableType, string Type, int ValFileNo=1, int RepitNo=1);
+	bool CreateChart(CHART_TYPES charttype, int chartnum, enum class DATA_TYPES dtype, std::string file="");
+//	void TimeSerieChartClick(long col, long row, long isheet, CPG *pSw, int Index, int VariableType, std::string Type, int ValFileNo=1, int RepitNo=1);
 
 	
 	void MakePlotWindows();

@@ -10,7 +10,7 @@ Ts::Ts(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	SetSimType(FLOW_SINGLE);
 	;
 }
-void Ts::Def(size_t ModuleNo, string name, double init, string unit, string conditions)
+void Ts::Def(size_t ModuleNo, std::string name, double init, std::string unit, std::string conditions)
 {
 
 	SetValue(init);

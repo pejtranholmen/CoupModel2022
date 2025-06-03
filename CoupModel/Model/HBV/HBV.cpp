@@ -59,7 +59,7 @@ bool HBV::Def()
 	Define(pPs, "Critical Uptake Frac", .45, "mm", "", 0.1, 1.0);
 
 	functorprop.FuncName = MyFunc::HBV_ACTUALEVAPORATION; functorprop.Arg = MyArgType::D2;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Actual Evaporation Function";
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_Points = 300;
@@ -144,7 +144,7 @@ bool HBV::Def()
 	pPs = new Ps(&MaxPerc, SINGLE, WATER, PERCOLATION, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "PMaxPerc", 0.5,UNIT_TYPES::WATERFLOW_UNIT, "", 0.1, 0.6);
 	functorprop.FuncName = MyFunc::HBV_GROUNDWATER_REDIST; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "HBV GroundWater Redistribution Function";
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_Points = 300;
@@ -174,7 +174,7 @@ bool HBV::Def()
 	Define(pPs, "PowerCoef_GwLev", 1., "-", "", 1., 100.);
 
 	functorprop.FuncName = MyFunc::HBV_GROUNDWATERLEVEL; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "HBV GroundWater Level Function";
 	pFunc = new Func(SINGLE, WATER, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();

@@ -204,7 +204,7 @@ void CUGVScroll::VScroll(UINT nSBCode, UINT nPos)
 		#ifdef UG_ENABLE_SCROLLHINTS
 			if(m_GI->m_enableVScrollHints)
 			{
-				CString string;
+				CString std::string;
 				RECT rect;
 				GetWindowRect(&rect);
 				rect.top = HIWORD(GetMessagePos());

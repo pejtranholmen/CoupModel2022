@@ -18,7 +18,7 @@ protected:
 	void Set_TotLogLi(double value) {m_totlogli=value;};
 	double Random_NormDist();
 	void UpdateNewPValues();
-	float GetBestRun() {return float(m_BestRun);};
+	float GetBestRun() noexcept {return float(m_BestRun);};
 	void SetNewPValues();
 	bool IsRunAccepted() {return AcceptedRun;};
 

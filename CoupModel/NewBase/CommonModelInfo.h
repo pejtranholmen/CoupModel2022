@@ -25,7 +25,7 @@ public:
 		if (it != m_GroupCategoryNo.end())
 			return it->second;
 		else
-			return string::npos;
+			return std::string::npos;
 ;};
 
 	std::string GetGroupCategoryNames(size_t index) {if(index<m_GroupCategoryNames.size()) return m_GroupCategoryNames[index];return "All Modules";};
@@ -69,7 +69,7 @@ public:
 		else
 			return txt;
 	}
-	void insert_ChangedNames(vector<pair<string, string>>);
+	void insert_ChangedNames(vector<pair<string, std::string>>);
 
 
 	std::vector<std::string> GetSortedListofElements();

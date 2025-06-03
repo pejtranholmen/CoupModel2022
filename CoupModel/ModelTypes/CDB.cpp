@@ -126,7 +126,7 @@ CDB::CDB(int index):SimB(DB)
 
 
 
-CDB::CDB(string group, string selection)
+CDB::CDB(string group, std::string selection)
 {
 	ID_Group=group;
 	while(selection.find('\t')>-1)
@@ -140,7 +140,7 @@ bool CDB::SetValue(string str)
 	ID_Selection=str;
 	return true;
 }
-bool CDB::SetChaDateAndValues(long newdate, string str, string key){
+bool CDB::SetChaDateAndValues(long newdate, std::string str, std::string key){
 
 
 	while(str.find("\t")>-1)
@@ -248,12 +248,12 @@ string CDB::GetStringValue()
 {
    return ID_Selection;
 }
-void CDB::MR_AddSelection(string des, string key)
+void CDB::MR_AddSelection(string des, std::string key)
 {
 	  MR_ParSelection.push_back(des);
 	  MR_KeySelection.push_back(key);
 }
-void CDB::MR_SetSelection(size_t index,string des, string key)
+void CDB::MR_SetSelection(size_t index,string des, std::string key)
 {
 	if(index<MR_ParSelection.size()) {
 		MR_ParSelection[index]=des;

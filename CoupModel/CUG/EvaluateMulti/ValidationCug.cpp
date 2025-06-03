@@ -3157,7 +3157,7 @@ int ValidationCug::OnEditVerify(int col, long row,CWnd *edit,UINT *vcKey)
 
 /////////////////////////////////////////////////////////////////////////////
 //	OnEditFinish this is send when editing is finished
-int ValidationCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
+int ValidationCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
 {
 	CString str;
 	CUGCell cell;
@@ -4630,9 +4630,9 @@ BOOL ValidationCug::DefineNewSubPeriod()
 		auto filterindex = [&]() {
 			for (auto valv : m_pSimDoc->m_Val_Array) {
 				auto test_index = valv.Name.find("Filter_Id");
-				if (test_index != string::npos) return test_index;
+				if (test_index != std::string::npos) return test_index;
 			}
-			return string::npos;
+			return std::string::npos;
 		};
 		auto testindex = filterindex();
 		if (m_SplitPeriods > 0) {
@@ -4641,7 +4641,7 @@ BOOL ValidationCug::DefineNewSubPeriod()
 			m_NumberNewSplitPeriods = 0;
 		}
 		else {
-			if (testindex != string::npos) {
+			if (testindex != std::string::npos) {
 				auto FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(testindex);
 				filter_index = testindex;
 				pValFile = m_pSimDoc->ValidationFilePointer(FileNo);
@@ -4807,7 +4807,7 @@ BOOL ValidationCug::DefineNewSubPeriod()
 						auto pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
 						auto nTabIndex = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
 						string namep = pPar->GetName();
-						if (namep.find("Index for selection of File") != string::npos) {
+						if (namep.find("Index for selection of File") != std::string::npos) {
 							index_split_par = numpar_calib;
 						}
 						numpar_calib++;

@@ -99,8 +99,8 @@ public:
 	size_t GetSecondIndepIndex();
 	void SetFirstIndepIndex(enum vartype, size_t index, size_t index2=0);
 	void SetSecondIndepIndex(enum vartype, size_t index);
-	void SetFirstIndepString(enum vartype, string str, size_t index=0);
-	void SetSecondIndepString(enum vartype, string str);
+	void SetFirstIndepString(enum vartype, std::string str, size_t index=0);
+	void SetSecondIndepString(enum vartype, std::string str);
 	enum vartype GetFirstIndepVarType() {return m_Indep.First;};
 	enum vartype GetSecondIndepVarType() {return m_Indep.Second;};
 	void SetFirstIndepVarType(enum vartype var) {m_Indep.First=var;if(var==NO_USE) SetFirstIndepIndex(var, 0); };

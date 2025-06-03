@@ -39,9 +39,9 @@ public:
 	virtual BOOL OnInit();
 	void SetChartCUGPointer(void *p) {m_ChartCugPtr =p;};
 	void UpdateData();
-	BOOL AddChartVar(int chartno, SimB* Sw, string type, int index);
+	BOOL AddChartVar(int chartno, SimB* Sw, std::string type, int index);
 	BOOL RemoveChartVar(int chartno,int varno);
-	BOOL SetChartTitle(int chartno, string text);
+	BOOL SetChartTitle(int chartno, std::string text);
 	BOOL SetChartType(int chartno, int);
 	void SetMultiSimDisplay(BOOL value) {m_MultiSimDisplay=value;};
 	BOOL GetMultiSimDisplay() {return m_MultiSimDisplay;};
@@ -93,7 +93,7 @@ protected:
 	BOOL m_InitDialog;
 
 	size_t m_NumRealCharts;
-	vector< vector<size_t>> m_VarMonitoring;
+	vector< std::vector<size_t>> m_VarMonitoring;
 
 
 	vector<string> m_Title, m_GroupA, m_GroupB, m_GroupC, m_GroupD;

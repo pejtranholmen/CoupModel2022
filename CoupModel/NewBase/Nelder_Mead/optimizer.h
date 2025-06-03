@@ -5,7 +5,7 @@
 #include <algorithm>
 using namespace std;
 
-// Float vector with standard operations
+// Float std::vector with standard operations
 class Vector {
 public:
     Vector() {
@@ -109,7 +109,7 @@ public:
         return pow(sum, 0.5f);
     }
 private:
-    vector<float> coords;
+    std::vector<float> coords;
 };
 
 // This class stores known values for vectors.
@@ -298,6 +298,6 @@ class NelderMeadOptimizer {
         size_t dimension;
         float alpha, gamma, rho, sigma;
         float termination_distance;
-        vector<Vector> vectors;
+        std::vector<Vector> vectors;
         ValueDB db;
 };

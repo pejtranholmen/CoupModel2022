@@ -120,7 +120,7 @@ bool SoilEvaporation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::RA_BELOWCANOPYLAI; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Below Canopy Aerodynamic Resistance Function";
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_Points = 100;
@@ -146,7 +146,7 @@ bool SoilEvaporation_Functions::Def()
 
 	ps_vec.clear();
 	functorprop.FuncName = MyFunc::RA_HEATSOIL_NEUTRAL; functorprop.Arg = MyArgType::D2;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Aerodynamic Resistance (Neutral) above bare soil";
 	plotpar.Num_Of_Curves = 2;
 	plotpar.Num_Of_X = 2;
@@ -166,7 +166,7 @@ bool SoilEvaporation_Functions::Def()
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar) ;
 
 	functorprop.FuncName = MyFunc::RA_HEATSOIL_ANALYTICAL; functorprop.Arg = MyArgType::D5;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Aerodynamic Resistance above soil surface - with plant";
 	plotpar.Num_Of_Curves = 3;
 	plotpar.Num_Of_X = 5;
@@ -192,7 +192,7 @@ bool SoilEvaporation_Functions::Def()
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::RA_HEATSOIL_NUMERICAL; functorprop.Arg = MyArgType::D5;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Num_Of_X = 5;
 	funcname = "Aerodynamic Resistance above soil surface (Monin-Obukkov) - with plant";
 	pFunc = new Func(SOILSURFACE, VAPOUR, SOILEVAPORATION, NOBPROC, NORMAL);
@@ -200,7 +200,7 @@ bool SoilEvaporation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::RA_HEATSOIL_ANALYTICAL; functorprop.Arg = MyArgType::D4;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Aerodynamic Resistance above soil surface ";
 	plotpar.Num_Of_X = 2;
 	plotpar.Num_Of_Curves = 2;
@@ -215,7 +215,7 @@ bool SoilEvaporation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::RA_HEATSOIL_NUMERICAL; functorprop.Arg = MyArgType::D4;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Num_Of_X = 4;
 
 	funcname = "Aerodynamic Resistance above soil surface (Monin-Obukkov) ";
@@ -224,7 +224,7 @@ bool SoilEvaporation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::STABILITY_ANALYTICAL; functorprop.Arg = MyArgType::D4;
-	functorprop.FunctorInitOption = string::npos; 
+	functorprop.FunctorInitOption = std::string::npos; 
 		funcname = "Analytical Atmosphere Stability Function";
 	pFunc = new Func(SOILSURFACE, VAPOUR, SOILEVAPORATION, NOBPROC, NORMAL);
 	for (size_t i = 0; i < 4; i++) {ps_vec.erase(ps_vec.begin());}

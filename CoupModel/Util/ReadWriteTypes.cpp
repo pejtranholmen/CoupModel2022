@@ -351,7 +351,7 @@ vector<size_t> ReadWriteTypes::rsize_tArray(size_t n,  size_t line_break)
 	}
 	return v;
 }
-bool ReadWriteTypes::wFloatArray(const vector<float> &f) 
+bool ReadWriteTypes::wFloatArray(const std::vector<float> &f) 
 {
 	for (size_t i = 0; i < f.size(); i++)
 		m_DocFileOut << f[i] << " ";
@@ -368,7 +368,7 @@ bool ReadWriteTypes::wFloatArray(float* f, size_t n)
 	return m_DocFileOut.good();
 }
 
-bool ReadWriteTypes::wFloatArray2(const vector<float> &v, size_t n, size_t line_break)
+bool ReadWriteTypes::wFloatArray2(const std::vector<float> &v, size_t n, size_t line_break)
 {
 	std::ofstream debug("debug_log.txt", std::ios::app);
 
@@ -407,7 +407,7 @@ bool ReadWriteTypes::wFloatArray2(const vector<float> &v, size_t n, size_t line_
 	return m_DocFileOut.good();
 }
 
-bool ReadWriteTypes::wFloatArray2(const vector<float>& v, size_t line_break) 
+bool ReadWriteTypes::wFloatArray2(const std::vector<float>& v, size_t line_break) 
 {
 	size_t line_count = 1;
 	m_DocFileOut << line_count << ',';
@@ -455,7 +455,7 @@ vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break)
 	return v;
 }
 
-bool ReadWriteTypes::wuLongArray(const vector<unsigned long> &v, size_t n)
+bool ReadWriteTypes::wuLongArray(const std::vector<unsigned long> &v, size_t n)
 {
 	for (size_t i = 0; i < n; i++)
 		m_DocFileOut << v[i] << " ";
@@ -463,10 +463,10 @@ bool ReadWriteTypes::wuLongArray(const vector<unsigned long> &v, size_t n)
 	return m_DocFileOut.good();
 }
 
-bool ReadWriteTypes::wsize_tArray(const vector<size_t> &v, size_t n, size_t line_break)
+bool ReadWriteTypes::wsize_tArray(const std::vector<size_t> &v, size_t n, size_t line_break)
 {
 	size_t line_count = 1;
-	if (n == string::npos) n = v.size();
+	if (n == std::string::npos) n = v.size();
 	if(line_break<n)
 		m_DocFileOut << line_count<<',';
 	for (size_t i = 0; i < n; i++) {

@@ -99,7 +99,7 @@ private:
 
 };
 class DenitTheta {
-public: DenitTheta(double range, double PowerC, vector<double> saturation) : range(range), PowerC(PowerC), saturation(saturation) {}
+public: DenitTheta(double range, double PowerC, std::vector<double> saturation) : range(range), PowerC(PowerC), saturation(saturation) {}
 	  double operator() (size_t index, double Theta) {
 		  if (Theta >= saturation[index])
 			  return 1.;
@@ -114,7 +114,7 @@ private:
 };
 class CommonThetaResponse {
 public: CommonThetaResponse(double SatActivity, double LowerRange, double UpperRange, double PowerCoef,
-	vector<double> saturation, vector<double> wilting) : SatActivity(SatActivity), LowerRange(LowerRange),
+	vector<double> saturation, std::vector<double> wilting) : SatActivity(SatActivity), LowerRange(LowerRange),
 	UpperRange(UpperRange), PowerCoef(PowerCoef), saturation(saturation), wilting(wilting) {}
 	  double operator() (size_t index, double Theta) {
 		  if (Theta >= saturation[index])
@@ -147,7 +147,7 @@ private:
 };
 class CombinedCO2ThetaResponse {
 public: CombinedCO2ThetaResponse(double UpperRange, double LowerRange, double PowerCoef, double LowestImpact, double UpperThreshold,
-	vector<double> saturation, vector<double> wilting) : SatActivity(SatActivity), LowerRange(LowerRange),
+	vector<double> saturation, std::vector<double> wilting) : SatActivity(SatActivity), LowerRange(LowerRange),
 	UpperRange(UpperRange), PowerCoef(PowerCoef), LowestImpact(LowestImpact), UpperThreshold(UpperThreshold), saturation(saturation), wilting(wilting) {}
 
 	  double operator() (size_t index, double Theta, double CO2_Conc) {

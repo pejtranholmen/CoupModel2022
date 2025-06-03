@@ -31,7 +31,7 @@ bool ValidationData::Init(NewMap *pDoc, int itype)
 
 	return true;
 }
-bool ValidationData::AddNewValList(size_t index,int FileNo, int valFileIndex, int outtype, string group, string name, int localindex, float perr, float aerr, bool ATest, bool LogTrans, int Dur)
+bool ValidationData::AddNewValList(size_t index,int FileNo, int valFileIndex, int outtype, std::string group, std::string name, int localindex, float perr, float aerr, bool ATest, bool LogTrans, int Dur)
 {	string Type;
 	SimB* Sw;
 
@@ -98,7 +98,7 @@ bool ValidationData::AddNewValList(size_t index,int FileNo, int valFileIndex, in
 	 m_pSimDoc->ValidationFilePointer(size_t(FileNo))->SetNumberOfSelectedVal(m_NumberSelectedValidationVar[FileNo-1]);
 	 return false;
 }
-bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, string group, string name, int localindex, float perr, float aerr, bool ATest)
+bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, std::string group, std::string name, int localindex, float perr, float aerr, bool ATest)
 {	string Type;
 	SimB* Sw;
 
@@ -161,7 +161,7 @@ bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, stri
 	 m_pSimDoc->m_Val_Array.push_back(Node);
 	 return false;
 }
-bool ValidationData::AddGroupValList(size_t index,  vector<pair<int,int>> group)
+bool ValidationData::AddGroupValList(size_t index,  std::vector<pair<int,int>> group)
 {
 	VALv Node;
 	if (index < m_pSimDoc->m_Val_Array.size()) {
@@ -206,7 +206,7 @@ bool ValidationData::AddGroupValList(size_t index,  vector<pair<int,int>> group)
 
 	return false;
 }
-bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, string group, string name, int localindex)
+bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, std::string group, std::string name, int localindex)
 {	string Type;
 	SimB* Sw;
 
@@ -272,7 +272,7 @@ bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, stri
 
 	 return false;
 }
-bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, size_t res_index, int sumvartype, SIMB Selected, string linkvarname, string linkfilename, float perror, float aerror)
+bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, size_t res_index, int sumvartype, SIMB Selected, std::string linkvarname, std::string linkfilename, float perror, float aerror)
 {
 	string Type;
 
@@ -414,7 +414,7 @@ bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, si
 
 	return false;
 }
-bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, string group, string name, int localindex, float obsvalue, float perror, float aerror )
+bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, std::string group, std::string name, int localindex, float obsvalue, float perror, float aerror )
 {	string Type;
 	SimB* Sw;
 
@@ -478,7 +478,7 @@ bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, 
 	 return false;
 }
 
-bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, string group, string name, int localindex, float perr, float aerr)
+bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, std::string group, std::string name, int localindex, float perr, float aerr)
 {	string Type;
 	SimB* Sw;
 
@@ -1569,7 +1569,7 @@ SIMB ValidationData::GetSimPointer_TSV(size_t Index) {
 	}
 	else {
 		out.pBase=nullptr;
-		out.TabIndex=string::npos;
+		out.TabIndex= std::string::npos;
 	}
 	return out;
 }
@@ -1590,7 +1590,7 @@ SIMB ValidationData::GetSimPointer_SV(size_t Index) {
 	}
 	else {
 		out.pBase=nullptr;
-		out.TabIndex=string::npos;
+		out.TabIndex= std::string::npos;
 	}
 	return out;
 }

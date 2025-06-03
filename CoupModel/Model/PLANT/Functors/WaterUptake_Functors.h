@@ -32,14 +32,14 @@ WaterUptakeTempFunction(bool NotOrig, double WupCTe, double WupDTe, double WupET
 	TrigTemp = WupCTe;
 	Option = 3;
 }
-WaterUptakeTempFunction(vector<double> WupATe, vector<double> WupBTe, vector<double> WupDayOff) : v_a(WupATe), v_b(WupBTe), v_dayoff(WupDayOff) {
+WaterUptakeTempFunction(vector<double> WupATe, std::vector<double> WupBTe, std::vector<double> WupDayOff) : v_a(WupATe), v_b(WupBTe), v_dayoff(WupDayOff) {
 	Option = 1; }
 
-WaterUptakeTempFunction(bool NotOrig, vector<double> WupCTe, vector<double> WupDTe, vector<double> WupDayOff) : v_TrigTemp(WupCTe), v_d(WupDTe), v_dayoff(WupDayOff) {
+WaterUptakeTempFunction(bool NotOrig, std::vector<double> WupCTe, std::vector<double> WupDTe, std::vector<double> WupDayOff) : v_TrigTemp(WupCTe), v_d(WupDTe), v_dayoff(WupDayOff) {
 	
 	Option = 2;
 }
-WaterUptakeTempFunction(bool NotOrig, vector<double> WupCTe, vector<double> WupDTe, vector<double> WupETe, vector<double> WupDayOff) : v_TrigTemp(WupCTe), v_d(WupDTe), v_e(WupETe),  v_dayoff(WupDayOff) {
+WaterUptakeTempFunction(bool NotOrig, std::vector<double> WupCTe, std::vector<double> WupDTe, std::vector<double> WupETe, std::vector<double> WupDayOff) : v_TrigTemp(WupCTe), v_d(WupDTe), v_e(WupETe),  v_dayoff(WupDayOff) {
 	Option = 3;
 }
 
@@ -95,7 +95,7 @@ private:
 };
 class WaterUptakeMoistureFunction {
 public:
-	WaterUptakeMoistureFunction(vector<double> AirMinContent, vector<double> AirRedCoef, vector<double> WupCri, vector<double> WupF, 
+	WaterUptakeMoistureFunction(vector<double> AirMinContent, std::vector<double> AirRedCoef, std::vector<double> WupCri, std::vector<double> WupF, 
 		vector<double> WupFB, Hydraulic* HydPointer) :
 		v_AirMinContent(AirMinContent), v_AirRedCoef(AirRedCoef), v_WupCri(WupCri), v_WupF(WupF), v_WupFB(WupFB), phyd(HydPointer)
 	{
@@ -158,7 +158,7 @@ private:
 };
 class WaterUptakeSaltFunction {
 public:
-	WaterUptakeSaltFunction( vector<double> SaltPowerCoef, vector<double> SaltHalfReduction ) :
+	WaterUptakeSaltFunction( std::vector<double> SaltPowerCoef, std::vector<double> SaltHalfReduction ) :
 		SaltHalfReduction(SaltHalfReduction), SaltPowerCoef(SaltPowerCoef) {}
 	double operator() ( size_t IndexPlant, double PsiValue) {
 		return max(0., 1. / (1. + pow(abs(PsiValue) / SaltHalfReduction[IndexPlant], SaltPowerCoef[IndexPlant])));

@@ -88,13 +88,13 @@ PGPOS CPGFile::GetPos(size_t minut, size_t varno )
 	}
 	else {*/
 
-	if (varno != string::npos)
+	if (varno != std::string::npos)
 		while (GetVarValue(varno, m_ActRecord[varno]) <= float(MISSING) && m_ActRecord[varno] < pg.Shape.NumRecords) m_ActRecord[varno]++;
 	else
 		varno = 0;
 		out.first = m_ActRecord[varno] - 1;
 
-		if(varno!=string::npos) {
+		if(varno!= std::string::npos) {
 			while(int(minut-GetLongTime(m_ActRecord[varno]))>0&&m_ActRecord[varno]<pg.Shape.NumRecords) {
 				m_ActRecord[varno]++;
 				if(varno>0)
@@ -257,12 +257,12 @@ void CPGFile::SetVarPointer_2Mix(float *varx1, float *varx2, size_t ist, size_t 
 		pg.Var.v[ist+i*2+2]=*(varx2+i+1);
 	}
 }
-void CPGFile::SetRecordPointerInterpolate(float *varx, size_t ist, size_t num, float weight, const vector<float> &vfloat)
+void CPGFile::SetRecordPointerInterpolate(float *varx, size_t ist, size_t num, float weight, const std::vector<float> &vfloat)
 {
 	for(size_t i=0; i<num;i++)
 		pg.Var.v[ist+i+1]=*(varx+i+1)*weight+vfloat[i+1]*(1-weight);
 }
-void CPGFile::SetRecordInterpolated(const vector<float>& vprior, size_t ist, float weight, const vector<float>& vfloat)
+void CPGFile::SetRecordInterpolated(const std::vector<float>& vprior, size_t ist, float weight, const std::vector<float>& vfloat)
 {
 	for (size_t i = 0; i < vprior.size(); i++)
 		pg.Var.v[ist + i + 1] =vprior[i + 1] * weight + vfloat[i + 1] * (1 - weight);
@@ -309,7 +309,7 @@ CPGFile::CPGFile(void)
 	pg.status.CompleteFileRead=false;
 	m_Closed=false;
 		pg.Shape.RepetitionMode=false;
-	m_NumberOfYears=string::npos;
+	m_NumberOfYears= std::string::npos;
 	m_YearIndexStart=nullptr;
 	m_YearRecords=nullptr;
 	m_SectionYear=true; // false== HOUR
@@ -356,7 +356,7 @@ void CPGFile::SetVarValue(size_t varno, size_t var_rec, float vv)
 		if(ind<koll)
 			pg.Var.v[(var_rec-1+pg.status.a.LocalStartRecord)*pg.Shape.RecordIndexSize+varno]=vv;
 	}
-	else if(pg.Shape.RepetitionMode&&pg.status.b.PrevBuf==string::npos) 
+	else if(pg.Shape.RepetitionMode&&pg.status.b.PrevBuf== std::string::npos) 
 		WritePGFileVarValue(varno, var_rec, vv, m_ActualSequence);
 	else if(GetNumBuffers()<=1) {
 		size_t CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize;
@@ -377,7 +377,7 @@ void CPGFile::SetVarValue(size_t varno, size_t var_rec, float vv)
 
 	
 }
-void CPGFile::SetDate(size_t var_rec, string str)
+void CPGFile::SetDate(size_t var_rec, std::string str)
 {
 	size_t min=PGUtil::MinutConv(str);
 	SetLongTime(var_rec, min);
@@ -393,7 +393,7 @@ bool CPGFile::SetLongTime(size_t var_rec, size_t t, bool WithinBuffer)
 		size_t CurrentBuf, CurrentRec;
 		CurrentBuf=(var_rec-1)/pg.status.b.buf_Size+1;
 		CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize+1;
-		if (CurrentBuf != pg.status.b.PrevBuf&&pg.status.b.PrevBuf != string::npos) {
+		if (CurrentBuf != pg.status.b.PrevBuf&&pg.status.b.PrevBuf != std::string::npos) {
 
 			if(!WriteNewBuffer(CurrentBuf)) {
 				return false;
@@ -437,7 +437,7 @@ string CPGFile::ExportToFile(bool secondhalf)
 		pszFileName=pg.status.FileName;
 		size_t pos=0;
 		pos=pszFileName.find('.');
-		if(pos!=string::npos)
+		if(pos!= std::string::npos)
 			pszFileName=pszFileName.substr(0,pos);
 
 #ifndef COUPSTD	
@@ -711,7 +711,7 @@ string CPGFile::GetFileName(bool OnlyTitle)
 {
 	if(OnlyTitle) {
 		size_t pos=pg.status.FileName.rfind("\\");
-		if(pos!=string::npos)
+		if(pos!= std::string::npos)
 			return ".."+pg.status.FileName.substr(pos);
 		else
 			return pg.status.FileName;
@@ -1006,7 +1006,7 @@ string CPGFile::GetVarPos(size_t index, size_t repit)
 		return "";
 }
 
-void CPGFile::SetVarName(size_t index, string str, size_t repit)
+void CPGFile::SetVarName(size_t index, std::string str, size_t repit)
 {	size_t add=0;
 	add=repit*pg.Shape.NumVar;
 	index+=add;
@@ -1020,7 +1020,7 @@ void CPGFile::SetVarName(size_t index, string str, size_t repit)
 	else
 		pg.Des.base.Name.push_back(str);
 }
-void CPGFile::SetVarUnit(size_t index, string str, size_t repit)
+void CPGFile::SetVarUnit(size_t index, std::string str, size_t repit)
 {   size_t add=0;
 	add=repit*pg.Shape.NumVar;
 	index+=add;
@@ -1033,7 +1033,7 @@ void CPGFile::SetVarUnit(size_t index, string str, size_t repit)
 		pg.Des.base.Unit.push_back(str);
 
 }
-void CPGFile::SetVarId(size_t index, string str, size_t repit)
+void CPGFile::SetVarId(size_t index, std::string str, size_t repit)
 {	size_t add=0;
 	add=repit*pg.Shape.NumVar;
 	index+=add;
@@ -1045,7 +1045,7 @@ void CPGFile::SetVarId(size_t index, string str, size_t repit)
 	else
 		pg.Des.base.Id.push_back(str);
 }
-void CPGFile::SetVarPos(size_t index, string str, size_t repit)
+void CPGFile::SetVarPos(size_t index, std::string str, size_t repit)
 {	size_t add=0;
 	add=repit*pg.Shape.NumVar;
 	index+=add;
@@ -1295,7 +1295,7 @@ void CPGFile::Reset()
 	pg.Shape.NumVar=8;
 	pg.status.b.buf_TotSize=32000;
 	pg.status.b.buf_Size=pg.status.b.buf_TotSize/pg.Shape.NumVar;
-	pg.status.b.PrevBuf=string::npos;
+	pg.status.b.PrevBuf= std::string::npos;
 	pg.status.b.NumberOfBuf=1;
 
 
@@ -1540,7 +1540,7 @@ void CPGFile::SetVarAlt(size_t index, double value, size_t repit)
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].Alt=value;
 }
-void CPGFile::SetVarCountry(size_t index, string value, size_t repit)
+void CPGFile::SetVarCountry(size_t index, std::string value, size_t repit)
 {
 	size_t add=0;
 	add=repit*pg.Shape.NumVar;
@@ -1548,7 +1548,7 @@ void CPGFile::SetVarCountry(size_t index, string value, size_t repit)
 	if(pg.Des.addinfo.size()>=index)
 		pg.Des.addinfo[index-1].CountryCode=value;
 }
-void CPGFile::SetVarStation(size_t index, string value, size_t repit)
+void CPGFile::SetVarStation(size_t index, std::string value, size_t repit)
 {
 	size_t add=0;
 	add=repit*pg.Shape.NumVar;
@@ -1598,13 +1598,13 @@ unsigned int CPGFile::GetLongTime(size_t var_rec, bool WithinBuffer)
 				return *(unsigned int*)&pg.Var.v[pg.Var.v.size()-1];
 	}
 	else {
-		if(!m_MainPGStreamReadWrite.good()) return string::npos;
+		if(!m_MainPGStreamReadWrite.good()) return std::string::npos;
 
 		size_t CurrentBuf, CurrentRec;
 		CurrentBuf=(var_rec-1)/pg.status.b.buf_Size;
 		CurrentRec=(var_rec-1)%pg.status.b.buf_Size*pg.Shape.RecordIndexSize;
 	
-		if (CurrentBuf != pg.status.b.PrevBuf&&pg.status.b.PrevBuf != string::npos) {
+		if (CurrentBuf != pg.status.b.PrevBuf&&pg.status.b.PrevBuf != std::string::npos) {
 			ReadNewBuffer(CurrentRec, CurrentBuf);
 			
 		}

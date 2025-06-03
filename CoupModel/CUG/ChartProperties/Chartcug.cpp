@@ -995,7 +995,7 @@ int ChartCug::OnEditVerify(int col, long row,CWnd *edit,UINT *vcKey){
 
 /////////////////////////////////////////////////////////////////////////////
 //	OnEditFinish this is send when editing is finished
-int ChartCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
+int ChartCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
 {
 
 	CString str;
@@ -1823,7 +1823,7 @@ BOOL ChartCug::InitData(Doc *pDoc, Ps *pCP, P *pCPt, int index)
 	return false;
 }
 
-BOOL ChartCug::InitData(Doc *pDoc, int chartnum, CHART_TYPES charttype, string PGFile, CView *view)
+BOOL ChartCug::InitData(Doc *pDoc, int chartnum, CHART_TYPES charttype, std::string PGFile, CView *view)
 {
 		CString str;
 	CString filename;

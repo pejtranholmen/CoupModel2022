@@ -178,7 +178,7 @@ private:
 
 class NuptakeImpactonRespiration {
 public:
-NuptakeImpactonRespiration(vector<double> RespNO3, vector<double> RespNH4, vector<double> RespNOrgCoef, NC_Organic *pNCSoil) :
+NuptakeImpactonRespiration(vector<double> RespNO3, std::vector<double> RespNH4, std::vector<double> RespNOrgCoef, NC_Organic *pNCSoil) :
 RespNO3(RespNO3), RespNH4(RespNH4), RespNOrgCoef(RespNOrgCoef), pNCSoil(pNCSoil)
 {}
 double operator() (size_t layer, size_t iplant) {
@@ -477,7 +477,7 @@ bool NC_Plant::Ini()	{
 				}
 			}
 			else
-				SoilLayerForLitterInput[i] = string::npos;
+				SoilLayerForLitterInput[i] = std::string::npos;
 
 		}
 
@@ -719,11 +719,11 @@ bool NC_Plant::Ini()	{
 					else 
 						NumParToChange--;					
 				}
-				else if (pos1 == string::npos && pos2 == string::npos) {
+				else if (pos1 == std::string::npos && pos2 == std::string::npos) {
 					auto pointer = m_pModelMap->GetPsPointer(name);
 					if (pointer != nullptr) {
 						ChangeParAtHarvestDate[i].pBase = pointer;
-						ChangeParAtHarvestDate[i].TabIndex = string::npos;
+						ChangeParAtHarvestDate[i].TabIndex = std::string::npos;
 					}
 					else 
 						NumParToChange--;
@@ -1441,13 +1441,13 @@ void NC_Plant::Integ()
 			for (size_t indexplant = 0; indexplant < P_LitterFall[_ROOT][_C_].size(); indexplant++) {
 				if(!RemovedCompAtHarvest[indexplant])
 					if (pNCSoil->LitterPools > 0) {
-						if (SoilLayerForLitterInput[indexplant] == string::npos)
+						if (SoilLayerForLitterInput[indexplant] == std::string::npos)
 							InflowToSurfaceLitter(jj, indexplant);
 						else
 							InflowAboveGroundComponentsToSoilHorizon(jj, indexplant, SoilLayerForLitterInput[indexplant]);
 					}
 					else {
-						if (SoilLayerForLitterInput[indexplant] == string::npos)
+						if (SoilLayerForLitterInput[indexplant] == std::string::npos)
 								InflowToSurfaceLitter(jj, indexplant);
 						else
 								InflowAboveGroundComponentsToSoilHorizon(jj, indexplant, SoilLayerForLitterInput[indexplant]);
@@ -1637,7 +1637,7 @@ if(PhotoInput>=1)	{
 auto CN_RatioPlant = [&]() {
 
 	//Note that array for ratio starts at 0 for first element of No Carbon.
-	//Also note the Component name is defined specific for this vector and differs from the index of P_State (_LEAF != _LEAF_)
+	//Also note the Component name is defined specific for this std::vector and differs from the index of P_State (_LEAF != _LEAF_)
 
 
 for (size_t jj = 1; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
@@ -2377,7 +2377,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 						size_t count_plant = 0;
 
 						for (SIMB p : ChangeParAtHarvestDate) {
-							if (p.TabIndex == string::npos) static_cast<Ps*>(p.pBase)->SetValue(ChangeParAtHarvestValues[ICountHarvest][count_plant]);
+							if (p.TabIndex == std::string::npos) static_cast<Ps*>(p.pBase)->SetValue(ChangeParAtHarvestValues[ICountHarvest][count_plant]);
 							else if (i_plant + 1 == p.TabIndex) static_cast<P*>(p.pBase)->SetValue(i_plant, ChangeParAtHarvestValues[ICountHarvest][count_plant]);
 							count_plant++;
 						}

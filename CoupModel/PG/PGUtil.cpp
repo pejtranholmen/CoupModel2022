@@ -56,7 +56,7 @@ extern "C" unsigned int cminut(char *date)
 //char  *date;
 {  int jy,jm,ja,jd;
    int   iyear, imonth, iday, ihour, iminut;
-/*   string Datum;
+/*   std::string Datum;
    Datum=date;
    iyear=AtoInt(Datum.Mid(0,4));
    imonth=AtoInt(Datum.Mid(4,2));
@@ -108,14 +108,14 @@ PGUtil::PGUtil(void)
 PGUtil::~PGUtil(void)
 {
 }
-string PGUtil::DateConv(dateformats d, string instr)
+string PGUtil::DateConv(dateformats d, std::string instr)
 {
 		string outstr;
 		auto p1 = instr.find("\\");
 		auto p2 = instr.rfind("\\");
 		auto p_space = instr.rfind(" ");
 		auto p_col = instr.rfind(":");
-		if (p1 == string::npos) {
+		if (p1 == std::string::npos) {
 			p1 = instr.find("/");
 			p2 = instr.rfind("/");
 		}
@@ -130,7 +130,7 @@ string PGUtil::DateConv(dateformats d, string instr)
 		}
 
 
-		if (p1!=string::npos) {
+		if (p1!= std::string::npos) {
 			if (d == DMY_SLASH) {
 				outstr = instr.substr(p2 + 1,4); outstr += "-";
 				if (p1 == 1) outstr += "0";
@@ -138,7 +138,7 @@ string PGUtil::DateConv(dateformats d, string instr)
 				outstr += "-";
 				if (p2 - p1 == 2) outstr += "0";
 				outstr += instr.substr(p1 + 1, p2 - p1 - 1);
-				if (p_col != string::npos && p_space != string::npos) {
+				if (p_col != std::string::npos && p_space != std::string::npos) {
 					auto time_str = instr.substr(p_space);
 					outstr += time_str;
 				}
@@ -198,7 +198,7 @@ IPGTID PGUtil::Ato_IPGTID(string Datum) {
    auto secondhourpos = Datum.rfind(":");
    
    auto ndatepos = Datum.find("-");
-   if (secondhourpos > nhourpos && ndatepos == string::npos) {
+   if (secondhourpos > nhourpos && ndatepos == std::string::npos) {
 	   out.iyear = 1900;
 	   out.imonth = 1;
 	   out.iday = 1;
@@ -206,7 +206,7 @@ IPGTID PGUtil::Ato_IPGTID(string Datum) {
 	   out.iminut = AtoInt(Datum.substr(nhourpos + 1, 2));
 
    }
-   else if (nhourpos == string::npos&&ndatepos == string::npos) {
+   else if (nhourpos == std::string::npos&&ndatepos == std::string::npos) {
 	   if (num <= 4) {
 		   out.iyear = AtoInt(Datum.substr(0, 4)); out.imonth = 1; out.iday = 1;
 		   out.ihour = 12;
@@ -251,7 +251,7 @@ IPGTID PGUtil::Ato_IPGTID(string Datum) {
 	   }
 
    } 
-   else if (nhourpos == string::npos){
+   else if (nhourpos == std::string::npos){
 	   if(num>=12) {
 			out.iyear=AtoInt(Datum.substr(0,4));
 			out.imonth=AtoInt(Datum.substr(4,2));
@@ -351,7 +351,7 @@ string PGUtil::StringDatum(unsigned int julian)
    int  year, month, day, hour, minut;
 
 
-   string Datum;
+   std::string Datum;
    char tmp[20];
 
    jul = julian;
@@ -394,7 +394,7 @@ string PGUtil::StringDatum(unsigned int julian)
    }
 }
 string PGUtil::STD_StringDatum(unsigned int min) {
-	return string(StringDatum(min));
+	return std::string(StringDatum(min));
 }
 double PGUtil::DayNumFunction(unsigned int min) {
 	string dat=STD_StringDatum(min);
@@ -410,7 +410,7 @@ int PGUtil::YearNumFunction(unsigned int min) {
 size_t  PGUtil::YearFunction(unsigned int julian)
 {  int jul, jalpha, ja, jb, jc, jd, je;
    int  year, month, day, hour, minut;
-   string Datum; string tmp;
+   std::string Datum; std::string tmp;
 
    jul = julian;
    minut = jul %1440;
@@ -447,7 +447,7 @@ size_t  PGUtil::YearFunction(unsigned int julian)
 int  PGUtil::MonthFunction(unsigned int julian)
 {  unsigned int jul, jalpha, ja, jb, jc, jd, je;
    int  year, month, day, hour, minut;
-   string Datum; string tmp;
+   std::string Datum; std::string tmp;
 
    jul = julian;
    minut = jul % (60 * 24);
@@ -486,7 +486,7 @@ int  PGUtil::MonthFunction(unsigned int julian)
 int  PGUtil::DayFunction(unsigned int julian)
 {  int jul, jalpha, ja, jb, jc, jd, je;
    int  year, month, day, hour, minut;
-   string Datum; string tmp;
+   std::string Datum; std::string tmp;
 
    jul = julian;
    minut = jul % (60 * 24);
@@ -571,7 +571,7 @@ string PGUtil::StringDatumStart(unsigned int value, unsigned int range)
 
 }
 string PGUtil::STD_StringDatumStart(unsigned int min, unsigned int range) {
-	return string(StringDatumStart(min,range)  ); 
+	return std::string(StringDatumStart(min,range)  ); 
 } 
 
 string PGUtil::StringDatumEnd(unsigned int value, unsigned int start, int step)
@@ -737,7 +737,7 @@ int range=value-start;
 
 }
 string PGUtil::STD_StringDatumEnd(unsigned int min, unsigned int start, int step){
-	return string(StringDatumEnd(min,start, step));
+	return std::string(StringDatumEnd(min,start, step));
 }
 string PGUtil::StringDatumStartEstimate(unsigned int value, unsigned int start)
 {
@@ -1017,7 +1017,7 @@ string PGUtil::CheckedForExistingBinFileName(string filename)
 
 
 		auto iposBIN = filename.rfind(".BIN");
-		if (iposBIN != string::npos) {
+		if (iposBIN != std::string::npos) {
 			auto testname = filename.substr(iposBIN+1) + ".bin";
 			if (FUtil::IsFileExisting(testname)) return testname;
 		}
@@ -1032,7 +1032,7 @@ string PGUtil::CheckedForExistingBinFileName(string filename)
 			numo++;
 		}
 		size_t n = filename.rfind("\\");
-		if (n != string::npos)
+		if (n != std::string::npos)
 			filename = filename.substr(n + 1);
 
 		string testname = UserDirectory + filename;
@@ -1065,7 +1065,7 @@ string PGUtil::CheckedForExistingBinFileName(string filename)
                 
                 if (!FUtil::IsFileExisting(testname)) {
                     
-                    if (filename.find("SOIL") == string::npos) {
+                    if (filename.find("SOIL") == std::string::npos) {
                         cout << "File name missing: " << filename << endl;
                     }
                 } else {
@@ -1095,7 +1095,7 @@ bool PGUtil::CheckForPossiblePGDateString(string str)
 		if (str[count] > 47 && str[count] < 58) valid = true;
 		count++;
 	}
-	if (str.find(".") != string::npos) return false;
+	if (str.find(".") != std::string::npos) return false;
 	if (!valid) return false;
 
 	IPGTID koll;

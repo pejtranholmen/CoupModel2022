@@ -5,9 +5,9 @@
 
 class FromMeasuredLayersToModelLayers {
 public: 
-	FromMeasuredLayersToModelLayers(vector<double> UpperDepth, vector<double> LowerDepth, vector<double> DepthLayers, vector<double> ThicknessLayers, vector<double> DepthMidpLayer): 
+	FromMeasuredLayersToModelLayers(vector<double> UpperDepth, std::vector<double> LowerDepth, std::vector<double> DepthLayers, std::vector<double> ThicknessLayers, std::vector<double> DepthMidpLayer): 
 		UpperDepth(UpperDepth), LowerDepth(LowerDepth), DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers), DepthMidpLayer(DepthMidpLayer) {}
-	void operator() (std::vector<double> &XX, vector<double> &pm_yy, vector<double> &pb_yy, bool aritmetric) {
+	void operator() (std::vector<double> &XX, std::vector<double> &pm_yy, std::vector<double> &pb_yy, bool aritmetric) {
 		double Displacement = 0.;
 		size_t NumSteps = 20;
 		pm_yy.resize(DepthLayers.size()); pb_yy.resize(DepthLayers.size());
@@ -101,7 +101,7 @@ public:
 
 
 	} // 
-	vector<double> operator() (vector<double> XX, vector<double> Bulk_Density, bool aritmetric) { // Return vector of mass per Model Layer
+	vector<double> operator() (vector<double> XX, std::vector<double> Bulk_Density, bool aritmetric) { // Return std::vector of mass per Model Layer
 		vector<double> out;
 		double Displacement = 0.;
 		size_t NumSteps = 20;
@@ -197,8 +197,8 @@ private:
 };
 class ModelProfileLayers {
 public: ModelProfileLayers(size_t NL) :NL(NL) {}
-		void operator() (vector<double> &OriginalThickness, vector<double> &ThicknessLayers, vector<double> &AThicknessLayers, vector<double> &DistanceMidpLayers,
-			vector<double> &DepthLayers, vector <double> &ModelUpperDepth, vector<double> &DepthMidpLayer, vector<double> &ModelLowerDepth) {
+		void operator() (vector<double> &OriginalThickness, std::vector<double> &ThicknessLayers, std::vector<double> &AThicknessLayers, std::vector<double> &DistanceMidpLayers,
+			vector<double> &DepthLayers, std::vector <double> &ModelUpperDepth, std::vector<double> &DepthMidpLayer, std::vector<double> &ModelLowerDepth) {
 			OriginalThickness.resize(NL);
 			OriginalThickness = ThicknessLayers;
 			for (size_t i = 1; i<NL; i++)
@@ -229,7 +229,7 @@ private:
 };
 class ModelProfile {
 public:
-	ModelProfile(size_t &NL, vector<double>& OriginalThickness, vector<double>& ThicknessLayer ): NL(NL), OriginalThickness(OriginalThickness),
+	ModelProfile(size_t &NL, std::vector<double>& OriginalThickness, std::vector<double>& ThicknessLayer ): NL(NL), OriginalThickness(OriginalThickness),
 		ThicknessLayers(ThicknessLayer) {
 		OriginalThickness.resize(NL);
 		OriginalThickness = ThicknessLayers;
@@ -257,7 +257,7 @@ private:
 
 class LinearDepthDistribution {
 public :
-	LinearDepthDistribution(vector<double> DepthLayers, vector<double> ThicknessLayers) : DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) {
+	LinearDepthDistribution(vector<double> DepthLayers, std::vector<double> ThicknessLayers) : DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) {
 		NL = ThicknessLayers.size();}
 	DEPTH_type operator() (double totsum, double S_Depth) {
 		DEPTH_type out;
@@ -285,7 +285,7 @@ private:
 	size_t NL;
 };
 class UniformDepthDistribution {
-public:	UniformDepthDistribution(vector<double> DepthLayers, vector<double> ThicknessLayers) : DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) { NL = ThicknessLayers.size(); }
+public:	UniformDepthDistribution(vector<double> DepthLayers, std::vector<double> ThicknessLayers) : DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) { NL = ThicknessLayers.size(); }
 		DEPTH_type operator() (double totsum, double S_Depth) {
 		DEPTH_type out;
 		out.NumLay = 0;
@@ -301,11 +301,11 @@ public:	UniformDepthDistribution(vector<double> DepthLayers, vector<double> Thic
 		out.NumLay = i;
 		return out;
 	}
-private: vector<double> DepthLayers, ThicknessLayers;
+private: std::vector<double> DepthLayers, ThicknessLayers;
 		 size_t NL;
 };
 class ExponentialDepthDistribution {
-public:	ExponentialDepthDistribution(double ExpTail, vector<double> DepthLayers, vector<double> ThicknessLayers) : ExpTail(ExpTail), DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) {
+public:	ExponentialDepthDistribution(double ExpTail, std::vector<double> DepthLayers, std::vector<double> ThicknessLayers) : ExpTail(ExpTail), DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) {
 	NL = ThicknessLayers.size();}
 		DEPTH_type operator() (double totsum, double S_Depth) {
 			double deck;
@@ -339,13 +339,13 @@ public:	ExponentialDepthDistribution(double ExpTail, vector<double> DepthLayers,
 
 			return out;
 		}
-private: vector<double> DepthLayers, ThicknessLayers;
+private: std::vector<double> DepthLayers, ThicknessLayers;
 		 double ExpTail;
 		 size_t NL;
 };
 class FixedDepthDistribution {
 public:
-	FixedDepthDistribution(vector<double> Dist, vector<double> DepthLayers, vector<double> ThicknessLayers) : Dist(Dist), DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) {}
+	FixedDepthDistribution(vector<double> Dist, std::vector<double> DepthLayers, std::vector<double> ThicknessLayers) : Dist(Dist), DepthLayers(DepthLayers), ThicknessLayers(ThicknessLayers) {}
 	DEPTH_type operator() (double totsum, double S_Depth) {
 		DEPTH_type out;
 		out.Dist;
@@ -355,7 +355,7 @@ public:
 	}
 
 private:
-private: vector<double> DepthLayers, ThicknessLayers;
+private: std::vector<double> DepthLayers, ThicknessLayers;
 	vector<double> Dist;
 
 };

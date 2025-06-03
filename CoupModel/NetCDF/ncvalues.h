@@ -259,7 +259,7 @@ class NcValues			// ABC for value blocks
     virtual long as_long( long n ) const = 0;     // nth value as long
     virtual float as_float( long n ) const = 0;   // nth value as floating-point
     virtual double as_double( long n ) const = 0; // nth value as double
-    virtual char* as_string( long n ) const = 0;  // value as string
+    virtual char* as_string( long n ) const = 0;  // value as std::string
     
   protected:
     NcType the_type;

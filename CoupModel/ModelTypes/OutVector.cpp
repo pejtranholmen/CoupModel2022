@@ -38,7 +38,7 @@ size_t OutVector::GetSumVarIndex(size_t index, size_t col) const
 {
 	if(SumList.size()>index)
 		return SumList[index].PgFileIndex*6+col- FUtil::GetPositionSumInitialFromOutSheet(); 
-	return string::npos;
+	return std::string::npos;
 }
 size_t OutVector::GetPgFileIndex(size_t index) const
 {
@@ -50,14 +50,14 @@ size_t OutVector::GetPgFileIndex(size_t index) const
 		else if(SumList[index].StoreFlag==2)
 			return SumList[index].PgMultiFileIndex;
 	}
-	return string::npos;
+	return std::string::npos;
 }
 size_t OutVector::GetPgSingleFileIndex(size_t index) const
 {
 	if(SumList.size()>index)
 			return SumList[index].PgFileIndex;
 
-	return string::npos;
+	return std::string::npos;
 }
 size_t OutVector::GetPgMultiFileIndex(size_t index) const
 {
@@ -66,7 +66,7 @@ size_t OutVector::GetPgMultiFileIndex(size_t index) const
 	if(SumList.size()>index){
 		return SumList[index].PgMultiFileIndex;
 	}
-	return string::npos;
+	return std::string::npos;
 }
 bool OutVector::SetPgFileIndex(size_t index, size_t value)
 {
@@ -159,7 +159,7 @@ size_t OutVector::GetLocalIndex(size_t index) const
 	{
 		return SumList[index].LocalIndex;
 	}
-	return string::npos;
+	return std::string::npos;
 }
 size_t OutVector::GetSelectedLocalIndex(size_t index, bool multi) const
 { 
@@ -175,7 +175,7 @@ size_t OutVector::GetSelectedLocalIndex(size_t index, bool multi) const
 					}
 			}
 	}
-	return string::npos;
+	return std::string::npos;
 
 }
 size_t OutVector::GetValidFlagIndex(size_t index) const noexcept
@@ -183,7 +183,7 @@ size_t OutVector::GetValidFlagIndex(size_t index) const noexcept
 
 	if(SumList.size()>index)
 		return SumList[index].ValidFlagIndex;
-	return string::npos;
+	return std::string::npos;
 }
 int OutVector::GetStoreFlag(size_t index) const
 { 
@@ -307,7 +307,7 @@ bool OutVector::SetFlags(string flagString, int value)
 		flagString.erase(flagString.find(' '),flagString.find_first_not_of(' ')); 
 	//flagString.TrimLeft();
 	//Read and store the values for the flags.
-	//Observe that if there are more flag values in the string than there are flags then the last flags in the string are discarded.
+	//Observe that if there are more flag values in the std::string than there are flags then the last flags in the std::string are discarded.
 		//Zero all the flags in the beginning
 	flags.resize(GetNumberOfFlags());
 	for (size_t k=0;k<GetNumberOfFlags();k++)
@@ -324,7 +324,7 @@ bool OutVector::SetFlags(string flagString, int value)
 		commaPlace=flagString.find(',');
 		minusPlace=flagString.find('-');
 			
-			//If there is only pone number left in the string
+			//If there is only pone number left in the std::string
 		if ((minusPlace==-1)&&(commaPlace==-1))
 		{
 				//Get the position
@@ -341,7 +341,7 @@ bool OutVector::SetFlags(string flagString, int value)
 		{
 				//Get next position
 			flagPosition=FUtil::AtoInt(flagString.substr(0,commaPlace));
-				//Remove the read position and the comma from the string
+				//Remove the read position and the comma from the std::string
 			flagString=flagString.substr(commaPlace+1);
 				//Store the new value
 			if (flagPosition<=flags.size())
@@ -358,7 +358,7 @@ bool OutVector::SetFlags(string flagString, int value)
 			{
 				//Get the first position in the serie
 				flagPosition=FUtil::AtoInt(flagString.substr(0,minusPlace));
-				//Remove the read position but leave the - sign in the string
+				//Remove the read position but leave the - sign in the std::string
 				flagString=flagString.substr(minusPlace);
 				//Store the new value
 				if (flagPosition<=flags.size())
@@ -367,7 +367,7 @@ bool OutVector::SetFlags(string flagString, int value)
 			else
 			{
 				//Increase flagposition and store the current flag
-				//Observe that there are no commas in the string
+				//Observe that there are no commas in the std::string
 				flagPosition++;
 				//Retrieve the maximum value that is to be incremented into
 				workingString=flagString.substr(1);
@@ -375,7 +375,7 @@ bool OutVector::SetFlags(string flagString, int value)
 				if (minusPlace==-1)
 				{
 					maxPos=FUtil::AtoInt(workingString.substr(0,workingString.size()-1));
-					//If the maximum number has been reached then clear the string
+					//If the maximum number has been reached then clear the std::string
 					if (flagPosition==maxPos)
 						flagString="";
 				}
@@ -400,7 +400,7 @@ bool OutVector::SetFlags(string flagString, int value)
 		{
 			//Get next position
 			flagPosition=FUtil::AtoInt(flagString.substr(0,commaPlace));
-			//Remove the read position and the comma from the string
+			//Remove the read position and the comma from the std::string
 			flagString=flagString.substr(commaPlace+1);
 			//Store the new value
 			if (flagPosition<=flags.size())
@@ -417,7 +417,7 @@ bool OutVector::SetFlags(string flagString, int value)
 			{
 				//Get the first position in the serie
 				flagPosition=FUtil::AtoInt(flagString.substr(0,minusPlace));
-				//Remove the read position but leave the - sign in the string
+				//Remove the read position but leave the - sign in the std::string
 				flagString=flagString.substr(minusPlace);
 				//Store the new value
 
@@ -446,7 +446,7 @@ bool OutVector::SetFlags(string flagString, int value)
 				//Store the new value
 				if (flagPosition<=flags.size())
 					flags[flagPosition-1]=value;
-					//If flagposition is equal to maxpos then remove everything from the string until the next comma´including the next comma
+					//If flagposition is equal to maxpos then remove everything from the std::string until the next comma´including the next comma
 				if (flagPosition==maxPos)
 					flagString=flagString.substr(commaPlace+1);
 			}

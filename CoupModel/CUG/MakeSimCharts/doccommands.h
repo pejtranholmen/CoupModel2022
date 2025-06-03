@@ -36,7 +36,7 @@ public:
 	int AnnimateCommand(int Col, int row, int item);
 	int MenuCornerCommand(int Col, int row, int item);
 	int AttachedFileCommand(int Col, int row, int item);
-	int ExcelExportCommand(int item, int Index=-1, string name="");
+	int ExcelExportCommand(int item, int Index=-1, std::string name="");
 
 
 	bool MultiRunPlotCommand(int Col, int row, int item, enum vartype);

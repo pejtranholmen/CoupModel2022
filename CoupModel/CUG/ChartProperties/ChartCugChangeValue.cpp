@@ -516,7 +516,7 @@ bool ChartCugChangeValue::ChangeAxis(int col, int row, CString str)
 			GetCell(-1, row, &cell);
 			string strvar = cell.GetStdText();
 			Index = FUtil::AtoInt(strvar) - 1;
-			if (Index == string::npos) return false;
+			if (Index == std::string::npos) return false;
 
 			switch(col) {
 					case 0:

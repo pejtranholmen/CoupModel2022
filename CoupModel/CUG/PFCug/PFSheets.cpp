@@ -148,7 +148,7 @@ void PFSheets::MakeBaseSheet(bool ExtraBase, bool NewProfile)
 	//SetColWidth(0,86);
 	//return;
 		Record=1;
-		CString string, tmpstring;
+		CString std::string, tmpstring;
 		if(NewProfile) {
 			m_NewHeader=p_PFCurve->GetHeader(ini_prof, ini_rep_prof);
 			SetDescriptionRow(0, m_NewHeader);
@@ -642,7 +642,7 @@ void PFSheets::MakeLinkToMultiRunTableSheet()
 	size_t NRep;
 	size_t NSelected;
 
-	if(N_Dim!=string::npos) {
+	if(N_Dim!= std::string::npos) {
 		NRep=m_pDoc->MR_GetNumOfRepeatitionsOfDim(N_Dim-1);
 		NSelected=pDB->MR_GetNumberOfSelections();
 	}
@@ -927,7 +927,7 @@ bool PFSheets::KeyTest(NEWHEADER header)
 void PFSheets::SetDescriptionRow(int Count, NEWHEADER header) 
 {
 		CUGCell cell; 
-		CString string;
+		CString std::string;
 		QuickSetNumber(-1,Count,Count+1);
 		GetCell(0,Count,&cell);
 		cell.SetNumber(header.KeyProf/100);

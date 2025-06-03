@@ -133,7 +133,7 @@ void SP_EXCHANGE1::OnButtonFile()
 void SP_EXCHANGE1::OnMoveToLocal() 
 {
  /*  int index[50];
-   CString string;
+   CString std::string;
    int max=50;
    int nsel;
    nsel=m_ListMain1.GetSelItems(max, &index[0]);
@@ -154,7 +154,7 @@ void SP_EXCHANGE1::OnMoveToLocal()
 void SP_EXCHANGE1::OnMoveToMain() 
 {
  /*  int index[50];
-   CString string;
+   CString std::string;
    int max=50;
    int nsel;
    
@@ -177,7 +177,7 @@ void SP_EXCHANGE1::OnMoveToMain()
 BOOL SP_EXCHANGE1::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-   CString string;
+   CString std::string;
 	 int numTab=2, Record=1;
    LPINT tabstops;
    int	tabstop[2];

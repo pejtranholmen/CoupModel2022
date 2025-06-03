@@ -6,7 +6,7 @@ class Sw : public SimB {
 	Sw(size_t *target, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 
 	~Sw();
-	void Def(size_t module_no, string varname, int initv, string options, string conditions, int recalc);  
+	void Def(size_t module_no, std::string varname, int initv, std::string options, std::string conditions, int recalc);  
 public:
 	virtual size_t GetIntValue() const {return *_ptarget;};
 	size_t GetOriginalIntValue() const {return org_value;};

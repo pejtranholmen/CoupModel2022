@@ -54,7 +54,7 @@ string Link::GetExcelDriver()
     WORD cbBufMax = 2000;
     WORD cbBufOut;
     TCHAR *pszBuf = szBuf;
-    string sDriver;
+    std::string sDriver;
 
     // Get the names of the installed drivers ("odbcinst.h" has to be included )
    if(!SQLGetInstalledDrivers(szBuf,cbBufMax,& cbBufOut))
@@ -66,7 +66,7 @@ string Link::GetExcelDriver()
         if( strstr( pszBuf, "Excel" ) != 0 )
         {
             // Found !
-            sDriver = string( pszBuf );
+            sDriver = std::string( pszBuf );
             break;
         }
         pszBuf = strchr( pszBuf, '\0' ) + 1;
@@ -79,12 +79,12 @@ string Link::GetExcelDriver()
 void Link::ReadExcel() 
 {
 /*    CDatabase* pDatabase;
-    string sSql;
+    std::string sSql;
     CString sItem1, sItem2, sItem3;
-    string sDriver;
+    std::string sDriver;
     CString sDsn;
 	
-    string sFile = GetExcelFile();        // the file name. Could also be something like C:\\Sheets\\WhatDoIKnow.xls
+    std::string sFile = GetExcelFile();        // the file name. Could also be something like C:\\Sheets\\WhatDoIKnow.xls
     
     // Clear the contents of the listbox
 //    m_ctrlList.Res/etContent();
@@ -114,7 +114,7 @@ void Link::ReadExcel()
         // Allocate the recordset
         CRecordset recset(pDatabase );
 
-        // Build the SQL string
+        // Build the SQL std::string
         // Remember to name a section of data in the Excel sheet using "Insert->Names" to be
         // able to work with the data like you would with a table in a "real" pDatabase-> There
         // may be more than one table contained in a worksheet.
@@ -170,7 +170,7 @@ string Link::GetMySQLDriver()
     WORD cbBufMax = 2000;
     WORD cbBufOut;
     char *pszBuf = szBuf;
-    string sDriver;
+    std::string sDriver;
 
     // Get the names of the installed drivers ("odbcinst.h" has to be included )
    if(!SQLGetInstalledDrivers(szBuf,cbBufMax,& cbBufOut))
@@ -182,7 +182,7 @@ string Link::GetMySQLDriver()
         if( strstr( pszBuf, "MySQL" ) != 0 )
         {
             // Found !
-            sDriver = string( pszBuf );
+            sDriver = std::string( pszBuf );
             break;
         }
         pszBuf = strchr( pszBuf, '\0' ) + 1;
@@ -191,7 +191,7 @@ string Link::GetMySQLDriver()
 
     return sDriver;
 }
-bool Link::SQL_Call(string Query, string DefError)
+bool Link::SQL_Call(string Query, std::string DefError)
 {
  	if(mysql_query( myData, Query.c_str() )){
  		res = mysql_store_result( myData );
@@ -765,7 +765,7 @@ bool Link::SQL_CREATE()
 
 					}
 					else if(typ=="Switches"){
-									//Set the name to the string to be written
+									//Set the name to the std::string to be written
   						int defnval;
   						defnval=*(int*)Sw->GetOriginalValue();
 						CSw*node=(CSw*)Sw;
@@ -782,7 +782,7 @@ bool Link::SQL_CREATE()
 					}
 	
 			   		else if(typ=="Files") {
-			   		  	//Set the name to the string to be written
+			   		  	//Set the name to the std::string to be written
 			   		  	CF *node=(CF*)Sw;
 			   		  	string val=node->GetValue();
 					  	namn=Sw->GetName();
@@ -805,7 +805,7 @@ bool Link::SQL_CREATE()
 						float fValue, defv;
 						int nCol;
 					
-						//Create string to write for the labels of the columns
+						//Create std::string to write for the labels of the columns
 						for (nCol=0;((CTab*)Sw)->GetTitle(nCol,&text);nCol++){
 							pPt=((CTab*)Sw)->GetCPtPointer(nCol);
 							if(pPt!=nullptr) {
@@ -1274,7 +1274,7 @@ bool Link::WriteFile(string str)
 	CCoupModelApp* pApp;
 
 	pApp = (CCoupModelApp*)AfxGetApp();
-    // Build the creation string for access without DSN
+    // Build the creation std::string for access without DSN
 	POSITION posd=GetFirstViewPosition();
 //	m_pView=(CCoupModelView*)GetNextView(posd);
 
@@ -2050,7 +2050,7 @@ bool Link::WriteFile(string str)
 										{
 											//Get the parameter
 			 								Sw=arr->GetAt(i);
-											//Initialize the name string
+											//Initialize the name std::string
 											if(Currentchoice==IDNO)
 												namn="Name:"+Sw->GetName();
 											else {
@@ -2079,7 +2079,7 @@ bool Link::WriteFile(string str)
 											}
 											else if(typ=="Switches") 
 												{
-													//Set the name to the string to be written
+													//Set the name to the std::string to be written
 													int nval, defnval;
 													defnval=*(int*)Sw->GetOriginalValue();
 													CSw *node=(CSw*)Sw;
@@ -2106,7 +2106,7 @@ bool Link::WriteFile(string str)
 												}
 											else if(typ=="Files") 
 												{
-													//Set the name to the string to be written
+													//Set the name to the std::string to be written
 													CF *node=(CF*)Sw;
 													CString val=node->GetValue();
 													if((!Sw->IsDisabled()&&Changed_Values==IDNO)||
@@ -2134,7 +2134,7 @@ bool Link::WriteFile(string str)
 															float fValue, defv;
 															int nCol;
 															
-															//Create string to write for the labels of the columns
+															//Create std::string to write for the labels of the columns
 														  	if(Currentchoice==IDNO) {
 																for (nCol=0;((CTab*)Sw)->GetTitle(nCol,&text);nCol++){
 																	pPt=((CTab*)Sw)->GetCPtPointer(nCol);
@@ -2384,7 +2384,7 @@ int Link::ReadFile(string lpszPathName)
 			continue;
 		}
 
-		//While the first character is a space or a " remove the first character from the string
+		//While the first character is a space or a " remove the first character from the std::string
 		while(row.Find(' ')==0||row.Find('\"')==0)
 					row=row.Mid(1);
 		//Set ntab and nspace to the positions f the first tab and " characters
@@ -2462,7 +2462,7 @@ int Link::ReadFile(string lpszPathName)
 					IncorrectParameterMessage(Parname,lpszPathName,typ,grp);
 				else
 				{
-					//Set the value of the parameter to the string Parvalue
+					//Set the value of the parameter to the std::string Parvalue
 					node->SetValue(Parvalue);
 					//Apply the changes
 					node->Apply();

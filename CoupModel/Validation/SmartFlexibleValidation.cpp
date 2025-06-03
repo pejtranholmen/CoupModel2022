@@ -155,13 +155,13 @@ bool SmartFlexibleValidation::UpdateValidationPerformance_SmartFlexVariables() {
 	CalculatePerformanceAndSetValues();
 	return true;
 }
-vector<float> SmartFlexibleValidation::GetObsValueFromValSumFlex(string IDFileName, string  IDVarName) {
+vector<float> SmartFlexibleValidation::GetObsValueFromValSumFlex(string IDFileName, std::string  IDVarName) {
 	vector<float> out;
 	float fvalue;
 	VALSUMLINK valsumlink;
 	size_t index_var, index_run, index_file, index_key_file;
-	index_file = string::npos;
-	index_run = string::npos;
+	index_file = std::string::npos;
+	index_run = std::string::npos;
 	for (size_t i = 0; i<m_ValsumFlexFiles.size(); i++) {
 		if (IDFileName == m_ValsumFlexFiles[i].FileName) {
 			index_file = i;

@@ -39,10 +39,10 @@
 	// - Fixed bug with reading and writing Excel files containing many unicode and ANSI strings.
 // Version 1.13 (1 August 2006)
 	// - Changed BasicExcelCell::Get() so that it will get a stored double as an integer or vice versa if necessary.
-	// - Changed BasicExcelCell::Get() so that it will not cause any errors if a string is empty.
-	// - Changed BasicExcelCell::SetString() and BasicExcelCell::SetWString() so that it will not save an empty string.
+	// - Changed BasicExcelCell::Get() so that it will not cause any errors if a std::string is empty.
+	// - Changed BasicExcelCell::SetString() and BasicExcelCell::SetWString() so that it will not save an empty std::string.
 // Version 1.14 (6 August 2006)
-	// - Fixed bug with reading Excel files that contain a null string.
+	// - Fixed bug with reading Excel files that contain a null std::string.
 
 #ifndef BASICEXCEL_HPP
 #define BASICEXCEL_HPP
@@ -141,7 +141,7 @@ struct LittleEndian
 	}
 
 	template<typename Type>
-	static void Read(const vector<char>& buffer, Type& retVal, int pos=0, int bytes=0)
+	static void Read(const std::vector<char>& buffer, Type& retVal, int pos=0, int bytes=0)
 	{
 		retVal = Type(0);
 		if (bytes == 0) bytes = sizeof(Type);
@@ -152,7 +152,7 @@ struct LittleEndian
 	}
 
 	template<typename Type>
-	static void ReadString(const vector<char>& buffer, Type* str, int pos=0, int bytes=0)
+	static void ReadString(const std::vector<char>& buffer, Type* str, int pos=0, int bytes=0)
 	{
 		for (size_t i=0; i<bytes; ++i) Read(buffer, str[i], pos+i*sizeof(Type));
 	}
@@ -205,7 +205,7 @@ struct LittleEndian
 		for (int i=0; i<bytes; ++i) Write(buffer, str[i], pos+i*SIZEOFWCHAR_T);
 	}
 
-	static void Read(const vector<char>& buffer, wchar_t& retVal, int pos=0, int bytes=0)
+	static void Read(const std::vector<char>& buffer, wchar_t& retVal, int pos=0, int bytes=0)
 	{
 		retVal = wchar_t(0);
 		if (bytes == 0) bytes = SIZEOFWCHAR_T;
@@ -215,7 +215,7 @@ struct LittleEndian
 		}
 	}
 
-	static void ReadString(const vector<char>& buffer, wchar_t* str, int pos=0, int bytes=0)
+	static void ReadString(const std::vector<char>& buffer, wchar_t* str, int pos=0, int bytes=0)
 	{
 		for (int i=0; i<bytes; ++i) Read(buffer, str[i], pos+i*SIZEOFWCHAR_T);
 	}
@@ -270,9 +270,9 @@ public:
 	int RemoveFile(const wchar_t* path);
 	int FileSize(const wchar_t* path, size_t& size);
 	int ReadFile(const wchar_t* path, char* data);
-	int ReadFile(const wchar_t* path, vector<char>&data);
+	int ReadFile(const wchar_t* path, std::vector<char>&data);
 	int WriteFile(const wchar_t* path, const char* data, size_t size);
-	int WriteFile(const wchar_t* path, const vector<char>&data, size_t size);
+	int WriteFile(const wchar_t* path, const std::vector<char>&data, size_t size);
 
 
 	// ANSI char functions
@@ -288,9 +288,9 @@ public:
 	int RemoveFile(const char* path);
 	int FileSize(const char* path, size_t& size);
 	int ReadFile(const char* path, char* data);
-	int ReadFile(const char* path, vector<char>& data);
+	int ReadFile(const char* path, std::vector<char>& data);
 	int WriteFile(const char* path, char* data, size_t size);
-	int WriteFile(const char* path, vector<char>& data, size_t size);
+	int WriteFile(const char* path, std::vector<char>& data, size_t size);
 
 // Protected functions and data members
 protected:
@@ -347,7 +347,7 @@ protected:
 	size_t DataSize(size_t startIndex, bool isBig);
 	size_t ReadData(size_t startIndex, char* data, bool isBig);
 	size_t WriteData(const char* data, size_t size, int startIndex, bool isBig);
-	void GetBlockIndices(size_t startIndex, vector<size_t>& indices, bool isBig);
+	void GetBlockIndices(size_t startIndex, std::vector<size_t>& indices, bool isBig);
 	size_t GetFreeBlockIndex(bool isBig);
 	void ExpandBATArray(bool isBig);
 	void LinkBlocks(size_t from, size_t to, bool isBig);
@@ -384,7 +384,7 @@ protected:
 		friend bool operator<=(const CompoundFile::Property& lhs, const CompoundFile::Property& rhs) {return !(rhs < lhs);}
 		friend bool operator>=(const CompoundFile::Property& lhs, const CompoundFile::Property& rhs) {return !(lhs < rhs);}
 
-		wchar_t name_[32];				// A unicode null-terminated uncompressed 16bit string (lblocke the high bytes) containing the name of the property. (0x00, 0x02, 0x04, ... 0x3E)
+		wchar_t name_[32];				// A unicode null-terminated uncompressed 16bit std::string (lblocke the high bytes) containing the name of the property. (0x00, 0x02, 0x04, ... 0x3E)
 		short nameSize_;				// Number of characters in the NAME field (0x40)
 		unsigned char propertyType_;	// Property type (directory, file, or root) Byte 1 (directory), 2 (file), or 5 (root entry) (0x42)
 		unsigned char nodeColor_;		// Node color (0x43)
@@ -447,8 +447,8 @@ struct CODE
 			ITERATION=0x0011,	//Whether iterations are allowed while calculating recursive formulas.
 			PROTECT=0x0012,		//Whether worksheet or a workbook is protected against modification.
 			PASSWORD=0x0013,	//16-bit hash value, calculated from the worksheet or workbook protection password.
-			HEADER=0x0014,		//Page header string for the current worksheet.
-			FOOTER=0x0015,		//Page footer string for the current worksheet.
+			HEADER=0x0014,		//Page header std::string for the current worksheet.
+			FOOTER=0x0015,		//Page footer std::string for the current worksheet.
 			EXTERNSHEET=0x0017,	//List with indexes to SUPBOOK records
 			NAME=0x0018,		//Name and token array of an internal defined name.
 			WINDOWPROTECT=0x0019,	//Whether the window configuration of the document is protected.
@@ -500,8 +500,8 @@ struct CODE
 			XF=0x00E0,			//Formatting information for cells, rows, columns or styles.
 			MERGEDCELLS=0x00E5,	//All merged cell ranges of the current sheet.
 			SST=0x00FC,			//List of all strings used anywhere in the workbook.
-			LABELSST=0x00FD,	//Cell that contains a string.
-			EXTSST=0x00FF,		//Create a hash table with stream offsets to the SST record to optimise string search operations.
+			LABELSST=0x00FD,	//Cell that contains a std::string.
+			EXTSST=0x00FF,		//Create a hash table with stream offsets to the SST record to optimise std::string search operations.
 			LABELRANGES=0x015F,	//Addresses of all row and column label ranges in the current sheet.
 			USESELFS=0x0160,	//Whether formulas in the workbook can use "natural language formulas".
 			DSF=0x0161,			//Whether file contains an addition BIFF5/BIFF7 workbook stream.
@@ -515,7 +515,7 @@ struct CODE
 			BLANK=0x0201,		//Empty cell, contains cell address and formatting information
 			NUMBER=0x0203,		//Cell that contains a floating-point value.
 			BOOLERR=0x0205,		//Error value cell
-			STRING=0x0207,		//Result of a string formula.
+			STRING=0x0207,		//Result of a std::string formula.
 			ROW=0x0208,			//Properties of a single row in the sheet.
 			INDEX=0x020B,		//Range of used rows and stream positions of several records of the current sheet.
 			ARRAY=0x0221,		//Token array of an array formula
@@ -1214,26 +1214,26 @@ public:
 
 	bool Get(int& val) const;		///< Get an integer value. Returns false if cell does not contain an integer or a double.
 	bool Get(double& val) const;	///< Get a double value. Returns false if cell does not contain a double or an integer.
-	bool Get(char* str) const;	///< Get an ANSI string. Returns false if cell does not contain an ANSI string.
-	bool Get(wchar_t* str) const;	///< Get an Unicode string. Returns false if cell does not contain an Unicode string.
-	size_t GetStringLength() const;	///< Return length of ANSI or Unicode string (excluding null character).
+	bool Get(char* str) const;	///< Get an ANSI std::string. Returns false if cell does not contain an ANSI std::string.
+	bool Get(wchar_t* str) const;	///< Get an Unicode std::string. Returns false if cell does not contain an Unicode std::string.
+	size_t GetStringLength() const;	///< Return length of ANSI or Unicode std::string (excluding null character).
 
 	int GetInteger() const;		///< Get an integer value. Returns 0 if cell does not contain an integer.
 	double GetDouble() const;		///< Get a double value. Returns 0.0 if cell does not contain a double.
-	const char* GetString() const;		///< Get an ANSI string. Returns 0 if cell does not contain an ANSI string.
-	const wchar_t* GetWString() const;	///< Get an Unicode string. Returns 0 if cell does not contain an Unicode string.
+	const char* GetString() const;		///< Get an ANSI std::string. Returns 0 if cell does not contain an ANSI std::string.
+	const wchar_t* GetWString() const;	///< Get an Unicode std::string. Returns 0 if cell does not contain an Unicode std::string.
 
 	friend ostream& operator<<(ostream& os, const BasicExcelCell& cell);	///< Print cell to output stream. Print a null character if cell is undefined.
 
 	void Set(int val);				///< Set content of current Excel cell to an integer.
 	void Set(double val);			///< Set content of current Excel cell to a double.
-	void Set(const char* str);		///< Set content of current Excel cell to an ANSI string.
-	void Set(const wchar_t* str);	///< Set content of current Excel cell to an Unicode string.
+	void Set(const char* str);		///< Set content of current Excel cell to an ANSI std::string.
+	void Set(const wchar_t* str);	///< Set content of current Excel cell to an Unicode std::string.
 	
 	void SetInteger(int val);			///< Set content of current Excel cell to an integer.
 	void SetDouble(double val);			///< Set content of current Excel cell to a double.
-	void SetString(const char* str);	///< Set content of current Excel cell to an ANSI string.
-	void SetWString(const wchar_t* str);///< Set content of current Excel cell to an Unicode string.
+	void SetString(const char* str);	///< Set content of current Excel cell to an ANSI std::string.
+	void SetWString(const wchar_t* str);///< Set content of current Excel cell to an Unicode std::string.
 
 	void EraseContents();	///< Erase the content of current Excel cell. Set type to UNDEFINED.
 
@@ -1241,8 +1241,8 @@ private:
 	int type_;				///< Type of value stored in current Excel cell. Contains one of the above enums.
 	int ival_;				///< Integer value stored in current Excel cell.
 	double dval_;			///< Double value stored in current Excel cell.
-	vector<char> str_;		///< ANSI string stored in current Excel cell. Include null character.
-	vector<wchar_t> wstr_;	///< Unicode string stored in current Excel cell. Include null character.
+	vector<char> str_;		///< ANSI std::string stored in current Excel cell. Include null character.
+	vector<wchar_t> wstr_;	///< Unicode std::string stored in current Excel cell. Include null character.
 };
 
 } // Namespace end

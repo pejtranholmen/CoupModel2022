@@ -101,7 +101,7 @@ namespace netCDF
       NcMaxDims(const std::string& complaint,const char* file,int line);
     };
 
-    /*! Thrown if string match to name is in use. */
+    /*! Thrown if std::string match to name is in use. */
     class NcNameInUse : public NcException
     {
     public:
@@ -171,7 +171,7 @@ namespace netCDF
       NcNotNCF(const std::string& complaint,const char* file,int line);
     };
 
-    /*! Thrown if in FORTRAN, string is too short. */
+    /*! Thrown if in FORTRAN, std::string is too short. */
     class NcSts : public NcException
     {
     public:

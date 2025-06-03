@@ -22,17 +22,17 @@ class Radiation_Functions : public Meteorological_Data
 
  // size_t RadiationInput;
   double FracBare, SnowAge, TempSnowSurf;
-  vector <double> SnowReduceLAIFactor;
-  vector<double> MC_TempCanopy;
+  std::vector <double> SnowReduceLAIFactor;
+  std::vector<double> MC_TempCanopy;
   double SnowReduceLAIThreshold, SnowReduceLAIMax;
 
 	
   double DripIrrigCover,DripIrrigXCenter; // From Irrigation
-  vector<double> BruntAirCoef, BruntAirSoilCoef	,BruntCoef;
+  std::vector<double> BruntAirCoef, BruntAirSoilCoef	,BruntCoef;
   double BruntAirCoef_1, BruntAirCoef_2, BruntAirCoef_3, BruntAirCoef_4;
   double BruntAirSoilCoef_1, BruntAirSoilCoef_2, BruntAirSoilCoef_3, BruntAirSoilCoef_4;
   double BruntCoef_1, BruntCoef_2, BruntCoef_3;
-  vector<double> KonzelmannCoef, SatterlundCoef,	RntLAIv;
+  std::vector<double> KonzelmannCoef, SatterlundCoef,	RntLAIv;
   double KonzelmannCoef_1, KonzelmannCoef_2, KonzelmannCoef_3;
   double SatterlundCoef_1, SatterlundCoef_2;
   double AlbedoVar,  RadNetShort, RadInLongGround, RadInLongGround1,RadInLongGround2;
@@ -47,10 +47,10 @@ class Radiation_Functions : public Meteorological_Data
   double	RntLAI;	
   double AlbedoKExp, AlbedoDry, AlbedoWet;
   double RadFracAng1, RadFracAng2, AlbSnowMin;
-  vector<double> AlbSnowCoef, MC_RntDist, MC_LAIAbove;
+  std::vector<double> AlbSnowCoef, MC_RntDist, MC_LAIAbove;
   double AlbSnowCoef_1, AlbSnowCoef_2, AlbSnowCoef_3;
 
-  vector<P*> mTab_Brunt, mTab_SnowAlb, mTab_BruntInLong, mTab_Konzel, mTab_SatterL, mTab_Beer;
+  std::vector<P*> mTab_Brunt, mTab_SnowAlb, mTab_BruntInLong, mTab_Konzel, mTab_SatterL, mTab_Beer;
 
   //! Define new Local Variables
   //Real RelSun         ! Relative clear sky fraction

@@ -16,7 +16,7 @@ Tab::Tab(vector<P*> *target,enum datatype data, enum elements elem, enum fysproc
 	_Hidden=true;
 }
 
-void Tab::Def(size_t ModuleNo,  string name, size_t minp_toenable)
+void Tab::Def(size_t ModuleNo,  std::string name, size_t minp_toenable)
 {
 	SetModuleNo(ModuleNo);
 	SetName(name);

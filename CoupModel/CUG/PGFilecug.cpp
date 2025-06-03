@@ -435,7 +435,7 @@ BOOL PGFileCug::AddFiles(CPG* pPG)
 	numrec=0;
 	numvar=10000;
 	int NumLines=m_PGPointers.GetSize();
-	size_t num_rep=string::npos;
+	size_t num_rep= std::string::npos;
 	bool Valid_Rep = true;
 
 	for(int i=0;i<NumLines-1;i++) {
@@ -447,7 +447,7 @@ BOOL PGFileCug::AddFiles(CPG* pPG)
 					long pgst=pCPG->GetLongTimeStart();
 					long pgend=pCPG->GetLongTimeEnd();
 					auto rep = pCPG->GetNumRepititions();
-					if (num_rep != string::npos) {
+					if (num_rep != std::string::npos) {
 						if (rep != num_rep)
 							Valid_Rep = false;
 					}
@@ -1144,7 +1144,7 @@ int PGFileCug::OnEditVerify(int col, long row,CWnd *edit,UINT *vcKey)
 
 /////////////////////////////////////////////////////////////////////////////
 //	OnEditFinish this is send when editing is finished
-int PGFileCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
+int PGFileCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
 {
 	CString str;
 	edit->GetWindowText(str);

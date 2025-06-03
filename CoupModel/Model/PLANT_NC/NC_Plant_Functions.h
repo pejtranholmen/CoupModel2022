@@ -473,7 +473,7 @@ size_t         NumValidHarvest, IHarvestInput,ICountHarvest;
 // New option How to Harvest 28 March 2006;
 vector<size_t> IHarvestDates ;// Variables in PG-file PhotoInput;
 vector<SIMB> ChangeParAtHarvestDate;
-vector< vector<double>> ChangeParAtHarvestValues;
+vector< std::vector<double>> ChangeParAtHarvestValues;
 
 // New for Sowing and Emergence from PG file reading
 vector<size_t> ISowingDates, IEmergenceDates;
@@ -583,7 +583,7 @@ double CN_RatioLeafFixed(size_t index,double Response);
 double PhoSoilWaterResponse(double EtaEtpRatio) ;
 double GBoundaryFunc(double RBoundary, double TP, double Temp);
 double GStomataFunc(double RStomata,double TP,double  Temp, double WStress);
-void SortIn(vector<double> FarqRange, vector<double> Gammas, size_t i_step, size_t NumPlants, size_t index);
+void SortIn(vector<double> FarqRange, std::vector<double> Gammas, size_t i_step, size_t NumPlants, size_t index);
 
 double CAlloFungi(size_t index);
 double CAlloMaxFungi(size_t index);
@@ -641,38 +641,38 @@ bool TerminatingHarvestFunction(size_t i);
 double CoverFungiAreaFuncL(size_t i);
 double CoverFungiFunc(double C_Fungi, double C_Root, double C_OldRoot, double AlloFungiC1, double Coef);
 
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_CarbonRatioWithOldBiomass, f_CarbonNitrogenRatioWithOldBiomass, f_CarbonPhosporousRatioWithOldBiomass;
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&)> f_CarbonRatio, f_CarbonNitrogenRatio, f_CarbonPhosporousRatio;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_CarbonRatioWithOldBiomass, f_CarbonNitrogenRatioWithOldBiomass, f_CarbonPhosporousRatioWithOldBiomass;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&)> f_CarbonRatio, f_CarbonNitrogenRatio, f_CarbonPhosporousRatio;
 
 function<double(size_t, double)> f_PhotoTempDirect, f_PhotoTempSum, f_PhotoNLeaf, f_LogisticGrowth, f_PhotoPLeaf;
 function<double(size_t, double)> f_MaxGPP, f_PhotoSaturation, f_PhotoGrainFill, f_PhotoGreenIndex;
 function<double(size_t, double, double)> f_Photo_Combined_N_Water_Response, f_PhotoTemp;
-function<DRIVERSOnGPP(DRIVERSOnGPP&, vector<double> &)> f_IntegratedAuxGPPResponse;
+function<DRIVERSOnGPP(DRIVERSOnGPP&, std::vector<double> &)> f_IntegratedAuxGPPResponse;
 
 function<double(size_t, double)> f_CAlloRootWater, f_CAlloRootNitrogen, f_CAlloRootPhosphorus, f_CAlloRootMass;
 function<double(size_t, double)> f_CAlloLeaf;
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_AlloRoots;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_AlloRoots;
 function <double(size_t)> f_AlloCoefLeaf, f_AlloCoefRoot;
 
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_AlloLeaf;
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&, vector<double>&)> f_AlloCoarseRoot;
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&, vector<double>&)> f_AlloStem;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_AlloLeaf;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_AlloCoarseRoot;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_AlloStem;
 
-function <vector<double>(vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&,
-	vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_AlloFungi;
+function <vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&,
+	vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_AlloFungi;
 
 AllocationToFungiwithP f_AlloFungiwithP;//HH
     
-//function <vector<double>(vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&,
-//    vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>)> f_AlloFungiwithP;//HH
-function < vector<double>(vector<bool>&, vector<double> &, vector<double>&, vector<double>&)> f_RootToLeaf;
-function <vector<double>(size_t Comp, size_t Elem, vector<double> &GSI, vector<double> &mass, vector<double>&flux)> f_GrainSupply;
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&)> f_ReAlloCarbonToStemFromLeaf;
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&)> f_ReAlloNitrogenToStemFromLeaf;
-function < vector<double>(vector<double> &, vector<double>&, vector<double>&)> f_ReAlloPhosphorusToStemFromLeaf;
+//function <vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&,
+//    std::vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>)> f_AlloFungiwithP;//HH
+function < std::vector<double>(vector<bool>&, std::vector<double> &, std::vector<double>&, std::vector<double>&)> f_RootToLeaf;
+function <vector<double>(size_t Comp, size_t Elem, std::vector<double> &GSI, std::vector<double> &mass, std::vector<double>&flux)> f_GrainSupply;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&)> f_ReAlloCarbonToStemFromLeaf;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&)> f_ReAlloNitrogenToStemFromLeaf;
+function < std::vector<double>(vector<double> &, std::vector<double>&, std::vector<double>&)> f_ReAlloPhosphorusToStemFromLeaf;
 
-function < AlloNewMobile(vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, AlloNewMobile&)> f_AlloCarbonPlant;
-function < AlloNewMobile(vector<double> &, vector<double>&, vector<double>&, vector<double>&, vector<double>&, AlloNewMobile)> f_AlloUptakePlant[2];
+function < AlloNewMobile(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, AlloNewMobile&)> f_AlloCarbonPlant;
+function < AlloNewMobile(vector<double> &, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, AlloNewMobile)> f_AlloUptakePlant[2];
 
 function<double(bool, size_t, double, double, double, double)> f_LeafLitterFall;
 function<double(bool, size_t, double, double, double)> f_StemLitterFall, f_RootLitterFall, f_CoarseRootLitterFall;
@@ -680,10 +680,10 @@ function<double(size_t, double, double, double)> f_GrainLitterFall, f_FungiLitte
 function<double(size_t, double)> f_GrowthRespiration;
 function<double(double)> f_TempResponseRespiration;
 function<double(PlantComp, size_t, double)> f_MaintenanceRespiration;
-function<vector<double>(PlantComp, vector<double> &Mass, double &Temp,vector<double> &Resp)> f_PlantRespiration;
-function<vector<double>(PlantComp, vector<double> &Mass, vector<double> &Photo, double &Temp, vector<double> &Resp)> f_PlantPhotoRespiration;
-function<PlantSoilLayers(PlantComp, vector<vector<double>> &DistPlantSoil, vector<double> &Mass, vector<double> &Temp)> f_PlantBelowGroundRespiration;
-function<PlantSoilLayers(PlantComp, vector<vector<double>> &DistPlantSoil, vector<double> &Mass, vector<double> &Photo, vector<double> &Temp)> f_PlantPhotoBelowGroundRespiration;
+function<vector<double>(PlantComp, std::vector<double> &Mass, double &Temp,vector<double> &Resp)> f_PlantRespiration;
+function<vector<double>(PlantComp, std::vector<double> &Mass, std::vector<double> &Photo, double &Temp, std::vector<double> &Resp)> f_PlantPhotoRespiration;
+function<PlantSoilLayers(PlantComp, std::vector<vector<double>> &DistPlantSoil, std::vector<double> &Mass, std::vector<double> &Temp)> f_PlantBelowGroundRespiration;
+function<PlantSoilLayers(PlantComp, std::vector<vector<double>> &DistPlantSoil, std::vector<double> &Mass, std::vector<double> &Photo, std::vector<double> &Temp)> f_PlantPhotoBelowGroundRespiration;
 function<double(PlantComp, size_t)> f_SaltImpactOnGrowthRespiration;
 function<double(size_t, size_t)> f_NuptRespiration;
 function<double(bool, size_t, double, double, double)> f_EmergenceWithMoistControl_Reset, f_GrainStartWithReset;
@@ -699,19 +699,19 @@ function<double(double)> f_Zadok;
 function<bool(size_t year, size_t dayno)> f_sow, f_emergence, f_harvest;
 vector<double> m_RootDensity;	// Local auxiliary variable
 
-function <vector<double>(vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_PlantDemand[2];
-function < vector<double>(vector<double>&, vector<double>&, vector<double>&)> f_FungiDemand;
-function < vector<double>(vector<double>&, vector<double>&, vector<double>&)> f_FungiPDemand;
-function <vector<double>(size_t index, vector<double>&, vector<double>&)> f_FungiPotentialUptake;
-function <vector<double>(size_t index, vector<double>&, vector<double>&)> f_FungiPotentialPUptake;
+function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_PlantDemand[2];
+function < std::vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&)> f_FungiDemand;
+function < std::vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&)> f_FungiPDemand;
+function <vector<double>(size_t index, std::vector<double>&, std::vector<double>&)> f_FungiPotentialUptake;
+function <vector<double>(size_t index, std::vector<double>&, std::vector<double>&)> f_FungiPotentialPUptake;
     
-function <vector<double>(vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_FungiCover;
+function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_FungiCover;
           
-function <vector<double>(vector<double>&, vector<double>&, vector<double>&)> f_FungiNAvail;
+function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&)> f_FungiNAvail;
     
-function <vector<double>(vector<double>&, vector<double>&, vector<double>&)> f_FungiPAvail;
+function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&)> f_FungiPAvail;
     
-function <vector<double>(vector<double>&, double&, double&, vector<double>&)> f_RootDensity;
+function <vector<double>(vector<double>&, double&, double&, std::vector<double>&)> f_RootDensity;
     
 function<LayerOutput(double, double)> f_Avail;
 function<LayerOutput(double, double)> f_AvailP;
@@ -720,45 +720,45 @@ function<double(double)> f_FungiImpactOnPlant;
 function<double(bool)> f_ImpactOnFungiMinUptake;
 function<double(double)> f_ImpactOnFungiPhosphateUptake;
 function<UptakeResults(vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, UptakeResults &out)> f_MineralUptake;
+	vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, UptakeResults &out)> f_MineralUptake;
 function<PUptakeResults(vector<double> &DistWithDepth,  size_t PlantIndex, double P_DemandPlant, double P_Tot_Demand,
-	vector<double>& Dist_Tot, vector<double> &Soilphosphate, PUptakeResults &out)> f_PMineralUptake;
+	vector<double>& Dist_Tot, std::vector<double> &Soilphosphate, PUptakeResults &out)> f_PMineralUptake;
         
 function<UptakeResults(vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, vector<double> &RootDensity, UptakeResults &out)> f_MineralUptakeWithDensity;
+	vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &RootDensity, UptakeResults &out)> f_MineralUptakeWithDensity;
     
 function<PUptakeResults(vector<double> &DistWithDepth,  size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilPhosphate, vector<double>& RootDensity, PUptakeResults &out)> f_PMineralUptakeWithDensity;
+	vector<double> Dist_Tot, std::vector<double> &SoilPhosphate, std::vector<double>& RootDensity, PUptakeResults &out)> f_PMineralUptakeWithDensity;
     
     
 function<UptakeResults(vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, vector<double> &RootDensity, vector<double> &FungiCover,bool, UptakeResults &out)> f_MineralUptakeWithDensityImpactWithFungi;
+	vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &RootDensity, std::vector<double> &FungiCover,bool, UptakeResults &out)> f_MineralUptakeWithDensityImpactWithFungi;
 function<PUptakeResults(vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilPhosphate,  vector<double> &RootDensity, vector<double> &FungiCover, bool, PUptakeResults &out)> f_PMineralUptakeWithDensityImpactWithFungi;
+	vector<double> Dist_Tot, std::vector<double> &SoilPhosphate,  std::vector<double> &RootDensity, std::vector<double> &FungiCover, bool, PUptakeResults &out)> f_PMineralUptakeWithDensityImpactWithFungi;
 function<UptakeResults(vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium,  vector<double> &FungiCover, UptakeResults &out)> f_MineralUptakeWithFungi;
+	vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium,  std::vector<double> &FungiCover, UptakeResults &out)> f_MineralUptakeWithFungi;
 function<PUptakeResults(vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilPhosphate, vector<double> &FungiCover, bool FungiUptake, PUptakeResults &out)> f_PMineralUptaketoFungi;//HH
+	vector<double> Dist_Tot, std::vector<double> &SoilPhosphate, std::vector<double> &FungiCover, bool FungiUptake, PUptakeResults &out)> f_PMineralUptaketoFungi;//HH
 function<UptakeResults(vector<double> &DistWithDepth,size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, vector<double> &RootDensity, vector<double> &FungiCover, bool FungiUptake, UptakeResults &out)> f_MineralUptaketoFungiWithDensityImpact;
+	vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &RootDensity, std::vector<double> &FungiCover, bool FungiUptake, UptakeResults &out)> f_MineralUptaketoFungiWithDensityImpact;
 function<UptakeResults(vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, vector<double>& FungiCover, bool FungiUptake, UptakeResults &out)> f_MineralUptaketoFungi;
+	vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double>& FungiCover, bool FungiUptake, UptakeResults &out)> f_MineralUptaketoFungi;
     
 function <UptakeResults(vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, double N_Tot_Demand,
-	vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, UptakeResults &uptprev, double ScaleComp, UptakeResults &out)> f_CompUptake;
+	vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, UptakeResults &uptprev, double ScaleComp, UptakeResults &out)> f_CompUptake;
 
-function < OrganicUptakeResults(vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, vector<double> Dist_Tot, vector<double>& Litter1, vector<double>& Humus)> f_OrganicUptake[NUM_BIOELEM-1];
+function < OrganicUptakeResults(vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, std::vector<double> Dist_Tot, std::vector<double>& Litter1, std::vector<double>& Humus)> f_OrganicUptake[NUM_BIOELEM-1];
     
-function < OrganicUptakeResults(vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, vector<double> Dist_Tot, vector<double>& Litter1, vector<double>& Humus,  vector<double>& RootDensity)> f_OrganicUptakeWithDensity[NUM_BIOELEM - 1];
+function < OrganicUptakeResults(vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, std::vector<double> Dist_Tot, std::vector<double>& Litter1, std::vector<double>& Humus,  std::vector<double>& RootDensity)> f_OrganicUptakeWithDensity[NUM_BIOELEM - 1];
     
-function < OrganicUptakeResults(bool Fungi, vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, vector<double> Dist_Tot, vector<double>& Litter1, vector<double>& Humus)> f_OrganicUptaketoFungi[NUM_BIOELEM - 1];
+function < OrganicUptakeResults(bool Fungi, std::vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, std::vector<double> Dist_Tot, std::vector<double>& Litter1, std::vector<double>& Humus)> f_OrganicUptaketoFungi[NUM_BIOELEM - 1];
     
-function < OrganicUptakeResults(bool Fungi, vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, vector<double> Dist_Tot, vector<double>& Litter1, vector<double>& Humus, vector<double>& RootDensity)> f_OrganicUptakeWithDensitytoFungi[NUM_BIOELEM - 1];
+function < OrganicUptakeResults(bool Fungi, std::vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant, std::vector<double> Dist_Tot, std::vector<double>& Litter1, std::vector<double>& Humus, std::vector<double>& RootDensity)> f_OrganicUptakeWithDensitytoFungi[NUM_BIOELEM - 1];
     
 
 function <vector<double>(vector<double>)> f_DemandDrivenNFixation;
-function < vector<double>(vector<vector<double>>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_AboveGroundDrivenNFixation;
-function < vector<double>(vector<vector<double>>&,  vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double>&)> f_BelowGroundDrivenNFixation;
+function < std::vector<double>(vector<vector<double>>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_AboveGroundDrivenNFixation;
+function < std::vector<double>(vector<vector<double>>&,  std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_BelowGroundDrivenNFixation;
 
 ZadokOutCreateFile* pZadokOutCreateFile{ nullptr };
 vector<string> zadokoutstrings, ZadokDates, sitename;

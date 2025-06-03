@@ -3,7 +3,7 @@
 class RootDensity {
 public:
 	RootDensity(vector<double> LayerThickness) : LayerThickness(LayerThickness) {};
-	vector<double> operator() (vector<double> &Dist, double &Root, double &OldRoot, vector<double> &Density) {//HH
+	vector<double> operator() (vector<double> &Dist, double &Root, double &OldRoot, std::vector<double> &Density) {//HH
 		//g/m3
 		for (size_t ii = 0; ii < Dist.size(); ii++)
 			Density[ii] = Dist[ii] * (Root + OldRoot) / LayerThickness[ii];
@@ -19,12 +19,12 @@ struct LayerOutput
 };
 class PlantDemand {
 public:
-	PlantDemand(vector<double> CN_RatioMinRoots, vector<double> CN_RatioMinCoarseRoots, vector<double> CN_RatioMinLeaf, vector<double> CN_RatioMinStem)
+	PlantDemand(vector<double> CN_RatioMinRoots, std::vector<double> CN_RatioMinCoarseRoots, std::vector<double> CN_RatioMinLeaf, std::vector<double> CN_RatioMinStem)
 		: CN_RatioRoot(CN_RatioMinRoots), CN_CoarseRoot(CN_RatioMinCoarseRoots),  CN_Stem(CN_RatioMinStem), CN_Leaf(CN_RatioMinLeaf)  {
 
 	};
-	PlantDemand(vector<double> CN_RatioMinRoots, vector<double> CN_RatioMinCoarseRoots,  vector<double> CN_RatioMinStem,
-	vector<double> CN_LeafThres, vector<double> CN_LeafOpt, vector<double> MinDegreeSupply)
+	PlantDemand(vector<double> CN_RatioMinRoots, std::vector<double> CN_RatioMinCoarseRoots,  std::vector<double> CN_RatioMinStem,
+	vector<double> CN_LeafThres, std::vector<double> CN_LeafOpt, std::vector<double> MinDegreeSupply)
 		: CN_RatioRoot(CN_RatioMinRoots), CN_CoarseRoot(CN_RatioMinCoarseRoots), CN_Stem(CN_RatioMinStem) {
 
 		CN_Leaf.resize(CN_LeafOpt.size());
@@ -32,8 +32,8 @@ public:
 			CN_Leaf[i] = CN_LeafThres[i] + MinDegreeSupply[i] * (CN_LeafOpt[i] - CN_LeafThres[i]);
 
 	};
-	vector<double> operator() (vector<double> &A1, vector<double> &A2, vector<double> &A3, vector<double> &A4,
-		vector<double> &R1, vector<double> &R2, vector<double> &R3, vector<double> &R4, vector<double> &demand) {
+	vector<double> operator() (vector<double> &A1, std::vector<double> &A2, std::vector<double> &A3, std::vector<double> &A4,
+		vector<double> &R1, std::vector<double> &R2, std::vector<double> &R3, std::vector<double> &R4, std::vector<double> &demand) {
 		for (size_t i = 0; i < A1.size(); i++) {
 			demand[i] = max(0., (A1[i] - R1[i]) / CN_RatioRoot[i]) + max(0., (A2[i] - R2[i]) / CN_CoarseRoot[i]) +
 				max(0., (A3[i] - R3[i]) / CN_Stem[i]) + max(0., (A4[i] - R4[i]) / CN_Leaf[i]);
@@ -47,7 +47,7 @@ class FungiDemand {
 public:
 	FungiDemand(vector<double> CN_RatioMinFungi): CN_RatioMinFungi(CN_RatioMinFungi) {};
 
-	vector<double> operator() (vector<double>&amount_C, vector<double> &amount_N, vector<double> &Demand) {
+	vector<double> operator() (vector<double>&amount_C, std::vector<double> &amount_N, std::vector<double> &Demand) {
 		for (size_t i = 0; i < amount_C.size(); i++)
 			Demand[i] = max(0., amount_C[i] / CN_RatioMinFungi[i] - amount_N[i]);
 		return Demand;
@@ -57,7 +57,7 @@ private:
 };
 class FungiPotentialSoilUptake {
 public:
-	FungiPotentialSoilUptake(vector<double> MyceliaCoverFrac, vector<double> OrgCoef, vector<double> NO3Coef, vector<double> NH4Coef)
+	FungiPotentialSoilUptake(vector<double> MyceliaCoverFrac, std::vector<double> OrgCoef, std::vector<double> NO3Coef, std::vector<double> NH4Coef)
 	{
 		for (size_t i = 0; i < MyceliaCoverFrac.size(); i++) {
 			NRateCoef[0].push_back(MyceliaCoverFrac[i] * OrgCoef[i]/Fix::BiomassToCarbon);
@@ -65,7 +65,7 @@ public:
 			NRateCoef[2].push_back(MyceliaCoverFrac[i] * NH4Coef[i]/Fix::BiomassToCarbon);
 		};
 	};
-	vector<double> operator() (size_t iform, vector<double> &State, vector<double> &PotentialUptake) {
+	vector<double> operator() (size_t iform, std::vector<double> &State, std::vector<double> &PotentialUptake) {
 		for (size_t i = 0; i < State.size(); i++)
 			PotentialUptake[i] = NRateCoef[iform][i] * State[i];
 		return PotentialUptake;
@@ -76,7 +76,7 @@ private:
 
 class FungiPotentialSoilPUptake {
 public:
-	FungiPotentialSoilPUptake(vector<double> MyceliaCoverFrac, vector<double> OrgPCoef, vector<double> PO4Coef)
+	FungiPotentialSoilPUptake(vector<double> MyceliaCoverFrac, std::vector<double> OrgPCoef, std::vector<double> PO4Coef)
 	{
 		for (size_t i = 0; i < MyceliaCoverFrac.size(); i++) {
 			PRateCoef[0].push_back(MyceliaCoverFrac[i] * OrgPCoef[i] / Fix::BiomassToCarbon);
@@ -84,7 +84,7 @@ public:
 			
 		};
 	};
-	vector<double> operator() (size_t iform, vector<double> &State, vector<double> &PotentialPUptake) {
+	vector<double> operator() (size_t iform, std::vector<double> &State, std::vector<double> &PotentialPUptake) {
 		for (size_t i = 0; i < State.size(); i++)
 			PotentialPUptake[i] = PRateCoef[iform][i] * State[i];
 		return PotentialPUptake;
@@ -95,11 +95,11 @@ private:
 
 class FungiCoverage{
 public:
-	FungiCoverage(vector<double> AlloFungiC1, vector<double> AreaCoverFungiCoef) {
+	FungiCoverage(vector<double> AlloFungiC1, std::vector<double> AreaCoverFungiCoef) {
 		for (size_t i = 0; i < AlloFungiC1.size(); i++)
 			Coef.push_back(AlloFungiC1[i] * AreaCoverFungiCoef[i]);
 	};
-vector<double> operator() (vector<double> &StateFungi, vector<double> &CRootState, vector<double> &COldRootState, vector<double> &FungiRootCover) {
+vector<double> operator() (vector<double> &StateFungi, std::vector<double> &CRootState, std::vector<double> &COldRootState, std::vector<double> &FungiRootCover) {
 	double AllRoot;
 	for (size_t i = 0; i < StateFungi.size(); i++) {
 		AllRoot = CRootState[i] + COldRootState[i];
@@ -118,7 +118,7 @@ class FungiNitrogenExcess {
 public:
 	FungiNitrogenExcess(vector<double> CN_RatioMaxFungi) :CN_RatioMaxFungi(CN_RatioMaxFungi) {
 	};
-	vector<double> operator() (vector<double> &StateN, vector<double> &StateC, vector<double> &FungiAvail) {
+	vector<double> operator() (vector<double> &StateN, std::vector<double> &StateC, std::vector<double> &FungiAvail) {
 	
 		for (size_t i = 0; i < StateN.size(); i++) {
 			FungiAvail[i] = max(0., StateN[i] - StateC[i] / CN_RatioMaxFungi[i]);
@@ -216,24 +216,24 @@ public:
 	// 3 Constructors for definition with various combination of functions
 	//add on for fungi without root density impact by HH
 	MineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_Avail, function<double(double)> f_Density, function<double(double)> f_FungiImpactOnPlant,
-		function<double(bool)> f_ImpactonFungiMinUptake, size_t MaxLayers, double FracAvail, vector<double> FlexDegree):
+		function<double(bool)> f_ImpactonFungiMinUptake, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree):
 		f_Avail(f_Avail), f_Density(f_Density), 
 		f_FungiImpactOnPlant(f_FungiImpactOnPlant),
 		f_ImpactonFungiByAmmonium(f_ImpactonFungiMinUptake), FracAvail(FracAvail), FlexDegree(FlexDegree)
 	{
 		 ScaledAvail.assign(MaxLayers, 1.0); Ratio.resize(MaxLayers);
 	};
-	MineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_Avail, function<double(double)> f_Density, size_t MaxLayers, double FracAvail, vector<double> FlexDegree) :
+	MineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_Avail, function<double(double)> f_Density, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree) :
 		 FracAvail(FracAvail),f_Avail(f_Avail), f_Density(f_Density), FlexDegree(FlexDegree)
 	{
 		ScaledAvail.assign(MaxLayers, 1.0); Ratio.resize(MaxLayers); 
 	};
-	MineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_Avail, size_t MaxLayers, double FracAvail, vector<double> FlexDegree) : 
+	MineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_Avail, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree) : 
 		f_Avail(f_Avail), FracAvail(FracAvail), FlexDegree(FlexDegree) {
 		ScaledAvail.assign(MaxLayers, 1.0); Ratio.resize(MaxLayers);
 	};
 	MineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_Avail,  function<double(double)> f_FungiImpactOnPlant,
-		function<double(bool)> f_ImpactonFungiMinUptake, size_t MaxLayers, double FracAvail, vector<double> FlexDegree) :
+		function<double(bool)> f_ImpactonFungiMinUptake, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree) :
 		f_Avail(f_Avail), 
 		f_FungiImpactOnPlant(f_FungiImpactOnPlant),
 		f_ImpactonFungiByAmmonium(f_ImpactonFungiMinUptake), FracAvail(FracAvail), FlexDegree(FlexDegree)
@@ -242,7 +242,7 @@ public:
 	};
 	// 4 operators for combination of RootDensity and Fungi Impacts on Plant Min uptake
 	UptakeResults operator() (vector<double> &DistWithDepth,  size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, vector<double> &RootDensity, UptakeResults &out) {
+		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &RootDensity, UptakeResults &out) {
 		out.RemainFrac = 0.;
 		for (size_t ii = 0; ii < out.UptNH4.size(); ii++) {
 			Ratio[ii] = (SoilNitrate[ii] + 1.E-20) / (SoilNitrate[ii] + SoilAmmonium[ii] + 1.E-20);
@@ -258,7 +258,7 @@ public:
 		return out;
 	}
 	UptakeResults operator() (vector<double> &DistWithDepth,  size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, UptakeResults &out) {
+		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, UptakeResults &out) {
 		out.RemainFrac = 0.;
 
 		if (N_DemandPlant<=0.) {
@@ -281,7 +281,7 @@ public:
 		return out;
 	}
 	UptakeResults operator() (vector<double> &DistWithDepth,  size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, vector<double> &FungiRootCover, bool Fungi, UptakeResults &out) {//HH
+		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &FungiRootCover, bool Fungi, UptakeResults &out) {//HH
 
 		out.RemainFrac = 0.; 
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
@@ -299,7 +299,7 @@ public:
 		return out;
 	}
 	UptakeResults operator() (vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, vector<double> &RootDensity, vector<double> &FungiRootCover, bool Fungi, UptakeResults &out) {
+		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &RootDensity, std::vector<double> &FungiRootCover, bool Fungi, UptakeResults &out) {
 		out.RemainFrac = 0.;
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
 			Ratio[ii] = (SoilNitrate[ii] + 1.E-20) / (SoilNitrate[ii] + SoilAmmonium[ii] + 1.E-20);
@@ -316,7 +316,7 @@ public:
 	}
 	// 1 operator for Compensatory Uptake by roots
 	UptakeResults operator() (vector<double> &DistWithDepth, size_t NumLayers,  double N_DemandPlant, double N_Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, UptakeResults &uptprev, double ScaleComp, UptakeResults &out) {
+		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, UptakeResults &uptprev, double ScaleComp, UptakeResults &out) {
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
 			Ratio[ii] = (SoilNitrate[ii] + 1.E-20) / (SoilNitrate[ii] + SoilAmmonium[ii] + 1.E-20);
 			Ratio[ii] = max(0., min(1., Ratio[ii]));
@@ -328,7 +328,7 @@ public:
 
 private:
 	UptakeResults GetNitrate(vector<double> &DistWithDepth, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> &Dist_Tot, vector<double> &SoilNitrate, UptakeResults &out) {
+		vector<double> &Dist_Tot, std::vector<double> &SoilNitrate, UptakeResults &out) {
 		double plant_ratio = N_DemandPlant / N_Tot_Demand;
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
 
@@ -346,7 +346,7 @@ private:
 		return out;
 	};
 	UptakeResults GetAdditionalCompUptake(vector<double> &DistWithDepth, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> &Dist_Tot, vector<double> &SoilNitrate, vector<double> &SoilAmmonium, double ScaleComp, UptakeResults &out) {
+		vector<double> &Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, double ScaleComp, UptakeResults &out) {
 		double plant_ratio = N_DemandPlant / N_Tot_Demand;
 		for (size_t ii = 0; ii < out.UptNH4.size(); ii++) {
 			if (Dist_Tot[ii] * N_Tot_Demand > 0.) {
@@ -369,7 +369,7 @@ private:
 		return out;
 	};
 	UptakeResults GetAmmonium(vector<double> &DistWithDepth,  double N_DemandPlant, double N_Tot_Demand,
-		vector<double> &Dist_Tot, vector<double> &SoilAmmonium, UptakeResults &out) {
+		vector<double> &Dist_Tot, std::vector<double> &SoilAmmonium, UptakeResults &out) {
 		double Demand;
 		double plant_ratio = N_DemandPlant / N_Tot_Demand;
 
@@ -398,24 +398,24 @@ class PMineralUptakeByRootsAndFungi {
 public:
 	// 3 Constructors for definition with various combination of functions + 1 by HH
 	PMineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_AvailP, function<double(double)> f_Density, function<double(double)> f_FungiImpactOnPlant,
-		function<double(double)> f_ImpactOnFungiPhosphateUptake, size_t MaxLayers, double FracAvail, vector<double> FlexDegree) :
+		function<double(double)> f_ImpactOnFungiPhosphateUptake, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree) :
 		f_AvailP(f_AvailP), f_Density(f_Density),
 		f_FungiImpactOnPlant(f_FungiImpactOnPlant),
 		f_ImpactOnFungiPhosphateUptake(f_ImpactOnFungiPhosphateUptake), FracAvail(FracAvail), FlexDegree(FlexDegree)
 	{
 		ScaledAvail.assign(MaxLayers, 1.0);
 	};
-	PMineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_AvailP, function<double(double)> f_Density, size_t MaxLayers, double FracAvail, vector<double> FlexDegree) :
+	PMineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_AvailP, function<double(double)> f_Density, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree) :
 		FracAvail(FracAvail), f_AvailP(f_AvailP), f_Density(f_Density), FlexDegree(FlexDegree)
 	{
 		ScaledAvail.assign(MaxLayers, 1.0); 
 	};
-	PMineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_AvailP, size_t MaxLayers, double FracAvail, vector<double> FlexDegree) : 
+	PMineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_AvailP, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree) : 
 		f_AvailP(f_AvailP), FracAvail(FracAvail), FlexDegree(FlexDegree) {
 		ScaledAvail.assign(MaxLayers, 1.0); 
 	};
 	PMineralUptakeByRootsAndFungi(function<LayerOutput(double, double)> f_AvailP,  function<double(double)> f_FungiImpactOnPlant,
-		function<double(double)> f_ImpactOnFungiPhosphateUptake, size_t MaxLayers, double FracAvail, vector<double> FlexDegree) :
+		function<double(double)> f_ImpactOnFungiPhosphateUptake, size_t MaxLayers, double FracAvail, std::vector<double> FlexDegree) :
 		f_AvailP(f_AvailP), 
 		f_FungiImpactOnPlant(f_FungiImpactOnPlant),
 		f_ImpactOnFungiPhosphateUptake(f_ImpactOnFungiPhosphateUptake), FracAvail(FracAvail), FlexDegree(FlexDegree)
@@ -424,7 +424,7 @@ public:
 	};
 	// 4 operators for combination of RootDensity and Fungi Impacts on Plant Min uptake
 	PUptakeResults operator() (vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &Phosphate, vector<double> &RootDensity, PUptakeResults &out) {
+		vector<double> Dist_Tot, std::vector<double> &Phosphate, std::vector<double> &RootDensity, PUptakeResults &out) {
 		out.RemainFrac = 0.;
 		for (size_t ii = 0; ii < out.UptPhosphate.size(); ii++) {
 	
@@ -438,7 +438,7 @@ public:
 		return out;
 	}
 	PUptakeResults operator() (vector<double> &DistWithDepth,  size_t PlantIndex, double DemandPlant, double Tot_Demand,
-		vector<double> &Dist_Tot, vector<double> &Phosphate, PUptakeResults &out) {
+		vector<double> &Dist_Tot, std::vector<double> &Phosphate, PUptakeResults &out) {
 		
 		if (DemandPlant <= 0.) {
 			out.UptPhosphate.assign(out.UptPhosphate.size(), 0.);
@@ -456,7 +456,7 @@ public:
 		return out;
 	}
 	PUptakeResults operator() (vector<double> &DistWithDepth,  size_t PlantIndex, double DemandPlant, double Tot_Demand,
-		vector<double> Dist_Tot,  vector<double> &Phosphate, vector<double> &FungiRootCover, bool Fungi, PUptakeResults &out) {
+		vector<double> Dist_Tot,  std::vector<double> &Phosphate, std::vector<double> &FungiRootCover, bool Fungi, PUptakeResults &out) {
 		if (DemandPlant <= 0.) {
 			out.UptPhosphate.assign(out.UptPhosphate.size(), 0.);
 			out.RemainFrac = 0.;
@@ -475,7 +475,7 @@ public:
 		return out;
 	}
 	PUptakeResults operator() (vector<double> &DistWithDepth, size_t PlantIndex, double DemandPlant, double Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &Phosphate, vector<double> &RootDensity, vector<double> &FungiRootCover, bool Fungi, PUptakeResults &out) {
+		vector<double> Dist_Tot, std::vector<double> &Phosphate, std::vector<double> &RootDensity, std::vector<double> &FungiRootCover, bool Fungi, PUptakeResults &out) {
 		out.RemainFrac = 0.;
 		for (size_t ii = 0; ii < out.UptPhosphate.size(); ii++) {
 			ScaledAvail[ii] = f_Density(RootDensity[ii])*f_FungiImpactOnPlant(FungiRootCover[PlantIndex]);
@@ -491,7 +491,7 @@ public:
 	}
 	// 1 operator for Compensatory Uptake by roots
 	PUptakeResults operator() (vector<double> &DistWithDepth,  double DemandPlant, double Tot_Demand,
-		vector<double> Dist_Tot, vector<double> &Phosphate,  PUptakeResults &uptprev, double ScaleComp, PUptakeResults &out) {
+		vector<double> Dist_Tot, std::vector<double> &Phosphate,  PUptakeResults &uptprev, double ScaleComp, PUptakeResults &out) {
 
 		out = uptprev;
 		out=GetAdditionalCompUptake(DistWithDepth, DemandPlant, Tot_Demand, Dist_Tot, Phosphate, ScaleComp, out);
@@ -501,7 +501,7 @@ public:
 
 private:
 	PUptakeResults GetPhosphate(vector<double> &DistWithDepth,  double DemandPlant, double Tot_Demand,
-		vector<double> &Dist_Tot, vector<double> &Phosphate, PUptakeResults &out) {
+		vector<double> &Dist_Tot, std::vector<double> &Phosphate, PUptakeResults &out) {
 		for (size_t ii = 0; ii < out.UptPhosphate.size(); ii++) {
 
 			double Demand = Dist_Tot[ii] * Tot_Demand;
@@ -517,7 +517,7 @@ private:
 		return out;
 	};
 	PUptakeResults GetAdditionalCompUptake(vector<double> &DistWithDepth, double N_DemandPlant, double N_Tot_Demand,
-		vector<double> &Dist_Tot, vector<double> &Phosphate, double ScaleComp, PUptakeResults &out) {
+		vector<double> &Dist_Tot, std::vector<double> &Phosphate, double ScaleComp, PUptakeResults &out) {
 		for (size_t ii = 0; ii < out.UptPhosphate.size(); ii++) {
 			if (Dist_Tot[ii] * N_Tot_Demand > 0.) {
 				double Demand =  Dist_Tot[ii] * N_Tot_Demand;
@@ -589,7 +589,7 @@ public:
 	
 	// 4 operators for combination of RootDensity and Fungi Impacts on Plant Min uptake
 	OrganicUptakeResults operator() (vector<double> &DistWithDepth, size_t NumLayers,  double N_DemandPlant,
-		vector<double> Dist_Tot, vector<double> &Litter1, vector<double> &Humus, vector<double> &RootDensity) {
+		vector<double> Dist_Tot, std::vector<double> &Litter1, std::vector<double> &Humus, std::vector<double> &RootDensity) {
 		for (size_t ii = 0; ii < NumLayers; ii++) {
 			ScaledAvail[ii] =FracL1*f_Density(RootDensity[ii])*Litter1[ii]/(FracH*f_Density(RootDensity[ii])*Humus[ii]+ FracL1 * f_Density(RootDensity[ii])*Litter1[ii]);
 			Demand[ii] = N_DemandPlant * DistWithDepth[ii] * ScaledAvail[ii];
@@ -603,7 +603,7 @@ public:
 		return soil_out;
 	}
 	OrganicUptakeResults operator() (vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant,
-		vector<double> Dist_Tot, vector<double> &Litter1, vector<double> &Humus) {
+		vector<double> Dist_Tot, std::vector<double> &Litter1, std::vector<double> &Humus) {
 		if (N_DemandPlant <= 0.) {
 			return soil_zero_out;
 		}
@@ -619,8 +619,8 @@ public:
 		soil_out.Humus = GetOrgUptake(NumLayers,FracH, Humus);
 		return soil_out;
 	}
-	OrganicUptakeResults operator() (bool Fungi, vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant,
-		vector<double> Dist_Tot, vector<double> &Litter1, vector<double> &Humus, vector<double> &RootDensity) {
+	OrganicUptakeResults operator() (bool Fungi, std::vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant,
+		vector<double> Dist_Tot, std::vector<double> &Litter1, std::vector<double> &Humus, std::vector<double> &RootDensity) {
 		for (size_t ii = 0; ii < NumLayers; ii++) {
 			ScaledAvail[ii] = FracL1 * f_Density(RootDensity[ii])*Litter1[ii] / (FracH*f_Density(RootDensity[ii])*Humus[ii] + FracL1 * f_Density(RootDensity[ii])*Litter1[ii]);
 			Demand[ii] = N_DemandPlant * DistWithDepth[ii] * ScaledAvail[ii];
@@ -633,8 +633,8 @@ public:
 		soil_out.Humus = GetOrgUptake(NumLayers,FracH*EnhanceFungi, Humus);//HH
 		return soil_out;
 	}
-	OrganicUptakeResults operator() (bool Fungi, vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant,
-		vector<double> Dist_Tot, vector<double> &Litter1, vector<double> &Humus) {
+	OrganicUptakeResults operator() (bool Fungi, std::vector<double> &DistWithDepth, size_t NumLayers, double N_DemandPlant,
+		vector<double> Dist_Tot, std::vector<double> &Litter1, std::vector<double> &Humus) {
 		for (size_t ii = 0; ii < NumLayers; ii++) {
 			ScaledAvail[ii] = FracL1 * Litter1[ii] / (FracH*Humus[ii] + FracL1 * Litter1[ii]);
 			Demand[ii] = N_DemandPlant * DistWithDepth[ii] * ScaledAvail[ii];
@@ -650,7 +650,7 @@ public:
 	
 
 private:
-	vector<double> GetOrgUptake(size_t NumLayers, double Frac, vector<double> &SoilOrgN) {
+	vector<double> GetOrgUptake(size_t NumLayers, double Frac, std::vector<double> &SoilOrgN) {
 		for (size_t ii = 0; ii < NumLayers; ii++)
 			out[ii] = max(0., min(Demand[ii], Frac*ScaledAvail[ii] * SoilOrgN[ii]));
 		return out;
@@ -682,7 +682,7 @@ private:
 };
 class NitrogenFixationResponseToMinNSoil {
 public:
-	NitrogenFixationResponseToMinNSoil(vector<double> MaxNFix, vector<double> MinNFix, vector<double> SensFix) :
+	NitrogenFixationResponseToMinNSoil(vector<double> MaxNFix, std::vector<double> MinNFix, std::vector<double> SensFix) :
 		MaxNFix(MaxNFix), MinNFix(MinNFix), SensFix(SensFix) {};
 	double operator() (size_t index, double conc) {
 		return (MaxNFix[index] - MinNFix[index])*exp(SensFix[index] * conc) + MinNFix[index];
@@ -696,14 +696,14 @@ class NitrogenFixationIndependentDemand {
 public:
 	NitrogenFixationIndependentDemand(
 		function<double(size_t, double)> f_Theta, function<double(double)> f_Temp,
-		function<double(size_t, double)> f_MinN, vector<double> NoduleRatio) :
+		function<double(size_t, double)> f_MinN, std::vector<double> NoduleRatio) :
 		f_Theta(f_Theta), f_Temp(f_Temp), f_MinN(f_MinN),
 		NoduleRatio(NoduleRatio) {};
 
 
-	vector<double> operator() (vector<vector<double>> RDist, vector<double> &Nitrate, vector<double> &Ammonium, 
-		vector<double> &Stem, vector<double> &OldStem, vector<double> &Leaf, vector<double> OldLeaf,
-		vector<double> &Theta, vector<double> &TempSoil, vector<double> &NFixation) {
+	vector<double> operator() (vector<vector<double>> RDist, std::vector<double> &Nitrate, std::vector<double> &Ammonium, 
+		vector<double> &Stem, std::vector<double> &OldStem, std::vector<double> &Leaf, std::vector<double> OldLeaf,
+		vector<double> &Theta, std::vector<double> &TempSoil, std::vector<double> &NFixation) {
 		for (size_t i = 0; i < NFixation.size(); i++) {
 			double NFixProf = 0;
 			double biomass=Stem[i]+OldStem[i]+Leaf[i]+OldLeaf[i];
@@ -716,9 +716,9 @@ public:
 		return NFixation;
 
 	};
-	vector<double> operator() (vector<vector<double>> RDist, vector<double> &Nitrate, vector<double> &Ammonium,
-		vector<double> &Root, vector<double> &OldRoot,
-		vector<double> &Theta, vector<double> &TempSoil, vector<double> &NFixation) {
+	vector<double> operator() (vector<vector<double>> RDist, std::vector<double> &Nitrate, std::vector<double> &Ammonium,
+		vector<double> &Root, std::vector<double> &OldRoot,
+		vector<double> &Theta, std::vector<double> &TempSoil, std::vector<double> &NFixation) {
 		for (size_t i = 0; i < NFixation.size(); i++) {
 			double NFixProf = 0;
 			double biomass = Root[i] + OldRoot[i];

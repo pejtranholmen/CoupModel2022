@@ -16,7 +16,7 @@ class DB_Plant
 public:
 	DB_Plant(){};
 	DB_Plant(string pszCaption, bool, void *pDoc) ;
-	DB_Plant(string pszCaption, void *pDoc, string key="");
+	DB_Plant(string pszCaption, void *pDoc, std::string key="");
 
 // Attributes
 public:
@@ -29,7 +29,7 @@ public:
 // Implementation
 public:
 	void Init(string pszCaption, bool, void *pDoc);
-	void Init(string pszCaption,   string key="");
+	void Init(string pszCaption,   std::string key="");
 	virtual ~DB_Plant();
 	void Actual_DB();
 	void DB_Actual();

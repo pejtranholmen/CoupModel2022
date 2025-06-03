@@ -12,7 +12,7 @@ public:
 	FCSV(ifstream *, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 	FCSV(definitions def);
 	~FCSV(void);
-	void Def(size_t ModuleNo, string name, string value, string conditions, size_t numheaders);
+	void Def(size_t ModuleNo, std::string name, std::string value, std::string conditions, size_t numheaders);
 
 	bool CheckFileName(ModelBase *pModelBase=nullptr);
 	bool CheckIfExistAndOpen() { if (m_Exist&&m_headervar.size() > 0) return true; else return false; };
@@ -77,6 +77,6 @@ private :
 	vector<SIMB> m_ParameterPointers;
 	size_t m_Headers;
 	map <size_t,size_t>KeyIndex;
-	vector< vector<double>> m_Values;
-	vector<  vector<string>> m_KeyValues;
+	vector< std::vector<double>> m_Values;
+	vector<  std::vector<string>> m_KeyValues;
 };

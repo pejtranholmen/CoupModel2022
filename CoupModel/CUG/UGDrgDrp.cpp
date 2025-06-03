@@ -95,7 +95,7 @@ DROPEFFECT CUGDropTarget::OnDropEx( CWnd* pWnd, COleDataObject* pDataObject, DRO
 	m_ctrl->GetCellFromPoint(point.x,point.y,&col,&row);
 	rt = m_ctrl->OnDragDrop(pDataObject,col,row);
 
-	CString string;
+	CString std::string;
 	HGLOBAL global;
 
 #ifdef _UNICODE

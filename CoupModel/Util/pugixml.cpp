@@ -208,7 +208,7 @@ PUGI__NS_END
 
 // String utilities
 PUGI__NS_BEGIN
-	// Get string length
+	// Get std::string length
 	PUGI__FN size_t strlength(const char_t* s)
 	{
 		assert(s);
@@ -242,7 +242,7 @@ PUGI__NS_BEGIN
 		return lhs[count] == 0;
 	}
 
-	// Get length of wide string, even if CRT lacks wide character support
+	// Get length of wide std::string, even if CRT lacks wide character support
 	PUGI__FN size_t strlength_wide(const wchar_t* s)
 	{
 		assert(s);
@@ -437,7 +437,7 @@ PUGI__NS_BEGIN
 	static const uintptr_t xml_memory_page_value_allocated_mask = 16;
 	static const uintptr_t xml_memory_page_type_mask = 15;
 
-	// combined masks for string uniqueness
+	// combined masks for std::string uniqueness
 	static const uintptr_t xml_memory_page_name_allocated_or_shared_mask = xml_memory_page_name_allocated_mask | xml_memory_page_contents_shared_mask;
 	static const uintptr_t xml_memory_page_value_allocated_or_shared_mask = xml_memory_page_value_allocated_mask | xml_memory_page_contents_shared_mask;
 
@@ -502,7 +502,7 @@ PUGI__NS_BEGIN
 	struct xml_memory_string_header
 	{
 		uint16_t page_offset; // offset from page->data
-		uint16_t full_size; // 0 if string occupies whole page
+		uint16_t full_size; // 0 if std::string occupies whole page
 	};
 
 	struct xml_allocator
@@ -640,7 +640,7 @@ PUGI__NS_BEGIN
 
 			PUGI__STATIC_ASSERT(xml_memory_page_size <= max_encoded_offset);
 
-			// allocate memory for string and header block
+			// allocate memory for std::string and header block
 			size_t size = sizeof(xml_memory_string_header) + length * sizeof(char_t);
 
 			// round size up to block alignment boundary
@@ -668,10 +668,10 @@ PUGI__NS_BEGIN
 			return static_cast<char_t*>(static_cast<void*>(header + 1));
 		}
 
-		void deallocate_string(char_t* string)
+		void deallocate_string(char_t* std::string)
 		{
 			// this function casts pointers through void* to avoid 'cast increases required alignment of target type' warnings
-			// we're guaranteed the proper (pointer-sized) alignment on the input string if it was allocated via allocate_string
+			// we're guaranteed the proper (pointer-sized) alignment on the input std::string if it was allocated via allocate_string
 
 			// get header
 			xml_memory_string_header* header = static_cast<xml_memory_string_header*>(static_cast<void*>(string)) - 1;
@@ -681,7 +681,7 @@ PUGI__NS_BEGIN
 			size_t page_offset = sizeof(xml_memory_page) + header->page_offset * xml_memory_block_alignment;
 			xml_memory_page* page = reinterpret_cast<xml_memory_page*>(static_cast<void*>(reinterpret_cast<char*>(header) - page_offset));
 
-			// if full_size == 0 then this string occupies the whole page
+			// if full_size == 0 then this std::string occupies the whole page
 			size_t full_size = header->full_size == 0 ? page->busy_size : header->full_size * xml_memory_block_alignment;
 
 			deallocate_memory(header, full_size, page);
@@ -2300,7 +2300,7 @@ PUGI__NS_BEGIN
 		// first pass: get length in utf8 characters
 		size_t size = as_utf8_begin(str, length);
 
-		// allocate resulting string
+		// allocate resulting std::string
 		std::string result;
 		result.resize(size);
 
@@ -2317,7 +2317,7 @@ PUGI__NS_BEGIN
 		// first pass: get length in wchar_t units
 		size_t length = utf8_decoder::process(data, size, 0, wchar_counter());
 
-		// allocate resulting string
+		// allocate resulting std::string
 		std::basic_string<wchar_t> result;
 		result.resize(length);
 
@@ -2357,12 +2357,12 @@ PUGI__NS_BEGIN
 	{
 		if (source_length == 0)
 		{
-			// empty string and null pointer are equivalent, so just deallocate old memory
+			// empty std::string and null pointer are equivalent, so just deallocate old memory
 			xml_allocator* alloc = PUGI__GETPAGE_IMPL(header)->allocator;
 
 			if (header & header_mask) alloc->deallocate_string(dest);
 
-			// mark the string as not allocated
+			// mark the std::string as not allocated
 			dest = 0;
 			header &= ~header_mask;
 
@@ -2386,14 +2386,14 @@ PUGI__NS_BEGIN
 			char_t* buf = alloc->allocate_string(source_length + 1);
 			if (!buf) return false;
 
-			// copy the string (including zero terminator)
+			// copy the std::string (including zero terminator)
 			memcpy(buf, source, source_length * sizeof(char_t));
 			buf[source_length] = 0;
 
 			// deallocate old buffer (*after* the above to protect against overlapping memory and/or allocation failures)
 			if (header & header_mask) alloc->deallocate_string(dest);
 
-			// the string is now allocated, so set the flag
+			// the std::string is now allocated, so set the flag
 			dest = buf;
 			header |= header_mask;
 
@@ -2930,7 +2930,7 @@ PUGI__NS_BEGIN
 		{
 			if (*s == '"' || *s == '\'')
 			{
-				// quoted string
+				// quoted std::string
 				char_t ch = *s++;
 				PUGI__SCANFOR(*s == ch);
 				if (!*s) PUGI__THROW_ERROR(status_bad_doctype, s);
@@ -3781,7 +3781,7 @@ PUGI__NS_BEGIN
 
 		void write_string(const char_t* data)
 		{
-			// write the part of the string that fits in the buffer
+			// write the part of the std::string that fits in the buffer
 			size_t offset = bufsize;
 
 			while (*data && offset < bufcapacity)
@@ -4984,7 +4984,7 @@ PUGI__NS_BEGIN
 		size_t length = strlength_wide(str);
 		size_t size = as_utf8_begin(str, length);
 
-		// allocate resulting string
+		// allocate resulting std::string
 		char* result = static_cast<char*>(xml_memory::allocate(size + 1));
 		if (!result) return 0;
 
@@ -7727,12 +7727,12 @@ PUGI__NS_BEGIN
 		bool _uses_heap;
 		size_t _length_heap;
 
-		static char_t* duplicate_string(const char_t* string, size_t length, xpath_allocator* alloc)
+		static char_t* duplicate_string(const char_t* std::string, size_t length, xpath_allocator* alloc)
 		{
 			char_t* result = static_cast<char_t*>(alloc->allocate((length + 1) * sizeof(char_t)));
 			if (!result) return 0;
 
-			memcpy(result, string, length * sizeof(char_t));
+			memcpy(result, std::string, length * sizeof(char_t));
 			result[length] = 0;
 
 			return result;
@@ -7793,10 +7793,10 @@ PUGI__NS_BEGIN
 				char_t* result = static_cast<char_t*>(alloc->reallocate(_uses_heap ? const_cast<char_t*>(_buffer) : 0, (target_length + 1) * sizeof(char_t), (result_length + 1) * sizeof(char_t)));
 				if (!result) return;
 
-				// append first string to the new buffer in case there was no reallocation
+				// append first std::string to the new buffer in case there was no reallocation
 				if (!_uses_heap) memcpy(result, _buffer, target_length * sizeof(char_t));
 
-				// append second string to the new buffer
+				// append second std::string to the new buffer
 				memcpy(result + target_length, o._buffer, source_length * sizeof(char_t));
 				result[result_length] = 0;
 
@@ -7858,7 +7858,7 @@ PUGI__NS_BEGIN
 PUGI__NS_END
 
 PUGI__NS_BEGIN
-	PUGI__FN bool starts_with(const char_t* string, const char_t* pattern)
+	PUGI__FN bool starts_with(const char_t* std::string, const char_t* pattern)
 	{
 		while (*pattern && *string == *pattern)
 		{
@@ -8206,7 +8206,7 @@ PUGI__NS_BEGIN
 
 		int exponent = atoi(exponent_string + 1);
 
-		// extract mantissa string: skip sign
+		// extract mantissa std::string: skip sign
 		char* mantissa = buffer[0] == '-' ? buffer + 1 : buffer;
 		assert(mantissa[0] != '0' && mantissa[1] == '.');
 
@@ -8291,7 +8291,7 @@ PUGI__NS_BEGIN
 		return xpath_string::from_heap_preallocated(result, s);
 	}
 
-	PUGI__FN bool check_string_to_number_format(const char_t* string)
+	PUGI__FN bool check_string_to_number_format(const char_t* std::string)
 	{
 		// parse leading whitespace
 		while (PUGI__IS_CHARTYPE(*string, ct_space)) ++string;
@@ -8321,12 +8321,12 @@ PUGI__NS_BEGIN
 		return *string == 0;
 	}
 
-	PUGI__FN double convert_string_to_number(const char_t* string)
+	PUGI__FN double convert_string_to_number(const char_t* std::string)
 	{
-		// check string format
+		// check std::string format
 		if (!check_string_to_number_format(string)) return gen_nan();
 
-		// parse string
+		// parse std::string
 	#ifdef PUGIXML_WCHAR_MODE
 		return wcstod(string, 0);
 	#else
@@ -8346,7 +8346,7 @@ PUGI__NS_BEGIN
 			if (!scratch) return false;
 		}
 
-		// copy string to zero-terminated buffer and perform conversion
+		// copy std::string to zero-terminated buffer and perform conversion
 		memcpy(scratch, begin, length * sizeof(char_t));
 		scratch[length] = 0;
 
@@ -8735,7 +8735,7 @@ PUGI__NS_BEGIN
 			if (!scratch) return false;
 		}
 
-		// copy string to zero-terminated buffer and perform lookup
+		// copy std::string to zero-terminated buffer and perform lookup
 		memcpy(scratch, begin, length * sizeof(char_t));
 		scratch[length] = 0;
 
@@ -9349,7 +9349,7 @@ PUGI__NS_BEGIN
 		ast_op_union,					// left | right
 		ast_predicate,					// apply predicate to set; next points to next predicate
 		ast_filter,						// select * from left where right
-		ast_string_constant,			// string constant
+		ast_string_constant,			// std::string constant
 		ast_number_constant,			// number constant
 		ast_variable,					// variable
 		ast_func_last,					// last()
@@ -9362,8 +9362,8 @@ PUGI__NS_BEGIN
 		ast_func_namespace_uri_1,		// namespace-uri(left)
 		ast_func_name_0,				// name()
 		ast_func_name_1,				// name(left)
-		ast_func_string_0,				// string()
-		ast_func_string_1,				// string(left)
+		ast_func_string_0,				// std::string()
+		ast_func_string_1,				// std::string(left)
 		ast_func_concat,				// concat(left, right, siblings)
 		ast_func_starts_with,			// starts_with(left, right)
 		ast_func_contains,				// contains(left, right)
@@ -9371,8 +9371,8 @@ PUGI__NS_BEGIN
 		ast_func_substring_after,		// substring-after(left, right)
 		ast_func_substring_2,			// substring(left, right)
 		ast_func_substring_3,			// substring(left, right, third)
-		ast_func_string_length_0,		// string-length()
-		ast_func_string_length_1,		// string-length(left)
+		ast_func_string_length_0,		// std::string-length()
+		ast_func_string_length_1,		// std::string-length(left)
 		ast_func_normalize_space_0,		// normalize-space()
 		ast_func_normalize_space_1,		// normalize-space(left)
 		ast_func_translate,				// translate(left, right, third)
@@ -9467,7 +9467,7 @@ PUGI__NS_BEGIN
 		union
 		{
 			// value for ast_string_constant
-			const char_t* string;
+			const char_t* std::string;
 			// value for ast_number_constant
 			double number;
 			// variable for ast_variable
@@ -10525,11 +10525,11 @@ PUGI__NS_BEGIN
 
 			xpath_allocator_capture ct(stack.temp);
 
-			// count the string number
+			// count the std::string number
 			size_t count = 1;
 			for (xpath_ast_node* nc = _right; nc; nc = nc->_next) count++;
 
-			// allocate a buffer for temporary string objects
+			// allocate a buffer for temporary std::string objects
 			xpath_string* buffer = static_cast<xpath_string*>(stack.temp->allocate(count * sizeof(xpath_string)));
 			if (!buffer) return xpath_string();
 
@@ -10546,7 +10546,7 @@ PUGI__NS_BEGIN
 			size_t length = 0;
 			for (size_t i = 0; i < count; ++i) length += buffer[i].length();
 
-			// create final string
+			// create final std::string
 			char_t* result = static_cast<char_t*>(stack.result->allocate((length + 1) * sizeof(char_t)));
 			if (!result) return xpath_string();
 
@@ -10794,7 +10794,7 @@ PUGI__NS_BEGIN
 				}
 
 				default:
-					assert(false && "Wrong expression for return type string"); // unreachable
+					assert(false && "Wrong expression for return type std::string"); // unreachable
 					return xpath_string();
 				}
 			}
@@ -11710,7 +11710,7 @@ PUGI__NS_BEGIN
 				xpath_ast_node* n = alloc_node(ast_step_root, xpath_type_node_set);
 				if (!n) return 0;
 
-				// relative location path can start from axis_attribute, dot, double_dot, multiply and string lexemes; any other lexeme means standalone root path
+				// relative location path can start from axis_attribute, dot, double_dot, multiply and std::string lexemes; any other lexeme means standalone root path
 				lexeme_t l = _lexer.current();
 
 				if (l == lex_string || l == lex_axis_attribute || l == lex_dot || l == lex_double_dot || l == lex_multiply)
@@ -11747,7 +11747,7 @@ PUGI__NS_BEGIN
 			// PathExpr begins with either LocationPath or FilterExpr.
 			// FilterExpr begins with PrimaryExpr
 			// PrimaryExpr begins with '$' in case of it being a variable reference,
-			// '(' in case of it being an expression, string literal, number constant or
+			// '(' in case of it being an expression, std::string literal, number constant or
 			// function call.
 			if (_lexer.current() == lex_var_ref || _lexer.current() == lex_open_brace ||
 				_lexer.current() == lex_quoted_string || _lexer.current() == lex_number ||
@@ -12311,7 +12311,7 @@ namespace pugi
 
 		impl::xpath_variable_string* var = static_cast<impl::xpath_variable_string*>(this);
 
-		// duplicate string
+		// duplicate std::string
 		size_t size = (impl::strlength(value) + 1) * sizeof(char_t);
 
 		char_t* copy = static_cast<char_t*>(impl::xml_memory::allocate(size));
@@ -12319,7 +12319,7 @@ namespace pugi
 
 		memcpy(copy, value, size);
 
-		// replace old string
+		// replace old std::string
 		if (var->value) impl::xml_memory::deallocate(var->value);
 		var->value = copy;
 

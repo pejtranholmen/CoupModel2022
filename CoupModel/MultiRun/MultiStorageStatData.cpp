@@ -32,7 +32,7 @@ MultiStorageStatData::~MultiStorageStatData()
 
 }
 
-bool MultiStorageStatData::EvaluateFile(bool reading, string filename) {
+bool MultiStorageStatData::EvaluateFile(bool reading, std::string filename) {
 	if (m_IsStatOpen) {
 		m_IsStatOpen = false;
 	}
@@ -242,7 +242,7 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			m_EFile.WriteTextLine("File name :  Added Runs , First Added ");
 		}
 		for (unsigned int i = 0; i < ifiles; i++) {
-            string addfile = GetNameAddedFiles(i);
+            std::string addfile = GetNameAddedFiles(i);
 			num = GetNumberOfAddedRuns(i);
 			num_first = GetFirstRunNoAddedRuns(i);
 			m_EFile.WriteTextLine(addfile, num , num_first);
@@ -266,7 +266,7 @@ bool MultiStorageStatData::ReadWrite_Accepted(bool reading) {
 			m_EFile.WriteTextLine("Ensemble Id ", m_AcceptedIdString[i]);
 
 			size_t num = m_AcceptedRuns[i].size();
-			if (m_TotalNumberRuns == string::npos) {
+			if (m_TotalNumberRuns == std::string::npos) {
 				m_TotalNumberRuns = m_pNewMap->MR_Get_NumberofRuns();
 			}
 			if (num == 0&&m_TotalNumberRuns>0) {
@@ -1061,7 +1061,7 @@ bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t Actua
 		return false;
 	else {
 		
-		if (ActualCumulatedPerformance != string::npos) {
+		if (ActualCumulatedPerformance != std::string::npos) {
 			auto it = MapOfStoredTSV.find(ActualCumulatedPerformance);
 			if (it != MapOfStoredTSV.end()) 
 				newindex = (*it).second;
@@ -1082,7 +1082,7 @@ bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t Actua
 		for (size_t i = 0; i < m_VarValidTransformed[newindex].VarValidVector.size();i++)
 			m_VarValid[i] = m_VarValidTransformed[newindex].VarValidVector[i];
 		m_Valid_TSV[m_ActualEnsemble].VarTranformed = m_CumulatedPerformance;
-		if (dim1_index != string::npos) m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index = dim1_index;
+		if (dim1_index != std::string::npos) m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index = dim1_index;
 	}
 	else
 		return false; //Keep m_VarValid as the original values

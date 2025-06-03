@@ -783,7 +783,7 @@ void ChartCugClick::VariablesTimeSerieMode(size_t col, size_t row) {
 	CUGCell cell; 
 	CString str, txt;
 	auto ArrayIndex=m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, row);
-	if (ArrayIndex == string::npos) return;
+	if (ArrayIndex == std::string::npos) return;
 			auto koll=m_pSimDoc->m_PlotStorage.GetPGSectionNo(ArrayIndex);
 			auto p_info= m_pSimDoc->m_PlotStorage.GetPlotInfo(ArrayIndex);
 

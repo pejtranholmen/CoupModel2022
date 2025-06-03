@@ -12,7 +12,7 @@ T::T(vector<double> *target,NE *pNNE, enum datatype data, enum elements elem, en
 	pNE=pNNE;
 	;
 }
-void T::Def(size_t ModuleNo, string name, vector<double> init, string unit, string conditions)
+void T::Def(size_t ModuleNo, std::string name, std::vector<double> init, std::string unit, std::string conditions)
 {
 
 	SetValue(init);

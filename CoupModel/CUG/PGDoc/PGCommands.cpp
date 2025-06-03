@@ -965,9 +965,9 @@ void PGCommands::OpenEditPGFile(int col, int row,int item) {
 	
 		size_t ipos=DumpFileName.rfind(".bin");
 
-		if(ipos==string::npos)
+		if(ipos== std::string::npos)
 			ipos=DumpFileName.rfind(".BIN");
-		if(ipos>DumpFileName.size()-5&&ipos!=string::npos) {
+		if(ipos>DumpFileName.size()-5&&ipos!= std::string::npos) {
 			filename=DumpFileName.substr(0,ipos);
 			filename+="_Copy.bin";
 			FUtil::CopyFile_Std(pPG->GetFileName(), filename.data());
@@ -1231,7 +1231,7 @@ bool PGCommands::InterpolateBasedOnRegressions(int col, int row) {
 	GetCell(-2,row,&cell);
 	auto index=size_t(cell.GetNumber());
 	CPG *pPG;
-	if(index!=string::npos) 
+	if(index!= std::string::npos) 
 		pPG=(CPG*)m_pPGArchive->m_PGFileArray[index].pFile;
 	else
 		pPG=m_pGSource;
@@ -1274,7 +1274,7 @@ bool PGCommands::SplitIntoNoRepetionsFiles(int col, int row){
 		GetCell(-2,row,&cell);
 		auto index=size_t(cell.GetNumber());
 		CPG *pPG;
-		if(index!=string::npos) 
+		if(index!= std::string::npos) 
 			pPG=(CPG*)m_pPGArchive->m_PGFileArray[index].pFile;
 		else
 			pPG=m_pGSource;

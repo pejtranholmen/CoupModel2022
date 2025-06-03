@@ -27,7 +27,7 @@ bool PG_Stream::SetActBufferReset()
 }
 bool PG_Stream::SetActBuffer(size_t ind_buf)
 {
-	pg.status.b.PrevBuf = string::npos;
+	pg.status.b.PrevBuf = std::string::npos;
 	if (ind_buf == 0) return false;
 	if (!pg.status.CompleteFileRead)
 		return ReadNewBuffer(ind_buf);
@@ -36,7 +36,7 @@ bool PG_Stream::SetActBuffer(size_t ind_buf)
 }
 bool PG_Stream::SetActBufferSize(size_t ind_buf)
 {
-	pg.status.b.PrevBuf = string::npos;
+	pg.status.b.PrevBuf = std::string::npos;
 	pg.status.b.buf_TotSize = ind_buf*pg.Shape.NumVar;
 	pg.status.b.buf_Size = ind_buf;
 
@@ -394,7 +394,7 @@ bool PG_Stream::WriteDescriptionsToStream(fstream * pWriteEnabledStream, size_t 
 		else  pWriteEnabledStream = &m_ExtraPGStreamWrite;
 	}
 	auto CheckAndSetStartPosition = [&]() {
-		if (RepNoInput_ToStore == string::npos) {
+		if (RepNoInput_ToStore == std::string::npos) {
 			std::streampos pos = (pg.Shape.TotalNumberOfRecords + 1) * pg.Shape.RecordSize;
 			pWriteEnabledStream->seekp(pos, ios::beg);
 			auto pos2 = pWriteEnabledStream->tellp();
@@ -463,7 +463,7 @@ bool PG_Stream::WriteDescriptionsToStream(fstream * pWriteEnabledStream, size_t 
 
 	if (!CheckAndSetStartPosition()) return false;;
 
-	if (RepNoInput_ToStore != string::npos) {
+	if (RepNoInput_ToStore != std::string::npos) {
 		for (size_t i = 0; i < pg.Shape.NumVar; i++) {
 			WriteFixedDescription(i, RepNoInput_ToStore);
 		}
@@ -506,7 +506,7 @@ bool PG_Stream::WriteDescriptionsToStream(fstream * pWriteEnabledStream, size_t 
 			if (pg.Des.addinfo.size()<(pg.Shape.NumRepetitions+1)*pg.Shape.NumVar) {
 				pg.Des.addinfo.resize((pg.Shape.NumRepetitions+1)*pg.Shape.NumVar);
 			}
-			if (RepNoInput_ToStore == string::npos) {
+			if (RepNoInput_ToStore == std::string::npos) {
 				for (size_t i = 0; i < pg.Shape.NumVar; i++) {
 					WriteToStream(i);
 				}
@@ -545,7 +545,7 @@ bool PG_Stream::WritePGFileStartHeader(size_t nrecords, size_t nrepititions, siz
 	std::streampos actpos;
 	unsigned int totnumrecords;
 
-	if (nrepititions>0 && InputRepNo != string::npos)
+	if (nrepititions>0 && InputRepNo != std::string::npos)
 		totnumrecords = nrecords*nrepititions;
 	else if(nrepititions==0) 
 		totnumrecords = nrecords;
@@ -600,7 +600,7 @@ bool PG_Stream::MakeBackUpCopy()
 	string filename = pg.status.FileName;
 	auto pos = filename.rfind('.');
 	size_t Num = 1;
-	if (pos != string::npos) {
+	if (pos != std::string::npos) {
 		filename = pg.status.FileName.substr(0, pos) + "_Copy" + FUtil::STD_ItoAscii(Num)+".bin";
 		while (FUtil::IsFileExisting(filename)) {
 			Num++;
@@ -648,7 +648,7 @@ bool PG_Stream::IsGood()
 bool PG_Stream::ClearFile() 
 {
 	m_MainPGStreamReadWrite.clear();
-	pg.status.b.PrevBuf=string::npos;
+	pg.status.b.PrevBuf= std::string::npos;
 	m_IsOpen=false;
 	return ReOpen(m_WriteEnabled);
 }
@@ -1060,7 +1060,7 @@ bool PG_Stream::WritePGFileVarValue(size_t varno, size_t var_rec, float value, s
 std::streamsize  PG_Stream::WriteNewPGFileRecord(size_t rec)
 {
 	//m_driveFile.seekp(newpos,ios::beg);
-	if (rec == string::npos) {
+	if (rec == std::string::npos) {
 		auto newpos = (pg.Shape.NumVar + 1) * 4;
 		m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
 	}
@@ -1084,7 +1084,7 @@ bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream, bool 
 	}
 	size_t nrecords, OutSizeData;
 
-	if (InputRepNo != string::npos) {
+	if (InputRepNo != std::string::npos) {
 
 		if (!m_MainPGStreamReadWrite.good()) return false;
 
@@ -1193,7 +1193,7 @@ bool PG_Stream::WritePGFileEnd(size_t nrecords, size_t nrepititions, size_t Inpu
 
 	std::streamsize newpos, actpos;
 
-	if (InputRepNo != string::npos || nrepititions>=1)
+	if (InputRepNo != std::string::npos || nrepititions>=1)
 		newpos = nrepititions*pg.Shape.RecordSize*nrecords + pg.Shape.RecordSize;
 	else
 		newpos = pg.Shape.RecordSize*nrecords + pg.Shape.RecordSize;
@@ -1455,7 +1455,7 @@ bool PG_Stream::WritePGFileData(size_t nrecords, fstream *pPGOutStream, bool Onl
 	m_OutFileVar = pg.Shape.NumVar;
 
 
-	if (pg.Shape.RepetitionMode&& pg.Shape.NumRepetitions>0&& pg.Shape.NumRepetitions!=string::npos) {
+	if (pg.Shape.RepetitionMode&& pg.Shape.NumRepetitions>0&& pg.Shape.NumRepetitions!= std::string::npos) {
 		//nrecords = nrecords*pg.Shape.NumRepetitions;
 		OutSizeData = nrecords*pg.Shape.RecordSize;
 

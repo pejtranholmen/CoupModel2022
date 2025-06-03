@@ -116,7 +116,7 @@ void MakePGCharts::MultiPGChartClick()
 
 		}
 }
-bool MakePGCharts::CreateZoomPlotWindow(bool multi, string FileName)
+bool MakePGCharts::CreateZoomPlotWindow(bool multi, std::string FileName)
 {
 		bool good;
 
@@ -131,7 +131,7 @@ bool MakePGCharts::CreateZoomPlotWindow(bool multi, string FileName)
 			//good=m_pZoom->InitMultiRunPlot(m_pDoc, m_CurrentChart, m_pProp->m_ChartType);
 		}
 		else {
-			good=pChart->m_TimeSeriePlot.InitData(m_pSimDoc, m_CurrentChart, string(FileName));
+			good=pChart->m_TimeSeriePlot.InitData(m_pSimDoc, m_CurrentChart, std::string(FileName));
 			//good=m_pZoom->InitData(m_pDoc, m_CurrentChart, m_CurrentChartType,FileName);
 
 		}

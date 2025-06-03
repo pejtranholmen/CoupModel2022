@@ -391,7 +391,7 @@ auto OutflowFromPlantLitterFalltoSoilLayers = [&]() {
 //	for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 		
 
-// Add contributions of all Plants with all plant components and all plant elements to to vector for two soil litters for all plant elements and soil layers
+// Add contributions of all Plants with all plant components and all plant elements to to std::vector for two soil litters for all plant elements and soil layers
 	//for (size_t i_plant = 0; i_plant < p_Plant->NumPlants; i_plant++) {
 	
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
@@ -709,7 +709,7 @@ auto AbioticResponseOnDecomposition = [&]() {
 		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 			f_VerticalSoluteFlowFromWaterFlowConcDeepPerc(p_NC_Plant->NDrivWaterFlow, Dissolved[jj].Conc, p_NC_Plant->NDrivDeepPercolation, Dissolved[jj].VFlow);
 			if (p_NC_Plant->SoilDrainageInput > 0) {
-				pair<double, vector<double>> out;
+				pair<double, std::vector<double>> out;
 				out = f_DrainageSoluteFlowWithMeanConcFromWaterFlowConc(p_NC_Plant->NDrivDrainage, Dissolved[jj].Conc, Dissolved[jj].HFlow);
 				Dissolved[jj].HFlow = out.second;
 			}

@@ -14,13 +14,13 @@ class NC_SoilManagement_Functions : public NC_GasFlux
    size_t PloughingYear;
 
    bool	Do_Ploughing;
-   vector<double> DistFrac;
+   std::vector<double> DistFrac;
 
    CPG m_PG_SurfaceCult, m_PG_Deep_Ploughing;
    
 
    // New for Sowing and Emergence from PG file reading
-   vector<size_t> ISurfaceCultDates, IPloughingDates;
+   std::vector<size_t> ISurfaceCultDates, IPloughingDates;
    size_t ISurfaceCultCount, IPloughingCount;
    
 

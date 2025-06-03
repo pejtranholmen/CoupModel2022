@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <memory>
 #include <functional>
-using namespace std;
+
 #ifndef NOSIMMODEL
 //#include "./SoilData/GetSoilStorage.h"
 #include "./SoilData/Plotpf/PFCurve.h"

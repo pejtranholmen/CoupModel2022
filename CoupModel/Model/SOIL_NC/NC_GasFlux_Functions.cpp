@@ -178,13 +178,13 @@ bool NC_GasFlux_Functions::Def()
   ;
 // CH4 Parameters;
   functorprop.FuncName = MyFunc::METHANE_PRODUCTION_FROM_ONE_LITTER; functorprop.Arg = MyArgType::D3;
-  functorprop.FunctorInitOption = string::npos;
+  functorprop.FunctorInitOption = std::string::npos;
   funcname = "Anaerobic Methane Production Function";
   plotpar.X_Label = "Amount Litter1 (g/m2)";
   plotpar.X_Min = 0;
   plotpar.X_Max = 10.;
   plotpar.Y_Label = "Potential Methane Production (";
-  string unit = p_ModelInfo->GetUnitString(UNIT_TYPES::mMASSFLOW_UNIT) + ")"; plotpar.Y_Label += unit;
+  std::string unit = p_ModelInfo->GetUnitString(UNIT_TYPES::mMASSFLOW_UNIT) + ")"; plotpar.Y_Label += unit;
   plotpar.Num_Of_Curves = 3.;
   plotpar.Num_Of_X = 3;
   plotpar.Num_Of_Opt = 1;
@@ -207,7 +207,7 @@ bool NC_GasFlux_Functions::Def()
 
 ;
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_OF_WATERUPTAKE; functorprop.Arg = MyArgType::D1;
-functorprop.FunctorInitOption = string::npos;
+functorprop.FunctorInitOption = std::string::npos;
 funcname = "Oxidation of Methane from Water Uptake Function";
 plotpar.X_Label = "Methane uptake by waterflow (";
  unit = p_ModelInfo->GetUnitString(UNIT_TYPES::MIKRO_MASS_FLOW_UNIT)+")";
@@ -231,7 +231,7 @@ plotpar.Y_ScalingCoef = 6;
 	
 	ps_vec.clear();
 	functorprop.FuncName = MyFunc::METHANE_OXIDATION; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Maximum Oxidation Rate Function";
 	plotpar.X_Label = "Amount of Methane (g/m2)";
 	plotpar.X_Min = 0;
@@ -252,7 +252,7 @@ plotpar.Y_ScalingCoef = 6;
 
 
 	functorprop.FuncName = MyFunc::METHANE_OXIDATION_REGULATION_BY_CH4; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Oxidation Regulation by CH4 concentration";
 	plotpar.X_Label = "Methane Water Conc(";
 	unit = p_ModelInfo->GetUnitString(UNIT_TYPES::mMASS_LITER_UNIT); unit += ")"; plotpar.X_Label += unit;
@@ -306,7 +306,7 @@ plotpar.Y_ScalingCoef = 6;
 
 
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_REGULATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
-functorprop.FunctorInitOption = string::npos;
+functorprop.FunctorInitOption = std::string::npos;
 funcname = "Plant Oxidation Regulation by root respiration";
 plotpar.X_Label = "Root Respiration Rate (gC/m3/day)";
 plotpar.X_Min = 0;
@@ -325,7 +325,7 @@ plotpar.LegendsVec.clear();
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 	functorprop.FuncName = MyFunc::DIFFUSION_FLUX_FUNCTION; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Methane Diffusion Flux Function in water";
 	plotpar.X_Label = "Concentration gradient (gC/m4)";
 	plotpar.X_Min = 0;
@@ -347,7 +347,7 @@ plotpar.LegendsVec.clear();
 
 	ps_vec.push_back((Ps*)m_pModelMap->GetPsPointer("CH4 PlantOxidationRate"));
 	functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		funcname = "Plant Oxidation Regulation by root respiration";
 		plotpar.X_Label = "Root Respiration Rate (gC/m3/day)";
 		plotpar.X_Min = 0;
@@ -369,7 +369,7 @@ plotpar.LegendsVec.clear();
 
 	
 	functorprop.FuncName = MyFunc::METHANE_VOLATIVITY; functorprop.Arg = MyArgType::D2;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Methane Volatility Function";
 	plotpar.X_Label = "Water Concentration (";
 	auto m_volume = p_ModelInfo->GetUnitString(UNIT_TYPES::mMASS_LITER_UNIT);
@@ -419,7 +419,7 @@ plotpar.LegendsVec.clear();
 
 	
 	functorprop.FuncName = MyFunc::METHANE_TRANSPIRATION_EFFICIENCY; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Transpiration Methane Emission Function";
 		plotpar.X_Label = "Water Uptake Rate (mm/day)";
 		plotpar.Y_Label = "Methane Emission Efficiency ()";
@@ -450,7 +450,7 @@ plotpar.LegendsVec.clear();
 
 
 	functorprop.FuncName = MyFunc::METHANE_BOUNDARYLAYER_FLUX; functorprop.Arg = MyArgType::D2;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 		funcname = "Methane Soil Surface Flux";
 		plotpar.X_Label = "Air Surface Concentration (";
 		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::mMASS_LITER_UNIT); unit += ")"; plotpar.X_Label += unit;
@@ -673,7 +673,7 @@ plotpar.LegendsVec.clear();
 		Define(pG, pNL  , "An_VolFraction",initv,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 
 	functorprop.FuncName = MyFunc::ANAEROBIC_BALLON; functorprop.Arg = MyArgType::D1;
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		funcname = "Anaerobic Ballon Function";
 		plotpar.X_Label = "Oxygen content (";
 		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::mMASS_LITER_UNIT)+")";
@@ -696,7 +696,7 @@ plotpar.LegendsVec.clear();
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 		functorprop.FuncName = MyFunc::DiFFUSION_SOIL_OXYGEN; functorprop.Arg = MyArgType::D1;
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		funcname = "Oxygen Soil Air Diffusion Function";
 		plotpar.Y_Label = "Soil Diffusion (";
 		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::AREA_PER_TIME_UNIT) + ")";
@@ -724,7 +724,7 @@ plotpar.LegendsVec.clear();
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 		functorprop.FuncName = MyFunc::DiFFUSION_SOIL_CO2; functorprop.Arg = MyArgType::D1;
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		funcname = "CO2 Soil Air Diffusion Function";
 		plotpar.Y_Label = "Soil Diffusion (";
 		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::AREA_PER_TIME_UNIT) + ")";
@@ -757,7 +757,7 @@ plotpar.LegendsVec.clear();
 	initv.assign(pSoil->NL,20.);
 
 	functorprop.FuncName = MyFunc::NITRI_N2O_PROD_RESPONSE; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Nitrous Oxide Production from Nitrifiers";
 	plotpar.Y_Label = "Nitrous Oxide Production (";
 	unit = p_ModelInfo->GetUnitString(UNIT_TYPES::MIKRO_MASS_FLOW_UNIT) + ")";
@@ -790,7 +790,7 @@ plotpar.LegendsVec.clear();
 
 
 functorprop.FuncName = MyFunc::NITRI_NO_PROD_TEMP_RESPONSE; functorprop.Arg = MyArgType::D1;
-functorprop.FunctorInitOption = string::npos;
+functorprop.FunctorInitOption = std::string::npos;
 funcname = "N oxide Production From Nitrification Temp Response";
 plotpar.Y_Label = "Relative Response (";
 unit = p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT) + ")";
@@ -816,7 +816,7 @@ plotpar.X_ScalingCoef = 0;
 
 ;
 functorprop.FuncName = MyFunc::NITRI_N2O_PROD_MOIST_RESPONSE; functorprop.Arg = MyArgType::D1;
-functorprop.FunctorInitOption = string::npos;
+functorprop.FunctorInitOption = std::string::npos;
 funcname = "N20 Production From Nitrification Moisture Response";
 plotpar.Y_Label = "Relative Response (";
 unit = p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT) + ")";
@@ -845,7 +845,7 @@ funcname = "N0 Production From Nitrification Moisture Response";
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 		functorprop.FuncName = MyFunc::NITRI_NO_PROD_PH_RESPONSE; functorprop.Arg = MyArgType::D1;
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		funcname = "N0 Production From Nitrification PH Response";
 		plotpar.Y_Label = "Relative Response (";
 		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT) + ")";
@@ -866,7 +866,7 @@ funcname = "N0 Production From Nitrification Moisture Response";
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 		functorprop.FuncName = MyFunc::DENIT_ANAEROBIC_FRAC_RESPONSE; functorprop.Arg = MyArgType::D1;
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		funcname = "Denitrifiers Response to Anaerobic fraction";
 		plotpar.Y_Label = "Relative Response (";
 		unit = p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT) + ")";
@@ -885,7 +885,7 @@ funcname = "N0 Production From Nitrification Moisture Response";
 
 ;
 functorprop.FuncName = MyFunc::EXCHANGE_EFFICIENY_ANAEROBIC; functorprop.Arg = MyArgType::D1;
-functorprop.FunctorInitOption = string::npos;
+functorprop.FunctorInitOption = std::string::npos;
 funcname = "Diffusion Exchange efficiency from Anaerobic to Aerobic";
 plotpar.Y_Label = "Relative Response (";
 unit = p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT) + ")";

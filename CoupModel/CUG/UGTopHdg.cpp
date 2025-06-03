@@ -1132,7 +1132,7 @@ BOOL CUGTopHdg::ToolTipNeedText( UINT id, NMHDR* pTTTStruct, LRESULT* pResult )
 
 	TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pTTTStruct;
 
-	static CString string;
+	static CString std::string;
 	int col;
 	int row;
 	CPoint point;

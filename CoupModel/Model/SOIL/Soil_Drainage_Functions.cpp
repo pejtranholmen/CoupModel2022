@@ -54,7 +54,7 @@ bool Soil_Drainage_Functions::Def()
 	functorprop.Arg = MyArgType::D1;
 	functorprop.pSimModule = this;
 	functorprop.pHyd = this;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Empirical Drainage Equation";
 	Func* pFunc;
 	plotpar.Num_Of_Curves = 1;

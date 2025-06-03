@@ -29,27 +29,27 @@ class ResidualsBase
 public:
 	ResidualsBase();
 	virtual ~ResidualsBase();
-	bool EnsembleReadWrite(bool reading, string EnsembleName, string NewEnsembleName="", size_t ensembleno=string::npos);
+	bool EnsembleReadWrite(bool reading, std::string EnsembleName, std::string NewEnsembleName="", size_t ensembleno= std::string::npos);
 	bool EnsembleReadWrite(bool reading, size_t ensembleno);
 	bool EnsembleReadWriteCheckFileOnly(size_t ensembleno);
 
-	bool ReadWrite_MeanEnsembleFile(bool reading, size_t ensembleno=string::npos);
+	bool ReadWrite_MeanEnsembleFile(bool reading, size_t ensembleno= std::string::npos);
 	bool ReadWrite_PriorStat();
 	bool ReadWrite_Ensemble(string EnsembleName);
 	bool OpenResidualFile(bool reading=false);
 	bool CloseResidualFile(bool reading);
 	bool Residuals_ReadWrite_Header(bool reading);
 	bool SetNewEnsembleByNumber(size_t ensembleno);
-	bool AlloResVector(size_t ActRecl=string::npos);
-	string GetXStatFileName(size_t ensembleno=string::npos);
+	bool AlloResVector(size_t ActRecl= std::string::npos);
+	string GetXStatFileName(size_t ensembleno= std::string::npos);
 	bool IsOpen(bool reading=true);
 	bool SetOneValidationVariableIndex(size_t index)  noexcept { m_ValidationFileIndex = index; if (m_ValidationFileIndex < 1000) return true; else return false; };
 	bool EnableEstimatesMade(size_t enableno=0);
 	bool m_IsUpdated, m_IsUpdated_Extra;
-	bool ShiftEnsembleName(string oldname, string newname);
+	bool ShiftEnsembleName(string oldname, std::string newname);
 	void SetResidualBaseFileNumVarScaling(size_t NumVarScaling) noexcept { m_ScalingNumVarWithDim1 = NumVarScaling; };
 	bool m_MeanDefined;
-	size_t m_ValidationFileIndex{ string::npos };
+	size_t m_ValidationFileIndex{ std::string::npos };
 	std::streamsize ResidualsBase::GetFileSizeFromHandle();
 
 

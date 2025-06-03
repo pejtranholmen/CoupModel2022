@@ -34,7 +34,7 @@ Func::Func(enum datatype data, enum elements elem, enum fysprocess fproc, enum b
 	//res=(mClass->*fpoint)(3.);
 	//SetPointer(ptr);
 }
-void Func::Def(int ModuleNo,size_t opt, size_t ftype,SimModule *mClass, string name, FunctionProperties* pFunctions, ModelMap* pModelMap)
+void Func::Def(int ModuleNo,size_t opt, size_t ftype,SimModule *mClass, std::string name, FunctionProperties* pFunctions, ModelMap* pModelMap)
 {
 	m_Index=pFunctions->GetIndex(name);
 	PLOT_PARAM_DEP p;
@@ -62,7 +62,7 @@ void Func::Def(int ModuleNo,size_t opt, size_t ftype,SimModule *mClass, string n
 	}
 
 }
-void Func::Def(FunctorProp myf, SimModule *mClass, string name, FunctionProperties* pFunctions, ModelMap* pModelMap)
+void Func::Def(FunctorProp myf, SimModule *mClass, std::string name, FunctionProperties* pFunctions, ModelMap* pModelMap)
 {
 	m_Index = pFunctions->GetIndex(name);
 	PLOT_PARAM_DEP p;
@@ -90,12 +90,12 @@ void Func::Def(FunctorProp myf, SimModule *mClass, string name, FunctionProperti
 	}
 
 }
-void Func::Def(FunctorProp myf, string name, vector<Ps*> Ps_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
+void Func::Def(FunctorProp myf, std::string name, std::vector<Ps*> Ps_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
 {
 	m_Index = pFunctions->GetIndex(name);
 
 	PLOT_PARAM_DEP p;
-	if (m_Index != string::npos) {
+	if (m_Index != std::string::npos) {
 		p = pFunctions->GetParamDep(m_Index);
 		m_PlotParam = pFunctions->GetParam(m_Index);
 	}
@@ -135,11 +135,11 @@ void Func::Def(FunctorProp myf, string name, vector<Ps*> Ps_Vector, FunctionProp
 		if (ptr != nullptr)
 			ptr->AddFuncPointer(this);
 	}
-	if (m_Index != string::npos) pFunctions->SetParamDep(Ps_Vector, m_Index);
+	if (m_Index != std::string::npos) pFunctions->SetParamDep(Ps_Vector, m_Index);
 	
 
 }
-void Func::Def(FunctorProp myf, string name, vector<Ps*> Ps_Vector, vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
+void Func::Def(FunctorProp myf, std::string name, std::vector<Ps*> Ps_Vector, std::vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
 {
 	m_Index = pFunctions->GetIndex(name);
 
@@ -198,10 +198,10 @@ void Func::Def(FunctorProp myf, string name, vector<Ps*> Ps_Vector, vector<P*> P
 	}
 	
 
-	if (m_Index != string::npos) pFunctions->SetParamDep(Ps_Vector,P_Vector, m_Index);
+	if (m_Index != std::string::npos) pFunctions->SetParamDep(Ps_Vector,P_Vector, m_Index);
 
 }
-void Func::Def(FunctorProp myf, string name,  vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
+void Func::Def(FunctorProp myf, std::string name,  std::vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
 {
 	m_Index = pFunctions->GetIndex(name);
 
@@ -238,10 +238,10 @@ void Func::Def(FunctorProp myf, string name,  vector<P*> P_Vector, FunctionPrope
 		if (P_Vector[i] != nullptr)
 			P_Vector[i]->AddFuncPointer(this);
 	}
-	if (m_Index != string::npos) pFunctions->SetParamDep(P_Vector, m_Index);
+	if (m_Index != std::string::npos) pFunctions->SetParamDep(P_Vector, m_Index);
 	
 }
-void Func::Def(FunctorProp myf, string name, HYDRAULIC_COEF *pProp, vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
+void Func::Def(FunctorProp myf, std::string name, HYDRAULIC_COEF *pProp, std::vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap)
 {
 	m_Index = pFunctions->GetIndex(name);
 
@@ -753,7 +753,7 @@ function<void(vector<double>*)>  Func::GetVectorPointer_D1_Functor() {
 	}
 
 }
-function<void(vector<double>*, vector<double>*)>  Func::GetVectorPointer_D2_Functor() {
+function<void(vector<double>*, std::vector<double>*)>  Func::GetVectorPointer_D2_Functor() {
 	if (m_TableType) {
 		UpdateP_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorP_Par);// ->Get_D1_Functor();
@@ -767,7 +767,7 @@ function<void(vector<double>*, vector<double>*)>  Func::GetVectorPointer_D2_Func
 	}
 
 }
-function<void(vector<double>*, vector<double>*, vector<double>*)>  Func::GetVectorPointer_D3_Functor() {
+function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  Func::GetVectorPointer_D3_Functor() {
 	UpdateP_Par();
 	UpdatePs_Par();
 	if (m_FunctorP_Par.size()>0&& m_FunctorPs_Par.size()>0) {
@@ -784,7 +784,7 @@ function<void(vector<double>*, vector<double>*, vector<double>*)>  Func::GetVect
 	}
 
 }
-function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*)> Func::GetVectorPointer_D4_Functor() {
+function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> Func::GetVectorPointer_D4_Functor() {
 	if (m_TableType) {
 		UpdateP_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorP_Par);// ->Get_D1_Functor();
@@ -797,7 +797,7 @@ function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*
 	}
 
 }
-function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*, vector<double>*)> Func::GetVectorPointer_D5_Functor() {
+function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> Func::GetVectorPointer_D5_Functor() {
 	if (m_TableType) {
 		UpdateP_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorP_Par);// ->Get_D1_Functor();

@@ -39,7 +39,7 @@ public:
 
 
 
-	BOOL InitData(Doc *pDoc, int, CHART_TYPES, string filename="", CView *view=nullptr);
+	BOOL InitData(Doc *pDoc, int, CHART_TYPES, std::string filename="", CView *view=nullptr);
 	void SaveToExtraChartWindow();
 	void ShiftExtraChartWindow();
 	void SaveToFileExtraChart();
@@ -178,7 +178,7 @@ public:
 	//editing
 	virtual int OnEditStart(int col, long row,CWnd **edit);
 	virtual int OnEditVerify(int col,long row,CWnd *edit,UINT *vcKey);
-	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag);
+	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag);
 	virtual int OnEditContinue(int oldcol,long oldrow,int* newcol,long* newrow);
 
 	//menu notifications

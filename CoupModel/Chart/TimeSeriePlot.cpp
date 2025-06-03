@@ -38,7 +38,7 @@ void TimeSeriePlot::Init(Doc *pDoc) {
 	m_pView=m_pSimDoc->GetModelView();
 
 }
-bool TimeSeriePlot::InitData(Doc *pDoc, int chartnum,  string PGFile, CChartViewer *view)
+bool TimeSeriePlot::InitData(Doc *pDoc, int chartnum,  std::string PGFile, CChartViewer *view)
 {
 	m_pSimDoc=pDoc;
 	m_pUtil->SetSymbolCodes();
@@ -333,7 +333,7 @@ bool TimeSeriePlot::OnUpdateSequence(int ArrayIndex)
 				//else 
 				if (m_ChartInfo.MultiValMode) {
 					size_t MaxNumberOfRepit = 1;
-					if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
+					if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != std::string::npos) {
 						MaxNumberOfRepit = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 					}
 
@@ -678,7 +678,7 @@ void TimeSeriePlot::UpdateGeneralProp()
 bool TimeSeriePlot::UpdateViewPortTime()
 {
 
-	if((m_pProp->m_ChartType== CHART_TYPES::TIME_SERIE||(m_pProp->m_ChartType== CHART_TYPES::CONTOUR_CHART))&&m_pProp->GetFirstIndepIndex()==string::npos/*&&!m_pProp->IsFirstIndepSet()*/) {  //Time Serie 
+	if((m_pProp->m_ChartType== CHART_TYPES::TIME_SERIE||(m_pProp->m_ChartType== CHART_TYPES::CONTOUR_CHART))&&m_pProp->GetFirstIndepIndex()== std::string::npos/*&&!m_pProp->IsFirstIndepSet()*/) {  //Time Serie 
 	//	if(m_pProp->m_XScaleChanged.size()<=0) 
 	//		return false;
 
@@ -739,7 +739,7 @@ bool TimeSeriePlot::UpdateViewPortTime()
 			m_ChartInfo.NumOfPoints = m_Agg.EndIndex - m_Agg.StartIndex;
 
 	}
-	else if(m_pProp->m_ChartType== CHART_TYPES::SCATTER||m_pProp->GetFirstIndepIndex()!=string::npos||m_pProp->IsFirstIndepSet()) {  // Scatter plot
+	else if(m_pProp->m_ChartType== CHART_TYPES::SCATTER||m_pProp->GetFirstIndepIndex()!= std::string::npos||m_pProp->IsFirstIndepSet()) {  // Scatter plot
 		m_ChartInfo.NumOfPoints=m_ChartInfo.NumOfPoints;
 		m_Agg.StartIndex=0;
 		m_Agg.EndIndex=m_ChartInfo.NumOfPoints-1;
@@ -845,8 +845,8 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 {
 	if (m_ChartInfo.NumOfPoints == 0) return;
 
-	size_t act_chartno=string::npos;
-	size_t start_varindex= string::npos;
+	size_t act_chartno= std::string::npos;
+	size_t start_varindex= std::string::npos;
 	size_t max_numvar=0;
 
 
@@ -890,7 +890,7 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 			
 			if(act_chartno!=p_info.SubChart_No) {
 				act_chartno = p_info.SubChart_No;
-				if (start_varindex == string::npos) start_varindex = 0;
+				if (start_varindex == std::string::npos) start_varindex = 0;
 				size_t numvar = 1;
 				PLOTv p_info2;
 				for (size_t icount = i + 1; icount < m_ChartInfo.NumVariables; icount++) {
@@ -1037,7 +1037,7 @@ void TimeSeriePlot::AggregateData() {
 	
 	Resolution = max(m_ChartSize.xplotwidth, 520);
 
-  if (m_ChartInfo.NumOfPoints >= Resolution&&(m_pProp->m_ChartType== CHART_TYPES::TIME_SERIE/*||m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART*/)&&!m_pProp->m_ReShape.m_NormalDist&&m_pProp->GetFirstIndepIndex()==string::npos&&m_pProp->GetIndepFirst()==DATEAXIS&&m_pProp->m_AggregateTime)
+  if (m_ChartInfo.NumOfPoints >= Resolution&&(m_pProp->m_ChartType== CHART_TYPES::TIME_SERIE/*||m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART*/)&&!m_pProp->m_ReShape.m_NormalDist&&m_pProp->GetFirstIndepIndex()== std::string::npos&&m_pProp->GetIndepFirst()==DATEAXIS&&m_pProp->m_AggregateTime)
     {
         //
         // Zoomable chart with high zooming ratios often need to plot many thousands of 
@@ -1267,7 +1267,7 @@ void TimeSeriePlot::SetFrame_Axis(XYChart *pXY_Chart) {
 }
 void TimeSeriePlot::AddLineAreaLayer(XYChart *pXY_Chart)  {
 
-	if(m_pProp->m_ChartType== CHART_TYPES::SCATTER||(m_pProp->GetFirstIndepIndex()!=string::npos&&m_pProp->GetSecondIndepIndex()==0)||m_pProp->IsFirstIndepSet()) {      // Scatter
+	if(m_pProp->m_ChartType== CHART_TYPES::SCATTER||(m_pProp->GetFirstIndepIndex()!= std::string::npos&&m_pProp->GetSecondIndepIndex()==0)||m_pProp->IsFirstIndepSet()) {      // Scatter
 		m_Layers.pLineLayer=pXY_Chart->addLineLayer();
 		m_Layers.pLineLayer->setLineWidth(m_pUtil->m_LineWidthPoint);
 		m_Layers.pLineLayer2 = pXY_Chart->addLineLayer();

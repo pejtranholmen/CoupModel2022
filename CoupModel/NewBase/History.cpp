@@ -30,7 +30,7 @@ History::History() {
 #endif
 
 }
-bool History::History_Add(SimB *pBase,int Lindex, time_t t, float v, string User) {
+bool History::History_Add(SimB *pBase,int Lindex, time_t t, float v, std::string User) {
 	int itype;
 	if (pBase->GetType() == PAR_TABLE)
 		itype = int(HIST_INFO::PARTABLE_INFO);
@@ -43,7 +43,7 @@ bool History::History_Add(SimB *pBase,int Lindex, time_t t, float v, string User
 	
 
 }
-bool History::History_Add(SimB *pBase,int Lindex, time_t t, string str, string User) {
+bool History::History_Add(SimB *pBase,int Lindex, time_t t, std::string str, std::string User) {
 	int itype=0;
 
 	
@@ -63,7 +63,7 @@ bool History::History_Add(SimB *pBase,int Lindex, time_t t, string str, string U
 
 }
 
-bool History::History_Add(SimB *pBase,int iType, int Lindex, time_t t, float v, string User)
+bool History::History_Add(SimB *pBase,int iType, int Lindex, time_t t, float v, std::string User)
 {
 
 #ifndef COUPSTD
@@ -97,7 +97,7 @@ bool History::History_Add(SimB *pBase,int iType, int Lindex, time_t t, float v, 
 	return true;
 
 }
-bool History::History_Add(SimB *pBase, int iType, int Lindex, time_t t, string str, string User)
+bool History::History_Add(SimB *pBase, int iType, int Lindex, time_t t, std::string str, std::string User)
 {
 	HISTv Node;
 
@@ -238,7 +238,7 @@ float History::History_GetFloat(size_t index)
 		return 0.;
 
 }
-bool History::History_Add(size_t index, string strvalue)
+bool History::History_Add(size_t index, std::string strvalue)
 {
  
 	size_t i=m_History_Array.size();
@@ -269,7 +269,7 @@ bool History::History_Add(size_t index, string strvalue)
 		  
 	return true;
 }
-void History::History_Add(string Group, string Type, string Name,string StringValue, int intValue, time_t tt, string User, string Computer)
+void History::History_Add(string Group, std::string Type, std::string Name,string StringValue, int intValue, time_t tt, std::string User, std::string Computer)
 {
    
 	SimB *pBase;
@@ -357,7 +357,7 @@ void History::History_Add(string Group, string Type, string Name,string StringVa
 	Node.RunNo=RunNo;
 	m_History_Array.push_back(Node);   
 }	  
-void History::History_NewAdd(size_t RunInfo, string Group, string Type, string Name,string StringValue, int intValue, time_t tt, string User, string Computer)
+void History::History_NewAdd(size_t RunInfo, std::string Group, std::string Type, std::string Name,string StringValue, int intValue, time_t tt, std::string User, std::string Computer)
 {
 
 	SimB *pBase;
@@ -423,7 +423,7 @@ void History::History_NewAdd(size_t RunInfo, string Group, string Type, string N
 			Type = "Table Parameters";
 			ityp = size_t(HIST_INFO::PARTABLE_INFO);
 			if (pBase->GetNumOfHistoryIndex(intValue) == 1) {
-				// Create vector of Parameters in the HistoryPar_Array
+				// Create std::vector of Parameters in the HistoryPar_Array
 				HistP element;
 				element.LocalIndex = intValue;
 				element.pBase = pBase;
@@ -445,7 +445,7 @@ void History::History_NewAdd(size_t RunInfo, string Group, string Type, string N
 				ityp=p_ModelInfo->GetTypeIndex(Type);
 			}		
 			if(pBase->GetNumOfHistoryIndex(intValue)==1) {
-			// Create vector of Parameters in the HistoryPar_Array
+			// Create std::vector of Parameters in the HistoryPar_Array
 				HistP element;
 				element.LocalIndex=intValue;
 				element.pBase=pBase;

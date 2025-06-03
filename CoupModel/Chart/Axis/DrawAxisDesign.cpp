@@ -19,7 +19,7 @@ void DrawAxisDesign::FindandSet_Labels_ForBothXandY_ScatterChart()
 	if (!m_pProp->IsSecondIndepSet()) {
 		pXY_Chart->yAxis()->setLabelFormat("{value|G4}");
 		pXY_Chart->xAxis()->setLabelFormat("{value|G4}");
-		/*if(m_pProp->GetFirstIndepIndex()!=string::npos&&m_pProp->GetIndepFirst()!=PGVARVALID) {
+		/*if(m_pProp->GetFirstIndepIndex()!= std::string::npos&&m_pProp->GetIndepFirst()!=PGVARVALID) {
 		pXY_Chart->xAxis()->setLinearScale(m_Time.MinDate, m_Time.MaxDate);
 		//m_pProp->SetAxisLayer(m_ichart,3);
 		}
@@ -40,7 +40,7 @@ void DrawAxisDesign::FindandSet_Labels_ForBothXandY_ScatterChart()
 
 
 		string newtitle;
-		if (m_pProp->GetFirstIndepIndex() != string::npos && !m_pProp->IsFirstIndepSet()) {
+		if (m_pProp->GetFirstIndepIndex() != std::string::npos && !m_pProp->IsFirstIndepSet()) {
 			newtitle = "Independent Variable :"; newtitle += m_Label.IndepId;
 		}
 		else
@@ -324,7 +324,7 @@ bool DrawAxisDesign::CheckIfCommonScaleCanBeSet()
 }
 void DrawAxisDesign::X_Axis_Scale() {
 		// Set the values on the x-scale
-	if ((m_pUtil->m_MultiRunPlot&&m_ChartInfo.DataType != 8)&&(m_pProp->m_ChartType ==CHART_TYPES::TIME_SERIE || m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART) && (m_pProp->GetFirstIndepIndex() == string::npos && !m_pProp->IsFirstIndepSet())) {
+	if ((m_pUtil->m_MultiRunPlot&&m_ChartInfo.DataType != 8)&&(m_pProp->m_ChartType ==CHART_TYPES::TIME_SERIE || m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART) && (m_pProp->GetFirstIndepIndex() == std::string::npos && !m_pProp->IsFirstIndepSet())) {
 		pXY_Chart->xAxis()->setLabelStyle("arial.ttf", m_pUtil->m_AxisScalePoint);
 		if (m_pProp->m_ReShape.m_SortedSeries&&m_pProp->m_ReShape.m_NormalDist) {
 			FindandSet_Scale_ForBothXandY(false);
@@ -606,7 +606,7 @@ void DrawAxisDesign::X_Axis_SetFormatScale() {
 	}
 
 
-	if (!m_pProp->isXScaleChanged(m_ichart) && !m_pProp->m_ReShape.m_CommonScale && (m_pProp->m_ChartType ==CHART_TYPES::SCATTER || m_pProp->GetFirstIndepIndex() != string::npos || m_pProp->IsFirstIndepSet())) {
+	if (!m_pProp->isXScaleChanged(m_ichart) && !m_pProp->m_ReShape.m_CommonScale && (m_pProp->m_ChartType ==CHART_TYPES::SCATTER || m_pProp->GetFirstIndepIndex() != std::string::npos || m_pProp->IsFirstIndepSet())) {
 		if (m_pProp->IsFirstIndepSet() && !m_pProp->isXScaleChanged(0) && m_pProp->m_ChartType !=CHART_TYPES::CONTOUR_CHART)
 			pXY_Chart->xAxis()->setAutoScale(m_pUtil->m_X_AxisAutoScaleValue, m_pUtil->m_X_AxisAutoScaleValue,0.);
 		/*else  if (m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART && !m_Contour.ScaleContourChart)
@@ -751,7 +751,7 @@ void DrawAxisDesign::Adjust_Legends_Axis_Labels()
 
 			}
 			else {
-				if(title_left.find(m_ChartOrigInfo[i].varname[index])==string::npos&&!common)
+				if(title_left.find(m_ChartOrigInfo[i].varname[index])== std::string::npos&&!common)
 				m_ChartOrigInfo[i].legends[index] = m_ChartOrigInfo[i].varname[index] + " " + m_ChartOrigInfo[i].legends[index];
 			};
 		 }
@@ -767,7 +767,7 @@ void DrawAxisDesign::X_Axis_SetScaleValueForChartPropArchive() {
 	int ntic = XaxisTicks.len;
 
 
-	if (ntic > 1 && m_pProp->m_ChartType != CHART_TYPES::SCATTER && (m_pProp->GetFirstIndepIndex() == string::npos || m_pProp->GetIndepFirst() == DATEAXIS) && !(m_pUtil->m_MultiRunPlot || m_pUtil->m_MultiPGPlot)) {
+	if (ntic > 1 && m_pProp->m_ChartType != CHART_TYPES::SCATTER && (m_pProp->GetFirstIndepIndex() == std::string::npos || m_pProp->GetIndepFirst() == DATEAXIS) && !(m_pUtil->m_MultiRunPlot || m_pUtil->m_MultiPGPlot)) {
 		// axis with date/time
 		// find good label offset depending on the lengths of the interval between the ticks
 		SetOffsetforTime(XaxisTicks[1] - XaxisTicks[0]);
@@ -863,7 +863,7 @@ void DrawAxisDesign::X_Axis_GetScale() {
 
 
 
-/*	if (m_pProp->m_ChartType ==CHART_TYPES::TIME_SERIE && !m_pProp->m_ReShape.m_SortedSeries && !m_pProp->m_ReShape.m_NormalDist&&m_pProp->GetFirstIndepIndex() == string::npos && !m_pProp->IsFirstIndepSet()) {
+/*	if (m_pProp->m_ChartType ==CHART_TYPES::TIME_SERIE && !m_pProp->m_ReShape.m_SortedSeries && !m_pProp->m_ReShape.m_NormalDist&&m_pProp->GetFirstIndepIndex() == std::string::npos && !m_pProp->IsFirstIndepSet()) {
 		m_pProp->m_TimeScale.MinX = m_pProp->m_TimeScale.min;
 		m_pProp->m_TimeScale.MaxX = m_pProp->m_TimeScale.max;
 		m_pProp->m_TimeScale.IntervX = m_pProp->m_TimeScale.interv;
@@ -986,7 +986,7 @@ void DrawAxisDesign::TitleAxisLabels() {
 	//	Chart0_Max=m_pProp->GetXDistMax(m_ichart);
 
 	if (m_pProp->MakeLabels()) {
-		if (m_pProp->m_ChartType ==CHART_TYPES::SCATTER || (m_pProp->m_ChartType !=CHART_TYPES::CONTOUR_CHART && m_pProp->GetFirstIndepIndex() != string::npos&&m_pProp->GetIndepFirst() != PARVAR)) {
+		if (m_pProp->m_ChartType ==CHART_TYPES::SCATTER || (m_pProp->m_ChartType !=CHART_TYPES::CONTOUR_CHART && m_pProp->GetFirstIndepIndex() != std::string::npos&&m_pProp->GetIndepFirst() != PARVAR)) {
 			FindandSet_Labels_ForBothXandY_ScatterChart();
 		}
 		else if (m_pProp->m_ChartType ==CHART_TYPES::TIME_SERIE) {

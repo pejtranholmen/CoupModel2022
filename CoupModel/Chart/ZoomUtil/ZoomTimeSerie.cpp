@@ -277,7 +277,7 @@ void ZoomTimeSerie::OnCommonday()
 			else
 				m_pProp->m_ReShape.NumOfCommonPoints=0;
 			
-			if(numsections<4&&numsections!=string::npos)
+			if(numsections<4&&numsections!= std::string::npos)
 				m_pPlotStorage->SetPGSectionNo(j,1);
 			else
 				m_pPlotStorage->SetPGSectionNo(j,20001);

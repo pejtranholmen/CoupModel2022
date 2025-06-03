@@ -66,7 +66,7 @@ bool MakeSimCharts::Make_ParameterChart(SimB* pSimB, Tab *pTab, size_t index, si
 	return true;
 
 }
-bool MakeSimCharts::Make_SwitchChart(Sw *pSw, string Group)
+bool MakeSimCharts::Make_SwitchChart(Sw *pSw, std::string Group)
 {
 		CWinApp* pApp = AfxGetApp();
 
@@ -659,7 +659,7 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 		return OK;
 
 }
-bool MakeSimCharts::MultiPlotVectorClick( vector<int> row_vector, size_t col)
+bool MakeSimCharts::MultiPlotVectorClick( std::vector<int> row_vector, size_t col)
 {
 	ChartCug *pChart;
 	pChart = MySingle::instance().GetChartCugPointer();
@@ -677,7 +677,7 @@ bool MakeSimCharts::MultiPlotVectorClick( vector<int> row_vector, size_t col)
 	int ivar = 0;
 	bool Add = true;
 
-	if (col == string::npos) {
+	if (col == std::string::npos) {
 	
 		m_pPlotInfo->SetDoc(m_pSimDoc);
 		for (size_t i = 0; i < row_vector.size(); i++)
@@ -816,7 +816,7 @@ void MakeSimCharts::UpdateCurrentChart(bool multi)
 			}
 
 }
-bool MakeSimCharts::CreateChart(CHART_TYPES ChartType, int ChartNum, enum class DATA_TYPES datatype, string filename)
+bool MakeSimCharts::CreateChart(CHART_TYPES ChartType, int ChartNum, enum class DATA_TYPES datatype, std::string filename)
 {
 			ChartCug *pChart;
 			pChart=MySingle::instance().GetChartCugPointer();
@@ -847,7 +847,7 @@ bool MakeSimCharts::CreateChart(CHART_TYPES ChartType, int ChartNum, enum class 
 				}
 				return false;
 }
-bool MakeSimCharts::CreateZoomPlotWindow(bool multi, string FileName)
+bool MakeSimCharts::CreateZoomPlotWindow(bool multi, std::string FileName)
 {
 			bool good;
 
@@ -863,7 +863,7 @@ bool MakeSimCharts::CreateZoomPlotWindow(bool multi, string FileName)
 			}
 			else {
 				m_pProp->Reset_Selected_Or_All_BasicVector(1, m_pProp->GetNumOfChartsOnSceen(), false);
-				good=pChart->m_TimeSeriePlot.InitData(m_pSimDoc, m_CurrentChart, string(FileName));
+				good=pChart->m_TimeSeriePlot.InitData(m_pSimDoc, m_CurrentChart, std::string(FileName));
 				//good=m_pZoom->InitData(m_pDoc, m_CurrentChart, m_pProp->m_ChartType,FileName);
 
 			}
@@ -918,7 +918,7 @@ void MakeSimCharts::TimeSerieChart(int isheet) {
 
 
 }
-void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *Ptr, int Index, int VariableType, string Type, int ValFileNo, int RepitNo)
+void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *Ptr, int Index, int VariableType, std::string Type, int ValFileNo, int RepitNo)
 {
 		CString str;
 		CUGCell cell, cell1, cell2; 
@@ -1217,7 +1217,7 @@ bool MakeSimCharts::CalculateMeanOffTimeSeries(long item, int ival_file, size_t 
 		if (!m_OutSelectedMulti_Defined[ival_file]) {
 			if (m_pSimDoc->MR_Storage_Open() && m_pSimDoc->MR_XBin_IsOpen(ival_file)) {
 				CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(ival_file);
-				if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
+				if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != std::string::npos) {
 					//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
 					//auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 				//	pRes->SetResidualBaseFileNumVarScaling(NumberofDim1);
@@ -1467,7 +1467,7 @@ MultiVAL MakeSimCharts::GetBlankMultiValStruct() {
 	out.row=0;
 	out.col=0;
 	out.PGSection=0;
-	out.index_cycle = string::npos;
+	out.index_cycle = std::string::npos;
 	return out;
 
 }

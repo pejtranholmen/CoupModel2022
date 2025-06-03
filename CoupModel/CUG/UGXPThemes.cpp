@@ -972,7 +972,7 @@ WriteText
 		hdc            - the device context for the dll to draw to
 		type	       - the cell type to draw
 		state          - the state of the cell ( selected, current, etc )
-		text	       - the text to draw, which is converted from a char * to a wide string.
+		text	       - the text to draw, which is converted from a char * to a wide std::string.
 		textLength     - the number of characters to draw
 		textFlags      - the text style to use when drawing the text area
 		pRect          - the rect to draw text into
@@ -1045,7 +1045,7 @@ WriteText
 		theme          - the name of the theme to use
 		partId         - the theme part to draw
 		stateId        - the state of the part to draw
-		text	       - the text to draw, which is converted from a char * to a wide string in this method.
+		text	       - the text to draw, which is converted from a char * to a wide std::string in this method.
 		textLength     - the number of characters to draw
 		textFlags      - the text style to use when drawing the text area
 		pRect          - the rect to draw text into
@@ -1199,7 +1199,7 @@ SetXPTheme
 	Params
 		type - the UGXPCellType we want to set the style for
 		state - the UGXPThemeState for which we want to set the state on this cell type.
-		typeName - the string that indicates the broad theme to use
+		typeName - the std::string that indicates the broad theme to use
 		iPartID - the number that indicates the item to draw
 		iStateID - the number that indicates the state of the item to draw
 	Return

@@ -52,7 +52,7 @@ void GetPFCurve::ReadHeaderFile()
 
 	}
 	size_t count = 0;
-	if (m_RwNewHeader.GetInputFileSize()==string::npos) {
+	if (m_RwNewHeader.GetInputFileSize()== std::string::npos) {
 
 		if (m_NewHeaderFile.is_open() && n2>0) { /// Reading New Header File
 			m_ActProfile.County.resize(2);
@@ -399,14 +399,14 @@ const size_t GetPFCurve::GetKey(int nump, int numr)
 {
 	return nump*100+numr;
 }
-const string GetPFCurve::GetName() {
+const std::string GetPFCurve::GetName() {
 	return m_ActProfile.Name;
 }
 const size_t GetPFCurve::GetNewKey(string str)
 {
 	size_t nump, numr;
 	auto pos=str.find(":");
-	if(pos!=string::npos) {
+	if(pos!= std::string::npos) {
 		nump=FUtil::AtoInt(str.substr(0,pos));
 		str=str.substr(pos+1);
 		numr=FUtil::AtoInt(str);
@@ -538,7 +538,7 @@ const size_t GetPFCurve::GetRecord(size_t key)
 	if(it!=m_Records.end())
 		return it->second;
 	else
-		return string::npos;
+		return std::string::npos;
 
 }
 const size_t GetPFCurve::GetHeaderRecord(size_t key)
@@ -547,7 +547,7 @@ const size_t GetPFCurve::GetHeaderRecord(size_t key)
 	if(it!=m_HeaderRec.end())
 		return it->second;
 	else
-		return string::npos;
+		return std::string::npos;
 
 }
 //const size_t GetPFCurve::GetHeader
@@ -558,7 +558,7 @@ const std::streampos GetPFCurve::GetInsertRecord(size_t rec) {
 		auto it=m_HeaderRec.begin();
 		return it->second;
 	}
-	return string::npos;
+	return std::string::npos;
 
 }
 
@@ -572,7 +572,7 @@ BC_ESTIMATE GetPFCurve::Estimate_BC(vector<double>* Theta,vector<double>* Psi,  
 	  
 	  ThetaMax=max(5., ThetaMax);
 	  double TheMin=30.;
-	  vector<double> x, y;	
+	  std::vector<double> x, y;	
 	  x.resize(Theta->size());
 	  y.resize(Theta->size());
 
@@ -651,7 +651,7 @@ vector<string> GetPFCurve::GetCommentsLines() {
 	string line = GetComments();
 	while (line.size() > 0) {
 		auto pos = line.find('\n');
-		if (pos != string::npos) {
+		if (pos != std::string::npos) {
 			outcom.push_back(line.substr(0, pos));
 			line = line.substr(pos + 2);
 			if (line[0] == '\r') line = line.substr(1);
@@ -724,7 +724,7 @@ string GetPFCurve::GetComments()
 bool GetPFCurve::DeleteActHeader()
 {
 	size_t irec=GetHeaderRecord(m_ActProfile.KeyProf);
-	if(irec==string::npos) return false;
+	if(irec== std::string::npos) return false;
 	auto itr=m_Records.find(m_ActProfile.KeyProf);
 	if(itr!=m_Records.end()) {
 		m_Records.erase(itr);
@@ -756,7 +756,7 @@ string GetPFCurve::GetComFileName() {
 		repstr=FUtil::ItoNumAscii(m_ActProfile.KeyProf%100);
 		repstr=repstr.substr(4);
 		filbas+=repstr;
-	    string directory=GetDataBaseDirectory();
+	    std::string directory=GetDataBaseDirectory();
 	    return directory+"Comments\\"+filbas+".pfn";
 }
 bool GetPFCurve::UpdateHeaderFile() {
@@ -781,7 +781,7 @@ bool GetPFCurve::ExpandToNewLayerActHeader(size_t newnum_layers) {
 
 	size_t prevlayrec=GetRecord(m_ActProfile.KeyProf);
 	size_t prevlayer=m_ActProfile.NumLayers;
-	vector< vector<float>> m_PrevCoef; 
+	vector< std::vector<float>> m_PrevCoef; 
 	m_PrevCoef.resize(newnum_layers+1);
 	for(size_t i=0; i<newnum_layers+1; i++) 
 		m_PrevCoef[i].resize(37);

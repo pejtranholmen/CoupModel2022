@@ -312,7 +312,7 @@ CommonModelInfo::CommonModelInfo() {
 
 		for_each(m_ElementNames.begin(), m_ElementNames.end(), [&](string &ElementStr) {
 			SortedListElementNames.insert(pair<string, elements>(ElementStr, elements(count)));
-			m_ElementNamesMap.insert(pair<elements, string>(elements(count), ElementStr));
+			m_ElementNamesMap.insert(pair<elements, std::string>(elements(count), ElementStr));
 			count++;
 		});
 		m_NamesElementMap = SortedListElementNames;
@@ -323,7 +323,7 @@ CommonModelInfo::CommonModelInfo() {
 		count = 0;
 		for_each(m_FysProcessNames.begin(), m_FysProcessNames.end(), [&](string& PhysProc) {
 			SortedListPhysProcNames.insert(pair<string, enum fysprocess>(PhysProc, fysprocess(count)));
-			m_PhysProcNamesMap.insert(pair<enum fysprocess, string>(fysprocess(count), PhysProc));
+			m_PhysProcNamesMap.insert(pair<enum fysprocess, std::string>(fysprocess(count), PhysProc));
 			count++;
 		});
 		m_NamesFysProcMap = SortedListPhysProcNames;
@@ -334,7 +334,7 @@ CommonModelInfo::CommonModelInfo() {
 		count = 0;
 		for_each(m_BioProcessNames.begin(), m_BioProcessNames.end(), [&](string& Names) {
 			SortedBiolProcessNames.insert(pair<string, enum bioprocess>(Names,bioprocess(count)));
-			m_BioProcNamesMap.insert(pair<bioprocess, string>(bioprocess(count), Names));
+			m_BioProcNamesMap.insert(pair<bioprocess, std::string>(bioprocess(count), Names));
 			count++;
 		});
 		m_NamesBioProcMap = SortedBiolProcessNames;
@@ -352,73 +352,73 @@ size_t CommonModelInfo::GetTypeIndex(string str) {
 	if(it!=m_TypeMap.end())
 		return it->second;
 	else
-		return string::npos;
+		return std::string::npos;
 }
 size_t CommonModelInfo::GetGroupIndex(string str) {
 	auto it=m_GroupMap.find(str);
 	if(it!=m_GroupMap.end())
 		return it->second;
 	else
-		return string::npos;
+		return std::string::npos;
 }
 int CommonModelInfo::GetGroupCategory(string str) {
 	auto it=m_GroupCategory.find(str);
 	if(it!=m_GroupCategory.end())
 		return it->second;
 	else
-		return string::npos;
+		return std::string::npos;
 }
 void CommonModelInfo::trim_xml(string& str)
 {
 	string in, out;
 	in = str;
 	auto pos = str.find(" ");
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		pos = str.find(" ");
 	}
 	pos = str.find(",");
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		pos = str.find(",");
 	}
 	pos = str.find("(");
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		pos = str.find("(");
 	}
 	pos = str.find(")");
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		pos = str.find(")");
 	}
 	pos = str.find("'");
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		pos = str.find("'");
 	}
 	pos = str.find("&");
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		pos = str.find("&");
 	}
 	pos = str.find("/");
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		pos = str.find("/");
 	}
 	out = str;
 	if (in != out) {
-		changed_names.insert(pair<string, string>(out, in));
+		changed_names.insert(pair<string, std::string>(out, in));
 
 	}
 }
-void CommonModelInfo::insert_ChangedNames(vector<pair<string, string>> p)
+void CommonModelInfo::insert_ChangedNames(vector<pair<string, std::string>> p)
 {
 	for (auto it = p.begin(); it != p.end(); it++) {
 		string in = (*it).first;
 		string out = (*it).second;
-		changed_names.insert(pair<string, string>(in, out));
+		changed_names.insert(pair<string, std::string>(in, out));
 
 	}
 }
@@ -427,7 +427,7 @@ void CommonModelInfo::insert_ChangedNames(vector<pair<string, string>> p)
 	if (it != m_GroupCategoryNo.end())
 		return it->second;
 	else
-		return string::npos;
+		return std::string::npos;
 }*/
 
 vector<string> CommonModelInfo::GetSortedListofElements()

@@ -28,8 +28,8 @@ class Profile_Functions : public SimModule
 		vector<double> OriginalThickness;	
 		vector<P*> mTab_BC_Model,mTab_HC_Model, mTab_Gen_Model, mTab_Compartment, mTab_MeasTexture, mTab_ModelTexture;
 	
-	//	function<void(vector<double> &pOriginalThickness, vector<double> &pThicknessLayers, vector<double> *pAThicknessLayers, vector<double> *pDistanceMidpLayers,
-	//		vector<double> *pDepthLayers, vector <double> *pModelUpperDepth, vector<double> *pDepthMidpLayer, vector<double> *pModelLowerDepth)> f_ReCalcProfile;
+	//	function<void(vector<double> &pOriginalThickness, std::vector<double> &pThicknessLayers, std::vector<double> *pAThicknessLayers, std::vector<double> *pDistanceMidpLayers,
+	//		vector<double> *pDepthLayers, std::vector <double> *pModelUpperDepth, std::vector<double> *pDepthMidpLayer, std::vector<double> *pModelLowerDepth)> f_ReCalcProfile;
 		function<DEPTH_type(double, double)> f_RootDepthDistribution;
 
 };

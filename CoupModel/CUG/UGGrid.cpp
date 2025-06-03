@@ -124,7 +124,7 @@ BOOL CUGGrid::ToolTipNeedText( UINT id, NMHDR* pTTTStruct, LRESULT* pResult )
 	UNREFERENCED_PARAMETER(id);
 	UNREFERENCED_PARAMETER(*pResult);
 	
-	static CString string;
+	static CString std::string;
 	int col;
 	long row;
 	// get mouse coordinates
@@ -143,7 +143,7 @@ BOOL CUGGrid::ToolTipNeedText( UINT id, NMHDR* pTTTStruct, LRESULT* pResult )
 			::SendMessage( pTTT->hdr.hwndFrom, TTM_SETDELAYTIME, TTDT_AUTOPOP, SHRT_MAX );
 			::SendMessage( pTTT->hdr.hwndFrom, TTM_SETDELAYTIME, TTDT_INITIAL, 200 );
 			::SendMessage( pTTT->hdr.hwndFrom, TTM_SETDELAYTIME, TTDT_RESHOW, 200 );
-			// set tool tip's string
+			// set tool tip's std::string
 			pTTT->lpszText = const_cast<LPTSTR>((LPCTSTR)string);
 
 			return TRUE;

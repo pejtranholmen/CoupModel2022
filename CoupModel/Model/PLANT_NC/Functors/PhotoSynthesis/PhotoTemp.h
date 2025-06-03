@@ -2,7 +2,7 @@
 #include "../../../../std.h"
 
 class PhoTempResponseDirect {
-public: PhoTempResponseDirect(vector<double> TempResMin, vector<double> TempResOpt1, vector<double> TempResOpt2, vector<double> TempResMax) : TempResMin(TempResMin), TempResOpt1(TempResOpt1),
+public: PhoTempResponseDirect(vector<double> TempResMin, std::vector<double> TempResOpt1, std::vector<double> TempResOpt2, std::vector<double> TempResMax) : TempResMin(TempResMin), TempResOpt1(TempResOpt1),
 	TempResOpt2(TempResOpt2), TempResMax(TempResMax) {}
 		double operator() (size_t index, double TempAir) {
 			double out;
@@ -18,7 +18,7 @@ private:
 	vector<double> TempResMin, TempResOpt1, TempResOpt2, TempResMax;
 };
 class PhotoGreenIndexResponse {
-public: PhotoGreenIndexResponse(vector<double> MinFracGreen, vector<double>OptGreenIndex) :MinFracGreenResponse(MinFracGreen), OptGreenIndex(OptGreenIndex) {}
+public: PhotoGreenIndexResponse(vector<double> MinFracGreen, std::vector<double>OptGreenIndex) :MinFracGreenResponse(MinFracGreen), OptGreenIndex(OptGreenIndex) {}
 		double operator() (size_t index, double GreenIndex) {
 			return MinFracGreenResponse[index] + min(1. - MinFracGreenResponse[index], max(0., GreenIndex / OptGreenIndex[index]));
 		}
@@ -27,7 +27,7 @@ private:
 };
 
 class PhoTempSumResponse {
-public:PhoTempSumResponse(vector<double> TempSumResponseStart, vector<double> TempSumResponseOpt) :TempSumResponseStart(TempSumResponseStart), TempSumResponseOpt(TempSumResponseOpt) {}
+public:PhoTempSumResponse(vector<double> TempSumResponseStart, std::vector<double> TempSumResponseOpt) :TempSumResponseStart(TempSumResponseStart), TempSumResponseOpt(TempSumResponseOpt) {}
 
 	   double operator() (size_t index, double GrowthTempSum) {
 		   return TempSumResponseStart[index] + (1 - TempSumResponseStart[index])*min(1.,

@@ -86,7 +86,7 @@ bool AbioticResponses::Def()
 	Ps *pPs; P *pP;
 	Tab *pTab;
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 	PLOT_PARAM plotpar;

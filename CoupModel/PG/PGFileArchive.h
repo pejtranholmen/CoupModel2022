@@ -16,7 +16,7 @@ public:
 	void SetInVisible(size_t index) {if(m_PGFileArray.size()>index) m_PGFileArray[index].Visible=false; };
 	void SetInVisible() {for(size_t i=0; i<m_PGFileArray.size(); i++) m_PGFileArray[i].Visible=false; };
 	void SetVisible(size_t index) {if(m_PGFileArray.size()>index) m_PGFileArray[index].Visible=true; };
-	size_t GetIndex(CCoupModelDoc *pDoc) {for(size_t i=0; i<m_PGFileArray.size(); i++)  if(m_PGFileArray[i].pDoc==pDoc) return i; return string::npos;}; 
+	size_t GetIndex(CCoupModelDoc *pDoc) {for(size_t i=0; i<m_PGFileArray.size(); i++)  if(m_PGFileArray[i].pDoc==pDoc) return i; return std::string::npos;}; 
 	CPG *GetPGFile(size_t i=0);
 	CCoupModelDoc *GetDocPointer(size_t i=0);
 };

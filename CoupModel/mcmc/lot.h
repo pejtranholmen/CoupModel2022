@@ -294,7 +294,7 @@ private:
   static const int MT_N = 624;
   static const int MT_M = 397;
 
-  std::vector<unsigned long> mt; // the array for the state vector
+  std::vector<unsigned long> mt; // the array for the state std::vector
   int mti; // mti==MT_N+1 means mt[MT_N] is not initialized
 
   int rngType_;

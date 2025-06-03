@@ -13,7 +13,7 @@ PGEditCells::~PGEditCells(void)
 {
 }
 
-bool PGEditCells::AllEditCells(int col, long row, string txt)
+bool PGEditCells::AllEditCells(int col, long row, std::string txt)
 {
 	CUGCell cell;
 	int isheet = GetSheetNumber();
@@ -200,7 +200,7 @@ bool PGEditCells::AllEditCells(int col, long row, string txt)
 			pCPG = (CPG*)m_pPGArchive->GetPGFile(m_IndexSource);
 			if (col == 5 || col == 6) {
 				long minut = PGUtil::MinutConv(txt);
-				if (pCPG->GetLongTime(1) == string::npos) {
+				if (pCPG->GetLongTime(1) == std::string::npos) {
 					if (!pCPG->ClearFile()) return FALSE;
 
 
@@ -249,7 +249,7 @@ bool PGEditCells::AllEditCells(int col, long row, string txt)
 			size_t actbuf = pCPG->GetPrevBuffer();
 			pCPG->CloseFile();
 			pCPG->ReOpen(true);
-			if(actbuf!=string::npos)
+			if(actbuf!= std::string::npos)
 				pCPG->SetActBuffer(actbuf);
 			else
 				pCPG->SetActBuffer(1);
@@ -271,7 +271,7 @@ bool PGEditCells::AllEditCells(int col, long row, string txt)
 	return FALSE;
 }
 
-void PGEditCells::ChangeDescriptions(int col, long row, string txt, CPG *pPG)
+void PGEditCells::ChangeDescriptions(int col, long row, std::string txt, CPG *pPG)
 {
 
 	size_t ivar, irep;

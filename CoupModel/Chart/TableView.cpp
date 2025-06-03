@@ -48,7 +48,7 @@ bool TableView::MakeTablePlot(Tab *pTab, P *pCPt) {
 	else if(m_Data.NumOfPoints==1) {
 			return false;
 	}
-	else if(group.find("Plant")!=string::npos) {
+	else if(group.find("Plant")!= std::string::npos) {
 				return false;
 
 	}

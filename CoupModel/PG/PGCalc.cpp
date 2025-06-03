@@ -15,7 +15,7 @@ vector<size_t> PGCalc::GetYearStartIndex()
 
 	size_t min=GetMinuteStartThisYear(1);
 	size_t rec=GetRecord(min, false);
-	while(min>0&&rec!=string::npos) {	
+	while(min>0&&rec!= std::string::npos) {	
 		out.push_back(rec);
 		min=GetMinuteStartNextYear(rec);
 		rec=GetRecord(min, false);
@@ -36,7 +36,7 @@ vector<size_t> PGCalc::GetDayStartIndex()
 		}
 	}
 	else {
-		while(min>0&&rec!=string::npos) {	
+		while(min>0&&rec!= std::string::npos) {	
 			out.push_back(rec);
 			min=GetMinuteStartNextDay(rec);
 			rec=GetRecord(min,false);

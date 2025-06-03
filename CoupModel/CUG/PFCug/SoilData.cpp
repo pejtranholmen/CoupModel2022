@@ -474,7 +474,7 @@ void SoilData::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point,int 
 		}
 		if(m_DataBaseString=="Kalle") return; // Kalle = Called from PP_EDIT
 		if(m_SelOne) {
-			//CString string=_T("");
+			//CString std::string=_T("");
 			//for(int i=0;i<6;i++)
 			//	string+=PLOTPF_mp_DKEY[i];
 			((SP_Retrieve*)m_pSP_Retrieve_Dlg)->OnEnChangeEditComments();
@@ -719,14 +719,14 @@ void SoilData::OnCB_RClicked(int updn,RECT *rect,POINT *point,BOOL processed)
 		if(NewFileDlg.DoModal()==IDOK) {
 			filename=CT2A(NewFileDlg.GetPathName()).m_psz;
 			size_t pos=filename.find(".dba");
-			if(pos==string::npos) pos=filename.find(".DBA");
-			if(pos!=string::npos)
+			if(pos== std::string::npos) pos=filename.find(".DBA");
+			if(pos!= std::string::npos)
 				filename=filename.substr(0,pos);
 			else {
 				pos=filename.find(".dbn");
-				if(pos==string::npos) pos=filename.find(".DBN");
+				if(pos== std::string::npos) pos=filename.find(".DBN");
 	
-				if(pos!=string::npos)
+				if(pos!= std::string::npos)
 					filename=filename.substr(0,pos);
 			}
 

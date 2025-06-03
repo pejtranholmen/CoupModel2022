@@ -314,7 +314,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// improves the usability of the taskbar because the document name is visible with the thumbnail.
 	ModifyStyle(0, FWS_PREFIXTITLE);
 
-	 string lDataBaseDirectory;
+	 std::string lDataBaseDirectory;
 	lDataBaseDirectory=MFC_Util::GetProfileStringStd("DataBaseDirectory",lDataBaseDirectory);
 	string fil=lDataBaseDirectory;
 	fil+="Functions.csv";
@@ -600,7 +600,7 @@ void CMainFrame::OnClose()
 	CMDIFrameWndEx::OnClose();
 }
 
-void CMainFrame::UpdatePaneText(int pane_number, string text) {
+void CMainFrame::UpdatePaneText(int pane_number, std::string text) {
 	if (pane_number > 0) {
 	
 		switch(pane_number) {

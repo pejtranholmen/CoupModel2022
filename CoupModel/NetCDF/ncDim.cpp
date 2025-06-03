@@ -91,9 +91,9 @@ bool NcDim::isUnlimited() const
   // get the number of unlimited dimensions
   ncCheck(nc_inq_unlimdims(groupId,&numlimdims,unlimdimidsp),__FILE__,__LINE__);
   // get all the unlimited dimension ids in this group
-  vector<int> unlimdimid(numlimdims);
+  std::vector<int> unlimdimid(numlimdims);
   ncCheck(nc_inq_unlimdims(groupId,&numlimdims,&unlimdimid[0]),__FILE__,__LINE__);
-  vector<int>::iterator it;
+  std::vector<int>::iterator it;
   // now look to see if this dimension is unlimited
   it = find(unlimdimid.begin(),unlimdimid.end(),myId);
   return it != unlimdimid.end();
@@ -101,15 +101,15 @@ bool NcDim::isUnlimited() const
 
 
 // gets the name of the dimension.
-const string NcDim::getName() const
+const std::string NcDim::getName() const
 {
   char dimName[NC_MAX_NAME+1];
   ncCheck(nc_inq_dimname(groupId, myId, dimName),__FILE__,__LINE__);
-  return string(dimName);
+  return std::string(dimName);
 }
   
 // renames this dimension.
-void NcDim::rename(const string& name)
+void NcDim::rename(const std::string& name)
 {
   ncCheck(nc_rename_dim(groupId, myId, name.c_str()),__FILE__,__LINE__);
 }

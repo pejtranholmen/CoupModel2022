@@ -626,7 +626,7 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 				double kh_cc_o2 = 0.;
 				//CH4_Conc_tot[i] = CH4[i] / p_Soil_WaterF->AThicknessLayers[i]; // g/m3-t
 
-				// What is the meaning with not using the same soil temperature vector ????
+				// What is the meaning with not using the same soil temperature std::vector ????
 				// zero index should be front 
 
 				if (i > 0) {
@@ -864,7 +864,7 @@ void NC_GasFlux::MethaneGas_Fluxes() {
 			// Integration of flow to methane state varialbes
 			// We might get negative values on the CH4 pools if any of the fluxes are too large...numerical problems
 
-			auto checkzero = [](vector<double> test, vector<double> prior) {
+			auto checkzero = [](vector<double> test, std::vector<double> prior) {
 				int error = 0;
 				for (size_t i = 0; i < test.size(); i++) {
 					if (test[i] < 0.) error = i + 1;

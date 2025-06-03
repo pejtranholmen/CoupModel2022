@@ -447,7 +447,7 @@ BOOL CUGCnrBtn::ToolTipNeedText( UINT id, NMHDR* pTTTStruct, LRESULT* pResult )
 
 	TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pTTTStruct;
 
-	static CString string;
+	static CString std::string;
 	int col = -1;
 	int row = -1;
 

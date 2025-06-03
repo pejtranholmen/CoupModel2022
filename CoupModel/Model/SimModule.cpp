@@ -137,9 +137,9 @@ int SimModule::Error()
 	return m_NumErrors;
 
 }
-void SimModule::Define(F* ptr, string name, string filename, string conditions)
+void SimModule::Define(F* ptr, std::string name, std::string filename, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -152,7 +152,7 @@ void SimModule::Define(F* ptr, string name, string filename, string conditions)
 
 
 }
-void SimModule::Define(FCSV* ptr, string name, string filename, string conditions, size_t NumHeaders)
+void SimModule::Define(FCSV* ptr, std::string name, std::string filename, std::string conditions, size_t NumHeaders)
 {
 	string AllConditions;
 	AllConditions = ModuleConditions;
@@ -167,9 +167,9 @@ void SimModule::Define(FCSV* ptr, string name, string filename, string condition
 
 
 }
-void SimModule::Define(Sw* ptr, string name, int value,string options, string conditions, int reCalc)
+void SimModule::Define(Sw* ptr, std::string name, int value,string options, std::string conditions, int reCalc)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(AllConditions.size()>0) {
 	   if (conditions.size() > 0) {
@@ -185,13 +185,13 @@ void SimModule::Define(Sw* ptr, string name, int value,string options, string co
 
    ptr->Def(ModuleNo,name, value,options, AllConditions, reCalc);
 }
-void SimModule::Define(Xs* ptr, string name, double value, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(Xs* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Xs* ptr,  string name, double value, string unit, string conditions)
+void SimModule::Define(Xs* ptr,  std::string name, double value, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -201,13 +201,13 @@ void SimModule::Define(Xs* ptr,  string name, double value, string unit, string 
    m_pModelMap->MapXs[ModuleNo].insert(pair<string,Xs*>(name,ptr));
    ptr->Def(ModuleNo, name, value, unit,AllConditions);
 }
-void SimModule::Define(Ts* ptr, string name, double value, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(Ts* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Ts* ptr,  string name, double value, string unit, string conditions)
+void SimModule::Define(Ts* ptr,  std::string name, double value, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -217,13 +217,13 @@ void SimModule::Define(Ts* ptr,  string name, double value, string unit, string 
    m_pModelMap->MapTs[ModuleNo].insert(pair<string,Ts*>(name,ptr));
    ptr->Def(ModuleNo, name, value, unit,AllConditions);
 }
-void SimModule::Define(Gs* ptr, string name, double value, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(Gs* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Gs* ptr,  string name, double value, string unit, string conditions)
+void SimModule::Define(Gs* ptr,  std::string name, double value, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -233,13 +233,13 @@ void SimModule::Define(Gs* ptr,  string name, double value, string unit, string 
    m_pModelMap->MapGs[ModuleNo].insert(pair<string,Gs*>(name,ptr));
    ptr->Def(ModuleNo, name, value, unit,AllConditions);
 }
-void SimModule::Define(Ds* ptr, string name, double value, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(Ds* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Ds* ptr,  string name, double value, string unit, string conditions)
+void SimModule::Define(Ds* ptr,  std::string name, double value, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -249,15 +249,15 @@ void SimModule::Define(Ds* ptr,  string name, double value, string unit, string 
    m_pModelMap->MapDs[ModuleNo].insert(pair<string,Ds*>(name,ptr));
    ptr->Def(ModuleNo, name, value, unit,AllConditions);
 } 
-void SimModule::Define(Ps* ptr, string name, double value, UNIT_TYPES UNIT, string conditions, double emin, double emax, double wmin, double wmax, int recalc, int UserLevel, int view)
+void SimModule::Define(Ps* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions, double emin, double emax, double wmin, double wmax, int recalc, int UserLevel, int view)
 {
 
 	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions, emin, emax, wmin, wmax, recalc, UserLevel, view);
 	
 }
-void SimModule::Define(Ps* ptr, string name, double value, string unit, string conditions, double emin, double emax, double wmin, double wmax,int recalc, int UserLevel, int view)
+void SimModule::Define(Ps* ptr, std::string name, double value, std::string unit, std::string conditions, double emin, double emax, double wmin, double wmax,int recalc, int UserLevel, int view)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -275,21 +275,21 @@ void SimModule::Define(Ps* ptr, string name, double value, string unit, string c
 	}
    ptr->Def(ModuleNo, name, value, unit,AllConditions, emin, emax,  wmin, wmax, recalc, UserLevel);
 }
-void SimModule::Define(NE* ne, string name)
+void SimModule::Define(NE* ne, std::string name)
 {
    m_pModelMap->NE_Map.insert(pair<string,NE*>(name,ne));
  //  m_pModelMap->GlobalMap.insert(pair<string,NE*>(name,ne));
    ne->Def(name);
 }
 
-void SimModule::Define(P* ptr, NE* ptrNE, string name, vector<double> vvalue, UNIT_TYPES UNIT, string conditions, double emin, double emax, double wmin, double wmax, int recalc, int views, int view)
+void SimModule::Define(P* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions, double emin, double emax, double wmin, double wmax, int recalc, int views, int view)
 {
 	Define(ptr,  ptrNE, name,  vvalue,p_ModelInfo->GetUnitString(UNIT) , conditions,  emin,  emax,  wmin, wmax,  recalc, views,  view);
 }
 
-void SimModule::Define(P* ptr,NE* ptrNE,string name, vector<double> vvalue, string unit, string conditions, double emin, double emax, double wmin, double wmax, int recalc, int views, int view)
+void SimModule::Define(P* ptr,NE* ptrNE,string name, std::vector<double> vvalue, std::string unit, std::string conditions, double emin, double emax, double wmin, double wmax, int recalc, int views, int view)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -318,7 +318,7 @@ void SimModule::Define(Tab* ptr,string name, size_t min_P2EnableTab)
 }
 
 
-void SimModule::Define(Func* ptr, FunctorProp myf, SimModule *mClass, string name)
+void SimModule::Define(Func* ptr, FunctorProp myf, SimModule *mClass, std::string name)
 {
 	m_pModelMap->GlobalMap.insert(pair<string, Func*>(name, ptr));
 	ptr->Def(myf, mClass, name, pFunc, m_pModelMap);
@@ -328,7 +328,7 @@ void SimModule::Define(Func* ptr, FunctorProp myf, SimModule *mClass, string nam
 		m_pModelMap->MapErrors.insert(pair<string, int>(name, ModuleNo));
 	}
 }
-void SimModule::Define(Func* ptr, FunctorProp myf,  SimModule *mClass, string name, PLOT_PARAM plotpar)
+void SimModule::Define(Func* ptr, FunctorProp myf,  SimModule *mClass, std::string name, PLOT_PARAM plotpar)
 {
 	m_pModelMap->GlobalMap.insert(pair<string, Func*>(name, ptr));
 
@@ -341,7 +341,7 @@ void SimModule::Define(Func* ptr, FunctorProp myf,  SimModule *mClass, string na
 	}
 }
 
-void SimModule::Define(Func* ptr, FunctorProp myf, string name,  vector<Ps*> Ps_Vec)
+void SimModule::Define(Func* ptr, FunctorProp myf, std::string name,  std::vector<Ps*> Ps_Vec)
 {
 	m_pModelMap->GlobalMap.insert(pair<string, Func*>(name, ptr));
 
@@ -356,7 +356,7 @@ void SimModule::Define(Func* ptr, FunctorProp myf, string name,  vector<Ps*> Ps_
 		m_pModelMap->MapErrors.insert(pair<string, int>(name, ModuleNo));
 	}
 }
-void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<Ps*> Ps_Vec, PLOT_PARAM plotpar)
+void SimModule::Define(Func* ptr, FunctorProp myf, std::string name, std::vector<Ps*> Ps_Vec, PLOT_PARAM plotpar)
 {
 	m_pModelMap->GlobalMap.insert(pair<string, Func*>(name, ptr));
 
@@ -372,7 +372,7 @@ void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<Ps*> Ps_V
 		m_pModelMap->MapErrors.insert(pair<string, int>(name, ModuleNo));
 	}
 }
-void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<Ps*> Ps_Vec, vector<P*> P_Vec, PLOT_PARAM plotpar)
+void SimModule::Define(Func* ptr, FunctorProp myf, std::string name, std::vector<Ps*> Ps_Vec, std::vector<P*> P_Vec, PLOT_PARAM plotpar)
 {
 	m_pModelMap->GlobalMap.insert(pair<string, Func*>(name, ptr));
 
@@ -392,7 +392,7 @@ void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<Ps*> Ps_V
 	}
 }
 
-void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<P*> P_Vec)
+void SimModule::Define(Func* ptr, FunctorProp myf, std::string name, std::vector<P*> P_Vec)
 {
 	m_pModelMap->GlobalMap.insert(pair<string, Func*>(name, ptr));
 	ptr->SetGroupNo(ModuleNo);
@@ -405,7 +405,7 @@ void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<P*> P_Vec
 		m_pModelMap->MapErrors.insert(pair<string, int>(name, ModuleNo));
 	}
 }
-void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<P*> P_Vec,  PLOT_PARAM plotpar)
+void SimModule::Define(Func* ptr, FunctorProp myf, std::string name, std::vector<P*> P_Vec,  PLOT_PARAM plotpar)
 {
 	m_pModelMap->GlobalMap.insert(pair<string, Func*>(name, ptr));
 
@@ -421,9 +421,9 @@ void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<P*> P_Vec
 }
 
 
-/*void SimModule::Define(Func* ptr,double (WaterUptake_Functions::*fpoint)(double),WaterUptake_Functions *mClass, string name,  string conditions)
+/*void SimModule::Define(Func* ptr,double (WaterUptake_Functions::*fpoint)(double),WaterUptake_Functions *mClass, std::string name,  std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -433,14 +433,14 @@ void SimModule::Define(Func* ptr, FunctorProp myf, string name, vector<P*> P_Vec
    ptr->Def(ModuleNo,fpoint, mClass, name,conditions);
    m_pModelMap->MapFunc[ModuleNo].insert(pair<string,Func*>(name,ptr));
 }*/
-void SimModule::Define(X* ptr, NE* ptrNE, string name, vector<double> vvalue, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(X* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, ptrNE, name, vvalue, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
 
-void SimModule::Define(X* ptr, NE* ptrNE, string name, vector<double> vvalue, string unit, string conditions)
+void SimModule::Define(X* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -451,13 +451,13 @@ void SimModule::Define(X* ptr, NE* ptrNE, string name, vector<double> vvalue, st
    ptr->Def(ModuleNo, name, vvalue, unit,AllConditions);
    ptrNE->LinkTo(ptr);
 }
-void SimModule::Define(T* ptr, NE* ptrNE, string name, vector<double> vvalue, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(T* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, ptrNE, name, vvalue, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(T* ptr, NE* ptrNE, string name, vector<double> vvalue, string unit, string conditions)
+void SimModule::Define(T* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -469,13 +469,13 @@ void SimModule::Define(T* ptr, NE* ptrNE, string name, vector<double> vvalue, st
    ptr->Def(ModuleNo, name, vvalue, unit,AllConditions);
    ptrNE->LinkTo(ptr);
 }
-void SimModule::Define(G* ptr, NE* ptrNE, string name, vector<double> vvalue, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(G* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, ptrNE, name, vvalue,p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(G* ptr, NE* ptrNE,string name, vector<double> vvalue, string unit, string conditions)
+void SimModule::Define(G* ptr, NE* ptrNE,string name, std::vector<double> vvalue, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -486,13 +486,13 @@ void SimModule::Define(G* ptr, NE* ptrNE,string name, vector<double> vvalue, str
    ptr->Def(ModuleNo, name, vvalue, unit,AllConditions);
    ptrNE->LinkTo(ptr);
 }
-void SimModule::Define(D* ptr, NE* ptrNE, string name, vector<double> vvalue, UNIT_TYPES UNIT, string conditions)
+void SimModule::Define(D* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
 	Define(ptr, ptrNE, name, vvalue, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(D* ptr, NE* ptrNE, string name, vector<double> vvalue, string unit, string conditions)
+void SimModule::Define(D* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string unit, std::string conditions)
 {
-   string AllConditions;
+   std::string AllConditions;
    AllConditions=ModuleConditions;
    if(conditions.size()>0) {
 	   AllConditions.append("|");
@@ -687,28 +687,28 @@ function<void(vector<double>*)>  SimModule::GetVectorPointer_D1_Functor(enum  My
 	}
 	return nullptr;
 }
-function<void(vector<double>*, vector<double>*)>  SimModule::GetVectorPointer_D2_Functor(enum  MyFunc choice) {
+function<void(vector<double>*, std::vector<double>*)>  SimModule::GetVectorPointer_D2_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D2_Functor();
 	}
 	return nullptr;
 }
-function<void(vector<double>*, vector<double>*, vector<double>*)>  SimModule::GetVectorPointer_D3_Functor(enum  MyFunc choice) {
+function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  SimModule::GetVectorPointer_D3_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D3_Functor();
 	}
 	return nullptr;
 }
-function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*)> SimModule::GetVectorPointer_D4_Functor(enum  MyFunc choice) {
+function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SimModule::GetVectorPointer_D4_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D4_Functor();
 	}
 	return nullptr;
 }
-function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*, vector<double>*)> SimModule::GetVectorPointer_D5_Functor(enum  MyFunc choice) {
+function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SimModule::GetVectorPointer_D5_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D5_Functor();

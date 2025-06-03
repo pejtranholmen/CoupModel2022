@@ -62,7 +62,7 @@ public:
 
 
 	size_t GetVarIndex(string str, size_t irep=1);
-	size_t GetVarIndex(string str, string str_id, size_t irep=1);
+	size_t GetVarIndex(string str, std::string str_id, size_t irep=1);
 
 	void ResetSelections();
 	void RemoveSelection(size_t);
@@ -271,7 +271,7 @@ public:
 	bool	EstimateWithinYearStatistics(Doc *pDoc=nullptr);
 	void	EstimateWithinYearClear(size_t rep);
 	bool	EstimateWithinDayStatistics();
-	bool	EstimateMultiStatistics(bool all=false, vector<size_t> *acceptedruns=nullptr, size_t EnsembleNo=0, vector<string> *addedfiles=nullptr, vector<size_t> *addedfirstNo= nullptr);
+	bool	EstimateMultiStatistics(bool all=false, std::vector<size_t> *acceptedruns=nullptr, size_t EnsembleNo=0, std::vector<string> *addedfiles=nullptr, std::vector<size_t> *addedfirstNo= nullptr);
 	bool	GetReplaceMode();
 	void	SetAllValuesAssigned(bool value) {
 				m_AllValuesAssigned = value;

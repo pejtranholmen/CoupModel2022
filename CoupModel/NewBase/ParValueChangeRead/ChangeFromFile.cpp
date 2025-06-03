@@ -83,7 +83,7 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 		break;
 		case 7:
 			//CalibIndex
-			if (index != string::npos) {
+			if (index != std::string::npos) {
 
 				
 				Sw *pSw;

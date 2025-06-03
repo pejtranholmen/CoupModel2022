@@ -27,7 +27,7 @@ SelectedAddEnsembles::~SelectedAddEnsembles()
 
 
 }
-bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, vector<float> VarValidVector, bool SaveToFile) {
+bool SelectedAddEnsembles::SetNewPerformanceVector(size_t transformed_index, std::vector<float> VarValidVector, bool SaveToFile) {
 
 
 	/**if (cumulatedPerformance == 0)
@@ -118,12 +118,12 @@ bool SelectedAddEnsembles::AddNewEnsemble(bool KeepPreviousCriteria) {
 		m_pNewMap->m_MStorage.SetAllToAcceptedRuns();
 	
 
-	if (m_ActualEnsemble != string::npos)
+	if (m_ActualEnsemble != std::string::npos)
 		return true;
 	else
 		return false;
 }
-bool SelectedAddEnsembles::ChangeEnsembleNames(size_t index, string newname) {
+bool SelectedAddEnsembles::ChangeEnsembleNames(size_t index, std::string newname) {
 	bool out = false;
 	map<int, CResiduals*> ResidualMap;
 	for (size_t i = 0; i < m_pNewMap->GetNumAll_TSV_ValVariables(); i++) {

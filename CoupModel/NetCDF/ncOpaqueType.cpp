@@ -45,7 +45,7 @@ NcOpaqueType::NcOpaqueType() :
 
 
 // constructor
-NcOpaqueType::NcOpaqueType(const NcGroup& grp, const string& name) :
+NcOpaqueType::NcOpaqueType(const NcGroup& grp, const std::string& name) :
   NcType(grp,name)
 {}
   

@@ -8,7 +8,7 @@ class Ps :	public Par
 		Ps(double *target, definitions def);
 		Ps(double *target, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 		~Ps(void);
-		void Def(size_t ModuleNo, string name, double init, string unit, string conditions, 
+		void Def(size_t ModuleNo, std::string name, double init, std::string unit, std::string conditions, 
 			double errormin, double errormax, double warningmin, double warningmax,
 			int recalc=0,  int view=0);
 		size_t SetValue(double v) {_oldValue=*_ptarget;_IsOldValue=true;
@@ -62,7 +62,7 @@ class Ps :	public Par
 		void   MR_Set_TabValue(size_t index, double value) {_mr_Tab_Value[index]=value;};
 
 
-		void def(int ModuleNo, string name, double init, string unit, string conditions, 
+		void def(int ModuleNo, std::string name, double init, std::string unit, std::string conditions, 
 			double errormin, double errormax, double warningmin, double warningmax,
 			int recalc=0,  int view=0);
 		bool IsOldValue()  noexcept {return _IsOldValue;};
@@ -84,7 +84,7 @@ class Ps :	public Par
 					if(test>minnew) {
 						ChaDateLong[i]=minnew;
 						ChaParValue[i]=newvalue;
-						ChaParIndex[i]=string::npos;
+						ChaParIndex[i]= std::string::npos;
 						return true;
 					}
 					else if(test==minnew) {

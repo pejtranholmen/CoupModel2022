@@ -34,7 +34,7 @@ namespace netCDF
       nc_UINT     = NC_UINT,	//!< unsigned 4-byte int
       nc_INT64    = NC_INT64,	//!< signed 8-byte int
       nc_UINT64   = NC_UINT64,	//!< unsigned 8-byte int
-      nc_STRING   = NC_STRING, 	//!< string
+      nc_STRING   = NC_STRING, 	//!< std::string
       nc_VLEN     = NC_VLEN,   	//!< "NcVlen type"
       nc_OPAQUE   = NC_OPAQUE, 	//!< "NcOpaque type"
       nc_ENUM     = NC_ENUM, 	//!< "NcEnum type"
@@ -121,7 +121,7 @@ namespace netCDF
     ncType getTypeClass() const;                       
 
     /*! 
-      Return a string containing the name of the enumerated type.  (ie one of the following strings:
+      Return a std::string containing the name of the enumerated type.  (ie one of the following strings:
       "nc_BYTE", "nc_CHAR", "nc_SHORT", "nc_INT", "nc_FLOAT", "nc_DOUBLE", "nc_UBYTE", "nc_USHORT", 
       "nc_UINT", "nc_INT64", "nc_UINT64", "nc_STRING", "nc_VLEN", "nc_OPAQUE", "nc_ENUM", "nc_COMPOUND"
      */

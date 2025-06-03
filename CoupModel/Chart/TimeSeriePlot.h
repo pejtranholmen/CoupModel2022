@@ -21,7 +21,7 @@ class TimeSeriePlot :public DrawDetails	{
 	bool OnUpdateSequence(int ArrayIndex=-1);
 	bool OnInit(CChartViewer *viewer);
 	bool InitMultiRunPlot(Doc *pDoc, int, CHART_TYPES, CChartViewer *view=nullptr);
-	bool InitData(Doc *pDoc, int, string filename="", CChartViewer *view=nullptr);
+	bool InitData(Doc *pDoc, int, std::string filename="", CChartViewer *view=nullptr);
 	bool InitMultiPGFilePlot(Doc *pSimDoc);
 
 	bool MakeAllMultiCharts(MultiChart *mc, size_t TotNumPrior);
@@ -69,7 +69,7 @@ class TimeSeriePlot :public DrawDetails	{
 	};
 
 	private: // Member pointer
-		vector< vector<double>> A, T;
+		vector< std::vector<double>> A, T;
 		MultiChart *m_PrevMC;
 		vector <XYChart*> m_PrevBaseChart;
 		CCoupModelView *m_pView;

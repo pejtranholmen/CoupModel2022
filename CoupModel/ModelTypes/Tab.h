@@ -6,8 +6,8 @@ class Tab : public SimB {
 	Tab(vector<P*> *target, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 
 	~Tab();
-	void Def(size_t module_no, string varname, string pname, string cond) {SetConditions(cond); Def(module_no, varname, 1);};
-	void Def(size_t module_no, string varname, size_t minP_toenable);  
+	void Def(size_t module_no, std::string varname, std::string pname, std::string cond) {SetConditions(cond); Def(module_no, varname, 1);};
+	void Def(size_t module_no, std::string varname, size_t minP_toenable);  
 	size_t GetViewFunction() {return _viewvalue;};
 	void SetViewFunction(size_t value) {_viewvalue=value;};
 	bool GetHide() {return _Hidden;};

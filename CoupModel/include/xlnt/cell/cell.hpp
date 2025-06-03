@@ -460,13 +460,13 @@ public:
     // formula
 
     /// <summary>
-    /// Returns the string representation of the formula applied to this cell.
+    /// Returns the std::string representation of the formula applied to this cell.
     /// </summary>
     std::string formula() const;
 
     /// <summary>
     /// Sets the formula of this cell to the given value.
-    /// This formula string should begin with '='.
+    /// This formula std::string should begin with '='.
     /// </summary>
     void formula(const std::string &formula);
 
@@ -483,7 +483,7 @@ public:
     // printing
 
     /// <summary>
-    /// Returns a string representing the value of this cell. If the data type is not a string,
+    /// Returns a std::string representing the value of this cell. If the data type is not a std::string,
     /// it will be converted according to the number format.
     /// </summary>
     std::string to_string() const;
@@ -516,7 +516,7 @@ public:
     void show_phonetics(bool phonetics);
 
     /// <summary>
-    /// Returns the error string that is stored in this cell.
+    /// Returns the error std::string that is stored in this cell.
     /// </summary>
     std::string error() const;
 

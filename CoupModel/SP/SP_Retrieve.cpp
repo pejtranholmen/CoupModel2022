@@ -288,7 +288,7 @@ SP_Retrieve::SP_Retrieve(string key,CWnd* pParent /*=nullptr*/)
 
 	int layer,prof=1,repNumber=1;
 	auto index=key.find(":");
-	if(index!=string::npos) {
+	if(index!= std::string::npos) {
 		prof=MFC_Util::AtoInt(key.substr(2,index-2));
 		repNumber=MFC_Util::AtoInt(key.substr(index+1,2));
 	}
@@ -793,7 +793,7 @@ void SP_Retrieve::OnBnClickedOk()
 			}
 		
 			if(!Testkey) {
-				string string;
+				string std::string;
 				string="";
 				string+="Use right key on mouse to copy Profile no from data base list\n";
 				string+="and make paste on the selection list of profiles\n";
@@ -850,7 +850,7 @@ void SP_Retrieve::OnBnClickedOkbutton()
 }
 void SP_Retrieve::IniDataBase() {
 	if(!p_PFCurve->IsOpen()) {
-	  string directory;
+	  std::string directory;
 	  directory=MFC_Util::GetProfileStringStd("DataBaseDirectory", directory);
 	 if(!p_PFCurve->OpenMainFile(directory+"PfProf")) {
 		 return;
@@ -868,7 +868,7 @@ void SP_Retrieve::IniDataBase() {
 		p_PFCurve->ReadHeaderFile();
 		p_PFCurve->SaveNewFormat();
 		p_PFCurve->CloseMainDataBase();
-		 string directory;
+		 std::string directory;
 		directory=MFC_Util::GetProfileStringStd("DataBaseDirectory", directory);
 		p_PFCurve->OpenMainFile(directory+"PfProf");
 		m_ActHeader=p_PFCurve->GetHeader(p_PFCurve->GetInsertRecord(0));

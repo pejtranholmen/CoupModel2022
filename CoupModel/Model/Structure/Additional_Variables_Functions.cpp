@@ -242,7 +242,7 @@ double Additional_Variables_Functions::GetWaterBalanceCheck() {
 	out-=TotalDiffStorage+AccTotalEvap+AccTotalRunoff;
 	return out;
 }
-vector<double> Additional_Variables_Functions::GetSensorValues(vector<double> Value, vector<SOIL_SENSORS> *Sens) {
+vector<double> Additional_Variables_Functions::GetSensorValues(vector<double> Value, std::vector<SOIL_SENSORS> *Sens) {
 	vector<double> out;
 	out.resize(Sens->size());
 	for(size_t i=0; i<Sens->size(); i++) {
@@ -251,7 +251,7 @@ vector<double> Additional_Variables_Functions::GetSensorValues(vector<double> Va
 	}
 	return out;
 }
-double Additional_Variables_Functions::GetSondStorage(size_t isond, vector<double> *Values) {
+double Additional_Variables_Functions::GetSondStorage(size_t isond, std::vector<double> *Values) {
 	double out=0;
 
 	for(size_t i=0; i<Values->size(); i++) {

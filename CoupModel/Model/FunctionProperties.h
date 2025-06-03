@@ -19,7 +19,7 @@ public:
 		if(it!=m_FuncIndex.end())
 			return it->second;
 		else
-			return string::npos;
+			return std::string::npos;
 	};
 	PLOT_PARAM GetParam(string str) {
 		size_t index=GetIndex(str);
@@ -35,7 +35,7 @@ public:
 	size_t GetNumFunctions() { return m_FuncIndex.size();};
 
 	
-	bool SetParamDep(vector<Ps*> PsVector, vector<P*> PVector, size_t index);
+	bool SetParamDep(vector<Ps*> PsVector, std::vector<P*> PVector, size_t index);
 	bool SetParamDep(vector<Ps*> PsVector, size_t index);
 	bool SetParamDep(vector<P*> PVector, size_t index);
 	bool IsFileRead() {return m_FileRead;};

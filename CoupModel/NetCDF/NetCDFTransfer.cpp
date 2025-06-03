@@ -21,17 +21,17 @@ using namespace netCDF;
 using namespace netCDF::exceptions;
 static const double CONV_SPEC_HPA=1013.;
 
-void Read_From_File(string var, string ncfile, int superindex, int ivar, CPG *pPG) {
+void Read_From_File(string var, std::string ncfile, int superindex, int ivar, CPG *pPG) {
   float fvar[NR];	
-  vector<float> v;
+  std::vector<float> v;
   v.resize(N8_REC);
 
    // Open the file for read access
      std::this_thread::sleep_for(std::chrono::seconds(1));
-  string finalName;
+  std::string finalName;
   size_t nstart=0;
-		  vector<size_t> st;
-		  vector<size_t> nel;
+		  std::vector<size_t> st;
+		  std::vector<size_t> nel;
 		  st.resize(3);
 		  nel.resize(3);
 		  st[1]=superindex%360;
@@ -87,17 +87,17 @@ void Read_From_File(string var, string ncfile, int superindex, int ivar, CPG *pP
 
 }
 
-void Read_From_File2(string var, string ncfile, int superindex, int ivar, CPG *pPG) {
+void Read_From_File2(string var, std::string ncfile, int superindex, int ivar, CPG *pPG) {
   float fvar[NR];	
-  vector<float> v;
+  std::vector<float> v;
   v.resize(N8_REC);
 
    // Open the file for read access
      std::this_thread::sleep_for(std::chrono::seconds(1));
-  string finalName;
+  std::string finalName;
   size_t nstart=0;
-		  vector<size_t> st;
-		  vector<size_t> nel;
+		  std::vector<size_t> st;
+		  std::vector<size_t> nel;
 		  st.resize(3);
 		  nel.resize(3);
 		  st[1]=superindex%360;
@@ -452,7 +452,7 @@ NetCDFTransfer::NetCDFTransfer(size_t iopt)
 	 m_Var[2]="Wind";
 	 m_Var[4]="SWdown";
 	 m_Var[3]="Rainf";
-	 m_Var[5]=="LWdown";
+	 m_Var[5]="LWdown";
 	 m_Var[6]="Snowf";
 	
 
@@ -809,7 +809,7 @@ void NetCDFTransfer::WFDEI()
 NetCDFTransfer::~NetCDFTransfer()
 {
 }
-bool NetCDFTransfer::ReadFile(string file, string var, vector<float> *v)
+bool NetCDFTransfer::ReadFile(string file, std::string var, std::vector<float> *v)
 {
 
    float fvar[NR];	
@@ -822,8 +822,8 @@ bool NetCDFTransfer::ReadFile(string file, string var, vector<float> *v)
 
 
 
-  vector<size_t> st;
-  vector<size_t> nel;
+  std::vector<size_t> st;
+  std::vector<size_t> nel;
   st.resize(3);
   nel.resize(3);
   st[0]=0, st[1]=0; st[2]=0;
@@ -873,17 +873,17 @@ bool NetCDFTransfer::ReadFile(string file, string var, vector<float> *v)
 
 	
 }
-bool NetCDFTransfer::Read3HFile(string file,int superindex, string var, vector<float> *v)
+bool NetCDFTransfer::Read3HFile(string file,int superindex, std::string var, std::vector<float> *v)
 {
 
    float fvar[NR];	
 
    // Open the file for read access
 
-  string finalName;
+  std::string finalName;
   size_t nstart=0;
-		  vector<size_t> st;
-		  vector<size_t> nel;
+		  std::vector<size_t> st;
+		  std::vector<size_t> nel;
 		  st.resize(3);
 		  nel.resize(3);
 		  st[1]=superindex%360;
@@ -952,7 +952,7 @@ bool NetCDFTransfer::Read3HFile(string file,int superindex, string var, vector<f
 return true;
 
 }
-float NetCDFTransfer::GetValue(string file, string var, size_t index)
+float NetCDFTransfer::GetValue(string file, std::string var, size_t index)
 {
 
    float fvar[NREC];	

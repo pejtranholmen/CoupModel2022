@@ -10,9 +10,9 @@ public:
 
 
 protected:
-	bool AllEditCells(int col, long row,  string txt);
+	bool AllEditCells(int col, long row,  std::string txt);
 
-	void ChangeDescriptions(int col, long row, string txt, CPG *pPG);
+	void ChangeDescriptions(int col, long row, std::string txt, CPG *pPG);
 
 
 

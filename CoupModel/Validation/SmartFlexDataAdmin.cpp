@@ -32,7 +32,7 @@ bool SmartFlexDataAdmin::CalculateSumMeanValidValues_SV_Variables()
 		m_MStorage.m_ActualEnsemble = m_MStorage.m_Valid_SV_Mean.size() - 1;
 
 	}
-	vector< vector<float> > MeanPerf;
+	vector< std::vector<float> > MeanPerf;
 	MeanPerf.resize(7);
 	for (size_t jx = 0; jx < 7; jx++) {
 		m_MStorage.m_Valid_SV_Mean[m_MStorage.m_ActualEnsemble].MeanPerFomanceIndicators[jx].resize(MR_Get_TotalNumberofRuns());
@@ -180,7 +180,7 @@ float SmartFlexDataAdmin::Get_SV_Value(size_t variable, size_t SV_Index, size_t 
 	return fvalue;
 }
 
-bool SmartFlexDataAdmin::Get_SV_MeanAllPerformance(size_t RunNo, vector<vector<float>>& Values)
+bool SmartFlexDataAdmin::Get_SV_MeanAllPerformance(size_t RunNo, std::vector<vector<float>>& Values)
 {
 	if (m_ValSum_Array.size() > 0 && m_ValSum_Array[0].R2_Multi.size() == 0) return false;
 	for (size_t i = 0; i < m_ValSum_Array.size(); i++) {	

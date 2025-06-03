@@ -165,8 +165,8 @@ string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level, bool ChildDoc
 	auto GetFileName = [&]() {
 		string fileout;
 		auto ip = DocName.find(".Sim");
-		if (ip == string::npos) ip = DocName.find(".xml");
-		if (ip != string::npos) {
+		if (ip == std::string::npos) ip = DocName.find(".xml");
+		if (ip != std::string::npos) {
 			fileout = DocName.substr(0, ip);
 			if (enable_level==doc_enabled::ALL) fileout += "_All";
 			else if (enable_level == doc_enabled::ENABLED) fileout += "_Enabled";
@@ -439,7 +439,7 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 			for (pugi::xml_node group = category.first_child(); group; group = group.next_sibling()) {
 				auto groupname = group.name();
 				for (pugi::xml_node item = group.first_child(); item; item = item.next_sibling()) {
-					string item_name = string(item.name());
+					string item_name = std::string(item.name());
 					
 					if (type == simtype::SWITCH) {
 						auto pSw = static_cast<Sw*>(GetPtr(type, item_name));
@@ -637,7 +637,7 @@ bool NewMap::WriteHeaderToXmlFile(pugi::xml_node node) {
 
 #endif
 
-	string exdate = string(ExeDate) + " ";
+	string exdate = std::string(ExeDate) + " ";
 
 	general.append_attribute("ExeFileDate") = exdate.c_str();
 
@@ -742,7 +742,7 @@ bool NewMap::WriteValidationToXmlFile(pugi::xml_node node) {
 	
 	size_t iv = m_Val_Array.size();
 	if (iv > 0)
-		if (MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
+		if (MR_GetValidIndex_IndexInValFile_InDim1() != std::string::npos) {
 		//	auto NumberofDim1 = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 		//	if (NumberofDim1 > 0 && (iv / NumberofDim1 > 1)) 	iv = iv / NumberofDim1;
 		};
@@ -807,7 +807,7 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 	VALv vst;
 	int ivalue;
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
-		auto namestring = string(level1.name());
+		auto namestring = std::string(level1.name());
 		
 		if (namestring.find("Variables") == 0) {
 			vst.ValidationFileIndex=level1.attribute(valTableAtt[0]).as_uint() ;
@@ -974,7 +974,7 @@ bool NewMap::WriteMultiRunSettingsToXmlFile(pugi::xml_node node)
 					string rowstring = "row_" + FUtil::STD_ItoAscii(iii + 1);
 					auto row = par.append_child(rowstring.c_str());
 					float value;
-					if (valPAR.TabIndex !=string::npos)
+					if (valPAR.TabIndex != std::string::npos)
 						value = ((P*)valPAR.pBase)->MR_Get_TabValue(valPAR.TabIndex, iii);
 					else
 						value = ((Ps*)valPAR.pBase)->MR_Get_TabValue(iii);
@@ -1068,7 +1068,7 @@ bool NewMap::Read_MultiRunSettings_FromXmlFile(pugi::xml_node node)
 	MRv valMR;
 
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
-		auto namestring = string(level1.name());
+		auto namestring = std::string(level1.name());
 		if (namestring == "Bayesian_Setting") {
 			m_BayesianStepSize = level1.attribute("StepSize").as_double();
 			SetNumBurnIn(level1.attribute("Number_BurnInStep").as_uint());
@@ -1103,7 +1103,7 @@ bool NewMap::Read_MultiRunSettings_FromXmlFile(pugi::xml_node node)
 							pDB->MR_AddSelection(strID, strKey);					
 						}
 						pDB->MR_Set_Dim(DimNumber);
-						MR_CP_Set((Ps*)pDB, string::npos, true);
+						MR_CP_Set((Ps*)pDB, std::string::npos, true);
 					}
 
 					else {
@@ -1161,7 +1161,7 @@ bool NewMap::Read_MultiRunSettings_FromXmlFile(pugi::xml_node node)
 								auto Indexdep = par.attribute("IndexDepPar").as_uint();
 
 
-								if (Indexdep == string::npos)
+								if (Indexdep == std::string::npos)
 									type = "Parameters";
 								else
 									type = "Table Parameters";
@@ -1221,7 +1221,7 @@ bool NewMap::Read_MultiRunSettings_FromXmlFile(pugi::xml_node node)
 							//Single Value Parameters
 
 							valPAR.pBase = pP;
-							valPAR.TabIndex = string::npos;
+							valPAR.TabIndex = std::string::npos;
 							if (m_FileVersionNumberRead > 43) {
 								if (valPAR.pBase->Is_P())
 									((Ps*)pP)->MR_Set_Monitoring(monitoring);
@@ -1243,7 +1243,7 @@ bool NewMap::Read_MultiRunSettings_FromXmlFile(pugi::xml_node node)
 								auto Indexdep = par.attribute("IndexDepPar").as_uint();
 
 
-								if (valPAR.TabIndex==string::npos)
+								if (valPAR.TabIndex== std::string::npos)
 									type = "Parameters";
 								else
 									type = "Table Parameters";
@@ -1402,7 +1402,7 @@ bool NewMap::Read_DynamicPar_FromXmlFile(pugi::xml_node node)
 	m_P_CH_Array.clear();
 	VALv vst;
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
-		auto namestring = string(level1.name());
+		auto namestring = std::string(level1.name());
 		ch.Type = level1.attribute("Type").as_int();
 		if (ch.Type == 0) {
 			group = level1.attribute("Group").as_string();
@@ -1577,7 +1577,7 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 	for (size_t i = 0; i < vpp.size(); i++) {
 		auto pPtr = (SimB*)vpp[i];
 		auto name = pPtr->GetName();
-		//if ((name == "WaterStorage" || name == "SoilHeat" || name.find("Humus") != string::npos || name.find("Litter") != string::npos) ) {
+		//if ((name == "WaterStorage" || name == "SoilHeat" || name.find("Humus") != std::string::npos || name.find("Litter") != std::string::npos) ) {
 			iv++;
 			vp_final.push_back(pPtr);
 		//}
@@ -1619,7 +1619,7 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 bool NewMap::Read_AllFinalState_FromXmlFile(pugi::xml_node node)
 {
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
-		auto namestring = string(level1.name());
+		auto namestring = std::string(level1.name());
 
 		auto group= level1.attribute("Group").as_string();
 		auto name = level1.attribute("Name").as_string();
@@ -1638,7 +1638,7 @@ bool NewMap::Read_History_FromXmlFile(pugi::xml_node node)
 	HISTv h;
 	string group, type, name;
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
-		auto namestring = string(level1.name());
+		auto namestring = std::string(level1.name());
 		h.RunInfoType = level1.attribute("RunInfoType").as_uint();
 		group = level1.attribute("GroupName").as_string();
 		name = level1.attribute("ItemName").as_string();
@@ -1798,7 +1798,7 @@ bool NewMap::Read_OutputSummary_FromXmlFile(pugi::xml_node node)
 			pSimB = GetPtr(enum simtype(type_id + 7), varstr);
 
 
-			if (varstr.rfind("_") != string::npos&&pSimB == nullptr) {
+			if (varstr.rfind("_") != std::string::npos&&pSimB == nullptr) {
 				pSimB = GetPtr(type_id,varstr.substr(0,varstr.rfind("_")));
 				if (pSimB == nullptr) {
 					string oldname = varstr.substr(0, varstr.rfind("_"));
@@ -1825,7 +1825,7 @@ bool NewMap::Read_OutputSummary_FromXmlFile(pugi::xml_node node)
 					}
 				}
 				OutSingle* pSingle;
-				output.LocalIndex = string::npos;
+				output.LocalIndex = std::string::npos;
 				pSingle = static_cast<OutSingle*>(pSimB);
 				if (pSingle != nullptr) {
 					pSingle->AddOutPutVar(output);
@@ -1868,7 +1868,7 @@ bool NewMap::WriteDataBaseLinksToXmlFile(pugi::xml_node node)
 		row.append_attribute("TimeStamp") = size_t(timestamp);
 		string strvalue= DB_GetChoice(DB_types(i)).c_str();
 		auto pos1 = strvalue.find('\t');
-		if (pos1 != string::npos) {
+		if (pos1 != std::string::npos) {
 			auto str1 = strvalue.substr(0, pos1);
 			if (str1.size() > 0) {
 				row.append_attribute("System") = str1.c_str();
@@ -1876,7 +1876,7 @@ bool NewMap::WriteDataBaseLinksToXmlFile(pugi::xml_node node)
 			strvalue = strvalue.substr(pos1 + 1);
 			pos1 = strvalue.find('\t');
 
-			if (pos1 != string::npos) {
+			if (pos1 != std::string::npos) {
 				auto str2 = strvalue.substr(0, pos1);
 				if (str1.size() > 0) {
 					row.append_attribute("Objekt") = str2.c_str();
@@ -1884,7 +1884,7 @@ bool NewMap::WriteDataBaseLinksToXmlFile(pugi::xml_node node)
 				strvalue = strvalue.substr(pos1 + 1);
 				pos1 = strvalue.find('\t');
 			}
-			if (pos1 != string::npos) {
+			if (pos1 != std::string::npos) {
 				auto str2 = strvalue.substr(0, pos1);
 				if (DB_types(i) == DB_types::Soil_Properties) {
 					auto key = str2.substr(0, 6);
@@ -1900,11 +1900,11 @@ bool NewMap::WriteDataBaseLinksToXmlFile(pugi::xml_node node)
 				pos1 = strvalue.find('\t');
 			}
 
-			if (pos1 != string::npos) {
+			if (pos1 != std::string::npos) {
 				auto cord = strvalue.substr(0, pos1);
 
 				auto pos4 = cord.find('/');
-				if (pos4 != string::npos) {
+				if (pos4 != std::string::npos) {
 					auto X = cord.substr(0, pos4);
 					row.append_attribute("X_cord") = X.c_str();
 					auto y = cord.substr(pos4 + 1);
@@ -1980,7 +1980,7 @@ bool NewMap::Read_DataBaseLinks_FromXmlFile(pugi::xml_node node)
 
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
 		string level1name = level1.name();
-		size_t i_id=string::npos;
+		size_t i_id= std::string::npos;
 
 		for (size_t i = 0; i < 10; i++) {
 			auto dbname=(DB_GetNames(i));
@@ -2051,14 +2051,14 @@ bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 		good=m_DocFileIn.good();
 		string xmlfile;
 		auto pos = m_DocFileName.find(".Sim");
-		if (pos == string::npos) pos = m_DocFileName.find(".Sim");
-		if (pos != string::npos) {
+		if (pos == std::string::npos) pos = m_DocFileName.find(".Sim");
+		if (pos != std::string::npos) {
 			xmlfile = m_DocFileName.substr(0, pos);
 			xmlfile += ".xml";
 		}
-		if (pos == string::npos) {
+		if (pos == std::string::npos) {
 			pos = m_DocFileName.find(".xml");
-			if (pos != string::npos) xmlfile = m_DocFileName;
+			if (pos != std::string::npos) xmlfile = m_DocFileName;
 
 		}
 
@@ -2210,7 +2210,7 @@ bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 		Tab *pTab=(Tab*)GetPtr(TABLE, "Scaling of Observed Variables");
 		if(pTab!=nullptr) {
 				auto oldnelements=pTab->GetNumOfRow();
-		  		if (iv!=oldnelements&&iv!=string::npos)  pTab->SetNumOfRow(iv);
+		  		if (iv!=oldnelements&&iv!= std::string::npos)  pTab->SetNumOfRow(iv);
 		}
 
 
@@ -2404,7 +2404,7 @@ bool NewMap::WriteDocFile(bool ChildDocument)
 {
 	if (m_xmlFileToUse) {
 		m_ChildDocument = ChildDocument;
-		auto string=WriteEntireModelToXmlFile(doc_enabled::NOT_DEFAULT);
+		auto std::string=WriteEntireModelToXmlFile(doc_enabled::NOT_DEFAULT);
 		return true;
 	}
 	else {
@@ -2590,7 +2590,7 @@ bool NewMap::Info_Header(bool reading)
 				ExeDate+=CT2A(kk.Format(_T("%d %B, %Y"))).m_psz;
 			}
 #endif
-            string exdate = string(ExeDate);
+            std::string exdate = std::string(ExeDate);
             
 			wString(&exdate );
 		}
@@ -2690,8 +2690,8 @@ bool NewMap::Info_Switches(bool reading)
 		wSize_t(&iv);
 		type="Switches";
 		wString(&type);
-        string group_psw;
-        string name_psw;
+        std::string group_psw;
+        std::string name_psw;
         
 		for(size_t i=0;i<iv;i++) {
 			pSw=m_Sw_Array[i];
@@ -2750,8 +2750,8 @@ bool NewMap::Info_Parameters(bool reading)
 		wSize_t(&iv);
 		type="Parameters";
 		wString(&type);
-        string group_psw;
-        string name_psw;
+        std::string group_psw;
+        std::string name_psw;
 		for(size_t i=0;i<iv;i++) {
 			pPs=m_P_Array[i];
             group_psw = pPs->GetGroup();
@@ -2834,14 +2834,14 @@ bool NewMap::Info_ParTables(bool reading)
 								string testparname = TableVarNames[nCol];
 								auto pVar=GetPPointer(testparname);
 								if (pVar == nullptr) {
-									if (testparname.find("I C OldRoots") != string::npos) pVar = NewTest("I C OldRoot");
-									if (testparname.find("I C OldCRoots") != string::npos) pVar = NewTest("I C OldCoarseRoot");
-									if (testparname.find("I C Roots") != string::npos) pVar = NewTest("I C Root");
-									if (testparname.find("I C CRoots") != string::npos) pVar = NewTest("I C CoarseRoot");
-									if (testparname.find("I N OldRoots") != string::npos) pVar = NewTest("I N OldRoot");
-									if (testparname.find("I N OldCRoots") != string::npos) pVar = NewTest("I N OldCoarseRoot");
-									if (testparname.find("I N Roots") != string::npos) pVar = NewTest("I N Root");
-									if (testparname.find("I N CRoots") != string::npos) pVar = NewTest("I N CoarseRoot");
+									if (testparname.find("I C OldRoots") != std::string::npos) pVar = NewTest("I C OldRoot");
+									if (testparname.find("I C OldCRoots") != std::string::npos) pVar = NewTest("I C OldCoarseRoot");
+									if (testparname.find("I C Roots") != std::string::npos) pVar = NewTest("I C Root");
+									if (testparname.find("I C CRoots") != std::string::npos) pVar = NewTest("I C CoarseRoot");
+									if (testparname.find("I N OldRoots") != std::string::npos) pVar = NewTest("I N OldRoot");
+									if (testparname.find("I N OldCRoots") != std::string::npos) pVar = NewTest("I N OldCoarseRoot");
+									if (testparname.find("I N Roots") != std::string::npos) pVar = NewTest("I N Root");
+									if (testparname.find("I N CRoots") != std::string::npos) pVar = NewTest("I N CoarseRoot");
 								}
 
 								if (pVar != pP&&pVar != nullptr) pP = pVar;
@@ -2879,7 +2879,7 @@ bool NewMap::Info_ParTables(bool reading)
 				 // if(name!="Plant diameter - multiple canopies");
 				  if(name!="Snow Albedo Coefficients"&&name!="Brunts Net long wave Coefficients"&&name!="Brunts incoming long wave Coefficients"
 					  &&name!="Satterlunds incoming long wave Coefficients"&&name!="Konzelmann incoming long wave Coefficients") {
-							  string mes="Table name not Identified and input file not fully read";
+							  std::string mes="Table name not Identified and input file not fully read";
 							  m_continueRead=false;
 
 							  mes+=name;
@@ -2905,8 +2905,8 @@ else {
 		wSize_t(&iv);
 		type="Tables";
 		wString(&type);
-    string group_psw;
-    string name_psw;
+    std::string group_psw;
+    std::string name_psw;
 	for(size_t i=0;i<iv;i++) {
 			pTab=(Tab*)m_Tab_Array[i];
             group_psw = pTab->GetGroup();
@@ -2962,9 +2962,9 @@ bool NewMap::Info_Files(bool reading)
 					pSw->SetIntValue(1);
 					//pSw->Apply();			
 				}
-				else if (name.find("ValidationFile_") != string::npos)
+				else if (name.find("ValidationFile_") != std::string::npos)
 					;
-				else if (name.find("Validation File") != string::npos) {
+				else if (name.find("Validation File") != std::string::npos) {
 					auto ipos = name.find("File");
 					string end = name.substr(ipos + 4);
 					if(end.size()==1)
@@ -3031,9 +3031,9 @@ bool NewMap::Info_Files(bool reading)
 		type="Files";
 		wSize_t(&iv);
 		wString(&type);
-        string group_psw;
-        string name_psw;
-        string strval_psw;
+        std::string group_psw;
+        std::string name_psw;
+        std::string strval_psw;
         
 		for(size_t i=0; i<iv;i++) {
 			pF=m_F_Array[i];
@@ -3152,7 +3152,7 @@ bool NewMap::Info_Outputs(bool reading)
 					}
 
 					SIMB out;
-					size_t storeflag{ string::npos };
+					size_t storeflag{ std::string::npos };
 					if(pVector!=nullptr) {
 						if(m_FileVersionNumberRead<60) {
 							pVector->SetFlags(FlagString.c_str(),1);
@@ -3340,7 +3340,7 @@ bool NewMap::Info_Outputs(bool reading)
 						wString(&name);
 						//iv=1;
 						//wInt(&iv);
-						lin=string::npos;
+						lin= std::string::npos;
 						wSize_t(&lin);
 						float fvalue;
 						fvalue=pSingle->GetInitial();wFloat(&fvalue);
@@ -3349,7 +3349,7 @@ bool NewMap::Info_Outputs(bool reading)
 						fvalue=pSingle->GetMax();wFloat(&fvalue);
 						fvalue=pSingle->GetMean();wFloat(&fvalue);
 						fvalue=pSingle->GetAccumulated();wFloat(&fvalue);
-						ivalue=string::npos;wSize_t(&ivalue);
+						ivalue= std::string::npos;wSize_t(&ivalue);
 						//ivalue=pSingle->GetPgSingleFileIndex();wInt(&ivalue);
 						//ivalue=pSingle->GetPgMultiFileIndex();wInt(&ivalue);
 						ivalue=pSingle->GetStoreFlag();wSize_t(&ivalue);
@@ -3502,7 +3502,7 @@ bool NewMap::Info_Validation(bool reading)
 	else {
 		iv=m_Val_Array.size();
 		if(iv>0)
-		if (MR_GetValidIndex_IndexInValFile_InDim1() != string::npos) {
+		if (MR_GetValidIndex_IndexInValFile_InDim1() != std::string::npos) {
 			auto NumberofDim1 = m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			if(NumberofDim1>0 && (iv/NumberofDim1 > 1)) 	iv =  iv/NumberofDim1;
 		}
@@ -3774,12 +3774,12 @@ bool NewMap::Info_MultiRun(bool reading)
 					rString(&name);
 					if(group=="DataBase") {
 						   CDB *pDB;
-						   string strID, strIDKey;
+						   std::string strID, strIDKey;
 						   pDB=DB_GetPointer(name);
 						   valPAR.pBase=pDB;
 						   int iread;
 						   rInt(&iread);
-						   if(iread<0) valPAR.TabIndex = string::npos;
+						   if(iread<0) valPAR.TabIndex = std::string::npos;
 						   else valPAR.TabIndex = iread;
 						   rInt(&imethod);
 						   if(m_FileVersionNumberRead>43) {
@@ -3788,7 +3788,7 @@ bool NewMap::Info_MultiRun(bool reading)
 						   
 						   pDB->MR_Set_Method(MR_METHOD(imethod));
 						   for(size_t i3=0;i3<valMR.NumberOfRepeatitionsWithinDimension;i3++) {
-							   	   string strID, strIDKey;
+							   	   std::string strID, strIDKey;
 								   rString(&strID);
 								   rString(&strIDKey);
   								   pDB->MR_AddSelection(strID, strIDKey);
@@ -3825,7 +3825,7 @@ bool NewMap::Info_MultiRun(bool reading)
 							}
 							int iread;
 							rInt(&iread); 
-							if (iread < 0) valPAR.TabIndex = string::npos;
+							if (iread < 0) valPAR.TabIndex = std::string::npos;
 							else valPAR.TabIndex=size_t(iread);
 							
 							SimB *pPar;
@@ -3835,7 +3835,7 @@ bool NewMap::Info_MultiRun(bool reading)
 							P* pkoll= dynamic_cast<P*>(pPar);
 						   valPAR.pBase=dynamic_cast<SimB*>(pPar);
 						   if(pPar==nullptr)  return false;
-							   if(valPAR.TabIndex==string::npos) valPAR.TabIndex=0;
+							   if(valPAR.TabIndex== std::string::npos) valPAR.TabIndex=0;
 							   if(m_FileVersionNumberRead>43) {
 								   rInt(&imonitor);  // no use of imonitoring Sept 2008
 								   if(!pPar->Is_PTable())
@@ -3888,12 +3888,12 @@ bool NewMap::Info_MultiRun(bool reading)
 									}
 									if(imethod>6) {
 											rFloat(&fvalue);
-											if(valPAR.TabIndex==string::npos) 
+											if(valPAR.TabIndex== std::string::npos) 
 												((Ps*)pPar)->MR_Set_Min(fvalue);
 											else
 												((P*)pPar)->MR_Set_Min(valPAR.TabIndex, fvalue);
 											rFloat(&fvalue);
-											if(valPAR.TabIndex==string::npos) 
+											if(valPAR.TabIndex== std::string::npos) 
 												((Ps*)pPar)->MR_Set_Max(fvalue);
 											else
 												((P*)pPar)->MR_Set_Max(valPAR.TabIndex, fvalue);
@@ -3901,19 +3901,19 @@ bool NewMap::Info_MultiRun(bool reading)
 								}
 							   else {
 										rFloat(&fvalue);
-										if(valPAR.TabIndex==string::npos) 
+										if(valPAR.TabIndex== std::string::npos) 
 											((Ps*)pPar)->MR_Set_Min(fvalue);
 										else
 											((P*)pPar)->MR_Set_Min(valPAR.TabIndex, fvalue);
 										rFloat(&fvalue);
-										if(valPAR.TabIndex==string::npos) 
+										if(valPAR.TabIndex== std::string::npos) 
 											((Ps*)pPar)->MR_Set_Max(fvalue);
 										else
 											((P*)pPar)->MR_Set_Max(valPAR.TabIndex, fvalue);
 										if(m_FileVersionNumberRead>30) {
 											rFloat(&fvalue);
 											double dvalue=fvalue;
-											if(valPAR.TabIndex==string::npos) 
+											if(valPAR.TabIndex== std::string::npos) 
 												((Ps*)pPar)->MR_Set_Start(dvalue);
 											else
 												((P*)pPar)->MR_Set_Start(valPAR.TabIndex, dvalue);
@@ -3922,7 +3922,7 @@ bool NewMap::Info_MultiRun(bool reading)
 								 }
 								 size_t idim;
 								 rSize_t(&idim);
-								 if(valPAR.TabIndex==string::npos) 
+								 if(valPAR.TabIndex== std::string::npos) 
 									((Ps*)pPar)->MR_Set_Dim(idim);
 								 else
 									((P*)pPar)->MR_Set_Dim(valPAR.TabIndex, idim);
@@ -3939,7 +3939,7 @@ bool NewMap::Info_MultiRun(bool reading)
 						   int iread;
 							rInt(&iread);
 							if (iread < 0)
-								valPAR.TabIndex = string::npos;
+								valPAR.TabIndex = std::string::npos;
 							else
 								valPAR.TabIndex = iread;
 							rInt(&imethod);
@@ -4102,8 +4102,8 @@ bool NewMap::Info_MultiRun(bool reading)
 				wSize_t(&valMR.nCount);
 				numpar=MR_Get_NumberOfParametersWithinDim(i+1);
 				wSize_t(&numpar);
-                string group_psw;
-                string name_psw;
+                std::string group_psw;
+                std::string name_psw;
 				for(size_t ii=0; ii<numpar;ii++) {
 
 					valPAR.pBase = MR_Get_pPar(i + 1, ii + 1);
@@ -4131,8 +4131,8 @@ bool NewMap::Info_MultiRun(bool reading)
 					}
 					else if(imethod==5) {
 						CDB* pCP=(CDB*)MR_Get_pPar(i+1,ii+1);
-                        string selection_pcp;
-                        string keyselection_pcp;
+                        std::string selection_pcp;
+                        std::string keyselection_pcp;
 						for(size_t iii=0;iii<MR_GetNumberOfRepeationsForThisDimension(i);iii++){
                             selection_pcp = pCP->MR_GetSelection(iii);
                             keyselection_pcp = pCP->MR_GetKeySelection(iii);
@@ -4154,8 +4154,8 @@ bool NewMap::Info_MultiRun(bool reading)
 							ind_dep=((P*)pCP)->Get_MR_ParDependenceIndex(indpar);
 						}
 						if (pParDep != nullptr) {
-                            string group_psw = pParDep->GetGroup();
-                            string name_psw = pParDep->GetName();
+                            std::string group_psw = pParDep->GetGroup();
+                            std::string name_psw = pParDep->GetName();
 							wString(&group_psw);
 							wString(&name_psw);
 							wSize_t(&ind_dep);
@@ -4284,8 +4284,8 @@ bool NewMap::Info_WithinRunOptions(bool reading)
 			auto TabIndex=ch.TabIndex;
 			if(ch.Type==0) {
 				pPar=(Ps*)ch.pBase;
-                string group_psw = pPar->GetGroup();
-                string name_psw = pPar->GetName();
+                std::string group_psw = pPar->GetGroup();
+                std::string name_psw = pPar->GetName();
 				wString(&group_psw);
 				wString(&name_psw);
 				wSize_t(&ch.NumDates);
@@ -4299,8 +4299,8 @@ bool NewMap::Info_WithinRunOptions(bool reading)
 			}
 			else if(ch.Type==1) {
 				P* pPar=(P*)ch.pBase;
-                string group_psw = pPar->GetGroup();
-                string name_psw = pPar->GetName();
+                std::string group_psw = pPar->GetGroup();
+                std::string name_psw = pPar->GetName();
 				wString(&group_psw);
 				wString(&name_psw);
 				wSize_t(&ch.NumDates);
@@ -4320,8 +4320,8 @@ bool NewMap::Info_WithinRunOptions(bool reading)
 				name=pDB->GetName();
 				wString(&name);
 				wSize_t(&ch.NumDates);
-                string chaparvalue;
-                string chaparkey;
+                std::string chaparvalue;
+                std::string chaparkey;
 				for(size_t ii=0; ii<ch.NumDates;ii++) {
 					unsigned int min=pDB->GetChaDate(ii);
 					wUint(&min);
@@ -4423,7 +4423,7 @@ bool NewMap::Info_FinalStateVariables(bool reading)
 		for(size_t i=0; i<vpp.size(); i++) {
 			pPtr=(SimB*)vpp[i];
 			name=pPtr->GetName();
-			if((name=="WaterStorage"||name=="SoilHeat"||name.find("Humus")!=string::npos||name.find("Litter") != string::npos)&&pPtr->Is_Vector() ) {
+			if((name=="WaterStorage"||name=="SoilHeat"||name.find("Humus")!= std::string::npos||name.find("Litter") != std::string::npos)&&pPtr->Is_Vector() ) {
 				iv++;
 				vp_final.push_back(pPtr);
 			}
@@ -4484,7 +4484,7 @@ bool NewMap::Info_Plottings(bool reading)
 		//m_PlotStorage.SetNumberSavedCharts(ncount);
 
 		rSize_t(&idoc);
-		if(idoc==string::npos||idoc>100) {
+		if(idoc== std::string::npos||idoc>100) {
 			ncount=0;
 			nCharts=0;
 			idoc=0;
@@ -5002,7 +5002,7 @@ vector<SIMB> NewMap::UpdateOutVector(vector<SimB*> vp_in,string GroupSet, bool o
 					pSingle=dynamic_cast<OutSingle*>(vp[j]);
 					if(pSingle!=nullptr) {
 						out.pBase=pSingle;
-						out.TabIndex = string::npos;
+						out.TabIndex = std::string::npos;
 						if(pSingle->IsNotOriginalValue()&&pSingle->IsEnabled()&&original)
 							  	vect.push_back(out);
 						else if(((( m_GroupEnabled[pSingle->GetGroupNo()]||original)&&pSingle->IsEnabled()))) {
@@ -5018,7 +5018,7 @@ vector<SIMB> NewMap::UpdateOutVector(vector<SimB*> vp_in,string GroupSet, bool o
 	}
 	return vect;
 }
-void NewMap::RemoveOriginalValues(string typ, string GroupSet, bool original, size_t ViewCategory_to_use) {
+void NewMap::RemoveOriginalValues(string typ, std::string GroupSet, bool original, size_t ViewCategory_to_use) {
 
 		vector<SimB*> vp;
 		vector<SimB*> vp_single;
@@ -5427,19 +5427,19 @@ bool NewMap::CreateMapSvFlexFile(size_t index) {
 	line.resize(n);
 	size_t ipos;
 	vector<string> header;
-	ipos = line.find(';'); if (ipos == string::npos) ipos = line.find(',');
+	ipos = line.find(';'); if (ipos == std::string::npos) ipos = line.find(',');
 	size_t count = 0;
 
 
-	while (ipos != string::npos) {
+	while (ipos != std::string::npos) {
 		string sub;
 		
 		sub = line.substr(0, ipos);
 		MapFlexId[index].insert(pair<string, size_t>(sub, count));
 		count++;
 		line = line.substr(ipos + 1);
-		ipos = line.find(';');	if (ipos == string::npos) ipos = line.find(',');
-		if (line.size() > 0 && ipos == string::npos) {
+		ipos = line.find(';');	if (ipos == std::string::npos) ipos = line.find(',');
+		if (line.size() > 0 && ipos == std::string::npos) {
 			size_t nn = line.size();
 			sub = line.substr(0, nn-1);
 			nn = sub.size();
@@ -5458,7 +5458,7 @@ bool NewMap::CreateMapSvFlexFile(size_t index) {
 		line.resize(k);
 		vector<float> values;
 
-		ipos = line.find(';'); if (ipos == string::npos) ipos = line.find(',');
+		ipos = line.find(';'); if (ipos == std::string::npos) ipos = line.find(',');
 		string sub;
 		sub = line.substr(0, ipos);
 		size_t value = FUtil::AtoInt(sub);
@@ -5466,27 +5466,27 @@ bool NewMap::CreateMapSvFlexFile(size_t index) {
 		values.push_back(fvalue);
 
 		line = line.substr(ipos + 1);
-		ipos = line.find(';');	if (ipos == string::npos) ipos = line.find(',');
-		while (ipos != string::npos) {
+		ipos = line.find(';');	if (ipos == std::string::npos) ipos = line.find(',');
+		while (ipos != std::string::npos) {
 			string sub;
 			sub = line.substr(0, ipos);
 			float value = FUtil::AtoFloat(sub);
 			values.push_back(value);
 			if (line[0] =='\n'&& ipos == 0) {
 				values.push_back(MISSING);
-				ipos = string::npos;
+				ipos = std::string::npos;
 			}
 			else {
 				line = line.substr(ipos + 1);
 		
-				ipos = line.find(';');	if (ipos == string::npos) ipos = line.find(',');
-				if (ipos == string::npos) {
+				ipos = line.find(';');	if (ipos == std::string::npos) ipos = line.find(',');
+				if (ipos == std::string::npos) {
 					float value = FUtil::AtoFloat(line);
 					values.push_back(value);
 				}
 			}
 		}
-		if (line.size() > 0 && ipos == string::npos) {
+		if (line.size() > 0 && ipos == std::string::npos) {
 			float value = FUtil::AtoFloat(line);
 			values.push_back(value);
 		}
@@ -5519,7 +5519,7 @@ void NewMap::Export_MBinToCSV(bool AcceptedOnly)
 	else fileexist = true;
 	if (!fileexist) return;
 	auto ipos=m_DocFile2.m_Multi_MBin_File.find(".MBin");
-	if (ipos != string::npos) {
+	if (ipos != std::string::npos) {
 		strbase = m_DocFile2.m_Multi_MBin_File.substr(0, ipos);
 		strbase += "_";
 	}
@@ -5784,7 +5784,7 @@ void NewMap::Export_MBinToCSV(bool AcceptedOnly)
 	
 };
 
-string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOut, string varname)
+string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOut, std::string varname)
 {
 	if (m_pSimDoc == nullptr) m_pSimDoc = this;
 #ifndef COUPSTD
@@ -5794,7 +5794,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 	else fileexist = true;
 	if (!fileexist) return "";
 	auto ipos = m_DocFile2.m_Multi_MBin_File.find(".MBin");
-	if (ipos != string::npos) {
+	if (ipos != std::string::npos) {
 		strbase = m_DocFile2.m_Multi_MBin_File.substr(0, ipos);
 	}
 	else
@@ -5803,7 +5803,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 	MFC_Util m;
 	m.SetPaneMessage("Extraction of data for an excel file started....");
 	vector<string> header, header2;
-	vector< vector<float>>	allvalues, clean_allvalues;
+	vector< std::vector<float>>	allvalues, clean_allvalues;
 	string sheetname;
 	xlnt::workbook wb;
 	wb.remove_sheet(wb.active_sheet());
@@ -5838,13 +5838,13 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 	size_t count=1;
 	if (FUtil::IsFileExisting(filein)) {
 		auto pos = filein.find(".xlsx");
-		if (pos != string::npos) {
+		if (pos != std::string::npos) {
 				fileout = filein.substr(0,pos) + "(" + FUtil::STD_ItoAscii(count) + ")"+".xlsx";
 		}
 		while (FUtil::IsFileExisting(fileout)) {
 			auto numpos1 = fileout.rfind("(");
 			auto numpos2 = fileout.rfind(")");
-			if (numpos1 != string::npos) {
+			if (numpos1 != std::string::npos) {
 				string txt;
 				txt = fileout.substr(numpos1+1, numpos2 - numpos1-1);
 				int newnum = FUtil::AtoInt(txt);
@@ -5858,7 +5858,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		fileout = filein;
 
 
-	auto FillInfoSheet = [&wb, &option](vector<string> headers, string fileout) {
+	auto FillInfoSheet = [&wb, &option](vector<string> headers, std::string fileout) {
 		xlnt::worksheet ws;
 
 		int startcol = 1; int startrow = 1;
@@ -6069,7 +6069,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 	FillCriteriaSheet();
 	vector<string> vert_header;
 
-	auto FillSheet = [&wb, &AddToExisting,&AddColNumbers,&vert_header](vector<string> header, vector< vector <float>> values, string sheetname, vector<string> header2, vector<string> header3) {
+	auto FillSheet = [&wb, &AddToExisting,&AddColNumbers,&vert_header](vector<string> header, std::vector< std::vector <float>> values, std::string sheetname, std::vector<string> header2, std::vector<string> header3) {
 		xlnt::worksheet ws;
 		int startcol = 1;
 
@@ -6528,7 +6528,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 				}
 				allvalues.resize(numout);
 				vector<vector<DistStat>> StatVectorEnsembleValues;
-				vector< vector<float>> allvalues2;
+				vector< std::vector<float>> allvalues2;
 				allvalues2.resize(numout);
 				StatVectorEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
 				vert_header.resize(numout);
@@ -6824,8 +6824,8 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 	auto GetFileName = [&](string DocName) {
 		string fileout;
 		auto ip = DocName.find(".Sim");
-		if (ip == string::npos) ip = DocName.find(".xml");
-		if (ip != string::npos) {
+		if (ip == std::string::npos) ip = DocName.find(".xml");
+		if (ip != std::string::npos) {
 			fileout = DocName.substr(0,ip);
 			if (AllItems) fileout += "_Extended";
 			fileout += ".xlsx";
@@ -7830,7 +7830,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 							case 2:
 								name = str1;
 								is_vector = false;
-								if (name.find("(") != string::npos && name.find(")") != string::npos) {
+								if (name.find("(") != std::string::npos && name.find(")") != std::string::npos) {
 									size_t len=name.find(")") - name.find("(") - 1;
 									strindex = name.substr(name.find("(")+1
 										, len);
@@ -7841,10 +7841,10 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 								break;
 							case 3:
 								storeflag = 0;
-								if (str1.find("X") != string::npos || str1.find("x") != string::npos) storeflag = 1;
+								if (str1.find("X") != std::string::npos || str1.find("x") != std::string::npos) storeflag = 1;
 								break;
 							case 4:
-								if (str1.find("X") != string::npos || str1.find("x") != string::npos) storeflag = 2;
+								if (str1.find("X") != std::string::npos || str1.find("x") != std::string::npos) storeflag = 2;
 								break;
 							}
 							cols++;

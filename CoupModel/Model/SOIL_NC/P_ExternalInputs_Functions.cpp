@@ -71,7 +71,7 @@ bool P_ExternalInputs_Functions::Def()
 		ps_vec.clear();
 
 
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		functorprop.pModelInfo = m_pModelInfo;
 
 		PLOT_PARAM plotpar;

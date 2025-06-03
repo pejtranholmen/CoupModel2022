@@ -11,7 +11,7 @@ private:
 	vector<double> a;
 };
 class CAlloLeaf_Linear {
-public: CAlloLeaf_Linear(vector<double> AlloLeaf1, vector<double> AlloLeaf2) :
+public: CAlloLeaf_Linear(vector<double> AlloLeaf1, std::vector<double> AlloLeaf2) :
 	a(AlloLeaf1), b(AlloLeaf2) {}
 		double operator() (size_t index, double Mass = 0) {
 			return max(0.01, a[index]+Mass*b[index]);
@@ -21,7 +21,7 @@ private:
 
 };
 class CAlloLeaf_Exp {
-public: CAlloLeaf_Exp(vector<double> AlloLeaf1, vector<double> AlloLeaf2, vector<double> AlloLeaf3) :
+public: CAlloLeaf_Exp(vector<double> AlloLeaf1, std::vector<double> AlloLeaf2, std::vector<double> AlloLeaf3) :
 	a(AlloLeaf1), b(AlloLeaf2), c(AlloLeaf3) {}
 	double operator() (size_t index, double Mass = 0) {
 		return a[index]*exp( Mass*c[index]);

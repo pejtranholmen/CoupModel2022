@@ -100,7 +100,7 @@ bool SnowPack_Functions::Def()
     Define(pPs 			,"WaterRetention",.07,"-","SnowPack >= 1",0.001, 0.5, 0.02, 0.1);
 	ps_vec.clear();
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::PRECCORR;	functorprop.Arg = MyArgType::D1; funcname = "Precipitation Correction Function";
 
 	plotpar.Num_Of_Curves = 1;

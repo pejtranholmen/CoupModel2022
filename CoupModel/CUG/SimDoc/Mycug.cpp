@@ -1025,7 +1025,7 @@ void MyCug::OnSetup()
 		}
 		SetDefColWidth(130);
 		if(m_pDoc==nullptr) return;
-		if (m_pSimDoc->m_DocFile.m_SimulationRunNo==string::npos)  return;	
+		if (m_pSimDoc->m_DocFile.m_SimulationRunNo== std::string::npos)  return;	
 		if(m_pDoc->m_Doc.m_DocumentType>0) return;
 		if(m_pFrame==nullptr) m_pFrame=MySingle::instance().GetFramePointer();
 	//	if(!m_pDoc->m_Ready) return;
@@ -1134,7 +1134,7 @@ void MyCug::OnSheetSetup(int sheetNumber)
 	Tableexpand=FALSE;
 	EnableMenu(TRUE); 
 
-	if (m_pDoc == nullptr || m_pSimDoc->m_DocFile.m_SimulationRunNo == string::npos) return;
+	if (m_pDoc == nullptr || m_pSimDoc->m_DocFile.m_SimulationRunNo == std::string::npos) return;
 		UpdateStatusBar(sheetNumber);
 		if(m_pDoc->GetDocumentType()>0&&sheetNumber!=11) {
 			int num_sheets=GetNumberSheets();
@@ -3058,7 +3058,7 @@ int MyCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 			if(gr=="DataBase") {
 				((CDB*)pPar)->MR_Set_Dim(iDim);
 			}
-			else if(TabIndex==string::npos) {
+			else if(TabIndex== std::string::npos) {
 				((Ps*)pPar)->MR_Set_Dim(iDim);
 			}
 			else {
@@ -3104,7 +3104,7 @@ int MyCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 			int imethod=GetMultiMethod(m_After);
 
 			auto TabIndex=m_pSimDoc->MR_GetTabIndex(idim,ip);
-			if(TabIndex==string::npos) {
+			if(TabIndex== std::string::npos) {
 				if((imethod==1||imethod==3)&&((Ps*)pPar)->MR_Get_Min()<=0) {
 						UpdateStatusBar("Not possible to have zero or negative values for log distibutions, set new min or method !");
 				}
@@ -3148,7 +3148,7 @@ int MyCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 						else
 							pDepPar=nullptr;
 						DepIndex=m_pSimDoc->MR_GetTabIndex(ix+1,iix+1); 
-						if(TabIndex==string::npos)
+						if(TabIndex== std::string::npos)
 							if(DepIndex>=0)
 								((Ps*)pPar)->Set_MR_ParDependence((Ps*)pDepPar, DepIndex);
 							else
@@ -3525,7 +3525,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 						m_pSimDoc->RunOpt.longMinPostEnd = PGUtil::MinutConv(DatumString, daily, hourly);
 						m_pSimDoc->m_DocFile.ipostdays = max(0, m_pSimDoc->RunOpt.longMinPostEnd - m_pSimDoc->RunOpt.longMinEnd) / 1440;
 
-						//m_pSimDoc->History_Add(13, string(str));
+						//m_pSimDoc->History_Add(13, std::string(str));
 
 						break;
 					case(105):
@@ -4116,7 +4116,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 						else
 							((P*)pPar)->MR_Set_Start(TabIndex,fvalue);
 
-						if(TabIndex==string::npos) {
+						if(TabIndex== std::string::npos) {
 							((Ps*)pPar)->MR_Set_Start(fvalue);
 						}
 						else {
@@ -4653,7 +4653,7 @@ else if(section==UG_TOPHEADING) {
 //	Return:
 //		Context help ID to be shown in the help.
 
-void MyCug::OnGetHelp(string Name, string Group, int Type) 
+void MyCug::OnGetHelp(string Name, std::string Group, int Type) 
 {
 	CWinApp* pApp = AfxGetApp();
 
@@ -4701,7 +4701,7 @@ DWORD MyCug::OnGetContextHelpID( int col, long row, int section )
 		else {
 			txt=QuickGetStdText(0,row);
 		}
-		while(txt.find(' ')!=string::npos)
+		while(txt.find(' ')!= std::string::npos)
 			txt.erase(txt.begin()+txt.find(' '));
 		if(txt=="Plant")
 			txt="DescriptionofPlant";
@@ -4736,7 +4736,7 @@ DWORD MyCug::OnGetContextHelpID( int col, long row, int section )
 		else {
 			txt=QuickGetStdText(0,row);
 		}
-		while(txt.find(' ')!=string::npos)
+		while(txt.find(' ')!= std::string::npos)
 			txt.erase(txt.begin()+txt.find(' '));
 		if(txt=="Plant")
 			txt="DescriptionofPlant";
@@ -4769,7 +4769,7 @@ DWORD MyCug::OnGetContextHelpID( int col, long row, int section )
 		else {
 			txt=QuickGetStdText(0,row);
 		}
-		while(txt.find(' ')!=string::npos)
+		while(txt.find(' ')!= std::string::npos)
 			txt.erase(txt.begin()+txt.find(' '));
 		if(txt=="Plant")
 			txt="DescriptionofPlant";
@@ -4802,7 +4802,7 @@ DWORD MyCug::OnGetContextHelpID( int col, long row, int section )
 		else {
 			txt=QuickGetStdText(0,row);
 		}
-		while(txt.find(' ')!=string::npos)
+		while(txt.find(' ')!= std::string::npos)
 			txt.erase(txt.begin()+txt.find(' '));
 
 	}
@@ -4814,7 +4814,7 @@ DWORD MyCug::OnGetContextHelpID( int col, long row, int section )
 		else {
 			txt=QuickGetStdText(1,row);
 		}
-		while(txt.find(' ')!=string::npos)
+		while(txt.find(' ')!= std::string::npos)
 			txt.erase(txt.begin()+txt.find(' '));
 
 		int pos1,pos2;
@@ -6102,7 +6102,7 @@ int MyCug::GetMultiDimensionIndex(string str)
 	return index+1;
 
 }
-int MyCug::GetOptionIndex(string optionlist, string str)
+int MyCug::GetOptionIndex(string optionlist, std::string str)
 {
 	int ipos_end, index;
 	ipos_end=optionlist.find(str);	
@@ -6128,7 +6128,7 @@ int MyCug::GetMultiDependenceIndex(string str)
 								icounto++;
 								string name;
 								name=m_pSimDoc->MR_GetParName(ix+1,iix+1).c_str();
-								if(m_pSimDoc->MR_GetTabIndex(ix+1,iix+1)!=string::npos) {
+								if(m_pSimDoc->MR_GetTabIndex(ix+1,iix+1)!= std::string::npos) {
 									name+="("+FUtil::STD_ItoAscii(m_pSimDoc->MR_GetTabIndex(ix+1,iix+1)+1)+")";
 								}
 
@@ -6297,7 +6297,7 @@ void MyCug::UpdateStatusBar(CString text)
 void MyCug::UpdateStatusBar(SimB *nod, int itype) {
 	if (nod==nullptr) return;
 
-    string text;
+    std::string text;
 	string kalle, lotta;
 	double value;
 	float fvalue;
@@ -6333,13 +6333,13 @@ void MyCug::UpdateStatusBar(SimB *nod, int itype) {
 	  kalle=nod->GetName().c_str();
 	  m_pFrame->UpdatePaneText(6,kalle);
 	  j=kalle.find(" ");
-	  while (j!=string::npos) {
+	  while (j!= std::string::npos) {
 		lotta+=kalle.substr(0,j);
 	    kalle=kalle.substr(j+1);
 		j=kalle.find(" ");
 	  }
 	  lotta+=kalle;
-	  if(lotta.find(",")!=string::npos)
+	  if(lotta.find(",")!= std::string::npos)
 			lotta.replace(lotta.find(","),1,".");
 	  m_pSimDoc->m_HelpName=lotta;
 	  break;
@@ -6387,13 +6387,13 @@ void MyCug::UpdateStatusBar(SimB *nod, int itype) {
 	  m_pFrame->UpdatePaneText(5, text);
 	  kalle=nod->GetName().c_str();
 	  j=kalle.find(" ");
-	  while (j!=string::npos) {
+	  while (j!= std::string::npos) {
 		lotta+=kalle.substr(0,j);
 	    kalle=kalle.substr(j+1);
 		j=kalle.find(" ");
 	  }
 	  lotta+=kalle;
-	  if(lotta.find(",")!=string::npos)
+	  if(lotta.find(",")!= std::string::npos)
 		lotta.replace(lotta.find(","),1,".");
 	  m_pSimDoc->m_HelpName=lotta;
 
@@ -6403,13 +6403,13 @@ void MyCug::UpdateStatusBar(SimB *nod, int itype) {
 	  kalle=nod->GetName().c_str();
 	  lotta="";
 	  j=kalle.find(" ");
-	  while (j!=string::npos) {
+	  while (j!= std::string::npos) {
 		lotta+=kalle.substr(0,j);
 	    kalle=kalle.substr(j+1);
 		j=kalle.find(" ");
 	  }
 	  lotta+=kalle;
-	  if(lotta.find(",")!=string::npos)
+	  if(lotta.find(",")!= std::string::npos)
 		lotta.replace(lotta.find(","),1,".");
 	  m_pSimDoc->m_HelpName=lotta;
 
@@ -6801,7 +6801,7 @@ void MyCug::UpdateSelectedVal(int row, int indicator)
 
 
 }
-void MyCug::UpdateSelected(SimB* pBase, string type,string group, int localindex, P* pCPt, string SumTyp, bool SelectAll)
+void MyCug::UpdateSelected(SimB* pBase, std::string type,string group, int localindex, P* pCPt, std::string SumTyp, bool SelectAll)
 {
 	m_pSel=pBase;
 	m_SelType=type;
@@ -7027,7 +7027,7 @@ void MyCug::CreateNewDocFromCurrentDoc(bool ChildDocument, bool KeepParentDoc)
 					if (m_pSimDoc->m_xmlFileToUse) {
 						filetype = ".xml";
 						ipos_sim = pzPathName.find(".xml");
-						if(ipos_sim==string::npos) ipos_sim = pzPathName.find(".S");
+						if(ipos_sim== std::string::npos) ipos_sim = pzPathName.find(".S");
 					}
 					if(iposext>0)
 						newPathName=pzPathName.substr(0,iposext+1)+Num+filetype;
@@ -7040,8 +7040,8 @@ void MyCug::CreateNewDocFromCurrentDoc(bool ChildDocument, bool KeepParentDoc)
 
 					string saveMBinFileName = m_pSimDoc->m_DocFile2.m_Multi_MBin_File;
 					ipos_sim = newPathName.rfind(".Sim");
-					if(ipos_sim==string::npos) ipos_sim = pzPathName.rfind(".xml");
-					if (ipos_sim != string::npos)
+					if(ipos_sim== std::string::npos) ipos_sim = pzPathName.rfind(".xml");
+					if (ipos_sim != std::string::npos)
 						m_pSimDoc->m_DocFile2.m_Multi_MBin_File = newPathName.substr(0, ipos_sim) + ".MBin";
 					m_pDoc->SetModifiedFlag(FALSE);
 					if(p_ModelInfo->IsMultiRunning()) 

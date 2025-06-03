@@ -59,7 +59,7 @@ bool FunctionProperties::Init(string filename)
 		auto ich=str.find(linebreak);
 		size_t pos=0;
 		line=str.substr(pos,ich-pos);
-		while (ich!=string::npos) {
+		while (ich!= std::string::npos) {
 			
 			nrec++;
 			size_t idel;
@@ -77,15 +77,15 @@ bool FunctionProperties::Init(string filename)
 			while(idel!=std::string::npos) {
 				pos=idel+1;
 				idel=line.find(delimiters,pos);
-				if(idel!=string::npos&&idel>pos){
+				if(idel!= std::string::npos&&idel>pos){
 					prop.Y_Label=line.substr(pos, idel-pos);
 				}
 			}
 			pos=ich+1;
 			ich=str.find(linebreak, pos);
 			if(pos>str.size()) {
-				idel=string::npos;
-				ich=string::npos;
+				idel= std::string::npos;
+				ich= std::string::npos;
 				end=true;
 			}
 			else {
@@ -94,13 +94,13 @@ bool FunctionProperties::Init(string filename)
 				var=line.substr(0,idel);
 			}
 			// About parameters linked to the function without Index			
-			while(idel!=string::npos&&idel!=line.size()) {
+			while(idel!= std::string::npos&&idel!=line.size()) {
 				size_t pos=idel+1;
 				idel=line.find(delimiters,pos);
-				if(idel==string::npos&&line.size()>pos) 
+				if(idel== std::string::npos&&line.size()>pos) 
 					idel=line.size();
 
-				if(idel!=string::npos&&idel>pos){
+				if(idel!= std::string::npos&&idel>pos){
 					prop_par.Ps_Names.push_back(line.substr(pos, idel-pos));
 				}
 			}
@@ -115,9 +115,9 @@ bool FunctionProperties::Init(string filename)
 				while(idel!=std::string::npos&&idel!=line.size()) {
 					size_t pos=idel+1;
 					idel=line.find(delimiters,pos);
-					if(idel==string::npos&&line.size()>pos) 
+					if(idel== std::string::npos&&line.size()>pos) 
 						idel=line.size();
-					if(idel!=string::npos&&idel>pos){
+					if(idel!= std::string::npos&&idel>pos){
 						prop_par.P_Names.push_back(line.substr(pos, idel-pos));
 					}
 				}
@@ -140,7 +140,7 @@ bool FunctionProperties::Init(string filename)
 					size_t pos=idel+1;
 					idel=line.find(delimiters,pos);
 					nvar++;
-					if(idel!=string::npos&&idel>pos){
+					if(idel!= std::string::npos&&idel>pos){
 						var=line.substr(pos,idel-pos);
 						switch (nvar) {
 							case 1:	prop.Num_Of_Points=FUtil::AtoInt(var);break;
@@ -169,7 +169,7 @@ bool FunctionProperties::Init(string filename)
 					size_t pos=idel+1;
 					idel=line.find(delimiters,pos);
 					nvar++;
-					if(idel!=string::npos&&idel>pos){
+					if(idel!= std::string::npos&&idel>pos){
 						var=line.substr(pos,idel-pos);
 						switch(nvar) {
 						case 1: prop.X_Label+="(";prop.X_Label+=var;prop.X_Label+=")";break;
@@ -191,7 +191,7 @@ bool FunctionProperties::Init(string filename)
 				line=str.substr(pos, ich-pos);
 				idel=line.find(delimiters);
 
-				for(size_t i=0; i<prop.Num_Of_Curves&&idel!=string::npos; i++) {
+				for(size_t i=0; i<prop.Num_Of_Curves&&idel!= std::string::npos; i++) {
 
 					
 						nvar=0;
@@ -203,7 +203,7 @@ bool FunctionProperties::Init(string filename)
 								lpos=0;
 							idel=line.find(delimiters,lpos);
 							nvar++;
-							if(idel!=string::npos&&idel>lpos){
+							if(idel!= std::string::npos&&idel>lpos){
 								var=line.substr(lpos,idel-lpos);
 								switch(nvar) {
 									case 1: prop.LegendsVec.push_back(var);break;
@@ -218,15 +218,15 @@ bool FunctionProperties::Init(string filename)
 
 						pos=ich+1; // XAxis Line
 						ich=str.find(linebreak, pos);
-						if(ich==string::npos&&pos<pos2) ich=pos2;
+						if(ich== std::string::npos&&pos<pos2) ich=pos2;
 						pos++;
-						if(ich>=pos&&ich!=string::npos) {
+						if(ich>=pos&&ich!= std::string::npos) {
 							line=str.substr(pos, ich-pos);
 							idel=line.find(delimiters);
 						}
 						else {
 							line="";
-							idel=string::npos;
+							idel= std::string::npos;
 						}
 
 				}
@@ -248,7 +248,7 @@ bool FunctionProperties::Init(string filename)
 	return true;
 }
 
-bool FunctionProperties::SetParamDep(vector<Ps*> PsVector, vector<P*> PVector, size_t index)
+bool FunctionProperties::SetParamDep(vector<Ps*> PsVector, std::vector<P*> PVector, size_t index)
 {
 	PLOT_PARAM_DEP p;
 	for (size_t i = 0; i < PsVector.size(); i++) {

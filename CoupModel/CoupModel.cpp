@@ -124,8 +124,8 @@ CCoupModelApp::CCoupModelApp()
 	System::Windows::Forms::Application::SetUnhandledExceptionMode(System::Windows::Forms::UnhandledExceptionMode::ThrowException);
 #endif
 
-	// TODO: replace application ID string below with unique ID string; recommended
-	// format for string is CompanyName.ProductName.SubProduct.VersionInformation
+	// TODO: replace application ID std::string below with unique ID std::string; recommended
+	// format for std::string is CompanyName.ProductName.SubProduct.VersionInformation
 	//SetAppID(_T("PEJ.CoupModel.Sim.5.4.4.0"));
 
 	// TODO: add construction code here,
@@ -239,7 +239,7 @@ BOOL CCoupModelApp::InitInstance()
 	// of your final executable, you should remove from the following
 	// the specific initialization routines you do not need
 	// Change the registry key under which our settings are stored
-	// TODO: You should modify this string to be something appropriate
+	// TODO: You should modify this std::string to be something appropriate
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
     LoadStdProfileSettings(10);  // Load standard INI file options (including MRU)
@@ -353,11 +353,11 @@ BOOL CCoupModelApp::InitInstance()
 	}
 	else
 	{
-	// Read command line input to string
+	// Read command line input to std::string
 		strCmdLine = m_lpCmdLine;
 		CString strDocPath;
 
-		// search for flags in Command line string
+		// search for flags in Command line std::string
 		if(strCmdLine.Find(_T("/"),0)>-1)
 		{
 			m_CommonModel.SetCommandLineMode(true);
@@ -487,7 +487,7 @@ void CCoupModelApp::OnAppExit()
 	for(size_t i=0;i<numpg;i++) {
 		CPG *pPG=MySingle::instance().GetPGFileArchivePointer()->GetPGFile(i);
 		filename=pPG->GetFileName();
-		if (filename.find(".") == string::npos) filename += ".Bin";
+		if (filename.find(".") == std::string::npos) filename += ".Bin";
 		pDoc = pArchive->GetSimDocPointer(i);
 		fileopen = "OpenFile" + FUtil::STD_ItoAscii(i + 1);
 		MFC_Util::WriteProfileString(fileopen, filename);

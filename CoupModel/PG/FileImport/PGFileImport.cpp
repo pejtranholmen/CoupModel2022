@@ -31,7 +31,7 @@ PGFileImport::PGFileImport(size_t NumFiles)
 	m_itimbase = m_minst_a;
 	m_ExtraFileScanning = false;
 	AddInfoLinkIndex.resize(5);
-	m_FilterTestColumn = string::npos;
+	m_FilterTestColumn = std::string::npos;
 	m_FilterToUseId = "";
 	m_ExpandedCurrentFile = false;
 
@@ -213,12 +213,12 @@ FILEINFO PGFileImport::ScanningInputFile(string filename){
 	out.MaxVar=0;
 	out.NumHeads=0;
 	out.FixedFormat=true;
-	out.TimeColumn = string::npos;
-	out.HourColumn = string::npos;
+	out.TimeColumn = std::string::npos;
+	out.HourColumn = std::string::npos;
 	out.TotRec=0;
 	out.RedNumVar=0;
 	out.SkipBeforeVar = 0;
-	out.SkipAfterVar = string::npos;
+	out.SkipAfterVar = std::string::npos;
 
 
 
@@ -239,7 +239,7 @@ FILEINFO PGFileImport::ScanningInputFile(string filename){
 			if (filename.find("smhi-opendata") == 0) {
 				out.IdentifiedFormat = SMHI_OPENDATA;
 			}
-			else if (filename.find("Perrenial") != string::npos) {
+			else if (filename.find("Perrenial") != std::string::npos) {
 				out.IdentifiedFormat = SITES;
 			}
 		}
@@ -254,13 +254,13 @@ FILEINFO PGFileImport::ScanningInputFile(string filename){
 //                m.SetPaneMessage(str);
 				return false;
 			}
-			if (m_filename.find("smhi-opendata") != string::npos) {
+			if (m_filename.find("smhi-opendata") != std::string::npos) {
 				out.IdentifiedFormat = SMHI_OPENDATA;
 			}
-			else if (m_filename.find("Perennial") != string::npos) {
+			else if (m_filename.find("Perennial") != std::string::npos) {
 				out.IdentifiedFormat = SITES;
 			}
-			else if (m_filename.find("open-meteo-") != string::npos) {
+			else if (m_filename.find("open-meteo-") != std::string::npos) {
 				out.IdentifiedFormat = OPEN_METEO;
 				m_format = OPEN_METEO;
 
@@ -349,7 +349,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 	char buf[40000];
 	pos2 = 0;
 	size_t SiteRecCount = 0;;
-	size_t SiteId_Index = string::npos;
+	size_t SiteId_Index = std::string::npos;
 	size_t CurrentSite;
 	string string_buf;
 	m_FilterCount.clear();
@@ -395,8 +395,8 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		vector<STEPS> steps;
 		size_t lowlim, highlim;
 		size_t initValue, initRecord;
-		size_t InitValueStep = string::npos;
-		size_t InitRecordStep = string::npos;
+		size_t InitValueStep = std::string::npos;
+		size_t InitRecordStep = std::string::npos;
 		for (auto it = TimeCheckMap.begin(); it != TimeCheckMap.end(); ++it) {
 			if (count == 0) {
 				initValue = (*it).first;
@@ -424,11 +424,11 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			count++;
 		}
-		b.RecordStep=b.ValueStep = string::npos;	
+		b.RecordStep=b.ValueStep = std::string::npos;	
 		if (b.CommonTimeStep) b.ValueStep = InitValueStep;
 		if (b.CommonRecStep) b.RecordStep = InitRecordStep;
 		
-		if (InitValueStep == string::npos)
+		if (InitValueStep == std::string::npos)
 			out.IdentifiedMinDiff = 1440;
 		else
 			out.IdentifiedMinDiff = InitValueStep;
@@ -458,7 +458,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 	};
 	auto FindAndSetDelimitter = [&](string headerline) {
 		m_ndelim = 0;
-		size_t n = string::npos;
+		size_t n = std::string::npos;
 		size_t Icount = 0;
 		auto IsHeaderlineValid = [&]() {
 			size_t numdig = 0;
@@ -477,21 +477,21 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			return false;
 		};
 
-		//if (!IsHeaderlineValid()) return string::npos;
-		while (n == string::npos&&Icount<4) {
+		//if (!IsHeaderlineValid()) return std::string::npos;
+		while (n == std::string::npos&&Icount<4) {
 			string dd = m_delimiters.substr(Icount, 1);
 			n = headerline.find(dd);
 			Icount++;
 		}
-		if (n != string::npos)
+		if (n != std::string::npos)
 			return Icount - 1;
 		else
-			return string::npos;
+			return std::string::npos;
 
 	};
 	auto CheckSizeOfValidLine = [&](string str) {
 		size_t ich = str.find(m_linebreak);
-		if (ich == string::npos && !Linebreaktest) {
+		if (ich == std::string::npos && !Linebreaktest) {
 			if (m_linebreak == "\r\n")
 				m_linebreak = "\n";
 			else if (m_linebreak == "\n")
@@ -508,7 +508,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		bool SoilSelect = false;
 		bool DateTimeIdentified = false;
 		m_ProFoundOption = 0;
-		out.HourColumn = out.TimeColumn = out.MinuteColumn = out.DayColumn = out.DayNumberColumn = out.MonthColumn = out.YearColumn = out.DateColumn = string::npos;
+		out.HourColumn = out.TimeColumn = out.MinuteColumn = out.DayColumn = out.DayNumberColumn = out.MonthColumn = out.YearColumn = out.DateColumn = std::string::npos;
 		if (m_format == STANDARD||(out.FirstValidHeads.size()==out.UnitsFromHead.size())) {
 			out.DateColumn = 1;
 			out.CopyMode = true;
@@ -577,7 +577,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				out.ValidVariables.push_back(false);
 		}
 
-		if (out.YearColumn = string::npos && out.MonthColumn != string::npos && out.DayColumn != string::npos) out.IdentifiedDateFormat = YMD;
+		if (out.YearColumn = std::string::npos && out.MonthColumn != std::string::npos && out.DayColumn != std::string::npos) out.IdentifiedDateFormat = YMD;
 		
 
 		
@@ -597,7 +597,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 	};
 	auto GetNextLine = [&](size_t breakpos) {
 		pair<string, size_t> out;
-		if (breakpos == string::npos) {
+		if (breakpos == std::string::npos) {
 			out.first = string_buf;		
 		}
 		else {
@@ -605,13 +605,13 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		}
 		nrec++;
 		out.second = nrec;
-		if (breakpos != string::npos)
+		if (breakpos != std::string::npos)
 			string_buf = string_buf.substr(breakpos + m_linebreak.size());
 		else
 			string_buf.clear();
 		return out;
 	};
-	auto CountVarsAndSetPos = [&](size_t breakpos, string &line) {
+	auto CountVarsAndSetPos = [&](size_t breakpos, std::string &line) {
 		line = line.substr(breakpos + 1);
 		size_t npos = line.find(m_delimiters.substr(m_ndelim, 1));
 		nvar++;
@@ -622,16 +622,16 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 	size_t Valid_Line = 0;
 	bool datestring = false;
-	auto CountHeads = [&out, &col_info_rec, &SiteId_Index, &SMHI_HeadLineNo, &SMHI_ParLineNo, &SMHI_TidPosStart, &SMHI_PeriodLineNo, &SMHI_StatLineNo, &UnitsHeaderFind, &Valid_Line](formats format, string varstr, size_t nrec, size_t nvar ) {
-		size_t numhead=string::npos;
+	auto CountHeads = [&out, &col_info_rec, &SiteId_Index, &SMHI_HeadLineNo, &SMHI_ParLineNo, &SMHI_TidPosStart, &SMHI_PeriodLineNo, &SMHI_StatLineNo, &UnitsHeaderFind, &Valid_Line](formats format, std::string varstr, size_t nrec, size_t nvar ) {
+		size_t numhead= std::string::npos;
 		//if (nrec < 5) numhead = nrec - 1;
 		enum class ReadVar { StatNamn, ParNamn, Period, DatumStart, No };
 		auto ReadStatus = ReadVar::No;
 		bool Heads_Set = false;
 		if (format == SITES) {
-			if (varstr.find("\"") != string::npos) varstr = varstr.substr(1, varstr.size() - 2);
+			if (varstr.find("\"") != std::string::npos) varstr = varstr.substr(1, varstr.size() - 2);
 			
-			if (numhead == string::npos) {
+			if (numhead == std::string::npos) {
 
 				if (varstr.find("LATITUDE:") == 0) {
 					out.dec_cord.y = FUtil::AtoFloat(varstr.substr(10));
@@ -642,7 +642,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 				}
 				else if (varstr.find("ALTITUDE:") == 0) {
-					if (varstr.find("m a.s.l.") != string::npos) {
+					if (varstr.find("m a.s.l.") != std::string::npos) {
 						varstr = varstr.substr(0, varstr.find("m a.s.l."));
 					}
 					out.dec_cord.z = FUtil::AtoFloat(varstr.substr(10));
@@ -675,12 +675,12 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 						size_t depth_pos = varstr.find("cm depth");
 						size_t depth_pos_start = varstr.find("@");
 						string depth = "";
-						if (depth_pos != string::npos) depth = varstr.substr(depth_pos_start + 1, depth_pos - depth_pos_start - 1);
+						if (depth_pos != std::string::npos) depth = varstr.substr(depth_pos_start + 1, depth_pos - depth_pos_start - 1);
 						FUtil::trim(depth);
 
 						string name = varstr.substr(0, start_namepos);
-						if (start_namepos == string::npos) {
-							if (start_unit_pos != string::npos)
+						if (start_namepos == std::string::npos) {
+							if (start_unit_pos != std::string::npos)
 								name = varstr.substr(0, start_unit_pos);
 							else
 								name = varstr;
@@ -688,13 +688,13 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 						}
 						else {
-							if (start_unit_pos != string::npos) name = varstr.substr(start_namepos + 2, start_unit_pos - start_namepos - 2);
+							if (start_unit_pos != std::string::npos) name = varstr.substr(start_namepos + 2, start_unit_pos - start_namepos - 2);
 						}
 						FUtil::trim(name);
 
 
 						string unit = "";
-						if (start_unit_pos != string::npos && end_unit_pos != string::npos) unit = varstr.substr(start_unit_pos + 1, end_unit_pos - start_unit_pos - 1);
+						if (start_unit_pos != std::string::npos && end_unit_pos != std::string::npos) unit = varstr.substr(start_unit_pos + 1, end_unit_pos - start_unit_pos - 1);
 						FUtil::trim(unit);
 						string id = "";
 						if (start_namepos < 15) id = varstr.substr(0, start_namepos);
@@ -709,10 +709,10 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 						size_t depth_pos = varstr.find("meters above ground");
 						size_t depth_pos_start = varstr.find("@");
 						string height = "";
-						if (depth_pos_start != string::npos) height = varstr.substr(depth_pos_start + 1, depth_pos - depth_pos_start - 1);
+						if (depth_pos_start != std::string::npos) height = varstr.substr(depth_pos_start + 1, depth_pos - depth_pos_start - 1);
 						FUtil::trim(height);
 						size_t trimp = height.find(".");
-						if (trimp != string::npos) {
+						if (trimp != std::string::npos) {
 							string add = height.substr(trimp + 1);
 							height = height.substr(0, trimp)+add;
 
@@ -723,7 +723,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					}
 				}
 			}
-			else if (nrec == 0) numhead = string::npos;
+			else if (nrec == 0) numhead = std::string::npos;
 			else if (nrec==4) {
 				out.IdFromHead.push_back(varstr);
 				return numhead;
@@ -732,14 +732,14 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			else if (nrec == 1) {
 				numhead = 4;
 				for (auto& c : varstr) c = toupper(c);
-				if (varstr == "TIMESTAMP" || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
+				if (varstr == "TIMESTAMP" || varstr.find("Date") != std::string::npos)	out.DateColumn = nvar;
 				out.FirstValidHeads.push_back(varstr);
 				return numhead;
 			}
 			else if (nrec == 2) {
 				if (nvar == 1) out.FirstValidHeads.clear();
 				for (auto& c : varstr) c = toupper(c);
-				if (varstr.find("TIMESTAMP")!=string::npos || varstr.find("Date") != string::npos)	out.DateColumn = nvar;
+				if (varstr.find("TIMESTAMP")!= std::string::npos || varstr.find("Date") != std::string::npos)	out.DateColumn = nvar;
 
 				out.FirstValidHeads.push_back(varstr);
 				return nrec;
@@ -778,8 +778,8 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 				out.DateColumn = nvar+2;
 				out.SkipBeforeVar = 2;
 				//m_CurrentFileInfo.DateColumn = out.DateColumn;
-				out.HourColumn = string::npos;
-				out.TimeColumn = string::npos;
+				out.HourColumn = std::string::npos;
+				out.TimeColumn = std::string::npos;
 				//m_CurrentFileInfo.IdentifiedDateFormat = YMD;
 				numhead = nrec;
 			}
@@ -865,26 +865,26 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			
 		}
 		else {
-			if (varstr.find("SITES STATION:") != string::npos) {
+			if (varstr.find("SITES STATION:") != std::string::npos) {
 				out.StatName = varstr.substr(15);
 				format = SITES;
-				numhead = string::npos;
+				numhead = std::string::npos;
 				return numhead;
 			}
-			else if (varstr.find("TITLE:") != string::npos && nrec==1) {
-				numhead = string::npos;
+			else if (varstr.find("TITLE:") != std::string::npos && nrec==1) {
+				numhead = std::string::npos;
 				return numhead;
 			}
 			if (nrec < 14 && varstr == "NaN") return numhead;
 			if (nrec >= 2&&nrec<14&&nvar==1) {
 				auto datestring=PGUtil::CheckForPossiblePGDateString(varstr);
-				if (datestring) return string::npos;
+				if (datestring) return std::string::npos;
 			}
 
-			if (nrec <= 9 && varstr.find("Variable") != string::npos||(format==STANDARD||format==PROFOUND)) {
+			if (nrec <= 9 && varstr.find("Variable") != std::string::npos||(format==STANDARD||format==PROFOUND)) {
 				numhead = min(9, nrec);
 				out.DateColumn = 1;
-				if (nrec == 1 && varstr.find("Variable Name")==string::npos&&varstr.size()>0) {
+				if (nrec == 1 && varstr.find("Variable Name")== std::string::npos&&varstr.size()>0) {
 					out.FirstValidHeads.push_back(varstr);
 					Heads_Set = true;
 					out.SkipBeforeVar = 0;
@@ -908,21 +908,21 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			else if (nrec < SMHI_HeadLineNo && format == SMHI_OPENDATA) {
 				numhead = nrec;
 				if (nrec >= 10 && varstr == "Datum") SMHI_HeadLineNo = nrec;
-				if (nrec >= 10 && varstr.find("Datum Tid") != string::npos) SMHI_HeadLineNo = nrec;
+				if (nrec >= 10 && varstr.find("Datum Tid") != std::string::npos) SMHI_HeadLineNo = nrec;
 
 				if (nrec != SMHI_HeadLineNo) out.FirstValidHeads.clear();
 
 			}
 			else if (nrec <= 14){
-				if ((varstr.find("Date") != string::npos || varstr.find("DATE") != string::npos || varstr.find("TIMESTAMP") != string::npos || varstr.find("TimeStamp") != string::npos)&&out.DateColumn==string::npos) {
+				if ((varstr.find("Date") != std::string::npos || varstr.find("DATE") != std::string::npos || varstr.find("TIMESTAMP") != std::string::npos || varstr.find("TimeStamp") != std::string::npos)&&out.DateColumn== std::string::npos) {
 					numhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
-				else if (((varstr.find("DATE") != string::npos || varstr.find("Date") != string::npos) || varstr.find("date") != string::npos)&&out.DateColumn==string::npos) {
+				else if (((varstr.find("DATE") != std::string::npos || varstr.find("Date") != std::string::npos) || varstr.find("date") != std::string::npos)&&out.DateColumn== std::string::npos) {
 					numhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
-				else if (((varstr.find("ISOD") == 0 || varstr.find("date") == 0 || varstr.find("DATUM") == 0))&& out.DateColumn == string::npos) {
+				else if (((varstr.find("ISOD") == 0 || varstr.find("date") == 0 || varstr.find("DATUM") == 0))&& out.DateColumn == std::string::npos) {
 					numhead = nrec;
 					out.DateColumn = out.FirstValidHeads.size() + 1;
 				}
@@ -1044,12 +1044,12 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					auto unitpos_end = varstr.find(")")+1;
 					auto pos_st = varstr.find("_");
 					auto pos_end = varstr.rfind("_");
-					auto temp_pos = varstr.find("temperature_"); if (temp_pos != string::npos) var = VarId::TEMP;
-					auto hum_pos = varstr.find("relative_humidity"); if (hum_pos != string::npos) var = VarId::REL;
-					auto prec_pos = varstr.find("precipitation"); if (prec_pos != string::npos) var = VarId::PREC;
-					auto wind_pos = varstr.find("wind_speed"); if (wind_pos != string::npos) var = VarId::WIND;
-					auto short_pos = varstr.find("shortwave_radiation"); if (short_pos != string::npos) var = VarId::SHORT;
-					auto snow_pos = varstr.find("snow_depth"); if (snow_pos != string::npos) var = VarId::SNOW;
+					auto temp_pos = varstr.find("temperature_"); if (temp_pos != std::string::npos) var = VarId::TEMP;
+					auto hum_pos = varstr.find("relative_humidity"); if (hum_pos != std::string::npos) var = VarId::REL;
+					auto prec_pos = varstr.find("precipitation"); if (prec_pos != std::string::npos) var = VarId::PREC;
+					auto wind_pos = varstr.find("wind_speed"); if (wind_pos != std::string::npos) var = VarId::WIND;
+					auto short_pos = varstr.find("shortwave_radiation"); if (short_pos != std::string::npos) var = VarId::SHORT;
+					auto snow_pos = varstr.find("snow_depth"); if (snow_pos != std::string::npos) var = VarId::SNOW;
 					switch (var) {
 						case VarId::TEMP:
 							out.Des.base.Name.push_back("Temperature");
@@ -1094,37 +1094,37 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
 		}
 		else if (nrec > nhead) return;
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Names:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Names:") != std::string::npos) {
 			DescriptionType = 0;
 		}
-		else if (nrec <= 10 && nvar == 1 && (varstr.find("Variable Unit") != string::npos|| varstr.find("dd")!=string::npos)) {
+		else if (nrec <= 10 && nvar == 1 && (varstr.find("Variable Unit") != std::string::npos|| varstr.find("dd")!= std::string::npos)) {
 			DescriptionType = 1;
-			if(varstr.find("dd") != string::npos&& out.Des.base.Unit.size()==0) 	out.Des.base.Unit.push_back(varstr);
+			if(varstr.find("dd") != std::string::npos&& out.Des.base.Unit.size()==0) 	out.Des.base.Unit.push_back(varstr);
 		}
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Id:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Id:") != std::string::npos) {
 			DescriptionType = 2;
 		}
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Pos:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Pos:") != std::string::npos) {
 			DescriptionType = 3;
 		}
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Station:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Station:") != std::string::npos) {
 			DescriptionType = 4;
 		}
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Country:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Country:") != std::string::npos) {
 			DescriptionType = 5;
 		}
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Alt:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Alt:") != std::string::npos) {
 			DescriptionType = 6;
 		}
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Lat:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Lat:") != std::string::npos) {
 			DescriptionType = 7;
 		}
-		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Long:") != string::npos) {
+		else if (nrec <= 10 && nvar == 1 && varstr.find("Variable Long:") != std::string::npos) {
 			DescriptionType = 8;
 		}
 		else if (nrec >= 1 && nrec<=9&&nrec == nhead ) {
 			DescriptionType = nrec - 1;
-			if ((varstr.find("Variable") == string::npos&&varstr.find("Date")==string::npos) && varstr.size()>0) {
+			if ((varstr.find("Variable") == std::string::npos&&varstr.find("Date")== std::string::npos) && varstr.size()>0) {
 				if (DescriptionType == 0) out.Des.base.Name.push_back(varstr);
 				else if (DescriptionType == 1) out.Des.base.Unit.push_back(varstr);
 				else if (DescriptionType == 2) out.Des.base.Id.push_back(varstr);
@@ -1215,7 +1215,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			link.Ids = CurrentSite;
 			out.LinkedSites.push_back(link);
 		}
-		else if (CurrentSite != string::npos) {
+		else if (CurrentSite != std::string::npos) {
 			if (CurrentSite == size_t(AtoInt(varstr))) {
 				SiteRecCount++;
 				out.LinkedSites.back().Records = SiteRecCount;
@@ -1296,7 +1296,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					out.IdentifiedDateFormat = YMD;
 					out.IdentifiedStartMin = PGUtil::MinutConv(PGUtil::DateConv(out.IdentifiedDateFormat, varstr));
 				}
-				else if (varstr.find('-') == string::npos) {
+				else if (varstr.find('-') == std::string::npos) {
 					out.IdentifiedDateFormat = PGMIN;
 					out.IdentifiedStartMin = AtoInt(varstr);
 					out.PG_MinColumn = 1;
@@ -1393,7 +1393,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			m_ndelim = FindAndSetDelimitter(headerline);
             
-			if (m_ndelim == string::npos&&m_format!=SILO) {
+			if (m_ndelim == std::string::npos&&m_format!=SILO) {
                 #ifndef COUPSTD
 				CWinApp* pApp = AfxGetApp();
 				pApp->BeginWaitCursor();
@@ -1406,7 +1406,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		}
 		else {
 			if (ich < out.MaxVar&&nrec>10000) {
-				ich = string::npos;
+				ich = std::string::npos;
 				string_buf.clear();
 				continue;
 			}
@@ -1425,7 +1425,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			npos = GetNextDelPos(line);
 
 			auto GetVarString = [&](size_t breakpos) {
-				if (breakpos != string::npos) return (line.substr(0, breakpos));
+				if (breakpos != std::string::npos) return (line.substr(0, breakpos));
 				else return line;
 			};
 			nvar = 1;
@@ -1434,20 +1434,20 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			while (line.size() > 0) {
 				varstr = GetVarString(npos);
 				if (nvar == 1 && nrec == 1) {
-					if (varstr.find("Variable Name")!=string::npos) m_format = STANDARD;
+					if (varstr.find("Variable Name")!= std::string::npos) m_format = STANDARD;
 
 				}
-				size_t num = string::npos;
+				size_t num = std::string::npos;
 				if(!FirstDataHit)	 num = CountHeads(m_format, varstr, nrec, nvar);
-				if (num < 10&&num!=string::npos&&!FirstDataHit) {
+				if (num < 10&&num!= std::string::npos&&!FirstDataHit) {
 					nhead = num;
 					SetDescription();
 				}
-				if (nrec > 1 && num == string::npos) {
+				if (nrec > 1 && num == std::string::npos) {
 					FirstDataHit = true;
 				}
 
-				if (m_format != IDSCAN&&nhead!=string::npos) {
+				if (m_format != IDSCAN&&nhead!= std::string::npos) {
 					if (nrec == nhead + 1&&!ValidTime) {
 						CheckAndSetDateFormats();
  					}
@@ -1459,7 +1459,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 					}
 				}
 
- 				if (npos != string::npos) {
+ 				if (npos != std::string::npos) {
 					npos = CountVarsAndSetPos(npos, line);
 				}
 				else {
@@ -1471,7 +1471,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 			}
 			
 
-			if (SiteId_Index != string::npos && nrec > 1) CountSitesAndSiteRecords();
+			if (SiteId_Index != std::string::npos && nrec > 1) CountSitesAndSiteRecords();
 
 
 			if (nrec % 100 == 0) {
@@ -1484,7 +1484,7 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 
  
 			ich = CheckSizeOfValidLine(string_buf);
-			if (ich != string::npos) {
+			if (ich != std::string::npos) {
 				NextLine = GetNextLine(ich);
 			}
 			else
@@ -1505,10 +1505,10 @@ FILEINFO PGFileImport::MakeScanning(FILEINFO out)
 		if (out.LinkedSites.size() == 0) {
 			LINKED_FILEINFO link;
 			link.TimeCheck = ResetTimeMap();
-			link.Ids = string::npos;
+			link.Ids = std::string::npos;
 			link.Records = link.TimeCheck.NumUniqueSteps;
 			link.RecordsSelected = link.Records;
-			if (link.TimeCheck.RecordStep == string::npos) {
+			if (link.TimeCheck.RecordStep == std::string::npos) {
 				link.TimeCheck.RecordStep = 1;
 				out.RedNumVar = 0;
 				if (out.ValidVariables.size() > 0) out.ValidVariables[0] = true;
@@ -1549,7 +1549,7 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 {
 
 	auto CheckFilterRecords = [&]() {
-		out.FilterColumnToUse = string::npos;
+		out.FilterColumnToUse = std::string::npos;
 		out.GlobalFilterItems.clear();
 		out.FilterItemToUse = "";
 		if (m_FilterMap.size() > 0) {
@@ -1566,8 +1566,8 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 	bool IsTimeIdentified = true;
 	auto CheckIdentifiedTime = [&]() {
 
-		if (out.DateColumn == string::npos&&out.HourColumn == string::npos&&out.TimeColumn == string::npos&&
-			out.DayColumn == string::npos&&out.YearColumn == string::npos) {
+		if (out.DateColumn == std::string::npos&&out.HourColumn == std::string::npos&&out.TimeColumn == std::string::npos&&
+			out.DayColumn == std::string::npos&&out.YearColumn == std::string::npos) {
 			out.IdentifiedStartMin = PGUtil::MinutConv("2010-01-01 12:00");
 			IsTimeIdentified = false;
 		}
@@ -1611,12 +1611,12 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 		else if (out.IdentifiedFormat == SITES) return;
 		if (IsTimeIdentified) {
 			out.IdentifiedFormat = STANDARD;
-			if (out.DateColumn != string::npos) out.IdentifiedFormat = STANDARD;
-			if (out.YearColumn != string::npos && out.MonthColumn != string::npos && out.DayColumn != string::npos && out.HourColumn != string::npos &&
-				out.MinuteColumn != string::npos) out.IdentifiedFormat = SEPARATED_YMDHM;
-			else if (out.YearColumn != string::npos && out.MonthColumn != string::npos && out.DayColumn != string::npos && out.HourColumn != string::npos)
+			if (out.DateColumn != std::string::npos) out.IdentifiedFormat = STANDARD;
+			if (out.YearColumn != std::string::npos && out.MonthColumn != std::string::npos && out.DayColumn != std::string::npos && out.HourColumn != std::string::npos &&
+				out.MinuteColumn != std::string::npos) out.IdentifiedFormat = SEPARATED_YMDHM;
+			else if (out.YearColumn != std::string::npos && out.MonthColumn != std::string::npos && out.DayColumn != std::string::npos && out.HourColumn != std::string::npos)
 				out.IdentifiedFormat = SEPARATED_YMDH;
-			else if (out.YearColumn != string::npos && out.MonthColumn != string::npos && out.DayColumn != string::npos) out.IdentifiedFormat = SEPARATED_YMD;
+			else if (out.YearColumn != std::string::npos && out.MonthColumn != std::string::npos && out.DayColumn != std::string::npos) out.IdentifiedFormat = SEPARATED_YMD;
 			
 		}
 		else
@@ -1628,7 +1628,7 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 	auto SetSizeOfDescriptions = [&]() {
 
 		size_t num = out.FirstValidHeads.size()*out.LinkedSites.back().TimeCheck.RecordStep;
-		if (out.LinkedSites.back().TimeCheck.RecordStep == string::npos) num = out.FirstValidHeads.size();
+		if (out.LinkedSites.back().TimeCheck.RecordStep == std::string::npos) num = out.FirstValidHeads.size();
 		out.Des.addinfo.resize(num);
 		for_each(out.Des.addinfo.begin(), out.Des.addinfo.end(), [](AddInfo& info) {
 			info.Unit = UNIT_TYPES::NO_UNIT; info.Element = GENERAL; } );
@@ -1882,7 +1882,7 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 	vector<float> varvalues;
 	varvalues.resize(33);
 
-	vector< vector< vector<float>> > AllVarValues;
+	vector< std::vector< std::vector<float>> > AllVarValues;
 	AllVarValues.resize(6100);
 	for (size_t i = 0; i < 60; i++) {
 		AllVarValues[i].resize(6100);
@@ -1902,7 +1902,7 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 
 
 	InitForSettingMinMaxMissingValues();
-	size_t ich = string::npos;
+	size_t ich = std::string::npos;
 	size_t CountLine = 0;
 	size_t failure = 0;
 	size_t success = 0;
@@ -1956,11 +1956,11 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 		size_t nvar = 0;
 		float value = MISSING;
 		size_t min = 0;
-		if (m_ndelim != string::npos&&CountLine>1) {
+		if (m_ndelim != std::string::npos&&CountLine>1) {
 			npos = line.find(m_delimiters.substr(m_ndelim, 1));
-			while (npos != string::npos ) {
+			while (npos != std::string::npos ) {
 
-				if (npos != string::npos)
+				if (npos != std::string::npos)
 					varstr = line.substr(0, npos);
 
 				else
@@ -1980,12 +1980,12 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 					value = FUtil::AtoFloat(varstr);
 					break;
 				case 5:
-					if (varstr.find("Ge") != string::npos) {
+					if (varstr.find("Ge") != std::string::npos) {
 						i_site = 0;
 						string numstr = varstr.substr(3,2);
 						i_site += FUtil::AtoInt(numstr);
 					}
-					else if (varstr.find("Go")!= string::npos) {
+					else if (varstr.find("Go")!= std::string::npos) {
 						i_site = 30;
 						string numstr = varstr.substr(3,2);
 						i_site += FUtil::AtoInt(numstr);
@@ -2002,7 +2002,7 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 					}
 					break;
 				case 8:
-					if (varstr.find("Soil")!=string::npos) i_var += 16;
+					if (varstr.find("Soil")!= std::string::npos) i_var += 16;
 					break;
 				}
 
@@ -2012,7 +2012,7 @@ vector<string> PGFileImport::CreatePGFileFromIButtonFiles()
 				npos = line.find(m_delimiters.substr(m_ndelim, 1));
 
 			}
-			if (i_var != string::npos&&i_record<6100&&i_site>0) {
+			if (i_var != std::string::npos&&i_record<6100&&i_site>0) {
 				varvalues[i_var - 1] = value;
 				AllVarValues[i_site - 1][i_record][i_var] = value;
 				success++;
@@ -2083,7 +2083,7 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 		vector<size_t> posv;
 	
 		size_t pos = str.find('_',0);
-		while (pos != string::npos) {
+		while (pos != std::string::npos) {
 			posv.push_back(pos);
 			pos = str.find('_', pos+1);
 		};
@@ -2093,17 +2093,17 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 				if(m_CurrentFileInfo.IdFromHead.size()>count)   to_Id = m_CurrentFileInfo.IdFromHead[count];
 
 			}
-			else if (str.rfind('_') != string::npos) {
+			else if (str.rfind('_') != std::string::npos) {
 				to_use = str.substr(str.rfind('_') + 1);
 				auto pos = to_use.find("??");
-				if (pos != string::npos) {
+				if (pos != std::string::npos) {
 					string ne;
 					ne= char(176);
 					to_use.replace(pos, 2,ne);
 
 				}
 				pos = to_use.find("m-2");
-				if (pos != string::npos) {
+				if (pos != std::string::npos) {
 					string ne;
 					ne = "/m";
 					ne += char(178);
@@ -2111,7 +2111,7 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 
 				}
 				pos = to_use.find("ms-1");
-				if (pos != string::npos) {
+				if (pos != std::string::npos) {
 					string ne;
 					ne = "m/s";
 					to_use.replace(pos, 4, ne);
@@ -2135,18 +2135,18 @@ void PGFileImport::ApplyHeaderLineAsNamesInPGFile(bool Units_Instead, bool Clean
 				to_Id = str.substr(posv[0], posv.back() - posv[0]);
 				size_t l;
 				l = to_Id.find('_');
-				while (l != string::npos) {
+				while (l != std::string::npos) {
 					to_Id.replace(l, 1, " ");
 					l = to_Id.find('_');
 				}
 				l = to_Id.find("cm");
-				if (l != string::npos&&l<6) {
+				if (l != std::string::npos&&l<6) {
 						to_pos = to_Id.substr(0, l);
 						FUtil::trim(to_pos);
 				}
 				to_use = str.substr(0, posv[0]);
 				l = to_use.find('_');
-				while (l != string::npos) {
+				while (l != std::string::npos) {
 					to_use.replace(l, 1, " ");
 					l = to_use.find('_');
 				}

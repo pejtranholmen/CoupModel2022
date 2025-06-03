@@ -19,7 +19,7 @@ Ps::Ps(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 		_Process="";
 
 }
-void Ps::Def(size_t ModuleNo, string name, double init, string unit, string conditions, 
+void Ps::Def(size_t ModuleNo, std::string name, double init, std::string unit, std::string conditions, 
 			double errormin, double errormax, double warningmin, double warningmax,
 			int recalc, int view)
 {

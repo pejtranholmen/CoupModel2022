@@ -305,7 +305,7 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
             std::string last = line.substr(start);
             tokens.push_back(last);
             if (isFloat) {
-                // Split vector
+                // Split std::vector
   
                 floats.resize(tokens.size());
                 for(size_t i = 0; i < tokens.size(); ++i) {
@@ -318,7 +318,7 @@ bool CWinAPIFileHandler::ReadTextLine(std::string &line, size_t &aftercol,std::v
 				}
             }
             else {
-                // Split vector
+                // Split std::vector
  
                 ints.resize(tokens.size());
                 for (size_t i = 0; i < tokens.size(); ++i) {
@@ -408,7 +408,7 @@ bool CWinAPIFileHandler::ReadTextLine(std::string& line, size_t& aftercol, std::
             std::string last = line.substr(start);
             if (last.size() > 0) tokens.push_back(last);
             if (isFloat) {
-                // Split vector
+                // Split std::vector
 
                 floats.resize(tokens.size());
                 for (size_t i = 0; i < tokens.size(); ++i) {
@@ -420,7 +420,7 @@ bool CWinAPIFileHandler::ReadTextLine(std::string& line, size_t& aftercol, std::
                 }
             }
             else {
-                // Split vector
+                // Split std::vector
 
                 sizets.resize(tokens.size());
                 for (size_t i = 0; i < tokens.size(); ++i) {

@@ -134,7 +134,7 @@ void CUGLstBox::OnLButtonUp(UINT nFlags, CPoint point)
 
 	ReleaseCapture();
 
-	//update the string in the current cell if the list box had a selected item
+	//update the std::string in the current cell if the list box had a selected item
 	if(GetCurSel() != LB_ERR)
 	{
 		Select();		
@@ -190,7 +190,7 @@ Return:
 void CUGLstBox::Select()
 {
 	CUGCell cell;
-	CString string;
+	CString std::string;
 	int col = *m_col; //m_ctrl->GetCurrentCol();
 	long row = *m_row; //m_ctrl->GetCurrentRow();
 
@@ -201,7 +201,7 @@ void CUGLstBox::Select()
 	m_ctrl->GetCellIndirect(col,row,&cell);
 	if ( cell.GetReadOnly() == FALSE )
 	{
-		//get the string selected
+		//get the std::string selected
 		GetText(GetCurSel(),string);
 
 		// send notification with index of the selected item

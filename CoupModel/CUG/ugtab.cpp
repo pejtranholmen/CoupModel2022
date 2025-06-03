@@ -63,16 +63,16 @@ END_MESSAGE_MAP()
 
 /***************************************************
 GetTabItemWidth
-	function is used to calculate width of a string as it will be displayed,
+	function is used to calculate width of a std::string as it will be displayed,
 	using default DC and current font.
 Params:
-	string		- the string to measure
+	string		- the std::string to measure
 Returns:
-	width in pixels of the string in questoin.
+	width in pixels of the std::string in questoin.
 *****************************************************/
-int CUGTab::GetTabItemWidth( CString string )
+int CUGTab::GetTabItemWidth( CString std::string )
 {
-	//get the string width
+	//get the std::string width
 	CDC* dc = GetDC();
 	
 	CFont * oldfont = dc->SelectObject(m_font);
@@ -94,13 +94,13 @@ Returns:
 	UG_SUCCESS	- tab was added successfuly
 	UG_ERROR	- tab could not be added
 *****************************************************/
-int CUGTab::AddTab( CString string, long ID )
+int CUGTab::AddTab( CString std::string, long ID )
 {
 	if ( m_tabCount < UTMAXTABS )
 	{
-		m_tabStrings[m_tabCount]	= string;
+		m_tabStrings[m_tabCount]	= std::string;
 		m_tabIDs[m_tabCount]		= ID;
-		m_tabWidths[m_tabCount]		= GetTabItemWidth( string );
+		m_tabWidths[m_tabCount]		= GetTabItemWidth( std::string );
 		m_tabTextColors[m_tabCount] = GetSysColor( COLOR_WINDOWTEXT );
 		m_tabBackColors[m_tabCount] = GetSysColor( COLOR_BTNFACE );
 		m_tabTextHColors[m_tabCount] = RGB(0,0,0);
@@ -127,7 +127,7 @@ Returns:
 	UG_SUCCESS	- tab was added successfuly
 	UG_ERROR	- tab could not be added
 *****************************************************/
-int CUGTab::InsertTab( int pos, CString string, long ID )
+int CUGTab::InsertTab( int pos, CString std::string, long ID )
 {
 	if ( pos < 0 || pos > m_tabCount )
 		return UG_ERROR;
@@ -151,9 +151,9 @@ int CUGTab::InsertTab( int pos, CString string, long ID )
 		if ( m_currentTab >= pos )
 			m_currentTab++;
 
-		m_tabStrings[pos]		= string;
+		m_tabStrings[pos]		= std::string;
 		m_tabIDs[pos]			= ID;
-		m_tabWidths[pos]		= GetTabItemWidth( string );
+		m_tabWidths[pos]		= GetTabItemWidth( std::string );
 		m_tabTextColors[pos]	= GetSysColor( COLOR_WINDOWTEXT );
 		m_tabBackColors[pos]	= GetSysColor( COLOR_BTNFACE );
 		m_tabTextHColors[pos]	= RGB(0,0,0);
@@ -299,7 +299,7 @@ int CUGTab::SetTabLabel( int nID, CString sLabel )
 /***************************************************
 GetTabLabel
 	The GetTabLabel function can be used to retrieve tab's
-	label string information based on the tab's ID
+	label std::string information based on the tab's ID
 Params:
 	nID		- ID of the tab to get information on
 	sLabel	- reference to a CString object that will receive the information
@@ -324,11 +324,11 @@ int CUGTab::GetTabLabel( int nID, CString &sLabel )
 
 /***************************************************
 GetTabLabel
-	function is used to retrieve label string of a tab.
+	function is used to retrieve label std::string of a tab.
 Params:
 	nIndex	- index of the tab
 Returns:
-	returns found label string.
+	returns found label std::string.
 *****************************************************/
 CString CUGTab::GetTabLabel( int nIndex )
 {

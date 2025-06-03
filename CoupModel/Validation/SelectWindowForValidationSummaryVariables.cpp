@@ -109,7 +109,7 @@ void SelectWindowForValidationSummaryVariables::MakeSimList()
 {
 	string Text;
 	auto koll = m_DependentVarTypeSelected;
-	if (m_VariableFromFile&&m_LinkFileVal!=string::npos) {
+	if (m_VariableFromFile&&m_LinkFileVal!= std::string::npos) {
 		m_LinkNameVariable.ResetContent();
 
 		for (auto it = m_pDoc->m_Doc.MapFlexId[m_LinkFileVal].begin(); it != m_pDoc->m_Doc.MapFlexId[m_LinkFileVal].end(); it++) {
@@ -138,7 +138,7 @@ void SelectWindowForValidationSummaryVariables::MakeSimList()
 			idc = id.c_str();
 			m_LinkFileNameBox.AddString(idc);
 		}
-		if (m_LinkFileVal != string::npos) {
+		if (m_LinkFileVal != std::string::npos) {
 			m_LinkFileNameBox.SetCurSel(m_LinkFileVal);
 			auto n = m_LinkFileNameBox.GetLBTextLen(m_LinkFileVal);
 			CString str1;
@@ -152,7 +152,7 @@ void SelectWindowForValidationSummaryVariables::MakeSimList()
 	for (size_t i = 0; i < m_pDoc->m_Doc.m_MultiRun_Array.size(); i++) {
 		for (size_t ii = 0; ii < m_pDoc->m_Doc.MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
 			string test = m_pDoc->m_Doc.MR_GetParName(i + 1, ii + 1);
-			if (m_pDoc->m_Doc.MR_GetTabIndex(i + 1, ii + 1) != string::npos) {
+			if (m_pDoc->m_Doc.MR_GetTabIndex(i + 1, ii + 1) != std::string::npos) {
 				test += "(";
 				test += FUtil::STD_ItoAscii(m_pDoc->m_Doc.MR_GetTabIndex(i + 1, ii + 1) + 1);
 				test += ")";
@@ -1071,7 +1071,7 @@ if (sheet1)
 			N_LocalIndex=-1;
 		}
 
-       m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected,Selectedtyp, m_TypeVal ,  string(NGroup), string(NParName), N_LocalIndex, OBS_v, REL_error,ABS_error);
+       m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected,Selectedtyp, m_TypeVal ,  std::string(NGroup), std::string(NParName), N_LocalIndex, OBS_v, REL_error,ABS_error);
 
 	   m_NumSelected++;
 	   m_NumberOfSelectedVariables=MFC_Util::ItoAscii(m_NumSelected);

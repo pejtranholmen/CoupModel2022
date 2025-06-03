@@ -63,10 +63,10 @@ string ModelFiles::GetOutputFileName(size_t ValidIndex, bool LastFile, bool Mult
 		string NewFolder = m_DocFileName;
 		size_t ipp = NewFolder.find("_Multi");
 		size_t ipe = NewFolder.rfind(".Sim");
-		if(ipe==string::npos) ipe = NewFolder.rfind(".xml");
+		if(ipe== std::string::npos) ipe = NewFolder.rfind(".xml");
 		size_t ll;
 		ll = 5;
-		if (ipe == string::npos && ipp == string::npos) {
+		if (ipe == std::string::npos && ipp == std::string::npos) {
 #ifndef COUPSTD
 			MFC_Util::MessageBox(NewFolder);
 #endif
@@ -94,7 +94,7 @@ string ModelFiles::GetOutputFileName(size_t ValidIndex, bool LastFile, bool Mult
 	bool OldNumInFile, NewNumInFile;
 	NewNumInFile=OldNumInFile = false;
 	size_t ipos_sim = test.find(".Sim");
-	if(ipos_sim==string::npos)	ipos_sim = test.find(".xml");
+	if(ipos_sim== std::string::npos)	ipos_sim = test.find(".xml");
 	size_t iposext = test.rfind("_");
 	if (ipos_sim - iposext == 4) {
 		numstr = test.substr(iposext+1, 3); OldNumInFile = true;
@@ -150,7 +150,7 @@ string ModelFiles::GetOutputFileName(size_t ValidIndex, bool LastFile, bool Mult
 
 
 	if (!NewFile&&!FUtil::IsFileExisting(filename)) {
-		while (filename.rfind("_0") != string::npos&&!FUtil::IsFileExisting(filename)) {
+		while (filename.rfind("_0") != std::string::npos&&!FUtil::IsFileExisting(filename)) {
 			filename.replace(filename.rfind("_0"), 2, "_", 1);
 		}
 	}

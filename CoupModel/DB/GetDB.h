@@ -9,7 +9,7 @@ public:
 	GetDB(void);
 	~GetDB(void);
 	bool Ini_DBBase();
-	string GetDBSimFileDate(string group, string key, bool modified);
+	string GetDBSimFileDate(string group, std::string key, bool modified);
 
 	bool ReadOpenHeaderFile(size_t index, bool add=false, bool newformat=false);
 	bool WriteHeaderFile(size_t index);

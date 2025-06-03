@@ -142,7 +142,7 @@ bool ParameterPlot::InitData(Doc *pDoc, SimB *pSimB, Tab *pTab, size_t index, si
 				m_Title+=p_PFCurve->m_ActProfile.Name.c_str();
 
 				string selected=m_pSimDoc->DB_GetChoice(DB_types(1));
-				if(selected.find(p_PFCurve->m_ActProfile.OldKey)==string::npos) {		
+				if(selected.find(p_PFCurve->m_ActProfile.OldKey)== std::string::npos) {		
 					m_PFMeasuredPoints=false;					
 					m_Title=m_Func->GetName().c_str();
 
@@ -235,7 +235,7 @@ bool ParameterPlot::OnInit()
 	 m_pUtil->m_MultiPGPlot = false;
 
 
-	 if (m_plotp.Num_Of_Curves == string::npos|| m_plotp.Num_Of_Curves >100) {
+	 if (m_plotp.Num_Of_Curves == std::string::npos|| m_plotp.Num_Of_Curves >100) {
 		 return false;
 
 

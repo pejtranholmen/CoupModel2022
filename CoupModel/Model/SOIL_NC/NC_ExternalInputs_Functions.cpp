@@ -98,7 +98,7 @@ bool NC_ExternalInputs_Functions::FunctionDef()
 	vector<P*> p_vec;
 	ps_vec.clear();
 	Func *pFunc;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 	PLOT_PARAM plotpar;

@@ -14,7 +14,7 @@ public:
 
 	void SetUnitMap(elements key, UNIT_TYPES typ) {
 		
-		m_StringMapUnits.insert(pair< size_t, string>(key, m.GetUnitString(typ)));
+		m_StringMapUnits.insert(pair< size_t, std::string>(key, m.GetUnitString(typ)));
 		m_Units.insert(pair< elements, UNIT_TYPES>(key, typ));
 	};
 
@@ -22,7 +22,7 @@ public:
 	vector<UNIT_TYPES> GetUnitOptions(enum elements);
 private:
 	Units m;
-	multimap<size_t, string> m_StringMapUnits;
+	multimap<size_t, std::string> m_StringMapUnits;
 	multimap<elements, UNIT_TYPES> m_Units;
 	void DefineUnitMap();
 

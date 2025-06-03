@@ -37,8 +37,8 @@ public:
 	
 	void SetVarPointer(float *pvar, size_t ist, size_t num);
 	void SetVarPointer_2Mix(float *pvar1, float* pvar2, size_t ist, size_t num);
-	void SetRecordPointerInterpolate(float *pvar, size_t ist, size_t num, float weight, const vector<float> &vfloat);
-	void SetRecordInterpolated(const vector<float>& vprior, size_t ist, float weight, const vector<float>& vfloat);
+	void SetRecordPointerInterpolate(float *pvar, size_t ist, size_t num, float weight, const std::vector<float> &vfloat);
+	void SetRecordInterpolated(const std::vector<float>& vprior, size_t ist, float weight, const std::vector<float>& vfloat);
 
 	void SetMissingValueRecordPointer(size_t ist, size_t num);
 
@@ -97,16 +97,16 @@ public:
 	float	GetVarMean(size_t, size_t repit=0);
 
 	bool    AdjustSize(size_t irecnumber, size_t varnumber, size_t repit=0);
-	void	SetDate(size_t, string);
+	void	SetDate(size_t, std::string);
 
 	bool	SetLongTime(size_t, size_t, bool WithinBuffer=false);
 	bool	SetRecordMissing(size_t);
 	void	SetVarValue(size_t varno, size_t recno, float v);
 
-	void	SetVarName(size_t, string, size_t repit=0);
-	void	SetVarUnit(size_t, string, size_t repit=0);
-	void	SetVarId(size_t, string, size_t repit=0);
-	void	SetVarPos(size_t, string, size_t repit=0);
+	void	SetVarName(size_t, std::string, size_t repit=0);
+	void	SetVarUnit(size_t, std::string, size_t repit=0);
+	void	SetVarId(size_t, std::string, size_t repit=0);
+	void	SetVarPos(size_t, std::string, size_t repit=0);
 	void	SetVarMin(size_t, float, size_t repit=0);
 	void	SetVarMax(size_t, float, size_t repit=0);
 
@@ -125,7 +125,7 @@ public:
 	bool	ReAllocate(size_t irec, size_t ivar, size_t repit=0);
 	bool    ReCalculateMinMax(size_t repit=0);
 		
-	float	GetVarValue(size_t varno) {return pg.Var.v[varno];}; // Return the value in Record 1
+	float	GetVarValue(size_t varno) noexcept {return pg.Var.v[varno];}; // Return the value in Record 1
 	float	GetVarValue(size_t varno, size_t recno, size_t repit_no=0);
 	bool	FilterTest(size_t varno, size_t var_rec, int requiredvalue);
 	float	GetVarValueRead(size_t varno, size_t recno);
@@ -134,13 +134,13 @@ public:
 	void	SetVarLat(size_t, double, size_t repit=0);
 	void	SetVarLong(size_t, double, size_t repit=0);
 	void	SetVarAlt(size_t, double, size_t repit=0);
-	void	SetVarCountry(size_t, string, size_t repit=0);
-	void	SetVarStation(size_t, string, size_t repit=0);
+	void	SetVarCountry(size_t, std::string, size_t repit=0);
+	void	SetVarStation(size_t, std::string, size_t repit=0);
 	void	SetVarMissing(size_t, size_t value, size_t repit=0);
 	void	SetVarSubstituted(size_t, size_t value, size_t repit=0);
 	void	SetEndPoints_ValidValue();
-	float	GetLastValid(size_t i) {return m_LastValid[i-1];};
-	float	GetFirstValid(size_t i) {return m_FirstValid[i-1];};
+	float	GetLastValid(size_t i) noexcept {return m_LastValid[i-1];};
+	float	GetFirstValid(size_t i) noexcept {return m_FirstValid[i-1];};
 
 
 	unsigned int GetLongTime(size_t, bool WithinBuffer=false);

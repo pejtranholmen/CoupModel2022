@@ -126,7 +126,7 @@ public:
 	FirstOrderRateResponse(double Eff, double Frac, double ComplementValue) : a(Eff), b(Frac) { factor =(ComplementValue- a) * b; };
 	FirstOrderRateResponse(double Frac, double RateCoef) :  b(Frac), c(RateCoef) { factor = b*c; };
 	FirstOrderRateResponse(double RateCoef) : c(RateCoef) { factor =c; };
-	FirstOrderRateResponse(vector<double> v1, vector<double> v2) : av(v1), bv(v2) {
+	FirstOrderRateResponse(vector<double> v1, std::vector<double> v2) : av(v1), bv(v2) {
 		for (size_t i = 0; i < av.size(); i++) {
 			factorv.push_back(av[i] * bv[i]);
 		}
@@ -146,12 +146,12 @@ public:
 };
 class OrganicWaterConcentration {
 public:
-	OrganicWaterConcentration(double DocSolFraction, vector<double> &ThicknessLayers) :Frac(DocSolFraction) {
+	OrganicWaterConcentration(double DocSolFraction, std::vector<double> &ThicknessLayers) :Frac(DocSolFraction) {
 		for (size_t i = 0; i < ThicknessLayers.size(); i++) {
 			CoefSum.push_back(Frac/ThicknessLayers[i]);// Frac=1 in default, by HH
 		};
 	};
-	vector<double> operator() (vector<double> &State, vector<double> &Theta, vector<double> Conc) {
+	vector<double> operator() (vector<double> &State, std::vector<double> &Theta, std::vector<double> Conc) {
 		for (size_t i = 0; i < State.size(); i++) {
 			Conc[i]=CoefSum[i] * State[i] / Theta[i];
 			if (State[i]<1.E-5 || Conc[i]>1.E3) Conc[i] = 1.E-7;
@@ -169,7 +169,7 @@ private:
 class VerticalSoluteWaterFlows {
 public:
 	VerticalSoluteWaterFlows(bool DeepPercolation) : DeepPercolation(DeepPercolation) {};
-	vector<double> operator() (vector<double> &WaterFlow, vector<double> &Conc, double DeepPercolationFlow, vector<double> &ItemFlow) {
+	vector<double> operator() (vector<double> &WaterFlow, std::vector<double> &Conc, double DeepPercolationFlow, std::vector<double> &ItemFlow) {
 		for (size_t i = 0; i < Conc.size(); i++) {
 			if (WaterFlow[i] > 0.)
 				ItemFlow[i] = WaterFlow[i] * Conc[i] / 1000.;
@@ -188,7 +188,7 @@ private:
 class HorisontalSoluteWaterFlows {
 public:
 	HorisontalSoluteWaterFlows() {};
-	pair<double,vector<double>> operator() (vector<double> DrainageFlow, vector<double> &Conc, vector<double> &ItemDrainage) {
+	pair<double,vector<double>> operator() (vector<double> DrainageFlow, std::vector<double> &Conc, std::vector<double> &ItemDrainage) {
 		auto cflux = 0.;
 		auto wflux = 0.;
 		for (size_t i = 0; i < Conc.size(); i++) {
@@ -197,23 +197,23 @@ public:
 			cflux += ItemDrainage[i];
 		}
 		if (wflux > 1.E-4)
-			return pair<double, vector<double>>(1000 * cflux / wflux, ItemDrainage);
+			return pair<double, std::vector<double>>(1000 * cflux / wflux, ItemDrainage);
 		else
-			return pair<double, vector<double>>(0.,ItemDrainage);
+			return pair<double, std::vector<double>>(0.,ItemDrainage);
 	}
 private:
 };
 class DissolvedTransformation {
 public:
 	DissolvedTransformation(vector<double> RateCoef, function<double(double)> f_Temp, function<double(size_t, double)> f_Theta) : RateCoef(RateCoef), f_Temp(f_Temp), f_Theta(f_Theta) {};
-	DissolvedTransformation(vector<double> RateCoef, vector<double> RateCoefDis, function<double(double)> f_Temp, function<double(size_t, double)> f_Theta) : RateCoef(RateCoef), RateCoefDis(RateCoefDis), f_Temp(f_Temp), f_Theta(f_Theta) {};
+	DissolvedTransformation(vector<double> RateCoef, std::vector<double> RateCoefDis, function<double(double)> f_Temp, function<double(size_t, double)> f_Theta) : RateCoef(RateCoef), RateCoefDis(RateCoefDis), f_Temp(f_Temp), f_Theta(f_Theta) {};
 
-		vector<double> operator() (size_t i_substrate,  vector<double> &Temp, vector<double> &Theta, vector<double> &State, vector<double> &TransformFlux) {
+		vector<double> operator() (size_t i_substrate,  std::vector<double> &Temp, std::vector<double> &Theta, std::vector<double> &State, std::vector<double> &TransformFlux) {
 			for (size_t i = 0; i < Theta.size(); i++) 
 				TransformFlux[i] =RateCoef[i_substrate]* f_Temp(Temp[i])*f_Theta(i, Theta[i])*State[i];
 			return TransformFlux;
 		};
-		vector<double> operator() (size_t i_substrate, vector<double> &Temp, vector<double> &Theta, vector<double> &StateOrg, vector<double> &StateDisOrg, vector<double> &TransformFlux) {
+		vector<double> operator() (size_t i_substrate, std::vector<double> &Temp, std::vector<double> &Theta, std::vector<double> &StateOrg, std::vector<double> &StateDisOrg, std::vector<double> &TransformFlux) {
 			for (size_t i = 0; i < Theta.size(); i++)
 				TransformFlux[i] = RateCoef[i_substrate] * f_Temp(Temp[i])*f_Theta(i, Theta[i])*StateOrg[i] -
 				RateCoefDis[i] * f_Temp(Temp[i])*f_Theta(i, Theta[i])*StateDisOrg[i];

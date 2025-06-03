@@ -449,7 +449,7 @@ namespace netCDF
     /*! 
       Gets the collection of NcType objects with a given name.
       \param name     Name of type. For atomic types, the CDL name is expected. This is consistent with the 
-                         string returned from NcType::getName().
+                         std::string returned from NcType::getName().
       \param location Enumeration type controlling the groups to search.
       \return         Set of  NcType objects.
     */
@@ -467,7 +467,7 @@ namespace netCDF
     /*! 
       Gets the collection of NcType objects with a given name and data type.
       \param name     Name of type. For atomic types, the CDL name is expected. This is consistent with the 
-                         string returned from NcType::getName().
+                         std::string returned from NcType::getName().
       \param enumType Enumeration type specifying the data type.
       \param location Enumeration type controlling the groups to search.
       \return         Set of Nctype objects.
@@ -478,7 +478,7 @@ namespace netCDF
     /*! 
       Gets the NcType object with a given name.
       \param name     Name of type. For atomic types, the CDL name is expected. This is consistent with the 
-                         string returned from NcType::getName().
+                         std::string returned from NcType::getName().
       \param location Enumeration type controlling the groups to search.
       \return         NcType object. If there are multiple objects indentied with the same name, 
       the object closest to the current group is returned.  If no valid object is found , a \ref NcType::isNull "null node" is returned.
@@ -490,7 +490,7 @@ namespace netCDF
     /*! 
       Adds a new netCDF enum type.
       \param name        Name of type. For atomic types, the CDL name is expected. This is consistent with the 
-                         string returned from NcType::getName().
+                         std::string returned from NcType::getName().
       \param enumType    The enumeration value of the object type.
       \return            The NcEnumType object for this new netCDF enum type.
     */

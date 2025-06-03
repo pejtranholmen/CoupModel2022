@@ -92,7 +92,7 @@
 //  
 //        <         Alphabetic placeholder,  but forces them to lowercase (a-z)
 //  
-//        \         Treat the next character in the mask string as a literal. This allows you to include 
+//        \         Treat the next character in the mask std::string as a literal. This allows you to include 
 //                  the '#', '&', 'A', '<', '>',and '?' characters in the mask. This character is treated as a 
 //                  literal for masking purposes.
 //  
@@ -289,7 +289,7 @@ public:
 	
 	// --- In     :	lpszText	-	string to be stripped by applying the current mask
 	// --- Out    :
-	// --- Returns:	string that represent pure data in the specified string 
+	// --- Returns:	string that represent pure data in the specified std::string 
 	//				excluding literals
 	// --- Effect : 
 	CString GetInputData(LPCTSTR lpszText) const ;

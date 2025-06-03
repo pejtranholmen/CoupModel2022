@@ -188,7 +188,7 @@ void CValidationVariables::OnApply()
 
 
 
-		m_pDoc->m_Doc.m_ValidationData.AddNewValList(m_ItemSelected, m_FileNo, m_ValVarList, m_SelTypeInt, string(m_SelGroup), CT2A(Name).m_psz, m_SelIndex, m_RelError, m_AbsError, m_Accumulate, m_LogTrans);
+		m_pDoc->m_Doc.m_ValidationData.AddNewValList(m_ItemSelected, m_FileNo, m_ValVarList, m_SelTypeInt, std::string(m_SelGroup), CT2A(Name).m_psz, m_SelIndex, m_RelError, m_AbsError, m_Accumulate, m_LogTrans);
 		m_ValVarList = 0;
 		m_SelType = "";
 		m_SelGroup = "";

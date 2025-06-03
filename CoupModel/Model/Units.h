@@ -47,11 +47,11 @@ public:
 	};
 private:
 	void SetUnitMap(UNIT_TYPES type,string str) {
-		m_TypeBasedUnits.insert(pair<UNIT_TYPES, string>(type, str));
+		m_TypeBasedUnits.insert(pair<UNIT_TYPES, std::string>(type, str));
 		m_StringBasedUnits.insert(pair<string, UNIT_TYPES>(str,type));
 	};
 
-	map<enum UNIT_TYPES, string> m_TypeBasedUnits;
+	map<enum UNIT_TYPES, std::string> m_TypeBasedUnits;
 	map<string, enum UNIT_TYPES> m_StringBasedUnits;
 };
 

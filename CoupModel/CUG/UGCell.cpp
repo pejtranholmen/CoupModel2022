@@ -246,7 +246,7 @@ int CUGCell::AddCellInfo(CUGCell *src,CUGCell *dest)
 
 	//String 
 	if(src->m_propSetFlags&UGCELL_STRING_SET)
-	{	// primary text string
+	{	// primary text std::string
 		dest->m_string = src->m_string;
 		// number
 		dest->m_nNumber = src->m_nNumber;
@@ -358,7 +358,7 @@ SetText
 		The text property is also the 'data' 
 		property of a cell
 	Params
-		text - pointer to a string
+		text - pointer to a std::string
 	Return 
 		UG_SUCCESS	success
 		UG_ERROR	fail
@@ -387,7 +387,7 @@ AppendText
 	Purpose
 		Appends text to the cells text property
 	Params
-		text - pointer to a string
+		text - pointer to a std::string
 	Return 
 		UG_SUCCESS	success
 		UG_ERROR	fail
@@ -440,7 +440,7 @@ GetText
 	Purpose
 		The GetText function will return a text
 		representation of cell's data, if current
-		data type is other than string than data
+		data type is other than std::string than data
 		will be converted using current format settings.
 
 		For numbers we introduced a way to retrieve
@@ -456,7 +456,7 @@ GetText
 string	CUGCell::GetStdText() {
 	CString str=GetText();
 
-	return string(CT2A(GetText()).m_psz);
+	return std::string(CT2A(GetText()).m_psz);
 }
 LPCTSTR	CUGCell::GetText()
 {
@@ -467,7 +467,7 @@ LPCTSTR	CUGCell::GetText()
 	else if ( m_dataType == UGCELLDATA_NUMBER )
 	{
 		CString strDouble;
-		// parse the string without localized formatting
+		// parse the std::string without localized formatting
 		m_string = _T("");
 		if( m_propSetFlags&UGCELL_NUMBERDEC_SET )
 		{
@@ -508,7 +508,7 @@ LPCTSTR	CUGCell::GetText()
 		if ( strDouble == _T("") && m_propSetFlags&UGCELL_STRING_SET )
 			strDouble = _T("0");
 
-		// create a 'proper' localized string representation of the numeric value
+		// create a 'proper' localized std::string representation of the numeric value
 		if (!( m_propSetFlags&UGCELL_DONOT_LOCALIZE ))
 		{
 			TCHAR szBuffer[256];
@@ -581,7 +581,7 @@ SetMask
 	Purpose
 		Sets the mask property of a cell object.
 	Params
-		text - pointer to a string
+		text - pointer to a std::string
 	Return 
 		UG_SUCCESS	success
 		UG_ERROR	fail
@@ -624,7 +624,7 @@ GetMask
 	Params
 		none
 	Return 
-		LPCTSTR to the mask string
+		LPCTSTR to the mask std::string
 *********************************************/
 LPCTSTR	CUGCell::GetMask(){
 
@@ -638,7 +638,7 @@ SetLabelText
 		Sets the label text property of a cell 
 		object.
 	Params
-		text - pointer to a string
+		text - pointer to a std::string
 	Return 
 		UG_SUCCESS	success
 		UG_ERROR	fail
@@ -976,7 +976,7 @@ int	CUGCell::GetNumberDecimals(){
 SetTime
 	Purpose
 		Sets the time value for the cell. This 
-		value is converted into a string and
+		value is converted into a std::string and
 		put in the cell's text property
 	Params
 		second	0 - 59
@@ -995,7 +995,7 @@ int	CUGCell::SetTime(int second,int minute,int hour,int day,int month,int year)
 	// populate the datetime structure with the information passed in
 	COleDateTime odt;
 	odt.SetDateTime(year,month,day,hour,minute,second);
-	// set the display string
+	// set the display std::string
 	SetText( odt.Format(_T("%Y-%m-%d %H:%M")));  // use default of LANG_USER_DEFAULT
 	// store the native form of the date
 	m_nNumber = odt;
@@ -1010,7 +1010,7 @@ GetTime
 	Purpose
 		Gets the time value stored in the cell's
 		text property. The value is converted from
-		a string to the time components. 
+		a std::string to the time components. 
 	Params
 		second	0 - 59
 		minute	0 - 59
@@ -1030,7 +1030,7 @@ int	CUGCell::GetTime(int* second,int* minute,int* hour,int* day,int* month,int* 
 	if(m_propSetFlags&UGCELLDATA_TIME)
 		odt = m_nNumber;
 	else
-		// convert cell's string into a date fromat
+		// convert cell's std::string into a date fromat
 		odt.ParseDateTime(m_string);
 
 	*day = odt.GetDay();
@@ -1824,14 +1824,14 @@ long CUGCell::GetExtraMemSize(){
 /********************************************
 StringToNumber
 	Purpose
-		Converts a string to a number.
+		Converts a std::string to a number.
 		This function will work with strings
 		containing characters other than numbers,
 		by removing non-digit characters before the
 		conversion. Therefore it will work with 
 		strings such as: "$123,456.00","123-456-789"
 	Params
-		string - string to convert
+		string - std::string to convert
 		number - resulting number
 	Return
 		UG_SUCCESS	success
@@ -1855,7 +1855,7 @@ int CUGCell::StringToNumber(CString *string,double *number)
 	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, szDecimalSep, 4);
 	tempString.Replace( szDecimalSep, _T(".") );
 
-	// parse the string to its numeric value
+	// parse the std::string to its numeric value
 	*number = ::_tcstod(tempString, nullptr);
 
 	return UG_SUCCESS;
@@ -1864,19 +1864,19 @@ int CUGCell::StringToNumber(CString *string,double *number)
 /********************************************
 StringToBool
 	Purpose
-		converts the given string to a bool value.
+		converts the given std::string to a bool value.
 		This function returns strings containing 
 		characters other than '0' or 'F' as true.
 	Params
-		string - string to convert
+		string - std::string to convert
 		state - resulting bool value
 	Return
 		UG_SUCCESS	success
 		UG_ERROR	fail
 *********************************************/
 int CUGCell::StringToBool(CString *string,BOOL * state){
-	if(string->GetAt(0) == _T('0') || string->GetAt(0) == _T('F') ||
-	  string->GetAt(0) == _T('f'))
+	if(string->GetAt(0) == _T('0') || std::string->GetAt(0) == _T('F') ||
+	  std::string->GetAt(0) == _T('f'))
 		*state = FALSE;
 	else
 		*state = TRUE;
@@ -1886,11 +1886,11 @@ int CUGCell::StringToBool(CString *string,BOOL * state){
 /********************************************
 StringToTime
 	Purpose
-		converts a string into a time value.
+		converts a std::string into a time value.
 		This function using the current locale 
 		setting to help perform the conversion.
 	Params
-		string - string to convert
+		string - std::string to convert
 		second - resulting second
 		minute - resulting minute
 		hour - resulting hour
@@ -1901,7 +1901,7 @@ StringToTime
 		UG_SUCCESS	success
 		UG_ERROR	fail
 *********************************************/
-int CUGCell::StringToTime(CString* string,int* second,int* minute,int* hour,int* day, int* month,int* year)
+int CUGCell::StringToTime(CString* std::string,int* second,int* minute,int* hour,int* day, int* month,int* year)
 {
 	COleVariant ovStr(*string);
 	COleDateTime ovTime(ovStr);

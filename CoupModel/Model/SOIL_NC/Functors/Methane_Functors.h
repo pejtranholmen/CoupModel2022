@@ -258,7 +258,7 @@ public:
 		OrgRateCoef.push_back(clitter1); OrgRateCoef.push_back(clitter2); OrgRateCoef.push_back(chumus);
 		f_Temp_Response = Q10(q10_prod, 20., 5.);
 	}
-	MethaneProduction(double CH4_RateCoef, double q10_prod, double RateCoefLitter1, double RateCoefLitter2, double RateCoefHumus, vector<double> pHValues) noexcept
+	MethaneProduction(double CH4_RateCoef, double q10_prod, double RateCoefLitter1, double RateCoefLitter2, double RateCoefHumus, std::vector<double> pHValues) noexcept
 	{
 		clitter1 = CH4_RateCoef * RateCoefLitter1; clitter2 = CH4_RateCoef * RateCoefLitter2; chumus = CH4_RateCoef * RateCoefHumus;
 		OrgRateCoef.push_back(clitter1); OrgRateCoef.push_back(clitter2); OrgRateCoef.push_back(chumus);
@@ -269,7 +269,7 @@ public:
 				pH_Influence.push_back(pow(10., -0.2235 * pHValues[i] * pHValues[i] + 2.7727 * pHValues[i] - 8.6));
 		}
 	}
-	MethaneProduction(double CH4_RateCoef,  double q10_prod, double RateCoefLitter1,  double RateCoefHumus, vector<double> pHValues) noexcept
+	MethaneProduction(double CH4_RateCoef,  double q10_prod, double RateCoefLitter1,  double RateCoefHumus, std::vector<double> pHValues) noexcept
 	{
 		clitter1 = CH4_RateCoef * RateCoefLitter1; clitter2 = 0.; chumus = CH4_RateCoef * RateCoefHumus;
 		OrgRateCoef.push_back(clitter1); OrgRateCoef.push_back(clitter2); OrgRateCoef.push_back(chumus);
@@ -288,7 +288,7 @@ public:
 	double operator() (double Litter1, double Humus, double temp) {
 		return f_Temp_Response(temp)*(clitter1 * Litter1 + chumus * Humus);
 	}
-	vector<double> operator() (const vector<double>& Litter1, const vector<double>& Humus, const vector<double>& temp, const vector<double>& AnaFrac, vector<double>& Prod) {
+	vector<double> operator() (const std::vector<double>& Litter1, const std::vector<double>& Humus, const std::vector<double>& temp, const std::vector<double>& AnaFrac, std::vector<double>& Prod) {
 		for (size_t i = 0; i < Prod.size(); i++) {
 			Prod[i] = f_Temp_Response(temp[i]) * (clitter1 * Litter1[i] + chumus * Humus[i])*AnaFrac[i];
 			if (pH_Influence.size() == Prod.size())
@@ -296,7 +296,7 @@ public:
 		}
 		return Prod;
 	}
-	vector<double> operator() (const vector<double> &Litter1, const vector<double> &Litter2, const vector<double> &Humus, const vector<double> &temp, const vector<double>& AnaFrac, vector<double> &Prod) {
+	vector<double> operator() (const std::vector<double> &Litter1, const std::vector<double> &Litter2, const std::vector<double> &Humus, const std::vector<double> &temp, const std::vector<double>& AnaFrac, std::vector<double> &Prod) {
 		for (size_t i = 0; i < Prod.size(); i++) {
 			Prod[i] = f_Temp_Response(temp[i]) * (clitter1 * Litter1[i] + clitter2 * Litter2[i] + chumus * Humus[i])*AnaFrac[i];
 			if (pH_Influence.size() == Prod.size())
@@ -305,7 +305,7 @@ public:
 			
 		return Prod;
 	}
-	vector<double> operator() (const vector<double>& Litter1, const vector<double>& Litter2, const vector<double>& Humus, const vector<double>& temp, const vector<double>& AnaFrac, size_t OrgIndex) {
+	vector<double> operator() (const std::vector<double>& Litter1, const std::vector<double>& Litter2, const std::vector<double>& Humus, const std::vector<double>& temp, const std::vector<double>& AnaFrac, size_t OrgIndex) {
 		vector<double> out;
 	
 		for (size_t i = 0; i < Litter1.size(); i++) {
@@ -387,12 +387,12 @@ public:
 	GasDiffusionSoilFlux(GasElement element, double tourtous) {
 		f_DiffusionAir = SoilAirDiffusion(element, 0.66);
 	};
-	void operator() (vector<double>& WaterConc, vector<double>& MidDistance, vector<double>* flux) {
+	void operator() (vector<double>& WaterConc, std::vector<double>& MidDistance, std::vector<double>* flux) {
 		for (size_t i = 1; i < flux->size(); i++) {
 			flux->at(i - 1) = -diffcoef_m2_day * (WaterConc[i] - WaterConc[i - 1]) / MidDistance[i];
 		}
 	};
-	void operator() (vector<double>& AirConc, vector<double>& AirContent, vector<double>& Temp, vector<double>& MidDistance, vector<double>* flux) {
+	void operator() (vector<double>& AirConc, std::vector<double>& AirContent, std::vector<double>& Temp, std::vector<double>& MidDistance, std::vector<double>* flux) {
 		for (size_t i = 1; i < flux->size(); i++) {
 			double meanaircontent = (AirContent[i - 1] + AirContent[i]) / 2.;//*1.E-6;
 			flux->at(i - 1) = -f_DiffusionAir(meanaircontent, Temp[i-1])* (AirConc[i] - AirConc[i - 1]) / MidDistance[i];
@@ -407,7 +407,7 @@ class GasConvectiveSoilFlux {
 // The convective flux is added to the flux of diffusion
 public:
 	GasConvectiveSoilFlux() {scalingcoef = 1.E-3;};
-	void operator() (vector<double> &WaterConc, vector<double> &WaterFlow, vector<double> *CH4_SoilFlux) {
+	void operator() (vector<double> &WaterConc, std::vector<double> &WaterFlow, std::vector<double> *CH4_SoilFlux) {
 		for (size_t i = 1; i < CH4_SoilFlux->size(); i++) {
 			if(WaterFlow[i-1]>0.)
 				CH4_SoilFlux->at(i - 1) = CH4_SoilFlux->at(i - 1) + WaterFlow[i - 1] * WaterConc[i - 1] *scalingcoef; // Scaling from mg/L to g/L

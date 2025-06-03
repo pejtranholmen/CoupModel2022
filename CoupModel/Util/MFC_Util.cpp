@@ -48,7 +48,7 @@ MFC_Util::MFC_Util(void)
 MFC_Util::~MFC_Util(void)
 {
 }
- string MFC_Util::GetProfileStringStd(string item, string value) {
+ std::string MFC_Util::GetProfileStringStd(string item, std::string value) {
 
 #ifndef COUPSTD
 	CWinApp* pApp = AfxGetApp();
@@ -78,9 +78,9 @@ MFC_Util::~MFC_Util(void)
 
  }
 
- string MFC_Util::GetWindowFileDate(string filename, bool modified)
+ std::string MFC_Util::GetWindowFileDate(string filename, bool modified)
  {
-	 string strout;
+	 std::string strout;
 	 CWinApp *pApp;
 	 pApp = AfxGetApp();
 	 CFileStatus status;
@@ -89,7 +89,7 @@ MFC_Util::~MFC_Util(void)
 	 if(modified)
 		kk = status.m_mtime;
 
-	 string v1= CT2A(kk.Format(_T("%Y"))).m_psz;
+	 std::string v1= CT2A(kk.Format(_T("%Y"))).m_psz;
 	 v1 += "-";
 	 v1+=CT2A(kk.Format(_T("%m"))).m_psz;
 	 v1 += "-";
@@ -133,15 +133,15 @@ MFC_Util::~MFC_Util(void)
 	
  }
 
- string MFC_Util::GetNewSimFileName(int SimulationRunNo, string pzPathName) {
-	 string newPathName;
-	 string newtype;
+ std::string MFC_Util::GetNewSimFileName(int SimulationRunNo, std::string pzPathName) {
+	 std::string newPathName;
+	 std::string newtype;
 	 newtype = ".Sim";
 
 	 auto iposext = pzPathName.rfind('_');
 	 auto iposMul = pzPathName.find("_Multi_");
 	 auto iposSim = pzPathName.find(".Sim");
-	 if (iposSim == string::npos) {
+	 if (iposSim == std::string::npos) {
 		 auto iposSim = pzPathName.find(".xml");
 		 newtype = ".xml";
 
@@ -150,12 +150,12 @@ MFC_Util::~MFC_Util(void)
 
 	 SimulationRunNo = MFC_Util::GetProfileIntNo("SimulationRunNo", SimulationRunNo);
 
-	 string Num = FUtil::ItoNumAscii(SimulationRunNo);
-	 if (iposMul!=string::npos && iposext!=string::npos)
+	 std::string Num = FUtil::ItoNumAscii(SimulationRunNo);
+	 if (iposMul!= std::string::npos && iposext!= std::string::npos)
 		 newPathName = pzPathName.substr(0,iposMul + 1) + Num + newtype;
-	 else if (iposext!=string::npos)
+	 else if (iposext!= std::string::npos)
 		 newPathName = pzPathName.substr(0,iposext + 1) + Num + newtype;
-	 else if (iposSim!=string::npos)
+	 else if (iposSim!= std::string::npos)
 		 newPathName = pzPathName.substr(0,iposSim) + '_' + Num + newtype;
 	 else
 		 newPathName = pzPathName;
@@ -163,7 +163,7 @@ MFC_Util::~MFC_Util(void)
 
 	 return newPathName;
  }
- FILEDLG MFC_Util::GetFileDialog(string type, string defname, string filtertype, BOOL OpenOnly) {
+ FILEDLG MFC_Util::GetFileDialog(string type, std::string defname, std::string filtertype, BOOL OpenOnly) {
 	 FILEDLG output;
 	 output.filename = "";
 	 output.opengood = false;
@@ -194,7 +194,7 @@ MFC_Util::~MFC_Util(void)
 	pApp->WriteProfileInt(IDCODE, CString(item.c_str()), value);
 #endif
 }
- void MFC_Util::WriteProfileString(string item, string value) {
+ void MFC_Util::WriteProfileString(string item, std::string value) {
 #ifndef COUPSTD
 	CWinApp* pApp = AfxGetApp();
 	pApp->WriteProfileString(IDCODE, CString(item.c_str()), CString(value.c_str()));
@@ -454,7 +454,7 @@ else {
 }	
 
 }
-vector<string> MFC_Util::GetFileNames(LPCTSTR lpszFilter, string DefExt) {
+vector<string> MFC_Util::GetFileNames(LPCTSTR lpszFilter, std::string DefExt) {
 
 
 	return GetFileNames(lpszFilter, CA2T(DefExt.c_str()));

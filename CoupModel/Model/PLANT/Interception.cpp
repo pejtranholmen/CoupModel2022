@@ -56,7 +56,7 @@ bool Interception::Def()
 	Define(pPs, "Ratio_Eva-Transp", 3., "-", "PlantType >= 1|PrecInterception > 0|WaterEq > 0", 0., 10., 1., 5.);
 	ps_vec.push_back(pPs);
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::POTENTIAL_WATERUPTAKE_INTERCEPTION_IMPLICIT; functorprop.Arg = MyArgType::D2;
 	funcname = "Potential Water Uptake - InterCeption Evaporation";
 	pFunc = new Func(SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
@@ -77,7 +77,7 @@ bool Interception::Def()
 
 
 	functorprop.FuncName = MyFunc::INTERCEPTION_RAIN_CAPACITY; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Water Interception Function";
 	pFunc = new Func(SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec); //ps_vec.clear();
@@ -322,9 +322,9 @@ void Interception::Flux()
 		  IntThQual = max(0., IntFracNew*pMet->ThQualP + (1. - IntFracNew)*IntThQual);
 		  MC_IntCapacity = f_IntCapacity_Snow_MultiLayer(LAI, IntThQual);
 	  }
-	  auto IndexPlantsByHeight = [](const vector<double>& h) {
-		  vector<size_t> out;
-		  vector<pair<double, size_t>> tosort;
+	  auto IndexPlantsByHeight = [](const std::vector<double>& h) {
+		  std::vector<size_t> out;
+		  std::vector<pair<double, size_t>> tosort;
 		  tosort.resize(h.size() * 2);
 		  out.resize(tosort.size());
 		  for (size_t i = 0; i < h.size(); i++) {

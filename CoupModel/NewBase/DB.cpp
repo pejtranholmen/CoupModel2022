@@ -23,7 +23,7 @@ DB::DB() {
 	m_pSwTimeRes=nullptr;
 	m_pSwPlantType=nullptr;
 }
-bool DB::Read_DB_DocFile(string file, string key, bool ApplyToCurrentSimFile, bool ExportToCSV)
+bool DB::Read_DB_DocFile(string file, std::string key, bool ApplyToCurrentSimFile, bool ExportToCSV)
 {
 	#ifndef COUPSTD
 		CMainFrame *p_mainframe;
@@ -68,8 +68,8 @@ bool DB::Read_DB_DocFile(string file, string key, bool ApplyToCurrentSimFile, bo
 		};
 	}
 
-	vector<Sw*> Applied_Sw; vector<Ps*> Applied_Ps;
-	vector<Tab*> Applied_Tab; vector<F*> Applied_Files;
+	vector<Sw*> Applied_Sw; std::vector<Ps*> Applied_Ps;
+	vector<Tab*> Applied_Tab; std::vector<F*> Applied_Files;
 
 
 	string ExportFileName;
@@ -184,7 +184,7 @@ bool DB::Read_DB_DocFile(string file, string key, bool ApplyToCurrentSimFile, bo
 		size_t nlines = 0;
 		vector<string> newlines;
 		string Details = header.Details;
-		while (Details.find('\r')!=string::npos) {
+		while (Details.find('\r')!= std::string::npos) {
 			newlines.push_back(Details.substr(0, Details.find('\r')));
 			Details=Details.substr(Details.find('\r') + 2);
 		}
@@ -235,7 +235,7 @@ bool DB::Read_DB_DocFile(string file, string key, bool ApplyToCurrentSimFile, bo
 			if(str=="Start") {
 				m_Read_DB_Version=irep;
 			}
-			else if(str.find("Switches")!=string::npos) {
+			else if(str.find("Switches")!= std::string::npos) {
 				Applied_Sw=ReadWrite_DB_Switches(true, irep);
 				if (ExportToCSV) WriteToFile(0);
 			}
@@ -367,7 +367,7 @@ void DB::SetGroupConnections(string m_ID_DB_Group)
 
 }
 
-bool DB::ReadFrom_DB_Object(string ID_DB_Group, string Key, bool deletefile, bool NotApply, bool ExportToCSV)
+bool DB::ReadFrom_DB_Object(string ID_DB_Group, std::string Key, bool deletefile, bool NotApply, bool ExportToCSV)
 {
 			m_ID_DB_Group = ID_DB_Group;
 			string strApp=m_AppString;
@@ -419,7 +419,7 @@ bool DB::ReadFrom_DB_Object(string ID_DB_Group, string Key, bool deletefile, boo
 
 			return prog;
 }
-void DB::SaveTo_DB_Object(string m_ID_DB_Group, string key)
+void DB::SaveTo_DB_Object(string m_ID_DB_Group, std::string key)
 {
 			string FileName;
 			string strApp=m_AppString;
@@ -529,7 +529,7 @@ void DB::Reset()
 	}
    
 }
-bool DB::Retrieve(string group, string key, bool NotApply) 
+bool DB::Retrieve(string group, std::string key, bool NotApply) 
 {
 	if (key == "-10")
 		return false;
@@ -617,8 +617,8 @@ bool DB::Info_DB_Switches(bool reading, int iv)
 
 		wInt(&iv);
 
-        string group_psw = pSw->GetGroup();
-        string name_psw = pSw->GetName();
+        std::string group_psw = pSw->GetGroup();
+        std::string name_psw = pSw->GetName();
         
 		wString(&group_psw);
 		wString(&name_psw);
@@ -732,8 +732,8 @@ vector<Sw*> DB::ReadWrite_DB_Switches(bool reading, int iv) {
 
 		wInt(&iv);
         
-        string group_psw = pSw->GetGroup();
-        string name_psw = pSw->GetName();
+        std::string group_psw = pSw->GetGroup();
+        std::string name_psw = pSw->GetName();
         
 		wString(&group_psw);
 		wString(&name_psw);
@@ -832,8 +832,8 @@ bool DB::Info_DB_Parameters(bool reading, int iv)
 		wInt(&iv);
 		float value;
         
-        string group_psw;
-        string name_psw;
+        std::string group_psw;
+        std::string name_psw;
         
 		for(int i=0;i<iv;i++) {
 			pP=(Ps*)m_P_Array[index_P[i]];
@@ -916,8 +916,8 @@ vector<Ps*> DB::ReadWrite_DB_Parameters(bool reading, int iv)
 		wString(&type);
 		wInt(&iv);
 		float value;
-        string group_psw;
-        string name_psw;
+        std::string group_psw;
+        std::string name_psw;
 		for (int i = 0; i<iv; i++) {
 			pP = (Ps*)m_P_Array[index_P[i]];
             
@@ -1075,8 +1075,8 @@ bool DB::Info_DB_ParTables(bool reading, int iv)
 
 		wString(&type);
 		wInt(&iv);
-        string group_psw;
-        string name_psw;
+        std::string group_psw;
+        std::string name_psw;
         
 		for(int i=0;i<iv;i++) {
 			pTab=(Tab*)m_Tab_Array[index_Tab[i]];
@@ -1134,7 +1134,7 @@ vector<Tab*> DB::ReadWrite_DB_ParTables(bool reading, int iv)
 				for (int nCol = 0; nCol<nColSize; nCol++) {
 					rString(&str);
 					if (pTab != nullptr) {
-						comp_str = string(pTab->GetTitle(nCol));
+						comp_str = std::string(pTab->GetTitle(nCol));
 					}
 				}
 			}
@@ -1246,8 +1246,8 @@ vector<Tab*> DB::ReadWrite_DB_ParTables(bool reading, int iv)
 
 		wString(&type);
 		wInt(&iv);
-        string group_psw;
-        string name_psw;
+        std::string group_psw;
+        std::string name_psw;
         
 		for (int i = 0; i<iv; i++) {
 			pTab = (Tab*)m_Tab_Array[index_Tab[i]];
@@ -1338,9 +1338,9 @@ bool DB::Info_DB_Files(bool reading, int iv)
 
 		wString(&type);
 		wInt(&iv);
-        string group_psw;
-        string name_psw;
-        string dbstringval_psw;
+        std::string group_psw;
+        std::string name_psw;
+        std::string dbstringval_psw;
         
 		for(size_t i=0; i<size_t(iv);i++) {
 			pF=(F*)m_F_Array[index_F[i]];
@@ -1413,9 +1413,9 @@ vector<F*> DB::ReadWrite_DB_Files(bool reading, int iv)
 
 		wString(&type);
 		wInt(&iv);
-        string group_psw;
-        string name_psw;
-        string dbstringval_psw;
+        std::string group_psw;
+        std::string name_psw;
+        std::string dbstringval_psw;
 		for (size_t i = 0; i<size_t(iv); i++) {
 			pF = (F*)m_F_Array[index_F[i]];
             
@@ -1461,7 +1461,7 @@ bool DB::Apply_DB_Struc(string Name)
 
 
 }
-bool DB::Apply_DB_DocFile(string group,   string DB_key, bool during)
+bool DB::Apply_DB_DocFile(string group,   std::string DB_key, bool during)
 {
 		m_DuringRun=during;
 		Sw *pSw;
@@ -1559,7 +1559,7 @@ bool DB::Apply_DB_DocFile(string group,   string DB_key, bool during)
 
 				pSw->SetIntValue(pSw->GetDBIntValue());
 				if (m_DB_key.size() > 0) {
-					History_Add(pSw, ityp, int(-1), sec, string(pSw->GetOption(pSw->GetDBIntValue())), "DB: " + m_DB_key);
+					History_Add(pSw, ityp, int(-1), sec, std::string(pSw->GetOption(pSw->GetDBIntValue())), "DB: " + m_DB_key);
 					numchange[0]++;
 				}
 			}
@@ -1597,7 +1597,7 @@ bool DB::Apply_DB_DocFile(string group,   string DB_key, bool during)
 		for(size_t i=0;i<vptr.size();i++) {
 			Tab* pTab=dynamic_cast<Tab*>(vptr[i]);
 		 // ((Tab*)pBase)->GetDBCell(0, 0,&fvalue);
-		  string Name=pTab->GetName();
+		  std::string Name=pTab->GetName();
 		  if(Name!="Root distribution with depth") {
 			auto oldvalue=pTab->GetNumOfRow();
 			auto newvalue=pTab->GetDB_Row();
@@ -1664,7 +1664,7 @@ bool DB::Apply_DB_DocFile(string group,   string DB_key, bool during)
 
 
 }
-bool DB::Apply_DB_DocFile(vector<Sw*> AppliedSw, vector<Ps*> AppliedPs, vector<Tab*> Applied_Tab, vector<F*> Applied_Files)
+bool DB::Apply_DB_DocFile(vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_Files)
 {
 	time_t sec;
 	sec = time(nullptr);
@@ -1760,7 +1760,7 @@ bool DB::Apply_DB_DocFile(vector<Sw*> AppliedSw, vector<Ps*> AppliedPs, vector<T
 		auto ans=checkswitch(pSw);
 		if (ans==6) {
 			pSw->SetIntValue(pSw->GetDBIntValue());
-			History_Add(pSw, int(-1), sec, string(pSw->GetOption(pSw->GetDBIntValue())), "DB: " + m_DB_key);
+			History_Add(pSw, int(-1), sec, std::string(pSw->GetOption(pSw->GetDBIntValue())), "DB: " + m_DB_key);
 			numchange[0]++;
 		}
 
@@ -1846,7 +1846,7 @@ bool DB::Apply_DB_DocFile(vector<Sw*> AppliedSw, vector<Ps*> AppliedPs, vector<T
 #endif
 	return false;
 }
-bool DB::Export_DB_CSVFile(vector<Sw*> AppliedSw, vector<Ps*> AppliedPs, vector<Tab*> Applied_Tab, vector<F*> Applied_Files)
+bool DB::Export_DB_CSVFile(vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_Files)
 {
 	time_t sec;
 	sec = time(nullptr);
@@ -2287,10 +2287,10 @@ string DB::CreateFlagString(SimB* currentParameter, bool GDType, int FlagValue)
 		}
 		}
 	}
-	//If the text ends with a , then remove the , from the string
+	//If the text ends with a , then remove the , from the std::string
 	if ((outString.size()!=0)&&(outString[outString.size()-1]==","))
 		outString=outString.substr(0, outString.size()-1);
-	//If the string doesnt allready end with two "" add a "
+	//If the std::string doesnt allready end with two "" add a "
 	if (!((outString[outString.size()-1]=="\"")&&((outString.size()>2)&&(outString[outString.size()-2]=="\""))))
 			outString+="\"";   */
 	return outString;

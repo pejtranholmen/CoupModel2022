@@ -420,7 +420,7 @@ namespace {
    *
    *  OUTPUT
    *
-   * ans   - a vector of length at least m whose first m
+   * ans   - a std::vector of length at least m whose first m
    *  components contain the sequence of derivatives
    *  scaled according to kode.
    *

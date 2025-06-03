@@ -10,7 +10,7 @@ Gs::Gs(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	SetSimType(AUX_SINGLE);
 	;
 }
-void Gs::Def(int ModuleNo, string name, double init, string unit, string conditions)
+void Gs::Def(int ModuleNo, std::string name, double init, std::string unit, std::string conditions)
 {
 
 	SetValue(init);

@@ -534,7 +534,7 @@ bool Hydraulic_Functions::FunctionDef() {
 
 bool Hydraulic_Functions::ReCalc() {
 
-	function<void(vector<double>&, vector<double>&, vector<double>&, bool)> f_conv;
+	function<void(vector<double>&, std::vector<double>&, std::vector<double>&, bool)> f_conv;
 
 	f_conv = FromMeasuredLayersToModelLayers(UpperDepth, LowerDepth, DepthLayers, ThicknessLayers, DepthMidpLayer);
 

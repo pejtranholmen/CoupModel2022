@@ -122,7 +122,7 @@ size_t CPG::GetRecord(size_t minutv, bool exact)
 		record++;
 		if(record>pg.Shape.NumRecords) {
 			m_startRec=1;
-			return string::npos;
+			return std::string::npos;
 		}
 	}
 	if(GetLongTime(record)==minutv){
@@ -130,7 +130,7 @@ size_t CPG::GetRecord(size_t minutv, bool exact)
 		return record;
 	}
 	else if(exact)
-		return string::npos;
+		return std::string::npos;
 	else
 		return record;
 }
@@ -309,7 +309,7 @@ bool CPG::WriteSelectionToExcel()
 
 string CPG::WriteExcelFile()
 {
-  string tmp, status, filename;
+  std::string tmp, status, filename;
   size_t ist, iend;
 
 
@@ -319,7 +319,7 @@ string CPG::WriteExcelFile()
 #ifndef COUPSTD
 
     CWinApp* pApp = AfxGetApp();
-  string UserDirectory="";
+  std::string UserDirectory="";
   UserDirectory=FUtil::GetProfileStringStd("UserDirectory", UserDirectory);
 
 
@@ -330,7 +330,7 @@ string CPG::WriteExcelFile()
 
   filename=pg.status.FileName;
   size_t pos=filename.rfind(".");
-  if(pos!=string::npos)
+  if(pos!= std::string::npos)
 	 filename=filename.substr(0,pos);
   filename+=".xls";
 	ist=1;
@@ -343,7 +343,7 @@ string CPG::WriteExcelFile()
 
 
 	for(size_t ish=0; ish<numsheets;ish++) {
-		 string s3=	"Sheet";
+		 std::string s3=	"Sheet";
 		 s3+=FUtil::STD_ItoAscii(ish+1);
 		BasicExcelWorksheet* sheet = e.GetWorksheet(s3.c_str());
 		if(sheet==nullptr) return "";
@@ -478,7 +478,7 @@ void CPG::SetCalcVarNew(size_t var)
 }
 void CPG::SetVarUnitType(size_t VarNo, size_t Repit, UNIT_TYPES unit)
 {
-	if (Repit > 0 && Repit != string::npos) {
+	if (Repit > 0 && Repit != std::string::npos) {
 		size_t add = 0;
 		add = (Repit - 1)*pg.Shape.NumVar;
 		VarNo += add;
@@ -488,7 +488,7 @@ void CPG::SetVarUnitType(size_t VarNo, size_t Repit, UNIT_TYPES unit)
 }
 void CPG::SetVarElementType(size_t VarNo, size_t Repit, elements elem)
 {
-	if (Repit > 0 && Repit != string::npos) {
+	if (Repit > 0 && Repit != std::string::npos) {
 		size_t add = 0;
 		add = (Repit - 1)*pg.Shape.NumVar;
 		VarNo += add;
@@ -903,11 +903,11 @@ size_t CPG::GetNumRecordsMonth(size_t months, size_t rep)
 			im=1;
 		}
 		currentmin=GetLongTimeStart();
-		if (currentmin == string::npos) {
+		if (currentmin == std::string::npos) {
 			if (ReOpen()) {
 				currentmin = GetLongTimeStart();
 			}
-			if (currentmin == string::npos) {
+			if (currentmin == std::string::npos) {
 				return 0;
 			}
 		}
@@ -1552,13 +1552,13 @@ size_t CPG::CalcVarMissingByRandomPeriod(size_t var_in, size_t repn)
 	vmin=abs(MISSING);
 	bool missing;
 	size_t count;
-	size_t var_out=string::npos;
+	size_t var_out= std::string::npos;
 
 	size_t year_min=1440*350;
 	size_t year_max=1440*370;
 	size_t year_mean=1440*365;
 
-	if (var_out == string::npos) var_out = var_in;
+	if (var_out == std::string::npos) var_out = var_in;
 
 
 	count=0;
@@ -2347,7 +2347,7 @@ bool CPG::SetCommonPeriod(size_t start,size_t end)
 	else
 		return false;
 }
-bool CPG::SetCommonPeriod(string Start, string End)
+bool CPG::SetCommonPeriod(string Start, std::string End)
 {
 	return SetCommonPeriod(PGUtil::MinutConv(Start),PGUtil::MinutConv(End));
 }
@@ -2544,7 +2544,7 @@ size_t CPG::GetNumberofSections()
 		return GetNumberofDays();
 }
 size_t CPG::GetNumberofYears() {
-	if(m_NumberOfYears==string::npos)
+	if(m_NumberOfYears== std::string::npos)
 		if(CreateYearIndex())
 			return m_NumberOfYears;	
 return m_NumberOfYears;
@@ -2581,7 +2581,7 @@ bool CPG::CreateYearIndex()
 		}
 	}
 	m_NumberOfYears=YearIndex.size();
-	if(m_NumberOfYears!=string::npos) {
+	if(m_NumberOfYears!= std::string::npos) {
 		m_YearIndexStart= new size_t[m_NumberOfYears];
 		m_YearRecords= new size_t[m_NumberOfYears];
 		m_YearShift= new double[m_NumberOfYears];
@@ -2597,14 +2597,14 @@ bool CPG::CreateYearIndex()
 }
 size_t CPG::GetYearIndex(size_t index) 
 {
-	if(index<=m_NumberOfYears&&m_NumberOfYears!=string::npos)
+	if(index<=m_NumberOfYears&&m_NumberOfYears!= std::string::npos)
 		return *(m_YearIndexStart+index-1);
 	return -1;
 
 }
 size_t CPG::GetRecordsInYear(size_t index)
 {
-	if(index<=m_NumberOfYears&&m_NumberOfYears != string::npos)
+	if(index<=m_NumberOfYears&&m_NumberOfYears != std::string::npos)
 		return *(m_YearRecords+index-1);
 	return -1;
 
@@ -2953,7 +2953,7 @@ bool CPG::EstimateWithinYearStatistics(Doc *pDoc)
 		return false;
 }
 
-bool CPG::EstimateMultiStatistics(bool all, vector<size_t> *acceptedruns, size_t EnsembleNo,vector<string> *addedfilenames, vector<size_t> *addedfirstRunNo)
+bool CPG::EstimateMultiStatistics(bool all, std::vector<size_t> *acceptedruns, size_t EnsembleNo,vector<string> *addedfilenames, std::vector<size_t> *addedfirstRunNo)
 {
 	if(!pg.Shape.RepetitionMode) return false;
 	if (m_UpdatedMultiAccepted.size() <= EnsembleNo) return false;
@@ -3232,7 +3232,7 @@ bool CPG::CheckConditions(size_t var_rec)
 	float LeftValue, RightValue;
 
 	for (size_t i = 0; i < m_IfVector.size(); i++) {
-		if (m_IfVector[i].LeftVariable != string::npos&&m_IfVector[i].LeftVariable <= pg.Shape.NumVar)
+		if (m_IfVector[i].LeftVariable != std::string::npos&&m_IfVector[i].LeftVariable <= pg.Shape.NumVar)
 			LeftValue = pg.Var.v[(var_rec - 1)*pg.Shape.RecordIndexSize + m_IfVector[i].LeftVariable];
 		else if (m_IfVector[i].Function > NO_USE_FUNC&&m_IfVector[i].LeftTimeFuncPos) {
 			if (m_IfVector[i].Function == DAYNUMBERFUNC)
@@ -3243,7 +3243,7 @@ bool CPG::CheckConditions(size_t var_rec)
 		else
 			LeftValue = m_IfVector[i].LeftValue;
 
-		if (m_IfVector[i].RightVariable != string::npos&&m_IfVector[i].RightVariable <= pg.Shape.NumVar)
+		if (m_IfVector[i].RightVariable != std::string::npos&&m_IfVector[i].RightVariable <= pg.Shape.NumVar)
 			RightValue = pg.Var.v[(var_rec - 1)*pg.Shape.RecordIndexSize + m_IfVector[i].RightVariable];
 		else if (m_IfVector[i].Function > NO_USE_FUNC&&!m_IfVector[i].LeftTimeFuncPos) {
 			if (m_IfVector[i].Function == DAYNUMBERFUNC)

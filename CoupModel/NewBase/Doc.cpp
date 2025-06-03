@@ -256,14 +256,14 @@ string Doc::DB_GetImportDate(int index)
 				localtime_s(&timeinfo, &timestamp);
 				char buffer[24];
 				strftime(buffer, 24, "%Y-%m-%d %H:%M", &timeinfo);
-				return string(buffer);
+				return std::string(buffer);
 			}
 			else
 				return "";
 		}
 			char buffer[24];
 			strftime(buffer,24, "%Y-%m-%d %H:%M", &timeinfo);
-		return string(buffer);
+		return std::string(buffer);
 	}
 	else
 		return "";
@@ -304,7 +304,7 @@ bool Doc::OpenSimDocument(long RunNo, bool NoMulti)
 		auto rpos=pzPathName.rfind('_');
 		if(NoMulti) {
 			auto mulpos=pzPathName.rfind("_Multi");
-			if(mulpos!=string::npos&&mulpos<rpos) rpos=mulpos;
+			if(mulpos!= std::string::npos&&mulpos<rpos) rpos=mulpos;
 		}
 		newPathName=pzPathName.substr(0,rpos);
 		newPathName+='_';
@@ -351,7 +351,7 @@ bool Doc::OpenSimDocument(long RunNo, bool NoMulti)
 			auto rpos=pzPathName.rfind('_');
 			if(NoMulti) {
 				auto mulpos=pzPathName.rfind("_Multi");
-				if(mulpos!=string::npos&&mulpos<rpos) rpos=mulpos;
+				if(mulpos!= std::string::npos&&mulpos<rpos) rpos=mulpos;
 			}
 			newPathName=pzPathName.substr(0,rpos);
 			newPathName+="_"+Num+".xml";

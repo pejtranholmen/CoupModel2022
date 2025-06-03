@@ -96,7 +96,7 @@ void PF_Import_Cug::MakeBaseSheet()
 		rows = m_row;
 	int Count;
 	int Record;
-	CString string;
+	CString std::string;
 	Count=0;
 	SetTH_NumberRows(1); 
 	SetTH_Height(25); 
@@ -237,7 +237,7 @@ void PF_Import_Cug::MakeBaseSheet()
 	//SetColWidth(0,86);
 	//return;
 		Record=1;
-		CString string, tmpstring;
+		CString std::string, tmpstring;
 
 	
 

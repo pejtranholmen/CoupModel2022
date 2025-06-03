@@ -70,7 +70,7 @@ public:
 	MultiStorageData();
 	virtual ~MultiStorageData();
 	void SetCyclicNumbers(size_t CycleLength, size_t CycleStartPos = 0, size_t Dim1Value=0) { m_CyclicNumber = CycleLength; m_CyclicStartPos = CycleStartPos; m_Dim1Value = Dim1Value; };
-	void UpdateCyclicNumbers(size_t ActualEnsemble, size_t Dim1_Value=string::npos, size_t Transform_Index=string::npos);
+	void UpdateCyclicNumbers(size_t ActualEnsemble, size_t Dim1_Value= std::string::npos, size_t Transform_Index= std::string::npos);
 
 	
 	size_t GetCyclicNumber() { return m_CyclicNumber; };
@@ -113,7 +113,7 @@ public:
 
 	float GetMinPar(unsigned long);
 	float GetMaxPar(unsigned long);
-	float GetValid(unsigned long record, unsigned long IndexValid, size_t cyclestart=string::npos, size_t cycle_length=string::npos);
+	float GetValid(unsigned long record, unsigned long IndexValid, size_t cyclestart= std::string::npos, size_t cycle_length= std::string::npos);
 	float GetSplitValid(unsigned long irun , unsigned long ival, unsigned long split=0);
 	float GetSplitNValue(unsigned long iv, unsigned long split=0);
 	float GetValidLow(unsigned long, unsigned long split=0);
@@ -132,8 +132,8 @@ public:
 
 	void  ReAssignPerformanceandAcceptanceFromAggregation(size_t aggregate_num);
 	void  CommonPerformanceFromAggregation(size_t aggregate_num);
-	void  SetCoCorValid(unsigned long, unsigned long, float, size_t actensemble=string::npos);
-	float GetCoCorValid(unsigned long, unsigned long, size_t actensemble = string::npos);
+	void  SetCoCorValid(unsigned long, unsigned long, float, size_t actensemble= std::string::npos);
+	float GetCoCorValid(unsigned long, unsigned long, size_t actensemble = std::string::npos);
 	void  SetCoCorValid_Init(unsigned long);
 	bool  IsCoCorValidSet();
 	void SetCoParUpdated(bool updated);
@@ -193,8 +193,8 @@ public:
 	size_t Get_And_UpdateTotalNumberofRuns();
 	void SetToBePlotted(size_t i, bool value=true) { if (m_Valid_TSV.size() > i) m_Valid_TSV[i].tobe_Plotted = value; };
 	bool IsToBePlotted(size_t i) { if (m_Valid_TSV.size() <= i) return false; return m_Valid_TSV[i].tobe_Plotted; };
-	bool UpdateParDist(vector<DistStat> ParDist, size_t ensemble=string::npos);
-	DistStat GetParDist(size_t index, size_t ensemble = string::npos);
+	bool UpdateParDist(vector<DistStat> ParDist, size_t ensemble= std::string::npos);
+	DistStat GetParDist(size_t index, size_t ensemble = std::string::npos);
 	bool  GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG);
 	size_t ChangeEnsembleNo(size_t change);
 	string GetTransformationIndicator(size_t i) {
@@ -240,7 +240,7 @@ public:
 	bool m_SplitFileOpen;
 	bool m_Lock;
 	bool m_New7_Stat;
-	vector< vector<size_t> > m_AcceptedRuns;
+	vector< std::vector<size_t> > m_AcceptedRuns;
 	vector<string> m_AcceptedIdString;
 
 	bool m_AcceptedUpdated;
@@ -250,9 +250,9 @@ public:
 	vector<float> m_ValidSumMin,m_ValidSumMax;			// index 0-2, reprsent the various performance indicators	
 	vector<float> m_ValidSumMinAll,m_ValidSumMaxAll;
 
-	vector< vector<float>> m_MeanSV_STAT, m_MeanTSV_STAT;
-	vector< vector<float>> m_MeanSV_All, m_MeanSV_Accepted;
-	vector< vector<float>> m_MeanTSV_All, m_MeanTSV_Accepted;
+	vector< std::vector<float>> m_MeanSV_STAT, m_MeanTSV_STAT;
+	vector< std::vector<float>> m_MeanSV_All, m_MeanSV_Accepted;
+	vector< std::vector<float>> m_MeanTSV_All, m_MeanTSV_Accepted;
 
 
 
@@ -346,7 +346,7 @@ protected:
 
 	vector<unsigned long> m_VarSumSel, m_VarMultiSel, m_VarValidSel, m_VarValidSumSel;
 	public:
-		vector< vector<float>> m_VarTSV_Mean, m_VarSV_Mean;
+		vector< std::vector<float>> m_VarTSV_Mean, m_VarSV_Mean;
 		MR *m_pNewMap;
 		vector<float> m_VarSum, m_VarMulti, m_VarValid, m_VarValidSum;
 		vector<float> m_VarValidHigh, m_VarValidSumLow, m_VarValidSumHigh;

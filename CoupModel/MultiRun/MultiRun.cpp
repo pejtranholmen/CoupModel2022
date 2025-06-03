@@ -173,7 +173,7 @@ BOOL MultiRun::OnInitDialog() // Get values. Set text.
 		Text += " (";
 		Text += m_pP->GetUnit();
 		Text += ")";
-		if(m_Par.TabIndex!=string::npos) Text+=", index="+FUtil::STD_ItoAscii(m_Par.TabIndex+1);
+		if(m_Par.TabIndex!= std::string::npos) Text+=", index="+FUtil::STD_ItoAscii(m_Par.TabIndex+1);
 
 	}
 

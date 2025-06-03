@@ -32,7 +32,7 @@ namespace netCDF
     case NC_ENOTVAR         : throw NcNotVar("Variable is not found",file,line);
     case NC_EGLOBAL         : throw NcGlobal("Action prohibited on NC_GLOBAL varid",file,line);
     case NC_ENOTNC          : throw NcNotNCF("Not a netcdf file",file,line);
-    case NC_ESTS            : throw NcSts("In Fortran, string too short",file,line);
+    case NC_ESTS            : throw NcSts("In Fortran, std::string too short",file,line);
     case NC_EMAXNAME        : throw NcMaxName("NC_MAX_NAME exceeded",file,line);
     case NC_EUNLIMIT        : throw NcUnlimit("NC_UNLIMITED size already in use",file,line);
     case NC_ENORECVARS      : throw NcNoRecVars("nc_rec op when there are no record vars",file,line);

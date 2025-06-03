@@ -63,7 +63,7 @@ bool Thermal_Functions::Def()
 	Define(pPs,"Balland_Arp Beta",18.3,"-","HeatEq >= 1|Thermal Conductivity Function=1", 10.,30.);	
 
 	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLAND_ARP; functorprop.Arg = MyArgType::T_D2;
-	funcname = "ThermalConduction Balland_Arp"; functorprop.FunctorInitOption = string::npos;
+	funcname = "ThermalConduction Balland_Arp"; functorprop.FunctorInitOption = std::string::npos;
 	functorprop.Set_PlotPar = true;
 	
 	p_vec.push_back(m_pModelMap->GetPPointer("Sand Content"));
@@ -97,7 +97,7 @@ bool Thermal_Functions::Def()
 	
 	ps_vec.clear();
 
-	function<void(vector<double>, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
+	function<void(vector<double>, std::vector<double>&, std::vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
 		m_pModelMap->GetPPointer("Lower Depth")->GetVector(),
 		m_pModelMap->GetPPointer("DepthLayers")->GetVector(),
 		m_pModelMap->GetPPointer("Thickness Layers")->GetVector(),
@@ -176,7 +176,7 @@ bool Thermal_Functions::Def()
 	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 
 	functorprop.FuncName = MyFunc::DRYBULKDENSITY; functorprop.Arg = MyArgType::BLANK;
-	funcname = "Dry Bulk Density"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Dry Bulk Density"; functorprop.FunctorInitOption = std::string::npos;
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
 
 	function<vector<double>(bool)> f_DryBulk = GetVector_boolBlank_Functor(MyFunc::DRYBULKDENSITY);
@@ -193,7 +193,7 @@ bool Thermal_Functions::Def()
 	pFunc = new Func(MPROFILE, HEAT, STORAGE , NOBPROC, NORMAL);
 
 	functorprop.FuncName = MyFunc::HEATCAPACITY_SOLID; functorprop.Arg = MyArgType::BLANK;
-	funcname = "Heat Capacity Solid Frac Soil"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Heat Capacity Solid Frac Soil"; functorprop.FunctorInitOption = std::string::npos;
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
 	function<vector<double>()> f_HeatCapSoil = GetVector_Blank_Functor(MyFunc::HEATCAPACITY_SOLID);
 	auto ccc = f_HeatCapSoil();
@@ -263,7 +263,7 @@ bool Thermal_Functions::Def()
 	functorprop.Set_PlotPar = true;
 	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::THERMALCOND_KERSTEN; functorprop.Arg = MyArgType::T_D2;
-	funcname = "ThermalConduction Kersten"; functorprop.FunctorInitOption = string::npos;
+	funcname = "ThermalConduction Kersten"; functorprop.FunctorInitOption = std::string::npos;
 
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
 
@@ -277,7 +277,7 @@ bool Thermal_Functions::Def()
 
 	pFunc = new Func(SINGLE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::THERMALCOND_ORGANIC; functorprop.Arg = MyArgType::D2;
-	funcname = "Thermal Conductivity Organic Soil"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Thermal Conductivity Organic Soil"; functorprop.FunctorInitOption = std::string::npos;
 	functorprop.Set_PlotPar = true;
 	plotpar.Num_Of_Curves = 2;
 	plotpar.Num_Of_Points = 100;
@@ -312,7 +312,7 @@ bool Thermal_Functions::Def()
 	
 	pFunc = new Func(SINGLE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::THERMALCOND_KERSTEN_CLAY; functorprop.Arg = MyArgType::D3;
-	funcname = "Thermal Conductivity - Kersten Clay"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Thermal Conductivity - Kersten Clay"; functorprop.FunctorInitOption = std::string::npos;
 	functorprop.Set_PlotPar = true;
 	plotpar.Num_Of_Curves = 4;
 	plotpar.Num_Of_Points = 100;
@@ -345,7 +345,7 @@ bool Thermal_Functions::Def()
 	ps_vec.push_back(m_pModelMap->GetPsPointer("SandFrozenC4"));
 
 	functorprop.FuncName = MyFunc::THERMALCOND_KERSTEN_SAND; functorprop.Arg = MyArgType::D3;
-	funcname = "Thermal Conductivity - Kersten Sand"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Thermal Conductivity - Kersten Sand"; functorprop.FunctorInitOption = std::string::npos;
 
 	pFunc = new Func(SINGLE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
@@ -356,7 +356,7 @@ bool Thermal_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::THERMALCOND_KERSTEN; functorprop.Arg = MyArgType::T_D2;
-	funcname = "Thermal Conductivity - Kersten"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Thermal Conductivity - Kersten"; functorprop.FunctorInitOption = std::string::npos;
 
 	pFunc = new Func(SINGLE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); p_vec.clear(); ps_vec.clear();
@@ -383,7 +383,7 @@ bool Thermal_Functions::Def()
 
 	pFunc = new Func(MPROFILE, HEAT, HEAT_CONDUCTION, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::EMPIRICALSOILSURFACEDAMPING; functorprop.Arg = MyArgType::D1;
-	funcname = "Empirical Reduction of Conduction because of freezing of uppermost layer"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Empirical Reduction of Conduction because of freezing of uppermost layer"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_Points = 100;
 	plotpar.Num_Of_X = 1;
@@ -466,7 +466,7 @@ bool Thermal_Functions::Thermal_ReCalc() noexcept
 		  
 		}
 
-		function<void(vector<double>, vector<double>&, vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
+		function<void(vector<double>, std::vector<double>&, std::vector<double>&, bool)> f_ModelLayers = FromMeasuredLayersToModelLayers((m_pModelMap->GetPPointer("Upper Depth"))->GetVector(),
 			m_pModelMap->GetPPointer("Lower Depth")->GetVector(),
 			m_pModelMap->GetPPointer("DepthLayers")->GetVector(),
 			m_pModelMap->GetPPointer("Thickness Layers")->GetVector(),

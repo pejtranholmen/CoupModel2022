@@ -179,7 +179,7 @@ void ChartProp_AxisScaleValues::ResetLegend1(size_t index)
 
 
 void ChartProp_AxisScaleValues::SetXmax(size_t index, float v) {
-	if (index == string::npos) {
+	if (index == std::string::npos) {
 		for (size_t i = 0; i < m_XScaleMax.size(); i++) {
 			m_XScaleMax[i] = v;
 			m_XScaleSet.at(i) = true;
@@ -192,7 +192,7 @@ void ChartProp_AxisScaleValues::SetXmax(size_t index, float v) {
 	}
 };
 void ChartProp_AxisScaleValues::SetXInterv(size_t index, float v) {
-	if (index == string::npos) {
+	if (index == std::string::npos) {
 		for (size_t i = 0; i < m_XScaleInterv.size(); i++) {
 			m_XScaleInterv[i] = v;
 			m_XScaleSet.at(i) = true;
@@ -204,7 +204,7 @@ void ChartProp_AxisScaleValues::SetXInterv(size_t index, float v) {
 	}
 };
 void ChartProp_AxisScaleValues::SetXmin(size_t index, float v) {
-	if (index == string::npos) {
+	if (index == std::string::npos) {
 		for (size_t i = 0; i < m_XScaleMin.size(); i++) {
 			m_XScaleMin[i] = v;
 			m_XScaleSet.at(i) = true;
@@ -285,7 +285,7 @@ void ChartProp_AxisScaleValues::ResetYRightScale(size_t index)
 }
 void ChartProp_AxisScaleValues::ResetXScale(size_t index)
 {
-	if (index == string::npos) {
+	if (index == std::string::npos) {
 		for (size_t i = 0; i < m_XScaleChanged.size(); i++) {
 			m_XScaleChanged[i] = false;
 			m_XScaleSet[i] = false;
@@ -314,7 +314,7 @@ bool ChartProp_AxisScaleValues::isXScaleChanged(int index) {
 	return m_XScaleChanged[index];
 };
 void ChartProp_AxisScaleValues::SetXScaleChanged(size_t index) {
-	if (index == string::npos) {
+	if (index == std::string::npos) {
 		for (size_t i = 0; i < m_XScaleChanged.size(); i++) {
 			m_XScaleChanged[i] = true;
 		}
@@ -392,7 +392,7 @@ void ChartProp_AxisScaleValues::ResetZLabel(int index) {
 	while (m_ZLabelChange.size() <= index) m_ZLabelChange.push_back(false);
 	m_ZLabelChange[index] = false;
 };
-bool ChartProp_AxisScaleValues::SetLegend1(int index, string txt, bool changeset)
+bool ChartProp_AxisScaleValues::SetLegend1(int index, std::string txt, bool changeset)
 {
 
 	while (m_Legend1.size() <= index) m_Legend1.push_back(txt);
@@ -412,31 +412,31 @@ void ChartProp_AxisScaleValues::SetXVariableNumber(int subchart, int value)
 size_t ChartProp_AxisScaleValues::GetXVariableNumber(int subchart) 
 {
 	if(m_XVariableNumber.size()<=subchart)
-		return string::npos;
+		return std::string::npos;
 	else
 		return m_XVariableNumber.at(subchart);
 }
-void ChartProp_AxisScaleValues::SetXLabel(int index, string str)
+void ChartProp_AxisScaleValues::SetXLabel(int index, std::string str)
 {
 	m_XLabel[index]=str;
 }
-void ChartProp_AxisScaleValues::SetZLabel(int index, string str)
+void ChartProp_AxisScaleValues::SetZLabel(int index, std::string str)
 {
 
 	m_ZLabel[index]=str;
 }
-void ChartProp_AxisScaleValues::SetYLabel1(int index, string str)
+void ChartProp_AxisScaleValues::SetYLabel1(int index, std::string str)
 {
 	m_YLabel1[index]=str;
 }
-void ChartProp_AxisScaleValues::AddYUnit1(int index, string str)
+void ChartProp_AxisScaleValues::AddYUnit1(int index, std::string str)
 {
 	string txt;
 	txt=m_YLabel1.at(index);
 	txt+=" ("+str+")";
 	m_YLabel1[index]= txt;
 }
-void ChartProp_AxisScaleValues::SetYLabel2(int index, string str)
+void ChartProp_AxisScaleValues::SetYLabel2(int index, std::string str)
 {
 	m_YLabel2[index]=str;
 }
@@ -542,7 +542,7 @@ string ChartProp_AxisScaleValues::GetLegend(int index)
 }
 
 
-bool ChartProp_AxisScaleValues::SetLegend2(int index, string txt)
+bool ChartProp_AxisScaleValues::SetLegend2(int index, std::string txt)
 {
 	if(m_Legend2.size()>index&&index>=0) {
 		m_Legend2[index]= txt;
@@ -561,8 +561,8 @@ bool ChartProp_AxisScaleValues::SetFreeze()
 	m_freeze=true;
 	return true;
 }
-void ChartProp_AxisScaleValues::ChangeYLabel1(size_t Index, string str) {
-	if (Index == string::npos) {
+void ChartProp_AxisScaleValues::ChangeYLabel1(size_t Index, std::string str) {
+	if (Index == std::string::npos) {
 		for (size_t i = 0; i < m_YLabel1.size(); i++) {
 			m_YLabel1[i] = str;
 			m_YLabel1Change[i] = true;
@@ -574,7 +574,7 @@ void ChartProp_AxisScaleValues::ChangeYLabel1(size_t Index, string str) {
 	}
 }
 void ChartProp_AxisScaleValues::ChangeYMin1(size_t Index, float value) {
-	if (Index == string::npos) {
+	if (Index == std::string::npos) {
 		for (size_t i = 0; i <min(m_YScaleLeftMin.size(), m_YScaleLeftChanged.size()); i++) {
 			m_YScaleLeftMin[i] = value;
 			m_YScaleLeftChanged[i] = true;
@@ -586,7 +586,7 @@ void ChartProp_AxisScaleValues::ChangeYMin1(size_t Index, float value) {
 	}
 }
 void ChartProp_AxisScaleValues::ChangeYMax1(size_t Index, float value) {
-	if (Index == string::npos) {
+	if (Index == std::string::npos) {
 		for (size_t i = 0; i <min(m_YScaleLeftMax.size(), m_YScaleLeftChanged.size()); i++) {
 			m_YScaleLeftMax[i] = value;
 			m_YScaleLeftChanged[i] = true;
@@ -598,7 +598,7 @@ void ChartProp_AxisScaleValues::ChangeYMax1(size_t Index, float value) {
 	}
 }
 void ChartProp_AxisScaleValues::ChangeYInterv1(size_t Index, float value) {
-	if (Index == string::npos) {
+	if (Index == std::string::npos) {
 		for (size_t i = 0; i < min(m_YScaleLeftInterv.size(), m_YScaleLeftChanged.size()); i++) {
 			m_YScaleLeftInterv[i] = value;
 			m_YScaleLeftChanged[i] = true;

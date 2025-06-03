@@ -46,7 +46,7 @@ public:
 	size_t GetNumOriginal(size_t db_index) {return m_NumOriginalRec[db_index];};
 	vector<string> m_PlantType[6];
 	size_t m_PlantTypeIndex[9];
-	size_t GetPlantTypeIndex(size_t db_index, string name);
+	size_t GetPlantTypeIndex(size_t db_index, std::string name);
 	bool SetCompareLinkNewHeader(size_t db_index, size_t keyindex, bool Compare) {
 		if (db_index<9 && db_index >= 0) {
 			if (keyindex<m_NewHeader[db_index].size()) {

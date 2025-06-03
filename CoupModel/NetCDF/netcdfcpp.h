@@ -86,8 +86,8 @@ class NcFile
     NcBool add_att( NcToken attname, int );
     NcBool add_att( NcToken attname, float );
     NcBool add_att( NcToken attname, double );
-    NcBool add_att( NcToken attname, const char*);       // string attribute
-    NcBool add_att( NcToken attname, int, const char* ); // vector attributes
+    NcBool add_att( NcToken attname, const char*);       // std::string attribute
+    NcBool add_att( NcToken attname, int, const char* ); // std::vector attributes
     NcBool add_att( NcToken attname, int, const ncbyte* );
     NcBool add_att( NcToken attname, int, const short* );
     NcBool add_att( NcToken attname, int, const long* );
@@ -194,7 +194,7 @@ class NcTypedComponent
     virtual long as_long( long n ) const;        // nth value as long
     virtual float as_float( long n ) const;      // nth value as floating-point
     virtual double as_double( long n ) const;    // nth value as double
-    virtual char* as_string( long n ) const;     // nth value as string
+    virtual char* as_string( long n ) const;     // nth value as std::string
 
   protected:
     NcFile *the_file;
@@ -296,8 +296,8 @@ class NcVar : public NcTypedComponent
     NcBool add_att( NcToken, long );
     NcBool add_att( NcToken, float );
     NcBool add_att( NcToken, double );
-    NcBool add_att( NcToken, const char* );      // string attribute
-    NcBool add_att( NcToken, int, const char* ); // vector attributes
+    NcBool add_att( NcToken, const char* );      // std::string attribute
+    NcBool add_att( NcToken, int, const char* ); // std::vector attributes
     NcBool add_att( NcToken, int, const ncbyte* );
     NcBool add_att( NcToken, int, const short* );
     NcBool add_att( NcToken, int, const int* );

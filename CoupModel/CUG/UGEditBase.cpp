@@ -143,7 +143,7 @@ LRESULT CUGEditBase::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 					::SetFocus( m_ctrl->m_CUGGrid->GetSafeHwnd());
 			}
 
-			CString string;
+			CString std::string;
 			GetWindowText(string);
 
 			if(m_ctrl->EditCtrlFinished(string,m_cancel,m_continueFlag,m_continueCol,m_continueRow) == FALSE)
@@ -393,7 +393,7 @@ LRESULT CUGEditBase::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 				rcText.left += 2;
 				rcText.top += 2;
 
-				// Work out the part of the string that's selected.
+				// Work out the part of the std::string that's selected.
 				int nFirstChar = LOWORD(CharFromPos(CPoint(rcText.left, rcText.top)));
 				int nBegin, nEnd;
 				GetSel(nBegin, nEnd);

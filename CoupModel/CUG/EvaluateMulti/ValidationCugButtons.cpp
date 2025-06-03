@@ -114,12 +114,12 @@ int ValidationCugButtons::OnMenuStart(int col, long row, int section)
 
 						}
 						if (next_index >= m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension) {
-							next_index = string::npos;
+							next_index = std::string::npos;
 							break;
 						}
 
 					}
-					if (next_index != string::npos)
+					if (next_index != std::string::npos)
 						AddMenuItem(4024 + int(next_index), "Assign performance based on single index within Dimension 1 ");
 
 				}

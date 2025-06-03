@@ -373,7 +373,7 @@ void Sim::SetCurrentSubDirectory(string str)
 	
 	string file;
 	size_t ipos=m_CurrentFile.rfind("\\");
-	if(ipos<m_CurrentFile.size()&&ipos!=string::npos) {
+	if(ipos<m_CurrentFile.size()&&ipos!= std::string::npos) {
 		file=m_CurrentFile.substr(ipos+1);
 		m_CurrentSubDirectoryFile=m_CurrentSubDirectory+file;
 	}
@@ -832,11 +832,11 @@ bool Sim::CheckAndUpdateFileName(bool MultiRun) {
 	iposXml = oldfilename.rfind(".xml");
 
 	bool xmlType = true;
-	if (iposXml == string::npos) xmlType = false;
+	if (iposXml == std::string::npos) xmlType = false;
 
 	int SimulationRunNo = FUtil::GetProfileIntNo("SimulationRunNo", 0);
 	if (SimulationRunNo < 0) {
-		if (iposExt != string::npos && iposSim != string::npos) {
+		if (iposExt != std::string::npos && iposSim != std::string::npos) {
 			if (iposSim - iposExt == 7) {
 				string filenum = oldfilename.substr(iposExt + 1, 6);
 				SimulationRunNo = FUtil::AtoInt(filenum);
@@ -860,11 +860,11 @@ bool Sim::CheckAndUpdateFileName(bool MultiRun) {
 	if (iposXml) filtypstr = ".xml";
 	if (MultiRun) {
 
-		if (iposMul != string::npos&&iposExt != string::npos)
+		if (iposMul != std::string::npos&&iposExt != std::string::npos)
 			newfilename = oldfilename.substr(0, iposMul + 7) + NumStr + filtypstr;
-		else if (iposExt != string::npos)
+		else if (iposExt != std::string::npos)
 			newfilename = oldfilename.substr(0, iposExt + 1) + "Multi_"+ NumStr + filtypstr;
-		else if (iposSim != string::npos)
+		else if (iposSim != std::string::npos)
 			newfilename = oldfilename.substr(0, iposSim) + "_" +"_Multi_"+ NumStr + filtypstr;
 		else
 			newfilename = oldfilename;
@@ -872,11 +872,11 @@ bool Sim::CheckAndUpdateFileName(bool MultiRun) {
 	}
 	else {
 
-		if (iposMul != string::npos&&iposExt != string::npos)
+		if (iposMul != std::string::npos&&iposExt != std::string::npos)
 			newfilename = oldfilename.substr(0, iposMul + 1) + NumStr + filtypstr;
-		else if (iposExt != string::npos)
+		else if (iposExt != std::string::npos)
 			newfilename = oldfilename.substr(0, iposExt + 1) + NumStr + filtypstr;
-		else if (iposSim != string::npos)
+		else if (iposSim != std::string::npos)
 			newfilename = oldfilename.substr(0, iposSim) + "_" + NumStr + filtypstr;
 		else
 			newfilename = oldfilename;
@@ -906,7 +906,7 @@ bool Sim::CreateNewDocFromCurrentDoc() {
 
 	iposext = pzPathName.rfind('_');
 	ipos_sim = pzPathName.rfind(".Sim");
-	if (ipos_sim == string::npos) {
+	if (ipos_sim == std::string::npos) {
 
 		ipos_sim = pzPathName.rfind(".xml");
 		m_xmlFileToUse = true;
@@ -940,7 +940,7 @@ bool Sim::CreateNewDocFromCurrentDoc() {
 #ifdef COUPSTD
 		
 		newPathName = pzPathName.substr(0, iposext + 1) + Num + stringtype;
-		if (iposMul == string::npos&&m_MultiRun_Array.size() > 0) {
+		if (iposMul == std::string::npos&&m_MultiRun_Array.size() > 0) {
 
 			newPathName = pzPathName.substr(0, iposext + 1) +"Multi_"+ Num + stringtype;
 

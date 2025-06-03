@@ -116,7 +116,7 @@ string DB_Storage::GetGroupString(size_t db_index, size_t index) {
 	//return p_ModelInfo->GetGroupNames(m_Group[db_index][index]);
 }
 
-size_t DB_Storage::GetPlantTypeIndex(size_t db_index, string name)
+size_t DB_Storage::GetPlantTypeIndex(size_t db_index, std::string name)
 {
 	size_t ival = 0;
 	while (m_PlantType[m_PlantTypeIndex[db_index]][ival] == name) {

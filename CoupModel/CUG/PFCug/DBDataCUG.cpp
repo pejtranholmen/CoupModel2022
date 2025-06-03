@@ -146,7 +146,7 @@ void DBDataCug::OnSheetSetup(int sheetNumber)
 	CString heading, number, test;
 
 	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
-	CString string, Defstring;
+	CString std::string, Defstring;
 	CString optionlist;
 	int MaxCol=8;
 	int colv=0;
@@ -222,7 +222,7 @@ void DBDataCug::Make_LinkToDocumentSheet() {
 	size_t NRep;
 	size_t NSelected;
 
-	if(N_Dim!=string::npos) {
+	if(N_Dim!= std::string::npos) {
 		NRep=m_pDoc->MR_GetNumOfRepeatitionsOfDim(N_Dim-1);
 		NSelected=pDB->MR_GetNumberOfSelections();
 	}
@@ -506,7 +506,7 @@ void DBDataCug::Make_SwitchesSheet()
 					QuickSetFont(ix,-1,&m_largeFont);
 					//pEDIT->m_ArrayIndex=ix;
 					m_pDoc->Reset();
-					m_pDoc->Retrieve(GetDataBaseName(), string(testkey), true);
+					m_pDoc->Retrieve(GetDataBaseName(), std::string(testkey), true);
 					if(ix<m_pDB->GetNumOriginal(m_DataBaseId)){//;m_NumOriginalRecords) {
 						readonly=TRUE;
 						QuickSetBackColor(ix,-1, m_ColorChanged);
@@ -580,7 +580,7 @@ void DBDataCug::Make_SwitchesSheet()
 							cell.SetLabelText(optionlist);
 
 							i1=pSw->GetDBIntValue();
-							if (i1 == string::npos) {
+							if (i1 == std::string::npos) {
 								cell.SetText("-");
 								cell.SetBackColor(m_ColorHeading);
 							}						
@@ -756,7 +756,7 @@ void DBDataCug::Make_ParameterSheet()
 
 				m_pDoc->Reset();
 
-				if (m_pDoc->Retrieve(GetDataBaseName(), string(testkey), true)) {
+				if (m_pDoc->Retrieve(GetDataBaseName(), std::string(testkey), true)) {
 					Counter = 0;
 					for (size_t i = 0; i < m_pDB->GetNumGroups(m_DataBaseId); i++) {
 						Group = m_pDB->GetGroupString(m_DataBaseId, i).c_str();
@@ -935,7 +935,7 @@ void DBDataCug::Make_TableElementSheet()
 
 
 				m_pDoc->Reset();
-				m_pDoc->Retrieve(GetDataBaseName(), string(testkey), true);
+				m_pDoc->Retrieve(GetDataBaseName(), std::string(testkey), true);
 
 				if(ix<m_pDB->GetNumOriginal(m_DataBaseId)){//;m_NumOriginalRecords) {
 					readonly=TRUE;
@@ -1157,7 +1157,7 @@ void DBDataCug::Make_ParameterTableSheet()
 
 				}
 				m_pDoc->Reset();
-				m_pDoc->Retrieve(GetDataBaseName(), string(testkey), true);
+				m_pDoc->Retrieve(GetDataBaseName(), std::string(testkey), true);
 				//pEDIT->Reset();
 				//pEDIT->Retrieve();
 			
@@ -1336,7 +1336,7 @@ void DBDataCug::Make_ModelFileSheet()
 
 
 				m_pDoc->Reset();
-				m_pDoc->Retrieve(GetDataBaseName(), string(testkey), true);
+				m_pDoc->Retrieve(GetDataBaseName(), std::string(testkey), true);
 				if(ix<m_pDB->GetNumOriginal(m_DataBaseId)){//;m_NumOriginalRecords) {
 					readonly=TRUE;
 					QuickSetBackColor(ix,-1, m_ColorChanged);

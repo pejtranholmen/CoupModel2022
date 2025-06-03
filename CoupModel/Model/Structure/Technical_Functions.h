@@ -19,7 +19,7 @@ class Technical_Functions : public SimModule
 
 
 		double SumLikelihood(size_t i, double sim, double obs);
-	    double SumLikelihood(size_t i, vector<double> *sim, vector<double> *obs);
+	    double SumLikelihood(size_t i, std::vector<double> *sim, std::vector<double> *obs);
 		double boxcox(double y, double lam1, double lam2) {if(lam1<=1.E-6) return log(y+lam2);else return (pow(y+lam2,lam1)-1)/lam1;} ;
 		double boxcox_derive(double y, double lam1, double lam2) {return pow(y+lam2,lam1-1);}; 
 		double MC_ScalingStepFunction(size_t IndexRun);

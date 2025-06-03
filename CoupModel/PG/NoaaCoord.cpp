@@ -336,7 +336,7 @@ CPG* NoaaCoord::CreateNewSpatialCorrelationFile(CPG *pPG)
 			for (int j = 0; j < nrep; j++) {
 				Maths::Regression::Linear *pLin;
 				pLin = nullptr;
-				vector<Maths::Regression::Linear *> Lin;				// vector of class Linear that keeps the regressions
+				vector<Maths::Regression::Linear *> Lin;				// std::vector of class Linear that keeps the regressions
 				vector<Maths::Regression::Linear *>::iterator it;
 				vector<int> Valid_Rep;					// Index of repetitions to which the regressions are find	(
 				Lin.resize(0);
@@ -422,7 +422,7 @@ CPG* NoaaCoord::CreateNewSpatialCorrelationFile(CPG *pPG)
 
 
 							pPG_Dest->SetVarValue(k, MissingIndex[i], float(newvalue));   // Set Number into PG Struture
-							MissingIndex.erase(MissingIndex.begin() + i);  // erase from vector of Missing values	
+							MissingIndex.erase(MissingIndex.begin() + i);  // erase from std::vector of Missing values	
 							Num_Substituted++;
 							i--;
 							//pPG_Dest->SetRepititionSequence(indexRep);//here added
@@ -483,7 +483,7 @@ CPG* NoaaCoord::CreateNewSpatialCorrelationFile(CPG *pPG)
 
 				Maths::Regression::Linear *pLin;
 				pLin = nullptr;
-				vector<Maths::Regression::Linear *> Lin;				// vector of class Linear that keeps the regressions
+				vector<Maths::Regression::Linear *> Lin;				// std::vector of class Linear that keeps the regressions
 				vector<Maths::Regression::Linear *>::iterator it;
 				vector<int> Valid_Rep;					// Index of repetitions to which the regressions are find	(
 				Lin.resize(0);
@@ -565,7 +565,7 @@ CPG* NoaaCoord::CreateNewSpatialCorrelationFile(CPG *pPG)
 
 
 							pPG_Dest->SetVarValue(k, MissingIndex[i], float(newvalue));   // Set Number into PG Struture
-							MissingIndex.erase(MissingIndex.begin() + i);  // erase from vector of Missing values	
+							MissingIndex.erase(MissingIndex.begin() + i);  // erase from std::vector of Missing values	
 							Num_Substituted++;
 							i--;
 							//pPG_Dest->SetRepititionSequence(indexRep);//here added
@@ -680,7 +680,7 @@ bool NoaaCoord::EstimateWeightforInterpolation(double Lat1, double Long1)
 	m_weight.resize(0);
 	m_disindex.resize(0);
 	m_sumweight=0.;
-	// Finding the distances to other stations and putting all including the weights into a sorted vector
+	// Finding the distances to other stations and putting all including the weights into a sorted std::vector
 	for(int k=0;k<nrep;k++){
 		m_pPGSource->SetRepititionSequence(k);
 		double lat2=m_pPGSource->GetVarLat(1,k);

@@ -101,7 +101,7 @@ bool Meteorological_Data_Functions::Def()
 
 	FunctorProp functorprop;
 	functorprop.FuncName = MyFunc::PRECCORR; functorprop.Arg = MyArgType::D1;
-	funcname = "Precipitation Generator"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Precipitation Generator"; functorprop.FunctorInitOption = std::string::npos;
 
 	Ps* pPs;
 	pPs = new Ps(&T_Step, ATMBOUNDARY, TIME, NOFPROC, NOBPROC, DETAILED);
@@ -345,7 +345,7 @@ bool Meteorological_Data_Functions::FunctionDef() {
 
 	pFunc = new Func(ATMBOUNDARY, VAPOUR, NOFPROC, NOBPROC, NORMAL);
 	functorprop.FuncName = MyFunc::NO_PARFUNC; functorprop.Arg = MyArgType::D2;	funcname = "Vapour Pressure Air Temperature Function";
-	functorprop.PhysFuncName = FUNC_CHOICE::AVP_TEMP_RH; functorprop.FunctorInitOption = string::npos; ps_vec.clear();
+	functorprop.PhysFuncName = FUNC_CHOICE::AVP_TEMP_RH; functorprop.FunctorInitOption = std::string::npos; ps_vec.clear();
 	Define(pFunc, functorprop, funcname,  ps_vec);
 
 

@@ -29,7 +29,7 @@ NewReShaped::NewReShaped()
 NewReShaped::~NewReShaped()
 {
 }
- CPG* NewReShaped::CreateNewReShapedFile(CPG* pPG,  vector<string> unique_names, vector<size_t> num_repof_names, vector<vector<size_t>> VarNamePos, bool treatment, bool specialtreatment, bool parcelNo)
+ CPG* NewReShaped::CreateNewReShapedFile(CPG* pPG,  std::vector<string> unique_names, std::vector<size_t> num_repof_names, std::vector<vector<size_t>> VarNamePos, bool treatment, bool specialtreatment, bool parcelNo)
 {
 	CPG* pPG_Dest;
 	pPG_Dest = new CPG;
@@ -155,8 +155,8 @@ NewReShaped::~NewReShaped()
  m_pPGSource->SetCompleteRead(true);
  size_t treat_var{ 0 };
  for (auto i = 0; i < ivar; i++) {
-	 string varname = m_pPGSource->GetVarName(i + 1);
-	 if(varname.find("Treatment")!=string::npos) {
+	 std::string varname = m_pPGSource->GetVarName(i + 1);
+	 if(varname.find("Treatment")!= std::string::npos) {
 		 treat_var = i + 1;
 	 }
  }
@@ -174,8 +174,8 @@ NewReShaped::~NewReShaped()
 
 	 size_t count_rec{0}, count{0};
 	 size_t min_pre, min_act;
-	 vector<float> varvalues;
-	 vector<int> n_values;
+	 std::vector<float> varvalues;
+	 std::vector<int> n_values;
 	 varvalues.resize(treat_var - 1);
 	 n_values.resize(treat_var - 1);
 	 min_pre = m_pPGSource->GetLongTime(1);
@@ -229,7 +229,7 @@ NewReShaped::~NewReShaped()
 	// pPG_Dest->SetNumRecords(count_rec);
 	 pPG_Dest->CreateNewFile(ivar, count_rec, 1);
 
-	 string txt;
+	 std::string txt;
 	 for (size_t i = 1; i <= ivar; i++) {
 		 txt = m_pPGSource->GetVarName(i, 1);
 		 pPG_Dest->SetVarName(i, txt, 1);
@@ -245,7 +245,7 @@ NewReShaped::~NewReShaped()
 		 pPG_Dest->SetVarLong(i, Long, 1);
 		 double Alt = m_pPGSource->GetVarAlt(i, 1);
 		 pPG_Dest->SetVarAlt(i, Alt, 1);
-		 string txt = m_pPGSource->GetVarStation(i, 1);
+		 std::string txt = m_pPGSource->GetVarStation(i, 1);
 		 pPG_Dest->SetVarStation(i, txt, 1);
 		 txt = m_pPGSource->GetVarCountry(i, 1);
 		 pPG_Dest->SetVarCountry(i, txt, 1);
@@ -265,7 +265,7 @@ NewReShaped::~NewReShaped()
 	 return nullptr;
  }
 
- CPG* NewReShaped::CreateRepitionsStructure(CPG* pPGSource, CPG* pOrigSource, vector<vector<size_t>> VarNamePos)
+ CPG* NewReShaped::CreateRepitionsStructure(CPG* pPGSource, CPG* pOrigSource, std::vector<vector<size_t>> VarNamePos)
  {
 	 // Input File any PG-file with repeated number of variables with common time points.
 	 pPGSource->CloseFile();
@@ -283,9 +283,9 @@ NewReShaped::~NewReShaped()
 	 m_DestFileName = m_pPGSource->GetFileName();
 
 	 size_t ipos = m_DestFileName.find("_Reshaped.bin");
-	 if(ipos==string::npos) ipos = m_DestFileName.find(".bin");
-	 if (ipos==string::npos) ipos = m_DestFileName.find(".BIN");
-	 if (ipos == string::npos) ipos = m_DestFileName.find(".Bin");
+	 if(ipos== std::string::npos) ipos = m_DestFileName.find(".bin");
+	 if (ipos== std::string::npos) ipos = m_DestFileName.find(".BIN");
+	 if (ipos == std::string::npos) ipos = m_DestFileName.find(".Bin");
 
 	 m_DestFileName = m_DestFileName.substr(0, ipos);
 	 m_DestFileName += "_WithRepetitions.bin";
@@ -325,7 +325,7 @@ NewReShaped::~NewReShaped()
 	}
 
 	 m_pPGSource->ReOpen();
-	 string txt;
+	 std::string txt;
 	 auto test_cycle=m_pPGSource->GetCycleWithCommonTime();
 	 auto ivar_test = m_pPGSource->GetNumVariables();
 	 for (size_t inames = 0; inames < VarNamePos.size()+m_NewIdVar; inames++) {
@@ -365,7 +365,7 @@ NewReShaped::~NewReShaped()
 				 pPG_Dest->SetVarLong(inames+1, Long, i);
 				 double Alt = pPGSource->GetVarAlt(VarNamePos[0][i]);
 				 pPG_Dest->SetVarAlt(inames+1, Alt, i);
-				 string txt = pPGSource->GetVarStation(VarNamePos[0][i]);
+				 std::string txt = pPGSource->GetVarStation(VarNamePos[0][i]);
 				 pPG_Dest->SetVarStation(inames+1, txt, i);
 				 txt = pPGSource->GetVarCountry(VarNamePos[0][i]);
 				 pPG_Dest->SetVarCountry(inames+1, txt, i);
@@ -394,7 +394,7 @@ for (size_t i = 0; i < treatment_convert.size(); i++) {
 	if (idkod.find(treatment_convert[i].first) == 0) {
 		IBeh = treatment_convert[i].second;
 		auto npos=idkod.find("-");
-		if (npos != string::npos) {
+		if (npos != std::string::npos) {
 			auto newstr = idkod.substr(npos);
 			if (newstr.find("IL")) IBeh = 60;
 		}		
@@ -414,7 +414,7 @@ int NewReShaped::GetParcell(string idkod)
 {
 	auto Isplit = idkod.find(";");
 
-	if (Isplit == string::npos) Isplit = 1;
+	if (Isplit == std::string::npos) Isplit = 1;
 	if (idkod.find("AN") == 0) Isplit = 2;
 	if (idkod.find("IL") == 0) Isplit = 2;
 	if (idkod.find("F30") == 0|| idkod.find("F50") == 0) Isplit = 3;
@@ -446,12 +446,12 @@ int NewReShaped::GetParcell(string idkod)
 	int IRuta;
 	IRuta = 0;
 	auto IposA = idkod.find(Parcell_Stop[0]);
-	if(IposA == string::npos) {
+	if(IposA == std::string::npos) {
 		auto IposB = idkod.find(Parcell_Stop[1]);
 		if (IposB == 1) IRuta = FUtil::AtoInt(idkod.substr(0, 1));
 		else if (IposB == 2) IRuta = FUtil::AtoInt(idkod.substr(0, 2));
 		else if (IposB == 3) IRuta = FUtil::AtoInt(idkod.substr(1, 3));
-		else if (IposB==string::npos) return 0;
+		else if (IposB== std::string::npos) return 0;
 		IRuta += Parcell_Add[0];
 	}
 	else {
@@ -464,27 +464,27 @@ int NewReShaped::GetParcell(string idkod)
 int NewReShaped::GetSpecTreatment(string idkod)
 {
 	auto Isplit = idkod.find(";");
-	if (Isplit == string::npos) Isplit = 0;
+	if (Isplit == std::string::npos) Isplit = 0;
 	auto ISpec = 0;
-	if (idkod.substr(Isplit).find("50") != string::npos) ISpec = 5;
-	if (idkod.substr(Isplit).find("30") != string::npos) ISpec = 3;
-	if (idkod.substr(Isplit).find("50M") != string::npos) ISpec = 50;
-	if (idkod.substr(Isplit).find("30M") != string::npos) ISpec = 30;
-	if (idkod.substr(Isplit).find("60") != string::npos) ISpec = 6;
-	if (idkod.substr(Isplit).find("60M") != string::npos) ISpec = 60;
+	if (idkod.substr(Isplit).find("50") != std::string::npos) ISpec = 5;
+	if (idkod.substr(Isplit).find("30") != std::string::npos) ISpec = 3;
+	if (idkod.substr(Isplit).find("50M") != std::string::npos) ISpec = 50;
+	if (idkod.substr(Isplit).find("30M") != std::string::npos) ISpec = 30;
+	if (idkod.substr(Isplit).find("60") != std::string::npos) ISpec = 6;
+	if (idkod.substr(Isplit).find("60M") != std::string::npos) ISpec = 60;
 
-	if (idkod.substr(Isplit).find("ILV") != string::npos) ISpec = 100;
-	if (idkod.substr(Isplit).find("IV") != string::npos) ISpec = 110;
-	if (idkod.substr(Isplit).find("ILVH") != string::npos) ISpec = 200;
-	if (idkod.substr(Isplit).find("IVH") != string::npos) ISpec = 210;
+	if (idkod.substr(Isplit).find("ILV") != std::string::npos) ISpec = 100;
+	if (idkod.substr(Isplit).find("IV") != std::string::npos) ISpec = 110;
+	if (idkod.substr(Isplit).find("ILVH") != std::string::npos) ISpec = 200;
+	if (idkod.substr(Isplit).find("IVH") != std::string::npos) ISpec = 210;
 
-	if (idkod.substr(Isplit).find("ILV") != string::npos) ISpec = 100;
-	if (idkod.substr(Isplit).find("IV") != string::npos) ISpec = 110;
-	if (idkod.substr(Isplit).find("ILVH") != string::npos) ISpec = 200;
-	if (idkod.substr(Isplit).find("IVH") != string::npos) ISpec = 210;
+	if (idkod.substr(Isplit).find("ILV") != std::string::npos) ISpec = 100;
+	if (idkod.substr(Isplit).find("IV") != std::string::npos) ISpec = 110;
+	if (idkod.substr(Isplit).find("ILVH") != std::string::npos) ISpec = 200;
+	if (idkod.substr(Isplit).find("IVH") != std::string::npos) ISpec = 210;
 
-	if (idkod.substr(Isplit).find("G") != string::npos) ISpec = 300;
-	if (idkod.substr(Isplit).find("GC") != string::npos) ISpec = 310;
-	if (idkod.substr(Isplit).find("GCO") != string::npos) ISpec = 320;
+	if (idkod.substr(Isplit).find("G") != std::string::npos) ISpec = 300;
+	if (idkod.substr(Isplit).find("GC") != std::string::npos) ISpec = 310;
+	if (idkod.substr(Isplit).find("GCO") != std::string::npos) ISpec = 320;
 	return ISpec;
 }

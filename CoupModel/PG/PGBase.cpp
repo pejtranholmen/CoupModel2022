@@ -6,7 +6,7 @@ CPGBase::CPGBase(void)
 	pg.Shape.NumVar=8;
 	pg.status.b.buf_TotSize=32000;
 	pg.status.b.buf_TotSize = pg.status.b.buf_TotSize/pg.Shape.NumVar;
-	pg.status.b.PrevBuf = string::npos;
+	pg.status.b.PrevBuf = std::string::npos;
 	pg.status.b.NumberOfBuf=1;
 	pg.Des.defaultAddInfo.Key=0; pg.Des.defaultAddInfo.Lat=0.;pg.Des.defaultAddInfo.Long=0.;pg.Des.defaultAddInfo.Alt=0.;pg.Des.defaultAddInfo.CountryCode="";
 	pg.Des.defaultAddInfo.Element = GENERAL; pg.Des.defaultAddInfo.Unit = UNIT_TYPES::NO_UNIT;

@@ -27,7 +27,7 @@ Method GetResiduals
 or GetResidualVector
 
 The Residuals are stored as float with 4 bytes each.
-A vector of Residuals consist of all records for each variables in the the files.
+A std::vector of Residuals consist of all records for each variables in the the files.
 
 The position in the files are in a sequence
 
@@ -42,10 +42,10 @@ To get the position for a give residual in the file:
 		if(m_RecL<3) newpos=irun*(m_RecL*m_NumVar)+iv*m_RecL+3;
 		newpos=newpos*byte;
 
-To Read the Residual vector
+To Read the Residual std::vector
 			m_ResidualFile.read((char*)&m_Residuals[0], m_RecL * 4);
 
-To Get the position of the specific record use the index of the vector read.
+To Get the position of the specific record use the index of the std::vector read.
 
 */
 
@@ -815,7 +815,7 @@ bool CResiduals::ReOpenFile(bool ReadOnly) {
 		m_ResidualFile.open(m_FileName, ios::binary | ios::in|ios::out);
 
 	size_t ikoll = 0;
-	if (m_FileName.find("V2_COUP_001570.XBin") != string::npos) {
+	if (m_FileName.find("V2_COUP_001570.XBin") != std::string::npos) {
 		ikoll = 1;
 
 	}
@@ -907,11 +907,11 @@ bool CResiduals::SmartUpdateTimeSerieEnsembleStatistic(bool AcceptedOnly, void *
 	auto pSw = m_pNewMap->GetSw("UseFilterParameters");
 	auto pSw2 = m_pNewMap->GetSw("PreDefinedEnsembles");
 	size_t n_cycle_withinPGFile=1;
-	size_t max_RecL_ObsFile = string::npos;
+	size_t max_RecL_ObsFile = std::string::npos;
 	CPG* pPG_ObsFile;
 
 	if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
-		//if (m_ValidationFileIndex != string::npos) {
+		//if (m_ValidationFileIndex != std::string::npos) {
 			//auto valfileindex=m_pNewMap->m_Val_Array[m_ValidationVarIndex].ValidationFileNumber;
 			F* pF = m_pNewMap->ValidationFilePointer(m_ResidualFileNo);
 			pPG_ObsFile=pF->GetPointer();
@@ -990,7 +990,7 @@ bool CResiduals::SmartUpdateTimeSerieEnsembleStatistic(bool AcceptedOnly, void *
 							m_MeanPost.p90[ii][index] = float(MISSING);
 						}
 					}
-					if (startvalue != string::npos) { // If Variable exist in validation file 
+					if (startvalue != std::string::npos) { // If Variable exist in validation file 
 						size_t inc_step;
 						if (m_ScalingNumVarWithDim1 > 1)
 							inc_step = m_ScalingNumVarWithDim1;

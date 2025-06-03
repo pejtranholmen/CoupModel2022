@@ -220,14 +220,14 @@ GetColName
 	to provide the grid with the name of a column.
 Params:
 	col		- column number for which to return name
-	string	- pointer to a string which should be populated
+	string	- pointer to a std::string which should be populated
 			  with the column name.
 Return:
 	UG_NA		not available
 	UG_SUCCESS	success
 	1...		error codes (data source dependant)
 ****************************************************/
-int CUGDataSource::GetColName(int col,CString * string)
+int CUGDataSource::GetColName(int col,CString * std::string)
 {
 	UNREFERENCED_PARAMETER(col);
 	UNREFERENCED_PARAMETER(*string);
@@ -497,7 +497,7 @@ FindFirst
 	to find first occurence of specified value (string)
 	in a column based on the flags passed in.
 Params:
-	string		- string to look for
+	string		- std::string to look for
 	col			- pointer to integer value identifying
 				  which column contains the found value
 	row			- pointer to a long integer value that
@@ -528,7 +528,7 @@ FindFirst
 	to find next occurence of specified value (string)
 	in a column based on the flags passed in.
 Params:
-	string		- string to look for
+	string		- std::string to look for
 	col			- pointer to integer value identifying
 				  which column contains the found value
 	row			- pointer to a long integer value that
@@ -869,13 +869,13 @@ OnEditFinish
 Params:
 	col, row	- coordinates of the edit cell
 	edit		- pointer to the edit control
-	string		- actual string that user typed in
+	string		- actual std::string that user typed in
 	cancelFlag	- indicates if the edit is being cancelled
 Return:
 	TRUE - to allow the edit it proceede
 	FALSE - to force the user back to editing of that same cell
 ****************************************************/
-int CUGDataSource::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
+int CUGDataSource::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
 {
 	UNREFERENCED_PARAMETER(col);
 	UNREFERENCED_PARAMETER(row);

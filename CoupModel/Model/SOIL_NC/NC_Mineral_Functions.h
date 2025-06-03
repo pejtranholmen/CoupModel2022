@@ -152,7 +152,7 @@ double SoilPressureNH3(double NH4Conc, double  Ph);
 double NUptMaxAvailFrac_Function(double RootDensity, size_t PlantIndex);
 double FungiNUptMaxAvailFrac_Function(double RootDensity,size_t PlantIndex, bool LAmmonium) ;
 double DenitNitrateFunction(double Nitrate);
-Plant_Uptake NUptake(vector<double> Dist, size_t NUM, size_t index, double N_demand, double N_Tot_Demand,  vector<double> Dist_Tot,double factNdemandFungi,double FungiNitrateUptpot,double FungiAmmoniumUptpot,double N_FungiDemand, double N_Tot_FungiDemand);
+Plant_Uptake NUptake(vector<double> Dist, size_t NUM, size_t index, double N_demand, double N_Tot_Demand,  std::vector<double> Dist_Tot,double factNdemandFungi,double FungiNitrateUptpot,double FungiAmmoniumUptpot,double N_FungiDemand, double N_Tot_FungiDemand);
 void NitrogenUptakeResetForAllSoilLayers();
 
 

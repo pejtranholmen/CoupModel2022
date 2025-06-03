@@ -5,7 +5,7 @@
 
 
  Units::Units() {  
-	 string unit, m2;
+	 std::string unit, m2;
 	SetUnitMap(UNIT_TYPES::WATERMASS_UNIT, "mm");
 	SetUnitMap(UNIT_TYPES::WATERFLOW_UNIT,"mm/day");
 	SetUnitMap(UNIT_TYPES::INVERSE_WATERFLOW_UNIT, "day/mm");

@@ -10,17 +10,17 @@ class DB :public History
 
 public:
 	DB();
-	bool Retrieve(string group, string key, bool NoApply=false);
-	bool Read_DB_DocFile(string file, string key, bool Apply=false, bool ExportToCSV=false);
+	bool Retrieve(string group, std::string key, bool NoApply=false);
+	bool Read_DB_DocFile(string file, std::string key, bool Apply=false, bool ExportToCSV=false);
 	bool Write_DB_DocFile(string file);
-	bool Apply_DB_DocFile(string group, string key="", bool during=false);
-	bool Apply_DB_DocFile(vector<Sw*> AppliedSw, vector<Ps*> AppliedPs, vector<Tab*> Applied_Tab, vector<F*> Applied_File);
-	bool Export_DB_CSVFile(vector<Sw*> AppliedSw, vector<Ps*> AppliedPs, vector<Tab*> Applied_Tab, vector<F*> Applied_File);
+	bool Apply_DB_DocFile(string group, std::string key="", bool during=false);
+	bool Apply_DB_DocFile(vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_File);
+	bool Export_DB_CSVFile(vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_File);
 	bool Apply_DB_Struc(string);
 	void Actual_DB(string group="");
 
-	bool ReadFrom_DB_Object(string ID_DB_Group, string key="", bool deletefile=false, bool NoApply=false, bool ExportToCSV=false);
-	void SaveTo_DB_Object(string, string key);
+	bool ReadFrom_DB_Object(string ID_DB_Group, std::string key="", bool deletefile=false, bool NoApply=false, bool ExportToCSV=false);
+	void SaveTo_DB_Object(string, std::string key);
 
 	void SetGroupConnections(string Group);
 	void Reset();

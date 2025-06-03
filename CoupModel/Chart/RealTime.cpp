@@ -1463,7 +1463,7 @@ void RealTime::OnBnClickedButton1()
 
 
 }
-BOOL RealTime::AddChartVar(int chartno, SimB *pBase, string Type, int index)
+BOOL RealTime::AddChartVar(int chartno, SimB *pBase, std::string Type, int index)
 {
 	string Name, Group;
 	bool response;
@@ -1643,7 +1643,7 @@ BOOL RealTime::RemoveChartVar(int chartno, int ivarno)
 
 }
 
-BOOL RealTime::SetChartTitle(int chartno, string text)
+BOOL RealTime::SetChartTitle(int chartno, std::string text)
 {
 	CWinApp* pApp = AfxGetApp();
 	string astr;

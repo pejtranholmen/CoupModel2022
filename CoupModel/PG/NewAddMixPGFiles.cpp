@@ -39,7 +39,7 @@ CPG * NewAddMixPGFiles::AddFileToNewPGFile(bool Reshape) {
 	numrec = 0;
 	numvar = 10000;
 	int NumLines = m_PGPointerVector.size();
-	size_t num_rep = string::npos;
+	size_t num_rep = std::string::npos;
 	bool Valid_Rep = true;
 
 	for (int i = 0; i<m_PGPointerVector.size(); i++) {
@@ -51,7 +51,7 @@ CPG * NewAddMixPGFiles::AddFileToNewPGFile(bool Reshape) {
 		long pgst = pCPG->GetLongTimeStart();
 		long pgend = pCPG->GetLongTimeEnd();
 		auto rep = pCPG->GetNumRepititions();
-		if (num_rep != string::npos) {
+		if (num_rep != std::string::npos) {
 			if (rep != num_rep)
 				Valid_Rep = false;
 		}
@@ -540,7 +540,7 @@ bool NewAddMixPGFiles::SetOutPutFileFormat()
 	numrec = 0;
 	numvar = 10000;
 	int NumLines = m_PGPointerVector.size();
-	size_t num_rep = string::npos;
+	size_t num_rep = std::string::npos;
 	bool Valid_Rep = true;
 	bool Valid_Merge = true;
 
@@ -559,7 +559,7 @@ bool NewAddMixPGFiles::SetOutPutFileFormat()
 
 
 		if (m_pPGADD_Out != nullptr) {
-			if (num_rep != string::npos) {
+			if (num_rep != std::string::npos) {
 				if (rep != num_rep)
 					Valid_Rep = false;
 			}

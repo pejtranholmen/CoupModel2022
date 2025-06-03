@@ -6,7 +6,7 @@ public:
 	ChangeFromFile();
 	~ChangeFromFile();
 
-	bool LinkedChangeToParameters(Par *pPar, size_t option, size_t index=string::npos);
+	bool LinkedChangeToParameters(Par *pPar, size_t option, size_t index= std::string::npos);
 
 	void Get_IGBP_Soil();
 	void Get_Mascur_Soil();

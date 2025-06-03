@@ -226,15 +226,15 @@ class ModelBase : public ModelMap{
 	vector<HistP> m_HistoryPar_Array;
 	vector<string>m_Report_Array;
 	vector<Annim>  AnnimVarList;
-	vector< vector<float>> m_ValFlexValue[4];
+	vector< std::vector<float>> m_ValFlexValue[4];
 	size_t m_AnnimChartX, m_AnnimChartY;
 	
 
-	SimB* GetPtrFromIntType(size_t itype, string group, string name);
-	SimB* GetPtr(string type, string group, string name);
-	SimB* GetPtr(string type, string name);
-	SimB* GetPtr(enum simtype, string name, string group="");
-	SimB* GetPtrByName(string name, string group="");
+	SimB* GetPtrFromIntType(size_t itype, std::string group, std::string name);
+	SimB* GetPtr(string type, std::string group, std::string name);
+	SimB* GetPtr(string type, std::string name);
+	SimB* GetPtr(enum simtype, std::string name, std::string group="");
+	SimB* GetPtrByName(string name, std::string group="");
 	P* GetP(string name)  {return (P*)GetPtr(PAR_TABLE, name);};
 	Ps* GetPs(string name) {return (Ps*)GetPtr(PAR_SINGLE, name);};
 	Sw* GetSw(string name) {return (Sw*)GetPtr(SWITCH,name);};
@@ -243,7 +243,7 @@ class ModelBase : public ModelMap{
 
 	void* GetNE_Ptr(size_t* val);
 
-	vector<SimB*> GetPtrVector(string type, string group, bool All=false);
+	vector<SimB*> GetPtrVector(string type, std::string group, bool All=false);
 	vector<SimB*> GetPtrVector(enum simtype,  bool All=false);
 	vector<SimB*> GetPtrVector(enum simtype, size_t GroupNo,bool All);
 	vector<SimB*> GetAllPtr(enum simtype);
@@ -260,8 +260,8 @@ class ModelBase : public ModelMap{
 
 	vector<SIMB> GetWShedOutputs();	
 	vector<size_t> GetPressureHeadOutputIndex(vector<SIMB> allout);
-	vector<SIMB> GetAllOutputs(size_t choice=string::npos, bool allout=false);
-	vector<SimB*> GetAllPtrOutputs(size_t choice=string::npos);
+	vector<SIMB> GetAllOutputs(size_t choice= std::string::npos, bool allout=false);
+	vector<SimB*> GetAllPtrOutputs(size_t choice= std::string::npos);
 	vector<SIMB> GetALLXOutputs() {return GetAllOutputs(0);};
 	vector<SIMB> GetALLTOutputs() {return GetAllOutputs(1);};
 	vector<SIMB> GetALLGutputs() {return GetAllOutputs(2);};
@@ -353,7 +353,7 @@ class ModelBase : public ModelMap{
 
 	size_t m_NumberSelectedValidationVar[16];
 
-	void DB_SetChoice(DB_types, string value);
+	void DB_SetChoice(DB_types, std::string value);
 	string DB_GetChoice(DB_types);
 	string DB_GetNames(size_t, bool AllIndex=true);
 	CDB* DB_GetPointer(DB_types);
@@ -362,7 +362,7 @@ class ModelBase : public ModelMap{
 	time_t DB_GetImportTimeT(size_t index);
 	void SetRunReportArray(string);
 
-	float GetActualObsValueFromValSumFlex(string IDFileName, string  IDVarName, size_t runno);
+	float GetActualObsValueFromValSumFlex(string IDFileName, std::string  IDVarName, size_t runno);
 	void CheckFileNameLinkedto_SV_Variables();
 	string GetExistingDocFileName(string FileName);
 

@@ -1,11 +1,11 @@
 #pragma once
 #include "pugixml.hpp"
-static vector<string> output_col_names={ "Index", "Initial", "Final", "Min", "Max", "Mean", "Accumulated", "StoreFlag" };
-struct Output_InXml { string name{ "" }; int Index{ -1 }; double dvalues[8]{0.,0.,0.,0.,0.,0.,0.,0.}; int flag{ -1 }; };
+static std::vector<string> output_col_names={ "Index", "Initial", "Final", "Min", "Max", "Mean", "Accumulated", "StoreFlag" };
+struct Output_InXml { std::string name{ "" }; int Index{ -1 }; double dvalues[8]{0.,0.,0.,0.,0.,0.,0.,0.}; int flag{ -1 }; };
 struct Multi_InXml {
-	int numrepeat; string group; string name; int tabindex; int imethod; int imon; double fmin;
-	double fmax; double fstart; int nCount; string group_dep; string name_dep; int tabindex_dep; vector<double> tablevalues;
-	string db_opt; string db_key;
+	int numrepeat; std::string group; std::string name; int tabindex; int imethod; int imon; double fmin;
+	double fmax; double fstart; int nCount; std::string group_dep; std::string name_dep; int tabindex_dep; std::vector<double> tablevalues;
+	string db_opt; std::string db_key;
 };
 class VALv;
 class CHPARv;
@@ -27,10 +27,10 @@ public:
 
     bool OpenRegister(bool read = true) {
 
-        string line_str;
+        std::string line_str;
         //if (m_register.is_open()) {
         if (read) {
-            if (ReadRegisterFile() == string::npos) {
+            if (ReadRegisterFile() == std::string::npos) {
                 return false;
             }
         } else {
@@ -46,7 +46,7 @@ public:
         return false;
     }
 
-    void setColumnAtt(vector<string> att, string Tag = "ColumnAtt") {
+    void setColumnAtt(vector<string> att, std::string Tag = "ColumnAtt") {
         /*	auto child = demoData->getChildByName(Tag);
             if (child == nullptr) {
                 child = demoData->createNewChildElement(Tag);
@@ -56,7 +56,7 @@ public:
             }*/
     }
 
-    int GetInt(const char *module, const char *type, string name, int default_value)   noexcept  {
+    int GetInt(const char *module, const char *type, std::string name, int default_value)   noexcept  {
 /*		auto child3 = getLevel3(module, type, name);
 		if (child3 == nullptr) {
 			child3 = getLevel2(module, type)->createNewChildElement(name);
@@ -91,7 +91,7 @@ public:
         return node;
     }
 
-    string getstring(const char *name, string default_value) {
+    std::string getstring(const char *name, std::string default_value) {
         auto child = currentList.child(name);
         /*if (child == nullptr) {
             child = currentList->createNewChildElement(name);
@@ -102,9 +102,9 @@ public:
             return child->getstringAttribute("Value").toStdstring();*/
     };
 
-    vector<pair<string, string>> getAllCurrentListstring()  noexcept {
-        vector<pair<string, string>> out;
-        /*	pair<string, string> node;
+    std::vector<pair<string, std::string>> getAllCurrentListstring()  noexcept {
+        std::vector<pair<string, std::string>> out;
+        /*	pair<string, std::string> node;
             auto num = currentList->getNumChildElements();
             for (int i = 0; i < num; i++) {
                 auto child = currentList->getChildElement(i);
@@ -115,7 +115,7 @@ public:
         return out;
     }
 
-    void setValue(const char *name, string newvalue)  noexcept {
+    void setValue(const char *name, std::string newvalue)  noexcept {
         /*	auto child = currentList->getChildByName(name);
             if (child == nullptr) {
                 child = currentList->createNewChildElement(name);
@@ -125,7 +125,7 @@ public:
                 child->setAttribute("Value", newvalue);*/
     };
 
-    void setTextValue(const char *name, string newvalue)  noexcept {
+    void setTextValue(const char *name, std::string newvalue)  noexcept {
         /*	auto child = currentList->getChildByName(name);
             if (child == nullptr) {
                 child = currentList->createNewChildElement("Text");
@@ -179,8 +179,8 @@ public:
         void setValue(const char *name, int newvalue) {
             auto child = currentList.child(name);
         };
-        void setTable(const char *module, const char *type, const char *name, vector<string> colnames,
-                      vector<vector<double>> values)  noexcept {
+        void setTable(const char *module, const char *type, const char *name, std::vector<string> colnames,
+                      std::vector<vector<double>> values)  noexcept {
 
            /* auto child3 = getLevel3(module, type, name);
             if (child3 == nullptr) {
@@ -191,7 +191,7 @@ public:
             }
             child3->deleteAllChildElements();
             for (size_t i = 0; i < values.size(); i++) {
-                string tag = "Row_" + string(int(i + 1));
+                std::string tag = "Row_" + std::string(int(i + 1));
                 auto child4 = new XmlElement(tag);
                 for (size_t j = 0; j < values[i].size(); j++) {
                     child4->setAttribute(string(colnames[j]), values[i][j]);
@@ -201,7 +201,7 @@ public:
         }
 
         void setOutPutRow(const char *module, const char *type, const char *name, int index_output, int storeflag,
-                          vector<double> values)  noexcept {
+                          std::vector<double> values)  noexcept {
 
           /*  auto child3 = getLevel3(module, type, name);
             if (child3 == nullptr) {
@@ -211,7 +211,7 @@ public:
             for (size_t i = 0; i < output_col_names.size(); i++) {
                 child3->setAttribute(string(output_col_names[i]), int(i + 1));
             }
-            string tag = "Row";
+            std::string tag = "Row";
             auto child4 = new XmlElement(tag);
             if (index_output >= 0) child4->setAttribute(string(output_col_names[0]), index_output);
             for (size_t i = 0; i < values.size(); i++) {
@@ -220,8 +220,8 @@ public:
             child4->setAttribute(string(output_col_names[7]), storeflag);
             child3->addChildElement(child4);*/
         }
-        vector<Output_InXml> getOutputs(const char *type)  noexcept {
-            vector<Output_InXml> out;
+        std::vector<Output_InXml> getOutputs(const char *type)  noexcept {
+            std::vector<Output_InXml> out;
 /*            Output_InXml node;
             auto child = demoData->getChildByName(type);
             if (child == nullptr) return out;
@@ -253,13 +253,13 @@ public:
         void setValidationRow(VALv val);
         std::vector<VALv> getValidationRows();
         void setWithinRunRow(CHPARv ch);
-        vector<CHPARv> getWithinRunRows(ModelBase *);
+        std::vector<CHPARv> getWithinRunRows(ModelBase *);
         void setMultiRunRow(int NumberOfRepeatitionsWithinDimension, int nCount, int numpar,
-                            string group_psw, const char *name_psw, int TabIndex, int imethod, int imon,
-                            vector<double> table, string selection_pcp, string keyselection_pcp,
-                            string group_psw_dep, const char *name_psw_dep, int ind_dep,
+                            std::string group_psw, const char *name_psw, int TabIndex, int imethod, int imon,
+                            std::vector<double> table, std::string selection_pcp, std::string keyselection_pcp,
+                            std::string group_psw_dep, const char *name_psw_dep, int ind_dep,
                             double fmin, double fmax, double fstart, int i1);
-        vector<Multi_InXml> getMultiRunRows();
+        std::vector<Multi_InXml> getMultiRunRows();
 
 
         bool IsRegisterOpen()  noexcept { return m_IsOpen; };
@@ -267,27 +267,27 @@ public:
         void setModelItems(vector<SimB *>, CommonModelInfo *);
         void setModelNE_All(vector<NE *>);
 
-        void setRegister(const string tag, const int value)  noexcept {
+        void setRegister(const std::string tag, const int value)  noexcept {
             /*auto child = dataList.node(tag);
             if (child != nullptr)
                 child->setAttribute("Value", value);*/
         };
-        void setRegister(const string tag, const string value)  noexcept {
+        void setRegister(const std::string tag, const std::string value)  noexcept {
             //dataList->getChildByName(tag)->setAttribute("Value", value);
         };
-        void setRegister(const string tag, const double value)  noexcept {
+        void setRegister(const std::string tag, const double value)  noexcept {
             //	dataList->getChildByName(tag)->setAttribute("Value", value);
         };
-        int getIntRegister(const string tag)  noexcept {
+        int getIntRegister(const std::string tag)  noexcept {
             //	return dataList->getChildByName(tag)->getIntAttribute("Value");
         };
-        string getstringRegister(const string tag)  noexcept {
+        std::string getstringRegister(const std::string tag)  noexcept {
             //	return dataList->getChildByName(tag)->getstringAttribute("Value");
         };
-        double getDoubleRegister(const string tag)  noexcept {
+        double getDoubleRegister(const std::string tag)  noexcept {
             //	return dataList->getChildByName(tag)->getDoubleAttribute("Value");
         };
-        void setHiddenData(const string tag, const int value)  noexcept {
+        void setHiddenData(const std::string tag, const int value)  noexcept {
             /*	auto child = dataStore->getChildByName(tag);
                 if (child != nullptr)
                     child->setAttribute("Value", value);
@@ -296,7 +296,7 @@ public:
                     child->setAttribute("Value", value);
                 }*/
         };
-        void setHiddenData(const string tag, const string value)  noexcept {
+        void setHiddenData(const std::string tag, const std::string value)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                  child->setAttribute("Value", value);
@@ -305,7 +305,7 @@ public:
               child->setAttribute("Value", value);
             }*/
         };
-        void setHiddenData(const string tag, const double value) noexcept {
+        void setHiddenData(const std::string tag, const double value) noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 child->setAttribute("Value", value);
@@ -314,7 +314,7 @@ public:
                 child->setAttribute("Value", value);
             }*/
         };
-        void setHiddenChildData(const string tag, const double value)  noexcept {
+        void setHiddenChildData(const std::string tag, const double value)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 child->setAttribute("Value", value);
@@ -325,7 +325,7 @@ public:
                         child2->setAttribute("Value", value);
             }*/
         };
-        int getHiddenIntData(const string tag)  noexcept {
+        int getHiddenIntData(const std::string tag)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 return child->getIntAttribute("Value");
@@ -333,14 +333,14 @@ public:
                 return 0;*/
         };
 
-        string getHiddenstringData(const string tag)  noexcept {
+        std::string getHiddenstringData(const std::string tag)  noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 return child->getstringAttribute("Value");
             else
                 return "";*/
         };
-        double getHiddenDoubleData(const string tag) noexcept {
+        double getHiddenDoubleData(const std::string tag) noexcept {
             /*auto child = dataStore->getChildByName(tag);
             if (child != nullptr)
                 return child->getDoubleAttribute("Value");
@@ -349,7 +349,7 @@ public:
         };
 
         bool setFileName(const char *name)  noexcept {
-//            if (name.find(":") == string::npos)
+//            if (name.find(":") == std::string::npos)
   //              return false;
           
             doc.load_file(name);
@@ -367,17 +367,17 @@ public:
 
             return 0;
         }
-        vector<pair<string, int>> getAllInt(const char *type);
-        vector<pair<string, double>> getAllDouble(const char *type);
-        vector<pair<string, string>> getAllstring(const char *type);
-        vector<string> getAllNames(const char *type);
-        vector<pair<string, string>> getAllChangedItems();
-        void insert_ChangedNames(vector<pair<string, string>>);
-        vector<pair<string, pair<vector<string>, vector<vector<double>>>>> getAllDoubleTables(const char *type);
+        std::vector<pair<string, int>> getAllInt(const char *type);
+        std::vector<pair<string, double>> getAllDouble(const char *type);
+        std::vector<pair<string, std::string>> getAllstring(const char *type);
+        std::vector<string> getAllNames(const char *type);
+        std::vector<pair<string, std::string>> getAllChangedItems();
+        void insert_ChangedNames(vector<pair<string, std::string>>);
+        std::vector<pair<string, pair<vector<string>, std::vector<vector<double>>>>> getAllDoubleTables(const char *type);
         void setSimFileName(string file) { m_xmlSimfileName = file; };
         void setModelFileName(string file) { m_xmlModelfileName = file; };
-        string getSimFileName() { return m_xmlSimfileName; };
-        string getModelFileName() { return m_xmlModelfileName; };
+        std::string getSimFileName() { return m_xmlSimfileName; };
+        std::string getModelFileName() { return m_xmlModelfileName; };
 
 
 
@@ -394,7 +394,7 @@ public:
         bool m_IsOpen;
         bool m_typeAsHighestLevel{true};
         fstream m_register;
-        string m_xmlfileName;
-        string m_xmlSimfileName;
-        string m_xmlModelfileName;
+        std::string m_xmlfileName;
+        std::string m_xmlSimfileName;
+        std::string m_xmlModelfileName;
 };

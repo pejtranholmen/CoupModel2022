@@ -142,7 +142,7 @@ ModelBase::ModelBase() {
 	m_AnnimChartY=2;
 	p_PFCurve = &PlotpF::GetPointer();
 	if(p_PFCurve->IsOpen()) {
-	  string directory;
+	  std::string directory;
 #ifndef STD
 	  m_DataBaseDirectory=FUtil::GetProfileStringStd("DataBaseDirectory", directory);
 	  p_PFCurve->SetDataBaseDirectory(m_DataBaseDirectory);
@@ -195,9 +195,9 @@ size_t ModelBase::MR_Get_ActualRunNumber()
 {	
 	size_t CountTotal=1;
 	for(size_t i= MR_GetNumberOfDimensions();i>0;i--) {
-		if(MR_GetNumberOfRepeationsForThisDimension(i-1)!=string::npos){
+		if(MR_GetNumberOfRepeationsForThisDimension(i-1)!= std::string::npos){
 			size_t Count=MR_GetDimCounter(i-1)-1;
-			for (size_t ii = i - 1; MR_GetNumberOfRepeationsForThisDimension(ii - 1) != string::npos; ii--) 
+			for (size_t ii = i - 1; MR_GetNumberOfRepeationsForThisDimension(ii - 1) != std::string::npos; ii--) 
 				Count *= MR_GetNumberOfRepeationsForThisDimension(ii - 1);
 
 			CountTotal+=Count;
@@ -213,7 +213,7 @@ size_t ModelBase::MR_Get_TotalNumberofRuns()
 	if(IsMultiSimulation()&&IsFinishedSimulation()&&IsMultiStorageBinFileValid()) {
 		
 		auto ifiles=m_MStorage.GetNumberOfAddedFiles(GetMBinFileName().c_str());
-		if(ifiles!=string::npos)
+		if(ifiles!= std::string::npos)
 			for(size_t i=0;i<ifiles;i++)
 				m_MultiRun_TotalNumber+=m_MStorage.GetNumberOfAddedRuns(i);
 	}
@@ -287,7 +287,7 @@ string ModelBase::GetWShedFileName(size_t inum){
 	string dir;
 	
 	size_t 	pos=m_DocFileName.rfind("\\");
-	if(pos!=string::npos)
+	if(pos!= std::string::npos)
 		dir=m_DocFileName.substr(0,pos+1);
 	else {
 		dir=GetCurrentWorkDirectory();
@@ -338,7 +338,7 @@ size_t ModelBase::MR_GetNumberOfRepeationsForThisDimension(size_t index)
    	if(m_MultiRun_Array.size()>index)
 		return m_MultiRun_Array[index].NumberOfRepeatitionsWithinDimension;
 	else
-		return string::npos;
+		return std::string::npos;
 
 }
 size_t ModelBase::MR_GetDimCounter(size_t index)
@@ -346,7 +346,7 @@ size_t ModelBase::MR_GetDimCounter(size_t index)
 	if(m_MultiRun_Array.size()>index)
 		return m_MultiRun_Array[index].nCount;
 	else
-		return string::npos;
+		return std::string::npos;
 }
 size_t ModelBase::GetNumOutPuts()
 {
@@ -478,7 +478,7 @@ vector<SIMB> ModelBase::GetAllOutPutVectorByCategory(int category) {
 			}		
 		return outfinal;
 }
-SimB* ModelBase::GetPtrFromIntType(size_t itype, string group, string name) {
+SimB* ModelBase::GetPtrFromIntType(size_t itype, std::string group, std::string name) {
 	string type;
 	switch(itype) {
 	case 1: case 8:
@@ -497,7 +497,7 @@ SimB* ModelBase::GetPtrFromIntType(size_t itype, string group, string name) {
 	if(type.size()==0) return nullptr;
 	return GetPtr(type, group, name);
 }
-SimB* ModelBase::GetPtr(string type, string group, string name)
+SimB* ModelBase::GetPtr(string type, std::string group, std::string name)
 {
 	size_t index=p_ModelInfo->GetGroupIndex(group);
 	if(index<0 ) return nullptr;
@@ -644,7 +644,7 @@ SimB* ModelBase::GetPtr(string type, string group, string name)
 	return nullptr;
 
 }
-SimB* ModelBase::GetPtr(enum simtype typ, string name, string group) {
+SimB* ModelBase::GetPtr(enum simtype typ, std::string name, std::string group) {
 		SimB *pSimB;
 		auto in=GlobalMap.count(name);
 		if(GlobalMap.count(name)>0) {
@@ -661,7 +661,7 @@ SimB* ModelBase::GetPtr(enum simtype typ, string name, string group) {
 
 		return nullptr;
 }
-SimB* ModelBase::GetPtrByName(string name, string group) {
+SimB* ModelBase::GetPtrByName(string name, std::string group) {
 		SimB *pSimB;
 		auto in=GlobalMap.count(name);
 		if(GlobalMap.count(name)>0) {
@@ -730,7 +730,7 @@ vector<SimB*> ModelBase::GetAllPtr(enum simtype typ) {
 	return vptr;
 }
 
-vector<SimB*> ModelBase::GetPtrVector(string type, string group, bool All)
+vector<SimB*> ModelBase::GetPtrVector(string type, std::string group, bool All)
 {
 	vector<SimB*> vptr;
 		if(type=="Switches") {
@@ -991,7 +991,7 @@ string ModelBase::DB_GetChoice(DB_types index)
 	else
 		return "";
 }
-void ModelBase::DB_SetChoice(DB_types index, string value)
+void ModelBase::DB_SetChoice(DB_types index, std::string value)
 {
    m_DB_choices[index]=value;
    CDB *pDB=(CDB*)m_DB_Array[index];
@@ -1202,7 +1202,7 @@ vector<SimB*> ModelBase::GetAllPtrOutputs(size_t choice) {
 	vector<SimB*> vp;
 
 	vp.clear();
-	if(choice==string::npos||choice==0) {
+	if(choice== std::string::npos||choice==0) {
 		vp=GetPtrVector(STATE, false);
 		for(size_t i=0; i<vp.size(); i++)
 			allout.push_back(vp[i]);
@@ -1215,7 +1215,7 @@ vector<SimB*> ModelBase::GetAllPtrOutputs(size_t choice) {
 	
 	vp.clear();
 
-	if(choice==string::npos||choice==1) {
+	if(choice== std::string::npos||choice==1) {
 		vp=GetPtrVector(FLOW,false);
 		for(size_t i=0; i<vp.size(); i++)
 			allout.push_back(vp[i]);
@@ -1227,7 +1227,7 @@ vector<SimB*> ModelBase::GetAllPtrOutputs(size_t choice) {
 	}
 
 	vp.clear();
-	if(choice==string::npos||choice==2) {
+	if(choice== std::string::npos||choice==2) {
 
 		vp=GetPtrVector(AUX,false);
 		for(size_t i=0; i<vp.size(); i++)
@@ -1239,7 +1239,7 @@ vector<SimB*> ModelBase::GetAllPtrOutputs(size_t choice) {
 
 	}
 	vp.clear();
-	if(choice==string::npos||choice==3) {
+	if(choice== std::string::npos||choice==3) {
 		vp=GetPtrVector(DRIVE,false);
 		for(size_t i=0; i<vp.size(); i++)
 			allout.push_back(vp[i]);
@@ -1256,7 +1256,7 @@ vector<SIMB> ModelBase::GetAllOutputs(size_t choice, bool all_out) {
 	vector<SIMB> out, allout;
 	vector<SimB*> vp;
 
-	if(choice==string::npos||choice==0) {
+	if(choice== std::string::npos||choice==0) {
 		vp=GetPtrVector(STATE, all_out);
 		out=CompleteOutVector(vp);
 		for(size_t i=0; i<out.size();i++) 
@@ -1271,7 +1271,7 @@ vector<SIMB> ModelBase::GetAllOutputs(size_t choice, bool all_out) {
 	
 
 
-	if(choice==string::npos||choice==1) {
+	if(choice== std::string::npos||choice==1) {
 		vp=GetPtrVector(FLOW,all_out);
 		out=CompleteOutVector(vp);
 		for(size_t i=0; i<out.size();i++)
@@ -1285,7 +1285,7 @@ vector<SIMB> ModelBase::GetAllOutputs(size_t choice, bool all_out) {
 	}
 
 
-	if(choice==string::npos||choice==0) {
+	if(choice== std::string::npos||choice==0) {
 
 		vp=GetPtrVector(AUX,all_out);
 		out=CompleteOutVector(vp);
@@ -1299,7 +1299,7 @@ vector<SIMB> ModelBase::GetAllOutputs(size_t choice, bool all_out) {
 
 	}
 
-	if(choice==string::npos||choice==3) {
+	if(choice== std::string::npos||choice==3) {
 		vp=GetPtrVector(DRIVE,all_out);
 		out=CompleteOutVector(vp);
 		for(size_t i=0; i<out.size();i++)
@@ -1450,7 +1450,7 @@ vector<string> ModelBase::GetAllSelectedNameList(bool MultiFlag) {
 	string str;
 	for (size_t i = 0; i < SIMBList.size(); i++) {
 		str = SIMBList[i].pBase->GetName();
-		if (SIMBList[i].TabIndex != string::npos) {
+		if (SIMBList[i].TabIndex != std::string::npos) {
 			str += "(";
 			str += FUtil::STD_ItoAscii(SIMBList[i].TabIndex + 1);
 			str += ")";
@@ -1528,7 +1528,7 @@ vector<SIMB> ModelBase::GetWShedOutputs() {
 
 
 	simb.pBase=GetPtr(FLOW_SINGLE,"SpoolRunoff");
-	simb.TabIndex=string::npos;
+	simb.TabIndex= std::string::npos;
 	allout.push_back(simb);
 	simb.pBase=GetPtr(FLOW_SINGLE,"DeepPerc");
 	allout.push_back(simb);
@@ -1536,12 +1536,12 @@ vector<SIMB> ModelBase::GetWShedOutputs() {
 	return allout;
 
 }
-float ModelBase::GetActualObsValueFromValSumFlex(string IDFileName, string  IDVarName, size_t runno) {
+float ModelBase::GetActualObsValueFromValSumFlex(string IDFileName, std::string  IDVarName, size_t runno) {
 	float fvalue;
 	VALSUMLINK valsumlink;
 	size_t index_var, index_run, index_file, index_key_file;
-	index_file = string::npos;
-	index_run = string::npos;
+	index_file = std::string::npos;
+	index_run = std::string::npos;
 	for (size_t i = 0; i<m_ValsumFlexFiles.size(); i++) {
 		if (IDFileName == m_ValsumFlexFiles[i].FileName) {
 			index_file = i;
@@ -1646,7 +1646,7 @@ string ModelBase::GetTimeCreated()
 		localtime_s(&timeinfo, &m_DocFile.m_TimeCreated);
 		char buffer[24];
 		strftime(buffer, 24, "%Y-%m-%d %H:%M:%S", &timeinfo);
-		return string(buffer);
+		return std::string(buffer);
 	}
 	else
 		return "";
@@ -1659,7 +1659,7 @@ string ModelBase::GetTimeModified()
 		localtime_s(&timeinfo, &m_DocFile.m_TimeModified);
 		char buffer[24];
 		strftime(buffer,24, "%Y-%m-%d %H:%M:%S", &timeinfo);
-		return string(buffer);
+		return std::string(buffer);
 		return "";
 	}
 	else

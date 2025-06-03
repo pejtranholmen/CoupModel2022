@@ -64,7 +64,7 @@ bool NC_Mineral_Functions::Def()
 		ps_vec.clear();
 		Tab *pTab;
 
-		functorprop.FunctorInitOption = string::npos;
+		functorprop.FunctorInitOption = std::string::npos;
 		functorprop.pModelInfo = m_pModelInfo;
 
 		PLOT_PARAM plotpar;
@@ -986,7 +986,7 @@ double NC_Mineral_Functions::DenitNitrateFunction(double Nitrate) {
 	return Nitrate/(Nitrate+DenitNitrateHalfSat);
 }
 
-Plant_Uptake  NC_Mineral_Functions::NUptake(vector<double> Dist, size_t NUM, size_t index, double N_Demand, double N_Tot_Demand,  vector<double> Dist_Tot,double factNdemandFungi,double FungiNitrateUptpot,double FungiAmmoniumUptpot,double N_FungiDemand, double N_Tot_FungiDemand) {
+Plant_Uptake  NC_Mineral_Functions::NUptake(vector<double> Dist, size_t NUM, size_t index, double N_Demand, double N_Tot_Demand,  std::vector<double> Dist_Tot,double factNdemandFungi,double FungiNitrateUptpot,double FungiAmmoniumUptpot,double N_FungiDemand, double N_Tot_FungiDemand) {
 	
 	SoilModel* p_Soil=(SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 	Soil_Frost* pSoil=&p_Soil->m_SoilFrost;	

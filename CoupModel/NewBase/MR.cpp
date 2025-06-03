@@ -147,7 +147,7 @@ string MR::MR_GetParGroup(size_t index1, size_t index2)
 		nTabIndex=m_P_MR_Array[i].TabIndex;
 		if(m_P_MR_Array[i].pBase->Is_DB())
 			nDim=((CDB*)pPar)->MR_Get_Dim();
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		if(nDim==index1) {
 			counter++;
@@ -172,7 +172,7 @@ string MR::MR_GetParName(size_t index1, size_t index2)
 		nTabIndex=m_P_MR_Array[i].TabIndex;
 		if(m_P_MR_Array[i].pBase->Is_DB())
 			nDim=((CDB*)pPar)->MR_Get_Dim();
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		if(nDim==index1) {
 			counter++;
@@ -197,7 +197,7 @@ size_t MR::MR_GetMethod(size_t index1, size_t index2)
 		nTabIndex=m_P_MR_Array[i].TabIndex;
 		if(m_P_MR_Array[i].pBase->Is_DB())
 			nDim=((CDB*)pPar)->MR_Get_Dim();
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 
 		if(nDim==index1) {
@@ -205,7 +205,7 @@ size_t MR::MR_GetMethod(size_t index1, size_t index2)
 			if(counter==index2) {
 				if(m_P_MR_Array[i].pBase->Is_DB())
 					return ((CDB*)pPar)->MR_Get_Method();
-				else if(nTabIndex==string::npos)
+				else if(nTabIndex== std::string::npos)
 					return pPar->MR_Get_Method();
 				else 
 					return pPar->MR_Get_Method(nTabIndex);
@@ -225,7 +225,7 @@ string MR::MR_GetMethodName(size_t index1, size_t index2)
 		nTabIndex=m_P_MR_Array[i].TabIndex;
 		if(m_P_MR_Array[i].pBase->Is_DB())
 			nDim=((CDB*)pPar)->MR_Get_Dim();
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 
 		if(nDim==index1) {
@@ -233,7 +233,7 @@ string MR::MR_GetMethodName(size_t index1, size_t index2)
 			if(counter==index2) {
 				if(m_P_MR_Array[i].pBase->Is_DB())
 					return "DataBase";
-				else if(nTabIndex==string::npos)
+				else if(nTabIndex== std::string::npos)
 					imethod=pPar->MR_Get_Method();
 				else 
 					imethod=pPar->MR_Get_Method(nTabIndex);
@@ -293,13 +293,13 @@ size_t MR::MR_GetMonitoring(size_t index1, size_t index2)
 			pP=(CDB*)pPar;
 			nDim=pP->MR_Get_Dim();
 		}
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-					if(nTabIndex==string::npos) {
+					if(nTabIndex== std::string::npos) {
 						if(pPar->MR_Get_Method()==10)
 							return 0;
 						else
@@ -332,13 +332,13 @@ void MR::MR_SetMonitoring(size_t index1, size_t index2, size_t value)
 			pP=(CDB*)pPar;
 			nDim=pP->MR_Get_Dim();
 		}
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-					if(nTabIndex==string::npos) {
+					if(nTabIndex== std::string::npos) {
 						if(pPar->MR_Get_Method()!=10)
 							((Ps*)pPar)->MR_Set_Monitoring(value);
 						return;
@@ -369,13 +369,13 @@ double MR::MR_GetMin(size_t index1, size_t index2)
 			pP=(CDB*)pPar;
 			nDim=pP->MR_Get_Dim();
 		}
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-					if(nTabIndex==string::npos) {
+					if(nTabIndex== std::string::npos) {
 						if(pPar->MR_Get_Method()==10)
 							return 0;
 						else
@@ -423,19 +423,19 @@ double  MR::MR_GetMin(size_t indexp)
 			pP=(CDB*)pPar;
 			nDim=pP->MR_Get_Dim();
 		}
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-					if(nTabIndex==string::npos) {
+					if(nTabIndex== std::string::npos) {
 						if(pPar->MR_Get_Method()==10)
 							return 0;
 						else if(MR_GetMethod(index1,index2)>=6&&MR_GetMethod(index1,index2)<9) {
 								pParDependent=((Ps*)pPar)->Get_MR_ParDependence();
 								nTabIndexDep=((Ps*)pPar)->Get_MR_ParDependenceIndex();
-								if(nTabIndexDep>=0&& nTabIndexDep!=string::npos)
+								if(nTabIndexDep>=0&& nTabIndexDep!= std::string::npos)
 									Float=((P*)pParDependent)->MR_Get_Min(nTabIndexDep);
 							return Float;
 
@@ -450,7 +450,7 @@ double  MR::MR_GetMin(size_t indexp)
 						else if(pPar->MR_Get_Method(nTabIndex)==6&&MR_GetMethod(index1,index2)<9) {
 								pParDependent=((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 								nTabIndexDep=((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
-								if(nTabIndexDep>=0 && nTabIndexDep != string::npos)
+								if(nTabIndexDep>=0 && nTabIndexDep != std::string::npos)
 									Float=((P*)pParDependent)->MR_Get_Min(nTabIndexDep);
 
 								return Float;
@@ -495,13 +495,13 @@ double MR::MR_GetStart(size_t index1, size_t index2)
 			pP=(CDB*)pPar;
 			nDim=pP->MR_Get_Dim();
 		}
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-				if(nTabIndex==string::npos)
+				if(nTabIndex== std::string::npos)
 					return ((Ps*)pPar)->MR_Get_Start();
 				else 
 					return ((P*)pPar)->MR_Get_Start(nTabIndex);
@@ -524,12 +524,12 @@ double MR::MR_GetMax(size_t index1, size_t index2)
 			pP=(CDB*)pPar;
 			nDim=pP->MR_Get_Dim();
 		}
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-				if(nTabIndex==string::npos)
+				if(nTabIndex== std::string::npos)
 					return ((Ps*)pPar)->MR_Get_Max();
 				else 
 					return ((P*)pPar)->MR_Get_Max(nTabIndex);
@@ -569,18 +569,18 @@ double MR::MR_GetMax(size_t indexp)
 			pP=(CDB*)pPar;
 			nDim=pP->MR_Get_Dim();
 		}
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-				if(nTabIndex==string::npos) {
+				if(nTabIndex== std::string::npos) {
 					if(pPar->MR_Get_Method()==10)
 							return 0;
 					else if(MR_GetMethod(index1,index2)>=6&&MR_GetMethod(index1,index2)<9) {
 							pParDependent=((Ps*)pPar)->Get_MR_ParDependence();
 							nTabIndexDep=((Ps*)pPar)->Get_MR_ParDependenceIndex();
-							if(nTabIndexDep>=0&&nTabIndexDep!=string::npos)
+							if(nTabIndexDep>=0&&nTabIndexDep!= std::string::npos)
 								Float=((P*)pParDependent)->MR_Get_Max(nTabIndexDep);
 							else
 								Float=((Ps*)pParDependent)->MR_Get_Max();
@@ -595,7 +595,7 @@ double MR::MR_GetMax(size_t indexp)
 					else if(MR_GetMethod(index1,index2)>=6&&MR_GetMethod(index1,index2)<9) {
 							pParDependent=((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 							nTabIndexDep=((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
-							if(nTabIndexDep>=0 && nTabIndexDep != string::npos)
+							if(nTabIndexDep>=0 && nTabIndexDep != std::string::npos)
 								Float=((P*)pParDependent)->MR_Get_Max(nTabIndexDep);
 							else
 								Float=((Ps*)pParDependent)->MR_Get_Max();
@@ -670,7 +670,7 @@ SimB* MR::MR_Get_pPar(size_t index1,size_t index2)
 		nTabIndex=m_P_MR_Array[i].TabIndex;
 		if(m_P_MR_Array[i].pBase->Is_DB())
 			nDim=((CDB*)pPar)->MR_Get_Dim();
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		if(nDim==index1) {
 			counter++;
@@ -694,7 +694,7 @@ size_t MR:: MR_GetTabIndex(size_t index1,size_t index2)
 		nTabIndex=m_P_MR_Array[i].TabIndex;
 		if(m_P_MR_Array[i].pBase->Is_DB())
 			nDim=((CDB*)pPar)->MR_Get_Dim();
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		if(nDim==index1) {
 			counter++;
@@ -716,7 +716,7 @@ size_t MR:: MR_GetParType(size_t index1,size_t index2)
 			nDim=((CDB*)pPar)->MR_Get_Dim();
 			ParType=2;
 		}
-		else if(nTabIndex==string::npos) {
+		else if(nTabIndex== std::string::npos) {
 			nDim=pPar->MR_Get_Dim();
 			ParType=0;
 		}
@@ -744,7 +744,7 @@ size_t MR:: MR_Get_NumberOfParametersWithinDim(size_t index)
 		nTabIndex=m_P_MR_Array[i].TabIndex;
 		if(m_P_MR_Array[i].pBase->Is_DB())
 			nDim=((CDB*)pPar)->MR_Get_Dim();
-		else if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		else if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 		if(nDim==index) counter++;
 	}	
@@ -760,13 +760,13 @@ double MR::MR_GetTableValue(size_t index1, size_t index2, size_t row)
 	for (size_t i=0;i<m_P_MR_Array.size();i++){
 		pPar=(Ps*)m_P_MR_Array[i].pBase;
 		nTabIndex=m_P_MR_Array[i].TabIndex;
-		if(nTabIndex==string::npos) nDim=pPar->MR_Get_Dim();
+		if(nTabIndex== std::string::npos) nDim=pPar->MR_Get_Dim();
 		else  nDim=pPar->MR_Get_Dim(nTabIndex);	
 
 		if(nDim==index1) {
 			counter++;
 			if(counter==index2) {
-				if(nTabIndex==string::npos)
+				if(nTabIndex== std::string::npos)
 					tmp = ((Ps*)pPar)->MR_Get_TabValue(row);
 				else 
 					tmp = ((P*)pPar)->MR_Get_TabValue(nTabIndex, row);
@@ -797,7 +797,7 @@ size_t MR::MR_GetNumOfRepeatitionsOfDim(size_t idim) {
 	if(m_MultiRun_Array.size()>idim) 
 		return m_MultiRun_Array[idim].NumberOfRepeatitionsWithinDimension;
 	else
-		return string::npos;
+		return std::string::npos;
 
 
 }
@@ -928,7 +928,7 @@ bool MR::MR_UpdateValuesFromMBin(size_t runno)
 				
 					Float=m_MStorage.GetMultiP(ActualRunNo,icount);
 
-					if(nTabIndex==string::npos) {
+					if(nTabIndex== std::string::npos) {
 						((Ps*)pPar)->SetValue(Float);
 						//pPar->Apply();
 						m_DocFile.m_TimeModified=time(nullptr);
@@ -950,7 +950,7 @@ bool MR::MR_UpdateValuesFromEnsembles() {
 
 	for (size_t i = 0; i < m_ParToUpdate.size(); i++) {
 		auto koll = m_ParToUpdate[i];
-		if (koll.TabIndex == string::npos) {
+		if (koll.TabIndex == std::string::npos) {
 			((Ps*)koll.pBase)->SetValue(koll.newvalue);
 			m_DocFile.m_TimeModified = time(nullptr);
 			History_Add(koll.pBase, -1, time(nullptr), koll.newvalue);
@@ -1026,7 +1026,7 @@ void MR::MR_UpdateValues()
 				switch (MR_GetMethod(i + 1, ii + 1)) {
 				case 0: Ratio = (float)(icount - 1) / (float)(irep - 1);// linear
 					Float = Ratio * max + (1 - Ratio)*min;
-					if (nTabIndex == string::npos) {
+					if (nTabIndex == std::string::npos) {
 						recalc = pPar->SetValue(Float);
 						pPar->Apply();
 					}
@@ -1042,7 +1042,7 @@ void MR::MR_UpdateValues()
 				case 1: //Logarithmic
 					Ratio = (float)(icount - 1) / (float)(irep - 1);
 					Float = exp(Ratio*log(max) + (1 - Ratio)*log(min));
-					if (nTabIndex == string::npos) {
+					if (nTabIndex == std::string::npos) {
 						recalc = pPar->SetValue(Float);
 						LinkedChangeToDB_Parameters(pPar, recalc);
 						pPar->Apply();
@@ -1060,12 +1060,12 @@ void MR::MR_UpdateValues()
 					if (NewRandomEstimate) {
 						Ratio = StatUtil::frand();//://PARAMETERS_mp_RANDOMVALUE;					
 						Float = Ratio * max + (1 - Ratio)*min;
-						if (nTabIndex != string::npos)
+						if (nTabIndex != std::string::npos)
 							((P*)pPar)->MR_Set_RelChange(nTabIndex, Ratio);
 						else
 							pPar->MR_Set_RelChange(Ratio);
 
-						if (nTabIndex == string::npos) {
+						if (nTabIndex == std::string::npos) {
 							recalc = pPar->SetValue(Float);
 							pPar->Apply();
 						}
@@ -1084,12 +1084,12 @@ void MR::MR_UpdateValues()
 					if (NewRandomEstimate) {
 						Ratio = StatUtil::frand();//PARAMETERS_mp_RANDOMVALUE;
 						Float = exp(Ratio*log(max) + (1 - Ratio)*log(min));
-						if (nTabIndex != string::npos)
+						if (nTabIndex != std::string::npos)
 							((P*)pPar)->MR_Set_RelChange(nTabIndex, Ratio);
 						else
 							pPar->MR_Set_RelChange(Ratio);
 
-						if (nTabIndex == string::npos) {
+						if (nTabIndex == std::string::npos) {
 							recalc = pPar->SetValue(Float);
 							pPar->Apply();
 						}
@@ -1109,7 +1109,7 @@ void MR::MR_UpdateValues()
 					break;
 					// MR_Extract_MidpointValue expects the final argument to be
 				case 4: // Table  
-					if (nTabIndex == string::npos) // Table, Note that ii is not incremented during MRs!!
+					if (nTabIndex == std::string::npos) // Table, Note that ii is not incremented during MRs!!
 						Float = pPar->MR_Get_TabValue(icount - 1);  // Ps case
 					else
 						Float = ((P*)pPar)->MR_Get_TabValue(nTabIndex, icount - 1);  // Ps case
@@ -1120,7 +1120,7 @@ void MR::MR_UpdateValues()
 					strkey = ((CDB*)pPar)->MR_GetKeySelection(icount - 1);
 					break;
 				case 6: // Same as another parameter
-					if (nTabIndex != string::npos) {
+					if (nTabIndex != std::string::npos) {
 						pParDependent = (Ps*)((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 						nTabIndexDep = ((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
 						if (nTabIndexDep >= 0)
@@ -1131,17 +1131,17 @@ void MR::MR_UpdateValues()
 					else {
 						pParDependent = (Ps*)pPar->Get_MR_ParDependence();
 						nTabIndexDep = pPar->Get_MR_ParDependenceIndex();
-						if (nTabIndexDep != string::npos)
+						if (nTabIndexDep != std::string::npos)
 							Float = ((P*)pParDependent)->GetValue(nTabIndexDep);
 						else
 							Float = pParDependent->GetValue();
 					}
 					break;
 				case 7: // Same Relative another parameter
-					if (nTabIndex != string::npos) {
+					if (nTabIndex != std::string::npos) {
 						pParDependent = (Ps*)((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 						nTabIndexDep = ((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
-						if (nTabIndexDep != string::npos)
+						if (nTabIndexDep != std::string::npos)
 							Ratio = ((P*)pParDependent)->MR_Get_RelChange(nTabIndexDep);
 						else
 							Ratio = pParDependent->MR_Get_RelChange();
@@ -1149,7 +1149,7 @@ void MR::MR_UpdateValues()
 					else {
 						pParDependent = (Ps*)pPar->Get_MR_ParDependence();
 						nTabIndexDep = pPar->Get_MR_ParDependenceIndex();
-						if (nTabIndexDep != string::npos)
+						if (nTabIndexDep != std::string::npos)
 							Ratio = ((P*)pParDependent)->MR_Get_RelChange(nTabIndexDep);
 						else
 							Ratio = pParDependent->MR_Get_RelChange();
@@ -1157,10 +1157,10 @@ void MR::MR_UpdateValues()
 					Float = Ratio * max + (1 - Ratio)*min;
 					break;
 				case 8: // Same Opposite Relative another parameter
-					if (nTabIndex != string::npos) {
+					if (nTabIndex != std::string::npos) {
 						pParDependent = (Ps*)((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 						nTabIndexDep = ((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
-						if (nTabIndexDep != string::npos)
+						if (nTabIndexDep != std::string::npos)
 							Ratio = ((P*)pParDependent)->MR_Get_RelChange(nTabIndexDep);
 						else
 							Ratio = pParDependent->MR_Get_RelChange();
@@ -1168,7 +1168,7 @@ void MR::MR_UpdateValues()
 					else {
 						pParDependent = (Ps*)pPar->Get_MR_ParDependence();
 						nTabIndexDep = pParDependent->Get_MR_ParDependenceIndex();
-						if (nTabIndexDep != string::npos)
+						if (nTabIndexDep != std::string::npos)
 							Ratio = ((P*)pParDependent)->MR_Get_RelChange(nTabIndexDep);
 						else
 							Ratio = pParDependent->MR_Get_RelChange();
@@ -1187,7 +1187,7 @@ void MR::MR_UpdateValues()
 
 					}
 
-					if (nTabIndex != string::npos)
+					if (nTabIndex != std::string::npos)
 						((P*)pPar)->MR_Set_RelChange(nTabIndex, Ratio);
 					else
 						pPar->MR_Set_RelChange(Ratio);
@@ -1200,7 +1200,7 @@ void MR::MR_UpdateValues()
 				//	m_ActualSimplex[icountNelderMead] = max(min, max(min, m_ActualSimplex[icountNelderMead]));
 					Float = m_ActualSimplex[icountNelderMead];
 
-					if (nTabIndex == string::npos) {
+					if (nTabIndex == std::string::npos) {
 						recalc = pPar->SetValue(Float);
 						pPar->Apply();
 					}
@@ -1218,7 +1218,7 @@ void MR::MR_UpdateValues()
 				
 				if (MR_GetMethod(i + 1, ii + 1) != 5 && MR_GetMethod(i + 1, ii + 1) <= 9 || MR_GetMethod(i + 1, ii + 1) == 11 || MR_GetMethod(i + 1, ii + 1) == NELDER_MEAD) {
 
-					if (nTabIndex == string::npos) {
+					if (nTabIndex == std::string::npos) {
 						recalc = pPar->SetValue(Float);
 						if (recalc > 10000)
 							LinkedChangeToDB_Parameters(pPar, recalc);
@@ -1304,7 +1304,7 @@ bool MR::SetParametersRandomForMultiRun(vector<SIMB> simv, FCSV * pCSVFile)
 					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Start((min_values[i] + max_values[i]) / 2.);
 					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Method(STOCHASTIC_LIN_CHANGE);
 					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Dim(Dimension);
-					dynamic_cast<MR*>(this)->MR_CP_Set(simv[i].pBase, string::npos);
+					dynamic_cast<MR*>(this)->MR_CP_Set(simv[i].pBase, std::string::npos);
 
 				}
 			}
@@ -1554,7 +1554,7 @@ bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
 
 	for (size_t ifile = 1; ifile <= m_NumValidFiles; ifile++) {
 
-		size_t ValFileIndex=string::npos;
+		size_t ValFileIndex= std::string::npos;
 		for(size_t ivalindex=0; ivalindex<m_Val_Array.size();++ivalindex) {
 			if (ifile == m_Val_Array[ivalindex].ValidationFileNumber) {
 				ValFileIndex = ivalindex;
@@ -1711,8 +1711,8 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 
 
 			auto pSw = GetSw("PreDefinedEnsembles");
-			size_t indexmulti{ string::npos };
-			size_t filter_index{ string::npos };
+			size_t indexmulti{ std::string::npos };
+			size_t filter_index{ std::string::npos };
 
 			if (pSw->GetIntValue() > 0) {
 				auto pDim1Index = GetP("MR Dim1 Index");
@@ -1851,7 +1851,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 					continue;
 				sim_v.resize(numrec);
 				vector<float> meas_filter;
-				if (indexmulti != string::npos) {
+				if (indexmulti != std::string::npos) {
 
 					meas_filter = pPG->GetVarVector(filter_index);
 				}
@@ -1868,7 +1868,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 				else
 					cycle = StartValueofMatchingEnsembleInDim1(m_MStorage.m_ActualEnsemble, pPG, i_var_index);
 
-				auto UpdateMeasuredToValidPointsOnly_ReturnNewRec = [&](vector<double> &sim, vector<double> &obs) {
+				auto UpdateMeasuredToValidPointsOnly_ReturnNewRec = [&](vector<double> &sim, std::vector<double> &obs) {
 					if (pPG->GetNumRepititions() > 0 && rephits.size() > 0) {
 						//for (size_t i = 0; i < meas_v.size(); i++) meas_v[i] = MISSING;
 						size_t active_points = pPG->GetNumRecords()*rephits.size();
@@ -1928,9 +1928,9 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 				//meas_v = pPG->GetVarVector(ind + 1);
 				size_t Valid_Records = UpdateMeasuredToValidPointsOnly_ReturnNewRec(sim, obs);
 
-				/*if (cycle.first != string::npos) {
+				/*if (cycle.first != std::string::npos) {
 					for (long j = cycle.first; j < Valid_Records; j += cycle.second) {
-						if (indexmulti != string::npos && pPG->GetNumRepititions() == 0) {
+						if (indexmulti != std::string::npos && pPG->GetNumRepititions() == 0) {
 							size_t test_value_sim = size_t(m_MStorage.GetMultiP(irun, indexmulti) + 0.001);
 							size_t test_value_obs = size_t(meas_filter[j] + 0.001);
 							if (test_value_sim == test_value_obs && res_v[j] > MISSING) {
@@ -2110,9 +2110,9 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 
 	}
 
-	// Setting of new vector below
+	// Setting of new std::vector below
 
-	if (cumulated == 0 && (dim1_index == 0 || dim1_index == string::npos)) {
+	if (cumulated == 0 && (dim1_index == 0 || dim1_index == std::string::npos)) {
 		m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].VarTranformed = 0;
 		m_MStorage.SetNewPerformanceVector(cumulated + dim1_index * 10, VarValidNewVector, false);
 	}
@@ -2121,7 +2121,7 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 			m_MStorage.SetNewPerformanceVector(cumulated+dim1_index*10, VarValidNewVector, false);
 		else
 			m_MStorage.SetNewPerformanceVector(cumulated + dim1_index * 10, VarValidNewVector, true);
-		if (dim1_index == string::npos) dim1_index = 0;
+		if (dim1_index == std::string::npos) dim1_index = 0;
 		m_MStorage.m_Valid_TSV[m_MStorage.m_ActualEnsemble].Dim1_Par_Index = dim1_index;
 	}
 
@@ -2153,7 +2153,7 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 {
 
 	size_t start_pos;
-	size_t test_value_sim{ string::npos };
+	size_t test_value_sim{ std::string::npos };
 	size_t Dim1Value = m_MStorage.m_Valid_TSV[ensembleno].Dim1_Par_Index;
 	if (Dim1Value == 0) return pair < size_t, size_t>(0,1);
 
@@ -2178,8 +2178,8 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 		}
 	}
 	size_t pg_filter_index = m_Val_Array[Index_val].PG_FilterIndex;
-	start_pos = string::npos;
-	if (test_value_sim != string::npos)
+	start_pos = std::string::npos;
+	if (test_value_sim != std::string::npos)
 		auto koll = pPGMeas->GetNumRecords();
 	auto koll2 = pPGMeas->GetFileName();
 
@@ -2196,9 +2196,9 @@ pair<size_t,size_t> MR::StartValueofMatchingEnsembleInDim1(size_t ensembleno, CP
 vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, size_t index_val, size_t RunNo)
 {
 	vector<size_t> out;
-	size_t test_value_sim{ string::npos };
+	size_t test_value_sim{ std::string::npos };
 
-	if (ensembleno == string::npos) {
+	if (ensembleno == std::string::npos) {
 		test_value_sim= m_Val_Array[index_val].PG_FilterValue;
 	}
 	else {
@@ -2423,7 +2423,7 @@ bool MR::MR_CheckIndexForFilterMode()
 {
 	for (auto valv : m_Val_Array) {
 		auto test_index = valv.Name.find("Filter_Id");
-		if (test_index != string::npos) return true;
+		if (test_index != std::string::npos) return true;
 	}
 	return false;
 }
@@ -2438,7 +2438,7 @@ bool MR::MR_CheckIndexForFile_RepMode()
 				auto pPar = MR_Get_pPar(i + 1, ii + 1);
 				auto nTabIndex = MR_GetTabIndex(i + 1, ii + 1);
 				string namep = pPar->GetName();
-				if (namep.find("Index for selection of File") != string::npos) {
+				if (namep.find("Index for selection of File") != std::string::npos) {
 					Exist = true;
 				}
 			}
@@ -2495,7 +2495,7 @@ void MR::MR_INIT_Bayesian_Nelder_Mead()
 					startNelderMeadvalues.push_back(act_start);
 					
 				
-					if (nTabIndex == string::npos) {
+					if (nTabIndex == std::string::npos) {
 						auto pP = dynamic_cast<Ps*>(pPar);
 						pP->SetValue(act_start);
 						pP->Apply();
@@ -2764,7 +2764,7 @@ bool MR::SetParametersTableForMultiRun(vector<SIMB> simv, FCSV *pCSVFile)
 			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Start((min_values[i] + max_values[i]) / 2.);
 			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Method(TABLE_VAL);
 			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Dim(Dimension);
-			MR_CP_Set(simv[i].pBase, string::npos);
+			MR_CP_Set(simv[i].pBase, std::string::npos);
 
 		}
 		dynamic_cast<MR*>(this)->MR_SetRepeatitionsOfDimension(Dimension, keys.size());
@@ -2976,7 +2976,7 @@ void MR::MR_Storage_Add()
 						string str = ((CDB*)pPar)->MR_GetKeySelection(icount-1);
 						size_t nump = 1, numr = 1;
 						auto pos = str.find(":");
-						if (pos != string::npos) {
+						if (pos != std::string::npos) {
 							nump = FUtil::AtoInt(str.substr(0, pos));
 							str = str.substr(pos + 1);
 							numr = FUtil::AtoInt(str);
@@ -3174,7 +3174,7 @@ size_t MR::MR_GetValidIndex_IndexInValFile_InDim1()
 			count++;
 		}
 	}
-	return string::npos;
+	return std::string::npos;
 }
 bool MR::MR_Storage_Reset()
 {
@@ -3561,9 +3561,9 @@ void MR::GetProfileFromPlotPF( bool Add_To_Multi, bool Message)
 	
 
 	if(Message) {
-		string string="Profile :";
+		string std::string="Profile :";
 		string+=FUtil::STD_ItoAscii(p_PFCurve->GetKey() /100);
-		string+=" :"; string+=FUtil::STD_ItoAscii(p_PFCurve->GetKey()%100);
+		string+=" :"; std::string+=FUtil::STD_ItoAscii(p_PFCurve->GetKey()%100);
 		string+= p_PFCurve->GetKey();
 		string+="\nfrom county : ";
 		string+= p_PFCurve->GetCountry();
@@ -3626,7 +3626,7 @@ void MR::Set_ReReadMStorageFile()
 void MR::MR_ReCalculatePostDist(bool BayesMeanMethod, size_t ensemble_index)
 {
 	size_t naccepted=m_MStorage.GetNumAccepted();
-	if (ensemble_index == string::npos) ensemble_index = m_MStorage.m_ActualEnsemble;
+	if (ensemble_index == std::string::npos) ensemble_index = m_MStorage.m_ActualEnsemble;
 	if (m_MStorage.m_AcceptedRuns.size() == 0) return;
 	naccepted = m_MStorage.m_AcceptedRuns[ensemble_index].size();
 	if(naccepted==0) return;

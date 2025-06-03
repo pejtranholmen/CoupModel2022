@@ -729,7 +729,7 @@ vector<ZONES> Radiation::DefineRadLongZones(vector<double> *pEdges, double Rad, 
 	return out;
 }
 vector<double> Radiation::DefineSortedHeight()
-{ vector<double> outas, outds;
+{ std::vector<double> outas, outds;
 	for(size_t i=0; i<p_Plant->PlantHeight.size();i++) 
 		outas.push_back(p_Plant->PlantHeight[i]);
 
@@ -740,7 +740,7 @@ vector<double> Radiation::DefineSortedHeight()
 	
 	return outds;
 }
-OUTDIST Radiation::DistributeRad(vector<double> *pRadAboveZone, vector<double> *pHSort, vector<BORDERS> *pBorder,vector<double> *pEdges, vector<ZONES> *pRadLongZones)
+OUTDIST Radiation::DistributeRad(vector<double> *pRadAboveZone, std::vector<double> *pHSort, std::vector<BORDERS> *pBorder,vector<double> *pEdges, std::vector<ZONES> *pRadLongZones)
 {
 	vector<double> RDistZone, LAI_Zone;
 	OUTDIST  out;
@@ -888,7 +888,7 @@ OUTDIST Radiation::DistributeRad(vector<double> *pRadAboveZone, vector<double> *
 
 	return out;
 	}
-SOILSURFACEZONE Radiation::DistributeRad_At_Surface(vector<double> *pRadAboveZone, vector<BORDERS> *pBorder,vector<double> *pEdges, vector<double>*pFracCoverSoilZone, vector<ZONES> *pRadLongZones) {
+SOILSURFACEZONE Radiation::DistributeRad_At_Surface(vector<double> *pRadAboveZone, std::vector<BORDERS> *pBorder,vector<double> *pEdges, std::vector<double>*pFracCoverSoilZone, std::vector<ZONES> *pRadLongZones) {
 	SOILSURFACEZONE out;
 	vector<double> RadSoilZone;
 

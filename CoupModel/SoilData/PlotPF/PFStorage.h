@@ -3,6 +3,7 @@
 #include "../../Util/ReadWriteTypes.h"
 
 
+
 struct NEWHEADER
 {	size_t KeyProf;
 	std::string OldKey;
@@ -51,7 +52,7 @@ public:
 	bool NewFormatFile() noexcept {return IsNewFormatFile;};
 	std::string GetDataBaseDirectory() {
 		return m_DataBaseDir;};
-	void SetDataBaseDirectory(std::string dir) noexcept {m_DataBaseDir=dir;};
+	void SetDataBaseDirectory(const std::string &dir)  {m_DataBaseDir=dir;};
 	std::string GetMainDataBaseName(bool OnlyTitle) {
 		if(OnlyTitle) {
 			size_t pos=m_MainStoreName.rfind("\\");

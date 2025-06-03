@@ -11,7 +11,7 @@ public:
 	F(CPG *pPG, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 	F(definitions def);
 	~F(void);
-	void Def(size_t ModuleNo,string name, string value,string conditions);
+	void Def(size_t ModuleNo,string name, std::string value,string conditions);
 	bool CheckFileNameAndAssignNameToPGClass() {
         bool res=m_PGPointer->Open(m_FileName, false);
 		if(res) { m_PGPointer->CloseFile(), m_Exist=true;}

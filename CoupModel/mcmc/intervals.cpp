@@ -38,9 +38,9 @@ using std::vector;
 /// of Hyndman and Fan (American Statistician, 50:361-365; 1996)
 ///
 /// Notice that as a side effect of calling this routine, the input
-/// vector is sorted.
+/// std::vector is sorted.
 ///
-/// \param ox  The vector from which to calculate the quantile
+/// \param ox  The std::vector from which to calculate the quantile
 /// \param p   The desired quantile
 ///
 double quantile(vector<double>& ox, const double p) {
@@ -64,9 +64,9 @@ double quantile(vector<double>& ox, const double p) {
 /// Returns P(x <= p).
 ///
 /// Notice that as a side effect of calling this routine, the input
-/// vector is sorted.
+/// std::vector is sorted.
 ///
-/// \param x  The vector
+/// \param x  The std::vector
 /// \param p  The desired P-value
 ///
 double p_value(vector<double>& x, const double p) {
@@ -82,18 +82,18 @@ double p_value(vector<double>& x, const double p) {
 
 /// Returns HPD interval, low in x[0], high in x[1].
 ///
-/// Returns lower limit of HPD interval in first element of vector, upper 
-/// limit of HPD interval in second element of vector. This method is an
+/// Returns lower limit of HPD interval in first element of std::vector, upper 
+/// limit of HPD interval in second element of std::vector. This method is an
 /// implementation of the Chen-Shao HPD estimation algorithm.
 ///
 /// Notice that as a side effect of calling this routine, the input
-/// vector is sorted.
+/// std::vector is sorted.
 ///
-/// \param x  The vector
+/// \param x  The std::vector
 /// \param p  The credible interval desired, e.g., 0.95 for 95%
 ///
 vector<double> hpd(vector<double>& x, const double p) {
-  vector<double> interval;
+  std::vector<double> interval;
   std::sort(x.begin(), x.end());
   // x.size()*p is the number of elements desired
   // x.size()*p - 1 is the index of the first (starting from 0)

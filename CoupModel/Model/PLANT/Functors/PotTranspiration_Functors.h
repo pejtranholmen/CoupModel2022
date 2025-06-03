@@ -64,7 +64,7 @@ private:
 };
 
 class Conductance {
-public: Conductance(vector<double> HalfSaturationLightRate, vector<double> VPD_50_V, vector<double> Cond_Max_V,double CondMaxWinter ):
+public: Conductance(vector<double> HalfSaturationLightRate, std::vector<double> VPD_50_V, std::vector<double> Cond_Max_V,double CondMaxWinter ):
 	Cond_Max_V(Cond_Max_V), Cond_Max_Winter(CondMaxWinter) {
 	f_Light_V = Conductance_Light(HalfSaturationLightRate); f_vpd_V = Conductance_VPD(VPD_50_V);
 }
@@ -72,7 +72,7 @@ public: Conductance(vector<double> HalfSaturationLightRate, vector<double> VPD_5
 	f_Light = Conductance_Light(Saturation_50); f_vpd = Conductance_VPD(VPD_50); }
 	 
 	 Conductance(double CondMax, double Cond_Max_Winter) : CondMax(CondMax), Cond_Max_Winter(Cond_Max_Winter) {}
-	 Conductance(double Cond_Max_Winter, vector<double> Cond_Max_V) : Cond_Max_Winter(Cond_Max_Winter), Cond_Max_V(Cond_Max_V) {}
+	 Conductance(double Cond_Max_Winter, std::vector<double> Cond_Max_V) : Cond_Max_Winter(Cond_Max_Winter), Cond_Max_V(Cond_Max_V) {}
 
 		double operator() (bool Winter, double LightRate, double vpd) {
 			if (Winter)
@@ -135,10 +135,10 @@ class RoughnessLengthCanopy {
 public:
 	RoughnessLengthCanopy(double CanDensMax, double PAddIndex, double RoughLMin ):
 		DensMax(CanDensMax), AddLAI(PAddIndex), RoughLMin(RoughLMin) {}
-	RoughnessLengthCanopy(vector<double> MC_CanDensMax, vector<double> MC_PAddIndex, vector<double> MC_RoughLMin,
+	RoughnessLengthCanopy(vector<double> MC_CanDensMax, std::vector<double> MC_PAddIndex, std::vector<double> MC_RoughLMin,
 		vector<double> MC_RoughLMax) :
 		DensMax_V(MC_CanDensMax), AddLAI_V(MC_PAddIndex), RoughL_Min_V(MC_RoughLMin), RoughL_Max_V(MC_RoughLMax) {}
-	RoughnessLengthCanopy(struct PlantInterp L, vector<double> MC_RoughLMin,
+	RoughnessLengthCanopy(struct PlantInterp L, std::vector<double> MC_RoughLMin,
 		vector<double> MC_RoughLMax) :
 		RoughL_Min_V(MC_RoughLMin), RoughL_Max_V(MC_RoughLMax) {
 		f_PlantSeasonFracRough = PlantSeasonDev(L);

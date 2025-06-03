@@ -78,7 +78,7 @@ public:
 	size_t m_MaxLayer;
 
 	//float m_NewPlotValue, m_NewPlotValue2, m_NewPlotValue3, m_NewPlotValue4;
-	vector< vector<double>> m_NewPlotValue, m_ResetPlotValue, m_PreviousValue;
+	vector< std::vector<double>> m_NewPlotValue, m_ResetPlotValue, m_PreviousValue;
 	vector<P*> m_P;
 	vector<Ps*> m_Ps;
 	Tab* m_pParTable;

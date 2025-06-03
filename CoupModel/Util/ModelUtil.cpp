@@ -76,7 +76,7 @@ bool ModelUtil::SetParValue(Doc *pDoc, Ps * pPs, double newvalue)
 
 	//((Ps*)pSw)->EditApply();
 	pDoc->TimeModified();
-	pDoc->History_Add(pPs, string::npos,time(nullptr), newvalue);
+	pDoc->History_Add(pPs, std::string::npos,time(nullptr), newvalue);
 
 
 #endif

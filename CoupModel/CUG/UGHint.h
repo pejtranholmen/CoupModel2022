@@ -72,7 +72,7 @@ public:
 	int SetBackColor(COLORREF color);
 	int SetFont(CFont *font);
 
-	int SetText(LPCTSTR string,int update);
+	int SetText(LPCTSTR std::string,int update);
 	int MoveHintWindow(int x,int y,int width);
 
 	int Hide();

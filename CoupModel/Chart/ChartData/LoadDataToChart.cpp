@@ -331,7 +331,7 @@ CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
 			// unknown fileType
 			out.pPG1 = p_info.pPG;//((F*)Ptr)->GetPointer();
 								  /*				if(out.pPG1==nullptr) {
-								  string fileName=((F*)Ptr)->GetStrValue();
+								  std::string fileName=((F*)Ptr)->GetStrValue();
 								  out.pPG1=new CPG;
 								  out.pPG1->Open(fileName);
 								  if(out.pPG1->IsOpen()){
@@ -591,7 +591,7 @@ void LoadDataToChart::SetChartInfo(CURVEINFO c_info, PLOTv plotv) {
 
 	m_ChartInfo.WithinDayRepresentation = 1;
 	m_ChartInfo.YearRepresentation = 0;
-	m_ChartInfo.NumExtraPointFreq = string::npos;
+	m_ChartInfo.NumExtraPointFreq = std::string::npos;
 
 	if (m_pUtil->m_MultiRunPlot) {
 		m_ChartInfo.NumOfPoints = m_pSimDoc->MR_Get_TotalNumberofRuns();
@@ -1351,7 +1351,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 			}
 			else {
 				if (p_info.PGSection == 0) {
-					if (p_info.index_cycle != string::npos)
+					if (p_info.index_cycle != std::string::npos)
 						TT[i] = double(pDocAct->m_MStorage.GetValid(i, index));
 					else
 						TT[i] = double(pDocAct->m_MStorage.GetValid(i, index));
@@ -2003,7 +2003,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 	PGNumVar = m_pPG_Active->GetNumVariables();
 	auto datatype = m_pSimDoc->m_PlotStorage.GetDataType(j);
 	int Residual_VarNum;
-	//if(p_info.index_cycle!=string::npos) Removed conditions forcing Residual to only first and One Validation variable
+	//if(p_info.index_cycle!= std::string::npos) Removed conditions forcing Residual to only first and One Validation variable
 	//	 Residual_VarNum = 0;
 	//else
 		Residual_VarNum = p_info.Residual_VarNum;
@@ -2116,7 +2116,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 			auto pSw = m_pSimDoc->GetSw("PreDefinedEnsembles");
 			if (pSw > 0) {
 				auto cycle_pair = m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
-				if (cycle_pair.first == string::npos) act_rep = cycle_pair.first + 1;
+				if (cycle_pair.first == std::string::npos) act_rep = cycle_pair.first + 1;
 			}
 		}
 	}
@@ -2162,7 +2162,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 
 		size_t inc_step = 1;
 		size_t start_pos = 0;
-		if (p_info.index_cycle != string::npos) {
+		if (p_info.index_cycle != std::string::npos) {
 			if (p_info.index_cycle > 1) inc_step = p_info.index_cycle;
 			start_pos = p_info.pg_start_pos % inc_step;
 		}
@@ -2187,7 +2187,7 @@ bool LoadDataToChart::SetDataValues(size_t ActNoPoints, PG_TIMECONTROL pg_contro
 					for(size_t i=0;i<NumStatPoints;i++)	Mean_Of_Mean_ResidualsValue[i].resize(ActNoPoints);
 				}
 				
-					vector< vector<float>> ValidValue, ValidMeanValue[NumStatPoints];
+					vector< std::vector<float>> ValidValue, ValidMeanValue[NumStatPoints];
 					ValidValue.resize(ActNoPoints);
 					for (size_t i_stat = 0; i_stat < NumStatPoints; i_stat++) 	ValidMeanValue[i_stat].resize(ActNoPoints);
 
@@ -2602,7 +2602,7 @@ void LoadDataToChart::SetTimeDataMinMax(int Type) {
 	if (m_pProp->m_ReShape.m_CommonDayNo) {
 		m_Time.MinDate = m_pPG_Active->GetDoubleTimeYearStart(1);
 		m_Time.MaxDate = m_pPG_Active->GetDoubleTimeYearEnd(1);
-		if (!m_pProp->isXScaleSet(0) && m_pProp->GetFirstIndepIndex() == string::npos&&Type != 18) {
+		if (!m_pProp->isXScaleSet(0) && m_pProp->GetFirstIndepIndex() == std::string::npos&&Type != 18) {
 			m_pProp->m_TimeScale.min = m_Time.MinDate;
 			m_pProp->m_TimeScale.max = m_Time.MaxDate;
 		}
@@ -2610,7 +2610,7 @@ void LoadDataToChart::SetTimeDataMinMax(int Type) {
 	else if (m_pProp->m_ReShape.m_CommonWithDay) {
 		m_Time.MinDate = m_pPG_Active->GetDoubleTimeYearStart(1);
 		m_Time.MaxDate = m_Time.MinDate + 86400.;
-		if (!m_pProp->isXScaleSet(0) && m_pProp->GetFirstIndepIndex() == string::npos && !m_pProp->IsFirstIndepSet()) {
+		if (!m_pProp->isXScaleSet(0) && m_pProp->GetFirstIndepIndex() == std::string::npos && !m_pProp->IsFirstIndepSet()) {
 			m_pProp->m_TimeScale.min = m_Time.MinDate;
 			m_pProp->m_TimeScale.max = m_Time.MaxDate;
 		}

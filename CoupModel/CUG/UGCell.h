@@ -99,11 +99,11 @@ protected:
 
 	// members that provide cell's data storage
 	double	m_nNumber;		// numeric value set with SetNumber
-	CString m_string;		// main text string set with SetText
+	CString m_string;		// main text std::string set with SetText
 	CString m_label;		// secondary text storage set with SetLabelText
-	CString m_mask;			// mask string used by the MaskEdit control
+	CString m_mask;			// mask std::string used by the MaskEdit control
 
-	short	m_dataType;		//bit level flag - string,date,time,
+	short	m_dataType;		//bit level flag - std::string,date,time,
 							//time&date,number,bool,binary, currency
 		
 	BOOL	m_readOnlyFlag; //TRUE for readonly

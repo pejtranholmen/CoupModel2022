@@ -425,7 +425,7 @@ GRIDCHAR ChartCugSheets::GetRowsAndCols() {
 				out.rows=n1;*/
 			out.cols=9;
 			auto ArrayIndex = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0);
-			if (ArrayIndex!= string::npos) {
+			if (ArrayIndex!= std::string::npos) {
 				auto koll = m_pSimDoc->m_PlotStorage.GetPGSectionNo(ArrayIndex);
 				auto p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(ArrayIndex);
 				if (p_info.RepitDataType) m_PGRepit = true;
@@ -2318,7 +2318,7 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 
 						}
 						else if (m_pUtil->m_MultiRunPlot || m_pUtil->m_MultiPGPlot || m_pProp->GetSecondIndepVarType() != DATEAXIS) {
-							if ((m_pProp->GetFirstIndepIndex() != string::npos&&m_pProp->IsSecondIndepSet() && m_pProp->GetSecondIndepVarType() == DATEAXIS)|| m_pProp->GetFirstIndepVarType()==MULTIRUN_NUM) {
+							if ((m_pProp->GetFirstIndepIndex() != std::string::npos&&m_pProp->IsSecondIndepSet() && m_pProp->GetSecondIndepVarType() == DATEAXIS)|| m_pProp->GetFirstIndepVarType()==MULTIRUN_NUM) {
 								if (m_pProp->GetIndepFirst() == MULTIRUN_NUM) {
 									QuickSetNumber(1, lineacc + jc, m_pProp->GetXmin(jc), false);
 									QuickSetNumber(2, lineacc + jc, m_pProp->GetXmax(jc), false);
@@ -2516,7 +2516,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 				for(size_t i=0;i<m_TimeSeriePlot.m_ChartInfo.NumVariables;i++) {
 						
 						ArrayIndex=m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, i/NumVarPerChartRatio);
-					//	if(ArrayIndex==string::npos&&m_TimeSeriePlot.m_ChartInfo.NumVariables==m_TimeSeriePlot.m_ChartInfo.NumPriorVariables) continue;
+					//	if(ArrayIndex== std::string::npos&&m_TimeSeriePlot.m_ChartInfo.NumVariables==m_TimeSeriePlot.m_ChartInfo.NumPriorVariables) continue;
 						lrow++;
 					//	if(m_TimeSeriePlot.m_ChartInfo.NumVariables==2*m_TimeSeriePlot.m_ChartInfo.NumPriorVariables) 
 					//		ArrayIndex=m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumIndex, int(i/2));
@@ -3080,9 +3080,9 @@ void ChartCugSheets::AddTimeData(DoubleArray data, DoubleArray data_y, size_t x_
 
 		//if(m_pProp->m_Legend1.size()<=0) return;
 
-		if (!(m_pProp->m_ChartType >=CHART_TYPES::FREQUENCE && m_pProp->m_ChartType >=CHART_TYPES::CUM_FREQUENCE)) x_var = string::npos;
+		if (!(m_pProp->m_ChartType >=CHART_TYPES::FREQUENCE && m_pProp->m_ChartType >=CHART_TYPES::CUM_FREQUENCE)) x_var = std::string::npos;
 
-		if (x_var == 0 || x_var == string::npos) {
+		if (x_var == 0 || x_var == std::string::npos) {
 			MakeDataSheet(0);
 			SetSheetNumber(6, false);
 			SetNumberRows(data.len);
@@ -3091,7 +3091,7 @@ void ChartCugSheets::AddTimeData(DoubleArray data, DoubleArray data_y, size_t x_
 		for (int j=0;j<data.len;j++) {
 			GetCell(0,j,&cell);
 			if(m_pUtil->m_MultiRunPlot||m_pProp->m_ReShape.m_NormalDist||m_pProp->m_ReShape.m_SortedSeries||m_pProp->m_ChartType!= CHART_TYPES::TIME_SERIE) {
-				if(x_var==string::npos)
+				if(x_var== std::string::npos)
 					v=*(data.data+j);
 				else {
 					double minv = m_pProp->GetXDistMin(m_NumVarSelected - 1);
@@ -3114,7 +3114,7 @@ void ChartCugSheets::AddTimeData(DoubleArray data, DoubleArray data_y, size_t x_
 				cell.SetText(txt.c_str());
 			}
 		
-			if (x_var != string::npos) {
+			if (x_var != std::string::npos) {
 				int col = x_var*(m_TimeSeriePlot.GetNumberOfEnsembles() + 2);
 				SetCell(col, j, &cell);
 

@@ -90,8 +90,8 @@ bool NC_ExternalInputs::Ini()	{
 
 		size_t LL;
 		if (m_pModelInfo->ActualNoMulRun <= 1) {
-			LL = string::npos;		
-			while (LL == string::npos) {
+			LL = std::string::npos;		
+			while (LL == std::string::npos) {
 				string str;
 				str = "You have to identify a File with the correct base of Filename \n";
 				str += "The file should correspond to the Year Tables for Fertilization and Crop Management";
@@ -101,10 +101,10 @@ bool NC_ExternalInputs::Ini()	{
 				//m_pFertTableStream->CheckFileName();
 				LL = m_FileNameParTable.rfind("_");
 				size_t DIRCHAR = m_FileNameParTable.rfind("\\");
-				if(DIRCHAR!=string::npos)
+				if(DIRCHAR!= std::string::npos)
 					if (DIRCHAR > LL) m_NoUnderScore = true;
 				else
-					if(LL==string::npos)  m_NoUnderScore = true;
+					if(LL== std::string::npos)  m_NoUnderScore = true;
 			}
 			if (!m_NoUnderScore) {
 				m_FileNameParTable = m_FileNameParTable.substr(0, LL + 1);
@@ -439,8 +439,8 @@ bool NC_ExternalInputs::CheckEcoDriv4() {
 
 
    for(size_t i=0; i<m_PG_Manure.GetNumVariables(); i++) {
-     string name=m_PG_Manure.GetVarName(i+1);
-	 string Id=m_PG_Manure.GetVarId(i+1);
+     std::string name=m_PG_Manure.GetVarName(i+1);
+	 std::string Id=m_PG_Manure.GetVarId(i+1);
 
 	 name += Id;
 
@@ -452,49 +452,49 @@ bool NC_ExternalInputs::CheckEcoDriv4() {
 
          
                 ;
-     if(name.find("MANNH")!=string::npos&&ManureInput>0) {;
+     if(name.find("MANNH")!= std::string::npos&&ManureInput>0) {;
 		if(ManNHIpos.ivar==0) 
 			ManNHIpos.ivar=i+1;
 		else
 			Message("Warning - too many MANNH variables, extra not used is :");
 		  
 	 }	
-	 else if (name.find("MANNLN") != string::npos&& ManureInput > 0) {
+	 else if (name.find("MANNLN") != std::string::npos&& ManureInput > 0) {
 		 ;
 		if(ManNLNIpos.ivar==0) 
 			ManNLNIpos.ivar=i+1;
 		else
           Message("Warning - too many ManNLN variables, extra not used is :");
 	}
-	 else if (name.find("CNBED") != string::npos && ManureInput > 0) {
+	 else if (name.find("CNBED") != std::string::npos && ManureInput > 0) {
 		if(CNBEDIpos.ivar==0) 
 			CNBEDIpos.ivar=i+1;
 		else
           Message("Warning - too many CNBED variables, extra not used is :");
 		  
 	 }
-     else if(name.find("MANFN")!=string::npos&&ManureInput>0) {
+     else if(name.find("MANFN")!= std::string::npos&&ManureInput>0) {
 		if(ManFNIpos.ivar==0) 
 			ManFNIpos.ivar=i+1;
 		else
 			Message("Warning - too many MANFN variables, extra not used is :");
 
 	}
-     else if(name.find("CNFEC")!=string::npos&&ManureInput>0) {
+     else if(name.find("CNFEC")!= std::string::npos&&ManureInput>0) {
 		if(CNFECIpos.ivar==0) 
 			CNFECIpos.ivar=i+1;
 		else
           Message("Warning - too many CNFEC variables, extra not used is :");
 		  
 	 }
-	 else if(name.find("MANDEPTH")!=string::npos&&ManureInput>0) {
+	 else if(name.find("MANDEPTH")!= std::string::npos&&ManureInput>0) {
 		if(ManDepthIpos.ivar==0) 
 			ManDepthIpos.ivar=i+1;
 		else
           Message("Warning - too many MANDEPTH variables, extra not used is :");
 		  
 	 }
-	 else if(name.find("FERTILIZ")!=string::npos&&N_Fertilization==2) {
+	 else if(name.find("FERTILIZ")!= std::string::npos&&N_Fertilization==2) {
 		if(FertNIpos.ivar==0)
 			FertNIpos.ivar=i+1;
 		else
@@ -533,8 +533,8 @@ bool NC_ExternalInputs::CheckEcoDeposition() {
 
 
    for(size_t i=0; i<m_PG_Deposition.GetNumVariables(); i++) {
-     string name=m_PG_Deposition.GetVarName(i+1);
-	 string Id=m_PG_Deposition.GetVarId(i+1);
+     std::string name=m_PG_Deposition.GetVarName(i+1);
+	 std::string Id=m_PG_Deposition.GetVarId(i+1);
 
 	 for(size_t ii=0; ii<20;ii++) {
 		if(int(name[ii])>=97) {
@@ -543,14 +543,14 @@ bool NC_ExternalInputs::CheckEcoDeposition() {
 	 }
          
                 ;
-     if(name.find("NH4")!=string::npos) {
+     if(name.find("NH4")!= std::string::npos) {
 		if(NH4NIpos.ivar==0) 
 			NH4NIpos.ivar=i+1;
 		else
 			Message("Warning - too many MANNH variables, extra not used is :");
 		  
 	 }	
-	 else if(name.find("NO3")!=string::npos) {;
+	 else if(name.find("NO3")!= std::string::npos) {;
 		if(NO3NIpos.ivar==0) 
 			NO3NIpos.ivar=i+1;
 		else
@@ -598,10 +598,10 @@ bool NC_ExternalInputs::ReadAndSetParameterValues(string newname)
 		icom = 1;
 		double value;
 		size_t var = 0;
-		while (icom != string::npos) {
+		while (icom != std::string::npos) {
 			string str;
 			icom = line.find(',');
-			if (icom == string::npos) {
+			if (icom == std::string::npos) {
 				str = line;
 				line = "";
 			}

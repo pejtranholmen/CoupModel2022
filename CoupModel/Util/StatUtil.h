@@ -163,8 +163,8 @@ return;
 
 namespace StatUtil
 {
-	STAT_PERF Get_StatComp(vector<double> *sim, vector<double> *obs);
-	STAT_PERF Get_StatComp_ObsIndep(vector<float> *sim, vector<float> *obs);
+	STAT_PERF Get_StatComp(vector<double> *sim, std::vector<double> *obs);
+	STAT_PERF Get_StatComp_ObsIndep(vector<float> *sim, std::vector<float> *obs);
 	double AIC_Func(double SSE, double n_point, double p_point);
 	double BIC_Func(double SSE, double n_point, double p_point);
 	double sum(vector<double>);

@@ -21,12 +21,12 @@ public:
 	Func(definitions def);
 	~Func(void);
 	void Def(int ModuleNo,size_t opt, size_t ftype,SimModule *mClass,string name, FunctionProperties* pFunc, ModelMap *pModelMap);
-	void Def(FunctorProp prop, SimModule *mClass, string name, FunctionProperties* pFunc, ModelMap *pModelMap);
-	void Def(function<double(double)> *pFunctor, string name, FunctionProperties* pFunc, ModelMap *pModelMap);
-	void Def(FunctorProp prop, string name, vector<Ps*> Ps_Vector,  FunctionProperties* pFunctions, ModelMap* pModelMap);
-	void Def(FunctorProp prop, string name, vector<Ps*> Ps_Vector, vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap);
-	void Def(FunctorProp prop, string name, vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap);
-	void Def(FunctorProp prop, string name, HYDRAULIC_COEF *pHyd, vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap);
+	void Def(FunctorProp prop, SimModule *mClass, std::string name, FunctionProperties* pFunc, ModelMap *pModelMap);
+	void Def(function<double(double)> *pFunctor, std::string name, FunctionProperties* pFunc, ModelMap *pModelMap);
+	void Def(FunctorProp prop, std::string name, std::vector<Ps*> Ps_Vector,  FunctionProperties* pFunctions, ModelMap* pModelMap);
+	void Def(FunctorProp prop, std::string name, std::vector<Ps*> Ps_Vector, std::vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap);
+	void Def(FunctorProp prop, std::string name, std::vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap);
+	void Def(FunctorProp prop, std::string name, HYDRAULIC_COEF *pHyd, std::vector<P*> P_Vector, FunctionProperties* pFunctions, ModelMap* pModelMap);
 	void SetPlotParam(PLOT_PARAM param) {m_PlotParam=param;};
 	void ResizeDoubleParVector(vector<double> *pDouble, size_t NewSize);
 
@@ -60,10 +60,10 @@ public:
 	function<double(size_t, size_t, double, double, double)> Get_T_D3_TableFunctor();
 
 	function<void(vector<double>*)>  GetVectorPointer_D1_Functor();
-	function<void(vector<double>*, vector<double>*)>  GetVectorPointer_D2_Functor();
-	function<void(vector<double>*, vector<double>*, vector<double>*)>  GetVectorPointer_D3_Functor();
-	function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*)> GetVectorPointer_D4_Functor();
-	function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*, vector<double>*)> GetVectorPointer_D5_Functor();
+	function<void(vector<double>*, std::vector<double>*)>  GetVectorPointer_D2_Functor();
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  GetVectorPointer_D3_Functor();
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D4_Functor();
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D5_Functor();
 	function<OrgTurnOver(double, double, double)> Get_OrgTurnOverFunctor();
 	function<OrgTurnOver(double, double, double, double, double)> Get_D5_OrgTurnOverFunctor();
 	function < pair<double, double>( double, double)> Get_Pair_D2Functor();
@@ -92,7 +92,7 @@ public:
 	void   SetFunctor(function<bool(bool)> functor) { m_D1Functor= functor; };
 	bool   MakeBool();
 	bool m_FunctorFunctions;
-	vector<string> GetParDep_Ps_Names() { vector<string> out; 
+	vector<string> GetParDep_Ps_Names() { std::vector<string> out; 
 		for (size_t i = 0; i < m_Ps_Vector.size(); i++) out.push_back(((SimB*)m_Ps_Vector[i])->GetName());
 		return out;
 	};
@@ -120,7 +120,7 @@ protected:
 	vector<Ps*> m_Ps_Vector;
 	vector<P*> m_P_vector;
 	vector<double> m_FunctorPs_Par;
-	vector< vector<double>> m_FunctorP_Par;
+	vector< std::vector<double>> m_FunctorP_Par;
 	FunctorProp m_FunctorProp;
 	bool m_TableType;
 	HYDRAULIC_COEF *m_pHydraulic_Coef;

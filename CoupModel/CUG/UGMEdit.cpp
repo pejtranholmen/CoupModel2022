@@ -152,7 +152,7 @@ int CUGMaskedEdit::MaskKeyStrokes(UINT *vKey){
 	int startPos,endPos;
 	GetSel(startPos,endPos);
 
-	//make sure the string is not longer than the mask
+	//make sure the std::string is not longer than the mask
 	if(endPos >= m_mask.GetLength())
 		return FALSE;
 
@@ -247,12 +247,12 @@ void CUGMaskedEdit::ShowInvalidEntryMessage(){
 SetMask
 	Sets the mask to use during editing. 
 Params:
-	string - mask string
+	string - mask std::string
 Return:
 	UG_SUCCESS - success
 	UG_ERROR - error
 ****************************************************/
-int CUGMaskedEdit::SetMask(LPCTSTR string){
+int CUGMaskedEdit::SetMask(LPCTSTR std::string){
 
 	if(string == nullptr){
 		m_useMask = FALSE;
@@ -260,7 +260,7 @@ int CUGMaskedEdit::SetMask(LPCTSTR string){
 	}
 
 	//set the mask
-	m_origMask = string;
+	m_origMask = std::string;
 	if(m_origMask.GetLength() > 0)
 		m_useMask = TRUE;
 	else{
@@ -302,7 +302,7 @@ int CUGMaskedEdit::SetMask(LPCTSTR string){
 			buf[pos] = 8;
 		pos++;
 	}
-	//copy over the final mask string
+	//copy over the final mask std::string
 	buf[pos]=0;
 	m_mask = buf;
 
@@ -331,7 +331,7 @@ int CUGMaskedEdit::SetMask(LPCTSTR string){
 			buf[pos] = m_origMask[loop];
 		pos++;
 	}
-	//copy over the final literal string
+	//copy over the final literal std::string
 	buf[pos]=0;
 	m_literals = buf;
 	delete[] buf;
@@ -343,11 +343,11 @@ int CUGMaskedEdit::SetMask(LPCTSTR string){
 
 /***************************************************
 MaskString
-	Applies the given string against the current
-	mask. If characters within the string do not
+	Applies the given std::string against the current
+	mask. If characters within the std::string do not
 	match the mask they will be disposed of.
 Params:
-	string - mask string
+	string - mask std::string
 Return:
 	UG_SUCCESS - success
 	UG_ERROR - error
@@ -360,8 +360,8 @@ int CUGMaskedEdit::MaskString(CString *string){
 
 	//make the mask
 	int loop;
-	int pos=0;	//original string pos
-	int pos2=0; //new string pos
+	int pos=0;	//original std::string pos
+	int pos2=0; //new std::string pos
 	int len = m_mask.GetLength();
 	TCHAR *buf = new TCHAR[len+1];
 
@@ -371,12 +371,12 @@ int CUGMaskedEdit::MaskString(CString *string){
 			buf[pos2] = m_literals.GetAt(loop);
 			pos2++;
 		}
-		//check to see if the string matches the mask
+		//check to see if the std::string matches the mask
 		else{
 			int c = m_mask.GetAt(loop);
-			if(pos == string->GetLength())
+			if(pos == std::string->GetLength())
 				break;
-			int d = string->GetAt(pos);
+			int d = std::string->GetAt(pos);
 			int valid = FALSE;
 	
 			switch(c){
@@ -443,7 +443,7 @@ int CUGMaskedEdit::MaskString(CString *string){
 			
 			pos++;
 		}
-		if(pos == string->GetLength())
+		if(pos == std::string->GetLength())
 			break;
 	}
 

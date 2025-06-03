@@ -10,7 +10,7 @@ public:
 				OldBioMass.push_back(false);
 		}
 	}
-	vector<double> operator() (const vector<double> &MassCarbon, const vector<double> &MassCarbonOld, const vector<double> &Mass, const vector<double> &MassOld, vector<double> &MassRatio) {
+	vector<double> operator() (const std::vector<double> &MassCarbon, const std::vector<double> &MassCarbonOld, const std::vector<double> &Mass, const std::vector<double> &MassOld, std::vector<double> &MassRatio) {
 		for (size_t i = 0; i < MassCarbon.size(); i++) {
 				    if (OldBioMass[i]) {
 						if ((Mass[i] + MassOld[i]) > 1.E-3) //for small P conditions HH
@@ -28,7 +28,7 @@ public:
 					
 		return MassRatio;
 	};
-	vector<double> operator() (const vector<double> &MassCarbon,  const vector<double> &Mass,  vector<double> &MassRatio) {
+	vector<double> operator() (const std::vector<double> &MassCarbon,  const std::vector<double> &Mass,  std::vector<double> &MassRatio) {
 		for (size_t i = 0; i < MassCarbon.size(); i++) {
 			if ((Mass[i]) > 1.E-3)
 				MassRatio[i] = (MassCarbon[i]+1.E-5) / (Mass[i]+1.E-7);
@@ -43,7 +43,7 @@ private:
 
 class CarbonRatioLeaf {
 public:
-	CarbonRatioLeaf(vector<double> Max_Plant_LifeTime , vector<double> CX_RatioMaxLeaf)   {
+	CarbonRatioLeaf(vector<double> Max_Plant_LifeTime , std::vector<double> CX_RatioMaxLeaf)   {
 		DefaultLeafRatio.assign(CX_RatioMaxLeaf.size(), 100.);
 		for (size_t i = 0; i < Max_Plant_LifeTime.size(); i++) {
 			if (Max_Plant_LifeTime[i] > 1.) OldBioMass.push_back(true);
@@ -53,7 +53,7 @@ public:
 
 		}
 	}
-	vector<double> operator() (const vector<double>& MassCarbon, const vector<double>& MassCarbonOld, const vector<double>& Mass, const vector<double>& MassOld, vector<double>& MassRatio) {
+	vector<double> operator() (const std::vector<double>& MassCarbon, const std::vector<double>& MassCarbonOld, const std::vector<double>& Mass, const std::vector<double>& MassOld, std::vector<double>& MassRatio) {
 		for (size_t i = 0; i < MassCarbon.size(); i++) {
 			if (OldBioMass[i]) {
 				if ((Mass[i] + MassOld[i]) > 1.E-3) //for small P conditions HH
@@ -71,7 +71,7 @@ public:
 
 		return MassRatio;
 	};
-	vector<double> operator() (const vector<double>& MassCarbon, const vector<double>& Mass, vector<double>& MassRatio) {
+	vector<double> operator() (const std::vector<double>& MassCarbon, const std::vector<double>& Mass, std::vector<double>& MassRatio) {
 		for (size_t i = 0; i < MassCarbon.size(); i++) {
 			if ((Mass[i]) > 1.E-2)
 					MassRatio[i] = (MassCarbon[i] + 5.E-19) / (Mass[i] + 1.E-20);

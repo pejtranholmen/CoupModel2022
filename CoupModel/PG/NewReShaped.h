@@ -4,9 +4,9 @@ public:
 	NewReShaped();
 	~NewReShaped();
 
-	CPG* CreateNewReShapedFile(CPG* pPG,  vector<string> unique_names, vector<size_t> num_repof_names, vector<vector<size_t>> VarNamePos, bool treatment, bool specialtreatment, bool parcNo);
+	CPG* CreateNewReShapedFile(CPG* pPG,  std::vector<string> unique_names, std::vector<size_t> num_repof_names, std::vector<vector<size_t>> VarNamePos, bool treatment, bool specialtreatment, bool parcNo);
 	CPG* CreateReshaped(CPG* pPG);
-	CPG* CreateRepitionsStructure(CPG* pPG_FirstStep, CPG* pPG_OrigSource, vector<vector<size_t>> VarNamePos);
+	CPG* CreateRepitionsStructure(CPG* pPG_FirstStep, CPG* pPG_OrigSource, std::vector<vector<size_t>> VarNamePos);
 
 	int GetTreatment(string idkod);
 	int GetParcell(string idkod);

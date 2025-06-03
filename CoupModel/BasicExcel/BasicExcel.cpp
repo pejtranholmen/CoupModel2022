@@ -830,7 +830,7 @@ int CompoundFile::ReadFile(const wchar_t* path, char* data)
 	return SUCCESS;
 }
 
-int CompoundFile::ReadFile(const wchar_t* path, vector<char>& data)
+int CompoundFile::ReadFile(const wchar_t* path, std::vector<char>& data)
 // PURPOSE: Read a file's data in the compound file.
 // PROMISE: Returns the small blocks of data stored by the Root Entry if path = "\".
 // PROMISE: data will not be set if file is not present in the compound file.
@@ -876,7 +876,7 @@ int CompoundFile::WriteFile(const wchar_t* path, const char* data, size_t size)
 	return SUCCESS;
 }
 
-int CompoundFile::WriteFile(const wchar_t* path, const vector<char>& data, size_t size)
+int CompoundFile::WriteFile(const wchar_t* path, const std::vector<char>& data, size_t size)
 // PURPOSE: Write data to a file in the compound file.
 // PROMISE: The file's original data will be replaced by the new data.
 {
@@ -1021,7 +1021,7 @@ int CompoundFile::ReadFile(const char* path, char* data)
 	delete[] wpath;
 	return ret;
 }
-int CompoundFile::ReadFile(const char* path, vector<char>& data)
+int CompoundFile::ReadFile(const char* path, std::vector<char>& data)
 {
 	size_t pathLength = strlen(path);
 	wchar_t* wpath = new wchar_t[pathLength+1];
@@ -1041,7 +1041,7 @@ int CompoundFile::WriteFile(const char* path, char* data, size_t size)
 	delete[] wpath;
 	return ret;
 }
-int CompoundFile::WriteFile(const char* path, vector<char>& data, size_t size)
+int CompoundFile::WriteFile(const char* path, std::vector<char>& data, size_t size)
 {
 	size_t pathLength = strlen(path);
 	wchar_t* wpath = new wchar_t[pathLength+1];
@@ -1649,7 +1649,7 @@ size_t CompoundFile::WriteData(const char* data, size_t size, int startIndex, bo
 	}
 }
 
-void CompoundFile::GetBlockIndices(size_t startIndex, vector<size_t>& indices, bool isBig)
+void CompoundFile::GetBlockIndices(size_t startIndex, std::vector<size_t>& indices, bool isBig)
 // PURPOSE: Get the indices of blocks where data are stored, starting from startIndex.
 // EXPLAIN: isBig is true if property uses big blocks, false if it uses small blocks.
 {
@@ -2516,7 +2516,7 @@ size_t SmallString::Read(const char* data)
 	size_t bytesRead = 2;
 	if (unicode_ == 0)
 	{
-		// ANSI string	
+		// ANSI std::string	
 		name_ = new char[stringSize+1];
 		LittleEndian::ReadString(data, name_, 2, stringSize);
 		name_[stringSize] = 0;
@@ -2538,7 +2538,7 @@ size_t SmallString::Write(char* data)
 	size_t bytesWrite = 0;
 	if (unicode_ == 0)
 	{
-		// ANSI string
+		// ANSI std::string
 		if (name_)
 		{
 			stringSize = strlen(name_);
@@ -2655,7 +2655,7 @@ size_t LargeString::ContinueRead(const char* data, size_t size)
 	if (unicode_ == -1) unicode_ = unicode;
 	if (unicode_ & 1)
 	{
-		// Present stored string is uncompressed (16 bit)
+		// Present stored std::string is uncompressed (16 bit)
 		size_t npos = 1;
 		if (richtext_) npos += 2;
 		if (phonetic_) npos += 4;
@@ -2681,7 +2681,7 @@ size_t LargeString::ContinueRead(const char* data, size_t size)
 	}
 	else
 	{
-		// Present stored string has character compression (8 bit)
+		// Present stored std::string has character compression (8 bit)
 		size_t npos = 1;
 		if (richtext_) npos += 2;
 		if (phonetic_) npos += 4;
@@ -2731,7 +2731,7 @@ size_t LargeString::Write(char* data)
 	}
 	else
 	{
-		// ANSI string
+		// ANSI std::string
 		unicode_ = 0; // Don't handle richtext or phonetic for now.
 		if (!name_.empty())
 		{
@@ -3133,7 +3133,7 @@ size_t Workbook::SharedStringTable::Read(const char* data)
 				++c;
 				if (size > 0) 
 				{
-					size /= multiplier;	// Number of characters available for string in current record.
+					size /= multiplier;	// Number of characters available for std::string in current record.
 					bytesRead += strings_[i].ContinueRead(&*(data_.begin())+npos+bytesRead, size);
 					stringSize -= size;
 					size = 0;
@@ -3191,7 +3191,7 @@ size_t Workbook::SharedStringTable::DataSize()
 		}
 		else
 		{
-			// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split string
+			// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split std::string
 			// otherwise, end record and start continue record.
 			bool unicode = strings_[i].unicode_ & 1;
 			if (curMax - dataSize_ >= 12)
@@ -3233,7 +3233,7 @@ size_t Workbook::SharedStringTable::DataSize()
 				}
 				else
 				{
-					// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split string
+					// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split std::string
 					// otherwise, end record and start continue record.
 					if (curMax - dataSize_ >= 12)
 					{
@@ -5044,7 +5044,7 @@ void BasicExcel::AdjustExtSSTPositions()
 			}
 			else
 			{
-				// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split string
+				// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split std::string
 				// otherwise, end record and start continue record.
 				if (8224 - relativeOffset >= 12)
 				{
@@ -5067,7 +5067,7 @@ void BasicExcel::AdjustExtSSTPositions()
 					}
 					else
 					{
-						// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split string
+						// If have >= 12 bytes (2 for size, 1 for unicode and >=9 for data, can split std::string
 						// otherwise, end record and start continue record.
 						if (8224 - relativeOffset >= 12)
 						{
@@ -5117,7 +5117,7 @@ void BasicExcel::UpdateWorksheets()
 	map<vector<wchar_t>, size_t> wstringMap;
 	map<vector<wchar_t>, size_t>::iterator wstringMapIt;
 
-	// Reset worksheets and string table.
+	// Reset worksheets and std::string table.
 	worksheets_.clear();
 	worksheets_.resize(maxWorksheets);
 	
@@ -5297,12 +5297,12 @@ void BasicExcel::UpdateWorksheets()
 							pCell->labelsst_.rowIndex_ = r;
 							pCell->labelsst_.colIndex_ = c;
 							
-							// Get cell string
+							// Get cell std::string
 							vector<char> str(cell->GetStringLength()+1);
 							cell->Get(&*(str.begin()));
 							str.pop_back();	// Remove null character because LargeString does not store null character.
 
-							// Check if string is present in Shared string table.
+							// Check if std::string is present in Shared std::string table.
 							++workbook_.sst_.stringsTotal_;
 							size_t maxUniqueStrings = workbook_.sst_.uniqueStringsTotal_;
 							size_t strIndex = 0;
@@ -5312,12 +5312,12 @@ void BasicExcel::UpdateWorksheets()
 
 							if (strIndex < maxUniqueStrings)
 							{
-								// String is present in Shared string table.
+								// String is present in Shared std::string table.
 								pCell->labelsst_.SSTRecordIndex_ = strIndex;
 							}
 							else
 							{
-								// New unique string.
+								// New unique std::string.
 								stringMap[str] = maxUniqueStrings;
 								workbook_.sst_.strings_.push_back(largeString);
 								workbook_.sst_.strings_[maxUniqueStrings].name_ = str;
@@ -5336,12 +5336,12 @@ void BasicExcel::UpdateWorksheets()
 							pCell->labelsst_.rowIndex_ = r;
 							pCell->labelsst_.colIndex_ = c;
 
-							// Get cell string
+							// Get cell std::string
 							vector<wchar_t> str(cell->GetStringLength()+1);
 							cell->Get(&*(str.begin()));
 							str.pop_back(); // Remove null character because LargeString does not store null character.
 
-							// Check if string is present in Shared string table.
+							// Check if std::string is present in Shared std::string table.
 							++workbook_.sst_.stringsTotal_;
 							size_t maxUniqueStrings = workbook_.sst_.strings_.size();
 							size_t strIndex = 0;
@@ -5351,12 +5351,12 @@ void BasicExcel::UpdateWorksheets()
 
 							if (strIndex < maxUniqueStrings)
 							{
-								// String is present in Shared string table.
+								// String is present in Shared std::string table.
 								pCell->labelsst_.SSTRecordIndex_ = strIndex;
 							}
 							else
 							{
-								// New unique string
+								// New unique std::string
 								wstringMap[str] = maxUniqueStrings;
 								workbook_.sst_.strings_.push_back(largeString);
 								workbook_.sst_.strings_[maxUniqueStrings].wname_ = str;
@@ -5500,12 +5500,12 @@ void BasicExcelWorksheet::Print(ostream& os, char delimiter, char textQualifier)
 				{
 					if (textQualifier != '\0')
 						{
-						// Get string.
+						// Get std::string.
 						size_t maxLength = cell->GetStringLength();
 						vector<char> cellString(maxLength+1);
 						cell->Get(&*(cellString.begin()));
 
-						// Duplicate textQualifier if found in string.
+						// Duplicate textQualifier if found in std::string.
 						vector<char>::iterator it;
 						size_t npos = 0;
 						while ((it=find(cellString.begin()+npos, cellString.end(), textQualifier)) != cellString.end())
@@ -5513,7 +5513,7 @@ void BasicExcelWorksheet::Print(ostream& os, char delimiter, char textQualifier)
 							npos = distance(cellString.begin(), cellString.insert(it, textQualifier)) + 2;
 						}
 
-						// Print out string enclosed with textQualifier.
+						// Print out std::string enclosed with textQualifier.
 						os << textQualifier << &*(cellString.begin()) << textQualifier;
 					}
 					else os << cell->GetString();
@@ -5522,7 +5522,7 @@ void BasicExcelWorksheet::Print(ostream& os, char delimiter, char textQualifier)
 
 				case BasicExcelCell::WSTRING:
 				{
-					// Print out string enclosed with textQualifier (does not work).
+					// Print out std::string enclosed with textQualifier (does not work).
 					//os << textQualifier << cell->GetWString() << textQualifier;
 					break;
 				}
@@ -5564,7 +5564,7 @@ BasicExcelCell* BasicExcelWorksheet::Cell(size_t row, size_t col)
 	{
 		// Increase number of rows.
 		maxRows_ = row + 1;
-		cells_.resize(maxRows_, vector<BasicExcelCell>(maxCols_));
+		cells_.resize(maxRows_, std::vector<BasicExcelCell>(maxCols_));
 	}
 
 	return &(cells_[row][col]);
@@ -5729,8 +5729,8 @@ bool BasicExcelCell::Get(double& val) const
 	else return false;
 }
 
-// Get an ANSI string.
-// Returns false if cell does not contain an ANSI string.
+// Get an ANSI std::string.
+// Returns false if cell does not contain an ANSI std::string.
 bool BasicExcelCell::Get(char* str) const 
 {
 	if (type_ == STRING)
@@ -5742,8 +5742,8 @@ bool BasicExcelCell::Get(char* str) const
 	else return false;
 }
 
-// Get an Unicode string.
-// Returns false if cell does not contain an Unicode string.
+// Get an Unicode std::string.
+// Returns false if cell does not contain an Unicode std::string.
 bool BasicExcelCell::Get(wchar_t* str) const 
 {
 	if (type_ == WSTRING)
@@ -5755,7 +5755,7 @@ bool BasicExcelCell::Get(wchar_t* str) const
 	else return false;
 }
 
-// Return length of ANSI or Unicode string (excluding null character).
+// Return length of ANSI or Unicode std::string (excluding null character).
 size_t BasicExcelCell::GetStringLength() const
 {
 	if (type_ == STRING) return str_.size() - 1;
@@ -5780,8 +5780,8 @@ double BasicExcelCell::GetDouble() const
 	else return 0.0;
 }
 
-// Get an ANSI string.
-// Returns 0 if cell does not contain an ANSI string.
+// Get an ANSI std::string.
+// Returns 0 if cell does not contain an ANSI std::string.
 const char* BasicExcelCell::GetString() const
 {
 	vector<char> str(str_.size());
@@ -5789,8 +5789,8 @@ const char* BasicExcelCell::GetString() const
 	else return 0;
 }
 
-// Get an Unicode string.
-// Returns 0 if cell does not contain an Unicode string.
+// Get an Unicode std::string.
+// Returns 0 if cell does not contain an Unicode std::string.
 const wchar_t* BasicExcelCell::GetWString() const
 {
 	vector<wchar_t> wstr(wstr_.size());
@@ -5810,13 +5810,13 @@ void BasicExcelCell::Set(double val)
 	SetDouble(val);
 }
 
-// Set content of current Excel cell to an ANSI string.
+// Set content of current Excel cell to an ANSI std::string.
 void BasicExcelCell::Set(const char* str) 
 {
 	SetString(str);
 }
 
-// Set content of current Excel cell to an Unicode string.
+// Set content of current Excel cell to an Unicode std::string.
 void BasicExcelCell::Set(const wchar_t* str)	
 {
 	SetWString(str);
@@ -5836,28 +5836,28 @@ void BasicExcelCell::SetDouble(double val)
 	dval_ = val;
 }
 
-// Set content of current Excel cell to an ANSI string.
+// Set content of current Excel cell to an ANSI std::string.
 void BasicExcelCell::SetString(const char* str) 
 {
 	size_t length = strlen(str);
 	if (length > 0)
 	{
 		type_ = STRING;
-		str_ = vector<char>(length+1);
+		str_ = std::vector<char>(length+1);
 		strcpy(&*(str_.begin()), str);
 		wstr_.clear();
 	}
 	else EraseContents();
 }
 
-// Set content of current Excel cell to an Unicode string.
+// Set content of current Excel cell to an Unicode std::string.
 void BasicExcelCell::SetWString(const wchar_t* str)	
 {
 	size_t length = wcslen(str);
 	if (length > 0)
 	{
 		type_ = WSTRING;
-		wstr_ = vector<wchar_t>(length+1);
+		wstr_ = std::vector<wchar_t>(length+1);
 		wcscpy(&*(wstr_.begin()), str);
 		str_.clear();
 	}

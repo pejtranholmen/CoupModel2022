@@ -17,7 +17,7 @@ P::P(std::vector<double> *target,NE *pE, enum datatype data, enum elements elem,
 
 	;
 }
-void P::Def(size_t ModuleNo, string name, vector<double> init, string unit, string conditions, 
+void P::Def(size_t ModuleNo, std::string name, std::vector<double> init, std::string unit, std::string conditions, 
 			double errormin, double errormax, double warningmin, double warningmax,
 			int recalc, int view)
 {

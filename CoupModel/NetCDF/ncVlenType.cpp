@@ -55,7 +55,7 @@ NcVlenType::NcVlenType() :
 {}
 
 // constructor
-NcVlenType::NcVlenType(const NcGroup& grp, const string& name) :
+NcVlenType::NcVlenType(const NcGroup& grp, const std::string& name) :
   NcType(grp,name)
 {}
   

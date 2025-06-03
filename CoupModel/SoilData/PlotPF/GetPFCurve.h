@@ -99,7 +99,7 @@ public:
 		else return false;};
 	void SetTopRow(int toprow) noexcept {m_TopRow=toprow;};
 	int GetTopRow() noexcept {return m_TopRow;};
-	const string GetName();
+	const std::string GetName();
 	BC_ESTIMATE Estimate_BC(std::vector<double>* Theta,std::vector<double>* Psi,  double ThetaMax, double FixResidual);
 	BC_ESTIMATE Estimate_BC_Texture(double sand, double clay, double poro);
 	double Estimate_HydraulicCond_Texture(double sand, double clay, double poro);

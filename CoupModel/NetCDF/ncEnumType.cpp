@@ -53,7 +53,7 @@ NcEnumType::NcEnumType() :
 {}
   
 // constructor
-NcEnumType::NcEnumType(const NcGroup& grp, const string& name):
+NcEnumType::NcEnumType(const NcGroup& grp, const std::string& name):
   NcType(grp,name)
 {}
   

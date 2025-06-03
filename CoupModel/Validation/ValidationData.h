@@ -94,15 +94,15 @@ public:
 	bool SetValSumVarErrors(size_t,int,float,float, float);
 
 	//bool SetValCoef(size_t, int, float, float, float, float,float, float,float);
-	bool AddGroupValList(size_t, vector<pair<int,int>>);
-	bool AddValList(size_t, int, int,string, string, int);
-	bool AddValList(size_t, int, int,string, string, int, float, float);
-	bool AddValList(size_t, int, int,string, string, int, float, float, bool);
-	bool AddNewValList(size_t, int, int, int,string, string, int, float, float, bool, bool, int Dur=60);
+	bool AddGroupValList(size_t, std::vector<pair<int,int>>);
+	bool AddValList(size_t, int, int,string, std::string, int);
+	bool AddValList(size_t, int, int,string, std::string, int, float, float);
+	bool AddValList(size_t, int, int,string, std::string, int, float, float, bool);
+	bool AddNewValList(size_t, int, int, int,string, std::string, int, float, float, bool, bool, int Dur=60);
 	bool UpdateValOutIndex();
-	bool AddValSumVarList(size_t, int, int, string , string ,int ,float, float, float );
+	bool AddValSumVarList(size_t, int, int, std::string , std::string ,int ,float, float, float );
 	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, int sumvartype, SIMB selected, float, float, float);
-	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, int sumvartype, SIMB selected, string, string csvfile, float, float);
+	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, int sumvartype, SIMB selected, std::string, std::string csvfile, float, float);
 	bool SetValFileLogTrans(size_t, bool);	
 	bool SetValFileNumber(size_t, int);
 	bool SetValDuration(size_t, int);

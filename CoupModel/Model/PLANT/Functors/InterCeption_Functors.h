@@ -78,7 +78,7 @@ private:
 
 class InterceptionCover {
 public:
-	InterceptionCover(vector<double> MaxCover, vector<double> LAICoverSens):MCover(MaxCover), CoverSens(LAICoverSens) {}
+	InterceptionCover(vector<double> MaxCover, std::vector<double> LAICoverSens):MCover(MaxCover), CoverSens(LAICoverSens) {}
 	double operator() (size_t index, double LAI) {
 		if (LAI >= 0.&&LAI<100.)
 			return MCover[index] * (1. - exp(-CoverSens[index] * LAI));
@@ -101,7 +101,7 @@ private:
 };
 class UnloadInputRate {
 public:
-	UnloadInputRate(double RainLim, double TiStep, vector<double> MaxCover, vector<double> LAICoverSens) {
+	UnloadInputRate(double RainLim, double TiStep, std::vector<double> MaxCover, std::vector<double> LAICoverSens) {
 		f_UnloadCoef = UnloadCoefSnow(RainLim, TiStep); f_Cover= InterceptionCover(MaxCover, LAICoverSens);
 	}
 	double operator() (size_t index, double Precip, double LAI, double TAir, double StorageCapacity) {
@@ -115,10 +115,10 @@ private:
 	function<double(size_t, double)> f_Cover;
 };
 class MultiFillByPass {
-public: MultiFillByPass(bool ModelOption, double RainLim, double TiStep, vector<double> MaxCover, vector<double> LAICoverSens): ModelOption(ModelOption), TiStep(TiStep) {
+public: MultiFillByPass(bool ModelOption, double RainLim, double TiStep, std::vector<double> MaxCover, std::vector<double> LAICoverSens): ModelOption(ModelOption), TiStep(TiStep) {
 	f_Cover = InterceptionCover(MaxCover, LAICoverSens); f_UnloadFraction = UnloadInputRate(RainLim, TiStep, MaxCover, LAICoverSens);
 }
-	double operator() (vector<double> *pMC_IntStorage,  vector<size_t> *pIndexList, vector<double> *pMC_IntCapacity, vector<double> LAI, double TAir, double ThroughFall) {
+	double operator() (vector<double> *pMC_IntStorage,  std::vector<size_t> *pIndexList, std::vector<double> *pMC_IntCapacity, std::vector<double> LAI, double TAir, double ThroughFall) {
 		double In, ByPass, Deficit, ActualCapacity, IntStartStorage;
 		size_t IndexP;
 		bool Below;
@@ -258,7 +258,7 @@ private:
 class InterceptionEvaporationMultiPlant {
 public: InterceptionEvaporationMultiPlant(double IntEvapFracMin, double MaxCondensation, double TiStep) : FracMin(IntEvapFracMin), MaxCondensation(MaxCondensation), tstep(TiStep) {}
 
-		vector<double> operator() (vector<double> MC_IntStorage, vector<double> MC_IntCapacity, vector<double> MC_EvaPot) {
+		vector<double> operator() (vector<double> MC_IntStorage, std::vector<double> MC_IntCapacity, std::vector<double> MC_EvaPot) {
 			vector<double> Evap;
 			size_t index = 0;
 			double IntFrac;
@@ -294,7 +294,7 @@ public:
 	double operator() (double PotTransp, double EvaActInt, double EpRatio) {
 		return _PotentialWaterUptakeRate(PotTransp, EvaActInt, EpRatio);
 	}
-	vector<double> operator() (vector<double> PotTransp, vector<double> EvaActInt, vector<double> PotIntercept) {
+	vector<double> operator() (vector<double> PotTransp, std::vector<double> EvaActInt, std::vector<double> PotIntercept) {
 		vector<double> PotUptake;
 		for (size_t i = 0; i < PotTransp.size(); i++) {
 			if (PotTransp[i] > 0 && EvaActInt[i] > 0) 
@@ -317,7 +317,7 @@ class PotentialEvaporation_Interception {
 public: PotentialEvaporation_Interception(Irrigation *pMet, double IntRS) : pMet(pMet), IntRS(IntRS) {
 	f_PM_Equation = Physf(FUNC_CHOICE::PM);
 }
-	vector<double> operator() (vector<double> ResAir, vector<double> LAI) {
+	vector<double> operator() (vector<double> ResAir, std::vector<double> LAI) {
 		vector<double> PotEvap;
 		for (size_t i = 0; i < pMet->MC_RntDist.size(); i++) {
 			if (pMet->SnowReduceLAIFactor[i] >= pMet->SnowReduceLAIThreshold)

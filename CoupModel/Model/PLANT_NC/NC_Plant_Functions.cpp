@@ -758,7 +758,7 @@ bool NC_Plant_Functions::Def()
 	pP = new P(&InitPlantAge, pNumPlants, PLANT, TIME, TRANSPORT, INITB, NORMAL); initv.assign(p_Plant->NumPlants, 0.);
 	Define(pP, pNumPlants, "I Plant Age", initv, "days", "Nitrogen and Carbon >= 1", 0., 50000.);
 	mTab_PlantInit[0].push_back(pP);
-	string name; double max_value[3]{ 200., 10., 1. }; double default_value; string condition;
+	string name; double max_value[3]{ 200., 10., 1. }; double default_value; std::string condition;
 	for (size_t jj = 0; jj < NUM_BIOELEM - 1; jj++) {
 		condition = "";
 		if (jj == _P_) condition = "|Phosphorus >0";
@@ -1151,7 +1151,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 	Tab *pTab;
 
 	functorprop.FuncName = MyFunc::MOISTURE_RESPONSE_EMERGENCE; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 	funcname = "Uppermost layer Moisture Control";
@@ -1194,7 +1194,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 
 
 	functorprop.FuncName = MyFunc::TEMP_SUM_SOWING; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 	ps_vec.clear();
 
@@ -1293,7 +1293,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 	//REMAIN INCLUDE two pointer to Salt response
 	plotpar.X_MaxPar = "Sow Tsum";
 	functorprop.FuncName = MyFunc::TEMP_SUM_SOWING; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Sowing GSI function of adjusted TempSum";
 	plotpar.X_Label = "TempSum (Cday)";
 	plotpar.Y_Label = "Relative stage prior Sowing (-)";
@@ -1311,7 +1311,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 
 	plotpar.X_MaxPar = "Emerge Tsum";
 	functorprop.FuncName = MyFunc::TEMP_SUM_EMERGENCE; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Emergence GSI function of adjusted TempSum";
 	plotpar.X_Label = "Adjusted TempSum (Cday)";
 	plotpar.Y_Label = "Relative stage of Emergence (-)";
@@ -1337,7 +1337,7 @@ bool NC_Plant_Functions::Def_GrowthStages()
 	plotpar.X_MaxPar = "";
 	plotpar.X_Max = 1440.;
 	functorprop.FuncName = MyFunc::PRIOR_GRAIN_DAYLENGTH; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Grain Start as function of Daylength";
 	plotpar.Y_Label = "Relative Response (-)";
 	plotpar.X_Label = "DayLength (minutes)";
@@ -1460,7 +1460,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	plotpar.Num_Of_Opt = 1;
 
 	functorprop.FuncName = MyFunc::LOGISTIC_GROWTH; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo=m_pModelInfo;
 
 	funcname = "Logistic Growth Response Function";
@@ -1494,7 +1494,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 
 
 	functorprop.FuncName = MyFunc::PHOTO_NLEAF; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Nitrogen Leaf Response Function";
 	p_vec.clear();
 
@@ -1523,7 +1523,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 
 
 	functorprop.FuncName = MyFunc::PHOTO_PLEAF; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Phosphorus Leaf Response Function";
 	p_vec.clear();
 	plotpar.X_Min = 0;
@@ -1544,7 +1544,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::PHOTO_DIRECT_TEMP; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Air Temp Response Function";
 	p_vec.clear();
 
@@ -1580,7 +1580,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	mTab_Photo.push_back(pP);
 
 	functorprop.FuncName = MyFunc::PHOTO_COMBINED_N_WATER_RESPONSE; functorprop.Arg = MyArgType::T_D2;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Combined Respone of Nitrogen and Water";
 	p_vec.clear();
 	pP = new P(&RelWeightWater, pNumPlants, PLANT, CARBON, TRANSPORT, PHOTOSYNTHESIS, NORMAL); initv.assign(p_Plant->NumPlants, 0.35); p_vec.push_back(pP);
@@ -1599,7 +1599,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	mTab_Photo.push_back(pP);
 	;
 	functorprop.FuncName = MyFunc::PHOTO_TEMPSUM; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Air Temp Sum Response Function";
 	p_vec.clear();
 	plotpar.X_Min = 0;
@@ -1640,7 +1640,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 
 
 	functorprop.FuncName = MyFunc::PHOTO_EFF_LIGHT; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Light efficiency";
 	p_vec.clear();
 	plotpar.X_Min = 0;
@@ -1661,7 +1661,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::PHOTO_GRAINFILL; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Scaling during Grainfilling";
 	p_vec.clear();
 	plotpar.X_Min = 0;
@@ -1687,7 +1687,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	Define(pP, pNumPlants, "Pmax", initv, "gC/m2/day", "Nitrogen and Carbon >= 1|Growth = 3|PhoSaturation >0", 0., 100.);
 	mTab_PhotoRad.push_back(pP);
 	functorprop.FuncName = MyFunc::PHOTO_SATURATION; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Reduction during Light Saturation";
 	p_vec.clear();
 
@@ -1747,7 +1747,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	Define(pP, pNumPlants, "QuanEff", initv, "gDw/MJ", "Nitrogen and Carbon >= 1|Growth>3", 0.5, 20.); mTab_Farq.push_back(pP);
 
 	functorprop.FuncName = MyFunc::PHOTO_EFF_FARQUAR; functorprop.Arg = MyArgType::T_D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Photosynthesis Light efficiency Farquar";
 	p_vec.clear();
 	p_vec.push_back(pP);
@@ -1817,7 +1817,7 @@ bool NC_Plant_Functions::Def_Allocation() {
 	plotpar.Num_Of_Opt = 1;
 
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 	functorprop.FuncName = MyFunc::ALLO_LEAF_MASS_FIXED;
@@ -2064,7 +2064,7 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	plotpar.Num_Of_Opt = 1;
 
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 
@@ -2458,7 +2458,7 @@ bool NC_Plant_Functions::Def_Respiration() {
 	Ps *pPs; P *pP;
 	Tab *pTab;
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 
@@ -2565,7 +2565,7 @@ bool NC_Plant_Functions::Def_Fungi() {
 	Ps *pPs; P *pP;
 	Tab *pTab;
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 
@@ -2931,7 +2931,7 @@ void NC_Plant_Functions::Def_NFixation()
 	Ps *pPs; P *pP;
 	Tab *pTab;
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 
@@ -3478,7 +3478,7 @@ double NC_Plant_Functions::GAirFunc(double ResAir,double  TP, double Temp) {
 }
 //C===================SUBROUTINE SORTIN===================================
 //C
-void NC_Plant_Functions:: SortIn(vector<double> FarqRange, vector<double> Gammas, size_t i_step, size_t NumPlants, size_t index) {
+void NC_Plant_Functions:: SortIn(vector<double> FarqRange, std::vector<double> Gammas, size_t i_step, size_t NumPlants, size_t index) {
 //C
 //C=======================================================================
 //C
@@ -3491,7 +3491,7 @@ void NC_Plant_Functions:: SortIn(vector<double> FarqRange, vector<double> Gammas
 
 //c     work arrays
 
-      vector<double> eyyi1,eyyi2,eyyi3,eyyis,
+      std::vector<double> eyyi1,eyyi2,eyyi3,eyyis,
           eyyisp,pco2yis,pco2yisp,
           pco2x,pco2yi1,pco2yi2,pco2yi3;
 
@@ -3502,8 +3502,8 @@ void NC_Plant_Functions:: SortIn(vector<double> FarqRange, vector<double> Gammas
 	
 
       double     pco2yl;
-      vector<size_t> is; is.resize(NumPlants);
-      vector<bool> bitx; bitx.resize(NumPlants);
+      std::vector<size_t> is; is.resize(NumPlants);
+      std::vector<bool> bitx; bitx.resize(NumPlants);
 
 
       //integer i, ix, i1, i2, i3, isp, n, l, j, index
@@ -4063,8 +4063,8 @@ bool NC_Plant_Functions:: CheckFromPhotoFile() {
     
 
 	for(size_t i=0; i<m_PG_PlantBiomass.GetNumVariables(); i++) {
-		 string name=m_PG_PlantBiomass.GetVarName(i+1);
-		 string Id=m_PG_PlantBiomass.GetVarId(i+1);
+		 std::string name=m_PG_PlantBiomass.GetVarName(i+1);
+		 std::string Id=m_PG_PlantBiomass.GetVarId(i+1);
 
 		 for(size_t ii=0; ii<20;ii++) {
 			if(int(name[ii])>=97) {
@@ -4144,7 +4144,7 @@ bool NC_Plant_Functions::CheckFromGrazingFile() {
 				name[ii] = char(int(name[ii]) - 32);
 			}
 		}
-		if (name.find("GRAZING") != string::npos) {
+		if (name.find("GRAZING") != std::string::npos) {
 
 			GrazingRate_Pos.ivar = i+1;
 

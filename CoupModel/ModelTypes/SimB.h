@@ -68,8 +68,8 @@ enum class TimeResolution { WITHIN_DAY, DAILY_MEAN, HOURLY, TEN_MIN };
 enum class SIMB_COMP{NOVALUE, LE, LT, GE, GT, EQ, NEQ, ON, OFF};
 enum class HIST_INFO {RUN_INFO, DATA_BASE_INFO, SWITCH_INFO, PARSINGLE_INFO, PARTABLE_INFO,NUMBER_ELEMENTS, MODELFILE_INFO, OUTPUT_SINGLE, OUTPUT_VECTOR};
 struct OUTPUT {size_t LocalIndex; float Initial; float Final; float Min; float Max; float Mean; float Accumulated; size_t ValidFlagIndex; float OptInitial; size_t PgFileIndex; size_t PgMultiFileIndex;int StoreFlag;}	;
-static vector<string> simType_StringId = { "Ps","X","T","G","D","Sw","F", "Ps", "Xs","Ts", "Gs", "Ds", "P", "Table","DB","Func","CSV" };
-static vector<string> Sw_StringOptions = { "O1","O2","O3", "O4", "O5", "O6", "O7", "O8","O9","O10","O11", "O12", "O13", "O14", "O15", "O16" , "O17", "O18" };
+static std::vector<string> simType_StringId = { "Ps","X","T","G","D","Sw","F", "Ps", "Xs","Ts", "Gs", "Ds", "P", "Table","DB","Func","CSV" };
+static std::vector<string> Sw_StringOptions = { "O1","O2","O3", "O4", "O5", "O6", "O7", "O8","O9","O10","O11", "O12", "O13", "O14", "O15", "O16" , "O17", "O18" };
 enum simtype {PAR, STATE, FLOW, AUX, DRIVE, SWITCH, PGFILE, PAR_SINGLE, STATE_SINGLE, FLOW_SINGLE,AUX_SINGLE, DRIVE_SINGLE, PAR_TABLE, TABLE, DB, FUNCTION, CSVFILE, NUM_ELEMENTS_VECTOR};
 enum datatype{SINGLE, SIMPROFILE, MPROFILE,SINGLEPLANT, PLANT, MYCON,OTHER, WATERPIPE, HEATBOX, ATMBOUNDARY, SURFACEPOOL, WATERPOND, 
 	IRRIGATIONCONTAINER,ROADSURFACE, SOILSURFACE,SOILBOTTOM, OBSERVED, TOTPROFILE,ALL_SOIL_LAYERS,ALL_SOIL_BOUNDARIES, ALLPLANTS,ACCUMULATOR, FILEDEFINEDPARAMETERS};
@@ -117,11 +117,11 @@ enum class ENSEMBLE_TYPE { NO, ALL, ACCEPTED };
 class SimB;
 class CommonModelInfo;
 struct SIMB {SimB* pBase=nullptr;
-	size_t TabIndex=string::npos;
+	size_t TabIndex= std::string::npos;
 };
 struct SIMB_VALUE {
 	SimB* pBase = nullptr;
-	size_t TabIndex = string::npos;
+	size_t TabIndex = std::string::npos;
 	double newvalue= MISSING;
 };
 struct MR_PAR{
@@ -213,8 +213,8 @@ class SimB
 		size_t  GetGroupNo() const noexcept {return _ModuleNo;};
 		virtual bool IsOldValue() noexcept {return false;};
 		virtual int GetIntValue() noexcept {return -1;};
-		virtual string GetOption(size_t ) {return "";};
-		virtual string GetName() {return _name;};
+		virtual std::string GetOption(size_t ) {return "";};
+		virtual std::string GetName() {return _name;};
 		virtual void SetDBIntValue(size_t value) noexcept {_DBIntValue=value;};
 		virtual size_t GetDBIntValue() noexcept {return _DBIntValue;};
 		virtual int MR_Get_Dim() noexcept {return -1;};
@@ -235,8 +235,8 @@ class SimB
 		virtual double GetDBValue(size_t) noexcept {return MISSING;};
 		virtual size_t GetPgFileIndex(size_t )noexcept  {return 0;};
 
-		virtual size_t GetValidFlagIndex(size_t ) const noexcept {return string::npos;};
-		virtual size_t GetValidFlagIndex() const noexcept {return string::npos;};
+		virtual size_t GetValidFlagIndex(size_t ) const noexcept {return std::string::npos;};
+		virtual size_t GetValidFlagIndex() const noexcept {return std::string::npos;};
 
 		virtual void SetStoreFlag(bool) noexcept {};
 		virtual void SetMultiStoreFlag(bool) noexcept {};
@@ -263,7 +263,7 @@ class SimB
 		enum datatype GetDataType() noexcept {return _def.data;};
 
 		string GetDepName(size_t) const;
-		virtual string GetUnit() const {return _unit;};		
+		virtual std::string GetUnit() const {return _unit;};		
 		UNIT_TYPES GetUnitType() const  noexcept { return _def.unittype; };
 		string GetDepUnit(size_t) const;	   			// Get name of dependent variables 
 		string GetGroup();
@@ -330,8 +330,8 @@ class SimB
 		vector<Condition> conditions_Array;		// Array of conditions
 		vector<SimB*>	noticelist_Array;
 		vector<size_t>m_HistoryIndex[100];
-		void Decode(string);		 	// Decodes condition string
+		void Decode(string);		 	// Decodes condition std::string
 		SIMB_COMP OpDecode(string,bool*) const;		// Decodes operators
-		int	ValDecode(string) const;	  	// Decodes string to integer number
+		int	ValDecode(string) const;	  	// Decodes std::string to integer number
 	};
 

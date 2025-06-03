@@ -412,7 +412,7 @@ double Technical_Functions::SumLikelihood(size_t index, double sim, double obs) 
 	}
 	return out;
 }
-double Technical_Functions::SumLikelihood(size_t index, vector<double> *psim, vector<double> *pobs) {
+double Technical_Functions::SumLikelihood(size_t index, std::vector<double> *psim, std::vector<double> *pobs) {
 
 	double out=0;
 

@@ -14,7 +14,7 @@ class ConstrainByInput : public CDialog
 {
 // Construction
 public:
-	ConstrainByInput(float MinValue, float MaxValue, string str="", CWnd* pParent = nullptr);   // standard constructor
+	ConstrainByInput(float MinValue, float MaxValue, std::string str="", CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(ConstrainByInput)

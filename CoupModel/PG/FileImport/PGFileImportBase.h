@@ -48,8 +48,8 @@ public:
 
 protected:
 	size_t m_MinStartCol;
-	bool ConvColLine(vector<float> *vv, string line, size_t option);
-	bool ConvLine(vector<float> *vv, string line, size_t option);
+	bool ConvColLine(vector<float> *vv, std::string line, size_t option);
+	bool ConvLine(vector<float> *vv, std::string line, size_t option);
 
 
 	bool CreateNewFileAndDefineSize(FILEINFO, size_t ActualId = 0);
@@ -71,10 +71,10 @@ protected:
 
 protected:
 
-	bool SetTimeVariable(size_t nrec, string varstr, size_t nvar, bool shift=false);
+	bool SetTimeVariable(size_t nrec, std::string varstr, size_t nvar, bool shift=false);
 	bool SetDefinedTime(size_t nrec);
 	void SetPGTimeVar_Minut_To_PG_Var();
-	void SetValidVariable(size_t index, string varstr);
+	void SetValidVariable(size_t index, std::string varstr);
 	void SetMissingVariable(size_t index);
 
 

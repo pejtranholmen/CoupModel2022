@@ -139,8 +139,8 @@ void CUserSetup::OnOK()
 
     MFC_Util::WriteProfileString( "UserDirectory", m_UserDirectory);
     MFC_Util::WriteProfileString( "DataBaseDirectory", m_DataBaseDirectory);
-    MFC_Util::WriteProfileString( "UserName", string(CT2A(m_UserName).m_psz));
-    MFC_Util::WriteProfileString( "Signature", string(CT2A(m_Signature).m_psz));
+    MFC_Util::WriteProfileString( "UserName", std::string(CT2A(m_UserName).m_psz));
+    MFC_Util::WriteProfileString( "Signature", std::string(CT2A(m_Signature).m_psz));
 	MySingle::instance().GetCugPointer()->ReDefineDefaultFont();
 
 

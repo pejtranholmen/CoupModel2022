@@ -12,10 +12,10 @@ NC_Organic_Functions::NC_Organic_Functions(void)
 	Org_Link[L1_HUM] = pair<size_t, size_t>(_L1, _H);
 	Org_Link[L2_HUM] = pair<size_t, size_t>(_L2, _H);
 	Org_Link[F_HUM] = pair<size_t, size_t>(_F, _H);
-	Org_Link[L1_PLANTUPTAKE] =pair<size_t, size_t>(_L1, string::npos);
+	Org_Link[L1_PLANTUPTAKE] =pair<size_t, size_t>(_L1, std::string::npos);
 	Org_Link[L2_PLANTUPTAKE] = pair<size_t, size_t>(_L2,string::npos);
-	Org_Link[F_PLANTUPTAKE] = pair<size_t, size_t>(_F, string::npos);
-	Org_Link[H_PLANTUPTAKE] = pair<size_t, size_t>(_H, string::npos);
+	Org_Link[F_PLANTUPTAKE] = pair<size_t, size_t>(_F, std::string::npos);
+	Org_Link[H_PLANTUPTAKE] = pair<size_t, size_t>(_H, std::string::npos);
 	Org_Link[L1_DIS] = pair<size_t, size_t>(_L1, _DIS);
 	Org_Link[L2_DIS] = pair<size_t, size_t>(_L2, _DIS);
 	Org_Link[F_DIS] = pair<size_t, size_t>(_F, _DIS);
@@ -727,7 +727,7 @@ bool NC_Organic_Functions::FunctionDef() {
 	Ps *pPs; P *pP;
 	Tab *pTab;
 	Func *pFunc;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.pModelInfo = m_pModelInfo;
 
 	PLOT_PARAM plotpar;
@@ -1189,7 +1189,7 @@ vector<double> Init_L1_N_Meas, Init_L2_N_Meas, Init_F_N_Meas, Init_M_N_Meas, Ini
 			Init_H_N_Meas[i]=Init_H_C_Meas[i]/Init_Assumed_CN_Humus[i];
 
 	}
-	function<vector<double>(vector<double>&, vector<double>&, bool)> f_conv;
+	function<vector<double>(vector<double>&, std::vector<double>&, bool)> f_conv;
 
 	f_conv = FromMeasuredLayersToModelLayers(m_pSoil->UpperDepth, m_pSoil->LowerDepth, m_pSoil->DepthLayers, m_pSoil->ThicknessLayers, m_pSoil->DepthMidpLayer);
 

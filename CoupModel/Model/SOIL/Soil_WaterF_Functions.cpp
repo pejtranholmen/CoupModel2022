@@ -111,7 +111,7 @@ bool Soil_WaterF_Functions::Def()
 	pPs=new Ps(&BarrierEfficiency,  SINGLE, VAPOUR, TRANSPORT, NOBPROC, DETAILED);
 
 	Define(pPs ,"BarrierEfficiency", 0.9,"-","Soil Water Barrier = 1",0.001,1.0);
-// vector Parameters	
+// std::vector Parameters	
 	P *pP=new P(&IniPsiValues, pNL,SIMPROFILE, WATER, STORAGE, NOBPROC, NORMAL);
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=60.;
 

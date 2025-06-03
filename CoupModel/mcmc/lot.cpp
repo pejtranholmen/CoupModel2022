@@ -72,7 +72,7 @@ namespace {
 
   // for Mersenne twister
   // Period parameters
-  const unsigned long MATRIX_A = 0x9908b0dfUL;   /* constant vector a */
+  const unsigned long MATRIX_A = 0x9908b0dfUL;   /* constant std::vector a */
   const unsigned long UPPER_MASK = 0x80000000UL; /* most significant w-r bits */
   const unsigned long LOWER_MASK = 0x7fffffffUL; /* least significant r bits */
   // Tempering parameters
@@ -404,7 +404,7 @@ lot::KNU_uniform(void) {
 
 /// Updates floating point array of Knuth generator
 ///
-/// \param aa  the vector of values in which to update
+/// \param aa  the std::vector of values in which to update
 /// \param n   the number of values to update, note n == aa.size() assumed
 ///
 void
@@ -443,7 +443,7 @@ lot::ranf_arr_cycle(void) {
 void
 lot::ranf_start(const long seed) {
   int t, s, j;
-  vector<double> u(KK + KK - 1);
+  std::vector<double> u(KK + KK - 1);
   double ulp = (1.0 / (1L << 30)) / (1L << 22);               /* 2 to the -52 */
   double ss = 2.0 * ulp * ((seed & 0x3fffffff) + 2);
 
@@ -528,7 +528,7 @@ lot::KNU_uniform_from_long(void) {
 
 /// Updates long array of Knuth generator
 ///
-/// \param aa  the vector of values in which to update
+/// \param aa  the std::vector of values in which to update
 /// \param n   the number of values to update, note n == aa.size() assumed
 ///
 void
@@ -567,7 +567,7 @@ lot::ran_arr_cycle() {
 void
 lot::ran_start(const long seed) {
   int t, j;
-  vector<long> x(KK + KK - 1);  // the preparation buffer
+  std::vector<long> x(KK + KK - 1);  // the preparation buffer
   long ss = (seed + 2) & (MM - 2);
 
   for (j = 0;j < KK;j++) {
@@ -1301,7 +1301,7 @@ lot::chisq(const double n) {
 }
 
 
-/// Returns a vector of Dirichlet variates
+/// Returns a std::vector of Dirichlet variates
 ///
 /// \f[ f({\bf x}) = \frac{\Gamma(\sum_i x_i)}{\prod_i\Gamma(x_i)}\prod_ix_i^{c_i} \f]
 ///
@@ -1310,7 +1310,7 @@ lot::chisq(const double n) {
 std::vector<double>
 lot::dirichlet(std::vector<double> c) {
   int n = c.size();
-  vector<double> p(n);
+  std::vector<double> p(n);
   for (;;) {
     DblVect g(n);
     double sum = 0.0;
@@ -2183,7 +2183,7 @@ lot::logis(double location, double scale) {
 std::vector<int>
 lot::multinom(unsigned n, const std::vector<double>& p) {
     int K = p.size();
-    vector<int> rN(K);
+    std::vector<int> rN(K);
     double p_tot = 0.0;
     for(int k = 0; k < K; k++) {
       p_tot += p[k];

@@ -116,7 +116,7 @@ class Plant : public SimModule
 
 		CPG m_PG_Crop;
 		vector<float>  VrootUt;
-		// vector<int>  VUTPG_File;//	! Variables in PG-file
+		// std::vector<int>  VUTPG_File;//	! Variables in PG-file
 		PGPOS m_PGPos_Crop;
 		ININFO LAI_Ipos, RoughIpos, DisplIpos, HeightIpos, RootIpos, RootLengthIpos, AlbedoVegIpos, ResSurfIpos;
 		vector<size_t> PlantExtraPosIvar;

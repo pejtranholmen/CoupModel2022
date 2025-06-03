@@ -68,7 +68,7 @@ namespace Util {
   ///
   /// This is a simple wrapper around std::min_element()
   ///
-  /// \param v  The vector whose minimum element is sought
+  /// \param v  The std::vector whose minimum element is sought
   ///
   template <class C>
   inline C vectorMin(std::vector<C>& v) {
@@ -79,7 +79,7 @@ namespace Util {
   ///
   /// This is a simple wrapper around std::max_element()
   ///
-  /// \param v  The vector whose maximum element is sought
+  /// \param v  The std::vector whose maximum element is sought
   ///
   template <class C>
   inline C vectorMax(std::vector<C>& v) {
@@ -90,12 +90,12 @@ namespace Util {
   double safeLog(double x);
   double sqr(double x);
   
-  /// Empty a vector, and ensure that its capacity is zero
+  /// Empty a std::vector, and ensure that its capacity is zero
   ///
-  /// \param v  The vector to be emptied
+  /// \param v  The std::vector to be emptied
   ///
   /// Uses the trick on p. 487 of Stroustrup (3rd ed.): create a temporary
-  /// vector with zero capacity and swap it with the one to be erased.
+  /// std::vector with zero capacity and swap it with the one to be erased.
   ///
   template <class C>
   void FlushVector(std::vector<C>& v) {
@@ -116,12 +116,12 @@ namespace Util {
     if (!assert) throw Except();
   }
 
-  /// Cast all elements of a vector from one type to another
+  /// Cast all elements of a std::vector from one type to another
   ///
-  /// \param x   the vector with elements to cast
+  /// \param x   the std::vector with elements to cast
   ///
   /// This template will cast elements of type From to elements of type
-  /// To and return the resulting vector
+  /// To and return the resulting std::vector
   ///
   template <class To, class From>
   inline std::vector<To> vector_cast(std::vector<From>& x) {
@@ -146,7 +146,7 @@ namespace Util {
     explicit PrintForVector(std::ostream& os) 
       : os_(os), first_(true)
     {}
-    /// allows for_each to provide appropriate output for vector elements
+    /// allows for_each to provide appropriate output for std::vector elements
     ///
     void operator()(const T& x) {
       if (!first_) {
@@ -166,7 +166,7 @@ namespace Util {
 /// ostream& operator<< for vectors
 ///
 /// \param os  the ostream
-/// \param x   the vector
+/// \param x   the std::vector
 ///
 template <class T>
 std::ostream& operator<<(std::ostream& os, std::vector<T> x) {

@@ -179,7 +179,7 @@ NcVar* NcFile::add_var(NcToken name, NcType type, // scalar to 5D var
 }
 
 // For variables with more than 5 dimensions, use n-dimensional interface
-// with vector of dimensions.
+// with std::vector of dimensions.
 
 NcVar* NcFile::add_var(NcToken name, NcType type, int ndims, const NcDim** dims)
 {

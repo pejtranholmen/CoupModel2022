@@ -8,7 +8,7 @@ public:
 	~MakePGCharts(void);
 	void TimeSerieChartClick();
 	void MultiPGChartClick();
-	bool CreateZoomPlotWindow(bool multi=false, string FileName="");
+	bool CreateZoomPlotWindow(bool multi=false, std::string FileName="");
 	bool CreateZoomPlotWindow(CPG *pPG);
 	Doc *m_pSimDoc;
 	CCoupModelDoc *m_pDoc;

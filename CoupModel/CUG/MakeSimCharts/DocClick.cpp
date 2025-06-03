@@ -36,7 +36,7 @@ int DocClick::SwitchClick(int col, int row) {
 	GetCell(0,row,&cell);
 	string Group=cell.GetStdText();
 	size_t iv = p_ModelInfo->GetGroupIndex(Group);
-	if (iv == string::npos) return 1;
+	if (iv == std::string::npos) return 1;
 	if (m_pSimDoc->GetGroupEnable(iv))
 		m_pSimDoc->SetGroupEnable(iv, false);
 	else
@@ -52,7 +52,7 @@ int DocClick::SwitchClick(int col, int row) {
 }
 int DocClick::ParameterClick(int col, int row) {
  CUGCell cell;
- string Name, Type, Group;
+ std::string Name, Type, Group;
  SimB *pSw;
  if(col>=1&&row>=0) {
 			GetCell(2,row, &cell);

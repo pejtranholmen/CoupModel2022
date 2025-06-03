@@ -214,7 +214,7 @@ operator <<(std::ostream& out, Statistic& st) {
 ///
 /// The SimpleStatistic class allows easy calculation of simple summary 
 /// statistics. Unlike Statistic, it cannot be applied to ratio data. In
-/// addition to adding single values, with Add(), an entire vector of
+/// addition to adding single values, with Add(), an entire std::vector of
 /// values can be added in the constructor.
 ///
 /// Example:
@@ -231,7 +231,7 @@ operator <<(std::ostream& out, Statistic& st) {
 /// double stddev  = stat.StdDev();  // stddev = 1.581
 /// stat.Clear();  // clears internal data for new calculation
 ///
-/// vector<double> x(5);
+/// std::vector<double> x(5);
 /// for (int i = 0; i < 5; ++i) {
 ///   x[i] = i;
 /// }

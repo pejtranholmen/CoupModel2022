@@ -12,7 +12,7 @@ private:
 };
 class LitterFall_Tsum {
 public:
-	LitterFall_Tsum(vector<double> Leaf_LitterRateC1, vector<double>Leaf_LitterRateC2, vector<double> Leaf_TSum1, vector<double> Leaf_TSum2, vector<double> Dorm_FinalDayNo) 
+	LitterFall_Tsum(vector<double> Leaf_LitterRateC1, std::vector<double>Leaf_LitterRateC2, std::vector<double> Leaf_TSum1, std::vector<double> Leaf_TSum2, std::vector<double> Dorm_FinalDayNo) 
 		: RateCoef1(Leaf_LitterRateC1), RateCoef2(Leaf_LitterRateC2), TSum1(Leaf_TSum1), TSum2(Leaf_TSum2), Dorm_FinalDayNo(Dorm_FinalDayNo) {
 		StaticFunc = false; for (size_t i = 0; i < TSum1.size(); i++) { if (TSum1[i] <= TSum2[i]) TSum2[i] = TSum1[i] + 1.; }
 	};
@@ -38,25 +38,25 @@ private:
 class LitterFallYear {
 
 public://8
-	LitterFallYear(vector<double> Leaf_LitterRateC1, vector<double> Leaf_LitterRateC2, vector<double> Leaf_TSum1,  vector<double> Leaf_TSum2, vector<double> Dorm_FinalDayNo, vector<double> LAI_Enh_Coef,
-		vector<double> ScaleNew, vector<double> ScaleOld) :ScaleNew(ScaleNew), ScaleOld(ScaleOld)  { f_TSum = LitterFall_Tsum(Leaf_LitterRateC1, Leaf_LitterRateC2, Leaf_TSum1, Leaf_TSum2, Dorm_FinalDayNo);
+	LitterFallYear(vector<double> Leaf_LitterRateC1, std::vector<double> Leaf_LitterRateC2, std::vector<double> Leaf_TSum1,  std::vector<double> Leaf_TSum2, std::vector<double> Dorm_FinalDayNo, std::vector<double> LAI_Enh_Coef,
+		vector<double> ScaleNew, std::vector<double> ScaleOld) :ScaleNew(ScaleNew), ScaleOld(ScaleOld)  { f_TSum = LitterFall_Tsum(Leaf_LitterRateC1, Leaf_LitterRateC2, Leaf_TSum1, Leaf_TSum2, Dorm_FinalDayNo);
 	f_LAI = LeafLitterFall_LAI(LAI_Enh_Coef); StaticOption = false;
 	}//7
-	LitterFallYear(vector<double> Leaf_LitterRateC1, vector<double> Leaf_LitterRateC2, vector<double> Leaf_TSum1, vector<double> Leaf_TSum2, vector<double> Dorm_FinalDayNo, 
-		vector<double> ScaleNew, vector<double> ScaleOld) :ScaleNew(ScaleNew), ScaleOld(ScaleOld) {
+	LitterFallYear(vector<double> Leaf_LitterRateC1, std::vector<double> Leaf_LitterRateC2, std::vector<double> Leaf_TSum1, std::vector<double> Leaf_TSum2, std::vector<double> Dorm_FinalDayNo, 
+		vector<double> ScaleNew, std::vector<double> ScaleOld) :ScaleNew(ScaleNew), ScaleOld(ScaleOld) {
 		f_TSum = LitterFall_Tsum(Leaf_LitterRateC1, Leaf_LitterRateC2, Leaf_TSum1, Leaf_TSum2, Dorm_FinalDayNo);
 		 StaticOption = false;
 	}//5
-	LitterFallYear(vector<double> Leaf_LitterRateC1, vector<double> Leaf_LitterRateC2, vector<double> Leaf_TSum1, vector<double> Leaf_TSum2, vector<double> Dorm_FinalDayNo)  {
+	LitterFallYear(vector<double> Leaf_LitterRateC1, std::vector<double> Leaf_LitterRateC2, std::vector<double> Leaf_TSum1, std::vector<double> Leaf_TSum2, std::vector<double> Dorm_FinalDayNo)  {
 		f_TSum = LitterFall_Tsum(Leaf_LitterRateC1, Leaf_LitterRateC2, Leaf_TSum1, Leaf_TSum2, Dorm_FinalDayNo);
 		StaticOption = false;
 	}
 	//4
-	LitterFallYear(vector<double> Leaf_LitterRateC1, vector<double> LAI_Enh_Coef, vector<double> ScaleNew, vector<double> ScaleOld): ScaleNew(ScaleNew), ScaleOld(ScaleOld) {
+	LitterFallYear(vector<double> Leaf_LitterRateC1, std::vector<double> LAI_Enh_Coef, std::vector<double> ScaleNew, std::vector<double> ScaleOld): ScaleNew(ScaleNew), ScaleOld(ScaleOld) {
 		f_Static = LitterFall_Tsum(Leaf_LitterRateC1); f_LAI = LeafLitterFall_LAI(LAI_Enh_Coef);
 		StaticOption = true;
 	}//3
-	LitterFallYear(vector<double> Leaf_LitterRateC1, vector<double> ScaleNew, vector<double> ScaleOld) : ScaleNew(ScaleNew), ScaleOld(ScaleOld) {
+	LitterFallYear(vector<double> Leaf_LitterRateC1, std::vector<double> ScaleNew, std::vector<double> ScaleOld) : ScaleNew(ScaleNew), ScaleOld(ScaleOld) {
 		f_Static = LitterFall_Tsum(Leaf_LitterRateC1);
 		StaticOption = true;
 	}//1

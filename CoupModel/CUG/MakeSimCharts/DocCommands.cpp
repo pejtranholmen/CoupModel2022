@@ -346,10 +346,10 @@ int DocCommands::HistoryCommand(int col, int row, int item) {
 		Type=cell.GetStdText();
 		GetCell(3,row,&cell);
 		name=cell.GetStdText();
-		if(name.find("(")!=string::npos) {
+		if(name.find("(")!= std::string::npos) {
 			auto ipos=name.find("(");
 			auto iposend = name.find((")"));		
-			if (iposend > ipos&&iposend!=string::npos) {
+			if (iposend > ipos&&iposend!= std::string::npos) {
 				string indexstring = name.substr(ipos + 1, iposend - ipos - 1);
 				LocalIndex = FUtil::AtoInt(indexstring);
 			}
@@ -2103,7 +2103,7 @@ int DocCommands::MultiRunCommand(int col, int row, int item) {
 					imethod=3;
 			}
 			auto TabIndex=m_pSimDoc->MR_GetTabIndex(idim,ip);
-			if(TabIndex==string::npos) 
+			if(TabIndex== std::string::npos) 
 				((Ps*)pPar)->MR_Set_Method(MR_METHOD(imethod));
 			else 
 				((P*)pPar)->MR_Set_Method(TabIndex,MR_METHOD(imethod));
@@ -2773,7 +2773,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 	}
 	return false;
 }
-int DocCommands::ExcelExportCommand(int item, int Index, string varname) {
+int DocCommands::ExcelExportCommand(int item, int Index, std::string varname) {
 	ExportOptions opt=ExportOptions::Performance;
 	if (item == 8014|| item == 8015) opt = ExportOptions::Outputs;
 	else if (item >= 8008&&item< 8010) opt = ExportOptions::Parameters;

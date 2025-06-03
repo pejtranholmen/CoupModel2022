@@ -29,7 +29,7 @@ public:
 	void ShowDataInGrid(bool CreateFile=false);
 
 	void AddMainData(DoubleArray data, int index);
-	void AddTimeData(DoubleArray data, DoubleArray data2, size_t index_x=string::npos);
+	void AddTimeData(DoubleArray data, DoubleArray data2, size_t index_x= std::string::npos);
 	void AddBandData(DoubleArray datasd, DoubleArray datamin, DoubleArray datamax, DoubleArray datap10, DoubleArray datap50,DoubleArray datap90, int index);
 
 

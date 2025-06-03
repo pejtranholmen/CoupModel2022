@@ -156,14 +156,14 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 		}
 		break;
 	case DATA_TYPES::MEASURED_VAL:
-		if (p_info.index_cycle != string::npos) {
+		if (p_info.index_cycle != std::string::npos) {
 			irun = p_info.pg_start_pos + 1;
 			PGindex += p_info.index_cycle;
 		}
 		else {
 			irun = p_info.Residual_RunNo + 1;
 			auto cycle_pair = m_pSimDoc->StartValueofMatchingEnsembleInDim1(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index);
-			if (cycle_pair.first == string::npos) irun = cycle_pair.first + 1;
+			if (cycle_pair.first == std::string::npos) irun = cycle_pair.first + 1;
 		}
 		rephits = m_pSimDoc->ActualRepetitionInMeasFile(p_info.EnsembleNo, p_info.pPG_MeasValFile, p_info.Index, p_info.Residual_RunNo);
 		if (rephits.size() == 0) irun = 0;
@@ -244,7 +244,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 				else m_Label.test += _T("(") + MFC_Util::ItoAscii(m_pProp->m_HourValueRepresentation) + " of "
 					+ MFC_Util::ItoAscii(m_ChartInfo.WithinDayRepresentation) + ") ";
 			}
-			else if (p_info.index_cycle != string::npos) {
+			else if (p_info.index_cycle != std::string::npos) {
 				//m_Label.st += "var :";
 				//m_Label.st += FUtil::STD_ItoAscii(p_info.index_cycle + 1);
 			}
@@ -299,7 +299,7 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 
 		case DATA_TYPES::SIM_PERFORMANCE: // Validation Variables
 		nselV = m_pSimDoc->m_ValidationData.GetNumberSelectedTSV_Val();
-		//if (m_pSimDoc->m_MStorage.GetCyclicNumber() > 1&& m_pSimDoc->m_MStorage.GetCyclicNumber()!=string::npos)
+		//if (m_pSimDoc->m_MStorage.GetCyclicNumber() > 1&& m_pSimDoc->m_MStorage.GetCyclicNumber()!= std::string::npos)
 		//	nselV/= m_pSimDoc->m_MStorage.GetCyclicNumber();
 		ival = ilocal%nselV;
 		m_Label.st = MFC_Util::ItoAscii(ival + 1) + ":";

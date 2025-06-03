@@ -22,7 +22,7 @@ bool Soil_HeatF::Ini()	{
 
 
 //	m_pModelStructure = ((Simulator*)m_pModelInfo)->GetSimStructurePointer();
-	function<void(vector<double>*, vector<double>*, vector<double>*)> f_ThCond;
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*)> f_ThCond;
 	f_ThCond=GetVectorPointer_D3_Functor(MyFunc::THERMALCOND_KERSTEN);
 	f_ThCond(&ThCondV, &p_Soil_WaterF->Theta, &ThQual);
 

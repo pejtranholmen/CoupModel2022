@@ -10,7 +10,7 @@ enum class ReadYearBasedManagementTable_Sw{off,on};
 
 class Day_FertRates {
 public:
-	Day_FertRates(vector<double> FertDayNo, vector<double> FertRates) : FertDayNo(FertDayNo), FertRates(FertRates)
+	Day_FertRates(vector<double> FertDayNo, std::vector<double> FertRates) : FertDayNo(FertDayNo), FertRates(FertRates)
 	{};
 	double operator() (double DayNum) {
 		for (size_t i = 0; i < FertDayNo.size(); i++)
@@ -23,7 +23,7 @@ private:
 
 class YearStage_FertRates {
 public:
-	YearStage_FertRates(vector<double> YearStage, vector<double> YearRate, vector<double> YearFrequency, vector<double> FertDayNo) :
+	YearStage_FertRates(vector<double> YearStage, std::vector<double> YearRate, std::vector<double> YearFrequency, std::vector<double> FertDayNo) :
 		YearStage(YearStage), YearRate(YearRate), YearFrequency(YearFrequency)
 		
 	{vector<double> FertDay; FertDay.push_back(FertDayNo.front()); f_YearApp = Day_FertRates(FertDay, YearRate); };
@@ -45,16 +45,16 @@ private:
 };
 class YearTable_FertRates {
 public:
-	YearTable_FertRates(vector<double> FertYear, vector<double> FertDayApp1, vector<double> FertRateApp1):FertRateApp1(FertRateApp1)
+	YearTable_FertRates(vector<double> FertYear, std::vector<double> FertDayApp1, std::vector<double> FertRateApp1):FertRateApp1(FertRateApp1)
 		{
 		for (size_t i = 0; i < FertDayApp1.size(); ++i) FertDay1.push_back(int(FertDayApp1[i] + 0.001));
 		m_CountYear = 0; for (size_t i = 0; i < FertYear.size(); i++) IntFertYear.push_back(int(FertYear[i]));
 		yearapp3 = false;
 	};
 
-	YearTable_FertRates(vector<double> FertYear, vector<double> FertDayApp1, vector<double> FertRateApp1,
-		 vector<double> FertDayApp2, vector<double> FertRateApp2,
-		 vector<double> FertDayApp3, vector<double> FertRateApp3) : FertRateApp1(FertRateApp1),
+	YearTable_FertRates(vector<double> FertYear, std::vector<double> FertDayApp1, std::vector<double> FertRateApp1,
+		 std::vector<double> FertDayApp2, std::vector<double> FertRateApp2,
+		 std::vector<double> FertDayApp3, std::vector<double> FertRateApp3) : FertRateApp1(FertRateApp1),
 		FertRateApp2(FertRateApp2), FertRateApp3(FertRateApp3)
 	{
 		for (size_t i = 0; i < FertDayApp1.size(); ++i) FertDay1.push_back(int(FertDayApp1[i] + 0.001));

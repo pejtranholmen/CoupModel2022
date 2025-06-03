@@ -2,9 +2,9 @@
 class CDB : public SimB {
 
 public:
-	void MR_AddSelection(string des, string key);
+	void MR_AddSelection(string des, std::string key);
 	void MR_ResetSelection();
-	void MR_SetSelection(size_t index,string des, string key);
+	void MR_SetSelection(size_t index,string des, std::string key);
 	string MR_GetKeySelection(size_t index);
 	string MR_GetSelection(size_t index);
 	size_t Get_DB_Index() { return DB_Index; };
@@ -21,7 +21,7 @@ public:
 	size_t GetLastSelectedRepetition() {return m_LastSelectedRepetition;};
 	~CDB();
 	CDB();						// Constructor
-	CDB(string, string);						// Constructor
+	CDB(string, std::string);						// Constructor
 	CDB(DB_types);						// Constructor
 	CDB(int);						// Constructor
 	CDB(string);						// Constructor
@@ -32,7 +32,7 @@ public:
 	string GetChaParKey(size_t);
 	int GetChaParIndex(size_t);
 	size_t GetNumChaDates();
-	bool SetChaDateAndValues(long, string, string);
+	bool SetChaDateAndValues(long, std::string, std::string);
 	bool DeleteChaDate(size_t);
 	bool ResetChaDates();
 protected:

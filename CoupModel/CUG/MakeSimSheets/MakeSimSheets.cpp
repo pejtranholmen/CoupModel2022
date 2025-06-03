@@ -1221,7 +1221,7 @@ bool MakeSimSheets::Make_HistorySheet()
 				JoinCells(-1,0,-1,NumLines-1);
 				int irow=-1;
 				size_t index;
-				for(size_t i=NumLines-1; i!=string::npos; i--)
+				for(size_t i=NumLines-1; i!= std::string::npos; i--)
 				{
 					irow++;
 					if (m_pSimDoc->m_ViewAll) index = i;
@@ -4606,7 +4606,7 @@ bool MakeSimSheets::Make_ChartListSheet()
 									int nTabIndex=m_pSimDoc->MR_GetTabIndex(i1+1,ii+1);
 									if (pPar == nullptr) continue;
 									string namep=pPar->GetName();
-									if(nTabIndex!=string::npos)				
+									if(nTabIndex!= std::string::npos)				
 										namep+="("+FUtil::STD_ItoAscii(nTabIndex+1)+")";
 									if(ind==ilocal) {
 										st=namep;
@@ -5032,7 +5032,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 	bool validMBinFile = false;
 
 	bool DynamicIndexValFile = false;
-	size_t DynamicIndexPos = string::npos;
+	size_t DynamicIndexPos = std::string::npos;
 
 
 	if (m_pSimDoc->IsMultiSimulation()) {
@@ -5041,7 +5041,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 		if (pP != nullptr) {
 			if (pP->GetValue() > 1.1) make_cyclic_sampling = true;
 		}
-		if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != string::npos&&make_cyclic_sampling) {
+		if (m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1() != std::string::npos&&make_cyclic_sampling) {
 			//auto NumberofDim1 = m_pSimDoc->MR_GetDimCounter(0);
 			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			DynamicIndexPos= m_pSimDoc->MR_GetValidIndex_IndexInValFile_InDim1();
@@ -5156,7 +5156,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 						CResiduals *pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
 						if (pRes != nullptr) {
 							if (!pRes->EnableEstimatesMade()) {
-								/*if (pRes->EnsembleReadWrite(true, string::npos)) {
+								/*if (pRes->EnsembleReadWrite(true, std::string::npos)) {
 									cell.SetBackColor(m_ColorClick);
 									cell.SetReadOnly(FALSE);
 								}
@@ -6623,7 +6623,7 @@ CString str;
 					SetCell(0, ii_count, &cell);
 
 					auto irun_no = m_pSimDoc->m_MStorage.m_AcceptedRuns[iens][irun];
-					if (irun == string::npos) irun_no = ii_count;
+					if (irun == std::string::npos) irun_no = ii_count;
 					GetCell(1, ii_count, &cell);
 					str.Format(_T("%u"), irun_no + 1);
 					cell.SetText(str);
@@ -7044,7 +7044,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 				}
 				else if (ifn == 2) {
 					test = m_pSimDoc->MR_GetParName(i + 1, ii + 1).c_str();
-					if (m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) != string::npos) {
+					if (m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) != std::string::npos) {
 						test += _T("(") + MFC_Util::ItoAscii(m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) + 1) + _T(")");
 					}
 				}
@@ -7159,7 +7159,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						index = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
 						pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
 						if (pPar != nullptr) {
-							if (index == string::npos) {
+							if (index == std::string::npos) {
 								pParDep = ((Ps*)pPar)->Get_MR_ParDependence();
 								indexdep = ((Ps*)pPar)->Get_MR_ParDependenceIndex();
 							}
@@ -7169,7 +7169,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 							}
 							if (pParDep != nullptr) {
 								test = pParDep->GetName().c_str();
-								if (indexdep != string::npos)
+								if (indexdep != std::string::npos)
 									test += _T("(") + MFC_Util::ItoAscii(indexdep + 1) + _T(")");
 							}
 							else
@@ -7491,7 +7491,7 @@ void MakeSimSheets::Multi_Post_SensitivityTest() {
 					}
 					else if (ifn == 2) {
 						test = m_pSimDoc->MR_GetParName(i + 1, ii + 1).c_str();
-						if (m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) != string::npos) {
+						if (m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) != std::string::npos) {
 							test += _T("(") + MFC_Util::ItoAscii(m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) + 1) + _T(")");
 						}
 					}
@@ -7807,7 +7807,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 						}
 						else if (ifn == 2) {
 							test = m_pSimDoc->MR_GetParName(i + 1, ii + 1).c_str();
-							if (m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) != string::npos) {
+							if (m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) != std::string::npos) {
 								test += _T("(") + MFC_Util::ItoAscii(m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1) + 1) + _T(")");
 							}
 						}
@@ -7922,7 +7922,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 								index = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
 								pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
 								if (pPar != nullptr) {
-									if (index == string::npos) {
+									if (index == std::string::npos) {
 										pParDep = ((Ps*)pPar)->Get_MR_ParDependence();
 										indexdep = ((Ps*)pPar)->Get_MR_ParDependenceIndex();
 									}
@@ -7932,7 +7932,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 									}
 									if (pParDep != nullptr) {
 										test = pParDep->GetName().c_str();
-										if (indexdep != string::npos)
+										if (indexdep != std::string::npos)
 											test += _T("(") + MFC_Util::ItoAscii(indexdep + 1) + _T(")");
 									}
 									else
@@ -8247,7 +8247,7 @@ CString test;
 						else {
 							auto tst=pPar->GetName();
 						//test=m_pSimDoc->MR_GetParName(i+1,ii+1);
-							if(m_pSimDoc->MR_GetTabIndex(i+1,ii+1)!=string::npos) 
+							if(m_pSimDoc->MR_GetTabIndex(i+1,ii+1)!= std::string::npos) 
 								tst+="("+FUtil::STD_ItoAscii(m_pSimDoc->MR_GetTabIndex(i+1,ii+1)+1)+")";
 							cell.SetText(tst);
 							if(m_pSimDoc->IsFinishedSimulation())
@@ -8403,7 +8403,7 @@ CString test;
 							index=m_pSimDoc->MR_GetTabIndex(i+1,ii+1);
 							pPar=m_pSimDoc->MR_Get_pPar(i+1,ii+1);
 							if(pPar!=nullptr) {
-								if(index==string::npos) {
+								if(index== std::string::npos) {
 									pParDep=((Ps*)pPar)->Get_MR_ParDependence();
 									if(pParDep!=nullptr)
 										indexdep=((Ps*)pPar)->Get_MR_ParDependenceIndex();
@@ -8415,7 +8415,7 @@ CString test;
 								}
 								if(pParDep!=nullptr) {
 									test=CString(pParDep->GetName().c_str());
-									if(indexdep!=string::npos)
+									if(indexdep!= std::string::npos)
 										test+=_T("(")+MFC_Util::ItoAscii(indexdep+1)+_T(")");
 								}
 								else
@@ -8437,7 +8437,7 @@ CString test;
 										icounto++;
 										CString name;
 										name=m_pSimDoc->MR_GetParName(ix+1,iix+1).c_str();
-										if(m_pSimDoc->MR_GetTabIndex(ix+1,iix+1)!=string::npos) {
+										if(m_pSimDoc->MR_GetTabIndex(ix+1,iix+1)!= std::string::npos) {
 											name+=_T("(")+MFC_Util::ItoAscii(m_pSimDoc->MR_GetTabIndex(ix+1,iix+1)+1)+_T(")");
 										}
 										/*	if(pkoll==m_pSimDoc->MR_Get_pPar(i+1,ii+1)){

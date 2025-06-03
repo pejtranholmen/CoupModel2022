@@ -3,7 +3,7 @@
 
 
 class LogisticGrowth {
-public:LogisticGrowth(vector<double> UptakeStart, vector<double> UptakeEnd, vector<double> UptakeACoef, vector<double> UptakeBCoef, vector<double> UptakeCCoef, vector<double> UptakeCNRatio, ModelInfo *pModelInfo):
+public:LogisticGrowth(vector<double> UptakeStart, std::vector<double> UptakeEnd, std::vector<double> UptakeACoef, std::vector<double> UptakeBCoef, std::vector<double> UptakeCCoef, std::vector<double> UptakeCNRatio, ModelInfo *pModelInfo):
 	a(UptakeACoef), b(UptakeACoef), c(UptakeACoef), start(UptakeStart), end(UptakeEnd), pModelInfo(pModelInfo), c_n(UptakeCNRatio) {}
    double operator() (size_t index, double Day) {
 		   double TimePeriod = Day - start[index];

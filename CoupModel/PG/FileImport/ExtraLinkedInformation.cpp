@@ -128,14 +128,14 @@ bool ExtraLinkedInformation::ReadCoord() {
 					DEC_COORD cord;
 
 					ipos=line.find(';');
-					if(ipos==string::npos) ipos=line.find(',');
+					if(ipos== std::string::npos) ipos=line.find(',');
 					for(size_t i=0; i<4;i++) {
 						string sub;
 						sub=line.substr(0,ipos);
 						size_t value=FUtil::AtoInt(sub);
 						line=line.substr(ipos+1);
 						ipos=line.find(';');
-						if(ipos==string::npos) ipos=line.find(',');
+						if(ipos== std::string::npos) ipos=line.find(',');
 						switch(i) {
 						case 0:
 							value=FUtil::AtoInt(sub);
@@ -289,11 +289,11 @@ bool ExtraLinkedInformation::SetFileDescriptionFromLinkedFileDataBase()
 
 	auto ReturnFileNameBase = [&]() {
 		size_t ip = m_filename.find(".txt");
-		if (ip == string::npos)
+		if (ip == std::string::npos)
 			ip = m_filename.find(".csv");
-		if (ip == string::npos)
+		if (ip == std::string::npos)
 			ip = m_filename.find(".");
-		if (ip != string::npos)
+		if (ip != std::string::npos)
 			return m_filename.substr(0, ip);
 		else
 			return m_filename;

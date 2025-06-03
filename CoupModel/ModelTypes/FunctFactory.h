@@ -92,9 +92,9 @@ struct FunctorProp {
 struct HYDRAULIC_COEF;
 class FunctFactory {
 public:
-    FunctFactory(const FunctorProp func, vector<double> Parva);
-    FunctFactory(const FunctorProp func, vector<double> Parv, vector<vector<double>> Parva);
-    FunctFactory(const FunctorProp func, vector<vector<double>> Parva);
+    FunctFactory(const FunctorProp func, std::vector<double> Parva);
+    FunctFactory(const FunctorProp func, std::vector<double> Parv, std::vector<vector<double>> Parva);
+    FunctFactory(const FunctorProp func, std::vector<vector<double>> Parva);
     FunctFactory(const FunctorProp func, HYDRAULIC_COEF *pHydCoef);
 
 	function<double(double)> Get_D1_Functor() {	return Set_D1_Functor();}
@@ -121,10 +121,10 @@ public:
 
 
 	function<void(vector<double>*)> GetVectorPointer_D1_Functor() { return SetVectorPointer_D1_Functor(); }
-	function<void(vector<double>*, vector<double>*)> GetVectorPointer_D2_Functor() { return SetVectorPointer_D2_Functor(); }
-	function<void(vector<double>*, vector<double>*, vector<double>*)> GetVectorPointer_D3_Functor() { return SetVectorPointer_D3_Functor(); }
-	function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*)> GetVectorPointer_D4_Functor() { return SetVectorPointer_D4_Functor(); }
-	function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*, vector<double>*)> GetVectorPointer_D5_Functor() { return SetVectorPointer_D5_Functor(); }
+	function<void(vector<double>*, std::vector<double>*)> GetVectorPointer_D2_Functor() { return SetVectorPointer_D2_Functor(); }
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D3_Functor() { return SetVectorPointer_D3_Functor(); }
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D4_Functor() { return SetVectorPointer_D4_Functor(); }
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D5_Functor() { return SetVectorPointer_D5_Functor(); }
 
 	function<double(size_t)> Get_BLANK_TableFunctor() { return Set_BLANK_TableFunctor(); }
 	function<double(size_t, double)> Get_D1_TableFunctor() { return Set_D1_TableFunctor(); }
@@ -177,10 +177,10 @@ private:
 	function<vector<double>(bool, double, double, double, double, double)> SetVector_boolD5_Functor();
 
 	function<void(vector<double>*)>  SetVectorPointer_D1_Functor(); 
-	function<void(vector<double>*, vector<double>*)>  SetVectorPointer_D2_Functor(); 
-	function<void(vector<double>*, vector<double>*, vector<double>*)>  SetVectorPointer_D3_Functor(); 
-	function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*)> SetVectorPointer_D4_Functor(); 
-	function<void(vector<double>*, vector<double>*, vector<double>*, vector<double>*, vector<double>*)> SetVectorPointer_D5_Functor(); 
+	function<void(vector<double>*, std::vector<double>*)>  SetVectorPointer_D2_Functor(); 
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  SetVectorPointer_D3_Functor(); 
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SetVectorPointer_D4_Functor(); 
+	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SetVectorPointer_D5_Functor(); 
 
 
 

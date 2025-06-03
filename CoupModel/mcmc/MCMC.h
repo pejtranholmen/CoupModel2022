@@ -126,7 +126,7 @@ class ParameterT : public ParameterBase {
 public:
   /// Constructor
   ///
-  /// \param label    a string identifier for the parameter
+  /// \param label    a std::string identifier for the parameter
   ///
   ParameterT(std::string label)
     : ParameterBase(label)
@@ -647,8 +647,8 @@ protected:
   unsigned nElem_;              ///< number of parameters in the model
   SimpleStatistic likelihood_;  ///< stores likelihood for DIC calculations
 
-  ModelSteps step_;             ///< vector of parameters to sample
-  Results results_;             ///< vector (boost::any) of stored results
+  ModelSteps step_;             ///< std::vector of parameters to sample
+  Results results_;             ///< std::vector (boost::any) of stored results
   virtual SampleVector Parameters(void) const;
 
   boost::format* summaryFormat_; ///< boost::format for summary output

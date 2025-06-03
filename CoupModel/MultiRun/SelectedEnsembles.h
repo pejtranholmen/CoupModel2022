@@ -120,7 +120,7 @@ public:
 	void SetValidDynLogLi(unsigned long iv, unsigned long idin, unsigned long all, float *pfloat);
 	void SetValidDynResiduals(unsigned long iv, unsigned long idin, unsigned long all, float *pfloat) { for (unsigned long i = 0; i<7; i++) { m_ValidDynResiduals[all*(m_NumValidVar * 7 * 13) + iv * 13 * 7 + idin * 7 + i] = *(pfloat + i); } };
 	float GetValidDynLogLi(unsigned long iv, unsigned long idin, unsigned long idut, unsigned long all);
-	float GetValidDynResiduals(unsigned long iv, unsigned long idin, unsigned long idut, unsigned long all) { return m_ValidDynResiduals[all*(m_NumValidVar * 7 * 13) + iv * 13 * 7 + idin * 7 + idut]; };
+	float GetValidDynResiduals(unsigned long iv, unsigned long idin, unsigned long idut, unsigned long all) noexcept { return m_ValidDynResiduals[all*(m_NumValidVar * 7 * 13) + iv * 13 * 7 + idin * 7 + idut]; };
 
 
 
@@ -134,8 +134,8 @@ public:
 	unsigned long GetNumAccepted();
 	unsigned long GetNumBayesAccepted(unsigned long num_burn_in);
 
-	SimpleStatistics GetValidStat(unsigned long ip, bool post = true, size_t actualensemble=string::npos, unsigned long split = 0) const;
-	void SetValidStat(unsigned long ip, bool post = true, size_t actualEnsemble=string::npos, unsigned long split = 0);
+	SimpleStatistics GetValidStat(unsigned long ip, bool post = true, size_t actualensemble= std::string::npos, unsigned long split = 0) const;
+	void SetValidStat(unsigned long ip, bool post = true, size_t actualEnsemble= std::string::npos, unsigned long split = 0);
 	
 
 	float GetMinSumValid(unsigned long);

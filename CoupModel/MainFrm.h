@@ -68,14 +68,14 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 	void OnClose();
-	void	UpdatePaneText(int, string); 
+	void	UpdatePaneText(int, std::string); 
 	void	UpdateLocalWindowText(string, WINDOW_NAMES window=WINDOW_PG);
 	void	UpdateProgress(int, float relfrac);
 	void SaveWindowSettings();
 	void SaveDockingLayout();
 	void LoadDockingLayout();
 
-	void	UpdateResidualProgress(int var, int numvar, float relfrac, size_t Transform = 0, size_t actual_ensemble = string::npos);
+	void	UpdateResidualProgress(int var, int numvar, float relfrac, size_t Transform = 0, size_t actual_ensemble = std::string::npos);
 	afx_msg void OnUpdateBound0(CCmdUI *pCmdUI); // added by DSM
 	afx_msg void OnUpdateBound1(CCmdUI *pCmdUI); // added by DSM
 	afx_msg void OnUpdateBound2(CCmdUI *pCmdUI); // added by DSM

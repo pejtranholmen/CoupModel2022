@@ -82,7 +82,7 @@ bool PFCurve::Set_Header(NEWHEADER head, bool Extra)
 	//start=(m_ActProfile.RecLayers-1)*NSizeHeader;
 	m_NewHeaderFile.seekp(start,ios::beg);
 	auto actpos=m_NewHeaderFile.tellp();
-	if(actpos==std::streampos(start)&&start!=string::npos) {
+	if(actpos==std::streampos(start)&&start!= std::string::npos) {
 		m_ActProfile=head;
 		return SaveRecord(false);
 	//	m_NewHeaderFile.write((char*)&head,100);
@@ -143,7 +143,7 @@ bool PFCurve::SetPF_Pressure(vector<float> pressure, bool Extra)
 
 	return m_LevelFile.good();
 }
-bool PFCurve::SetPF_Theta(size_t row, vector<float> theta, bool Extra)
+bool PFCurve::SetPF_Theta(size_t row, std::vector<float> theta, bool Extra)
 {
 	if(!IsMainEditOpen&&!Extra) return false;
 	size_t start;
@@ -158,7 +158,7 @@ bool PFCurve::SetPF_Theta(size_t row, vector<float> theta, bool Extra)
 
 
 };
-bool PFCurve::SetPF_Texture(size_t row, vector<float> texture, bool Extra)
+bool PFCurve::SetPF_Texture(size_t row, std::vector<float> texture, bool Extra)
 {
 	if(!IsMainEditOpen&&!Extra) return false;
 	size_t start;
@@ -226,7 +226,7 @@ NEWHEADER PFCurve::GetNewHeader() {
 	m_IniHeader.CreateDate = FUtil::GetCurrentDateTime();
 	m_IniHeader.CreatedBy = FUtil::GetWindowUser();
 	auto start=GetHeaderRecord(m_IniHeader.KeyProf);
-	while(start!=string::npos) {
+	while(start!= std::string::npos) {
 		m_IniHeader.KeyProf++;
 		start=GetHeaderRecord(m_IniHeader.KeyProf);
 	}
@@ -288,7 +288,7 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 	}
 	char delim = ';';
 
-	auto WriteItem = [&](string item, string &value) {
+	auto WriteItem = [&](string item, std::string &value) {
 		if (Export) {
 			line = item + ';';
 			line += value + '\n';
@@ -299,7 +299,7 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 			if (item == line.substr(0, line.find(delim))) {
 				value = line.substr(line.find(delim) + 1);
 				auto pos = value.find(delim);
-				if (pos != string::npos) value = value.substr(0, pos);
+				if (pos != std::string::npos) value = value.substr(0, pos);
 			}
 		}
 	};
@@ -434,7 +434,7 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 			line = line.substr(pos + 1);
 			string valuestr;
 			pos = line.find(delim);
-			if (pos != string::npos)
+			if (pos != std::string::npos)
 				valuestr = line.substr(0, pos);
 			else
 				valuestr = line;
@@ -448,7 +448,7 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 			line = line.substr(pos+1);
 			pos = line.find(delim);
 			for (size_t i = 0; i<numpressure; i++) {
-				if (pos != string::npos)
+				if (pos != std::string::npos)
 					valuestr = line.substr(0, pos);
 				else
 					valuestr = line;
@@ -512,7 +512,7 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 		int iprof = FUtil::AtoInt(str);
 		line = line.substr(pos + 1);
 		pos = line.find(delim);
-		if (pos == string::npos)
+		if (pos == std::string::npos)
 			str = line;
 		else
 			str = line.substr(0, pos);
@@ -523,7 +523,7 @@ bool PFCurve::Export_Import_ActualProfile_CSVFile(size_t keyno, bool Export)
 
 
 
-		if (startrec != string::npos) {
+		if (startrec != std::string::npos) {
 
 			header = GetHeader(startrec);
 			header.RecHeader = startrec;

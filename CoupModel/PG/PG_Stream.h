@@ -25,7 +25,7 @@ void	SetNewFileName(string filename, bool RemoveOld = false);
 void	SetFileName(string filename);
 
 bool    WriteNewPGFileAs(string filename, bool newfile = false);
-bool	WritePGFileFrame(size_t InputRepNo = string::npos, fstream *pPGOutStream=nullptr, bool WriteFileWithoutRep=true);
+bool	WritePGFileFrame(size_t InputRepNo = std::string::npos, fstream *pPGOutStream=nullptr, bool WriteFileWithoutRep=true);
 bool	WriteSeparateSplitFiles();
 bool	WriteMinMax(size_t varno, float fmin, float fmax, size_t repit = 1);
 bool	WritePGFileEnd(size_t nrecords, size_t nrepititions = 1, size_t InputRepNo = -1, bool newdrive = false);
@@ -41,7 +41,7 @@ bool	ReadNewBuffer(size_t Buffer);
 
 bool	WritePGFileRecord(size_t irec, size_t repit = 1);
 bool	WritePGFileVarValue(size_t varno, size_t irec, float v, size_t repit = 1);
-std::streamsize	WriteNewPGFileRecord(size_t rec = string::npos);
+std::streamsize	WriteNewPGFileRecord(size_t rec = std::string::npos);
 
 string  GetDateFromVarRecord(size_t Record);
 bool   SetMinToVarRecord(size_t Record, size_t Min);
@@ -59,7 +59,7 @@ bool	SetActBufferSize(size_t abuffer);
 	size_t	GetRepititionSequence();
 	void	SetRepititionMode(bool, size_t repititions = 1);
 	size_t	CheckAndEstimateRepetions();
-	bool WriteDescriptionsToStream(fstream *pWriteEnabledStream=nullptr, size_t RepNoInput_ToStore=string::npos);
+	bool WriteDescriptionsToStream(fstream *pWriteEnabledStream=nullptr, size_t RepNoInput_ToStore= std::string::npos);
 
 bool	m_IsOpen;
 bool	m_Closed;

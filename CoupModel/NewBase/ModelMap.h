@@ -43,7 +43,7 @@ class Func;
 class FCSV;
 class FlexVal{
 public:
-    vector<float> val;
+    std::vector<float> val;
 };
 
 //#include "../ModelTypes/FunctFactory.h"

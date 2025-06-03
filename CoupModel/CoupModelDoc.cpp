@@ -124,8 +124,8 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 	if (ifilt<0)ifilt = file.find(".sim");
 	if(ifilt<0) ifilt=file.find(".SIM");
 	if (ifilt < 0) ifilt = file.find(".xml");
-	if (ifilt == string::npos) ifilt = file.find(".MBin");
-	if (ifilt == string::npos) ifilt = file.find(".SBin");
+	if (ifilt == std::string::npos) ifilt = file.find(".MBin");
+	if (ifilt == std::string::npos) ifilt = file.find(".SBin");
 	m_Doc.m_DocumentType=2;
 	if(ifilt>0) {
 		m_Doc.m_DocumentType=0;

@@ -17,7 +17,7 @@ FCSV::FCSV(ifstream *ptr, enum datatype data, enum elements elem, enum fysproces
 
 
 }
-void FCSV::Def(size_t ModuleNo, string name, string value, string conditions, size_t numheaders)
+void FCSV::Def(size_t ModuleNo, std::string name, std::string value, std::string conditions, size_t numheaders)
 {
 	SetModuleNo(ModuleNo);
 	m_FileName=value;
@@ -78,12 +78,12 @@ void FCSV::CheckSizeOfFile()
 		var_count = 0;
 		line.resize(n);
 		char delim = ',';
-		if (line.find(';') != string::npos)  delim = ';';
+		if (line.find(';') != std::string::npos)  delim = ';';
 
 		while (line.size()>0) {
 			var_count++;
 			string TheValueString;
-			if (line.find(delim) != string::npos)
+			if (line.find(delim) != std::string::npos)
 				TheValueString = line.substr(0, line.find(delim));
 			else
 				TheValueString = line.substr(0, line.find('\0'));
@@ -93,7 +93,7 @@ void FCSV::CheckSizeOfFile()
 			if (count== 1&&option>TwoLineType||option==SimpleOneLine) m_headervar.push_back(TheValueString);
 			if (count == 3 && option > TwoLineType) m_headervar_unit.push_back(TheValueString);
 			
-			if (line.find(delim) != string::npos)
+			if (line.find(delim) != std::string::npos)
 				line = line.substr(line.find(delim) + 1);
 			else
 				line.resize(0);
@@ -140,7 +140,7 @@ bool FCSV::CheckMinMaxValues()
 		var_count = 0;
 		line.resize(n);
 		char delim = ',';
-		if (line.find(';')!=string::npos)  delim = ';';
+		if (line.find(';')!= std::string::npos)  delim = ';';
 	
 		option = Unknown;
 		
@@ -150,7 +150,7 @@ bool FCSV::CheckMinMaxValues()
 		while (line.size()>0) {
 			var_count++;
 			string TheValueString;
-			if (line.find(delim) != string::npos)
+			if (line.find(delim) != std::string::npos)
 				TheValueString = line.substr(0, line.find(delim));
 			else
 				TheValueString = line;
@@ -167,7 +167,7 @@ bool FCSV::CheckMinMaxValues()
 			else if (option == MaxValue&&var_count>1) {
 				m_VarMax[var_count - 2] = double(FUtil::AtoFloat(TheValueString));
 			}
-			if (line.find(delim) != string::npos)
+			if (line.find(delim) != std::string::npos)
 				line = line.substr(line.find(delim) + 1);
 			else
 				line.resize(0);
@@ -204,7 +204,7 @@ size_t FCSV::AssignSIMB_PointersFromHeader()
 			if (simb.pBase != nullptr) m_ParameterPointers.push_back(simb);
 		}
 		else {
-			simb.TabIndex = string::npos;
+			simb.TabIndex = std::string::npos;
 			simb.pBase = m_pModelBase->GetPsPointer(str);
 			if (simb.pBase != nullptr) m_ParameterPointers.push_back(simb);
 		}
@@ -250,7 +250,7 @@ size_t FCSV::AssignKey_WithValues() {
 		var_count = 0;
 		line.resize(n);
 		char delim = ',';
-		if (line.find(';') != string::npos)  delim = ';';
+		if (line.find(';') != std::string::npos)  delim = ';';
 		if (line.find("keyindex") == 0 || line.find("KeyIndex") == 0) TableMode = true;
 		bool fineline = false;
 		bool DBString;
@@ -265,7 +265,7 @@ size_t FCSV::AssignKey_WithValues() {
 
 			var_count++;
 			string TheValueString;
-			if (line.find(delim) != string::npos)
+			if (line.find(delim) != std::string::npos)
 				TheValueString = line.substr(0, line.find(delim));
 			else
 				TheValueString = line;
@@ -281,7 +281,7 @@ size_t FCSV::AssignKey_WithValues() {
 				else
 					Values[var_count - 1] = double(FUtil::AtoFloat(TheValueString));
 			}
-			if (line.find(delim) != string::npos)
+			if (line.find(delim) != std::string::npos)
 				line = line.substr(line.find(delim) + 1);
 			else
 				line.resize(0);

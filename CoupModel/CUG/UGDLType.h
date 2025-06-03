@@ -7,7 +7,7 @@
 
 	Purpose
 		The CUGDropListType is the standard droplist cell type used
-		in the Ultimate Grid.  This cell type uses the string stored
+		in the Ultimate Grid.  This cell type uses the std::string stored
 		in the 'label' portion of a given cell (set with SetLabelText)
 		to populate the drop list.
 

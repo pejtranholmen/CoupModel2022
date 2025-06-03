@@ -31,21 +31,21 @@ class Soil_HeatF_Functions : public Thermal
 
  double SoilInitTemp, GeothermalF ,TempDiffPrec_Air, SurfHeatFlow,TotalGroundSensFlow,TotalGroundLatFlow;
  double TempSoilSurf;
- vector <double> SoilInitTempVar, SoilHeatInitial, ExactTemperature,HeatProdCoef_A,HeatProdCoef_A2;
+ std::vector <double> SoilInitTempVar, SoilHeatInitial, ExactTemperature,HeatProdCoef_A,HeatProdCoef_A2;
  double HeatProdCoef_B,  HeatProdCoef_AA, HeatProdCoef_AA2, HeatProd_Threshold, HeatSourceRateCoef1, HeatSourceRateCoef2;
  double HeatConversionCoef;
- vector <double> ThCondV, Temp;
+ std::vector <double> ThCondV, Temp;
 
 
- vector <double> SoilHeat, SoilHeatFlow, SoilHeatSink, SoilHeatSource;
+ std::vector <double> SoilHeat, SoilHeatFlow, SoilHeatSink, SoilHeatSource;
  
  //! Water Box Heat
  size_t InsulatedWaterPipe, WaterPipeBox, NPS, NHB;
  
- vector <double>  HeatBoxBoundaryFlux, HeatBoxStorage, HeatBoxHeaterFlux, HeatBoxTemp, WaterPipeLayer;
+ std::vector <double>  HeatBoxBoundaryFlux, HeatBoxStorage, HeatBoxHeaterFlux, HeatBoxTemp, WaterPipeLayer;
  double  ThCondInsulator,  HeaterFluxRate, HeaterTempThreshold, HeaterDuration;
- vector <double> ColdPipeHeat, OutPipeHeat, ColdPipeFlux,ColdPipeSinkFlux, OutPipeFlux, OutPipeSinkFlux;
- vector <double> ColdPipeTemp, OutPipeTemp, PipeSegments;
+ std::vector <double> ColdPipeHeat, OutPipeHeat, ColdPipeFlux,ColdPipeSinkFlux, OutPipeFlux, OutPipeSinkFlux;
+ std::vector <double> ColdPipeTemp, OutPipeTemp, PipeSegments;
  double SewageHeatStore, SewageSinkFlux, SewageInflow, SewageOutflow, SewageWaterStore;
  double SewageWaterIn, SewageWaterOut, OutPipeOutFlux ,  ColdPipeInFlux,  WaterPipeFlux, WaterPipeInTemp;
  double WaterSewageBuffer, WaterSewageInputAdd, HeatPipeResistance, WaterPipeFluxFluc, HeatBoxEnhancer;

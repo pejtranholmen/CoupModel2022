@@ -19,40 +19,40 @@ public:
 	bool ReadWrite_OptionalTSV_Valid(bool reading);
 	bool ReadWrite_OptionalSUM_Valid(bool reading);
 	bool ReadWrite_Parameters(bool reading);
-	bool EvaluateFile(bool reading, string filename="");
+	bool EvaluateFile(bool reading, std::string filename="");
 
-	float GetMeanValid_R2(unsigned long rec) {
+	float GetMeanValid_R2(unsigned long rec) noexcept {
 		if (m_VarValidMean_R2.size() <= rec)
 			return 0.;
 		return m_VarValidMean_R2[rec];
 	};
-	float GetMeanValid_A0(unsigned long rec) {
+	float GetMeanValid_A0(unsigned long rec) noexcept {
 		if (m_VarValidMean_A0.size() <= rec)
 			return 0.;
 		return m_VarValidMean_A0[rec];
 	};
-	float GetMeanValid_A1(unsigned long rec) {
+	float GetMeanValid_A1(unsigned long rec) noexcept {
 		if (m_VarValidMean_A1.size() <= rec)
 			return 0.;
 		return m_VarValidMean_A1[rec];
 	};
-	float GetMeanValid_AbsME(unsigned long rec) {
+	float GetMeanValid_AbsME(unsigned long rec) noexcept {
 		if (m_VarValidMean_AbsME.size() <= rec)
 			return 0.;
 		return m_VarValidMean_AbsME[rec];
 	};
-	float GetMeanValid_RMSE(unsigned long rec) {
+	float GetMeanValid_RMSE(unsigned long rec) noexcept {
 		if (m_VarValidMean_RMSE.size() <= rec)
 			return 0.;
 		return m_VarValidMean_RMSE[rec];
 	};
-	float GetMeanValid_NSE(unsigned long rec) {
+	float GetMeanValid_NSE(unsigned long rec) noexcept {
 		if (m_VarValidMean_NSE.size() <= rec)
 			return 0.;
 		return m_VarValidMean_NSE[rec];
 	};
 
-	float GetSumValid_LogLi(unsigned long rec) {
+	float GetSumValid_LogLi(unsigned long rec) noexcept {
 		if (m_VarValidSum_LogLi.size() <= rec)
 			return 0.;
 		else
@@ -60,20 +60,20 @@ public:
 	}
 
 
-	float GetMinMeanValid_R2() {return m_ValidMin[0];};
-	float GetMinMeanValid_A0() { return m_ValidMin[1]; };
-	float GetMinMeanValid_A1() { return m_ValidMin[2]; };
-	float GetMinMeanValid_AbsME() { return m_ValidMin[3]; };
-	float GetMinMeanValid_RMSE() { return m_ValidMin[4]; };
-	float GetMinMeanValid_NSE() {return m_ValidMin[6];};
-	float GetMinSumValid_LogLi() { return m_ValidMin[5];};
-	float GetMaxMeanValid_R2() { return m_ValidMax[0]; };
-	float GetMaxMeanValid_A0() { return m_ValidMax[1]; };
-	float GetMaxMeanValid_A1() { return m_ValidMax[2]; };
-	float GetMaxMeanValid_AbsME() { return m_ValidMax[3]; };
-	float GetMaxMeanValid_RMSE() {	return m_ValidMax[4];};
-	float GetMaxMeanValid_NSE() {return m_ValidMax[6];};
-	float GetMaxSumValid_LogLi() {return m_ValidMax[5];	};
+	float GetMinMeanValid_R2() noexcept {return m_ValidMin[0];};
+	float GetMinMeanValid_A0() noexcept { return m_ValidMin[1]; };
+	float GetMinMeanValid_A1() noexcept { return m_ValidMin[2]; };
+	float GetMinMeanValid_AbsME() noexcept { return m_ValidMin[3]; };
+	float GetMinMeanValid_RMSE() noexcept { return m_ValidMin[4]; };
+	float GetMinMeanValid_NSE() noexcept {return m_ValidMin[6];};
+	float GetMinSumValid_LogLi() noexcept { return m_ValidMin[5];};
+	float GetMaxMeanValid_R2() noexcept { return m_ValidMax[0]; };
+	float GetMaxMeanValid_A0() noexcept { return m_ValidMax[1]; };
+	float GetMaxMeanValid_A1() noexcept { return m_ValidMax[2]; };
+	float GetMaxMeanValid_AbsME() noexcept { return m_ValidMax[3]; };
+	float GetMaxMeanValid_RMSE() noexcept {	return m_ValidMax[4];};
+	float GetMaxMeanValid_NSE() noexcept {return m_ValidMax[6];};
+	float GetMaxSumValid_LogLi() noexcept {return m_ValidMax[5];	};
 	bool  GetAcceptedRunNo(unsigned long index) {
 		float v = GetMultiP(index, m_NumMulti - 10);
 		if (v <= 0.)
@@ -85,11 +85,11 @@ public:
 		if (index<m_AcceptedRuns[m_ActualEnsemble].size())
 			return m_AcceptedRuns[m_ActualEnsemble][index];
 		else
-			return string::npos;
+			return std::string::npos;
 	};
 	bool CompleteProcessingOfInputFiles_MultiStorage();
 	bool Reset_AcceptedRuns(size_t ensemble);
-	bool SetActualPerformanceVector_TSV_Variables(size_t ActualPerformance=string::npos, size_t dim1_index=string::npos);
+	bool SetActualPerformanceVector_TSV_Variables(size_t ActualPerformance= std::string::npos, size_t dim1_index= std::string::npos);
 	size_t GetActualTransformation(size_t EnsembleNo);
 
 	bool SetActual_AcceptedEnsemble();

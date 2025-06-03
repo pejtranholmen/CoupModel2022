@@ -35,7 +35,7 @@ NcFile::NcFile() :
 {}
 
 // constructor
-NcFile::NcFile(const string& filePath, const FileMode fMode)
+NcFile::NcFile(const std::string& filePath, const FileMode fMode)
 {
   switch (fMode) 
     {
@@ -56,7 +56,7 @@ NcFile::NcFile(const string& filePath, const FileMode fMode)
 }
 
 // constructor with file type specified
-NcFile::NcFile(const string& filePath, const FileMode fMode, const FileFormat fFormat )
+NcFile::NcFile(const std::string& filePath, const FileMode fMode, const FileFormat fFormat )
 {
   int format=0;
   switch (fFormat)

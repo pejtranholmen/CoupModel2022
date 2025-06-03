@@ -237,15 +237,15 @@ int CUGHint::SetBackColor(COLORREF color)
 SetText
 	<...>
 Params:
-	string	- new string to show in the tool tip
+	string	- new std::string to show in the tool tip
 	update	- flag indicating if the tool window should
 			  be repainted right away to reflect change.
 Returns:
 	UG_SUCCESS, this function will never fail.
 *****************************************************/
-int CUGHint::SetText(LPCTSTR string,int update)
+int CUGHint::SetText(LPCTSTR std::string,int update)
 {
-	m_text = string;
+	m_text = std::string;
 
 	if(update)
 		Invalidate();
@@ -261,7 +261,7 @@ MoveHintWindow
 Params:
 	x, y	- coordinates
 	width	- minimum width of the tool window, the window
-			  will be resized to fit the entire tool string.
+			  will be resized to fit the entire tool std::string.
 Returns:
 	UG_SUCCESS, this function will never fail.
 *****************************************************/
@@ -271,14 +271,14 @@ int CUGHint::MoveHintWindow(int x,int y,int width)
 	CRect parentRect;
 	int dif;
 
-	//get the width of the string and reset the
+	//get the width of the std::string and reset the
 	//specified width if needed
 	CDC * dc =GetDC();
 	// TD first select font...
 	if(m_hFont != nullptr)
 		dc->SelectObject(m_hFont);
 
-	// calculate the string's length in pixels
+	// calculate the std::string's length in pixels
 	CSize textSize = dc->GetTextExtent( m_text, m_text.GetLength());
 	if(( textSize.cx+4 ) > width )
 		width = textSize.cx+4;

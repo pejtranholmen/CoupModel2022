@@ -209,14 +209,14 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 			}
 			else {
 				m_pSimDoc->m_MStorage.SetCyclicNumbers(cycle);
-				size_t start_pos{ string::npos };
+				size_t start_pos{ std::string::npos };
 				for (size_t i = 0; i <cycle ; i++) {
 					auto koll2=out.pPG_MeasValFile->GetVarValue(out.PG_FilterVarIndex, i + 1);
 					if (size_t(out.PG_FilterVarValue) == koll2) {
 						start_pos = i; break;
 					}
 				}
-				if (start_pos != string::npos) {
+				if (start_pos != std::string::npos) {
 					out.pg_start_pos = start_pos;
 
 				}
@@ -585,7 +585,7 @@ PLOTv PlotInfo::GetDefaultPlotInfo() {
 	out.DataType = DATA_TYPES::ANYDATA;
 	out.EnsembleType = ENSEMBLE_TYPE::NO;
 	out.pPG_MeasValFile = nullptr;
-	out.index_cycle = string::npos;
+	out.index_cycle = std::string::npos;
 	return out;
 }
 void PlotInfo::SetFirstIndep(enum vartype vtype)	 {

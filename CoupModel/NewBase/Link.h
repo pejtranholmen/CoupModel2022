@@ -29,7 +29,7 @@ public:
 	bool SQL_UPDATEVERSION();
 	bool SQL_WRITE();
 	string GetMySQLDriver();
-	bool SQL_Call(string Query, string DefError);
+	bool SQL_Call(string Query, std::string DefError);
 	bool SQL_Check();
     int SQL_RES();
     int SQL_RES2();

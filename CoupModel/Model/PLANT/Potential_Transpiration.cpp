@@ -68,7 +68,7 @@ bool Potential_Transpiration::Def()
 	Define(pPs, "EPMaxRate", 4.,UNIT_TYPES::WATERFLOW_UNIT, "PlantType = 1|PotTranspInput = 0", 0.1, 20., 1., 10.); ps_vec.push_back(pPs);
 
 	functorprop.FuncName = MyFunc::POTTRANSPIRATION_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Potential Transpiration - Day of year function";
 	pFunc = new Func(SINGLEPLANT, ATMOSPHERE, POTTRANSPIRATION, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec,plotpar); ps_vec.clear();
@@ -125,7 +125,7 @@ bool Potential_Transpiration::Def()
 	Define(pPs, "CondMaxWinter", 0.002, "m/s", "Winter regulation = 1", 0.00005, 1., 0.001, .05); ps_vec.push_back(pPs);
 
 	functorprop.FuncName = MyFunc::MAXCONDUCTANCE; functorprop.Arg = MyArgType::BLANK;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Max Conductance - Winter - Summer";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec);
@@ -209,7 +209,7 @@ bool Potential_Transpiration::Def()
 	Define(pPs, "CO2 Power Coef", 1., "-", "CAtmDependence>0|PlantType>=3", 0.5, 1.5); ps_vec.push_back(pPs);
 
 	functorprop.FuncName = MyFunc::CONDUCTANCE_CO2; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Conductance - CO2 influence";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 
@@ -296,7 +296,7 @@ bool Potential_Transpiration::Def()
 	p_vec.push_back(pP);
 
 	functorprop.FuncName = MyFunc::ROUGHNESSLENGTH_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Resistance - Day of year function";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -317,7 +317,7 @@ bool Potential_Transpiration::Def()
 	p_vec.push_back(pP);
 
 	functorprop.FuncName = MyFunc::DISPLACEMENT_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Displacement - Day of year function";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -336,7 +336,7 @@ bool Potential_Transpiration::Def()
 	p_vec.push_back(pP);
 
 	functorprop.FuncName = MyFunc::CANOPYRESISTANCE_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Resistance - Day of year function";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
@@ -384,7 +384,7 @@ bool Potential_Transpiration::Def()
 	p_vec.push_back((P*)m_pModelMap->GetP_Pointer("Roughness Min"));
 	p_vec.push_back((P*)m_pModelMap->GetP_Pointer("Roughness Max"));
 	functorprop.FuncName = MyFunc::ROUGHNESSFRACTION_SEASON; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Roughness Frac of Height - with season";
 	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec); p_vec.clear();
@@ -423,7 +423,7 @@ bool Potential_Transpiration::Def()
 
 
 	functorprop.FuncName = MyFunc::DISPLACEMENTFRACTION_SEASON; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Displacement Frac of Height - with season";
 	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec); p_vec.clear();
@@ -439,7 +439,7 @@ bool Potential_Transpiration::Def()
 	p_vec.push_back((P*)m_pModelMap->GetP_Pointer("Conduct Max"));
 
 	functorprop.FuncName = MyFunc::MAXCONDUCTANCE_MC; functorprop.Arg = MyArgType::BLANK;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Resistance - Winter - Summer (Multi Plant Canopy)";
 	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar); ps_vec.clear();
@@ -751,7 +751,7 @@ void Potential_Transpiration::Flux()
         // ! DG 2003-08-18: introduced averaging of ResAir in relation to LAI for multiple plants
          //!                just check that sum(LAI) not eq 0!!
          //!	ResAir=Sum(MC_ResAir)/NumPlants
-		 vector<double> mult; mult.resize(LAI.size());
+		 std::vector<double> mult; mult.resize(LAI.size());
 		 for(size_t i=0; i<LAI.size(); i++) mult[i]=MC_ResAir[i]*LAI[i];
 
          ResAir=sum(mult)/max(0.00001,sum(LAI));

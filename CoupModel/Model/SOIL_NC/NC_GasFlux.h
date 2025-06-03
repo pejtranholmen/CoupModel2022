@@ -22,8 +22,8 @@ class NC_GasFlux : public NC_GasFlux_Functions
 		bool End();
 
 	private:
-		function<void(vector<double>, vector<double>, vector<double> *)> f_DiffusionFlux, f_ConvectiveFlux;
-		function<void(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionAirSoilFlux;
+		function<void(vector<double>, std::vector<double>, std::vector<double> *)> f_DiffusionFlux, f_ConvectiveFlux;
+		function<void(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>*)> f_DiffusionAirSoilFlux;
 		function<double(double, double, double , double c)> f_delta_conc;
 
 

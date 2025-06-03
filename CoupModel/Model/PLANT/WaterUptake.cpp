@@ -81,7 +81,7 @@ bool WaterUptake::Def()
 	Define(pPs, "DripScaleWupt", 2., "-", "Irrigation >0|Dripper>0", 0., 10000.);
 
 
-	functorprop.FunctorInitOption = string::npos; functorprop.pHyd = p_Soil_WaterF;
+	functorprop.FunctorInitOption = std::string::npos; functorprop.pHyd = p_Soil_WaterF;
 	functorprop.FuncName = MyFunc::WATERUPTAKEMOISTURE; functorprop.Arg = MyArgType::T_D3;
 	funcname = "Water Uptake Function";
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -114,7 +114,7 @@ bool WaterUptake::Def()
 	pPs = new Ps(&WupDayOff, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "TempWupDayNoCut", 365., "#", "PlantType > 0|WaterEq = 1|Temperature response>=1", 0., 366.);
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::WATERUPTAKETEMP_ORIG; functorprop.Arg = MyArgType::D2;
 	funcname = "Water Uptake Original TempFunction";
 	plotpar.Num_Of_Curves = 2;
@@ -137,7 +137,7 @@ bool WaterUptake::Def()
 
 	ps_vec.push_back(m_pModelMap->GetPsPointer("TempWupDayNoCut"));
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::WATERUPTAKETEMP_TRIGTEMP; functorprop.Arg = MyArgType::D2;
 	funcname = "Water Uptake Trig TempFunction";
 
@@ -152,7 +152,7 @@ bool WaterUptake::Def()
 	ps_vec.push_back(m_pModelMap->GetPsPointer("TempCoefE"));
 	ps_vec.push_back(m_pModelMap->GetPsPointer("TempWupDayNoCut"));
 
-	functorprop.FunctorInitOption = string::npos; functorprop.pHyd = nullptr;
+	functorprop.FunctorInitOption = std::string::npos; functorprop.pHyd = nullptr;
 	functorprop.FuncName = MyFunc::WATERUPTAKETEMP_TRIGTEMP_POLY; functorprop.Arg = MyArgType::D2;
 	funcname = "Water Uptake Trig polynomial TempFunction";
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -170,7 +170,7 @@ bool WaterUptake::Def()
 	pPs = new Ps(&RootDensityCoef, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);ps_vec.push_back(pPs);
 	Define(pPs, "RootDensityCoef", .5, UNIT_TYPES::AREA_UNIT, "Basic equation =1", 0.00001, 5.);
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::ROOT_DISTANCE_FROM_DENSITY; functorprop.Arg = MyArgType::D1;
 	funcname = "Root Distance to bulk soil";
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -183,7 +183,7 @@ bool WaterUptake::Def()
 	pPs = new Ps(&XylemResistivity, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "ResistivityXylem", 1., "days/m", "Basic equation =1", 0.1E-3, 100.);
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::INTERNAL_PLANTRESISTANCE; functorprop.Arg = MyArgType::D2;
 	funcname = "PlantWater Resistance by Height and Roots";
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -196,7 +196,7 @@ bool WaterUptake::Def()
 	pPs = new Ps(&LeafThresholdSuction, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "LeafThresholdSuction", 1000., "cm water", "PlantWaterStorage>0", 100., 30000.);
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::STOMATA_RELATIVEOPENING_FROM_PLANTWATERPOTENTIAL; functorprop.Arg = MyArgType::D1;
 	funcname = "Stomata Opening from PlantWater Potential";
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -209,7 +209,7 @@ bool WaterUptake::Def()
 	Define(pPs, "PlantWatRelLAI", 1., "mm", "PlantWaterStorage=1", 0.01, 10.);
 
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::MAXPLANTWATER_FROM_LAI; functorprop.Arg = MyArgType::D1;
 	funcname = "Max Plant Water Storage by LAI";
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -218,7 +218,7 @@ bool WaterUptake::Def()
 	pPs = new Ps(&PlantWatRelLAI_Height, SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "PlantWatRelLAI_Height", 0.5, "mm/m", "PlantWaterStorage=2", 0.001, 5.);
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::MAXPLANTWATER_FROM_LAIHEIGHT; functorprop.Arg = MyArgType::D2;
 	funcname = "Max Plant Water Storage by LAI and Heigth";
 	pFunc = new Func(SINGLE, WATER, WATERUPTAKE, NOBPROC, NORMAL);
@@ -236,7 +236,7 @@ bool WaterUptake::Def()
 	NE* pNumPlants;
 	pNumPlants = m_pModelMap->GetNEPointer("Number of Plants");
 	vector<double> initv;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::WATERUPTAKE_SALT; functorprop.Arg = MyArgType::T_D1;
 	funcname = "Water Uptake SaltFunction";
 
@@ -296,7 +296,7 @@ bool WaterUptake::Def()
 	 p_vec.clear();
 
 
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::WATERUPTAKETEMP_ORIG; functorprop.Arg = MyArgType::T_D2;
 	funcname = "Water Uptake Original TempFunction";
 	plotpar.Num_Of_Curves = 2;

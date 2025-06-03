@@ -18,7 +18,7 @@ enum class PlantHeighFunction_Sw { Default, Tree_Type_Biometri };
 
 
 class PlantInterPolate {
-	public:PlantInterPolate(vector<double> DayNum, vector<double> CForm): DayNum(DayNum), CForm(CForm)  {}
+	public:PlantInterPolate(vector<double> DayNum, std::vector<double> CForm): DayNum(DayNum), CForm(CForm)  {}
 	TIME_INTP operator() (double day) {
 		TIME_INTP out;
 		out.weight = 0;
@@ -35,7 +35,7 @@ private :
 	vector<double> DayNum, CForm;
 };
 class PlantTableSeasonTimeFunction {
-public:PlantTableSeasonTimeFunction(vector<double> DayNum, vector<double> CForm, vector<double> PlantV) : DayNum(DayNum), PlantV(PlantV) { f_Int = PlantInterPolate(DayNum, CForm); }
+public:PlantTableSeasonTimeFunction(vector<double> DayNum, std::vector<double> CForm, std::vector<double> PlantV) : DayNum(DayNum), PlantV(PlantV) { f_Int = PlantInterPolate(DayNum, CForm); }
 	   double operator() (double Day) {
 		   if (Day <= DayNum.front())
 			   return PlantV.front();
@@ -51,7 +51,7 @@ private:
 	function<TIME_INTP(double)> f_Int;
 };
 class RootTimeVarFunction {
-public: RootTimeVarFunction(vector<double> DayNumber, vector<double> RootVar) : DayNumber(DayNumber), RootVar(RootVar) {}
+public: RootTimeVarFunction(vector<double> DayNumber, std::vector<double> RootVar) : DayNumber(DayNumber), RootVar(RootVar) {}
 		double operator() (double Day) {
 		double out = RootVar.back();
 		if (Day <= DayNumber.front())
@@ -72,7 +72,7 @@ private:
 };
 
 class PlantHeight {
-public: PlantHeight(vector<double> PlantMaxHeight, vector<double> PlantHeightC1, vector<double> PlantHeightC2, vector<double> PlantHeightC3, vector<double> PlantHeightC4)
+public: PlantHeight(vector<double> PlantMaxHeight, std::vector<double> PlantHeightC1, std::vector<double> PlantHeightC2, std::vector<double> PlantHeightC3, std::vector<double> PlantHeightC4)
 	:Max(PlantMaxHeight), c1(PlantHeightC1), c2(PlantHeightC2), c3(PlantHeightC3), c4(PlantHeightC4) {}
 		double operator() (size_t index, double MassAboveGround, double Age, double MassGrain) {
 			MassAboveGround = max(0., min(1.E10, MassAboveGround));
@@ -89,7 +89,7 @@ private:
 };
 
 class LeafAreaIndex {
-public: LeafAreaIndex(vector<double> SpecificLeafAreaBegin, vector<double> SpecificLeafArea) :
+public: LeafAreaIndex(vector<double> SpecificLeafAreaBegin, std::vector<double> SpecificLeafArea) :
 	StartValue(SpecificLeafAreaBegin), NormalValue(SpecificLeafArea) {}
 		double operator() (size_t index, double Mass, double GrowthStage) {
 			double SLA;
@@ -106,7 +106,7 @@ private:
 };
 
 class PlantAlbedo {
-public: PlantAlbedo(vector<double> AlbedoVegStage, vector<double> AlbedoGrainStage) :
+public: PlantAlbedo(vector<double> AlbedoVegStage, std::vector<double> AlbedoGrainStage) :
 AVeg(AlbedoVegStage), AGrain(AlbedoGrainStage) {}
 		double operator() (size_t index, double GrowthStage) {
 			double AWeight, out;
@@ -135,7 +135,7 @@ private:
 
 };
 class RootDepth {
-public: RootDepth(vector<double> RootLowestDepth, vector<double> RootIncDepth) :
+public: RootDepth(vector<double> RootLowestDepth, std::vector<double> RootIncDepth) :
 	Lowest(RootLowestDepth), Inc(RootIncDepth){}
 	double operator() (size_t index, double MassRoots) {
 			return Lowest[index] * MassRoots / (MassRoots + Lowest[index] / Inc[index]);
@@ -144,7 +144,7 @@ public: RootDepth(vector<double> RootLowestDepth, vector<double> RootIncDepth) :
 };
 class CanopyCover {
 public:
-	CanopyCover(vector<double> MaxPlantCover, vector<double> KExpPlantCover): mcov(MaxPlantCover), senslai(KExpPlantCover) {}
+	CanopyCover(vector<double> MaxPlantCover, std::vector<double> KExpPlantCover): mcov(MaxPlantCover), senslai(KExpPlantCover) {}
 	double operator() (size_t index, double lai) {
 		return mcov[index] * (1. - exp(-senslai[index] * lai));
 	}

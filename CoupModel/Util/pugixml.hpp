@@ -126,7 +126,7 @@ namespace pugi
 	typedef PUGIXML_CHAR char_t;
 
 #ifndef PUGIXML_NO_STL
-	// String type used for operations that work with STL string; depends on PUGIXML_WCHAR_MODE
+	// String type used for operations that work with STL std::string; depends on PUGIXML_WCHAR_MODE
 	typedef std::basic_string<PUGIXML_CHAR, std::char_traits<PUGIXML_CHAR>, std::allocator<PUGIXML_CHAR> > string_t;
 #endif
 }
@@ -638,7 +638,7 @@ namespace pugi
 		xml_node find_child_by_attribute(const char_t* attr_name, const char_t* attr_value) const;
 
 	#ifndef PUGIXML_NO_STL
-		// Get the absolute node path from root as a text string.
+		// Get the absolute node path from root as a text std::string.
 		string_t path(char_t delimiter = '/') const;
 	#endif
 
@@ -1037,10 +1037,10 @@ namespace pugi
 		xml_parse_result load(std::basic_istream<wchar_t, std::char_traits<wchar_t> >& stream, unsigned int options = parse_default);
 	#endif
 
-		// (deprecated: use load_string instead) Load document from zero-terminated string. No encoding conversions are applied.
+		// (deprecated: use load_string instead) Load document from zero-terminated std::string. No encoding conversions are applied.
 		PUGIXML_DEPRECATED xml_parse_result load(const char_t* contents, unsigned int options = parse_default);
 
-		// Load document from zero-terminated string. No encoding conversions are applied.
+		// Load document from zero-terminated std::string. No encoding conversions are applied.
 		xml_parse_result load_string(const char_t* contents, unsigned int options = parse_default);
 
 		// Load document from file
@@ -1092,7 +1092,7 @@ namespace pugi
 		// Error message (0 if no error)
 		const char* error;
 
-		// Last parsed offset (in char_t units from string start)
+		// Last parsed offset (in char_t units from std::string start)
 		ptrdiff_t offset;
 
 		// Default constructor, initializes object to failed state
@@ -1127,7 +1127,7 @@ namespace pugi
 		// Get variable type
 		xpath_value_type type() const;
 
-		// Get variable value; no type conversion is performed, default value (false, NaN, empty string, empty node set) is returned on type mismatch error
+		// Get variable value; no type conversion is performed, default value (false, NaN, empty std::string, empty node set) is returned on type mismatch error
 		bool get_boolean() const;
 		double get_number() const;
 		const char_t* get_string() const;
@@ -1225,12 +1225,12 @@ namespace pugi
 		double evaluate_number(const xpath_node& n) const;
 
 	#ifndef PUGIXML_NO_STL
-		// Evaluate expression as string value in the specified context; performs type conversion if necessary.
+		// Evaluate expression as std::string value in the specified context; performs type conversion if necessary.
 		// If PUGIXML_NO_EXCEPTIONS is not defined, throws std::bad_alloc on out of memory errors.
 		string_t evaluate_string(const xpath_node& n) const;
 	#endif
 
-		// Evaluate expression as string value in the specified context; performs type conversion if necessary.
+		// Evaluate expression as std::string value in the specified context; performs type conversion if necessary.
 		// At most capacity characters are written to the destination buffer, full result size is returned (includes terminating zero).
 		// If PUGIXML_NO_EXCEPTIONS is not defined, throws std::bad_alloc on out of memory errors.
 		// If PUGIXML_NO_EXCEPTIONS is defined, returns empty  set instead.
@@ -1399,11 +1399,11 @@ namespace pugi
 #endif
 
 #ifndef PUGIXML_NO_STL
-	// Convert wide string to UTF8
+	// Convert wide std::string to UTF8
 	std::basic_string<char, std::char_traits<char>, std::allocator<char> > PUGIXML_FUNCTION as_utf8(const wchar_t* str);
 	std::basic_string<char, std::char_traits<char>, std::allocator<char> > PUGIXML_FUNCTION as_utf8(const std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >& str);
 
-	// Convert UTF8 to wide string
+	// Convert UTF8 to wide std::string
 	std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > PUGIXML_FUNCTION as_wide(const char* str);
 	std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > PUGIXML_FUNCTION as_wide(const std::basic_string<char, std::char_traits<char>, std::allocator<char> >& str);
 #endif

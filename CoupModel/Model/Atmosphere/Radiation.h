@@ -52,8 +52,8 @@ class Radiation : public Radiation_Functions
 		vector<double> DefineRadAbove(vector<double> *pEdges, double Rad);
 		vector<ZONES>  DefineRadLongZones(vector<double> *pEdges, double RadLongIn, double RadLongOut);
 		vector<double> DefineSortedHeight();
-		OUTDIST DistributeRad(vector<double> *pRadAboveZone, vector<double> *pHSort, vector<BORDERS> *pBorder, vector<double> *pEdges, vector <ZONES> *pRadLongZones=nullptr);
+		OUTDIST DistributeRad(vector<double> *pRadAboveZone, std::vector<double> *pHSort, std::vector<BORDERS> *pBorder, std::vector<double> *pEdges, std::vector <ZONES> *pRadLongZones=nullptr);
 		void Snow_On_RadImpact(double SnowHeight=0.);
-		SOILSURFACEZONE DistributeRad_At_Surface(vector<double> *pRadAboveZone, vector<BORDERS> *pBorder, vector<double> *pEdges, vector<double> *pFracCoverSoilZone, vector <ZONES> *pRadLongZones=nullptr);
+		SOILSURFACEZONE DistributeRad_At_Surface(vector<double> *pRadAboveZone, std::vector<BORDERS> *pBorder, std::vector<double> *pEdges, std::vector<double> *pFracCoverSoilZone, std::vector <ZONES> *pRadLongZones=nullptr);
 
 };

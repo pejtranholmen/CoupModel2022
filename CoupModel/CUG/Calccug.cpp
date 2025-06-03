@@ -25,8 +25,8 @@ BEGIN_MESSAGE_MAP(CalcCug,CUGCtrl)
 END_MESSAGE_MAP()
 IF_CONDITIONS CondTranslation(string str) {
 	IF_CONDITIONS cond;
-	cond.LeftVariable = string::npos;
-	cond.RightVariable = string::npos;
+	cond.LeftVariable = std::string::npos;
+	cond.RightVariable = std::string::npos;
 	size_t pos_less = str.find('<');
 	size_t pos_more = str.find('>');
 	size_t pos_equal = str.find('=');
@@ -39,33 +39,33 @@ IF_CONDITIONS CondTranslation(string str) {
 	if (str.size() == 0) return cond;
 	size_t pos_cond, pos_func;
 	cond.Function = NO_USE_FUNC;
-	pos_func = string::npos;
-	if (pos_min != string::npos) {
+	pos_func = std::string::npos;
+	if (pos_min != std::string::npos) {
 		cond.Function = MINUTENUMBERFUNC;
 		pos_func = pos_min;
 	}
-	else if (pos_day != string::npos) {
+	else if (pos_day != std::string::npos) {
 		cond.Function = DAYNUMBERFUNC;
 		pos_func = pos_day;
 	}
 
-	if (pos_less != string::npos&&pos_equal != string::npos) {
+	if (pos_less != std::string::npos&&pos_equal != std::string::npos) {
 		cond.comp_method = SMALLER_EQUAL;
 		pos_cond = pos_less;
 	}
-	else if (pos_less != string::npos&&pos_equal == string::npos) {
+	else if (pos_less != std::string::npos&&pos_equal == std::string::npos) {
 		cond.comp_method = SMALLER;
 		pos_cond = pos_less;
 	}
-	else if (pos_more != string::npos&&pos_equal != string::npos) {
+	else if (pos_more != std::string::npos&&pos_equal != std::string::npos) {
 		cond.comp_method = GREATER_EQUAL;
 		pos_cond = pos_equal;
 	}
-	else if (pos_more != string::npos&&pos_equal == string::npos) {
+	else if (pos_more != std::string::npos&&pos_equal == std::string::npos) {
 		cond.comp_method = GREATER;
 		pos_cond = pos_more;
 	}
-	else if (pos_equal != string::npos) {
+	else if (pos_equal != std::string::npos) {
 		cond.comp_method = EQUAL;
 		pos_cond = pos_equal;
 	}
@@ -73,18 +73,18 @@ IF_CONDITIONS CondTranslation(string str) {
 	if (pos_func < pos_cond) cond.LeftTimeFuncPos = true;
 
 
-	if (pos_left != string::npos&&pos_left < pos_cond) {
+	if (pos_left != std::string::npos&&pos_left < pos_cond) {
 		cond.LeftVariable = FUtil::AtoInt(str.substr(pos_left+1, pos_right - pos_left - 1));
 		cond.LeftValue = MISSING;
 	}
-	else if(pos_func==string::npos|| pos_func >pos_cond) {
+	else if(pos_func== std::string::npos|| pos_func >pos_cond) {
 		cond.LeftValue=FUtil::AtoFloat(str.substr(0, pos_cond));	
 	}
-	if (pos_left2 != string::npos&&pos_left2 > pos_cond) {
+	if (pos_left2 != std::string::npos&&pos_left2 > pos_cond) {
 		cond.RightVariable = FUtil::AtoInt(str.substr(pos_left2+1, pos_right2 - pos_left2 - 1));
 		cond.RightValue = MISSING;
 	}
-	else if(pos_func == string::npos || pos_func <pos_cond)
+	else if(pos_func == std::string::npos || pos_func <pos_cond)
 		cond.RightValue = FUtil::AtoFloat(str.substr(pos_cond+1));
 
 	return cond;
@@ -92,7 +92,7 @@ IF_CONDITIONS CondTranslation(string str) {
 
 string CondString(IF_CONDITIONS cond) {
 	string out;
-	if (cond.LeftVariable != string::npos) {
+	if (cond.LeftVariable != std::string::npos) {
 		out = "V(" + FUtil::STD_ItoAscii(cond.LeftVariable) + ")";
 	}
 	else if (cond.Function > NO_USE_FUNC&&cond.LeftTimeFuncPos) {
@@ -112,7 +112,7 @@ string CondString(IF_CONDITIONS cond) {
 		case GREATER_EQUAL:	out += ">=";break;
 		case GREATER:	out += ">";	break;
 	}
-	if (cond.RightVariable != string::npos) {
+	if (cond.RightVariable != std::string::npos) {
 		out += "V(" + FUtil::STD_ItoAscii(cond.RightVariable) + ")";
 	}
 	else if (cond.Function > NO_USE_FUNC&&!cond.LeftTimeFuncPos) {
@@ -1747,7 +1747,7 @@ int CalcCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR st,BOOL cancelFla
 				GetCell(-1, row, &cell);
 				size_t index = size_t(cell.GetNumber()+1.e-7);
 				bool Error = true;
-				if (index != string::npos&&index<m_pPG->GetNumOfIfConditions()) {
+				if (index != std::string::npos&&index<m_pPG->GetNumOfIfConditions()) {
 					Error = false;
 					string str1 = CT2A(str).m_psz;
 					auto cond = CondTranslation(str1);

@@ -29,8 +29,8 @@ public:
 	vector<size_t> m_ExtraMonitor;
 	vector<float> m_PBayesMean,m_PBayesCovar, m_PBayesCocor, m_PValues;
 	vector< DistStat> m_AcceptedParDist, m_AcceptedValDist;
-	DistStat GetPostDist(size_t index, size_t ensemble=string::npos) {
-		if (ensemble == string::npos) {
+	DistStat GetPostDist(size_t index, size_t ensemble= std::string::npos) {
+		if (ensemble == std::string::npos) {
 			return m_MStorage.GetParDist(index, m_MStorage.m_ActualEnsemble);
 			/*if (index < m_AcceptedParDist.size())
 				return m_AcceptedParDist[index];
@@ -94,7 +94,7 @@ public:
 	double	MR_GetMax(size_t);
 	bool	MR_GetLogDist(size_t);
 	string MR_GetParDependence(size_t, size_t);
-	void	MR_SetParDependence(size_t, size_t, string);	
+	void	MR_SetParDependence(size_t, size_t, std::string);	
 	void	MR_Background();
 	float   m_BayesianStepSize;
 	float MR_GetBayesianStepSize();
@@ -153,7 +153,7 @@ public:
 	void GetProfileFromPlotPF(bool Add=true);
 	void GetProfileFromPlotPF(bool Add, bool Message=true);
 	void GetProfileFromPlotPF(string);
-	void MR_ReCalculatePostDist(bool BayesMeanMethod=true, size_t ensemble=string::npos);
+	void MR_ReCalculatePostDist(bool BayesMeanMethod=true, size_t ensemble= std::string::npos);
 	void MR_INIT_Bayesian_Nelder_Mead();
 	void MR_CHECK_Bayesian(bool UpdateExt=false);
 	void MR_CheckCalibMethod();
@@ -173,7 +173,7 @@ public:
 		if (i_noTable < m_NoTableParIndex.size())
 			return m_NoTableParIndex[i_noTable];
 		else
-			return string::npos;
+			return std::string::npos;
 	}
 
 	float	MR_Get_BayesCoCor(size_t, size_t);
@@ -206,10 +206,10 @@ public:
 	bool LinkedChangeToSwitches(Sw *pSw, size_t option);
 	bool LinkedChangeToDB_Parameters(Par *pPar, size_t option);
 	bool PreDefined_Criteria_Process(bool OnlyNewConstrain=false);
-	bool EstimateNewTransformedPerformance(size_t cumulated, size_t dim1Index=string::npos, bool All_New=false);
+	bool EstimateNewTransformedPerformance(size_t cumulated, size_t dim1Index= std::string::npos, bool All_New=false);
 
 	pair<size_t,size_t> StartValueofMatchingEnsembleInDim1(size_t ensembleno, CPG* pPGMeas, size_t index_val);
-	vector<size_t> ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, size_t index_val, size_t RunNo=string::npos);
+	vector<size_t> ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, size_t index_val, size_t RunNo= std::string::npos);
 	bool ValidDim1VersusRunNo(size_t EnsembleNo, size_t RunNo);
 	vector<SIMB_VALUE> m_ParToUpdate;
 

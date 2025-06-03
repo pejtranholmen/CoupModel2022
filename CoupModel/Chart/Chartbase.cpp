@@ -23,7 +23,7 @@ void ChartBase::CheckIfRightAxis(enum class DATA_TYPES itype, int ivar, int curv
 		}
 		else if(m_pProp->GetAxisLayer(ivar)<0) {
 			FUtil::trim(m_Label.test);
-			if(m_Label.ytitle1.find(m_Label.test)!=string::npos||m_Label.ytitle1==""||m_pProp->m_ReShape.m_CommonScale||m_pProp->m_ReShape.m_Cumulated||m_pProp->m_ReShape.m_DerivateValues)
+			if(m_Label.ytitle1.find(m_Label.test)!= std::string::npos||m_Label.ytitle1==""||m_pProp->m_ReShape.m_CommonScale||m_pProp->m_ReShape.m_Cumulated||m_pProp->m_ReShape.m_DerivateValues)
 				m_pProp->m_rightaxis=false;
 
 			else if(m_Label.test==m_Label.ytitle2||(m_Label.ytitle2==""&&m_pProp->m_ChartType!= CHART_TYPES::TIME_SERIE&&curve_count>0)||(m_Label.ytitle2==""&&m_pProp->m_ChartType ==CHART_TYPES::SCATTER&&curve_count>1))
@@ -51,11 +51,11 @@ void ChartBase::CheckAndAddLabelInfo(size_t ich, int idoc) {
 
 
 				}
-				if(ipos==string::npos) {
+				if(ipos== std::string::npos) {
 						//Label.test not in Title
 					auto previous_id = m_Label.st;
 					m_Label.st=m_Label.test;
-					if (m_Label.st.find(previous_id) == string::npos) {
+					if (m_Label.st.find(previous_id) == std::string::npos) {
 						m_Label.st += "," + previous_id;
    					}
 

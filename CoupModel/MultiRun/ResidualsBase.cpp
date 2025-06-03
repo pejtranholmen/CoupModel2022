@@ -43,7 +43,7 @@ ResidualsBase::~ResidualsBase()
 
 }
 bool ResidualsBase::EnsembleReadWrite(bool reading, size_t ensembleno) {
-	 if(ensembleno==string::npos&&reading) {
+	 if(ensembleno== std::string::npos&&reading) {
 		 bool validfile = true;
 		for(size_t i=0; i<m_Ensembles.size(); i++) {
 			auto filename = GetXStatFileName(ensembleno);
@@ -57,7 +57,7 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, size_t ensembleno) {
 		else return false;
 	 }
 	 else if(ensembleno<m_Ensembles.size()) {
-		 string filename = GetXStatFileName(ensembleno);
+		 std::string filename = GetXStatFileName(ensembleno);
 		 return EnsembleReadWrite(reading, filename, "", ensembleno);
 	 }
 	 return false;
@@ -76,7 +76,7 @@ bool ResidualsBase::EnsembleReadWriteCheckFileOnly(size_t ensembleno)
 		return true;
 	}
 }
-bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string NewEnsembleName, size_t ensembleno) {
+bool ResidualsBase::EnsembleReadWrite(bool reading, std::string EnsembleName, std::string NewEnsembleName, size_t ensembleno) {
 	auto filename = GetXStatFileName(ensembleno);
 	auto wfile = m_EnsembleResFile.ToWString(filename);
 	bool good;
@@ -120,7 +120,7 @@ bool ResidualsBase::EnsembleReadWrite(bool reading, string EnsembleName, string 
 				m_EnsembleResFile.Close();
 				m_EnsembleResFile.Close();
 				remove(filename.c_str());
-				vector< vector<size_t>> koll;
+				vector< std::vector<size_t>> koll;
 				float value = m_MeanPost.mean[0][0];
 				//float value2 = m_MeanPost.mean[1][0];
 				for (size_t ivar = 0; ivar < m_NumVar;ivar++) {
@@ -311,7 +311,7 @@ string ResidualsBase::GetXStatFileName(size_t EnsembleNo) {
 	if (m_pNewMap != nullptr) {
 		string str;
 		auto ipos = m_pNewMap->m_DocFile2.m_Multi_MBin_File.find(".MBin");
-		if (ipos != string::npos) {
+		if (ipos != std::string::npos) {
 			str = m_pNewMap->m_DocFile2.m_Multi_MBin_File.substr(0, ipos);
 			str += "_V" + FUtil::STD_ItoAscii(m_ResidualFileNo)+"_Eno"+ FUtil::STD_ItoAscii(EnsembleNo+1);
 			str += ".SXBin";
@@ -322,7 +322,7 @@ string ResidualsBase::GetXStatFileName(size_t EnsembleNo) {
 }
 bool ResidualsBase::AlloResVector(size_t ActRecL) {
 	if (m_NumVar == 0) return false; 
-	if(ActRecL==string::npos) ActRecL = m_RecL;
+	if(ActRecL== std::string::npos) ActRecL = m_RecL;
 
 	m_Residuals.resize(ActRecL);
 	m_Mean.resize(m_NumVar*m_RecL);
@@ -392,7 +392,7 @@ bool ResidualsBase::OpenResidualFile(bool reading) {
 	if (reading) {
 		if (!m_ResidualFile.OpenDocFileIn(m_FileName)) return false;
 		m_FileSize = m_ResidualFile.GetStdInputFileSize();
-		if (m_FileSize == 0 || m_FileSize == string::npos) {
+		if (m_FileSize == 0 || m_FileSize == std::string::npos) {
 			return false;
 
 
@@ -475,7 +475,7 @@ bool ResidualsBase::SetNewEnsembleByNumber(size_t EnsembleNo) {
 	else
 		return false;
 }
-bool ResidualsBase::ShiftEnsembleName(string oldname, string newname) {
+bool ResidualsBase::ShiftEnsembleName(string oldname, std::string newname) {
 	bool out=false;
 
 

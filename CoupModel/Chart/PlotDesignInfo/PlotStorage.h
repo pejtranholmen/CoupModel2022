@@ -88,7 +88,7 @@ public:
 	bool Init(Doc *pDoc);
 	void Update(size_t SimmNo, size_t NumberRead);
 	size_t AddPlotInfo(PLOTv plotinfo,size_t chartnum);
-	bool Add(void *pXG, size_t type, size_t index, size_t chartnum, CHART_TYPES charttype, string DocName="", size_t ValFileNo=0, size_t vnum=0, size_t runno=0, size_t section=0, size_t subchart=0, size_t logli_ver=0, size_t repit_no=1);
+	bool Add(void *pXG, size_t type, size_t index, size_t chartnum, CHART_TYPES charttype, std::string DocName="", size_t ValFileNo=0, size_t vnum=0, size_t runno=0, size_t section=0, size_t subchart=0, size_t logli_ver=0, size_t repit_no=1);
 	bool Add(void *pXG, size_t type, size_t index, size_t chartnum, CHART_TYPES charttype, size_t iDoc, size_t ValFileNo=0, size_t vnum=0, size_t runno=0, size_t section=0, size_t subchart=0, size_t logli_ver=0, size_t repit_no=1);
 	bool AddCurve(size_t add_section=0, size_t backshift=0);
 
@@ -104,7 +104,7 @@ public:
     enum DATA_TYPES GetDataType(size_t index);
 	bool GetRepitType(size_t index);
 	bool RemoveAll();
-	bool SetConstrainBy(size_t index, vector<CONSTRAIN_BY> con);
+	bool SetConstrainBy(size_t index, std::vector<CONSTRAIN_BY> con);
 	size_t  NumSelected();
 	//SimB* GetPtr(size_t index);
 	void* GetPtr(size_t index);

@@ -185,11 +185,11 @@ function<double(double)> f_LitterTransSurf_L1, f_LitterTransSurf_L2, f_LitterTra
 
 
 // Functors as Templates for fast processing
-function <vector<double>(vector<double>&, vector<double>&, vector<double>)> f_ConcFromAmountandWater;
-function <vector<double>(vector<double>&, vector<double>&, double, vector<double>&)> f_VerticalSoluteFlowFromWaterFlowConcDeepPerc;
-function <pair<double,vector<double>>(vector<double>, vector<double>&, vector<double>&)> f_DrainageSoluteFlowWithMeanConcFromWaterFlowConc;
-function <vector<double>(size_t, vector<double>&, vector<double>&, vector<double>&, vector<double>&, vector<double> &)> f_DissolvedHumusTransformbyTempThetaState;
-function <vector<double>(size_t, vector<double>&, vector<double>&, vector<double>&, vector<double> &)> f_DissolvedTransformbyTempThetaState;
+function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>)> f_ConcFromAmountandWater;
+function <vector<double>(vector<double>&, std::vector<double>&, double, std::vector<double>&)> f_VerticalSoluteFlowFromWaterFlowConcDeepPerc;
+function <pair<double,vector<double>>(vector<double>, std::vector<double>&, std::vector<double>&)> f_DrainageSoluteFlowWithMeanConcFromWaterFlowConc;
+function <vector<double>(size_t, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double> &)> f_DissolvedHumusTransformbyTempThetaState;
+function <vector<double>(size_t, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double> &)> f_DissolvedTransformbyTempThetaState;
 	
 
 bool Do_Cultivating;

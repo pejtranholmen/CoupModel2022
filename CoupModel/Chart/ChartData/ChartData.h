@@ -103,10 +103,10 @@ class ChartData
 		CHART_INFO m_CurrentChartInfo;
 		vector<CHART_INFO> m_ChartOrigInfo;
 		vector<double> TT, TT2, ZZ;
-		vector< vector<double>>  TT_Indep;
+		vector< std::vector<double>>  TT_Indep;
 
-		vector< vector<double>>  AA, BB, BB_MIN, BB_MAX, BB_P10, BB_P50, BB_P90;
-		vector< vector<double>> BX, BY;
+		vector< std::vector<double>>  AA, BB, BB_MIN, BB_MAX, BB_P10, BB_P50, BB_P90;
+		vector< std::vector<double>> BX, BY;
 
 /*static double TT[NUM_TIME];
 static double TT2[NUM_TIME];

@@ -55,7 +55,7 @@ bool NC_Drivings::Ini()	{
    }
 
    if(DrivNPG1) {
-	   string filename;
+	   std::string filename;
 	   filename=m_PG_Abiotic.GetFileName();
 	   m_PG_Abiotic.Open(filename);
 		//Run_res_id=INECO(FileDriv9, NUnitDriv9, DAT2)
@@ -78,7 +78,7 @@ bool NC_Drivings::Ini()	{
 
 
    if (GreenIndexForcing == 1) {
-	   string filename;
+	   std::string filename;
 	   filename = m_PG_GreenIndex.GetFileName();
 	   if(!m_PG_GreenIndex.Open(filename)){
 		   Message("ERROR! - Abiotic Driving variable file not found");

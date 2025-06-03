@@ -249,7 +249,7 @@ void PEJUGCtrl::SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos,
 
 }
 
-void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, vector<pair<string, int>> &translate_code,vector<string> Parcell_stop, vector<size_t> Parcell_Add, map<int,size_t> hits_map, map<int, size_t> parc_hit_map)
+void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, std::vector<pair<string, int>> &translate_code,vector<string> Parcell_stop, std::vector<size_t> Parcell_Add, map<int,size_t> hits_map, map<int, size_t> parc_hit_map)
 {
 	CUGCell cell;
 	button.Row++;
@@ -435,10 +435,10 @@ size_t PEJUGCtrl::DefinedFixedHints()
 {
 	m_DoubleClickEdit.param = m_UniqueNumber;
 	m_DoubleClickEdit.HintText = "Double Click to Edit";
-	m_HintMap.insert(pair<int, string>(m_DoubleClickEdit.param, m_DoubleClickEdit.HintText));
+	m_HintMap.insert(pair<int, std::string>(m_DoubleClickEdit.param, m_DoubleClickEdit.HintText));
 	m_RightClickOption.param = m_UniqueNumber+1;
 	m_RightClickOption.HintText = "Right Click to Select options";
-	m_HintMap.insert(pair<int, string>(m_RightClickOption.param, m_RightClickOption.HintText));
+	m_HintMap.insert(pair<int, std::string>(m_RightClickOption.param, m_RightClickOption.HintText));
 
 	return 3;
 

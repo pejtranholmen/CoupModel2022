@@ -175,8 +175,8 @@ int CugChartData::SaveAs(LPCTSTR name,LPCTSTR option){
 					temp+=text;
 					text=temp;
 				}
-				// if one of the quoted chars is in the string 
-				//    quote the string
+				// if one of the quoted chars is in the std::string 
+				//    quote the std::string
 				if(text.FindOneOf(m_quoted)!=-1){
 					buff += m_quote;
 					buff +=text;

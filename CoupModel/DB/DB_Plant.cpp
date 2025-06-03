@@ -75,7 +75,7 @@ DB_Plant::DB_Plant(string pszCaption,bool readonly, void *pDoc)
 	
 
 }
-DB_Plant::DB_Plant(string pszCaption, void *pDoc,  string DB_key)
+DB_Plant::DB_Plant(string pszCaption, void *pDoc,  std::string DB_key)
 {
 		m_DuringRun=false;
 
@@ -196,7 +196,7 @@ void DB_Plant::Init(string pszCaption,bool readonly, void *pDoc)
 
 }
 
-void DB_Plant::Init(string pszCaption,  string DB_key)
+void DB_Plant::Init(string pszCaption,  std::string DB_key)
 {
 		m_DuringRun=false;
 		Sw *pSw;
@@ -324,7 +324,7 @@ void DB_Plant::DB_Actual()
 		for(size_t i=0;i<vptr.size();i++) {
 		  pBase=vptr[i];
 		  //((Tab*)pBase)->GetDBCell(0, 0,&fvalue);
-		  string Name=((Tab*)pBase)->GetName();
+		  std::string Name=((Tab*)pBase)->GetName();
 		  if(Name!="Root distribution with depth") {
 			size_t oldvalue=((Tab*)pBase)->GetNumOfRow();
 			size_t newvalue=((Tab*)pBase)->GetDB_Row();

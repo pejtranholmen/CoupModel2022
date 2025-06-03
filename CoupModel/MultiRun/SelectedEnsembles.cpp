@@ -210,17 +210,17 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		}
 	};
 
-	size_t index_trans = string::npos;
-	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed != string::npos) {
+	size_t index_trans = std::string::npos;
+	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed != std::string::npos) {
 
 		auto it = MapOfStoredTSV.find(m_Valid_TSV[m_ActualEnsemble].VarTranformed);
 		if (it != MapOfStoredTSV.end())
 			index_trans = (*it).second;
 
 		if (m_VarValidTransformed.size() == 0)
-			index_trans = string::npos;
+			index_trans = std::string::npos;
 		else if (m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
-			index_trans = string::npos;
+			index_trans = std::string::npos;
 
 
 	};
@@ -231,7 +231,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		float fval;
 		fval = MISSING;
 		if (ip < m_NumValid) {
-			if (index_trans != string::npos) {
+			if (index_trans != std::string::npos) {
 				size_t indextsv = ip + irun*m_NumValid;
 				fval = m_VarValidTransformed[index_trans].VarValidVector[indextsv];
 			}
@@ -240,7 +240,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		}
 		else if (rmse_o != 0) {
 			float vtest;
-			if (index_trans != string::npos) {
+			if (index_trans != std::string::npos) {
 				size_t indextsv = ind_rmse + irun*m_NumValid;
 				vtest = 1 - m_VarValidTransformed[index_trans].VarValidVector[indextsv];
 			}
@@ -261,7 +261,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 #ifndef COUPSTD
 		mfc_util.SetPaneMessage("Find Posterior ensemble of accepted runs using TSV Criteria " + FUtil::STD_ItoAscii(iv + 1) + " (" + FUtil::STD_ItoAscii(size_t(m_NumValid + m_NumExtraValid)) + ")");
 #endif
-		auto stat_all = GetValidStat(iv, false, string::npos, isplit);
+		auto stat_all = GetValidStat(iv, false, std::string::npos, isplit);
 		if (GetValidLow(iv, isplit) > stat_all.Min || GetValidHigh(iv, isplit) < stat_all.Max) {
 			if (isplit == 0) {
 
@@ -652,14 +652,14 @@ unsigned long SelectedEnsembles::GetNumAccepted()
 				icount++;
 		m_TotalNumAccepted = icount;
 	}
-	else if (m_TotalNumAccepted == string::npos)
+	else if (m_TotalNumAccepted == std::string::npos)
 		m_TotalNumAccepted = 0;
 
 	return m_TotalNumAccepted;
 }
 unsigned long SelectedEnsembles::GetNumBayesAccepted(unsigned long num_burn_in) 
 {
-	if ((m_TotalNumBayesAccepted == 0 || m_TotalNumBayesAccepted > m_TotalNumberRuns)&&m_TotalNumberRuns != string::npos) {
+	if ((m_TotalNumBayesAccepted == 0 || m_TotalNumBayesAccepted > m_TotalNumberRuns)&&m_TotalNumberRuns != std::string::npos) {
 		unsigned long icount = 0;
 
 		for (unsigned long i = num_burn_in; i < m_TotalNumberRuns; i++)
@@ -667,14 +667,14 @@ unsigned long SelectedEnsembles::GetNumBayesAccepted(unsigned long num_burn_in)
 				icount++;
 		m_TotalNumBayesAccepted = icount;
 	}
-	else if (m_TotalNumBayesAccepted == string::npos)
+	else if (m_TotalNumBayesAccepted == std::string::npos)
 		m_TotalNumBayesAccepted = 0;
 	return m_TotalNumBayesAccepted;
 }
 
 SimpleStatistics SelectedEnsembles::GetValidStat(unsigned long ip, bool post, size_t actualensemble, unsigned long split) const
 {
-	if (actualensemble == string::npos) actualensemble = m_ActualEnsemble;
+	if (actualensemble == std::string::npos) actualensemble = m_ActualEnsemble;
 	if(post) return { m_Valid_TSV[actualensemble].v[E_POST_MEAN][ip], m_Valid_TSV[actualensemble].v[E_POST_CV][ip], m_Valid_TSV[actualensemble].v[E_POST_MIN][ip], m_Valid_TSV[actualensemble].v[E_POST_MAX][ip] };
 	else return { m_Valid_TSV[actualensemble].v[E_PRIOR_MEAN][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_CV][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_MIN][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_MAX][ip] };
 
@@ -682,7 +682,7 @@ SimpleStatistics SelectedEnsembles::GetValidStat(unsigned long ip, bool post, si
 
 void SelectedEnsembles::SetValidStat(unsigned long ip, bool post, size_t actualensemble, unsigned long split)
 {
-	if(actualensemble==string::npos) actualensemble = m_ActualEnsemble;
+	if(actualensemble== std::string::npos) actualensemble = m_ActualEnsemble;
 		vector<float> values;
 		DistStat stat;
 		size_t ncheck;
@@ -1117,7 +1117,7 @@ unsigned long SelectedEnsembles::GetNumberOfAddedFiles(string str)
 }
 string SelectedEnsembles::GetNameAddedFiles(unsigned long index)
 {
-	if(index!=string::npos&&index<m_AddedFiles.size())
+	if(index!= std::string::npos&&index<m_AddedFiles.size())
 		return m_AddedFiles[index];
 	else
 		return "";
@@ -1145,7 +1145,7 @@ unsigned long SelectedEnsembles::GetMultiRunNo(unsigned long index)
 }
 unsigned long SelectedEnsembles::GetAdd_MultiPGFileIndex(unsigned long simRunNo)
 {
-	unsigned long index=string::npos;
+	unsigned long index= std::string::npos;
 	unsigned long count;
 	count=m_OrigFirstRunNo;
 	for(unsigned long i=0; i<m_AddedFiles.size();i++) {
@@ -1455,7 +1455,7 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 
 
 		}
-		size_t index_trans=string::npos;
+		size_t index_trans= std::string::npos;
 		if (m_Valid_TSV[m_ActualEnsemble].VarTranformed > 0) {
 			
 			auto it = MapOfStoredTSV.find(m_Valid_TSV[m_ActualEnsemble].VarTranformed);
@@ -1463,10 +1463,10 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 				index_trans = (*it).second;
 
 			if (m_VarValidTransformed.size() == 0)
-				index_trans = string::npos;
+				index_trans = std::string::npos;
 			else if (index_trans < m_VarValidTransformed.size()) {
 				if(m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
-				index_trans = string::npos;
+				index_trans = std::string::npos;
 			}
 
 			
@@ -1556,18 +1556,18 @@ vector<float> SelectedEnsembles::GetPost_SV_ValidPerformanceIndicatorVector(size
 vector<float> SelectedEnsembles::GetPost_TSV_ValidPerformanceIndicatorVector(unsigned long ip, unsigned long ind_split) {
 	float v = MISSING;
 	vector<float> out;
-	size_t index_trans = string::npos;
+	size_t index_trans = std::string::npos;
 	if (m_Valid_TSV[m_ActualEnsemble].VarTranformed >= 0) {
 
 		auto it = MapOfStoredTSV.find(m_Valid_TSV[m_ActualEnsemble].VarTranformed);
 		if (it != MapOfStoredTSV.end())
 			index_trans = (*it).second;
 
-		if (index_trans != string::npos && index_trans < m_VarValidTransformed.size()) {
+		if (index_trans != std::string::npos && index_trans < m_VarValidTransformed.size()) {
 			if (m_VarValidTransformed.size() == 0)
-				index_trans = string::npos;
+				index_trans = std::string::npos;
 			else if (m_VarValidTransformed[index_trans].Transformed_index != m_Valid_TSV[m_ActualEnsemble].VarTranformed)
-				index_trans = string::npos;
+				index_trans = std::string::npos;
 			else
 				m_VarValidTransformed[index_trans].Dim1_index = m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index;
 		}

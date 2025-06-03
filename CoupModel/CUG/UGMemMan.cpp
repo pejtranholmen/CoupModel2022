@@ -934,18 +934,18 @@ int CUGMem::SetCell(int col,long row,CUGCell *cell)
 /***************************************************
 FindFirst
 	Returns the column and row numbers of the first
-	cell that matches the given string. How the match
+	cell that matches the given std::string. How the match
 	is performed is dependant on the specified flags.
 
 Params
-	string	- string to find
+	string	- std::string to find
 	col		- [in] column to perform the search on
 			  [out] pointer to the column number of the cell that matches
 	row		- [out] pointer to the row number of the cell that matches
 	flags	- flags that modify how the find is performed
 			  UG_FIND_CASEINSENSITIVE - all matching is insensitive
 			  UG_FIND_PARTIAL - matches all cells that contains 
-				the search string as a substring, otherwise the
+				the search std::string as a substring, otherwise the
 				strings must match exactly
 			  UG_FIND_ALLCOLUMNS - searches all columns in the grid
 Return
@@ -970,11 +970,11 @@ int CUGMem::FindFirst(CString *string,int *col,long *row,long flags){
 /***************************************************
 FindNext
 	Returns the column and row numbers of the next
-	cell that matches the given string. How the match
+	cell that matches the given std::string. How the match
 	is performed is dependant on the specified flags.
 
 Params
-	string	- string to find
+	string	- std::string to find
 	col		- [in] column to start to perform the search on. If searching
 			  all columns, then this specifies the column to continue the
 			  search from.
@@ -984,7 +984,7 @@ Params
 	flags	- flags that modify how the find is performed
 			  UG_FIND_CASEINSENSITIVE - all matching is insensitive
 			  UG_FIND_PARTIAL - matches all cells that contains 
-				the search string as a substring, otherwise the
+				the search std::string as a substring, otherwise the
 				strings must match exactly
 			  UG_FIND_ALLCOLUMNS - searches all columns in the grid
 			  UG_FIND_UP - search upwards from the specified row, the
@@ -1111,7 +1111,7 @@ int CUGMem::FindNext(CString *string,int *col,long *row,int flags)
 							tempStr = m_colInfo->cell->GetText();
 							if( tempStr.IsEmpty() == 0 )
 							{
-								if( string->CompareNoCase( tempStr ) == 0 )
+								if( std::string->CompareNoCase( tempStr ) == 0 )
 									success = TRUE;
 							}
 						}
@@ -1129,7 +1129,7 @@ int CUGMem::FindNext(CString *string,int *col,long *row,int flags)
 							tempStr = m_colInfo->cell->GetText();
 							if( tempStr.IsEmpty() == 0 )
 							{
-								if( string->Compare( tempStr ) == 0 )
+								if( std::string->Compare( tempStr ) == 0 )
 									success = TRUE;
 							}
 						}

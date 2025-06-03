@@ -161,7 +161,7 @@ private:
 			pHyd->LayerOfDrain = pHyd->NL - 1;
 		}
 		else if (PhysicalDrainEq_Sw(pHyd->PhysicalDrainEq) == PhysicalDrainEq_Sw::Ernst_Model) {
-			for (size_t i = pHyd->NL - 1; i != string::npos; i--) {
+			for (size_t i = pHyd->NL - 1; i != std::string::npos; i--) {
 				CorrHH[i] = 0.;
 				SUMR[i] = 0.;
 				SUMV[i] = 0.;

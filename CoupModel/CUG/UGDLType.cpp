@@ -561,7 +561,7 @@ void CUGDropListType::OnDraw(CDC *dc,RECT *rect,int col,long row,CUGCell *cell,i
 /***************************************************
 StartDropList
 	This internal function is used to parse out 
-	the label string, which contains the items to 
+	the label std::string, which contains the items to 
 	show in the list.  Also this function will
 	show the list box in the proper location on the
 	screen.
@@ -581,7 +581,7 @@ int CUGDropListType::StartDropList()
 	LOGFONT		lf;
 	CFont *		cfont;
 	CStringList list;	  //lists of strings for the list are assembed here
-	CString *	items;	  //points to the string used to assemble the list
+	CString *	items;	  //points to the std::string used to assemble the list
 
 	//return false if it is already up
 	if(	m_listBox->m_HasFocus)
@@ -599,7 +599,7 @@ int CUGDropListType::StartDropList()
 	m_btnRow = m_ctrl->GetCurrentRow();
 
 	//add the strings to the CStringList
-	CString string;
+	CString std::string;
 	cell.GetLabelText(&string);
 	items = &string;
 	len = items->GetLength();

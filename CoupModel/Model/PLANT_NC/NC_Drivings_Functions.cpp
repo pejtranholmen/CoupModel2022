@@ -132,7 +132,7 @@ bool NC_Drivings_Functions::CheckEcoDriv3() {
       
    m_PG_Abiotic.SetEndPoints_ValidValue();
 	for(size_t i=0; i<m_PG_Abiotic.GetNumVariables(); i++) {
-		 string name=m_PG_Abiotic.GetVarName(i+1);
+		 std::string name=m_PG_Abiotic.GetVarName(i+1);
 		string Id=m_PG_Abiotic.GetVarId(i+1);
 
 		 for(size_t ii=0; ii<20;ii++) {

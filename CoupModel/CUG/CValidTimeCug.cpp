@@ -1289,7 +1289,7 @@ int CValidTimeCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR stringx,BOO
 			}
 
 
-			MFC_Util::WriteProfileString("Title_"+astr, string(CT2A(str)));
+			MFC_Util::WriteProfileString("Title_"+astr, std::string(CT2A(str)));
 			//((CRealtimedemoDlg*)m_pDlg)->SetChartTitle(ichart-1, str);
 	
 	}

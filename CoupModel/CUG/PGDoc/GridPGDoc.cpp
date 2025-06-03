@@ -198,7 +198,7 @@ bool GridPGDoc::Make_PGFileSheet()
 		int newpglines=0;
 		size_t i_doc=m_pPGArchive->GetIndex(m_pDoc);
 		CPG *pCPG=nullptr;
-		if(i_doc!=string::npos) {
+		if(i_doc!= std::string::npos) {
 			pCPG=(CPG*)m_pPGArchive->GetPGFile(i_doc);
 			if(pCPG!=nullptr) {
 				test=pCPG->GetFileName().c_str();
@@ -1621,7 +1621,7 @@ bool GridPGDoc::Make_ChangePeriodSheet()
 				QuickSetNumber(2,ind, nrec);
 				nrep=pCPG->GetNumRepititions();
 				QuickSetNumber(3,ind, nrep);
-				if(pgst!=string::npos) {
+				if(pgst!= std::string::npos) {
 				QuickSetText(5,ind,PGUtil::StringDatum(pgst),false);
 				QuickSetText(6,ind,PGUtil::StringDatum(pgend),false);
 				}
@@ -1637,7 +1637,7 @@ bool GridPGDoc::Make_ChangePeriodSheet()
 			if(!pCPG->IsGood()) pCPG->Open(pCPG->GetFileName());
 			auto pgst=pCPG->GetLongTimeStart();
 			auto pgend=pCPG->GetLongTimeEnd();
-			if(pgst!=string::npos) {
+			if(pgst!= std::string::npos) {
 				QuickSetText(5,ind, PGUtil::StringDatum(pgst),true);
 				QuickSetText(6,ind, PGUtil::StringDatum(pgend), true);
 			}
@@ -2136,10 +2136,10 @@ bool GridPGDoc::Make_NewDataResolution()
 			newfilename=pCPG->GetFileName();
 			string filebase;
 			auto ipos=newfilename.find(".bin");
-			if(ipos==string::npos) ipos=newfilename.find(".BIN");
-			if(ipos==string::npos) ipos=newfilename.find(".Bin");
+			if(ipos== std::string::npos) ipos=newfilename.find(".BIN");
+			if(ipos== std::string::npos) ipos=newfilename.find(".Bin");
 			auto isub=newfilename.find("Extended");
-			if(ipos!=string::npos) {
+			if(ipos!= std::string::npos) {
 				newfilename=newfilename.substr(0,ipos);
 				newfilename+="Extended";
 				newfilename+=".bin";
@@ -2720,38 +2720,38 @@ auto SetNumColandRows = [&]() {
 		SetCellClickButton(m_ClickBoxFormatButton);
 		if (m_PGFileImport.m_CurrentFileInfo.LinkedSites.size()>1) QuickSetNumber(7, 0, m_PGFileImport.m_CurrentFileInfo.LinkedSites.size());
 		size_t count_timeIds = 0;
-		if (m_PGFileImport.m_CurrentFileInfo.DateColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.DateColumn != std::string::npos) {
 			QuickSetText(0, 1, "DateColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.DateColumn),true,m_ScanTimeId_Date.param);
 			QuickSetBackColor(0, 1, m_ColorInfo);
 
 			count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.YearColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.YearColumn != std::string::npos) {
 			QuickSetText(count_timeIds, 1, "YearColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.YearColumn),true, m_ScanTimeId_Year.param);
 			QuickSetBackColor(count_timeIds, 1, m_ColorInfo);
 			count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.MonthColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.MonthColumn != std::string::npos) {
 			QuickSetText(count_timeIds, 1, "MonthColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.MonthColumn), true, m_ScanTimeId_Month.param);
 			QuickSetBackColor(count_timeIds, 1, m_ColorInfo); count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.DayNumberColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.DayNumberColumn != std::string::npos) {
 			QuickSetText(count_timeIds, 1, "DayNumberColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.DayNumberColumn), true, m_ScanTimeId_DayNo.param);
 			QuickSetBackColor(count_timeIds, 1, m_ColorInfo); count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.DayColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.DayColumn != std::string::npos) {
 			QuickSetText(count_timeIds, 1, "DayColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.DayColumn), true, m_ScanTimeId_Day.param);
 			QuickSetBackColor(count_timeIds, 1, m_ColorInfo); count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.TimeColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.TimeColumn != std::string::npos) {
 			QuickSetText(count_timeIds, 1, "TimeColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.TimeColumn), true, m_ScanTimeId_Time.param);
 			QuickSetBackColor(count_timeIds, 1, m_ColorInfo); count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.HourColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.HourColumn != std::string::npos) {
 			QuickSetText(count_timeIds, 1, "HourColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.HourColumn), true, m_ScanTimeId_Hour.param);
 			QuickSetBackColor(count_timeIds, 1, m_ColorInfo); count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.MinuteColumn != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.MinuteColumn != std::string::npos) {
 			QuickSetText(count_timeIds, 1, "MinuteColumn:" + FUtil::STD_ItoAscii(m_PGFileImport.m_CurrentFileInfo.MinuteColumn), true, m_ScanTimeId_Minute.param);
 			QuickSetBackColor(count_timeIds, 1, m_ColorInfo); count_timeIds++;
 		}
@@ -2763,7 +2763,7 @@ auto SetNumColandRows = [&]() {
 				SetCellClickButton(m_SiteInfoButton, count_timeIds-1);	
 				count_timeIds++;
 		}
-		if (m_PGFileImport.m_CurrentFileInfo.IdentifiedDelimiter == string::npos|| m_PGFileImport.m_CurrentFileInfo.IdentifiedDelimiter>3)
+		if (m_PGFileImport.m_CurrentFileInfo.IdentifiedDelimiter == std::string::npos|| m_PGFileImport.m_CurrentFileInfo.IdentifiedDelimiter>3)
 			m_VarSeparationButton.Text = "No Variable separator";
 		else
 			m_VarSeparationButton.Text= m_VarSeparationButton.VectorNames[m_PGFileImport.m_CurrentFileInfo.IdentifiedDelimiter];
@@ -2784,14 +2784,14 @@ auto SetNumColandRows = [&]() {
 
 		m_FilterVariableButton.VectorNames= m_PGFileImport.m_CurrentFileInfo.FirstValidHeads;
 		m_FilterVariableButton.VectorNames.insert(m_FilterVariableButton.VectorNames.begin(), "No Use of Filter");
-		if (m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse != string::npos)
+		if (m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse != std::string::npos)
 			m_FilterVariableButton.Text = m_FilterVariableButton.VectorNames[m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse];
 		else
 			m_FilterVariableButton.Text = "No Use of Filter";
 
 		SetCellClickButton(m_FilterVariableButton, count_timeIds);
 
-		if (m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse != string::npos) {
+		if (m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse != std::string::npos) {
 			m_FilterUseButton.Text = m_PGFileImport.m_CurrentFileInfo.FilterItemToUse;
 			m_FilterUseButton.VectorNames = m_PGFileImport.m_CurrentFileInfo.GlobalFilterItems;
 			SetCellClickButton(m_FilterUseButton, count_timeIds);
@@ -2992,7 +2992,7 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 		});
 	};
 	for_each (NewItems.begin(),NewItems.end(),[&]
-		(const string&str){		
+		(const std::string&str){		
 		QuickSetText(-1, startline + 4+count,str );	
 		SetLineofDescriptiontoSelectedOutputVariables(count);
 		count++;
@@ -3063,7 +3063,7 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 	
 				size_t count = 1;
 				for_each(m_PGFileImport.m_CurrentFileInfo.LinkedSites.begin(), m_PGFileImport.m_CurrentFileInfo.LinkedSites.end(), [&](LINKED_FILEINFO &link) {
-					if (link.Ids != string::npos)
+					if (link.Ids != std::string::npos)
 						QuickSetText(0, start + linecount, FUtil::STD_ItoAscii(link.Ids));
 					else
 						QuickSetText(0, start + linecount, m_PGFileImport.m_CurrentFileInfo.StatNo);
@@ -3085,7 +3085,7 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 					else QuickSetBackColor(4, start + linecount, m_NoColor);
 
 					QuickSetText(5, start + linecount, PGUtil::STD_StringDatum(link.TimeCheck.ValueStart));
-					if (m_PGFileImport.m_CurrentFileInfo.LinkedSites.front().TimeCheck.ValueStep != string::npos) {
+					if (m_PGFileImport.m_CurrentFileInfo.LinkedSites.front().TimeCheck.ValueStep != std::string::npos) {
 						if (TimeDay)
 							QuickSetNumber(6, start + linecount, size_t(m_PGFileImport.m_CurrentFileInfo.LinkedSites.front().TimeCheck.ValueStep / 1440));
 						else
@@ -4290,7 +4290,7 @@ bool GridPGDoc::OnWriteGridDataToFile(CPG *pCPG)
 
 				}
 				else {
-					if (pCPG->GetNumRepititions()!=string::npos)
+					if (pCPG->GetNumRepititions()!= std::string::npos)
 						status = pCPG->WriteNewBuffer(irep);
 
 					if (!status) return false;

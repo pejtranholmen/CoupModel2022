@@ -73,7 +73,7 @@ MultiStorageData::MultiStorageData()
 	//m_Valid_TSV.resize(1);
 	m_Valid_SV.resize(1);
 	m_Valid_SV_Mean.resize(1);
-	m_TotalNumberRuns = string::npos;
+	m_TotalNumberRuns = std::string::npos;
 }
 
 MultiStorageData::~MultiStorageData()
@@ -85,11 +85,11 @@ MultiStorageData::~MultiStorageData()
 }
 void MultiStorageData::UpdateCyclicNumbers(size_t ActualEnsemble, size_t Dim1_Value, size_t Transform_index)
 {
-		if(Dim1_Value!=string::npos)
+		if(Dim1_Value!= std::string::npos)
 			m_Valid_TSV[ActualEnsemble].Dim1_Par_Index = Dim1_Value;
 		else
 			Dim1_Value = m_Valid_TSV[ActualEnsemble].Dim1_Par_Index;
-		if (Transform_index != string::npos)
+		if (Transform_index != std::string::npos)
 			m_Valid_TSV[ActualEnsemble].VarTranformed = Transform_index;
 		else
 			Transform_index= m_Valid_TSV[ActualEnsemble].VarTranformed;
@@ -110,7 +110,7 @@ void MultiStorageData::UpdateCyclicNumbers(size_t ActualEnsemble, size_t Dim1_Va
 bool MultiStorageData::Reset()
 {
 
-	m_TotalNumberRuns=string::npos;
+	m_TotalNumberRuns= std::string::npos;
 	return true;
 }
 
@@ -133,7 +133,7 @@ string MultiStorageData::GetStatFileName(bool NewFile)
 {
 	string str;
 	size_t ipos = m_FileName.find(".MBin");
-	if (ipos!=string::npos) {
+	if (ipos!= std::string::npos) {
 /*		if (NewFile) {
 			MFC_Util m;
 			auto vec_names=m.GetSBInFileNames();
@@ -455,7 +455,7 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 bool MultiStorageData::ReWriteExistingFile(unsigned long NewRuns)
 {
 	if(NewRuns>0) m_TotalNumberRuns=NewRuns;
-	if (m_TotalNumberRuns == string::npos) return false;
+	if (m_TotalNumberRuns == std::string::npos) return false;
 	//if (m_pNewMap->m_ValidationData.GetNumSumVarVariables()*3 != m_NumSumValid) {
 
 		m_NumSumValid = m_pNewMap->m_ValidationData.GetNumSumVarVariables() * 7;
@@ -792,10 +792,10 @@ float MultiStorageData::GetSplitValid(unsigned long irun, unsigned long ip, unsi
 }
 float MultiStorageData::GetValid(unsigned long rec, unsigned long ip, size_t i_cycle_start, size_t i_cycle)
 {
-	if(i_cycle_start!=string::npos) {
+	if(i_cycle_start!= std::string::npos) {
 		m_CyclicStartPos = i_cycle_start;
 	}
-	if(i_cycle!=string::npos) {
+	if(i_cycle!= std::string::npos) {
 		m_CyclicNumber = i_cycle;
 	}
 	if (m_CyclicNumber > 0) {
@@ -924,14 +924,14 @@ unsigned long MultiStorageData::GetNumAccepted()
 				icount++;
 		m_TotalNumAccepted = icount;
 	}
-	else if (m_TotalNumAccepted == string::npos)
+	else if (m_TotalNumAccepted == std::string::npos)
 		m_TotalNumAccepted = 0;
 
 	return m_TotalNumAccepted;
 }
 unsigned long MultiStorageData::GetNumBayesAccepted(unsigned long num_burn_in) 
 {
-	if ((m_TotalNumBayesAccepted == 0 || m_TotalNumBayesAccepted > m_TotalNumberRuns)&&m_TotalNumberRuns != string::npos) {
+	if ((m_TotalNumBayesAccepted == 0 || m_TotalNumBayesAccepted > m_TotalNumberRuns)&&m_TotalNumberRuns != std::string::npos) {
 		unsigned long icount = 0;
 
 		for (unsigned long i = num_burn_in; i < m_TotalNumberRuns; i++)
@@ -939,7 +939,7 @@ unsigned long MultiStorageData::GetNumBayesAccepted(unsigned long num_burn_in)
 				icount++;
 		m_TotalNumBayesAccepted = icount;
 	}
-	else if (m_TotalNumBayesAccepted == string::npos)
+	else if (m_TotalNumBayesAccepted == std::string::npos)
 		m_TotalNumBayesAccepted = 0;
 	return m_TotalNumBayesAccepted;
 }
@@ -1021,7 +1021,7 @@ void MultiStorageData::SelSumV_Index_Reset()
 unsigned long MultiStorageData::SelSumV_Index_Get(unsigned long index) 
 {
 	if(index>=m_VarSumSel.size())
-		return string::npos;
+		return std::string::npos;
 	else
 		return m_VarSumSel[index];
 }
@@ -1035,7 +1035,7 @@ void MultiStorageData::SetCoCorValid_Init(unsigned long Nindex)
 	m_CoCorNumValid=Nindex;
 }
 void MultiStorageData::SetCoCorValid(unsigned long i1, unsigned long i2, float v, size_t act_ensemble){
-if (act_ensemble != string::npos) {
+if (act_ensemble != std::string::npos) {
 	if (i1*m_CoCorNumValid + i2 >= m_Valid_TSV[act_ensemble].copar.size())
 	m_Valid_TSV[act_ensemble].copar[i1*m_CoCorNumValid + i2] = v;
 
@@ -1047,7 +1047,7 @@ else {
 }
 float MultiStorageData::GetCoCorValid(unsigned long i1, unsigned long i2, size_t act_ensemble)
 {
-	if (act_ensemble != string::npos) {
+	if (act_ensemble != std::string::npos) {
 		if (i1*m_CoCorNumValid + i2 >= m_Valid_TSV[act_ensemble].copar.size())
 			return m_Valid_TSV[act_ensemble].copar[i1*m_CoCorNumValid + i2];
 		else
@@ -1079,7 +1079,7 @@ size_t MultiStorageData::Get_ActualFilterVarValue(size_t RunNo)
 		if (namep == "Filter Var Value")
 			return size_t(m_pNewMap->m_MStorage.GetMultiP(RunNo, ii+1)+0.0001);
 	}
-	return string::npos;
+	return std::string::npos;
 }
 unsigned long MultiStorageData::GetNumberOfAddedFiles(string str)
 {
@@ -1093,7 +1093,7 @@ unsigned long MultiStorageData::GetNumberOfAddedFiles(string str)
 }
 string MultiStorageData::GetNameAddedFiles(unsigned long index)
 {
-	if(index!=string::npos&&index<m_AddedFiles.size())
+	if(index!= std::string::npos&&index<m_AddedFiles.size())
 		return m_AddedFiles[index];
 	else
 		return "";
@@ -1130,7 +1130,7 @@ unsigned long MultiStorageData::GetFirstRunNoAddedRuns(unsigned long index)
 }
 unsigned long MultiStorageData::GetAdd_MultiPGFileIndex(unsigned long simRunNo)
 {
-	unsigned long index=string::npos;
+	unsigned long index= std::string::npos;
 	unsigned long count;
 	count=m_OrigFirstRunNo;
 	for(unsigned long i=0; i<m_AddedFiles.size();i++) {
@@ -1141,7 +1141,7 @@ unsigned long MultiStorageData::GetAdd_MultiPGFileIndex(unsigned long simRunNo)
 	return index;
 }
 void MultiStorageData::AllocateValid_TSV(size_t i) {
-	if (m_NumValidAdd != string::npos && m_MBinHeader.n_param != string::npos) {
+	if (m_NumValidAdd != std::string::npos && m_MBinHeader.n_param != std::string::npos) {
 		size_t num_indicators = 7;
 
 		m_Valid_TSV[i].v[E_PRIOR_MIN].resize(m_NumValidAll);
@@ -1807,7 +1807,7 @@ size_t MultiStorageData::Get_And_UpdateTotalNumberofRuns() {
 	return m_TotalNumberRuns;
 }
 bool MultiStorageData::UpdateParDist(vector<DistStat> ParDist, size_t ensemble_index) {
-	if (ensemble_index == string::npos) ensemble_index = m_ActualEnsemble;
+	if (ensemble_index == std::string::npos) ensemble_index = m_ActualEnsemble;
 	if (m_Valid_TSV.size() <= ensemble_index) return false;
 	if (ParDist.size() == m_Valid_TSV[ensemble_index].ParDist.size())
 		m_Valid_TSV[ensemble_index].ParDist = ParDist;
@@ -1826,7 +1826,7 @@ bool MultiStorageData::UpdateParDist(vector<DistStat> ParDist, size_t ensemble_i
 
 }
 DistStat MultiStorageData::GetParDist(size_t index, size_t ensemble) {
-	if (ensemble == string::npos)
+	if (ensemble == std::string::npos)
 		return m_Valid_TSV[m_ActualEnsemble].ParDist[index];
 	else
 		return m_Valid_TSV[ensemble].ParDist[index];
@@ -1851,7 +1851,7 @@ bool MultiStorageData::GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG)
 		size_t lp = filename.find("_Multi_");
 		size_t lext= filename.rfind(".MBin");
 		string numname;
-		if (lp != string::npos) {
+		if (lp != std::string::npos) {
 			numname = filename.substr(lp + 7, lext - lp - 7);		
 		}	
 		string dir=m_pNewMap->GetMultiSubDir();
@@ -1871,7 +1871,7 @@ bool MultiStorageData::GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG)
 size_t MultiStorageData::ChangeEnsembleNo(size_t change)
 {
 	if (m_AcceptedIdString.size() > 1) {
-		if(change==string::npos)
+		if(change== std::string::npos)
 			m_ActualEnsemble--;
 		else
 		    m_ActualEnsemble ++;
@@ -1900,7 +1900,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 		ip = VarIndex + Indicator*MaxNum ;
 
 	if (VarIndex == MaxNum) MeanOfMany = true;
-	if (ip == string::npos) return false;
+	if (ip == std::string::npos) return false;
 
 	vector<pair<float, size_t>> dist_pair;
 	if (MeanOfMany) {
@@ -2096,7 +2096,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 
 		}
 		else {
-			return string::npos;
+			return std::string::npos;
 		}
 	return dist_pair.size();
 

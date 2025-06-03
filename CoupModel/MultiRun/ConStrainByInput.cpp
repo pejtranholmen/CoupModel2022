@@ -15,7 +15,7 @@ static char THIS_FILE[] = __FILE__;
 // ConstrainByInput dialog
 
 
-ConstrainByInput::ConstrainByInput(float MinValue, float MaxValue, string parname, CWnd* pParent /*=nullptr*/)
+ConstrainByInput::ConstrainByInput(float MinValue, float MaxValue, std::string parname, CWnd* pParent /*=nullptr*/)
 	: CDialog(ConstrainByInput::IDD, pParent)
 {
 	m_NewMin=MinValue;

@@ -52,13 +52,13 @@ public:
 protected:
 	void SetNewCleanSheetWithNumber(int sheet);
 	//void SetCellButton(BUTTON_INFO button, size_t ShiftPos=0);
-	//void SetCellListButton(LIST_BUTTON_INFO button, size_t index = string::npos);
+	//void SetCellListButton(LIST_BUTTON_INFO button, size_t index = std::string::npos);
 
 	void SetCellClickButton(CLICK_BUTTON button,size_t ShiftPos = 0, size_t ListIndex=0);
 	void SetPGFileColumns(size_t NumCol, long Row=-1, bool OutPutName=false, int NumTopHeads=2);
 	void SetPGFileColumnsInfo(CPG *pPG, int col_start=0, int NumCol=5, long row=0, bool OnlyStruc = false, bool WithFileName=false, long Param=0);
 	void SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos=0 , int NumCol=4);
-	void SetCodeTranslateInfo(CLICK_BUTTON, vector<pair<string, int>>&, vector<string> unique_names, vector<size_t> num_of_names, map<int,size_t> hit_map, map<int,size_t> parc_hit_map);
+	void SetCodeTranslateInfo(CLICK_BUTTON, std::vector<pair<string, int>>&, std::vector<string> unique_names, std::vector<size_t> num_of_names, map<int,size_t> hit_map, map<int,size_t> parc_hit_map);
 
 
 	size_t GetUniqueMenuNumber();
@@ -78,7 +78,7 @@ protected:
 
 	CLICK_BUTTON GetClick_BUTTON(int ParV);
 	void SetClickButtonMap(CLICK_BUTTON);
-	void SetHintMap(HINTLIST h) { if(h.param==0) h.param = GetUniqueMenuNumber(); m_HintMap.insert(pair<int, string>(h.param, h.HintText)); };
+	void SetHintMap(HINTLIST h) { if(h.param==0) h.param = GetUniqueMenuNumber(); m_HintMap.insert(pair<int, std::string>(h.param, h.HintText)); };
 
 
 	HINTLIST m_DoubleClickEdit;
@@ -90,8 +90,8 @@ protected:
 	COLORREF m_COLHEAD, m_ColorHeading;
 
 	CWinApp *m_pApp;
-	map<int, string> m_HintMap;
-	map<int, string> m_ClickTextMap;
+	map<int, std::string> m_HintMap;
+	map<int, std::string> m_ClickTextMap;
 	map<int, CLICK_BUTTON> m_ClickButtonMap;
 	float m_ScaleColWidth;
 	float m_ScaleRowHeight;

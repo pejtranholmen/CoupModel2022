@@ -16,7 +16,7 @@ Sw::Sw(size_t *target,enum datatype data, enum elements elem, enum fysprocess fp
 	;
 }
 
-void Sw::Def(size_t ModuleNo,  string name, int def, string opt, string conditions, int recalc)
+void Sw::Def(size_t ModuleNo,  std::string name, int def, std::string opt, std::string conditions, int recalc)
 {
 	org_value=def;
 	_orgIntValue = def;
@@ -33,7 +33,7 @@ void Sw::Def(size_t ModuleNo,  string name, int def, string opt, string conditio
 	
 	while(opt.size()>0) {
 		auto npos=opt.find('|');
-		if(npos!=string::npos) {
+		if(npos!= std::string::npos) {
 			option=opt.substr(0,npos);
 			opt=opt.substr(npos+1);
 		}

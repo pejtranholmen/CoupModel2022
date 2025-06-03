@@ -97,15 +97,15 @@ public:
 	void ResetYLabel2(int index);
 	void ResetXLabel(int index);
 	void ResetZLabel(int index);
-	bool SetLegend1(int index, string text, bool changeset = false);
+	bool SetLegend1(int index, std::string text, bool changeset = false);
 
 	void SetYLabel1(int index,string);
 	void AddYUnit1(int index,string);
-	void SetYLabel2(int index, string);
+	void SetYLabel2(int index, std::string);
 	string GetYLabel1(int index);
 	string GetYLabel2(int index);
 	string GetLegend(int index);
-	void SetLengend1(size_t index, string str, bool changeset=false);
+	void SetLengend1(size_t index, std::string str, bool changeset=false);
 	void SetYLabel1Changed(int index) {m_YLabel1Change.at(index)=true;};
 	void SetYLabel2Changed(int index) {m_YLabel2Change.at(index)=true;};
 	void SetXLabelChanged(int index) {m_XLabelChange.at(index)=true;};
@@ -117,13 +117,13 @@ public:
 	bool AddLegend1(string, int layer=1);
 	bool AddLegend2(string);
 
-	bool SetLegend2(int index, string txt);
+	bool SetLegend2(int index, std::string txt);
 	bool Open();
 
 void SetVerticalLegends(bool value) ;
 	bool GetVerticalLegends() {return m_VerticalLegends;};
-	void SetXLabel(int index, string str);
-	void SetZLabel(int index, string str);
+	void SetXLabel(int index, std::string str);
+	void SetZLabel(int index, std::string str);
 	string GetZLabel(int index);
 	bool isZLabelChanged(int index);
 
@@ -140,7 +140,7 @@ void SetVerticalLegends(bool value) ;
 	bool isYLegendChanged(int index);
 	bool isYLegend2Changed(int index);
 
-	void ChangeYLabel1(size_t index, string str);
+	void ChangeYLabel1(size_t index, std::string str);
 	void ChangeYMin1(size_t index, float value);
 	void ChangeYMax1(size_t index, float value);
 	void ChangeYInterv1(size_t index, float value);

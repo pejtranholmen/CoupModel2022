@@ -114,9 +114,9 @@ function<double(double, double, double)> f_MethaneDynResBoundaryLayerFlux;
 function<double(double)> f_MethaneOxidationInPlant;
 function<double(double, double, double, double)> f_MethaneProduction_TwoLitter;
 
-function<vector<double>(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>)> f_MethaneProdVector_TwoLitter;
-function<vector<double>(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>)> f_MethaneProdVector_OneLitter;
-function<vector<double>(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, size_t OrgIndex)> f_MethaneProdVector_ByLitterIndex;
+function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>)> f_MethaneProdVector_TwoLitter;
+function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>)> f_MethaneProdVector_OneLitter;
+function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, size_t OrgIndex)> f_MethaneProdVector_ByLitterIndex;
 function<double(double, double, double, double, double)> f_MethaneResistanceSoilSurface;
 function<double(double, double, double, double, double,double,double,double,double,double)> f_PlantEmissionbyAerenchyma,f_OxygenDiffusionbyAerenchyma;
 function<double(double)> f_AnaerobicFraction;

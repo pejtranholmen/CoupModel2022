@@ -17,7 +17,7 @@ F::F(CPG *ptr, enum datatype data, enum elements elem, enum fysprocess fproc, en
 	m_NumVariables=0;
 
 }
-void F::Def(size_t ModuleNo, string name, string value, string conditions)
+void F::Def(size_t ModuleNo, std::string name, std::string value, std::string conditions)
 {
 	SetModuleNo(ModuleNo);
 	m_FileName=value;

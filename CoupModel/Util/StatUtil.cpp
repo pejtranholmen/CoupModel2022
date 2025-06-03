@@ -20,7 +20,7 @@ double StatUtil::BIC_Func(double SSE, double n_point, double p_point) {
 
 
 
-STAT_PERF StatUtil::Get_StatComp(vector<double> *psim, vector<double> *pobs) 
+STAT_PERF StatUtil::Get_StatComp(vector<double> *psim, std::vector<double> *pobs) 
 {
 	STAT_PERF out;
 
@@ -59,7 +59,7 @@ STAT_PERF StatUtil::Get_StatComp(vector<double> *psim, vector<double> *pobs)
 	}
 	return out;
 }
-STAT_PERF StatUtil::Get_StatComp_ObsIndep(vector<float> *psim, vector<float> *pobs)
+STAT_PERF StatUtil::Get_StatComp_ObsIndep(vector<float> *psim, std::vector<float> *pobs)
 {
 	STAT_PERF out;
 

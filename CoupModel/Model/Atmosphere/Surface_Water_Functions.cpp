@@ -46,7 +46,7 @@ bool Surface_Water_Functions::Def()
 	plotpar.Num_Of_Opt = 1;
 
 	functorprop.FuncName = MyFunc::SURFACE_RUNOFF; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Surface Pool Runoff Function";
 
 	pPs = new Ps(&SurfCoef, SURFACEPOOL, WATER, SURFACERUNOFF, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
@@ -64,7 +64,7 @@ bool Surface_Water_Functions::Def()
 	Define(pPs, "SurfPoolInit", 0.,"mm","WaterEq = 1",0., 100000.);
 
 	functorprop.FuncName = MyFunc::SURFACE_WATER_COVER; functorprop.Arg = MyArgType::D1;
-	functorprop.FunctorInitOption = string::npos;
+	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Surface Pool Cover Function";
 	plotpar.X_Label = "Surface Pool "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::WATERMASS_UNIT, true);
 	plotpar.Y_Label = "Degree of Soil Cover "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);

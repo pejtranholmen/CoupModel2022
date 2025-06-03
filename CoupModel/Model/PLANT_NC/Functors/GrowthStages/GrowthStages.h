@@ -40,12 +40,12 @@ private:
 };
 
 class PlantTempSum {
-public: PlantTempSum(vector<double> T_Thres, vector<double> T_Sum) :
+public: PlantTempSum(vector<double> T_Thres, std::vector<double> T_Sum) :
 	T_Thres(T_Thres), T_Sum(T_Sum) {
 	Sum.resize(T_Sum.size());
 	for (size_t i = 0; i < Sum.size(); i++) Sum[i] = 0.;
 }
-	PlantTempSum(vector<double> T_Thres, vector<double> T_Sum, double WiltingPoint, double ThetaRange) :
+	PlantTempSum(vector<double> T_Thres, std::vector<double> T_Sum, double WiltingPoint, double ThetaRange) :
 			T_Thres(T_Thres), T_Sum(T_Sum) {
 			Sum.resize(T_Sum.size());
 			for (size_t i = 0; i < Sum.size(); i++) Sum[i] = 0.;
@@ -101,7 +101,7 @@ private:
 
 class EmergenceStart {
 public:
-	EmergenceStart(vector<double> T_Thres, vector<double> T_Sum, double WiltingPoint, double ThetaRange)  { 
+	EmergenceStart(vector<double> T_Thres, std::vector<double> T_Sum, double WiltingPoint, double ThetaRange)  { 
 	
 		f_TempSum = PlantTempSum(T_Thres, T_Sum);
 	
@@ -125,7 +125,7 @@ private:
 
 
 class GrainStart {
-public: GrainStart(vector<double> GrainCommonStep,vector<double> GrainStepDay, vector<double> Grain_ThresDay, vector<double> GrainStepTemp, vector<double> GrainThresTemp ) :
+public: GrainStart(vector<double> GrainCommonStep,vector<double> GrainStepDay, std::vector<double> Grain_ThresDay, std::vector<double> GrainStepTemp, std::vector<double> GrainThresTemp ) :
 	GrainCommonStep(GrainCommonStep), GrainStepDay(GrainStepDay), Grain_ThresDay(Grain_ThresDay), GrainStepTemp(GrainStepTemp), GrainThresTemp(GrainThresTemp) {
 	Sum.resize(GrainStepDay.size());
 	for (size_t i = 0; i < Sum.size(); i++) Sum[i] = 0.;
@@ -168,7 +168,7 @@ class GrowingSumF {
 public: GrowingSumF(vector<double> ThresHold, double Latitude) : ThresHold(ThresHold), Latitude(Latitude) { Growing = false; 
 		ContinStopSum = 0; ContinStartSum = 0.;  GSum.resize(ThresHold.size()); 	for (size_t i = 0; i < GSum.size(); i++) GSum[i] = 0.;
 }
-public: GrowingSumF(vector<double> ThresHold, vector<double> ThresHold_Dorming, double Latitude, vector<double> tsumstart) : ThresHold(ThresHold), ThresHold_Dorming(ThresHold_Dorming), Latitude(Latitude) {
+public: GrowingSumF(vector<double> ThresHold, std::vector<double> ThresHold_Dorming, double Latitude, std::vector<double> tsumstart) : ThresHold(ThresHold), ThresHold_Dorming(ThresHold_Dorming), Latitude(Latitude) {
 	Growing = false;
 	ContinStopSum = 0; ContinStartSum = 0.;  GSum.resize(ThresHold.size()); 	for (size_t i = 0; i < GSum.size(); i++) GSum[i] = tsumstart[i];
 }

@@ -561,7 +561,7 @@ namespace netCDF
     void getVar(const std::vector<size_t>& start, const std::vector<size_t>& count, unsigned long long* dataValues) const;
     /*! 
       Reads an array of values from a netCDF variable of an open netCDF dataset. 
-      The array is specified by giving a corner and a vector of edge lengths. 
+      The array is specified by giving a corner and a std::vector of edge lengths. 
       The values are read into consecutive locations with the last dimension varying fastest.
 
       \param start
@@ -633,7 +633,7 @@ namespace netCDF
     void getVar(const std::vector<size_t>& start, const std::vector<size_t>& count,  const std::vector<ptrdiff_t>& stride, unsigned long long* dataValues) const;
     /*! 
       Reads a subsampled (strided) array section of values from a netCDF variable.
-      The subsampled array section is specified by giving a corner, a vector of edge lengths, and a stride vector. 
+      The subsampled array section is specified by giving a corner, a std::vector of edge lengths, and a stride std::vector. 
       The values are read with the last dimension of the netCDF variable varying fastest.
 
       \param start
@@ -651,7 +651,7 @@ namespace netCDF
       Note: setting any element of the count array to zero causes the function to exit without error, and without doing anything. 
 
       \param stride
-      Vector specifying the interval between selected indices. The elements of the stride vector correspond, in order, 
+      Vector specifying the interval between selected indices. The elements of the stride std::vector correspond, in order, 
       to the variable's dimensions. A value of 1 accesses adjacent values of the netCDF variable in the corresponding 
       dimension; a value of 2 accesses every other value of the netCDF variable in the corresponding dimension; and so 
       on. A nullptr stride argument is treated as (1, 1, ... , 1). 
@@ -712,8 +712,8 @@ namespace netCDF
     void getVar(const std::vector<size_t>& start, const std::vector<size_t>& count,  const std::vector<ptrdiff_t>& stride, const std::vector<ptrdiff_t>& imap, unsigned long long* dataValues) const;
     /*! 
       Reads a mapped array section of values from a netCDF variable.
-      The mapped array section is specified by giving a corner, a vector of edge lengths, a stride vector, and an 
-      index mapping vector. The index mapping vector is a vector of integers that specifies the mapping between the 
+      The mapped array section is specified by giving a corner, a std::vector of edge lengths, a stride std::vector, and an 
+      index mapping std::vector. The index mapping std::vector is a std::vector of integers that specifies the mapping between the 
       dimensions of a netCDF variable and the in-memory structure of the internal data array. No assumptions are 
       made about the ordering or length of the dimensions of the data array. 
 
@@ -732,7 +732,7 @@ namespace netCDF
       Note: setting any element of the count array to zero causes the function to exit without error, and without doing anything. 
 
       \param stride
-      Vector specifying the interval between selected indices. The elements of the stride vector correspond, in order, 
+      Vector specifying the interval between selected indices. The elements of the stride std::vector correspond, in order, 
       to the variable's dimensions. A value of 1 accesses adjacent values of the netCDF variable in the corresponding 
       dimension; a value of 2 accesses every other value of the netCDF variable in the corresponding dimension; and so 
       on. A nullptr stride argument is treated as (1, 1, ... , 1). 
@@ -943,7 +943,7 @@ namespace netCDF
     void putVar(const std::vector<size_t>& startp, const std::vector<size_t>& countp, const unsigned long long* dataValues) const;
     /*! 
       Writes an array of values into the netCDF variable.
-      The portion of the netCDF variable to write is specified by giving a corner and a vector of edge lengths 
+      The portion of the netCDF variable to write is specified by giving a corner and a std::vector of edge lengths 
       that refer to an array section of the netCDF variable. The values to be written are associated with 
       the netCDF variable by assuming that the last dimension of the netCDF variable varies fastest. 
 
@@ -1016,7 +1016,7 @@ namespace netCDF
     void putVar(const std::vector<size_t>& startp, const std::vector<size_t>& countp, const std::vector<ptrdiff_t>& stridep, const unsigned long long* dataValues) const;
     /*! 
       Writes an array of values into the netCDF variable.
-      The subsampled array section is specified by giving a corner, a vector of counts, and a stride vector. 
+      The subsampled array section is specified by giving a corner, a std::vector of counts, and a stride std::vector. 
 
       \param startp  Vector specifying the index where the first data values will be written.  The indices are relative to 0, so for 
       example, the first data value of a variable would have index (0, 0, ... , 0). The elements of start correspond, in order, to the 
@@ -1028,8 +1028,8 @@ namespace netCDF
       variable, the first element of count corresponds to a count of the number of records to write. Note: setting any element 
       of the count array to zero causes the function to exit without error, and without doing anything. 
 
-      \param stridep  A vector of ptrdiff_t integers that specifies the sampling interval along each dimension of the netCDF variable. 
-      The elements of the stride vector correspond, in order, to the netCDF variable's dimensions (stride[0] gives the sampling interval 
+      \param stridep  A std::vector of ptrdiff_t integers that specifies the sampling interval along each dimension of the netCDF variable. 
+      The elements of the stride std::vector correspond, in order, to the netCDF variable's dimensions (stride[0] gives the sampling interval 
       along the most slowly varying dimension of the netCDF variable). Sampling intervals are specified in type-independent units of 
       elements (a value of 1 selects consecutive elements of the netCDF variable along the corresponding dimension, a value of 2 selects 
       every other element, etc.). A nullptr stride argument is treated as (1, 1, ... , 1).
@@ -1088,8 +1088,8 @@ namespace netCDF
     void putVar(const std::vector<size_t>& startp, const std::vector<size_t>& countp, const std::vector<ptrdiff_t>& stridep, const std::vector<ptrdiff_t>& imapp, const unsigned long long* dataValues) const;
     /*! 
       Writes a mapped array section of values into the netCDF variable.
-      The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector. 
-      The index mapping vector is a vector of integers that specifies the mapping between the dimensions of a netCDF variable and the in-memory structure of the internal data array. 
+      The mapped array section is specified by giving a corner, a std::vector of counts, a stride std::vector, and an index mapping std::vector. 
+      The index mapping std::vector is a std::vector of integers that specifies the mapping between the dimensions of a netCDF variable and the in-memory structure of the internal data array. 
       No assumptions are made about the ordering or length of the dimensions of the data array. 
 
       \param countp  Vector specifying the number of indices selected along each dimension. 
@@ -1098,14 +1098,14 @@ namespace netCDF
       variable, the first element of count corresponds to a count of the number of records to write. Note: setting any element 
       of the count array to zero causes the function to exit without error, and without doing anything. 
 
-      \param stridep  A vector of ptrdiff_t integers that specifies the sampling interval along each dimension of the netCDF variable. 
-      The elements of the stride vector correspond, in order, to the netCDF variable's dimensions (stride[0] gives the sampling interval 
+      \param stridep  A std::vector of ptrdiff_t integers that specifies the sampling interval along each dimension of the netCDF variable. 
+      The elements of the stride std::vector correspond, in order, to the netCDF variable's dimensions (stride[0] gives the sampling interval 
       along the most slowly varying dimension of the netCDF variable). Sampling intervals are specified in type-independent units of 
       elements (a value of 1 selects consecutive elements of the netCDF variable along the corresponding dimension, a value of 2 selects 
       every other element, etc.). A nullptr stride argument is treated as (1, 1, ... , 1).
 
       \param imap Vector  specifies the mapping between the dimensions of a netCDF variable and the in-memory structure of the internal data array. 
-      The elements of the index mapping vector correspond, in order, to the netCDF variable's dimensions (imap[0] gives the distance between elements 
+      The elements of the index mapping std::vector correspond, in order, to the netCDF variable's dimensions (imap[0] gives the distance between elements 
       of the internal array corresponding to the most slowly varying dimension of the netCDF variable). Distances between elements are 
       specified in type-independent units of elements (the distance between internal elements that occupy adjacent memory locations is 
       1 and not the element's byte-length as in netCDF 2). A nullptr argument means the memory-resident values have the same structure as 

@@ -47,7 +47,7 @@ size_t ChartProp_AxisRepresentation::GetFirstIndepIndex(size_t index) {
 
 	}
 
-	return string::npos;
+	return std::string::npos;
 }
 size_t ChartProp_AxisRepresentation::GetSecondIndepIndex() {
 	switch(m_Indep.Second) {
@@ -65,7 +65,7 @@ size_t ChartProp_AxisRepresentation::GetSecondIndepIndex() {
 	case PARVAR:
 		return m_MultiPar_dep.Second_Index;
 	}
-	return string::npos;
+	return std::string::npos;
 }
 bool ChartProp_AxisRepresentation::IsFirstIndepSet(size_t index) {
 	switch(m_Indep.First) {
@@ -229,7 +229,7 @@ void ChartProp_AxisRepresentation::SetFirstIndepIndex(enum vartype var, size_t i
 		m_MultiPar_dep.FirstIndepSet=true;
 		break;
 	case NO_USE:
-		m_MultiSum_dep.First_Index=string::npos;
+		m_MultiSum_dep.First_Index= std::string::npos;
 		m_MultiSum_dep.FirstIndepSet=false;
 		m_MultiPG_dep.FirstIndepSet=false;
 		m_MultiVal_dep.FirstIndepSet=false;
@@ -266,7 +266,7 @@ void ChartProp_AxisRepresentation::SetFirstIndepSet(enum vartype var, bool value
 		else {
 			m_ValidationPG_dep[index].FirstIndepSet=false;
 			m_Indep.First=NO_USE;
-			m_ValidationPG_dep[index].First_Index=string::npos;
+			m_ValidationPG_dep[index].First_Index= std::string::npos;
 		}
 		break;
 	case PGVAR:
@@ -275,7 +275,7 @@ void ChartProp_AxisRepresentation::SetFirstIndepSet(enum vartype var, bool value
 		else {
 			m_MultiPG_dep.FirstIndepSet=false;
 			m_Indep.First=NO_USE;
-			m_MultiPG_dep.First_Index=string::npos;
+			m_MultiPG_dep.First_Index= std::string::npos;
 		}
 		break;
 	case SUMVAR:
@@ -318,7 +318,7 @@ void ChartProp_AxisRepresentation::SetFirstIndepSet(enum vartype var, bool value
 		}
 		break;
 	case NO_USE:
-		m_MultiSum_dep.First_Index=string::npos;
+		m_MultiSum_dep.First_Index= std::string::npos;
 		m_MultiSum_dep.FirstIndepSet=false;
 	}
 }
@@ -353,7 +353,7 @@ void ChartProp_AxisRepresentation::SetSecondIndepSet(enum vartype var, bool valu
 		else {
 			m_MultiPG_dep.SecondIndepSet=false;
 			m_Indep.Second=NO_USE;
-			m_MultiPG_dep.Second_Index=string::npos;
+			m_MultiPG_dep.Second_Index= std::string::npos;
 		}
 		break;
 	case SUMVAR:
@@ -394,7 +394,7 @@ void ChartProp_AxisRepresentation::SetSecondIndepSet(enum vartype var, bool valu
 		}
 
 	case NO_USE:
-		m_MultiSum_dep.Second_Index=string::npos;
+		m_MultiSum_dep.Second_Index= std::string::npos;
 		m_MultiSum_dep.SecondIndepSet=false;
 	}
 }
@@ -435,7 +435,7 @@ void ChartProp_AxisRepresentation::SetSecondIndepIndex(enum vartype var, size_t 
 		break;
 	case NO_USE:
 
-		m_MultiSum_dep.Second_Index=string::npos;
+		m_MultiSum_dep.Second_Index= std::string::npos;
 		m_MultiSum_dep.SecondIndepSet=false;
 		m_MultiVal_dep.SecondIndepSet=false;
 		m_MultiPar_dep.SecondIndepSet=false;
@@ -444,7 +444,7 @@ void ChartProp_AxisRepresentation::SetSecondIndepIndex(enum vartype var, size_t 
 
 	}
 }
-void ChartProp_AxisRepresentation::SetFirstIndepString(enum vartype var, string str, size_t index) {
+void ChartProp_AxisRepresentation::SetFirstIndepString(enum vartype var, std::string str, size_t index) {
 	switch(var) {
 	case PGVARVALID:
 		m_ValidationPG_dep[index].FirstStr=str;
@@ -471,7 +471,7 @@ void ChartProp_AxisRepresentation::SetFirstIndepString(enum vartype var, string 
 		break;
 	}
 }
-void ChartProp_AxisRepresentation::SetSecondIndepString(enum vartype var, string str) {
+void ChartProp_AxisRepresentation::SetSecondIndepString(enum vartype var, std::string str) {
 	switch(var) {
 	case PGVARVALID:
 		m_ValidationPG_dep[0].SecondStr=str;

@@ -13,7 +13,7 @@ public:
 		GrowthResponseVar(GrowthResponseVar), m_pModelInfo(pModelinfo) {
 		GPP_Driver=GPP_Deficit = GPP_Potential = Actual; ICountDay = 0;
 	};
-	DRIVERSOnGPP operator() (DRIVERSOnGPP &GPP_Current, vector<double> &AtmNewMobile) {
+	DRIVERSOnGPP operator() (DRIVERSOnGPP &GPP_Current, std::vector<double> &AtmNewMobile) {
 		if (Growth_Sw(Growth) >= Growth_Sw::Radiation_use_efficiency&&
 			GrowthResponseVar_Sw(GrowthResponseVar) >= GrowthResponseVar_Sw::Mean_and_Delayed) {
 			bool DayShift;

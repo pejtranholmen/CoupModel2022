@@ -27,7 +27,7 @@ struct HYDRAULIC_COEF {
 	vector<CONDUCTIVITY_COEF> cond;
 };
 struct bc {
-	bc (vector<double>& sat, vector<double>& macro, vector<double>& lambda, vector<double>& air, vector<double>& residual) : sat(sat), macro(macro), lambda(lambda), air(air), residual(residual) {
+	bc (vector<double>& sat, std::vector<double>& macro, std::vector<double>& lambda, std::vector<double>& air, std::vector<double>& residual) : sat(sat), macro(macro), lambda(lambda), air(air), residual(residual) {
 		for (size_t i = 0; i < sat.size(); i++) {
 			psix.push_back(pow(1 - macro[i] / (sat[i] - residual[i]), -1. / lambda[i]) * air[i]);
 			range.push_back(sat[i] - residual[i]);
@@ -57,7 +57,7 @@ struct bc {
 
 
 struct genuchten {
-	genuchten(vector<double>&sat, vector<double>& alfa, vector<double>& n, vector<double>& m, vector<double>&residual): sat(sat), alfa(alfa), n(n), m(m), residual(residual)  {}
+	genuchten(vector<double>&sat, std::vector<double>& alfa, std::vector<double>& n, std::vector<double>& m, std::vector<double>&residual): sat(sat), alfa(alfa), n(n), m(m), residual(residual)  {}
 	double operator() (size_t i, double theta) {
 		double se = max( min(0.99999, (theta - residual[i]) / (sat[i] - residual[i])), 0.0001);
 		return  1./ alfa[i] * pow(pow(se, -1./m[i]) - 1., 1./n[i]);
@@ -175,7 +175,7 @@ struct power_coef {
 	vector<double> b;
 };
 struct powergm {
-	powergm(vector<double>& n, vector<double>& gm) : n(n), gm(gm) {}
+	powergm(vector<double>& n, std::vector<double>& gm) : n(n), gm(gm) {}
 	double operator() (size_t index, double se) {
 		return pow(se, n[index]) * pow((1 - pow(1 - pow(se, 1 / gm[index]), gm[index])), 2.);
 	}
@@ -183,7 +183,7 @@ struct powergm {
 };
 class se_eff {
 public:
-	se_eff(vector<double>& Sat, vector<double>& res) : res(res) {
+	se_eff(vector<double>& Sat, std::vector<double>& res) : res(res) {
 		for (size_t i = 0; i < Sat.size(); i++) range.push_back(Sat[i] - res[i]); }
 	double operator() (size_t index,double Theta) { return min(1., max(0.001, (Theta - res[index]) / range[index])); }
 private:
@@ -463,7 +463,7 @@ private:
 
 class PedoFunc_fromIndex {
 public:
-	PedoFunc_fromIndex(enum  PedoType Opt, vector<double> Sand, vector<double> Clay, vector<double> Sat) :
+	PedoFunc_fromIndex(enum  PedoType Opt, std::vector<double> Sand, std::vector<double> Clay, std::vector<double> Sat) :
 		Option(Opt), SandContent(Sand), ClayContent(Clay), Saturation(Sat) {
 		switch (Opt) {
 		case PedoType::AIRENTRY:

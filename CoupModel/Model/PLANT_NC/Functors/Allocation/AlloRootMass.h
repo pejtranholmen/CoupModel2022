@@ -20,7 +20,7 @@ private:
 };
 class CAlloRootMass_Linear {
 public:
-	CAlloRootMass_Linear(vector<double> AlloRootTotMass1, vector<double> AlloRootTotMass2, double minimum) :a(AlloRootTotMass1), b(AlloRootTotMass2), minimum(minimum) {}
+	CAlloRootMass_Linear(vector<double> AlloRootTotMass1, std::vector<double> AlloRootTotMass2, double minimum) :a(AlloRootTotMass1), b(AlloRootTotMass2), minimum(minimum) {}
 	double operator() (size_t index, double Mass) {
 		return min(0.99, max(minimum, a[index]+b[index]*Mass));
 	}
@@ -30,7 +30,7 @@ private:
 };
 class CAlloRootMass_Exp {
 public:
-	CAlloRootMass_Exp(vector<double> AlloRootTotMass1, vector<double> AlloRootTotMass2, vector<double> AlloRootTotMass3) :a(AlloRootTotMass1), b(AlloRootTotMass2), c(AlloRootTotMass3) {}
+	CAlloRootMass_Exp(vector<double> AlloRootTotMass1, std::vector<double> AlloRootTotMass2, std::vector<double> AlloRootTotMass3) :a(AlloRootTotMass1), b(AlloRootTotMass2), c(AlloRootTotMass3) {}
 	double operator() (size_t index, double Mass) {
 		return a[index]+b[index]*exp(c[index]*Mass);
 	}
@@ -48,7 +48,7 @@ private:
 };
 class CAlloRootWater_Linear {
 public:
-	CAlloRootWater_Linear(vector<double> AlloRootWater1, vector<double> AlloRootWater2) :a(AlloRootWater1), b(AlloRootWater2) {}
+	CAlloRootWater_Linear(vector<double> AlloRootWater1, std::vector<double> AlloRootWater2) :a(AlloRootWater1), b(AlloRootWater2) {}
 	double operator() (size_t index, double EtRatio) {
 		return a[index] + b[index] * EtRatio;
 	}
@@ -57,7 +57,7 @@ private:
 };
 class CAlloRootWater_Exp {
 public:
-	CAlloRootWater_Exp(vector<double> AlloRootWater1, vector<double> AlloRootWater2, vector<double> AlloRootWater3) :a(AlloRootWater1), b(AlloRootWater2), c(AlloRootWater3) {}
+	CAlloRootWater_Exp(vector<double> AlloRootWater1, std::vector<double> AlloRootWater2, std::vector<double> AlloRootWater3) :a(AlloRootWater1), b(AlloRootWater2), c(AlloRootWater3) {}
 	double operator() (size_t index, double EtRatio) {
 		return a[index] + b[index] * (1-exp(c[index] * EtRatio));
 	}
@@ -75,7 +75,7 @@ private:
 };
 class CAlloRootNitrogen_Linear {
 public:
-	CAlloRootNitrogen_Linear(vector<double> AlloRoot_CN1, vector<double> AlloRoot_CN2) :a(AlloRoot_CN1), b(AlloRoot_CN2) {}
+	CAlloRootNitrogen_Linear(vector<double> AlloRoot_CN1, std::vector<double> AlloRoot_CN2) :a(AlloRoot_CN1), b(AlloRoot_CN2) {}
 	double operator() (size_t index, double N_Response) {
 		return a[index] + b[index] * N_Response;
 	}
@@ -84,7 +84,7 @@ private:
 };
 class CAlloRootNitrogen_Exp {
 public:
-	CAlloRootNitrogen_Exp(vector<double> AlloRoot_CN1, vector<double> AlloRoot_CN2, vector<double> AlloRoot_CN3) :a(AlloRoot_CN1), b(AlloRoot_CN2), c(AlloRoot_CN3) {}
+	CAlloRootNitrogen_Exp(vector<double> AlloRoot_CN1, std::vector<double> AlloRoot_CN2, std::vector<double> AlloRoot_CN3) :a(AlloRoot_CN1), b(AlloRoot_CN2), c(AlloRoot_CN3) {}
 	double operator() (size_t index, double N_Response) {
 		return a[index] + b[index] * (1.-exp(c[index] * N_Response));
 	}
@@ -102,7 +102,7 @@ private:
 };
 class CAlloRootPhosphorus_Linear {
 public:
-	CAlloRootPhosphorus_Linear(vector<double> AlloRoot_CP1, vector<double> AlloRoot_CP2) :a(AlloRoot_CP1), b(AlloRoot_CP2) {}
+	CAlloRootPhosphorus_Linear(vector<double> AlloRoot_CP1, std::vector<double> AlloRoot_CP2) :a(AlloRoot_CP1), b(AlloRoot_CP2) {}
 	double operator() (size_t index, double P_Response) {
 		return a[index] + b[index] * P_Response;
 	}
@@ -111,7 +111,7 @@ private:
 };
 class CAlloRootPhosphorus_Exp {
 public:
-	CAlloRootPhosphorus_Exp(vector<double> AlloRoot_CP1, vector<double> AlloRoot_CP2, vector<double> AlloRoot_CP3) :a(AlloRoot_CP1), b(AlloRoot_CP2), c(AlloRoot_CP3) {}
+	CAlloRootPhosphorus_Exp(vector<double> AlloRoot_CP1, std::vector<double> AlloRoot_CP2, std::vector<double> AlloRoot_CP3) :a(AlloRoot_CP1), b(AlloRoot_CP2), c(AlloRoot_CP3) {}
 	double operator() (size_t index, double P_Response) {
 		return a[index] + b[index] * exp(c[index] * P_Response);
 	}
@@ -126,7 +126,7 @@ public:AllocationToRoots(function<double(size_t, double)> f_Mass, function<doubl
 	   double operator() (size_t index) {
 		   return f_Mass(index, 0.);
 	   };
-	   vector<double> operator() (vector<double> &Leaf, vector<double>&Stem, vector<double> &Response_N, vector<double> &Response_P, vector<double> &Response_W, vector<double> &NewMobile, vector<double> &AlloToRoots) {
+	   std::vector<double> operator() (vector<double> &Leaf, std::vector<double>&Stem, std::vector<double> &Response_N, std::vector<double> &Response_P, std::vector<double> &Response_W, std::vector<double> &NewMobile, std::vector<double> &AlloToRoots) {
 		   double MassResponse, NResponse, PResponse, WaterResponse, combined_response;
 		   for (size_t index = 0; index < Leaf.size(); index++) {
 			   MassResponse = max(0.001, f_Mass(index, Leaf[index] + Stem[index]));
@@ -155,11 +155,11 @@ public: LeafResponseToMass(vector<double> AlloLeaf1)
 		: C1(AlloLeaf1) {
 		option = 0;
 	};
-LeafResponseToMass(vector<double> AlloLeaf1, vector<double> AlloLeaf2)
+LeafResponseToMass(vector<double> AlloLeaf1, std::vector<double> AlloLeaf2)
 		: C1(AlloLeaf1), C2(AlloLeaf2) {
 		option = 1;
 	};
- LeafResponseToMass(vector<double> AlloLeaf1, vector<double> AlloLeaf2, vector<double> AlloLeaf3)
+ LeafResponseToMass(vector<double> AlloLeaf1, std::vector<double> AlloLeaf2, std::vector<double> AlloLeaf3)
 		: C1(AlloLeaf1), C2(AlloLeaf2), C3(AlloLeaf3) {
 		option = 2;
 	};
@@ -179,7 +179,7 @@ size_t option;
 
 };
 class AllocationToLeaf {
-public:AllocationToLeaf(vector<double> AlloLeaf1, vector<double> AlloLeaf2, vector<double> AlloLeaf3,
+public:AllocationToLeaf(vector<double> AlloLeaf1, std::vector<double> AlloLeaf2, std::vector<double> AlloLeaf3,
 	vector<double> RateCoef, size_t option) :	RateCoef(RateCoef), option(option) {
 	if (option == 0) f_mass = LeafResponseToMass(AlloLeaf1);
 	else if (option == 1) f_mass = LeafResponseToMass(AlloLeaf1, AlloLeaf2);
@@ -188,7 +188,7 @@ public:AllocationToLeaf(vector<double> AlloLeaf1, vector<double> AlloLeaf2, vect
 	   double operator() (size_t index) {
 		   return f_mass(index, 0.);
 	   };
-   vector<double> operator() (vector<double> &Leaf, vector<double>&Stem, vector<double> &AlloToRoots, vector<double> &NewMobile, vector<double> &AlloToLeaf) {
+   std::vector<double> operator() (vector<double> &Leaf, std::vector<double>&Stem, std::vector<double> &AlloToRoots, std::vector<double> &NewMobile, std::vector<double> &AlloToLeaf) {
 		   double  combined_response;
 		   for (size_t index = 0; index < Leaf.size(); index++) {
 			   if (option == 0)
@@ -214,12 +214,12 @@ private:
 
 class AllocationToStemCoarseRoot {
 public:
-	AllocationToStemCoarseRoot(bool CoarseRoot, vector<double> RateCoef, vector<double> FractionCoarseRoot) :
+	AllocationToStemCoarseRoot(bool CoarseRoot, std::vector<double> RateCoef, std::vector<double> FractionCoarseRoot) :
 		RateCoef(RateCoef), Fraction(FractionCoarseRoot) {
 		if (CoarseRoot != true)
 			for (size_t i = 0; i < Fraction.size(); i++) Fraction[i] = 1. - Fraction[i];
 	};
-	vector<double> operator() (vector<double> &AlloRoot, vector<double>&AlloLeaf, vector<double> &NewMobile, vector<double> &AlloToTarget) {
+	vector<double> operator() (vector<double> &AlloRoot, std::vector<double>&AlloLeaf, std::vector<double> &NewMobile, std::vector<double> &AlloToTarget) {
 		for (size_t i = 0; i < AlloToTarget.size(); i++)
 			AlloToTarget[i] = max(0., (NewMobile[i] * RateCoef[i] - AlloRoot[i] - AlloLeaf[i])*Fraction[i]);
 		return AlloToTarget;
@@ -231,7 +231,7 @@ private:
 class AlloNewMobile_To_All {
 public:
 	AlloNewMobile_To_All(function<double(size_t, double)> f_Mass, function<double(size_t, double)> f_Nitrogen, function<double(size_t, double)> f_Phosphorus, function<double(size_t, double)> f_Water,
-		vector<double> RateCoef, size_t optionRoot, vector<double> AlloLeaf1, vector<double> AlloLeaf2, vector<double> AlloLeaf3, size_t optionLeaf,
+		vector<double> RateCoef, size_t optionRoot, std::vector<double> AlloLeaf1, std::vector<double> AlloLeaf2, std::vector<double> AlloLeaf3, size_t optionLeaf,
 		vector<double> FractionCoarseRoot) :
 		f_Root_Mass(f_Mass), f_Root_Nitrogen(f_Nitrogen), f_Root_Phosphorus(f_Phosphorus), f_Root_Water(f_Water), RateCoef(RateCoef), OptionRoot(optionRoot), OptionLeaf(optionLeaf),
 		FractionCoarseRoot(FractionCoarseRoot)
@@ -243,7 +243,7 @@ public:
 	
 	
 	};
-	AlloNewMobile operator() (vector<double> &Leaf, vector<double>&Stem, vector<double> &Response_N, vector<double> &Response_P, vector<double> &Response_W, vector<double> &NewMobile, AlloNewMobile &allo) {
+	AlloNewMobile operator() (vector<double> &Leaf, std::vector<double>&Stem, std::vector<double> &Response_N, std::vector<double> &Response_P, std::vector<double> &Response_W, std::vector<double> &NewMobile, AlloNewMobile &allo) {
 		double MassResponse, NResponse, PResponse, WaterResponse, combined_response_root, combined_response_leaf, Amount_To_Allocate;
 		for (size_t index = 0; index < Leaf.size(); index++) {
 			MassResponse = max(0.001, f_Root_Mass(index, Leaf[index] + Stem[index]));
@@ -297,13 +297,13 @@ private:
 
 class AlloUptake_To_All {
 public:
-	AlloUptake_To_All(vector<double> RatioMinRoot, vector<double> RatioMinStem, vector<double> RatioMinCoarseRoot) :
+	AlloUptake_To_All(vector<double> RatioMinRoot, std::vector<double> RatioMinStem, std::vector<double> RatioMinCoarseRoot) :
 		RatioMinRoot(RatioMinRoot), RatioMinStem(RatioMinStem), RatioMinCoarseRoot(RatioMinCoarseRoot)
 	{
 		FixedSupply = false;
 	};
-	AlloUptake_To_All(vector<double> RatioMinRoot, vector<double> RatioMinStem, vector<double> RatioMinCoarseRoot, 
-		vector<double> Ratio_LeafThres, vector<double> Ratio_LeafOpt, vector<double> MinDegreeSupply) :
+	AlloUptake_To_All(vector<double> RatioMinRoot, std::vector<double> RatioMinStem, std::vector<double> RatioMinCoarseRoot, 
+		vector<double> Ratio_LeafThres, std::vector<double> Ratio_LeafOpt, std::vector<double> MinDegreeSupply) :
 		RatioMinRoot(RatioMinRoot), RatioMinStem(RatioMinStem), RatioMinCoarseRoot(RatioMinCoarseRoot)
 	{
 		RatioLeaf_FixSupply.resize(Ratio_LeafOpt.size());
@@ -311,7 +311,7 @@ public:
 			RatioLeaf_FixSupply[i] = Ratio_LeafThres[i] + MinDegreeSupply[i] * (Ratio_LeafOpt[i] - Ratio_LeafThres[i]);
 		FixedSupply = true;
 	};
-	AlloNewMobile operator() (vector<double> &RespLeaf, vector<double> &RespStem, vector<double> &RespRoot, vector<double> &RespCoarseRoot, vector<double> &NewMobile, AlloNewMobile allo ) {
+	AlloNewMobile operator() (vector<double> &RespLeaf, std::vector<double> &RespStem, std::vector<double> &RespRoot, std::vector<double> &RespCoarseRoot, std::vector<double> &NewMobile, AlloNewMobile allo ) {
 		for (size_t i = 0; i < allo.Leaf.size(); i++) {
 			double demandroot = (allo.Roots[i]-RespRoot[i]) / RatioMinRoot[i];
 			double demandcoarseroot = (allo.CoarseRoots[i]-RespCoarseRoot[i]) /RatioMinCoarseRoot[i];
@@ -381,12 +381,12 @@ private:
 
 class AllocationToFungi {
 public:
-	AllocationToFungi(function<double(size_t, double)> f_Available, function<double(size_t, double, double, double)> f_Supply, vector<double> AlloMaxC1, vector<double> CAlloFungiC1) :
+	AllocationToFungi(function<double(size_t, double)> f_Available, function<double(size_t, double, double, double)> f_Supply, std::vector<double> AlloMaxC1, std::vector<double> CAlloFungiC1) :
 		f_Available(f_Available), f_Supply(f_Supply), AlloMaxC1(AlloMaxC1), CAlloFungiC1(CAlloFungiC1) {};
 
-	vector<double> operator() (vector<double > &NO3, vector<double> &NH4,
-		vector<double> &root, vector<double> &oldroot, vector<double> &fungi,
-		vector<double> &NFungiPlant, vector<double> &NRootUptake, vector<double> &PlantDemand,vector<double> &AllotoRoot, vector<double> &CFungiAtm, vector<double> &AllotoFungi) {
+	vector<double> operator() (vector<double > &NO3, std::vector<double> &NH4,
+		vector<double> &root, std::vector<double> &oldroot, std::vector<double> &fungi,
+		vector<double> &NFungiPlant, std::vector<double> &NRootUptake, std::vector<double> &PlantDemand,vector<double> &AllotoRoot, std::vector<double> &CFungiAtm, std::vector<double> &AllotoFungi) {
 		double demand, supply;
 		double TotalMinSoil = 0;
 		for (size_t i = 0; i < NO3.size(); i++) // loop over layers
@@ -409,13 +409,13 @@ private:
 class AllocationToFungiwithP {
 public:
     AllocationToFungiwithP(){};
-    AllocationToFungiwithP(function<double(size_t, double)> f_Available, function<double(size_t, double)> f_AvailableP, function<double(size_t, double, double, double)> f_Supply, function<double(size_t, double, double, double)> f_SupplyP, vector<double> AlloMaxC1, vector<double> CAlloFungiC1) :
+    AllocationToFungiwithP(function<double(size_t, double)> f_Available, function<double(size_t, double)> f_AvailableP, function<double(size_t, double, double, double)> f_Supply, function<double(size_t, double, double, double)> f_SupplyP, std::vector<double> AlloMaxC1, std::vector<double> CAlloFungiC1) :
         f_Available(f_Available), f_AvailableP(f_AvailableP), f_Supply(f_Supply), f_SupplyP(f_SupplyP), AlloMaxC1(AlloMaxC1), CAlloFungiC1(CAlloFungiC1) {};
 
-    vector<double> operator() (vector<double > &NO3, vector<double> &NH4, vector<double> &Soil_PO4,
-        vector<double> &root, vector<double> &oldroot, vector<double> &fungi,
-        vector<double> &NFungiPlant, vector<double> &NRootUptake, vector<double> &PlantDemandN,
-        vector<double> &PFungiPlant, vector<double> &PRootUptake, vector<double> &PlantDemandP, vector<double> &AllotoRoot, vector<double> &CFungiAtm, vector<double> &AllotoFungi) {
+    std::vector<double> operator() (vector<double > &NO3, std::vector<double> &NH4, std::vector<double> &Soil_PO4,
+        std::vector<double> &root, std::vector<double> &oldroot, std::vector<double> &fungi,
+        std::vector<double> &NFungiPlant, std::vector<double> &NRootUptake, std::vector<double> &PlantDemandN,
+        std::vector<double> &PFungiPlant, std::vector<double> &PRootUptake, std::vector<double> &PlantDemandP, std::vector<double> &AllotoRoot, std::vector<double> &CFungiAtm, std::vector<double> &AllotoFungi) {
         double demand, supply;
         double TotalMinSoil = 0;
         double TotalPhosphateSoil = 0.;
@@ -435,13 +435,13 @@ public:
 
 private:
 
-    vector<double> AlloMaxC1, CAlloFungiC1;
+    std::vector<double> AlloMaxC1, CAlloFungiC1;
     function<double(size_t, double)> f_Available, f_AvailableP;
     function<double(size_t, double, double, double)> f_Supply, f_SupplyP;
 };
 
 class FromRootToLeafAfterHarvest {
-public:FromRootToLeafAfterHarvest(vector<double> AlloFromRootLeafCoef, vector<double> AlloFromRootLeafRatio) :
+public:FromRootToLeafAfterHarvest(vector<double> AlloFromRootLeafCoef, std::vector<double> AlloFromRootLeafRatio) :
 	Coef(AlloFromRootLeafCoef), Ratio(AlloFromRootLeafRatio) {};
 	   double operator() (size_t index, double mass_root, double mass_leaf) {
 		   if ((mass_root + 0.01) / (mass_leaf + 0.01) > Ratio[index])
@@ -449,7 +449,7 @@ public:FromRootToLeafAfterHarvest(vector<double> AlloFromRootLeafCoef, vector<do
 		   else
 			   return 0.;
 }
-	   vector<double> operator() (vector<bool> &HarvestDone, vector<double> &root, vector<double> &Leaf, vector<double> &AlloRootToLeaf) {
+	   std::vector<double> operator() (vector<bool> &HarvestDone, std::vector<double> &root, std::vector<double> &Leaf, std::vector<double> &AlloRootToLeaf) {
 		   for (size_t i = 0; i < root.size(); i++) {
 			   if (HarvestDone[i]&&(root[i] + 0.001) / (Leaf[i] + 0.001) > Ratio[i])
 				   AlloRootToLeaf[i]= Coef[i] * (root[i] - Leaf[i] * Ratio[i]);
@@ -467,11 +467,11 @@ private:
 class GrainFillingSupply {
 public:
     GrainFillingSupply() {};
-	GrainFillingSupply(vector<vector<double>> C_coef, vector<vector<double>> N_coef, vector<vector<double>> P_coef) :
+	GrainFillingSupply(vector<vector<double>> C_coef, std::vector<vector<double>> N_coef, std::vector<vector<double>> P_coef) :
 		C_coef(C_coef), N_coef(N_coef), P_coef(P_coef) {
 		range = 0.2; threshold = 3.;
 	};
-	vector<double> operator() (size_t P_Comp, size_t P_Elem,vector<double> &GSI, vector<double> &mass, vector<double> &flux) {
+	vector<double> operator() (size_t P_Comp, size_t P_Elem,vector<double> &GSI, std::vector<double> &mass, std::vector<double> &flux) {
 		
 		for (size_t i = 0; i < mass.size(); i++) {
 			if (mass[i] < 0.) {
@@ -536,13 +536,13 @@ private:
 };
 class GrainFillingSupply_WithReduction {
 public:
-	GrainFillingSupply_WithReduction(vector<vector<double>> C_coef, vector<vector<double>> N_coef, vector<vector<double>> P_coef, vector<double> Range_Red) :
+	GrainFillingSupply_WithReduction(vector<vector<double>> C_coef, std::vector<vector<double>> N_coef, std::vector<vector<double>> P_coef, std::vector<double> Range_Red) :
 		Range_Red(Range_Red)
 	{
         f_GrainFill = GrainFillingSupply(C_coef, N_coef, P_coef);
     };
 	
-	vector<double> operator() (size_t P_Comp, size_t P_Elem, vector<double>& GSI, vector<double>& mass, vector<double>& flux) {
+	vector<double> operator() (size_t P_Comp, size_t P_Elem, std::vector<double>& GSI, std::vector<double>& mass, std::vector<double>& flux) {
 		flux = f_GrainFill(P_Comp, P_Elem, GSI, mass, flux);
 		for (size_t i = 0; i < flux.size(); ++i) {
 			double scale = min(1., (3.- GSI[i]) / Range_Red[i]);
@@ -560,7 +560,7 @@ class ReAlloCarbonToStemFromLeaf {
 public:
 	ReAlloCarbonToStemFromLeaf(vector<double> Allo_C_LeafStem) :
 		Coef(Allo_C_LeafStem) {};
-	vector<double> operator() (vector<double> &GSI, vector<double> &mass, vector<double> &flux) {
+	vector<double> operator() (vector<double> &GSI, std::vector<double> &mass, std::vector<double> &flux) {
 		for (size_t i = 0; i < GSI.size(); i++) {
 			if (GSI[i] < 4)
 				flux[i] = 0.;
@@ -576,7 +576,7 @@ class ReAlloNitrogenToStemFromLeaf {
 public:
 	ReAlloNitrogenToStemFromLeaf(vector<double> CN_RatioMinStem) :
 		 Ratio(CN_RatioMinStem) {};
-	vector<double> operator() (vector<double> &GSI, vector<double> &carbonflux, vector<double> &flux) {
+	vector<double> operator() (vector<double> &GSI, std::vector<double> &carbonflux, std::vector<double> &flux) {
 		for (size_t i = 0; i < GSI.size(); i++) {
 			if (GSI[i] < 3)
 				flux[i] = 0.;
@@ -595,7 +595,7 @@ class ReAlloPhosphorusToStemFromLeaf {
 public:
 	ReAlloPhosphorusToStemFromLeaf(vector<double> CP_RatioMinStem) :
 		Ratio(CP_RatioMinStem) {};
-	vector<double> operator() (vector<double> &GSI, vector<double> &carbonflux, vector<double> &flux) {
+	vector<double> operator() (vector<double> &GSI, std::vector<double> &carbonflux, std::vector<double> &flux) {
 		for (size_t i = 0; i < GSI.size(); i++) {
 			if (GSI[i] < 3)
 				flux[i] = 0.;

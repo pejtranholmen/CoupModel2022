@@ -19,7 +19,7 @@
 #include <afxmt.h>
 
 //
-// Utility to convert from UTF8 string to MFC TCHAR string.
+// Utility to convert from UTF8 std::string to MFC TCHAR std::string.
 //
 class UTF8toTCHAR
 {
@@ -74,7 +74,7 @@ private :
 	bool needFree;
 
 	//
-	// helper utility to test if a string contains only ASCII characters
+	// helper utility to test if a std::string contains only ASCII characters
 	//
 	bool isPureAscii(const char *s)
 	{
@@ -88,7 +88,7 @@ private :
 };
 
 //
-// Utility to convert from MFC TCHAR string to UTF8 string
+// Utility to convert from MFC TCHAR std::string to UTF8 std::string
 //
 class TCHARtoUTF8
 {
@@ -145,7 +145,7 @@ private :
 	bool needFree;
 
 	//
-	// helper utility to test if a string contains only ASCII characters
+	// helper utility to test if a std::string contains only ASCII characters
 	//
 	bool isPureAscii(const char *s)
 	{

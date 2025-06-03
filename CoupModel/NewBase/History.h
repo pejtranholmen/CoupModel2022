@@ -7,14 +7,14 @@ class History :public ModelFiles {
 	
 public:
 	History();
-	bool History_Add(SimB *,int Type, int LocalIndex, time_t t, float value, string User="");
-	bool History_Add(SimB *,int Type, int LocalIndex, time_t t, string str, string User="");
-	bool History_Add(SimB* pSimB, int LocalIndex, time_t t, float value, string User="");
-	bool History_Add(SimB* pSimB, int LocalIndex, time_t t, double value, string User = "") {return History_Add( pSimB, LocalIndex, t, float(value), User); };
-	bool History_Add(SimB *, int LocalIndex, time_t t, string str, string User="");
+	bool History_Add(SimB *,int Type, int LocalIndex, time_t t, float value, std::string User="");
+	bool History_Add(SimB *,int Type, int LocalIndex, time_t t, std::string str, std::string User="");
+	bool History_Add(SimB* pSimB, int LocalIndex, time_t t, float value, std::string User="");
+	bool History_Add(SimB* pSimB, int LocalIndex, time_t t, double value, std::string User = "") {return History_Add( pSimB, LocalIndex, t, float(value), User); };
+	bool History_Add(SimB *, int LocalIndex, time_t t, std::string str, std::string User="");
 	bool History_Add(size_t RunInfoIndex,string str);
-	void History_Add(string, string,string, string, int, time_t, string, string);
-	void History_NewAdd(size_t RunInfoType, string, string,string, string, int, time_t, string, string);
+	void History_Add(string, std::string,string, std::string, int, time_t, std::string, std::string);
+	void History_NewAdd(size_t RunInfoType, std::string, std::string,string, std::string, int, time_t, std::string, std::string);
 
 
 	size_t History_GetNumber();

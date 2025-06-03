@@ -49,19 +49,19 @@ class Interception : public  Potential_Transpiration
 
 		function<double(double, double)> f_IntCapacity_Snow;
 		function<vector<double>(vector<double>, double)> f_IntCapacity_Snow_MultiLayer;
-		function<double(vector<double> *, vector<size_t> *, vector<double> *, vector<double>, double, double)> f_MultiFill;
+		function<double(vector<double> *, std::vector<size_t> *, std::vector<double> *, std::vector<double>, double, double)> f_MultiFill;
 
 		function<double()> f_ThroughFall;
 		function<double(double, double)> f_ThroughFallSinglePlant;
 		function<double(double, double)> f_IntStorage;
 		function<double(double, double, double)> f_EvapImplicitPlant;
 		function<double(double, double, double, double)> f_EvapExplicitPlant;
-		function<vector<double>(vector<double>, vector<double>, vector<double>)> f_EvapMultiPlant;
-		function<vector<double>(vector<double>, vector<double>, vector<double>)> f_PotentialWaterUptakeMultiPlant;
+		function<vector<double>(vector<double>, std::vector<double>, std::vector<double>)> f_EvapMultiPlant;
+		function<vector<double>(vector<double>, std::vector<double>, std::vector<double>)> f_PotentialWaterUptakeMultiPlant;
 
 		function<double(double, double)> f_PotentialWaterUptakeImplicitPlant;
 		function<double(double, double, double)> f_PotentialWaterUptakeExplicitPlant;
-		function<vector<double>(vector<double>, vector<double>)> f_PM_EquationPotentialIntercept_MultiLayer;
+		function<vector<double>(vector<double>, std::vector<double>)> f_PM_EquationPotentialIntercept_MultiLayer;
 
 		function<double(double, double, double)> f_ThermalQualityInterCept;
 		function<void(double, double, double)> f_ThermalQualityThroughFall;

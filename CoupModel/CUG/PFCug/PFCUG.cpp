@@ -409,7 +409,7 @@ void PFCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point,int pro
 		}
 		if(m_DataBaseString=="Kalle") return; // Kalle = Called from PP_EDIT
 		if(m_SelOne) {
-			//CString string=_T("");
+			//CString std::string=_T("");
 			//for(int i=0;i<6;i++)
 			//	string+=PLOTPF_mp_DKEY[i];
 			//((SP_Retrieve*)m_pSP_Retrieve_Dlg)->OnEnChangeEditComments();
@@ -1185,7 +1185,7 @@ BOOL PFCug::SaveToSim()
 bool PFCug::IniDataBase() {
 
 	if(!p_PFCurve->IsOpen()) {
-	  string directory;
+	  std::string directory;
 	  directory=MFC_Util::GetProfileStringStd("DataBaseDirectory", directory);
 	 
 	 if(!p_PFCurve->OpenMainFile(directory+"PfProf")) {
@@ -1208,10 +1208,10 @@ bool PFCug::IniDataBase() {
 		p_PFCurve->ReadHeaderFile();
 		p_PFCurve->SaveNewFormat();
 		p_PFCurve->CloseMainDataBase();
-		 string directory;
+		 std::string directory;
 		directory=MFC_Util::GetProfileStringStd("DataBaseDirectory", directory);
 		p_PFCurve->OpenMainFile(directory+"PfProf");
-		if(size_t(p_PFCurve->GetInsertRecord(0))==string::npos) return false;
+		if(size_t(p_PFCurve->GetInsertRecord(0))== std::string::npos) return false;
 		m_ActHeader=p_PFCurve->GetHeader(p_PFCurve->GetInsertRecord(0));
 	}
 	if(m_ActHeader.RecHeader>0) {

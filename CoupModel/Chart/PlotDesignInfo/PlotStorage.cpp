@@ -97,7 +97,7 @@ bool CPlotStorage::Init(Doc *pDoc)
 	size_t v=m_PlotArray.size();
 	return true;
 }
-bool CPlotStorage::Add(void *pXG, size_t type, size_t index, size_t chartnum, CHART_TYPES charttyp, string docname, size_t ValFileNo, size_t vnum, size_t runno, size_t section_no, size_t sub_chart, size_t logli_ver, size_t repit_no)
+bool CPlotStorage::Add(void *pXG, size_t type, size_t index, size_t chartnum, CHART_TYPES charttyp, std::string docname, size_t ValFileNo, size_t vnum, size_t runno, size_t section_no, size_t sub_chart, size_t logli_ver, size_t repit_no)
 {
 	size_t iDoc=-1;
 	bool MainDoc=true;
@@ -122,7 +122,7 @@ bool CPlotStorage::Add(void *pXG, size_t type, size_t index, size_t chartnum, CH
 	if(m_pSimDoc->GetCurrentSimFile()==docname.c_str()) {
 		SimRunNo=m_pSimDoc->m_DocFile.m_SimulationRunNo;
 		auto iposext=docname.find(".S");
-		if(iposext>=0&&iposext!=string::npos) {
+		if(iposext>=0&&iposext!= std::string::npos) {
 			string txt=docname.substr(iposext-5,5);
 			size_t SimRunNoFile=FUtil::AtoInt(txt);
 			if(SimRunNoFile!=SimRunNo&&SimRunNoFile>0) {
@@ -225,7 +225,7 @@ bool CPlotStorage::Add(void *pXG, size_t type, size_t index, size_t chartnum, CH
 bool CPlotStorage::AddCurve(size_t add_section, size_t backshift)
 {
 	auto j=m_PlotArray.size()-1-backshift;
-	if(j==string::npos||m_PlotArray.size()<=j) return false;
+	if(j== std::string::npos||m_PlotArray.size()<=j) return false;
 	PLOTv plot;
 	plot=m_PlotArray[j];
 	if(add_section==5000) 
@@ -328,7 +328,7 @@ bool CPlotStorage::RemoveAll()
 	return true;
 }
 
-bool CPlotStorage::SetConstrainBy(size_t index, vector<CONSTRAIN_BY> con)
+bool CPlotStorage::SetConstrainBy(size_t index, std::vector<CONSTRAIN_BY> con)
 {
 	bool changed;
 	changed = false;
@@ -441,7 +441,7 @@ CPG* CPlotStorage::GetPGValFilePointer(size_t indexdoc, size_t ValidIndex, size_
 
 			while(!FUtil::IsFileExisting(string(pgfilename))&&SecondTry) {
 				auto iposmul=filename.find("_Multi");
-				if(iposmul!=string::npos) {
+				if(iposmul!= std::string::npos) {
 					if(simRunNo==0) {
 						string str;
 						str=FUtil::ItoNumAscii(simRunNo);
@@ -818,7 +818,7 @@ size_t CPlotStorage::GetArrayIndex(size_t indexchart, size_t indexVar)
 				ivar++;
 		  }	
 	}
-	return string::npos;
+	return std::string::npos;
 }
 
 size_t	CPlotStorage::GetValVarNo(size_t index)
@@ -913,7 +913,7 @@ size_t CPlotStorage::GetChart(size_t index)
 size_t CPlotStorage::GetCurrentChart()
 {
 	auto index=m_PlotArray.size()-1;
-	if(index==string::npos)
+	if(index== std::string::npos)
 		return 0;
 	else
 		return m_PlotArray[index].Chart;
@@ -925,7 +925,7 @@ SUM_PERFORMANCE CPlotStorage::GetPerformance_type(size_t index)
 	return SUM_PERFORMANCE::SUM_NOVALUE;
 }
 CHART_TYPES CPlotStorage::GetChartType(size_t index)
-{	if(index>=0&&index!=string::npos)
+{	if(index>=0&&index!= std::string::npos)
 		return m_PlotArray[index].ChartType;
 	else
 		return CHART_TYPES::TIME_SERIE;
@@ -943,7 +943,7 @@ size_t CPlotStorage::GetIndex_Chart(size_t iv)
 	bool test;
 	test=true;
 	size_t num;
-	size_t index=string::npos;
+	size_t index= std::string::npos;
 	for (size_t j=0;j<m_PlotArray.size();j++) {
 		test=true;
 		num=m_PlotArray[j].ChartNumber;
@@ -1356,7 +1356,7 @@ size_t CPlotStorage::SelectedDoc_GetNum()
 }
 bool CPlotStorage::CPG_SetTypeFile(size_t index, bool value)
 {
-	if (index == string::npos) return false;
+	if (index == std::string::npos) return false;
 	while(m_CPG_MultiType.size()<index+1)
 		m_CPG_MultiType.push_back(false);
 	m_CPG_MultiType[index]=value;	
@@ -1364,11 +1364,11 @@ bool CPlotStorage::CPG_SetTypeFile(size_t index, bool value)
 }
 size_t CPlotStorage::CPG_GetTypeFile(size_t index)
 {
-	if (index == string::npos) return string::npos;
+	if (index == std::string::npos) return std::string::npos;
 	if(m_CPG_MultiType.size()>index)
 		return m_CPG_MultiType[index];
 	else
-		return string::npos;
+		return std::string::npos;
 }
 size_t CPlotStorage::GetPGRepitNo(size_t index) 
 {
@@ -1393,12 +1393,12 @@ bool CPlotStorage::SetPGRepitNo(size_t index, size_t value)
 size_t CPlotStorage::GetPGSectionNo(size_t index) 
 {
 	size_t koll;
-	if(index!=string::npos&&index<m_PlotArray.size()) {
+	if(index!= std::string::npos&&index<m_PlotArray.size()) {
 		koll=m_PlotArray[index].PGSection;
 		return koll;
 	}
 	else
-		return string::npos;
+		return std::string::npos;
 
 }
 bool CPlotStorage::SetPGSectionNo(size_t index, size_t value)
@@ -1482,7 +1482,7 @@ size_t CPlotStorage::RemoveAllSectionCurves()
 { size_t count;
 	count=0;
 	auto i=m_PlotArray.size()-1;
-	while(m_PlotArray.size()>i&&i!=string::npos) {
+	while(m_PlotArray.size()>i&&i!= std::string::npos) {
 		if (m_PlotArray[i].PGSection>1&&m_PlotArray[i].PGSection<5000) {
 			Remove(i);
 			count++;
@@ -1509,7 +1509,7 @@ size_t CPlotStorage::GetSubChart(size_t index)
 		return koll;
 	}
 	else
-		return string::npos;
+		return std::string::npos;
 
 }
 bool CPlotStorage::SetSubChart(size_t index, size_t value)
@@ -1529,7 +1529,7 @@ size_t CPlotStorage::GetLogLiVersion(size_t index)
 		return koll;
 	}
 	else
-		return string::npos;
+		return std::string::npos;
 
 }
 bool CPlotStorage::SetLogLiVersion(size_t index, size_t value)

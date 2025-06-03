@@ -83,16 +83,16 @@ FUtil::~FUtil(void)
 	return value;
 }
 
- string FUtil::check_open_newcsvfile(fstream *filestream, string filename) {
-	 string fileout;
+ std::string FUtil::check_open_newcsvfile(fstream *filestream, std::string filename) {
+	 std::string fileout;
 	 filestream->open(filename, ios::out);
 	 if (!filestream->is_open()) {
 
-		 string UserDirectory = "";
+		 std::string UserDirectory = "";
 		 UserDirectory = FUtil::GetProfileStringStd("UserDirectory", UserDirectory);
-		 string testname;
+		 std::string testname;
 		 unsigned long ipos = filename.find("\\");
-		 while (ipos != string::npos) {
+		 while (ipos != std::string::npos) {
 			 filename = filename.substr(ipos + 1);
 			 ipos = filename.find("\\");
 		 }
@@ -102,7 +102,7 @@ FUtil::~FUtil(void)
 #ifndef COUPSTD
 			 TRACE("Can't Open file %s´\n", filename);
 			 //Display error message
-			 string str;
+			 std::string str;
 			 str = "For some reason the file (";
 			 str += testname;
 			 str += ") specified couldn´t be opened.";
@@ -119,16 +119,16 @@ FUtil::~FUtil(void)
 
 	 return fileout;
  }
- string FUtil::check_open_newfile(fstream *filestream, string filename) {
-	 string fileout;
+ std::string FUtil::check_open_newfile(fstream *filestream, std::string filename) {
+	 std::string fileout;
 	 filestream->open(filename, ios::binary | ios::in);
 	 if (!filestream->is_open()) {
 
-		 string UserDirectory = "";
+		 std::string UserDirectory = "";
 		 UserDirectory = FUtil::GetProfileStringStd("UserDirectory", UserDirectory);
-		 string testname;
+		 std::string testname;
 		 unsigned long ipos = filename.find("\\");
-		 while (ipos != string::npos) {
+		 while (ipos != std::string::npos) {
 			 filename = filename.substr(ipos + 1);
 			 ipos = filename.find("\\");
 		 }
@@ -138,7 +138,7 @@ FUtil::~FUtil(void)
 #ifndef COUPSTD
 			 TRACE("Can't Open file %s´\n", filename);
 			 //Display error message
-			 string str;
+			 std::string str;
 			 str = "For some reason the file (";
 			 str += testname;
 			 str += ") specified couldn´t be opened.";
@@ -156,7 +156,7 @@ FUtil::~FUtil(void)
 	 return fileout;
  }
 
- bool FUtil::check_if_empty_file(fstream *filestream, string filename) {
+ bool FUtil::check_if_empty_file(fstream *filestream, std::string filename) {
 	 filestream->seekg(0, ios::beg);
 	 //HeaderStart = filestream->tellg();
 	 filestream->seekg(0, ios::end);
@@ -172,7 +172,7 @@ FUtil::~FUtil(void)
 
 		 TRACE("Can't Open file %s´\n", filename);
 		 //Display error message
-		 string str;
+		 std::string str;
 		 str = "For some reason the file (";
 		 str += filename;
 		 str += ") is empty";
@@ -196,7 +196,7 @@ FUtil::~FUtil(void)
 #endif
 #endif
 }
- void FUtil::WriteProfileStringStd(string item, string value) {
+ void FUtil::WriteProfileStringStd(string item, std::string value) {
 #ifndef COUPSTD
 	CWinApp* pApp = AfxGetApp();
 	pApp->WriteProfileString(_T("CoupModel"), CString(item.c_str()), CString(value.c_str()));
@@ -208,11 +208,11 @@ FUtil::~FUtil(void)
 }
 void FUtil::trim(string& str)
 {
-  string::size_type pos = str.find_last_not_of(" ");
-  if(pos != string::npos) {
+  std::string::size_type pos = str.find_last_not_of(" ");
+  if(pos != std::string::npos) {
     str.erase(pos + 1);
     pos = str.find_first_not_of(" ");
-    if(pos != string::npos) str.erase(0, pos);
+    if(pos != std::string::npos) str.erase(0, pos);
   }
   else str.erase(str.begin(), str.end());
 }
@@ -230,17 +230,17 @@ string FUtil::ItoNum2Ascii(int v) {
 void FUtil::trim_datestr(string& str)
 {
   size_t pos=str.find(" ");
-  while (pos!=string::npos) {
+  while (pos!= std::string::npos) {
 	  str.erase(pos,1);
 	  pos=str.find(" ");
   }
   pos=str.find(":");
-  while (pos!=string::npos) {
+  while (pos!= std::string::npos) {
 	  str.erase(pos,1);
 	  pos=str.find(":");
   }
   pos=str.find("-");
-  while (pos!=string::npos) {
+  while (pos!= std::string::npos) {
 	  str.erase(pos,1);
 	  pos=str.find("-");
   }
@@ -248,7 +248,7 @@ void FUtil::trim_datestr(string& str)
 void FUtil::trim_space(string& str)
 {
   size_t pos=str.find(" ");
-  while (pos!=string::npos) {
+  while (pos!= std::string::npos) {
 	  str.erase(pos,1);
 	  pos=str.find(" ");
   }
@@ -278,21 +278,21 @@ void FUtil::trim_xmlstring(string& str)
 	
 
 	auto pos = str.find('//');
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		str.insert(pos, "_");
 		pos = str.find(
 			'//');
 	}
 	pos = str.find('ø');
-	while (pos != string::npos) {
+	while (pos != std::string::npos) {
 		str.erase(pos, 1);
 		str.insert(pos, "");
 		pos = str.find('ø');
 	}
 
 }
-bool FUtil::CopyFile_Std(string srcFileName, string destFileName)
+bool FUtil::CopyFile_Std(string srcFileName, std::string destFileName)
 {
     std::ifstream ifs(srcFileName, std::ios::binary | std::ios::in);
     std::ofstream ofs(destFileName, std::ios::binary | std::ios::out);
@@ -324,7 +324,7 @@ bool FUtil::CopyFile_Std(string srcFileName, string destFileName)
 
 string FUtil::STD_FtoAsciiPane(float v)
 {
-	//return string(FtoAsciiPane(v));
+	//return std::string(FtoAsciiPane(v));
 	return "";
 }
 
@@ -353,7 +353,7 @@ float FUtil::AtoFloat(string str) {
 	float f=MISSING;
 	trim(str);
 	auto pos=str.find(",");
-	if(pos!=string::npos) {
+	if(pos!= std::string::npos) {
 		str.replace(pos,1,".");
 
 	}
@@ -372,9 +372,9 @@ vector<float> FUtil::GetFloatVectorFromString(string str, size_t num) {
 
 	
 	size_t ipos;
-	ipos = str.find(' '); if (ipos == string::npos) ipos= str.find(';'); if (ipos == string::npos) ipos = str.find('\t');
+	ipos = str.find(' '); if (ipos == std::string::npos) ipos= str.find(';'); if (ipos == std::string::npos) ipos = str.find('\t');
 	while (ipos == 0 && str[0] == ' ') { str = str.substr(1); ipos = str.find(' '); }
-	while (ipos != string::npos) {
+	while (ipos != std::string::npos) {
 		string sub;
 		sub = str.substr(0, ipos);
 		while (ipos == 0 && str[0] ==' ') {
@@ -385,14 +385,14 @@ vector<float> FUtil::GetFloatVectorFromString(string str, size_t num) {
 		vv.push_back(value);
 		if (str[0] == '\n'&& ipos == 0) {
 			vv.push_back(MISSING);
-			ipos = string::npos;
+			ipos = std::string::npos;
 		}
 		else {
 			str = str.substr(ipos + 1);
-			ipos = str.find(' '); if (ipos == string::npos) ipos = str.find(';'); if (ipos == string::npos) ipos = str.find('\t');
+			ipos = str.find(' '); if (ipos == std::string::npos) ipos = str.find(';'); if (ipos == std::string::npos) ipos = str.find('\t');
 
 
-			if (ipos == string::npos) {
+			if (ipos == std::string::npos) {
 				float value = FUtil::AtoFloat(str);
 				vv.push_back(value);
 			}
@@ -400,7 +400,7 @@ vector<float> FUtil::GetFloatVectorFromString(string str, size_t num) {
 
 	}
 
-	if (str.size() > 0 && ipos == string::npos) {
+	if (str.size() > 0 && ipos == std::string::npos) {
 		float value = FUtil::AtoFloat(str);
 		vv.push_back(value);
 	}
@@ -412,8 +412,8 @@ vector<float> FUtil::GetFloatVectorFromString(string str, size_t num) {
 vector<string> FUtil::GetStringVectorFromStringLine(string str, size_t num) {
 	vector<string> outvector;
 	size_t ipos;
-	ipos = str.find(';'); if (ipos == string::npos) ipos = str.find('\t');
-	while (ipos != string::npos) {
+	ipos = str.find(';'); if (ipos == std::string::npos) ipos = str.find('\t');
+	while (ipos != std::string::npos) {
 		string sub;
 		sub = str.substr(0, ipos);
 		while (ipos == 0 && str[0] == ' ') {
@@ -423,15 +423,15 @@ vector<string> FUtil::GetStringVectorFromStringLine(string str, size_t num) {
 		outvector.push_back(sub);
 		if (str[0] == '\n'&& ipos == 0) {
 			outvector.push_back("");
-			ipos = string::npos;
+			ipos = std::string::npos;
 		}
 		else {
 			str = str.substr(ipos + 1);
-			ipos = str.find(';'); if (ipos == string::npos) ipos = str.find('\t');
-			if (ipos == string::npos) 	outvector.push_back(str);	
+			ipos = str.find(';'); if (ipos == std::string::npos) ipos = str.find('\t');
+			if (ipos == std::string::npos) 	outvector.push_back(str);	
 		}
 	}
-	if (str.size() > 0 && ipos == string::npos) outvector.push_back(str);
+	if (str.size() > 0 && ipos == std::string::npos) outvector.push_back(str);
 	while (outvector.size() < num) outvector.push_back("");
 	return outvector;
 }
@@ -446,11 +446,11 @@ void FUtil::SetDelimChar(char delim)
 pair<string, size_t> FUtil::GetIndexAndName(string str) {
 	pair<string, size_t> out;
 	auto pos=str.find("(");
-	out.second = string::npos;
-	if (pos != string::npos) {
+	out.second = std::string::npos;
+	if (pos != std::string::npos) {
 		out.first = str.substr(0, pos);
 		auto pos2 = str.find(")");
-		if (pos2 != string::npos && pos2 > pos) {
+		if (pos2 != std::string::npos && pos2 > pos) {
 			string txt = str.substr(pos+1, pos2 - pos-1);
 			out.second = FUtil::AtoInt(txt);
 		}
@@ -463,7 +463,7 @@ pair<string, size_t> FUtil::GetIndexAndName(string str) {
 string FUtil::FileNameOnly(string urlname)
 {
 	auto rpos = urlname.rfind("\\");
-	if (rpos != string::npos) {
+	if (rpos != std::string::npos) {
 
 		string str = urlname.substr(rpos + 1);
 		return str;
@@ -477,7 +477,7 @@ string FUtil::FileNameOnly(string urlname)
 string FUtil::DirectoryNameOnly(string urlname)
 {
 	auto rpos = urlname.rfind("\\");
-	if (rpos != string::npos) {
+	if (rpos != std::string::npos) {
 
 		string str = urlname.substr(0, rpos + 1);
 		return str;
@@ -515,7 +515,7 @@ string FUtil::GetCurrentDateTime()
 #endif
 	strftime(buf, 24, "%Y-%m-%d %H:%M", &tstruct);
 
-	string koll = string(buf);
+	string koll = std::string(buf);
 	return koll;
 }
 rgb_color FUtil::Get_RGB(float value)
@@ -556,15 +556,15 @@ string FUtil::NameRevision2018(string name)
 		name = "CP Ratio Total Plant"; return name;
 
 	}
-	if (name.rfind("SurfaceLitter") != string::npos) {
+	if (name.rfind("SurfaceLitter") != std::string::npos) {
 		auto pos = name.rfind("Surface");
-		if (pos != string::npos) {
+		if (pos != std::string::npos) {
 			name = name.substr(0, pos) + "Litter";
 		}
 
 
 	}
-	while (name.rfind("Roots") != string::npos) {
+	while (name.rfind("Roots") != std::string::npos) {
 		string str = "Root";
 		auto pos = name.rfind("Roots");
 		string add="";
@@ -573,7 +573,7 @@ string FUtil::NameRevision2018(string name)
 
 			add = name.substr(pos + 5);
 		}
-		if (name.find("Total Roots") != string::npos) return name;
+		if (name.find("Total Roots") != std::string::npos) return name;
 		name = name.substr(0, pos) + str;
 		if (add.size() > 0) name += add;
 	}
@@ -662,10 +662,10 @@ bool FUtil::IsFileExisting(string str)
   return file.good();
 
 }
- int FUtil::GetOptionIndex(string optionlist, string str)
+ int FUtil::GetOptionIndex(string optionlist, std::string str)
 {
 	 int ipos_end, index;
-	 vector<string> v;
+	 std::vector<string> v;
 	 int ipos = optionlist.find("\n");
 	 size_t pos = 0;
 	 while (ipos > 0) {

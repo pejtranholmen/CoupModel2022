@@ -14,7 +14,7 @@ GetDB::~GetDB(void)
 {
 }
 
-string GetDB::GetDBSimFileDate(string group, string Key, bool modified)
+string GetDB::GetDBSimFileDate(string group, std::string Key, bool modified)
 {
 	string file="";
 #ifndef COUPSTD
@@ -34,7 +34,7 @@ string GetDB::GetDBSimFileDate(string group, string Key, bool modified)
 
 
 bool GetDB::Ini_DBBase() {
-	  string directory;
+	  std::string directory;
 #ifndef COUPSTD
 	  directory =MFC_Util::GetProfileStringStd("DataBaseDirectory", directory);
 #else
@@ -69,7 +69,7 @@ bool GetDB::Ini_DBBase() {
 	  if (!newformat) {
 		  icount = 0;
 		  for (int i = 0; i < 10; i++) {
-			  string str = m_pSimDoc->DB_GetNames(i).c_str();
+			  std::string str = m_pSimDoc->DB_GetNames(i).c_str();
 			  str += "\\DB_" + str + ".DBS";
 			  if (i != 1) {
 
@@ -165,7 +165,7 @@ bool GetDB::ReadOpenHeaderFile(size_t index, bool add, bool newformat) {
 	return false;
 }
 bool GetDB::WriteHeaderFile(size_t index) {
-	 string directory;
+	 std::string directory;
 #ifndef COUPSTD
 	 directory = MFC_Util::GetProfileStringStd("DataBaseDirectory", directory);
 #else
@@ -174,7 +174,7 @@ bool GetDB::WriteHeaderFile(size_t index) {
 
 	 size_t adjust = 0;
 	 if (index > 0) adjust = 1;
-	 string str=m_pSimDoc->DB_GetNames(index+adjust).c_str();
+	 std::string str=m_pSimDoc->DB_GetNames(index+adjust).c_str();
 	 str += "\\DB_" + str + ".DB";
 	 bool check = true;
 	 //Original File
@@ -186,7 +186,7 @@ bool GetDB::WriteHeaderFile(size_t index) {
 		 for (size_t i = 0; i<m_NewHeader[index].size(); i++) {
 			 DB_OldHeader head = m_OldHeader[index][i];
 			 DB_NewHeader headnew = m_NewHeader[index][i];
-			 string key=GetKeyString(head.IdUser, head.IdNum);
+			 std::string key=GetKeyString(head.IdUser, head.IdNum);
 			 auto valid=m_ValidNewHeader[index].insert(pair<string, DB_NewHeader>(key, headnew));
 			 if (valid.second) {
 				 auto itype = static_cast<unsigned int>(head.Type);
@@ -271,7 +271,7 @@ size_t GetDB::CreateNewHeader(size_t db_index) {
 	if(m_pSimDoc!=nullptr) {
 		auto file= FUtil::FileNameOnly(m_pSimDoc->m_CurrentFile);
 		auto pos = file.find(".");
-		if (pos != string::npos)
+		if (pos != std::string::npos)
 			head.Name = file.substr(0,pos);
 		headnew.ModelVersion = m_pSimDoc->m_DocFile2.m_ExeFileDate;
 		head.Details="Sim File:"+ m_pSimDoc->m_CurrentFile+"\n";
@@ -325,9 +325,9 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 
 	string group, type, name, strvalue;
 	auto checkdelim_DBType = [&]()	{
-		if (line.find(delim) == string::npos) {	
+		if (line.find(delim) == std::string::npos) {	
 			delim = ',';
-			if (line.find(delim) == string::npos) return pCDB;
+			if (line.find(delim) == std::string::npos) return pCDB;
 		}
 
 		string type = line.substr(line.find(delim)+1);
@@ -343,7 +343,7 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 		return pCDB;
 	
 	};
-	size_t NumOfDetails=string::npos;
+	size_t NumOfDetails= std::string::npos;
 	auto readheader = [&](size_t lineno) {
 		string item = line.substr(0, line.find(delim));
 		string value = line.substr(line.find(delim) + 1);
@@ -548,7 +548,7 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 	while(std::getline(stream, line)) {
 		linecount++;
 		if (line.size() > 0) {
-			if(NumOfDetails==string::npos)
+			if(NumOfDetails== std::string::npos)
 				readheader(linecount);
 			else {
 				read_db_values();

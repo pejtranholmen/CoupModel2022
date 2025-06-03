@@ -11,8 +11,8 @@ struct KERSTEN_COEF {
 };
 class DryBulkDensity {
 public: DryBulkDensity(vector<double> Meas_Saturation,
-	vector<double> UpperDepth, vector<double> LowerDepth, vector<double> DepthLayers, vector<double> ThicknessLayers, vector<double> DepthMidpLayer) {
-	function<void(vector<double>&, vector<double>&, vector<double>& , bool)> f_ModelLayers = FromMeasuredLayersToModelLayers(UpperDepth, LowerDepth, DepthLayers, ThicknessLayers, DepthMidpLayer);
+	vector<double> UpperDepth, std::vector<double> LowerDepth, std::vector<double> DepthLayers, std::vector<double> ThicknessLayers, std::vector<double> DepthMidpLayer) {
+	function<void(vector<double>&, std::vector<double>&, std::vector<double>& , bool)> f_ModelLayers = FromMeasuredLayersToModelLayers(UpperDepth, LowerDepth, DepthLayers, ThicknessLayers, DepthMidpLayer);
 	vector<double> M_Saturation, B_Saturation;
 	f_ModelLayers(Meas_Saturation, M_Saturation, B_Saturation, true);
 	for (size_t i = 0; i < B_Saturation.size(); i++) {
@@ -30,7 +30,7 @@ private:
 	vector<double> DryBulkDens, M_DryBulkDens;
 };
 class HeatCapacitySolid {  // J/m2 - scaled to model layers
-public: HeatCapacitySolid(vector<double> M_Saturation, vector<double> ThicknessLayers) {
+public: HeatCapacitySolid(vector<double> M_Saturation, std::vector<double> ThicknessLayers) {
 	for (size_t i = 0; i < M_Saturation.size(); i++)  HeatCapSolid.push_back(Fix::HeatCapSolidSoil*(100. - M_Saturation[i]) / 100 * ThicknessLayers[i]);
 	}
 	vector<double> operator() () { return HeatCapSolid; }
@@ -41,7 +41,7 @@ private:
 };
 
 class SoilHeatCapacity {
-public: SoilHeatCapacity(vector<double> HeatCapacitySolid_Layer, vector<double> ThicknessLayers) {
+public: SoilHeatCapacity(vector<double> HeatCapacitySolid_Layer, std::vector<double> ThicknessLayers) {
 
 	for (size_t i = 0; i < HeatCapacitySolid_Layer.size(); i++)
 		HeatCapacity_Vol.push_back(HeatCapacitySolid_Layer[i] / ThicknessLayers[i]);
@@ -54,7 +54,7 @@ private:
 };
 
 class NonFrozenWater {
-public: NonFrozenWater(double FpointFWi, vector<double> M_Wilting, vector<double> ThicknessLayer )  {
+public: NonFrozenWater(double FpointFWi, std::vector<double> M_Wilting, std::vector<double> ThicknessLayer )  {
 	for (size_t i = 0; i < M_Wilting.size(); i++) ScaledValue.push_back(M_Wilting[i] * ThicknessLayer[i] * 10.*FpointFWi);
 }
 double operator() (size_t index, double MassWater) {return min(ScaledValue[index], MassWater);}
@@ -88,7 +88,7 @@ private:
 class SoilThermalQuality {
 public:SoilThermalQuality(size_t option, double FreezingStartTemp, double OsmoticScaleSens, double FpointFWi, double FpointF0, double FpointF1,
 	vector<double> Lambda,
-	vector<double> M_Saturation, vector<double> M_Wilting, vector<double> ThicknessLayers) {
+	vector<double> M_Saturation, std::vector<double> M_Wilting, std::vector<double> ThicknessLayers) {
 	Choice = FreezingStartOption(option);
 	for (size_t i = 0; i < Lambda.size(); i++) PowerCoef.push_back(FpointF0 + FpointF1*Lambda[i]);
 	f_StartTempStatic = FreezingStartTemperature(option, FreezingStartTemp, OsmoticScaleSens);
@@ -301,7 +301,7 @@ private:
 
 class ThCond_KerstenEq {
 public:
-	ThCond_KerstenEq(double uc1, double uc2, double uc3,double fc1, double fc2, double fc3, double fc4, vector<double> bd) :
+	ThCond_KerstenEq(double uc1, double uc2, double uc3,double fc1, double fc2, double fc3, double fc4, std::vector<double> bd) :
 	c1(uc1), c2(uc2), c3(uc3), fc1(fc1), fc2(fc2), fc3(fc3), fc4(fc4), bd(bd) {}
 	ThCond_KerstenEq(double uc1, double uc2, double uc3, double fc1, double fc2, double fc3, double fc4) :
 		c1(uc1), c2(uc2), c3(uc3), fc1(fc1), fc2(fc2), fc3(fc3), fc4(fc4) {}
@@ -345,8 +345,8 @@ private:
 
 enum class SoilType {Org, Sand, Clay};
 class ThCond_Kersten{
-public: ThCond_Kersten(double OrganicLayerThickness,  double c1, double c2, double cfrozen,KERSTEN_COEF Clay, KERSTEN_COEF Sand, vector<double> BulkDensity,
-	vector<double> ThScaleLog ,vector<double> DepthMidpLayer, vector<double> DistanceMidpLayers, vector<double> B_Lambda, vector<double> M_Wilting) {
+public: ThCond_Kersten(double OrganicLayerThickness,  double c1, double c2, double cfrozen,KERSTEN_COEF Clay, KERSTEN_COEF Sand, std::vector<double> BulkDensity,
+	vector<double> ThScaleLog ,vector<double> DepthMidpLayer, std::vector<double> DistanceMidpLayers, std::vector<double> B_Lambda, std::vector<double> M_Wilting) {
 
 
 	f_Org = ThCond_Org(c1, c2, cfrozen);
@@ -382,7 +382,7 @@ public: ThCond_Kersten(double OrganicLayerThickness,  double c1, double c2, doub
 	}
 }
 	double operator() (size_t index, double Theta, double ThQual) {	return ThCond(index, Theta, ThQual);}
-	void operator() (vector<double> *ThCondV, vector<double> *Theta, vector<double> *ThQual) { for (size_t i = 0; i < ThCondV->size(); i++) { ThCondV->at(i)=ThCond(i, Theta->at(i), ThQual->at(i)); }	}
+	void operator() (vector<double> *ThCondV, std::vector<double> *Theta, std::vector<double> *ThQual) { for (size_t i = 0; i < ThCondV->size(); i++) { ThCondV->at(i)=ThCond(i, Theta->at(i), ThQual->at(i)); }	}
 
 private:
 	double ThCond(size_t index, double Theta, double ThQual) {
@@ -434,7 +434,7 @@ private:
 };
 class KerstenFactor {
 public:
-	KerstenFactor(double Th_Beta, vector<double> SolidVol_FracOrg, vector<double> BallardArpCoef, vector<double> Saturation) : Th_Beta(Th_Beta), m_SolidVol_FracOrg(SolidVol_FracOrg),
+	KerstenFactor(double Th_Beta, std::vector<double> SolidVol_FracOrg, std::vector<double> BallardArpCoef, std::vector<double> Saturation) : Th_Beta(Th_Beta), m_SolidVol_FracOrg(SolidVol_FracOrg),
 		m_BallardArpCoef(BallardArpCoef), m_Saturation(Saturation) { }
 	double operator() (size_t index, double Theta, double ThQual) {
 		double RelSat;
@@ -456,14 +456,14 @@ private:
 };
 
 class ThCond_BallarpArp {
-public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<double> Meas_Sand, vector<double> Meas_Gravel, vector<double> Meas_Organic, vector<double> Meas_QuartsFraction,
+public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, std::vector<double> Meas_Sand, std::vector<double> Meas_Gravel, std::vector<double> Meas_Organic, std::vector<double> Meas_QuartsFraction,
 	vector<double> Meas_Saturation,
-	vector<double> UpperDepth, vector<double> LowerDepth, vector<double> DepthLayers, vector<double> ThicknessLayers, vector<double> DepthMidpLayer) {
+	vector<double> UpperDepth, std::vector<double> LowerDepth, std::vector<double> DepthLayers, std::vector<double> ThicknessLayers, std::vector<double> DepthMidpLayer) {
 
 	vector<double> FracSolid, Sim_Saturation, FracGravel,  FracSand, FracQuarts, FracOrg,  BulkDens;
 	vector<double> DummyFracMidPoint;
 
-	function<void(vector<double>&, vector<double>&, vector<double>& , bool)> f_ModelLayers= FromMeasuredLayersToModelLayers(UpperDepth, LowerDepth, DepthLayers, ThicknessLayers, DepthMidpLayer);
+	function<void(vector<double>&, std::vector<double>&, std::vector<double>& , bool)> f_ModelLayers= FromMeasuredLayersToModelLayers(UpperDepth, LowerDepth, DepthLayers, ThicknessLayers, DepthMidpLayer);
 
 	f_ModelLayers(Meas_Sand, DummyFracMidPoint, FracSand, true);
 	f_ModelLayers(Meas_QuartsFraction, DummyFracMidPoint, FracQuarts, true);
@@ -502,10 +502,10 @@ public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<do
 	}
 	f_KerstenFactor = KerstenFactor(Th_Beta, VolFracOrg, Balland_Arp_PowerCoef, Saturation);
 }
-	  ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<double> Meas_Sand, vector<double> Meas_Gravel, vector<double> Meas_Organic, vector<double> Meas_QuartsFraction,
-		  vector<double> Meas_Saturation): Saturation(Meas_Saturation) {
+	  ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, std::vector<double> Meas_Sand, std::vector<double> Meas_Gravel, std::vector<double> Meas_Organic, std::vector<double> Meas_QuartsFraction,
+		  std::vector<double> Meas_Saturation): Saturation(Meas_Saturation) {
 
-		  vector<double> BulkDens, FracSand, FracQuarts, FracOrg, FracGravel, FracSolid;
+		  std::vector<double> BulkDens, FracSand, FracQuarts, FracOrg, FracGravel, FracSolid;
 		  
 
 		  BulkDens.resize(Meas_Saturation.size()); FracSand.resize(Meas_Saturation.size());
@@ -522,7 +522,7 @@ public: ThCond_BallarpArp(double Th_a, double Th_Alfa, double Th_Beta, vector<do
 
 		  }
 
-		  vector<double> VolFracOrg;
+		  std::vector<double> VolFracOrg;
 		  for (size_t i = 0; i < FracSolid.size(); i++) {
 			  f_Mineral = ThSolidFrac(Fix::ThermalCond_Mineral, 1 - FracSolid[i] * FracQuarts[i] - FracSolid[i] * FracOrg[i]);
 			  f_Org = ThSolidFrac(Fix::ThermalCond_Organic, FracSolid[i] * FracOrg[i]);

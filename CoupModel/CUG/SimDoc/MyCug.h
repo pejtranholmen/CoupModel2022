@@ -51,7 +51,7 @@ public:
 	void UpdateChartInfo();
 	void SetViewCategory(int i=0);
 	void SetShowAllOutputs(BOOL value=TRUE);
-	void UpdateSelected(SimB*, string typ="",string group="", int localindex=-1, P * pCPt=nullptr, string SumTyp="", bool SelectAll=false);
+	void UpdateSelected(SimB*, std::string typ="",string group="", int localindex=-1, P * pCPt=nullptr, std::string SumTyp="", bool SelectAll=false);
 	void UpdateSelectedVal(int row, int indicator=-1);
 	void UpdateSelected_MR(int idim, int ipar);
 	void SelectTab(int ID);
@@ -122,12 +122,12 @@ private:
 
 
 
-	void OnGetHelp(string Name, string Group, int Type);
+	void OnGetHelp(string Name, std::string Group, int Type);
 	void OnGetHelp(SimB *pBase);
 
 
 
-	int GetOptionIndex(string optionlist, string str);
+	int GetOptionIndex(string optionlist, std::string str);
 	//***** Over-ridable Notify Functions *****
 	virtual void OnSetup();
 	void OnReset();
@@ -194,7 +194,7 @@ private:
 	//editing
 	virtual int OnEditStart(int col, long row,CWnd **edit);
 	virtual int OnEditVerify(int col,long row,CWnd *edit,UINT *vcKey);
-	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag);
+	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag);
 	virtual int OnEditContinue(int oldcol,long oldrow,int* newcol,long* newrow);
 
 	//menu notifications

@@ -126,10 +126,10 @@ double invSafeFreq(const double x, const double zero) {
   return p;
 }
 
-/// Ensures that all values in vector are greater than zero and
+/// Ensures that all values in std::vector are greater than zero and
 /// less than 1.0 - n*zero, where n is p.size()
 ///
-/// \param p    Frequency vector to guard
+/// \param p    Frequency std::vector to guard
 /// \param zero Value used for guard (MCMC_ZERO_FREQ default)
 ///
 /// Assumes all elements of p are in [0, 1]
@@ -144,9 +144,9 @@ safeFreq(const std::vector<double>& p, const double zero) {
   return q;
 }
 
-/// Inverts a safeFreq()ed vector
+/// Inverts a safeFreq()ed std::vector
 ///
-/// \param x        The vector to invert
+/// \param x        The std::vector to invert
 /// \param zero     The original guard (not checked)
 ///
 std::vector<double>
@@ -203,7 +203,7 @@ double logQBeta(const double newMean, const double oldMean,
   return Util::safeLog(value);
 }
 
-/// Propose a new Dirichlet vector for an M-H step
+/// Propose a new Dirichlet std::vector for an M-H step
 ///
 /// \param q         Mean of the proposal distribution
 /// \param denom     Effective sample size
@@ -286,7 +286,7 @@ double safeBetaPar(const double x) {
 }
 
 /// Ensures MinBetaPar <= x <= MaxBetaPar for all elements of a 
-/// Dirichlet parameter vector
+/// Dirichlet parameter std::vector
 ///
 /// \param x    Frequency to guard
 ///
@@ -302,7 +302,7 @@ void safeDirchPar(std::vector<double>& x) {
 
 /// Constructor
 ///
-/// \param label    a string identifier for the parameter
+/// \param label    a std::string identifier for the parameter
 ///
 /// Used internally to construct Parameter classes. Not intended for direct
 /// use.
@@ -367,9 +367,9 @@ ParameterBase::Assign(const boost::any& value) {
 }
 
 
-/// Returns string identifying current parameter
+/// Returns std::string identifying current parameter
 ///
-/// The default value is an empty string. Replace it by including an
+/// The default value is an empty std::string. Replace it by including an
 /// argument to the constructor 
 ///
 std::string 
@@ -379,7 +379,7 @@ ParameterBase::Label(void) const {
 
 /// Set the label associated with this parameter
 ///
-/// \param label  the label string
+/// \param label  the label std::string
 ///
 void 
 ParameterBase::SetLabel(const std::string& label) {
@@ -475,7 +475,7 @@ StepBase::ResetAccept(void) {
 
 /// Set the label associated with this step
 ///
-/// \param label  the label string
+/// \param label  the label std::string
 ///
 void 
 StepBase::SetLabel(const std::string& label) {
@@ -513,9 +513,9 @@ StepBase::iValue(void) const {
 
 /// Returns parameter value of the current step
 ///
-/// Assumes value stored as vector<double>
+/// Assumes value stored as std::vector<double>
 ///
-const vector<double>
+const std::vector<double>
 StepBase::dVecValue(void) const {
   dVecPar* q = dynamic_cast<dVecPar*>(par_);
   return q->Value();
@@ -523,9 +523,9 @@ StepBase::dVecValue(void) const {
 
 /// Returns parameter value of the current step
 ///
-/// Assumes value stored as vector<int>
+/// Assumes value stored as std::vector<int>
 ///
-const vector<int>
+const std::vector<int>
 StepBase::iVecValue(void) const {
   iVecPar* q = dynamic_cast<iVecPar*>(par_);
   return q->Value();
@@ -709,7 +709,7 @@ namespace {
 }
 
 // N.B.: nBurnin + nSample <= Util::ulong_max required (but probably
-// ensured by use of vector<vector<double> > to hold parameter
+// ensured by use of std::vector<vector<double> > to hold parameter
 // results)
 
 /// Constructor
@@ -866,7 +866,7 @@ Model::ReportHead(std::ostream& outf) {
 void
 Model::Summarize(const int i, std::ostream& outf) {
     int n = nSample_/nThin_;
-    vector<double> x(n);
+    std::vector<double> x(n);
     for (int k = 0; k < n; ++k) {
       x[k] = any_cast<double>(results_[k][i]);
     }
@@ -888,7 +888,7 @@ Model::Label(const int i) const {
 
 /// Likelihood
 ///
-/// \param par  A vector of parameters from which to calculate the likelihood
+/// \param par  A std::vector of parameters from which to calculate the likelihood
 ///
 double
 Model::Llike(const SampleVector& par) const {
@@ -908,14 +908,14 @@ Model::ReportDic(std::ostream& outf) {
   if (useMedian_) {   // use posterior median for Dhat
     int n = results_.size();
     for (int j = 0; j < nElem_; ++j) {
-      vector<double> x(n);
+      std::vector<double> x(n);
       for (int i = 0; i < n; ++i) {
         x[i] = any_cast<double>(results_[i][j]);
       }
       pMean[j] = quantile(x, 0.5);
     }
   } else {   // use posterior mean for Dhat (default)
-    vector<SimpleStatistic> stats(nElem_);
+    std::vector<SimpleStatistic> stats(nElem_);
     ResultsIter iTer = results_.begin();
     ResultsIter iEnd = results_.end();
     for (; iTer != iEnd; ++iTer) {
@@ -960,7 +960,7 @@ Model::percent(const int k, const int n) const {
   return 100.0*static_cast<double>(k)/n;
 }
 
-/// percent -- average percent across a vector
+/// percent -- average percent across a std::vector
 ///
 /// \param x  Vector of counts
 /// \param n  Sample size
@@ -975,9 +975,9 @@ Model::percent(const std::vector<int>& x, const int n) const {
   return pStat.Mean();
 }
 
-/// percent -- average percent across a vector of vectors
+/// percent -- average percent across a std::vector of vectors
 ///
-/// \param x  Vector of vector of counts
+/// \param x  Vector of std::vector of counts
 /// \param n  Sample size
 ///
 double 
@@ -1011,9 +1011,9 @@ Model::Generation(void) {
   }
 }
 
-/// Return parameter vector associated with this step
+/// Return parameter std::vector associated with this step
 ///
-/// Values in the sample vector are stored as boost::any. Retrieving them
+/// Values in the sample std::vector are stored as boost::any. Retrieving them
 /// will require an appropriate boost::any_cast<>
 ///
 SampleVector

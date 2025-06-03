@@ -53,8 +53,8 @@ DataSet* DrawDetails::AddDataPlot( int ivar,int TotNumPrior, bool accept_type, P
 	int PGindex=p_info.PGFileIndex;
 	int xVar;
 	DataSet *pDataSet;
-		if(m_pProp->m_ChartType ==CHART_TYPES::SCATTER||m_pProp->GetFirstIndepIndex()!=string::npos) {
-				if(m_pProp->GetFirstIndepIndex()!=string::npos) {
+		if(m_pProp->m_ChartType ==CHART_TYPES::SCATTER||m_pProp->GetFirstIndepIndex()!= std::string::npos) {
+				if(m_pProp->GetFirstIndepIndex()!= std::string::npos) {
 					if(m_pProp->GetIndepFirst()==PGVARVALID) {
 						m_Layers.pScatterLayer=pXY_Chart->addScatterLayer(m_pProp->m_IndepX[ivar],DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints),
 							m_Label.st.c_str(),m_Symbol.isymb,m_pUtil->m_SymbolSizePoint,m_Color.ivar);
@@ -357,7 +357,7 @@ DataSet* DrawDetails::TimeSerieChart( int ivar,int TotNumPrior, bool accept_type
 		//AddLegend2(m_Label.st);
 
 		if (m_Label.test != m_Label.ytitle2) {
-			if(m_Label.st.find(m_Label.test)==string::npos)
+			if(m_Label.st.find(m_Label.test)== std::string::npos)
 			m_Label.st = m_Label.test + m_Label.st;
 		}
 
@@ -664,7 +664,7 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 	string legend;
 	auto save_regline = m_pProp->m_ReShape.m_RegLine;
 	m_pProp->SetSyncAxis(false);
-	if(m_pProp->GetFirstIndepIndex()==string::npos||m_pProp->IsFirstIndepSet()||(xVar==ivar&&m_pUtil->m_MultiRunPlot)) {
+	if(m_pProp->GetFirstIndepIndex()== std::string::npos||m_pProp->IsFirstIndepSet()||(xVar==ivar&&m_pUtil->m_MultiRunPlot)) {
 		if (m_pProp->GetIndepFirst() == PGVARVALID || (m_pProp->GetIndepFirst() == VALVARSUM && m_pUtil->m_AutoShiftFirstIndep)) {
 
 
@@ -794,10 +794,10 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 			
 			auto koll = m_DataSets.size();
 				m_Label.ytitle1=m_Label.test;
-				if(m_Label.ytitle1.find(m_Label.unit)==string::npos) 
+				if(m_Label.ytitle1.find(m_Label.unit)== std::string::npos) 
 					m_Label.ytitle1 = m_Label.test+ " ("+ m_Label.unit+")";
 				m_Label.unit1=m_Label.unit;
-				if((m_pProp->GetFirstIndepIndex()!=string::npos&&!m_pUtil->m_AutoShiftFirstIndep )||!m_pProp->IsFirstIndepSet()) {
+				if((m_pProp->GetFirstIndepIndex()!= std::string::npos&&!m_pUtil->m_AutoShiftFirstIndep )||!m_pProp->IsFirstIndepSet()) {
 					m_Label.xtitle=m_pProp->GetFirstIndepString(ivar);
 				}
 
@@ -1008,7 +1008,7 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 				}
 				if (pDataSet != nullptr) {
 
-					if ((m_pProp->m_ChartType != CHART_TYPES::TIME_SERIE || m_pProp->m_ReShape.m_AddLine) && m_pProp->GetFirstIndepIndex() == string::npos && !m_pProp->IsFirstIndepSet())
+					if ((m_pProp->m_ChartType != CHART_TYPES::TIME_SERIE || m_pProp->m_ReShape.m_AddLine) && m_pProp->GetFirstIndepIndex() == std::string::npos && !m_pProp->IsFirstIndepSet())
 						SetLineWidth(pDataSet);
 
 					if (CommonColors)
@@ -1039,7 +1039,7 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 					//}
 
 
-					//if ((m_Symbol.isymb > 0 || m_pProp->m_ChartType ==CHART_TYPES::SCATTER || m_pProp->GetFirstIndepIndex() != string::npos || m_pProp->IsFirstIndepSet()) && pDataSet != nullptr) {
+					//if ((m_Symbol.isymb > 0 || m_pProp->m_ChartType ==CHART_TYPES::SCATTER || m_pProp->GetFirstIndepIndex() != std::string::npos || m_pProp->IsFirstIndepSet()) && pDataSet != nullptr) {
 						if (CommonColors)
 							SetSymbols(curve_count, pDataSet);
 						else

@@ -68,7 +68,7 @@ bool Meteorological_Data::Ini()	{
         if(ClimIndexFileName_Sw(ClimIndexFileName) == ClimIndexFileName_Sw::SINGLE_PG_FILE) {
 			filename=m_PG_Meteor.GetFileName();
 			size_t LL=filename.rfind("_");
-   			 if(LL!=string::npos) {
+   			 if(LL!= std::string::npos) {
 				string newname, num;
 				int n=int(PGFileName_Index+0.1);
 				num=STD_ItoAscii(int(PGFileName_Index));
@@ -386,7 +386,7 @@ void Meteorological_Data::Flux()
 
 		// Horisontellt vatteninflöde
 
-		if (m_pModelStructure->LateralInput >= 1 && LateralIpos.ivar != string::npos && LateralIpos.ivar > 0) {
+		if (m_pModelStructure->LateralInput >= 1 && LateralIpos.ivar != std::string::npos && LateralIpos.ivar > 0) {
 
 			if (m_pModelStructure->LateralGWSource == 1)
 				Wsource = GetEcoDat(&m_PGPOS_Source, Wsource.size(), LateralIpos);
@@ -524,8 +524,8 @@ bool Meteorological_Data::CheckEcoDriv1()
 
 
 	for(size_t i=0; i<m_PG_Meteor.GetNumVariables(); i++) {
-     string name=m_PG_Meteor.GetVarName(i+1);
-	 string Id=m_PG_Meteor.GetVarId(i+1);
+     std::string name=m_PG_Meteor.GetVarName(i+1);
+	 std::string Id=m_PG_Meteor.GetVarId(i+1);
 
 	 for(size_t ii=0; ii<20;ii++) {
 		if(int(name[ii])>=97) {
@@ -533,22 +533,22 @@ bool Meteorological_Data::CheckEcoDriv1()
 		}
 	 }
                 
-      if(name.find("TEMP")!=string::npos) {
-        if( name.find("DIFF")!=string::npos) {
+      if(name.find("TEMP")!= std::string::npos) {
+        if( name.find("DIFF")!= std::string::npos) {
            TempDiff_Count++;
            if(TempDiff_Count==TempDiff_Index) 
                 TempDiff_Ipos.ivar=i+1;
         }
-		else if(name.find("AIR")!=string::npos) {
+		else if(name.find("AIR")!= std::string::npos) {
            Tair_Count++;
 		   if(Tair_Count==TAir_Index) 
                 TairIpos.ivar=i+1;
         } 
-        else if(name.find("SURFACE")!=string::npos&&TSurfIpos.ivar==0) 
+        else if(name.find("SURFACE")!= std::string::npos&&TSurfIpos.ivar==0) 
            TSurfIpos.ivar=i+1;
-		else if(name.find("WET")!=string::npos&&WetBulbIpos.ivar==0) 
+		else if(name.find("WET")!= std::string::npos&&WetBulbIpos.ivar==0) 
 		   WetBulbIpos.ivar=i+1;
-		else if(name.find("DEW POINT")!=string::npos&&WetBulbIpos.ivar==0) 
+		else if(name.find("DEW POINT")!= std::string::npos&&WetBulbIpos.ivar==0) 
 		   WetBulbIpos.ivar=i+1;           
 		else if(TairIpos.ivar==0){
 		   Tair_Count++;
@@ -557,89 +557,89 @@ bool Meteorological_Data::CheckEcoDriv1()
      
         }
 	  }
-     else if(name.find("PREC")!=string::npos) {
+     else if(name.find("PREC")!= std::string::npos) {
         Prec_Count++;
         if(Prec_Count==Prec_Index||PrecInput==1)    
 			PrecIpos.ivar=i+1;
 	 }	
-     else if(name.find("GLOBAL")!=string::npos&&RadGlobIpos.ivar==0) {
+     else if(name.find("GLOBAL")!= std::string::npos&&RadGlobIpos.ivar==0) {
         RadGlob_Count++;
         if(RadGlob_Count==RadGlob_Index||RadGlobInput==1) 
 			RadGlobIpos.ivar=i+1;
 	 }	
-     else if(name.find("RIS")!=string::npos&&RadGlobIpos.ivar==0) {
+     else if(name.find("RIS")!= std::string::npos&&RadGlobIpos.ivar==0) {
         RadGlob_Count++;
         if(RadGlob_Count==RadGlob_Index||RadGlobInput==1) 
 			RadGlobIpos.ivar=i+1;
 	}     
-	 else if(name.find("HUM")!=string::npos&&HumRelIpos.ivar==0) {
+	 else if(name.find("HUM")!= std::string::npos&&HumRelIpos.ivar==0) {
 	    HumRel_Count++;
 	    if(HumRel_Count==HumRel_Index||HumRelInput==1) 
 			HumRelIpos.ivar=i+1;
 	}	
-	 else if(name.find("VAPOUR")!=string::npos&&VapourAirIpos.ivar==0) {
+	 else if(name.find("VAPOUR")!= std::string::npos&&VapourAirIpos.ivar==0) {
 	    VapourAir_Count++;
-		if (name.find("DEF")!=string::npos) VapourAirInput = 5;
+		if (name.find("DEF")!= std::string::npos) VapourAirInput = 5;
 	    if(VapourAir_Count==VapourAir_Index||VapourAirInput==1) 
 			VapourAirIpos.ivar=i+1;
 	}	
-	else if(name.find("HR")!=string::npos&&HumRelIpos.ivar==0) {
+	else if(name.find("HR")!= std::string::npos&&HumRelIpos.ivar==0) {
 	    HumRel_Count++;
 	    if(HumRel_Count==HumRel_Index||HumRelInput==1) 
 			HumRelIpos.ivar=i+1;
 	}	
-	else if(name.find("WIND")!=string::npos&&WSpeedIpos.ivar==0) {
+	else if(name.find("WIND")!= std::string::npos&&WSpeedIpos.ivar==0) {
 	    WSpeed_Count++;
 	    if(WSpeed_Count==WSpeed_Index||WSpeedInput==1)
 			WSpeedIpos.ivar=i+1;
 	}	
-	else if(name.find("RNT")!=string::npos&&RadNetIpos.ivar==0) {
+	else if(name.find("RNT")!= std::string::npos&&RadNetIpos.ivar==0) {
 	    RNT_Count++;
 	    if(RNT_Count==RNT_Index||RadNetInput==1) 
 			RadNetIpos.ivar=i+1;
 	}	
-	else if(name.find("RAD")!=string::npos&&RadNetIpos.ivar==0) {
-		if(name.find("NET")!=string::npos) {
+	else if(name.find("RAD")!= std::string::npos&&RadNetIpos.ivar==0) {
+		if(name.find("NET")!= std::string::npos) {
 	        RNT_Count++;
 	        if(RNT_Count==RNT_Index||RadNetInput==1) 
 			    RadNetIpos.ivar=i+1;
 		}
-		else if(name.find("LONG")!=string::npos&&RadInLongIpos.ivar==0) {
+		else if(name.find("LONG")!= std::string::npos&&RadInLongIpos.ivar==0) {
 	         RadInLong_Count++;
 	        if(RadInLong_Count==RadInLong_Index||RadGlobInput==1) 
 		        RadInLongIpos.ivar=i+1;
 		    
 		 }  
 	}
-	else if(name.find("RIL")!=string::npos&&RadInLongIpos.ivar==0) {
+	else if(name.find("RIL")!= std::string::npos&&RadInLongIpos.ivar==0) {
 			 RadInLong_Count++;
 			if(RadInLong_Count==RadInLong_Index||RadGlobInput==1) 
 				RadInLongIpos.ivar=i+1;
 	}
-	else if(name.find("CLOUD")!=string::npos&&CloudFIpos.ivar==0) {
+	else if(name.find("CLOUD")!= std::string::npos&&CloudFIpos.ivar==0) {
 	     Cloud_Count++;
 	     if(Cloud_Count==Cloud_Index||CloudInput==1) 
 			CloudFIpos.ivar=i+1;
 	 }	
-	 else if((name.find("SUNSHINE") != string::npos || name.find("Duration of")!=string::npos||Id.find("DBS")!=string::npos)&&DBSunIpos.ivar==0) {
+	 else if((name.find("SUNSHINE") != std::string::npos || name.find("Duration of")!= std::string::npos||Id.find("DBS")!= std::string::npos)&&DBSunIpos.ivar==0) {
 	     DBSun_Count++;
 	     if(DBSun_Count==DBSun_Index||DBSunInput==1) 
 			DBSunIpos.ivar=i+1;
 	}	
-	else if(name.find("IRRIG")!=string::npos) {
+	else if(name.find("IRRIG")!= std::string::npos) {
 	        IrrigCount++;
 			if(IrrigCount==int(IrrigV_Index)) IrrigIpos.ivar=i+1;
 	}
-	 else if(name.find("TRAFFIC")!=string::npos) {
+	 else if(name.find("TRAFFIC")!= std::string::npos) {
 	        TrafficCount++;
 			TrafficIpos.ivar=i+1;
 	 }
-	 else if(name.find("POTEN")!=string::npos&&PotEvapIpos.ivar==0) 
+	 else if(name.find("POTEN")!= std::string::npos&&PotEvapIpos.ivar==0) 
 			PotEvapIpos.ivar=i+1;
-	 else if(name.find("EPOT")!=string::npos&&PotEvapIpos.ivar==0) 
+	 else if(name.find("EPOT")!= std::string::npos&&PotEvapIpos.ivar==0) 
 			PotEvapIpos.ivar=i+1;
-	 else if(name.find("DURA")!=string::npos&&DBSunIpos.ivar==0) {
-	 	  if(name.find("SUN")!=string::npos) {
+	 else if(name.find("DURA")!= std::string::npos&&DBSunIpos.ivar==0) {
+	 	  if(name.find("SUN")!= std::string::npos) {
 	        DBSun_Count++;
 	        if(DBSun_Count==DBSun_Index||DBSunInput==1) 
 			    DBSunIpos.ivar=i+1;
@@ -780,8 +780,8 @@ bool Meteorological_Data::CheckDriveHorizontal() {
 
       
    for(size_t i=0; i<m_PG_Source.GetNumVariables(); i++) {
-		 string name=m_PG_Source.GetVarName(i+1);
-		 string Id=m_PG_Source.GetVarId(i+1);
+		 std::string name=m_PG_Source.GetVarName(i+1);
+		 std::string Id=m_PG_Source.GetVarId(i+1);
 
 		 for(size_t ii=0; ii<20;ii++) {
 			if(int(name[ii])>=97) {
@@ -793,26 +793,26 @@ bool Meteorological_Data::CheckDriveHorizontal() {
 
 		 }
 
-     if(name.find("WATERDRAINFLOW")!=string::npos||Id.find("WSOURCE")!=string::npos) {
+     if(name.find("WATERDRAINFLOW")!= std::string::npos||Id.find("WSOURCE")!= std::string::npos) {
 		if(LateralIpos.ivar==0) LateralIpos.ivar=i+1;
 		if(DrainageCount<Wsource.size()) 
 			DrainageCount++;
 		else 
           Message("Warning - too many drainage variables, extra not used is :"+name);
 	 }
-	 else if(name.find("SPOOLRUNOFF")!=string::npos|| name.find("SPOOL") != string::npos) {
+	 else if(name.find("SPOOLRUNOFF")!= std::string::npos|| name.find("SPOOL") != std::string::npos) {
 		if(RunOnIpos.ivar==0) 
 			RunOnIpos.ivar=i+1;
 		else
           Message("Warning - too many drainage variables, extra not used is :"+name);
 	 }
-	 else if(name.find("SNOW MASS EXPORT")!=string::npos) {
+	 else if(name.find("SNOW MASS EXPORT")!= std::string::npos) {
 		if(SnowImportIpos.ivar==0) 
 			SnowImportIpos.ivar=i+1;
 		else
           Message("Warning - too many snow export, extra not used is :"+name);
 	 }
-	 else if(name.find("SALTDRAINFLOW")!=string::npos) {
+	 else if(name.find("SALTDRAINFLOW")!= std::string::npos) {
 		if(SaltDrainIpos.ivar==0) 	SaltDrainIpos.ivar=i;
 		if(SaltDrainCount<Wsource.size()) 
 			SaltDrainCount++;

@@ -47,9 +47,9 @@ class ChartUtil
 	int GetRemoveTitle() {return m_RemoveTitle;};
 
 	float GetScaleInterval(float max, float min);
-	float GetGapHorFraction() {return m_GapHFraction;};
-	float GetGapVertTopFraction() {return m_GapVertTopFraction;};
-	float GetGapHorLeftFraction() {return m_GapHorLeftFraction;};
+	float GetGapHorFraction() noexcept {return m_GapHFraction;};
+	float GetGapVertTopFraction() noexcept {return m_GapVertTopFraction;};
+	float GetGapHorLeftFraction() noexcept {return m_GapHorLeftFraction;};
 	
 	void SaveCurrentLinePatternScheme(CHART_OPTION);
 	void RetrieveSavedLinePatternScheme(CHART_OPTION);

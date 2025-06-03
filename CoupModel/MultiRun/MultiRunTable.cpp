@@ -74,7 +74,7 @@ void MultiRunTable::OnFile()
 			if(resultTab==IDOK) {
 				m_SelectedKey=dlg.m_SelectedId;
 				m_strNewValue="Soil";
-				m_pDB->MR_AddSelection(string(m_strNewValue), string(m_SelectedKey));
+				m_pDB->MR_AddSelection(string(m_strNewValue), std::string(m_SelectedKey));
 			}
 		}
 		else {

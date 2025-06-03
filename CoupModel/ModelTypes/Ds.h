@@ -7,7 +7,7 @@ public:
 
 	~Ds();
 
-	void Def(int module_no, string varname, double initv, string unit, string conditions);  
+	void Def(int module_no, std::string varname, double initv, std::string unit, std::string conditions);  
 
 protected:
 

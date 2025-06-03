@@ -159,7 +159,7 @@ void Sim_Xml::setWithinRunRow(CHPARv ch)
 }
 vector<CHPARv> Sim_Xml::getWithinRunRows(ModelBase* pModelBase)
 {
-    vector<CHPARv> out;
+    std::vector<CHPARv> out;
 /*	CHPARv node;
 	CommonModelInfo* pCommonModelInfo = pModelBase->getCommonModelInfoPointer();
 	auto child = demoData->getChildByName("WithinRunOptions");
@@ -219,7 +219,7 @@ vector<CHPARv> Sim_Xml::getWithinRunRows(ModelBase* pModelBase)
 static std::vector<string> MultiTableAtt = { "Dim", "Module", "Name", "TabIndex", "Method", "Monitoring",
 "Min", "Max", "Start", "Dependence", "n", "Db_type", "Db_key", "Group_Dep", "Name_Dep", "TabIndex_Dep" };
 void Sim_Xml::setMultiRunRow(int NumberOfRepeatitionsWithinDimension, int nCount, int numpar,
-	string group_psw, const char* name_psw, int TabIndex, int imethod, int imon, vector<double> table, string selection_pcp, string keyselection_pcp,
+	string group_psw, const char* name_psw, int TabIndex, int imethod, int imon, std::vector<double> table, std::string selection_pcp, std::string keyselection_pcp,
 	string group_psw_dep, const char* name_psw_dep, int ind_dep,
 	double fmin, double fmax, double fstart, int i1) {
 
@@ -308,7 +308,7 @@ vector<Multi_InXml> Sim_Xml::getMultiRunRows()
 
 
 
-void Sim_Xml::setModelGroup(const vector<SimB*> v_simb, CommonModelInfo* pCommonModelInfo)
+void Sim_Xml::setModelGroup(const std::vector<SimB*> v_simb, CommonModelInfo* pCommonModelInfo)
 {
 	if (v_simb.size() == 0) return;
 
@@ -325,7 +325,7 @@ void Sim_Xml::setModelGroup(const vector<SimB*> v_simb, CommonModelInfo* pCommon
 	auto child = demoData->getChildByName(groupname);
 	if (child == nullptr) 	child = demoData->createNewChildElement(groupname);
 	 simtype etype = v_simb[0]->GetType();
-	 string nametype= simType_StringId[static_cast<size_t>(etype)];
+	 std::string nametype= simType_StringId[static_cast<size_t>(etype)];
 	 pCommonModelInfo->trim_xml(nametype);
 	 auto child2 = child->getChildByName(nametype);
 	 if(child2 ==nullptr)  child2 = child->createNewChildElement(nametype);
@@ -413,10 +413,10 @@ void Sim_Xml::setModelGroup(const vector<SimB*> v_simb, CommonModelInfo* pCommon
 				  break;
 			  case simtype::FUNCTION:
 				  pFunc = static_cast<Func*>(v_simb[i]);
-				  vector<string> pnames=pFunc->GetParDep_P_Names();
+				  std::vector<string> pnames=pFunc->GetParDep_P_Names();
 				  icount = 0;
 				  for (auto it = pnames.begin(); it != pnames.end(); ++it) {
-					  string str = (*it);
+					  std::string str = (*it);
 					  conditions = "P_dependentPar" + FUtil::STD_ItoAscii(icount + 1);
 					  child3->setAttribute(conditions, str);
 					  icount++;
@@ -424,7 +424,7 @@ void Sim_Xml::setModelGroup(const vector<SimB*> v_simb, CommonModelInfo* pCommon
 				  pnames = pFunc->GetParDep_Ps_Names();
 				  icount = 0;
 				  for (auto it = pnames.begin(); it != pnames.end(); ++it) {
-					  string str = (*it);
+					  std::string str = (*it);
 					  conditions = "Ps_dependentPar" + FUtil::STD_ItoAscii(icount + 1);
 					  child3->setAttribute(conditions, str);
 					  icount++;
@@ -448,7 +448,7 @@ void Sim_Xml::setModelGroup(const vector<SimB*> v_simb, CommonModelInfo* pCommon
 			  child2->addChildElement(child3);
 	  }*/
 }
-void Sim_Xml::setModelNE_All(const vector<NE*> v_ne)
+void Sim_Xml::setModelNE_All(const std::vector<NE*> v_ne)
 {
 	const char* nametype = "NE";
 	auto child = doc.child(nametype);
@@ -467,7 +467,7 @@ void Sim_Xml::setModelNE_All(const vector<NE*> v_ne)
 	}*/
 
 }
-void Sim_Xml::setModelItems(const vector<SimB*> v_simb, CommonModelInfo* pCommonModelInfo)
+void Sim_Xml::setModelItems(const std::vector<SimB*> v_simb, CommonModelInfo* pCommonModelInfo)
 {
 	if (v_simb.size() == 0) return;
 
@@ -657,10 +657,10 @@ vector<pair<string, double>> Sim_Xml::getAllDouble(const char* type)
 	}*/
 	return out;
 }
-vector<pair<string, string>> Sim_Xml::getAllstring(const char* type)
+vector<pair<string, std::string>> Sim_Xml::getAllstring(const char* type)
 {
-	vector<pair<string, string>> out;
-	pair<string, string> p;
+	vector<pair<string, std::string>> out;
+	pair<string, std::string> p;
 	auto child = doc.child(type);
 	/*if (child != nullptr) {
 		auto child2 = child->getFirstChildElement();
@@ -678,10 +678,10 @@ vector<pair<string, string>> Sim_Xml::getAllstring(const char* type)
 	}*/
 	return out;
 }
-vector<pair<string, string>> Sim_Xml::getAllChangedItems()
+vector<pair<string, std::string>> Sim_Xml::getAllChangedItems()
 {
-	vector<pair<string, string>> out;
-	pair<string, string> p;
+	vector<pair<string, std::string>> out;
+	pair<string, std::string> p;
 	const char* name = "MapWithChangedNames";
 	auto child = doc.child(name);
 	/*if (child != nullptr) {
@@ -710,11 +710,11 @@ vector<string> Sim_Xml::getAllNames(const char* type) {
 
 	return out;
 }
-vector<pair<string, pair<vector<string>, vector<vector<double>>>>> Sim_Xml::getAllDoubleTables(const char* type)
+vector<pair<string, pair<vector<string>, std::vector<vector<double>>>>> Sim_Xml::getAllDoubleTables(const char* type)
 {
-	vector<pair<string,pair<vector<string>, vector<vector<double>>>>> out;
-	pair<string, pair<vector<string>, vector<vector<double>>>> t;
-	pair < vector<string>, vector<vector<double>>> c;
+	vector<pair<string,pair<vector<string>, std::vector<vector<double>>>>> out;
+	pair<string, pair<vector<string>, std::vector<vector<double>>>> t;
+	pair < std::vector<string>, std::vector<vector<double>>> c;
 	
 	auto child = doc.child(type);
 	/*if (child != nullptr) {

@@ -45,8 +45,8 @@ public:
 
 	bool CheckStart_EndTime();
 	void UpdateArchiveLists(size_t icat=8);
-	void RemoveOriginalValues(string typ, string GroupSet, bool original=true, size_t ViewCategory=0);
-	void SetOriginalValues(string typ, string GroupSet="") {RemoveOriginalValues(typ, GroupSet,true);};
+	void RemoveOriginalValues(string typ, std::string GroupSet, bool original=true, size_t ViewCategory=0);
+	void SetOriginalValues(string typ, std::string GroupSet="") {RemoveOriginalValues(typ, GroupSet,true);};
 	void CleanAllLists();
 	bool Sort_TableList_Arrays(bool) {return true;};
 	NewMap();						// standard constructor
@@ -62,7 +62,7 @@ public:
 	bool CreateMapSvFlexFile(size_t index=0);
 
 	void  Export_MBinToCSV(bool accepted);
-	string Export_XLSX(bool accepted, ExportOptions = ExportOptions::All , int Indexoption = -1, string varname = "");
+	string Export_XLSX(bool accepted, ExportOptions = ExportOptions::All , int Indexoption = -1, std::string varname = "");
 
 	bool Info_Header(bool ReadFlag=true);
 	bool Info_Switches(bool ReadFlag=true);

@@ -6,8 +6,8 @@
 
 PGFileImportBase::PGFileImportBase()
 {
-	m_PreviousMin = string::npos;
-	m_CurrentMinStep = string::npos;
+	m_PreviousMin = std::string::npos;
+	m_CurrentMinStep = std::string::npos;
 }
 
 
@@ -77,7 +77,7 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 
 		varstr = newstr.substr(0, npos);
 
-		if (nhourcolumn > npos&&nhourcolumn!=string::npos) {
+		if (nhourcolumn > npos&&nhourcolumn!= std::string::npos) {
 			newstr = newstr.substr(npos + 1);
 			npos = newstr.find(m_delimiters.substr(m_ndelim, 1));
 			varstr += ' ' + newstr.substr(0, npos);
@@ -96,7 +96,7 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 			newstr = newstr.substr(npos + 1);
 			npos = newstr.find(m_delimiters.substr(m_ndelim, 1));
 		}
-		if (npos == string::npos) {
+		if (npos == std::string::npos) {
 			if (newstr.size() == 1 && varstr[0] == 32)
 				varstr = "";
 			else
@@ -117,7 +117,7 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 		return varstr;
 
 	};
-	auto SetValueFromString = [&](size_t index, string varstr) {
+	auto SetValueFromString = [&](size_t index, std::string varstr) {
 		if (varstr.find("-9999") == 0 || varstr.find("NaN") == 0 || (varstr.size() == 1 && varstr[0] == 32)||varstr.size()==0|| varstr.find("-2147483648")==0)
 			vv->at(index) = MISSING;
 		else
@@ -401,7 +401,7 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 			i++;
 			npos=line.find(m_delimiters.substr(m_ndelim,1));
 			auto koll=line.size();
-			if(npos==string::npos||npos>line.size()) {
+			if(npos== std::string::npos||npos>line.size()) {
 				vv->at(i)=FUtil::AtoFloat(line);
 				varstr="";
 			}
@@ -466,7 +466,7 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 			i++;
 			npos=line.find(m_delimiters.substr(m_ndelim,1));
 			auto koll=line.size();
-			if(npos==string::npos||npos>line.size()) {
+			if(npos== std::string::npos||npos>line.size()) {
 				vv->at(i)=FUtil::AtoFloat(line);
 				varstr="";
 			}
@@ -511,7 +511,7 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 		while(newstr.size()>0) {
 			i++;
 			npos=newstr.find(m_delimiters.substr(m_ndelim,1));
-			if(npos==string::npos) {
+			if(npos== std::string::npos) {
 				vv->at(i)=FUtil::AtoFloat(newstr);
 				if(i==10) vv->at(8)=vv->at(10)*3600.f;
 				
@@ -564,10 +564,10 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 		npos=newstr.find(m_delimiters.substr(m_ndelim,1));
 		newstr = newstr.substr(npos + 1);
 
-		while(npos!=string::npos) {
+		while(npos!= std::string::npos) {
 			npos = newstr.find(m_delimiters.substr(m_ndelim, 1));
 			irec++;
-			if (npos != string::npos)
+			if (npos != std::string::npos)
 				varstr = newstr.substr(0, npos);
 			else
 				varstr = newstr;
@@ -726,11 +726,11 @@ bool PGFileImportBase::CreateNewFileAndDefineSize(FILEINFO input,  size_t Actual
 
 	auto ReturnFileNameBase = [&]() {
 		size_t ip = m_filename.find(".txt");
-		if (ip == string::npos)
+		if (ip == std::string::npos)
 			ip = m_filename.find(".csv");
-		if (ip == string::npos) 
+		if (ip == std::string::npos) 
 			ip = m_filename.find(".");
-		if (ip != string::npos)
+		if (ip != std::string::npos)
 			return m_filename.substr(0, ip);
 		else 
 			return m_filename;
@@ -792,7 +792,7 @@ bool PGFileImportBase::CreateNewFileAndDefineSize(FILEINFO input,  size_t Actual
 		SetNumRecords(m_CurrentFile.NumRec - input.NumHeads + m_nprevrec);
 		ReAllocate(input.TotRec - input.NumHeads, input.MaxVar - m_time_red - input.RedNumVar);
 		size_t ip = m_filename.find(".txt");
-		if (ip == string::npos)
+		if (ip == std::string::npos)
 			ip = m_filename.find(".csv");
 		pg.status.FileName = m_filename.substr(0, ip) + ".bin";
 		SaveAs(pg.status.FileName, true);
@@ -1051,12 +1051,12 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 	for (size_t i = 0; i < nbyte; i++) {
 		nvar = 1;
 		string checkline = str.substr(0, ich);
-		if (ich == string::npos) continue;
+		if (ich == std::string::npos) continue;
 		string line;
 		for (size_t jj = 0; jj < ich; jj++)
 			if (checkline[jj] > 0) line.push_back(checkline[jj]);
 		ich = line.size();
-		if (ich == string::npos) continue;
+		if (ich == std::string::npos) continue;
 		bool SkipFirst = false;
 		FUtil::trim(line);
 		if (m_format == NOAA) {
@@ -1306,7 +1306,7 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 				unitstr.clear();
 				switch (jj) {
 				case (1):
-					if (pg.status.FileName.find("NO3") != string::npos)
+					if (pg.status.FileName.find("NO3") != std::string::npos)
 						varstr = "NO3 Deposition Rate";
 					else
 						varstr = "NH4 Deposition Rate";
@@ -1336,7 +1336,7 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 				unitstr.clear();
 				switch (jj) {
 				case (1):
-					if (pg.status.FileName.find("sraz") != string::npos) {
+					if (pg.status.FileName.find("sraz") != std::string::npos) {
 						varstr = "Precipitation";
 						unitstr = "mm";
 					}
@@ -1371,27 +1371,27 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 		}*/
 		else {
 			size_t npos;
-			if (m_ndelim != string::npos) 
+			if (m_ndelim != std::string::npos) 
 				npos = line.find(m_delimiters.substr(m_ndelim, 1));			
 			else
-				npos = string::npos;
-			if(npos!=string::npos) varstr = line.substr(0, npos);
+				npos = std::string::npos;
+			if(npos!= std::string::npos) varstr = line.substr(0, npos);
 			else varstr = line;
 			i_head = 0;
-			if (varstr.find("Name") != string::npos || varstr.find("DATE") != string::npos || varstr.find("Date") != string::npos || varstr.find("date") != string::npos || varstr.find("Time") != string::npos || varstr.find("DATUM") != string::npos)
+			if (varstr.find("Name") != std::string::npos || varstr.find("DATE") != std::string::npos || varstr.find("Date") != std::string::npos || varstr.find("date") != std::string::npos || varstr.find("Time") != std::string::npos || varstr.find("DATUM") != std::string::npos)
 				i_head = 1;
-			else if (varstr.find("Variable Unit") != string::npos)
+			else if (varstr.find("Variable Unit") != std::string::npos)
 				i_head = 2;
-			else if (varstr.find("Variable Id") != string::npos)
+			else if (varstr.find("Variable Id") != std::string::npos)
 				i_head = 3;
-			else if (varstr.find("Variable Pos") != string::npos)
+			else if (varstr.find("Variable Pos") != std::string::npos)
 				i_head = 4;
 			FUtil::trim(line);
-			if (m_ndelim != string::npos)
+			if (m_ndelim != std::string::npos)
 				npos = line.find(m_delimiters.substr(m_ndelim, 1));
 			else
-				npos = string::npos;
-			while (npos != string::npos) {
+				npos = std::string::npos;
+			while (npos != std::string::npos) {
 				varstr = line.substr(0, npos);
 				if (i_head == 1 && (input.RedNumVar == 0 || input.RedNumVar == 1)) {
 					FUtil::trim(varstr);
@@ -1442,7 +1442,7 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 					SetVarName(nvar - input.RedNumVar, varstr.substr(0, npos));
 					SetVarUnit(nvar - input.RedNumVar, varstr.substr(npos + 1, 2));
 					npos = m_filename.find(".txt");
-					if (npos != string::npos)
+					if (npos != std::string::npos)
 						SetVarId(nvar - input.RedNumVar, m_filename.substr(npos - 5, 5));
 				}
 			}
@@ -1498,7 +1498,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 		size_t nread=0;
 		size_t nmissing=0;
 		string str;
-		size_t ich = string::npos;
+		size_t ich = std::string::npos;
 		string datestring;
 
 		string line;
@@ -1525,7 +1525,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 				size_t koll = line.size();
 				ich = line.find('\0');
 				line.resize(ich);
-				if (ich == string::npos) {
+				if (ich == std::string::npos) {
 					if (istream.good()) {
 						line.clear();
 						line.resize(40000);
@@ -1561,7 +1561,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 
 				string varstr = newstr.substr(0, npos);
 
-				if (nhourcolumn > npos&&nhourcolumn != string::npos) {
+				if (nhourcolumn > npos&&nhourcolumn != std::string::npos) {
 					newstr = newstr.substr(npos + 1);
 					npos = newstr.find(m_delimiters.substr(m_ndelim, 1));
 					varstr += ' ' + newstr.substr(0, npos);
@@ -1594,7 +1594,7 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 			else
 				LastLinetoRead = input.TotRec;
 		else
-			LastLinetoRead = string::npos;
+			LastLinetoRead = std::string::npos;
 
 		// hack
 		//LastLinetoRead = input.TotRec;
@@ -1610,11 +1610,11 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 			for (size_t i = 0; i < input.Des.base.Unit.size(); i++) {
 				if (input.ValidVariables[i]) {
 
-					if (input.Des.base.Unit[i].find("W") != string::npos) {
+					if (input.Des.base.Unit[i].find("W") != std::string::npos) {
 						To_Convert.push_back(pair<size_t, double>(nvar, 86400.));
 						pg.Des.base.Unit[nvar] = "J/m2/day";
 					}
-					else if (input.Des.base.Unit[i].find("mm") != string::npos) {
+					else if (input.Des.base.Unit[i].find("mm") != std::string::npos) {
 						To_Convert.push_back(pair<size_t, double>(nvar, 24.));
 						pg.Des.base.Unit[nvar] = "mm/day";
 					}
@@ -1688,11 +1688,11 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 						}
 
 
-						if (m_ndelim != string::npos) {
+						if (m_ndelim != std::string::npos) {
 							npos = line.find(m_delimiters.substr(m_ndelim, 1));
 						}
 						else
-							npos = string::npos;
+							npos = std::string::npos;
 						string dateString;
 						TimeSetComplete = false;
 
@@ -1712,8 +1712,8 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 							extralines--;
 						}
 						else {
-							while (npos != string::npos || line.size() > 0) {
-								if (npos != string::npos)
+							while (npos != std::string::npos || line.size() > 0) {
+								if (npos != std::string::npos)
 									varstr = line.substr(0, npos);
 								else
 									varstr = line;
@@ -1754,9 +1754,9 @@ bool PGFileImportBase::ReadingVariableValues(FILEINFO input, size_t ActualIndexI
 									}
 									if (!TimeSetComplete) TimeSetComplete = SetDefinedTime(next_validLine- ValidMapAdjust);
 								}
-								if (npos != string::npos && line.size() > npos)
+								if (npos != std::string::npos && line.size() > npos)
 									line = line.substr(npos + 1);
-								if (m_ndelim != string::npos)
+								if (m_ndelim != std::string::npos)
 									npos = line.find(m_delimiters.substr(m_ndelim, 1));
 
 								if (input.ValidVariables.size() > nvar + 1) {
@@ -1871,7 +1871,7 @@ void PGFileImportBase::InitForSettingMinMaxMissingValues()
 	}
 
 }
-bool PGFileImportBase::SetTimeVariable(size_t nrec, string varstr, size_t nvar, bool Shift)	{
+bool PGFileImportBase::SetTimeVariable(size_t nrec, std::string varstr, size_t nvar, bool Shift)	{
 	//size_t npos=varstr.size();
 	bool CompleteSet=false;
 
@@ -1881,14 +1881,14 @@ if (nvar == m_CurrentFileInfo.DateColumn) {
 	if (m_CurrentFileInfo.IdentifiedDateFormat == DMY_SLASH) {
 		m_CurrentMin = PGUtil::MinutConv(PGUtil::DateConv(DMY_SLASH, varstr));
 		if (varstr.size()>11) return true;
-		else if (m_CurrentFileInfo.HourColumn == string::npos&&m_CurrentFileInfo.TimeColumn == string::npos) return true;	
+		else if (m_CurrentFileInfo.HourColumn == std::string::npos&&m_CurrentFileInfo.TimeColumn == std::string::npos) return true;	
 	}
 	else if (m_CurrentFileInfo.IdentifiedDateFormat == YMD) {
 		m_CurrentMin = PGUtil::MinutConv(PGUtil::DateConv(m_CurrentFileInfo.IdentifiedDateFormat, varstr));
-		if (m_CurrentFileInfo.HourColumn != string::npos || m_CurrentFileInfo.TimeColumn != string::npos) return false;
+		if (m_CurrentFileInfo.HourColumn != std::string::npos || m_CurrentFileInfo.TimeColumn != std::string::npos) return false;
 
 		if (varstr.size()>8) return true;
-		if (m_CurrentFileInfo.HourColumn == string::npos&&m_CurrentFileInfo.TimeColumn == string::npos) return true;
+		if (m_CurrentFileInfo.HourColumn == std::string::npos&&m_CurrentFileInfo.TimeColumn == std::string::npos) return true;
 
 	}
 	else if(m_CurrentFileInfo.IdentifiedDateFormat == YMDHM) {	
@@ -1902,7 +1902,7 @@ if (nvar == m_CurrentFileInfo.DateColumn) {
 	else {
 		m_CurrentMin = PGUtil::MinutConv(varstr);
 		if (varstr.size()>11) return true;
-		if (m_CurrentFileInfo.HourColumn == string::npos&&m_CurrentFileInfo.TimeColumn == string::npos) return true;
+		if (m_CurrentFileInfo.HourColumn == std::string::npos&&m_CurrentFileInfo.TimeColumn == std::string::npos) return true;
 	}
 }
 else if (nvar == m_CurrentFileInfo.PG_MinColumn) {
@@ -1925,18 +1925,18 @@ else if (nvar == m_CurrentFileInfo.DayNumberColumn) {
 else if (nvar == m_CurrentFileInfo.TimeColumn|| nvar == m_CurrentFileInfo.HourColumn) {
 	m_CurrentMin-=720;
 	if (varstr.size() == 0) {
-		if (m_PreviousMin != string::npos&&m_CurrentMinStep!=string::npos) {
+		if (m_PreviousMin != std::string::npos&&m_CurrentMinStep!= std::string::npos) {
 			m_CurrentMin = m_PreviousMin + m_CurrentMinStep;
 				string datum = PGUtil::STD_StringDatum(m_CurrentMin);
 		}
 
 
 	}
-	else if(varstr.find(":")!=string::npos) {
+	else if(varstr.find(":")!= std::string::npos) {
 		string datum = PGUtil::STD_StringDatum(m_CurrentMin);
 		datum = datum.substr(0, 11) + varstr;
 		m_CurrentMin = PGUtil::MinutConv(datum);
-		if (m_PreviousMin != string::npos) {
+		if (m_PreviousMin != std::string::npos) {
 			m_CurrentMinStep = m_CurrentMin - m_PreviousMin;
 		}
 		m_PreviousMin = m_CurrentMin;
@@ -1955,7 +1955,7 @@ else if (nvar == m_CurrentFileInfo.TimeColumn|| nvar == m_CurrentFileInfo.HourCo
 		string datum = PGUtil::STD_StringDatum(m_CurrentMin);
 		datum = datum.substr(0, 11) + varstr;
 		m_CurrentMin = PGUtil::MinutConv(datum);
-		if (m_PreviousMin != string::npos) {
+		if (m_PreviousMin != std::string::npos) {
 			m_CurrentMinStep = m_CurrentMin - m_PreviousMin;
 		}
 		m_PreviousMin = m_CurrentMin;
@@ -1966,19 +1966,19 @@ else if (nvar == m_CurrentFileInfo.TimeColumn|| nvar == m_CurrentFileInfo.HourCo
 else if (nvar == m_CurrentFileInfo.HourColumn) {
 	   m_CurrentMin -= 720;
 	   if (varstr.size() == 0) {
-		   if (m_PreviousMin != string::npos && m_CurrentMinStep != string::npos) {
+		   if (m_PreviousMin != std::string::npos && m_CurrentMinStep != std::string::npos) {
 			   m_CurrentMin = m_PreviousMin + m_CurrentMinStep;
-			   string datum = PGUtil::STD_StringDatum(m_CurrentMin);
+			   std::string datum = PGUtil::STD_StringDatum(m_CurrentMin);
 		   }
 
 
 	   }
 	   else {
-		   string datum = PGUtil::STD_StringDatum(m_CurrentMin);
+		   std::string datum = PGUtil::STD_StringDatum(m_CurrentMin);
 		   m_CurrentMin += 60 * FUtil::AtoInt(varstr);
 		   //datum = datum.substr(0, 11) + varstr;
 		   //m_CurrentMin = PGUtil::MinutConv(datum);
-		   if (m_PreviousMin == string::npos) {
+		   if (m_PreviousMin == std::string::npos) {
 			   m_CurrentMinStep = m_CurrentMin - m_PreviousMin;
 		   }
 		   m_PreviousMin = m_CurrentMin;
@@ -1999,7 +1999,7 @@ else if (m_CurrentFileInfo.IdentifiedDateFormat == YMD) {
  }
 else if (nvar == m_CurrentFileInfo.YearColumn&&m_CurrentFileInfo.DayColumn!=3) {
 	m_CurrentMin = PGUtil::MinutConv(PGUtil::DateConv(YMD, varstr));
-	if (varstr.size()> 10&& m_CurrentFileInfo.TimeColumn==string::npos&&m_CurrentFileInfo.DateColumn == string::npos)
+	if (varstr.size()> 10&& m_CurrentFileInfo.TimeColumn== std::string::npos&&m_CurrentFileInfo.DateColumn == std::string::npos)
 		return true;
 	else
 		return false;
@@ -2193,7 +2193,7 @@ void PGFileImportBase::WriteCompleteRecord() {
 	for(size_t j=0;j<pg.Shape.NumVar;j++)
 		pg.Var.vv[j+1]=float(MISSING);
 }
-void PGFileImportBase::SetValidVariable(size_t index, string varstr) {
+void PGFileImportBase::SetValidVariable(size_t index, std::string varstr) {
 	if (varstr == "G") pg.Var.vv[index] = 0;
 	else if (varstr == "Y") pg.Var.vv[index] = 1;
 	else pg.Var.vv[index]=FUtil::AtoFloat(varstr);

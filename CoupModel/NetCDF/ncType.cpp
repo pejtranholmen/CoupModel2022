@@ -46,7 +46,7 @@ NcType::NcType() :
 {}
 
 // constructor
-NcType::NcType(const NcGroup& grp, const string& name) :
+NcType::NcType(const NcGroup& grp, const std::string& name) :
   nullObject (false)
 {
   groupId= grp.getId();
@@ -96,7 +96,7 @@ string  NcType::getName() const{
   char charName[NC_MAX_NAME+1];
   size_t *sizep=nullptr;
   ncCheck(nc_inq_type(groupId,myId,charName,sizep),__FILE__,__LINE__);
-  return string(charName);
+  return std::string(charName);
   //  }
 };
 
@@ -136,26 +136,26 @@ NcType::ncType NcType::getTypeClass() const{
   }
 }
   
-// The type class returned as a string.
+// The type class returned as a std::string.
 string NcType::getTypeClassName() const{
   ncType typeClass=getTypeClass();
   switch (typeClass) {
-  case nc_BYTE    : return string("nc_BYTE");
-  case nc_UBYTE   : return string("nc_UBYTE");
-  case nc_CHAR    : return string("nc_CHAR");
-  case nc_SHORT   : return string("nc_SHORT");
-  case nc_USHORT  : return string("nc_USHORT");
-  case nc_INT     : return string("nc_INT");
-  case nc_UINT    : return string("nc_UINT");  
-  case nc_INT64   : return string("nc_INT64"); 
-  case nc_UINT64  : return string("nc_UINT64");
-  case nc_FLOAT   : return string("nc_FLOAT");
-  case nc_DOUBLE  : return string("nc_DOUBLE");
-  case nc_STRING  : return string("nc_STRING");
-  case nc_VLEN    : return string("nc_VLEN");
-  case nc_OPAQUE  : return string("nc_OPAQUE");
-  case nc_ENUM    : return string("nc_ENUM");
-  case nc_COMPOUND: return string("nc_COMPOUND");
+  case nc_BYTE    : return std::string("nc_BYTE");
+  case nc_UBYTE   : return std::string("nc_UBYTE");
+  case nc_CHAR    : return std::string("nc_CHAR");
+  case nc_SHORT   : return std::string("nc_SHORT");
+  case nc_USHORT  : return std::string("nc_USHORT");
+  case nc_INT     : return std::string("nc_INT");
+  case nc_UINT    : return std::string("nc_UINT");  
+  case nc_INT64   : return std::string("nc_INT64"); 
+  case nc_UINT64  : return std::string("nc_UINT64");
+  case nc_FLOAT   : return std::string("nc_FLOAT");
+  case nc_DOUBLE  : return std::string("nc_DOUBLE");
+  case nc_STRING  : return std::string("nc_STRING");
+  case nc_VLEN    : return std::string("nc_VLEN");
+  case nc_OPAQUE  : return std::string("nc_OPAQUE");
+  case nc_ENUM    : return std::string("nc_ENUM");
+  case nc_COMPOUND: return std::string("nc_COMPOUND");
   }
   // we never get here!
   return "Dummy";

@@ -95,7 +95,7 @@ bool Radiation_Functions::Def()
 	Ps *pPs;
 	functorprop.PhysFuncName = FUNC_CHOICE::DAYLENGTH; functorprop.Arg = MyArgType::D1;
 	functorprop.FuncName = MyFunc::NO_PARFUNC;
-	funcname = "Day Length During Year Function"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Day Length During Year Function"; functorprop.FunctorInitOption = std::string::npos;
 
 	plotpar.X_Max = 365;
 	plotpar.X_Label = "Day Number";
@@ -114,7 +114,7 @@ bool Radiation_Functions::Def()
 
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	functorprop.PhysFuncName = FUNC_CHOICE::POTRISDAILY; functorprop.Arg = MyArgType::D1;
-	funcname = "Potential Global Radiation Function"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Potential Global Radiation Function"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Y_Label = "Global Radiation "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MEGA_HEATFLOW_UNIT, true);
 	plotpar.Y_ScalingCoef = -6;
 
@@ -132,7 +132,7 @@ bool Radiation_Functions::Def()
 	Define(pPs, "Solar Time Adjust", 0., "minutes", "RadiationInput > 0", -600., 600., -240., 240.);
 	functorprop.PhysFuncName = FUNC_CHOICE::POTRISHOUR; functorprop.Arg = MyArgType::D2;
 	functorprop.FuncName = MyFunc::NO_PARFUNC;
-	funcname = "Potential Global Radiation Within Day Function"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Potential Global Radiation Within Day Function"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Num_Of_Curves = 3;
 	plotpar.Num_Of_Points = 100;
 	plotpar.Num_Of_X = 2;
@@ -151,7 +151,7 @@ bool Radiation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::ATM_TRANSPARENCY; functorprop.Arg = MyArgType::D1;
-	funcname = "Angstroms Short Wave Equation"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Angstroms Short Wave Equation"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
@@ -172,7 +172,7 @@ bool Radiation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::BEER_LAW_SINGLE_LEAF; functorprop.Arg = MyArgType::D1;
-	funcname = "Beer's Law"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Beer's Law"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_Points = 100;
 	plotpar.Num_Of_X = 1;
@@ -205,7 +205,7 @@ bool Radiation_Functions::Def()
 
 	pFunc = new Func(ATMBOUNDARY, RADIATION, NOFPROC, NOBPROC, NORMAL);  
 	functorprop.FuncName = MyFunc::BEER_LAW_PERLEAF; functorprop.Arg = MyArgType::D1;
-	funcname = "Beer's Law multi canopy"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Beer's Law multi canopy"; functorprop.FunctorInitOption = std::string::npos;
 	
 
 	Define(pFunc, functorprop, funcname,  p_vec, plotpar);  ps_vec.clear();
@@ -228,7 +228,7 @@ bool Radiation_Functions::Def()
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
 	functorprop.FuncName = MyFunc::ALBEDO_SOIL; functorprop.Arg = MyArgType::D1;
-	funcname = "Bare Soil Albedo Function"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Bare Soil Albedo Function"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SOILSURFACE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec,plotpar);  ps_vec.clear();
 
@@ -259,7 +259,7 @@ bool Radiation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::ALBEDO_SNOW_TSUMAIR; functorprop.Arg = MyArgType::D2;
-	funcname = "Snow Age Albedo TempSum Function"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Snow Age Albedo TempSum Function"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SOILSURFACE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);  
 
@@ -267,7 +267,7 @@ bool Radiation_Functions::Def()
 	ps_vec.push_back(m_pModelMap->GetPsPointer("Time Step"));
 
 	functorprop.FuncName = MyFunc::ALBEDO_SNOW_TAIR; functorprop.Arg = MyArgType::D2;
-	funcname = "Snow Age Albedo Function"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Snow Age Albedo Function"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SOILSURFACE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 
 	Define(pFunc, functorprop, funcname,  ps_vec,plotpar); 
@@ -281,7 +281,7 @@ bool Radiation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::RADLONG_OUT_EM; functorprop.Arg = MyArgType::D1;
-	funcname = "Outgoing Long Wave Radiation"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Outgoing Long Wave Radiation"; functorprop.FunctorInitOption = std::string::npos;
 
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = -20;
@@ -305,7 +305,7 @@ bool Radiation_Functions::Def()
 
 
 	functorprop.FuncName = MyFunc::BRISTOW_FIXEDB; functorprop.Arg = MyArgType::D2;
-	funcname = "Atmospheric Transparency from Daily Temp Range"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Atmospheric Transparency from Daily Temp Range"; functorprop.FunctorInitOption = std::string::npos;
 	
 	pPs= new Ps(&ParB.Bristow_Turb, SINGLE,RADIATION, SCATTERING,NOBPROC, NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "Bristow_Turb", 0.72, "-", "RadiationInput > 0|CloudInput=4", 0., 1., 0.5, 0.8); 
@@ -334,7 +334,7 @@ bool Radiation_Functions::Def()
 	Define(pPs, "DTR Year Shift", 15., "DayNo", "RadiationInput > 0|CloudInput=4", 0., 30., 3., 25.);
 
 	functorprop.FuncName = MyFunc::BRISTOW_SEASONALB; functorprop.Arg = MyArgType::D2;
-	funcname = "Atmospheric Transparency from Daily Temp Range with seasonality"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Atmospheric Transparency from Daily Temp Range with seasonality"; functorprop.FunctorInitOption = std::string::npos;
 
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec); ps_vec.clear();
@@ -347,7 +347,7 @@ bool Radiation_Functions::Def()
     //! New Gryning Coefficient
 	
 	functorprop.FuncName = MyFunc::RAD_RATIO_DIFFUSE; functorprop.Arg = MyArgType::D2;
-	funcname = "Ratio of Diffuse Radiation"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Ratio of Diffuse Radiation"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
@@ -384,7 +384,7 @@ bool Radiation_Functions::Def()
 	functorprop.FuncName = MyFunc::CANOPY_SHADE_COVER; functorprop.Arg = MyArgType::D2;
 	plotpar.Num_Of_Curves = 2;
 	plotpar.Y_Label = "Enhanced Shadowing Factor ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
-	funcname = "Shadowing Cover for Canopy Heights"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Shadowing Cover for Canopy Heights"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.X2_Vec = { 0.1f, 100.f };
 	plotpar.LegendsVec = { "1 m tree","10 m tree"};
 	plotpar.X_Label = "Solar Zenit Angle ";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::ANGLE_UNIT, true);
@@ -410,7 +410,7 @@ bool Radiation_Functions::Def()
 	Define(pPs,"BruntAirCoef_4",0.9,"-","LongWaveBalance=0|RadiationInput  > 0", 0.8, 1.);
 
 	functorprop.FuncName = MyFunc::RADNETLONG_SATURATED_AIR; functorprop.Arg = MyArgType::D2;
-	funcname = "Net Long Wave Radiation"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Net Long Wave Radiation"; functorprop.FunctorInitOption = std::string::npos;
 
 	plotpar.Num_Of_Curves = 2;
 	plotpar.Num_Of_Points = 100;
@@ -444,7 +444,7 @@ bool Radiation_Functions::Def()
 		Define(pPs,"KonzelmannCoef_3",0.963,"-","LongWaveBalance > 0|InLongRad=0", 0.9, 0.99); ps_vec.push_back(pPs);
 	
 	functorprop.FuncName = MyFunc::RADLONGIN_KONZELMANN_EMISSIVITY; functorprop.Arg = MyArgType::D3;
-	funcname = "Emissivity Long Wave Radiation (Konzelmann)"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Emissivity Long Wave Radiation (Konzelmann)"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	functorprop.Set_PlotPar = false;
 	plotpar.Y_Label = "Emissivity atmosphere (-)";
@@ -457,7 +457,7 @@ bool Radiation_Functions::Def()
 
 	functorprop.FuncName = MyFunc::RADLONGIN_KONZELMANN; functorprop.Arg = MyArgType::D3;
 
-	funcname = "Incoming Long Wave Radiation (Konzelmann)"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Incoming Long Wave Radiation (Konzelmann)"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	functorprop.Set_PlotPar = false;
 	plotpar.Y_Label = "Incomining Longwave Radiation (J/m2/day)";
@@ -492,11 +492,11 @@ bool Radiation_Functions::Def()
 		Define(pPs,"SatterlundCoef_2",.3,"-","RadiationInput  > 0|InLongRad=1", 0.1, 0.7);
 		
 	functorprop.FuncName = MyFunc::RADLONGIN_SATTERLUND_EMISSIVITY; functorprop.Arg = MyArgType::D3;
-	funcname = "Emissivity Long Wave Radiation (Satterlund)"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Emissivity Long Wave Radiation (Satterlund)"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec);
 	functorprop.FuncName = MyFunc::RADLONGIN_SATTERLUND; functorprop.Arg = MyArgType::D3;
-	funcname = "Incoming Long Wave Radiation (Satterlund)"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Incoming Long Wave Radiation (Satterlund)"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec);	 ps_vec.clear();
 
@@ -516,11 +516,11 @@ bool Radiation_Functions::Def()
 		Define(pPs, "BruntCoef_3",0.3,"-","RadiationInput  > 0|InLongRad=2",0.2,0.4);
 		mTab_BruntInLong.push_back(pP);
 	functorprop.FuncName = MyFunc::RADLONGIN_BRUNT_EMISSIVITY; functorprop.Arg = MyArgType::D3;
-	funcname = "Emissivity Long Wave Radiation (Brunt)"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Emissivity Long Wave Radiation (Brunt)"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec);
 	functorprop.FuncName = MyFunc::RADLONGIN_BRUNT; functorprop.Arg = MyArgType::D3;
-	funcname = "Incoming Long Wave Radiation (Brunt)"; functorprop.FunctorInitOption = string::npos;
+	funcname = "Incoming Long Wave Radiation (Brunt)"; functorprop.FunctorInitOption = std::string::npos;
 	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec);	 ps_vec.clear();
 

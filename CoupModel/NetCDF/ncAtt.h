@@ -85,7 +85,7 @@ namespace netCDF
     void getValues(char** dataValues) const;
 
     /*! \overload
-      (The string variable does not need preallocating.)
+      (The std::string variable does not need preallocating.)
      */ 
     void getValues(std::string& dataValues) const;
 

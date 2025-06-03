@@ -96,7 +96,7 @@ bool NcGroup::operator!=(const NcGroup & rhs) const
 // Get the group name.
 string NcGroup::getName(bool fullName) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::getName on a Null group",__FILE__,__LINE__);
-  string groupName;
+  std::string groupName;
   if(fullName){
     // return full name of group with foward "/" separarating sub-groups.
     size_t lenp;
@@ -187,20 +187,20 @@ multimap<std::string,NcGroup> NcGroup::getGroups(NcGroup::GroupLocation location
 
   // record this group
   if(location == ParentsAndCurrentGrps || location == AllGrps) {
-    ncGroups.insert(pair<const string,NcGroup>(getName(),*this));
+    ncGroups.insert(pair<const std::string,NcGroup>(getName(),*this));
   }
 
   // the child groups of the current group
   if(location == ChildrenGrps || location == AllChildrenGrps || location == AllGrps ) {
     // get the number of groups
     int groupCount = getGroupCount();
-    vector<int> ncids(groupCount);
+    std::vector<int> ncids(groupCount);
     int* numgrps=nullptr;
     // now get the id of each NcGroup and populate the ncGroups container.
     ncCheck(nc_inq_grps(myId, numgrps,&ncids[0]),__FILE__,__LINE__);
     for(int i=0; i<groupCount;i++){
       NcGroup tmpGroup(ncids[i]);
-      ncGroups.insert(pair<const string,NcGroup>(tmpGroup.getName(),tmpGroup));
+      ncGroups.insert(pair<const std::string,NcGroup>(tmpGroup.getName(),tmpGroup));
     }
   }
 
@@ -211,7 +211,7 @@ multimap<std::string,NcGroup> NcGroup::getGroups(NcGroup::GroupLocation location
       while(1) {
 	const NcGroup parentGroup(tmpGroup.getParentGroup());
 	if(parentGroup.isNull()) break;
-	ncGroups.insert(pair<const string,NcGroup>(parentGroup.getName(),parentGroup));
+	ncGroups.insert(pair<const std::string,NcGroup>(parentGroup.getName(),parentGroup));
 	tmpGroup=parentGroup;
       }
     }
@@ -231,7 +231,7 @@ multimap<std::string,NcGroup> NcGroup::getGroups(NcGroup::GroupLocation location
 }
   
 // Get the named child NcGroup object.
-NcGroup NcGroup::getGroup(const string& name,NcGroup::GroupLocation location) const{
+NcGroup NcGroup::getGroup(const std::string& name,NcGroup::GroupLocation location) const{
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::getGroup on a Null group",__FILE__,__LINE__);
   multimap<string,NcGroup> ncGroups(getGroups(location));
   pair<multimap<string,NcGroup>::iterator,multimap<string,NcGroup>::iterator> ret;
@@ -260,7 +260,7 @@ set<NcGroup> NcGroup::getGroups(const std::string& name,NcGroup::GroupLocation l
 }
 
 // Add a new child NcGroup object.
-NcGroup NcGroup::addGroup(const string& name) const {
+NcGroup NcGroup::addGroup(const std::string& name) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::addGroup on a Null group",__FILE__,__LINE__);
   int new_ncid;
   ncCheck(nc_def_grp(myId,const_cast<char*> (name.c_str()),&new_ncid),__FILE__,__LINE__);
@@ -320,11 +320,11 @@ multimap<std::string,NcVar> NcGroup::getVars(NcGroup::Location location) const {
     int varCount = getVarCount();
     // now get the name of each NcVar object and populate the ncVars container.
     int* nvars=nullptr;
-    vector<int> varids(varCount);
+    std::vector<int> varids(varCount);
     ncCheck(nc_inq_varids(myId, nvars,&varids[0]),__FILE__,__LINE__);
     for(int i=0; i<varCount;i++){
       NcVar tmpVar(*this,varids[i]);
-      ncVars.insert(pair<const string,NcVar>(tmpVar.getName(),tmpVar));
+      ncVars.insert(pair<const std::string,NcVar>(tmpVar.getName(),tmpVar));
     }
   }
 
@@ -337,11 +337,11 @@ multimap<std::string,NcVar> NcGroup::getVars(NcGroup::Location location) const {
       int varCount = tmpGroup.getVarCount();
       // now get the name of each NcVar object and populate the ncVars container.
       int* nvars=nullptr;
-      vector<int> varids(varCount);
+      std::vector<int> varids(varCount);
       ncCheck(nc_inq_varids(tmpGroup.getId(), nvars,&varids[0]),__FILE__,__LINE__);
       for(int i=0; i<varCount;i++){
 	NcVar tmpVar(tmpGroup,varids[i]);
-	ncVars.insert(pair<const string,NcVar>(tmpVar.getName(),tmpVar));
+	ncVars.insert(pair<const std::string,NcVar>(tmpVar.getName(),tmpVar));
       }
       // continue loop with the parent.
       tmpGroup=tmpGroup.getParentGroup();
@@ -363,7 +363,7 @@ multimap<std::string,NcVar> NcGroup::getVars(NcGroup::Location location) const {
   
 
 // Get all NcVar objects with a given name.
-set<NcVar> NcGroup::getVars(const string& name,NcGroup::Location location) const {
+set<NcVar> NcGroup::getVars(const std::string& name,NcGroup::Location location) const {
   // get the set of ncVars in this group and above.
   multimap<std::string,NcVar> ncVars(getVars(location));
   pair<multimap<string,NcVar>::iterator,multimap<string,NcVar>::iterator> ret;
@@ -379,7 +379,7 @@ set<NcVar> NcGroup::getVars(const string& name,NcGroup::Location location) const
 
 
 // Get the named NcVar object.
-NcVar NcGroup::getVar(const string& name,NcGroup::Location location) const {
+NcVar NcGroup::getVar(const std::string& name,NcGroup::Location location) const {
   multimap<std::string,NcVar> ncVars(getVars(location));
   pair<multimap<string,NcVar>::iterator,multimap<string,NcVar>::iterator> ret;
   ret = ncVars.equal_range(name);
@@ -392,7 +392,7 @@ NcVar NcGroup::getVar(const string& name,NcGroup::Location location) const {
 
 
 // Add a new netCDF variable.
-NcVar NcGroup::addVar(const string& name, const string& typeName, const string& dimName) const {
+NcVar NcGroup::addVar(const std::string& name, const std::string& typeName, const std::string& dimName) const {
     
   // get an NcType object with the given type name.
   NcType tmpType(getType(typeName,NcGroup::ParentsAndCurrent));
@@ -412,7 +412,7 @@ NcVar NcGroup::addVar(const string& name, const string& typeName, const string& 
 
 
 // Add a new netCDF variable.
-NcVar NcGroup::addVar(const string& name, const NcType& ncType, const NcDim& ncDim) const {
+NcVar NcGroup::addVar(const std::string& name, const NcType& ncType, const NcDim& ncDim) const {
     
   // check NcType object is valid
   if(ncType.isNull()) throw NcNullType("Attempt to invoke NcGroup::addVar with a Null NcType object",__FILE__,__LINE__);
@@ -434,14 +434,14 @@ NcVar NcGroup::addVar(const string& name, const NcType& ncType, const NcDim& ncD
 
 
 // Add a new netCDF multi-dimensional variable.
-NcVar NcGroup::addVar(const string& name, const string& typeName, const vector<string>& dimNames) const {
+NcVar NcGroup::addVar(const std::string& name, const std::string& typeName, const std::vector<string>& dimNames) const {
     
   // get an NcType object with the given name.
   NcType tmpType(getType(typeName,NcGroup::ParentsAndCurrent));
   if(tmpType.isNull()) throw NcNullType("Attempt to invoke NcGroup::addVar failed: typeName must be defined in either the current group or a parent group",__FILE__,__LINE__);
 
   // get a set of NcDim objects corresponding to the given dimension names.
-  vector<int> dimIds;
+  std::vector<int> dimIds;
   dimIds.reserve(dimNames.size());
   for (size_t i=0; i<dimNames.size();i++){
     NcDim tmpDim(getDim(dimNames[i],NcGroup::ParentsAndCurrent));
@@ -457,7 +457,7 @@ NcVar NcGroup::addVar(const string& name, const string& typeName, const vector<s
 }
 
 // Add a new netCDF multi-dimensional variable.
-NcVar NcGroup::addVar(const string& name, const NcType& ncType, const vector<NcDim>& ncDimVector) const {
+NcVar NcGroup::addVar(const std::string& name, const NcType& ncType, const std::vector<NcDim>& ncDimVector) const {
     
   // check NcType object is valid
   if(ncType.isNull()) throw NcNullType("Attempt to invoke NcGroup::addVar with a Null NcType object",__FILE__,__LINE__);
@@ -465,8 +465,8 @@ NcVar NcGroup::addVar(const string& name, const NcType& ncType, const vector<NcD
   if(tmpType.isNull()) throw NcNullType("Attempt to invoke NcGroup::addVar failed: NcType must be defined in either the current group or a parent group",__FILE__,__LINE__);
   
   // check NcDim objects are valid
-  vector<NcDim>::const_iterator iter;
-  vector<int> dimIds;
+  std::vector<NcDim>::const_iterator iter;
+  std::vector<int> dimIds;
   dimIds.reserve(ncDimVector.size());
   for (iter=ncDimVector.begin();iter < ncDimVector.end(); iter++) {
     if(iter->isNull()) throw NcNullDim("Attempt to invoke NcGroup::addVar with a Null NcDim object",__FILE__,__LINE__);
@@ -538,7 +538,7 @@ multimap<std::string,NcGroupAtt> NcGroup::getAtts(NcGroup::Location location) co
       char charName[NC_MAX_NAME+1];
       ncCheck(nc_inq_attname(tmpGroup.getId(),NC_GLOBAL,i,charName),__FILE__,__LINE__);
       NcGroupAtt tmpAtt(tmpGroup.getId(),i);
-      ncAtts.insert(pair<const string,NcGroupAtt>(string(charName),tmpAtt));
+      ncAtts.insert(pair<const std::string,NcGroupAtt>(string(charName),tmpAtt));
     }
   }
   
@@ -553,7 +553,7 @@ multimap<std::string,NcGroupAtt> NcGroup::getAtts(NcGroup::Location location) co
 	char charName[NC_MAX_NAME+1];
 	ncCheck(nc_inq_attname(tmpGroup.getId(),NC_GLOBAL,i,charName),__FILE__,__LINE__);
 	NcGroupAtt tmpAtt(tmpGroup.getId(),i);
-	ncAtts.insert(pair<const string,NcGroupAtt>(string(charName),tmpAtt));
+	ncAtts.insert(pair<const std::string,NcGroupAtt>(string(charName),tmpAtt));
       }
       // continue loop with the parent.
       tmpGroup=tmpGroup.getParentGroup();
@@ -586,7 +586,7 @@ NcGroupAtt NcGroup::getAtt(const std::string& name,NcGroup::Location location) c
 }
 
 // Get all NcGroupAtt objects with a given name.
-set<NcGroupAtt> NcGroup::getAtts(const string& name,NcGroup::Location location) const {
+set<NcGroupAtt> NcGroup::getAtts(const std::string& name,NcGroup::Location location) const {
   // get the set of ncGroupAtts in this group and above.
   multimap<std::string,NcGroupAtt> ncAtts(getAtts(location));
   pair<multimap<string,NcGroupAtt>::iterator,multimap<string,NcGroupAtt>::iterator> ret;
@@ -603,14 +603,14 @@ set<NcGroupAtt> NcGroup::getAtts(const string& name,NcGroup::Location location) 
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const string& dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const std::string& dataValues) const {
   ncCheck(nc_put_att_text(myId,NC_GLOBAL,name.c_str(),dataValues.size(),dataValues.c_str()),__FILE__,__LINE__);
   // finally instantiate this attribute and return
   return getAtt(name);
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const unsigned char* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const unsigned char* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -622,7 +622,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const signed char* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const signed char* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -634,7 +634,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, short datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, short datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -646,7 +646,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, short datumVa
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, int datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, int datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -657,7 +657,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, int datumValu
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, long datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, long datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -668,7 +668,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, long datumVal
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, float datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, float datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -680,7 +680,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, float datumVa
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, double datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, double datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -692,7 +692,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, double datumV
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, unsigned short datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, unsigned short datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -703,7 +703,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, unsigned shor
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, unsigned int datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, unsigned int datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -714,7 +714,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, unsigned int 
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, long long datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, long long datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -726,7 +726,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, long long dat
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, unsigned long long datumValue) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, unsigned long long datumValue) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),1,&datumValue),__FILE__,__LINE__);
@@ -738,7 +738,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, unsigned long
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const short* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const short* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -750,7 +750,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const int* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const int* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -761,7 +761,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const long* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const long* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -772,7 +772,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const float* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const float* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -784,7 +784,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const double* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const double* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -796,7 +796,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const unsigned short* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const unsigned short* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -807,7 +807,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const unsigned int* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const unsigned int* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -818,7 +818,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const long long* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const long long* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -830,7 +830,7 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const unsigned long long* dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const unsigned long long* dataValues) const {
   NcType::ncType typeClass(type.getTypeClass());
   if(typeClass == NcType::nc_VLEN | typeClass == NcType::nc_OPAQUE | typeClass == NcType::nc_ENUM | typeClass == NcType::nc_COMPOUND) 
     ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
@@ -842,14 +842,14 @@ NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, c
 
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
-NcGroupAtt NcGroup::putAtt(const string& name, size_t len, const char** dataValues) const {
+NcGroupAtt NcGroup::putAtt(const std::string& name, size_t len, const char** dataValues) const {
   ncCheck(nc_put_att_string(myId,NC_GLOBAL,name.c_str(),len,dataValues),__FILE__,__LINE__);
   // finally instantiate this attribute and return
   return getAtt(name);
 }
 
 //  Creates a new NetCDF group attribute or if already exisiting replaces it.
- NcGroupAtt NcGroup::putAtt(const string& name, const NcType& type, size_t len, const void* dataValues) const {
+ NcGroupAtt NcGroup::putAtt(const std::string& name, const NcType& type, size_t len, const void* dataValues) const {
   ncCheck(nc_put_att(myId,NC_GLOBAL,name.c_str(),type.getId(),len,dataValues),__FILE__,__LINE__);
   // finally instantiate this attribute and return
   return getAtt(name);
@@ -905,12 +905,12 @@ multimap<string,NcDim> NcGroup::getDims(NcGroup::Location location) const {
   // search in current group
   if(location == Current || location == ParentsAndCurrent || location == ChildrenAndCurrent || location == All ) {
     int dimCount = getDimCount();
-    vector<int> dimids(dimCount);
+    std::vector<int> dimids(dimCount);
     ncCheck(nc_inq_dimids(getId(),&dimCount,&dimids[0],0),__FILE__,__LINE__);
     // now get the name of each NcDim and populate the nDims container.
     for(int i=0; i<dimCount;i++){
       NcDim tmpDim(*this,dimids[i]); 
-      ncDims.insert(pair<const string,NcDim>(tmpDim.getName(),tmpDim));
+      ncDims.insert(pair<const std::string,NcDim>(tmpDim.getName(),tmpDim));
     }
   }
 
@@ -940,7 +940,7 @@ multimap<string,NcDim> NcGroup::getDims(NcGroup::Location location) const {
 
 
 // Get the named NcDim object.
-NcDim NcGroup::getDim(const string& name,NcGroup::Location location) const {
+NcDim NcGroup::getDim(const std::string& name,NcGroup::Location location) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::getDim on a Null group",__FILE__,__LINE__);
   multimap<string,NcDim> ncDims(getDims(location));
   pair<multimap<string,NcDim>::iterator,multimap<string,NcDim>::iterator> ret;
@@ -953,7 +953,7 @@ NcDim NcGroup::getDim(const string& name,NcGroup::Location location) const {
 
 
 // Get all NcDim objects with a given name.
-set<NcDim> NcGroup::getDims(const string& name,NcGroup::Location location) const {
+set<NcDim> NcGroup::getDims(const std::string& name,NcGroup::Location location) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::getDims on a Null group",__FILE__,__LINE__);
   // get the set of ncDims in this group and above.
   multimap<string,NcDim> ncDims(getDims(location));
@@ -968,7 +968,7 @@ set<NcDim> NcGroup::getDims(const string& name,NcGroup::Location location) const
 }
 
 // Add a new NcDim object.
-NcDim NcGroup::addDim(const string& name, size_t dimSize) const {
+NcDim NcGroup::addDim(const std::string& name, size_t dimSize) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::addDim on a Null group",__FILE__,__LINE__);
   int dimId;
   ncCheck(nc_def_dim(myId,name.c_str(),dimSize,&dimId),__FILE__,__LINE__);
@@ -977,7 +977,7 @@ NcDim NcGroup::addDim(const string& name, size_t dimSize) const {
 }
 
 // Add a new NcDim object with unlimited size..
-NcDim NcGroup::addDim(const string& name) const {
+NcDim NcGroup::addDim(const std::string& name) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::addDim on a Null group",__FILE__,__LINE__);
   int dimId;
   ncCheck(nc_def_dim(myId,name.c_str(),NC_UNLIMITED,&dimId),__FILE__,__LINE__);
@@ -1044,7 +1044,7 @@ int NcGroup::getTypeCount(NcType::ncType enumType, NcGroup::Location location) c
     int ntypesp;
     int* typeidsp=nullptr;
     ncCheck(nc_inq_typeids(getId(), &ntypesp,typeidsp),__FILE__,__LINE__);
-    vector<int> typeids(ntypesp);
+    std::vector<int> typeids(ntypesp);
     ncCheck(nc_inq_typeids(getId(), &ntypesp,&typeids[0]),__FILE__,__LINE__);
     for (int i=0; i<ntypesp;i++){
       NcType tmpType(*this,typeids[i]);
@@ -1082,12 +1082,12 @@ multimap<string,NcType> NcGroup::getTypes(NcGroup::Location location) const {
   // search in current group
   if(location == Current || location == ParentsAndCurrent || location == ChildrenAndCurrent || location == All ) {
     int typeCount = getTypeCount();
-    vector<int> typeids(typeCount);
+    std::vector<int> typeids(typeCount);
     ncCheck(nc_inq_typeids(getId(), &typeCount,&typeids[0]),__FILE__,__LINE__);
     // now get the name of each NcType and populate the nTypes container.
     for(int i=0; i<typeCount;i++){
       NcType tmpType(*this,typeids[i]); 
-      ncTypes.insert(pair<const string,NcType>(tmpType.getName(),tmpType));
+      ncTypes.insert(pair<const std::string,NcType>(tmpType.getName(),tmpType));
     }
   }
 
@@ -1116,7 +1116,7 @@ multimap<string,NcType> NcGroup::getTypes(NcGroup::Location location) const {
 
 
 // Gets the collection of NcType objects with a given name.
-set<NcType> NcGroup::getTypes(const string& name, NcGroup::Location location) const {
+set<NcType> NcGroup::getTypes(const std::string& name, NcGroup::Location location) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::getTypes on a Null group",__FILE__,__LINE__);
   // iterator for the multimap container.
   multimap<string,NcType>::iterator it;
@@ -1155,7 +1155,7 @@ set<NcType> NcGroup::getTypes(NcType::ncType enumType, NcGroup::Location locatio
 
 
 // Gets the collection of NcType objects with a given name and data type.
-set<NcType> NcGroup::getTypes(const string& name, NcType::ncType enumType, NcGroup::Location location) const {
+set<NcType> NcGroup::getTypes(const std::string& name, NcType::ncType enumType, NcGroup::Location location) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::getTypes on a Null group",__FILE__,__LINE__);
   // iterator for the multimap container.
   multimap<string,NcType>::iterator it;
@@ -1177,7 +1177,7 @@ set<NcType> NcGroup::getTypes(const string& name, NcType::ncType enumType, NcGro
 
 
 // Gets the NcType object with a given name.
-NcType NcGroup::getType(const string& name, NcGroup::Location location) const {
+NcType NcGroup::getType(const std::string& name, NcGroup::Location location) const {
   if(isNull()) throw NcNullGrp("Attempt to invoke NcGroup::getType on a Null group",__FILE__,__LINE__);
   if(name ==  "byte"    ) return ncByte;
   if(name ==  "ubyte"   ) return ncUbyte;
@@ -1211,7 +1211,7 @@ NcType NcGroup::getType(const string& name, NcGroup::Location location) const {
 
 
 // Adds a new netCDF Enum type.
-NcEnumType NcGroup::addEnumType(const string& name,NcEnumType::ncEnumType baseType) const {
+NcEnumType NcGroup::addEnumType(const std::string& name,NcEnumType::ncEnumType baseType) const {
   nc_type typeId;
   ncCheck(nc_def_enum(myId, baseType, name.c_str(), &typeId),__FILE__,__LINE__);
   NcEnumType ncTypeTmp(*this,name);
@@ -1220,7 +1220,7 @@ NcEnumType NcGroup::addEnumType(const string& name,NcEnumType::ncEnumType baseTy
 
 
 // Adds a new netCDF Vlen type.
-NcVlenType NcGroup::addVlenType(const string& name,NcType& baseType) const {
+NcVlenType NcGroup::addVlenType(const std::string& name,NcType& baseType) const {
   nc_type typeId;
   ncCheck(nc_def_vlen(myId,  const_cast<char*>(name.c_str()),baseType.getId(),&typeId),__FILE__,__LINE__);
   NcVlenType ncTypeTmp(*this,name);
@@ -1229,7 +1229,7 @@ NcVlenType NcGroup::addVlenType(const string& name,NcType& baseType) const {
 
 
 // Adds a new netCDF Opaque type.
-NcOpaqueType NcGroup::addOpaqueType(const string& name, size_t size) const {
+NcOpaqueType NcGroup::addOpaqueType(const std::string& name, size_t size) const {
   nc_type typeId;
   ncCheck(nc_def_opaque(myId, size,const_cast<char*>(name.c_str()), &typeId),__FILE__,__LINE__);
   NcOpaqueType ncTypeTmp(*this,name);
@@ -1237,7 +1237,7 @@ NcOpaqueType NcGroup::addOpaqueType(const string& name, size_t size) const {
 }
     
 // Adds a new netCDF UserDefined type.
-NcCompoundType NcGroup::addCompoundType(const string& name, size_t size) const {
+NcCompoundType NcGroup::addCompoundType(const std::string& name, size_t size) const {
   nc_type typeId;
   ncCheck(nc_def_compound(myId, size,const_cast<char*>(name.c_str()),&typeId),__FILE__,__LINE__);
   NcCompoundType ncTypeTmp(*this,name);
@@ -1258,10 +1258,10 @@ map<string,NcGroup> NcGroup::getCoordVars(NcGroup::Location location) const {
     multimap<string,NcDim> dimTmp(tmpGroup.getDims());
     multimap<string,NcVar> varTmp(tmpGroup.getVars());
     for (itD=dimTmp.begin();itD!=dimTmp.end();itD++) {
-      string coordName(itD->first);
+      std::string coordName(itD->first);
       itV = varTmp.find(coordName);
       if(itV != varTmp.end()) {
-	coordVars.insert(pair<const string,NcGroup>(string(coordName),tmpGroup));
+	coordVars.insert(pair<const std::string,NcGroup>(string(coordName),tmpGroup));
       }
     }
     if(location != ParentsAndCurrent || location != All || tmpGroup.isRootGroup()) {

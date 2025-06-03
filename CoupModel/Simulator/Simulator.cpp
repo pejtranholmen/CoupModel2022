@@ -287,7 +287,7 @@ bool Simulator::Run(bool MultiFlag)
 	  m_pModelInfo->RelRunTimeSingle=0.;
 	  if(m_pModelInfo->TotalNoMulRun>0) m_pModelInfo->RelRunTimeMulti=(m_pModelInfo->ActualNoMulRun-1.)/ m_pModelInfo->TotalNoMulRun;
 	  size_t daycount=0;
-	  size_t prevday=string::npos;
+	  size_t prevday= std::string::npos;
 
 
 	 // m_OutRecord*=m_pSim->m_DocFile.m_TimePeriodScaleFactor;
@@ -977,7 +977,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 	size_t count=0;
 	VALID_PGFILE b;
 	if(First||!MultiFlag) {
-		// Find number of files and create a vector for those
+		// Find number of files and create a std::vector for those
 		size_t numfile=0;
 		for(size_t i=0; i<m_ValTest.size(); i++) {
 			size_t ifile=m_pSim->m_Val_Array[i].ValidationFileNumber;
@@ -995,7 +995,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			m_StructureModel.m_Structure.Rel_Error.push_back(m_StructureModel.m_Structure.Rel_Error.back());
 
 		}
-		// Check Validation data from document info create ValPGFile vector to store info for validation
+		// Check Validation data from document info create ValPGFile std::vector to store info for validation
 		for(size_t i=0; i<m_ValTest.size(); i++) {
 			size_t index;
 			if (m_pSim->m_Val_Array[i].Sum_of_Others.size() > 0) {
@@ -1124,7 +1124,7 @@ bool Simulator::Valid_Ini(bool MultiFlag, bool First) {
 			m_ValPGFile[i].simvalfile->pg.status.MinStart = min_min;
 		}
 		auto name_obs = m_ValPGFile[i].file->GetFileName();
-		if (name_obs.find("Reshaped.bin") != string::npos) {
+		if (name_obs.find("Reshaped.bin") != std::string::npos) {
 			 NewReShaped a;
 			 CPG* pPG=a.CreateReshaped(m_ValPGFile[i].file);
 		}
@@ -1536,7 +1536,7 @@ bool Simulator::Valid_Evaluation(bool MultiFlag, bool Final) {
 		for(size_t i=0; i<m_pSim->m_ValSum_Array.size();i++) {
 			auto valsum=pMR->m_ValidationData.GetValSumStruct(i);
 			if (valsum.SimValueSource == SIMSUMSOURCE::MULTIFILESTAT) {
-				bool vector = false;
+				bool std::vector = false;
 				SIMB sumv;
 				sumv.pBase = m_pSim->GetPtrFromIntType(valsum.OutputType, valsum.Group, valsum.Name);
 				sumv.TabIndex = valsum.LocalIndex;
@@ -1648,7 +1648,7 @@ void Simulator::Set_StateVariables(bool Initial) {
 	for (size_t i = 0; i < vp_start.size(); i++) {
 		pPtr = vp_start[i];
 		auto name = pPtr->GetName();
-		if ((name == "WaterStorage" || name == "SoilHeat" || name.find("Humus") != string::npos || name.find("Litter") != string::npos || name.find("Litter2") != string::npos) && pPtr->Is_Vector()) {
+		if ((name == "WaterStorage" || name == "SoilHeat" || name.find("Humus") != std::string::npos || name.find("Litter") != std::string::npos || name.find("Litter2") != std::string::npos) && pPtr->Is_Vector()) {
 			vp_final.push_back(pPtr);
 		}
 		else if (!pPtr->Is_Vector())

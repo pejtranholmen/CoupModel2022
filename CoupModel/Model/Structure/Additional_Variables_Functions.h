@@ -2,12 +2,12 @@
 #include "./Technical.h"
 
 class ZadokShift2 {
-public: ZadokShift2(vector<double>& z, vector<double>& k) :zadokindex(z), zadokStages(k) {
+public: ZadokShift2(vector<double>& z, std::vector<double>& k) :zadokindex(z), zadokStages(k) {
 	previndex.push_back(1.); act_stage = 0;
 
 };
 
-	  void operator ()(double dayofYear, vector<double>& zadokvalues) {
+	  void operator ()(double dayofYear, std::vector<double>& zadokvalues) {
 		  if (previndex[0] < zadokStages[act_stage] && zadokindex[0] >= zadokStages[act_stage]) {
 			  zadokvalues[act_stage] = dayofYear;
 			  if (act_stage < zadokStages.size() - 1) act_stage++;
@@ -55,7 +55,7 @@ class Additional_Variables_Functions : public Technical
 		double GetTotalWaterStorage();
 		double GetWaterBalanceCheck();
 		ORG_PROBES Get_Org_SondStorage(size_t i);
-		double  GetSondStorage(size_t i, vector<double> *values);
+		double  GetSondStorage(size_t i, std::vector<double> *values);
 
 
 
@@ -64,15 +64,15 @@ class Additional_Variables_Functions : public Technical
 		size_t Soil_TempSensors, Soil_ThetaSensors,IGBP_LandID_Selector ;
 		size_t Multi_PGFile_Var_Selector, Multi_PGFile_ID_Selector;
 
-		function<void(double, vector<double>&)> f_ZadokShifts;
+		function<void(double, std::vector<double>&)> f_ZadokShifts;
 
 
 	vector<double> SondDepth, AccWStorage, AccSStorage, AccRStorage;
 	vector<double> ZadokDayValues, ZadokDays;
 	vector<double>  AccMinNStorage, AccNH4Storage, AccNO3Storage;
 	vector<double>  AccCSoilStorage,AccNSoilStorage;
-    vector<double>  TempSensorLow, TempSensorHigh, ThetaSensorLow, ThetaSensorHigh;
-    vector<double>  ThetaSensors, TempSensors;
+    std::vector<double>  TempSensorLow, TempSensorHigh, ThetaSensorLow, ThetaSensorHigh;
+    std::vector<double>  ThetaSensors, TempSensors;
 
 	vector<P*> mTab_Temp, mTab_Theta, mTab_Sonds, mTab_Zadoks;
 	double  Evapotranspiration, X_coordinate, Y_coordinate, Z_coordinate, Scale;
@@ -90,8 +90,8 @@ class Additional_Variables_Functions : public Technical
 	double PlantWaterStorage;
 
    double TDiff, TDiffC;// !Local variables
-   vector<double> MC_TDiff, MC_TDiffC;
-   vector<SOIL_SENSORS> TempSond, ThetaSond;
+   std::vector<double> MC_TDiff, MC_TDiffC;
+   std::vector<SOIL_SENSORS> TempSond, ThetaSond;
    /*Real, Dimension, Allocatable :: T_UpperWeight1,T_UpperWeight2,T_LowerWeight1, T_LowerWeight2
    Integer, Dimension , Allocatable :: T_UpperLayer1, T_UpperLayer2, T_LowerLayer1, T_LowerLayer2
 
@@ -100,7 +100,7 @@ class Additional_Variables_Functions : public Technical
 
 	*/	
 
-   vector<double> GetSensorValues(vector<double> Value, vector<SOIL_SENSORS> *Sens);
+   std::vector<double> GetSensorValues(vector<double> Value, std::vector<SOIL_SENSORS> *Sens);
    NC_SoilManagement *m_pNCSoil;
 
 };
