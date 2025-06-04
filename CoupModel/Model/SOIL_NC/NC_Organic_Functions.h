@@ -175,21 +175,21 @@ bool MakeDisplacement(bool OnlyTopLayer=true);
 
 
 
-function<OrgTurnOver(double, double, double)> f_TurnOver_CN[4];
-function<OrgTurnOver(double, double, double, double, double)> f_TurnOver_CNP[4];
+std::function<OrgTurnOver(double, double, double)> f_TurnOver_CN[4];
+std::function<OrgTurnOver(double, double, double, double, double)> f_TurnOver_CNP[4];
 
-function<double(double)> f_Decomp_CN_Response, f_Decomp_Conc_Response;
-function<double(double)> f_PotentialGrowthMicrobe, f_MicrobeRespiration;
-function<double(size_t, double)> f_MicrobeGrowthRespiration, f_GrowthConsumption, f_Humification, f_Mortality;
-function<double(double)> f_LitterTransSurf_L1, f_LitterTransSurf_L2, f_LitterTransSurf_Hum;
+std::function<double(double)> f_Decomp_CN_Response, f_Decomp_Conc_Response;
+std::function<double(double)> f_PotentialGrowthMicrobe, f_MicrobeRespiration;
+std::function<double(size_t, double)> f_MicrobeGrowthRespiration, f_GrowthConsumption, f_Humification, f_Mortality;
+std::function<double(double)> f_LitterTransSurf_L1, f_LitterTransSurf_L2, f_LitterTransSurf_Hum;
 
 
 // Functors as Templates for fast processing
-function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>)> f_ConcFromAmountandWater;
-function <vector<double>(vector<double>&, std::vector<double>&, double, std::vector<double>&)> f_VerticalSoluteFlowFromWaterFlowConcDeepPerc;
-function <pair<double,vector<double>>(vector<double>, std::vector<double>&, std::vector<double>&)> f_DrainageSoluteFlowWithMeanConcFromWaterFlowConc;
-function <vector<double>(size_t, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double> &)> f_DissolvedHumusTransformbyTempThetaState;
-function <vector<double>(size_t, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double> &)> f_DissolvedTransformbyTempThetaState;
+std::function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>)> f_ConcFromAmountandWater;
+std::function <vector<double>(vector<double>&, std::vector<double>&, double, std::vector<double>&)> f_VerticalSoluteFlowFromWaterFlowConcDeepPerc;
+std::function <pair<double,vector<double>>(vector<double>, std::vector<double>&, std::vector<double>&)> f_DrainageSoluteFlowWithMeanConcFromWaterFlowConc;
+std::function <vector<double>(size_t, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double> &)> f_DissolvedHumusTransformbyTempThetaState;
+std::function <vector<double>(size_t, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double> &)> f_DissolvedTransformbyTempThetaState;
 	
 
 bool Do_Cultivating;

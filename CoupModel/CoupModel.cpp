@@ -12,7 +12,9 @@
 // CoupModel.cpp : Defines the class behaviors for the application.
 //
 
-
+#ifndef _HAS_STD_BYTE
+#define _HAS_STD_BYTE 0
+#endif
 #include "stdafx.h"
 #include "std.h"
 #include ".\util.h"

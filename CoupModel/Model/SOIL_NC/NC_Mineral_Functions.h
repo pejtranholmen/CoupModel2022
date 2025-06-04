@@ -156,8 +156,8 @@ Plant_Uptake NUptake(vector<double> Dist, size_t NUM, size_t index, double N_dem
 void NitrogenUptakeResetForAllSoilLayers();
 
 
-function<double(double)> f_DenitTempResponse, f_NitriTempResponse;
-function<double(size_t, double)> f_DenitThetaResponse;
+std::function<double(double)> f_DenitTempResponse, f_NitriTempResponse;
+std::function<double(size_t, double)> f_DenitThetaResponse;
 
 
 };

@@ -78,7 +78,7 @@ FunctFactory::FunctFactory(const FunctorProp func, HYDRAULIC_COEF *m_pHydCoef) :
 	default:;
 	}
 };
-function<double(double)> FunctFactory::Set_D1_Functor() {
+std::function<double(double)> FunctFactory::Set_D1_Functor() {
 
 	if (m_Prop.FunctorInitOption != std::string::npos) {
 		switch (m_Prop.FuncName) {
@@ -386,7 +386,7 @@ function<double(double)> FunctFactory::Set_D1_Functor() {
 	}
 	return nullptr;
 };
-function<double(double, double)> FunctFactory::Set_D2_Functor() {
+std::function<double(double, double)> FunctFactory::Set_D2_Functor() {
 	switch (m_Prop.FuncName) {
 		case MyFunc::NO_PARFUNC:
 			return Set_D2_PhysFunctor();
@@ -558,7 +558,7 @@ function<double(double, double)> FunctFactory::Set_D2_Functor() {
 	}
 	return nullptr;
 }
-function<double(double, double, double)> FunctFactory::Set_D3_Functor() {
+std::function<double(double, double, double)> FunctFactory::Set_D3_Functor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::SIMPLE_SNOWDENSITY:
 		if (m_Ps_Par.size() != 3) { m_functor3.~function(); return m_functor3; }
@@ -634,7 +634,7 @@ function<double(double, double, double)> FunctFactory::Set_D3_Functor() {
 	}
 	return nullptr;
 }
-function<double(double, double, double, double)> FunctFactory::Set_D4_Functor() {
+std::function<double(double, double, double, double)> FunctFactory::Set_D4_Functor() {
 	/*switch (m_Prop.FuncName) {
 	default:;
 	}*/
@@ -681,7 +681,7 @@ function<double(double, double, double, double)> FunctFactory::Set_D4_Functor() 
 	}
 	return m_functor4;
 }
-function<double(double, double, double, double, double)> FunctFactory::Set_D5_Functor() {
+std::function<double(double, double, double, double, double)> FunctFactory::Set_D5_Functor() {
 
 	switch (m_Prop.FuncName) {
 		case MyFunc::NO_PARFUNC:
@@ -707,7 +707,7 @@ function<double(double, double, double, double, double)> FunctFactory::Set_D5_Fu
 
 	return m_functor5;
 }
-function<double(double, double, double, double, double,double)> FunctFactory::Set_D6_Functor() {
+std::function<double(double, double, double, double, double,double)> FunctFactory::Set_D6_Functor() {
 
 	switch (m_Prop.FuncName) {
 	case MyFunc::NO_PARFUNC:
@@ -719,7 +719,7 @@ function<double(double, double, double, double, double,double)> FunctFactory::Se
 	return nullptr;
 }
 
-function<double(bool)> FunctFactory::Set_boolBlank_Functor() {
+std::function<double(bool)> FunctFactory::Set_boolBlank_Functor() {
 
 	if (m_Prop.FunctorInitOption != std::string::npos) {
 		switch (m_Prop.FuncName) {
@@ -741,7 +741,7 @@ function<double(bool)> FunctFactory::Set_boolBlank_Functor() {
 	}
 	return nullptr;
 };
-function<double(bool, double)> FunctFactory::Set_boolD1_Functor() {
+std::function<double(bool, double)> FunctFactory::Set_boolD1_Functor() {
 
 	if (m_Prop.FunctorInitOption != std::string::npos) {
 		switch (m_Prop.FuncName) {
@@ -759,13 +759,13 @@ function<double(bool, double)> FunctFactory::Set_boolD1_Functor() {
 	}
 	return nullptr;
 };
-function<double(bool, double, double)> FunctFactory::Set_boolD2_Functor() {
+std::function<double(bool, double, double)> FunctFactory::Set_boolD2_Functor() {
 	switch (m_Prop.FuncName) {
 	default:;
 	}
 	return nullptr;
 }
-function<double(bool, double, double, double)> FunctFactory::Set_boolD3_Functor() {
+std::function<double(bool, double, double, double)> FunctFactory::Set_boolD3_Functor() {
 	switch (m_Prop.FuncName) {
 
 
@@ -773,7 +773,7 @@ function<double(bool, double, double, double)> FunctFactory::Set_boolD3_Functor(
 	}
 	return nullptr;
 }
-function<double(bool, double, double, double, double)> FunctFactory::Set_boolD4_Functor() {
+std::function<double(bool, double, double, double, double)> FunctFactory::Set_boolD4_Functor() {
 	/*switch (m_Prop.FuncName) {
 	default:;
 	}*/
@@ -793,7 +793,7 @@ function<double(bool, double, double, double, double)> FunctFactory::Set_boolD4_
 	}
 	return nullptr;
 }
-function<double(bool, double, double, double, double, double)> FunctFactory::Set_boolD5_Functor() {
+std::function<double(bool, double, double, double, double, double)> FunctFactory::Set_boolD5_Functor() {
 
 	switch (m_Prop.FuncName) {
 
@@ -805,7 +805,7 @@ function<double(bool, double, double, double, double, double)> FunctFactory::Set
 
 
 
-function<vector<double>()> FunctFactory::SetVector_Blank_Functor() {
+std::function<vector<double>()> FunctFactory::SetVector_Blank_Functor() {
 
 	if (m_Prop.FunctorInitOption != std::string::npos) {
 		switch (m_Prop.FuncName) {
@@ -827,7 +827,7 @@ function<vector<double>()> FunctFactory::SetVector_Blank_Functor() {
 	}
 	return nullptr;
 };
-function<vector<double>(bool)> FunctFactory::SetVector_boolBlank_Functor() {
+std::function<vector<double>(bool)> FunctFactory::SetVector_boolBlank_Functor() {
 
 	if (m_Prop.FunctorInitOption != std::string::npos) {
 		switch (m_Prop.FuncName) {
@@ -849,7 +849,7 @@ function<vector<double>(bool)> FunctFactory::SetVector_boolBlank_Functor() {
 	}
 	return nullptr;
 };
-function<vector<double>(bool, double)> FunctFactory::SetVector_boolD1_Functor() {
+std::function<vector<double>(bool, double)> FunctFactory::SetVector_boolD1_Functor() {
 
 	if (m_Prop.FunctorInitOption != std::string::npos) {
 		switch (m_Prop.FuncName) {
@@ -867,13 +867,13 @@ function<vector<double>(bool, double)> FunctFactory::SetVector_boolD1_Functor() 
 	}
 	return nullptr;
 };
-function<vector<double>(bool, double, double)> FunctFactory::SetVector_boolD2_Functor() {
+std::function<vector<double>(bool, double, double)> FunctFactory::SetVector_boolD2_Functor() {
 	switch (m_Prop.FuncName) {
 	default:;
 	}
 	return nullptr;
 }
-function<vector<double>(bool, double, double, double)> FunctFactory::SetVector_boolD3_Functor() {
+std::function<vector<double>(bool, double, double, double)> FunctFactory::SetVector_boolD3_Functor() {
 	switch (m_Prop.FuncName) {
 
 
@@ -881,7 +881,7 @@ function<vector<double>(bool, double, double, double)> FunctFactory::SetVector_b
 	}
 	return nullptr;
 }
-function<vector<double>(bool, double, double, double, double)> FunctFactory::SetVector_boolD4_Functor() {
+std::function<vector<double>(bool, double, double, double, double)> FunctFactory::SetVector_boolD4_Functor() {
 	/*switch (m_Prop.FuncName) {
 	default:;
 	}*/
@@ -901,7 +901,7 @@ function<vector<double>(bool, double, double, double, double)> FunctFactory::Set
 	}
 	return nullptr;
 }
-function<vector<double>(bool, double, double, double, double, double)> FunctFactory::SetVector_boolD5_Functor() {
+std::function<vector<double>(bool, double, double, double, double, double)> FunctFactory::SetVector_boolD5_Functor() {
 	switch (m_Prop.FuncName) {
 
 	default:;
@@ -909,7 +909,7 @@ function<vector<double>(bool, double, double, double, double, double)> FunctFact
 	return nullptr;
 }
 
-function<void(vector<double>*)>  FunctFactory::SetVectorPointer_D1_Functor() {
+std::function<void(vector<double>*)>  FunctFactory::SetVectorPointer_D1_Functor() {
 	switch (m_Prop.FuncName) {
 
 
@@ -917,14 +917,14 @@ function<void(vector<double>*)>  FunctFactory::SetVectorPointer_D1_Functor() {
 	}
 	return nullptr;
 }
-function<void(vector<double>*, std::vector<double>*)>  FunctFactory::SetVectorPointer_D2_Functor() {
+std::function<void(vector<double>*, std::vector<double>*)>  FunctFactory::SetVectorPointer_D2_Functor() {
 	switch (m_Prop.FuncName) {
 
 	default:;
 	}
 	return nullptr;
 }
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  FunctFactory::SetVectorPointer_D3_Functor() {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  FunctFactory::SetVectorPointer_D3_Functor() {
 	switch (m_Prop.FuncName) {
 	case::MyFunc::THERMALCOND_KERSTEN:
 		if (m_P_Par.size() == 6) {
@@ -951,7 +951,7 @@ function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  Fun
 	}
 	return nullptr;
 };
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> FunctFactory::SetVectorPointer_D4_Functor() {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> FunctFactory::SetVectorPointer_D4_Functor() {
 	switch (m_Prop.FuncName) {
 
 
@@ -960,7 +960,7 @@ function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::
 	}
 	return nullptr;
 };
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> FunctFactory::SetVectorPointer_D5_Functor() {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> FunctFactory::SetVectorPointer_D5_Functor() {
 	switch (m_Prop.FuncName) {
 
 	default:;
@@ -970,7 +970,7 @@ function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::
 
 
 
-function<double(double)> FunctFactory::Set_D1_PhysFunctor() {
+std::function<double(double)> FunctFactory::Set_D1_PhysFunctor() {
 	{
 		switch (m_Prop.PhysFuncName) {
 		case FUNC_CHOICE::SVP:
@@ -989,7 +989,7 @@ function<double(double)> FunctFactory::Set_D1_PhysFunctor() {
 
 
 };
-function<double(double, double)> FunctFactory::Set_D2_PhysFunctor() {
+std::function<double(double, double)> FunctFactory::Set_D2_PhysFunctor() {
 	switch (m_Prop.PhysFuncName) {
 		case FUNC_CHOICE::AVP_TEMP_RH:
 			return Physf(m_Prop.PhysFuncName);
@@ -1003,7 +1003,7 @@ function<double(double, double)> FunctFactory::Set_D2_PhysFunctor() {
 	}
 	return Physf(m_Prop.PhysFuncName);
 }
-function<double(double, double, double)> FunctFactory::Set_D3_PhysFunctor() {
+std::function<double(double, double, double)> FunctFactory::Set_D3_PhysFunctor() {
 	switch (m_Prop.FuncName) {
 
 
@@ -1012,7 +1012,7 @@ function<double(double, double, double)> FunctFactory::Set_D3_PhysFunctor() {
 	return Physf(m_Prop.PhysFuncName);
 
 }
-function<double(double, double, double, double)> FunctFactory::Set_D4_PhysFunctor() {
+std::function<double(double, double, double, double)> FunctFactory::Set_D4_PhysFunctor() {
 	switch (m_Prop.PhysFuncName) {
 	case FUNC_CHOICE::RES_AIR_MOM_HEAT:
 		return Physf(m_Prop.PhysFuncName);
@@ -1021,7 +1021,7 @@ function<double(double, double, double, double)> FunctFactory::Set_D4_PhysFuncto
 	return Physf(m_Prop.PhysFuncName);
 
 }
-function<double(double, double, double, double, double)> FunctFactory::Set_D5_PhysFunctor() {
+std::function<double(double, double, double, double, double)> FunctFactory::Set_D5_PhysFunctor() {
 	switch (m_Prop.PhysFuncName) {
 	case FUNC_CHOICE::PM:
 		return nullptr;
@@ -1030,7 +1030,7 @@ function<double(double, double, double, double, double)> FunctFactory::Set_D5_Ph
 	return Physf(m_Prop.PhysFuncName);
 
 }
-function<double(double, double, double, double, double,double)> FunctFactory::Set_D6_PhysFunctor() {
+std::function<double(double, double, double, double, double,double)> FunctFactory::Set_D6_PhysFunctor() {
 	switch (m_Prop.PhysFuncName) {
 	case FUNC_CHOICE::PM:
 		return PMEquation;
@@ -1039,7 +1039,7 @@ function<double(double, double, double, double, double,double)> FunctFactory::Se
 	return Physf(m_Prop.PhysFuncName);
 
 }
-function<OrgTurnOver(double, double, double)> FunctFactory::SetOrgTurnOverFunctor() {
+std::function<OrgTurnOver(double, double, double)> FunctFactory::SetOrgTurnOverFunctor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::FAECES_TURNOVER:
 	case MyFunc::FAECES_TURNOVER_CARBON:
@@ -1064,7 +1064,7 @@ function<OrgTurnOver(double, double, double)> FunctFactory::SetOrgTurnOverFuncto
 
 
 }
-function<OrgTurnOver(double, double, double, double, double)> FunctFactory::SetOrg_D5_TurnOverFunctor() {
+std::function<OrgTurnOver(double, double, double, double, double)> FunctFactory::SetOrg_D5_TurnOverFunctor() {
 	switch (m_Prop.FuncName) {
 
 	case MyFunc::LITTER_CNP_TURNOVER:
@@ -1094,7 +1094,7 @@ function<OrgTurnOver(double, double, double, double, double)> FunctFactory::SetO
 
 
 }
-function<pair<double, double>(double, double)> FunctFactory::Set_Pair_D2_Functor() {
+std::function<pair<double, double>(double, double)> FunctFactory::Set_Pair_D2_Functor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::HEAT_TEMP_THQUAL:
 		m_Prop.FunctorInitOption = static_cast<Soil_Frost_Functions*>(m_Prop.pHyd)->FreezingPointOptions;
@@ -1111,7 +1111,7 @@ function<pair<double, double>(double, double)> FunctFactory::Set_Pair_D2_Functor
 
 
 }
-function<pair<double, double>(double, double, double)> FunctFactory::Set_Pair_D3_Functor() {
+std::function<pair<double, double>(double, double, double)> FunctFactory::Set_Pair_D3_Functor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::HEAT_TEMP_THQUAL_OSMOTIC:
 		if (m_Ps_Par.size() == 5) {
@@ -1127,7 +1127,7 @@ function<pair<double, double>(double, double, double)> FunctFactory::Set_Pair_D3
 
 
 }
-function<pair<double, double>(size_t, double, double)> FunctFactory::Set_Pair_D2_TableFunctor() {
+std::function<pair<double, double>(size_t, double, double)> FunctFactory::Set_Pair_D2_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::HEAT_TEMP_THQUAL:
 		if (m_Ps_Par.size() == 5) {
@@ -1143,7 +1143,7 @@ function<pair<double, double>(size_t, double, double)> FunctFactory::Set_Pair_D2
 
 
 }
-function<pair<double, double>(size_t, double, double, double)> FunctFactory::Set_Pair_D3_TableFunctor() {
+std::function<pair<double, double>(size_t, double, double, double)> FunctFactory::Set_Pair_D3_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::HEAT_TEMP_THQUAL_OSMOTIC:
 		if (m_Ps_Par.size() == 5) {
@@ -1159,7 +1159,7 @@ function<pair<double, double>(size_t, double, double, double)> FunctFactory::Set
 
 
 }
-function< double(size_t, size_t, double, double)> FunctFactory::Set_T_D2_TableFunctor() {
+std::function< double(size_t, size_t, double, double)> FunctFactory::Set_T_D2_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::HEAT_TEMP_THQUAL:
 		if (m_P_Par.size() == 5) {
@@ -1174,7 +1174,7 @@ function< double(size_t, size_t, double, double)> FunctFactory::Set_T_D2_TableFu
 
 
 }
-function< double(size_t, size_t, double,double, double)> FunctFactory::Set_T_D3_TableFunctor() {
+std::function< double(size_t, size_t, double,double, double)> FunctFactory::Set_T_D3_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::WATERUPTAKEMOISTURE:
 		if (m_P_Par.size() == 5) {
@@ -1190,7 +1190,7 @@ function< double(size_t, size_t, double,double, double)> FunctFactory::Set_T_D3_
 
 }
 
-function<double(size_t)> FunctFactory::Set_BLANK_TableFunctor() {
+std::function<double(size_t)> FunctFactory::Set_BLANK_TableFunctor() {
 	switch (m_Prop.FuncName) {
 
 	case MyFunc::PHOTO_EFF_LIGHT:
@@ -1203,7 +1203,7 @@ function<double(size_t)> FunctFactory::Set_BLANK_TableFunctor() {
 	return nullptr;
 };
 
-function<double(size_t, double)> FunctFactory::Set_D1_TableFunctor() {
+std::function<double(size_t, double)> FunctFactory::Set_D1_TableFunctor() {
 		switch (m_Prop.FuncName) {
 			case MyFunc::BEER_LAW_PERLEAF:
 				if (m_P_Par.size() == 1) {
@@ -1481,7 +1481,7 @@ function<double(size_t, double)> FunctFactory::Set_D1_TableFunctor() {
 
 	return nullptr;
 };
-function<double(size_t, double, double)> FunctFactory::Set_D2_TableFunctor() {
+std::function<double(size_t, double, double)> FunctFactory::Set_D2_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::LEAFAREAINDEX_PER_MASS_STAGE:
 		if (m_P_Par.size() == 2) {
@@ -1578,7 +1578,7 @@ function<double(size_t, double, double)> FunctFactory::Set_D2_TableFunctor() {
 	}
 	return nullptr;
 }
-function<double(size_t, double, double, double)> FunctFactory::Set_D3_TableFunctor() {
+std::function<double(size_t, double, double, double)> FunctFactory::Set_D3_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case MyFunc::CANOPYHEIGHT_PER_MASS_AGE:
 		if (m_P_Par.size() == 5) {
@@ -1616,7 +1616,7 @@ function<double(size_t, double, double, double)> FunctFactory::Set_D3_TableFunct
 	}
 	return nullptr;
 }
-function<double(size_t, double, double, double, double)> FunctFactory::Set_D4_TableFunctor() {
+std::function<double(size_t, double, double, double, double)> FunctFactory::Set_D4_TableFunctor() {
 
 	switch (m_Prop.FuncName) {
 	case MyFunc::LEAF_LITTERFALL_TSUM:
@@ -1641,7 +1641,7 @@ function<double(size_t, double, double, double, double)> FunctFactory::Set_D4_Ta
 	return nullptr;
 }
 
-function<double(bool, size_t)> FunctFactory::Set_boolBlank_TableFunctor() {
+std::function<double(bool, size_t)> FunctFactory::Set_boolBlank_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case::MyFunc::MAXCONDUCTANCE_MC:
 		return Conductance(m_Ps_Par[0], m_P_Par[0]);
@@ -1653,7 +1653,7 @@ function<double(bool, size_t)> FunctFactory::Set_boolBlank_TableFunctor() {
 
 	return nullptr;
 };
-function<double(bool, size_t, double)> FunctFactory::Set_boolD1_TableFunctor() {
+std::function<double(bool, size_t, double)> FunctFactory::Set_boolD1_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	
 	
@@ -1662,14 +1662,14 @@ function<double(bool, size_t, double)> FunctFactory::Set_boolD1_TableFunctor() {
 
 	return nullptr;
 };
-function<double(bool, size_t, double, double)> FunctFactory::Set_boolD2_TableFunctor() {
+std::function<double(bool, size_t, double, double)> FunctFactory::Set_boolD2_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	
 
 	}
 	return nullptr;
 }
-function<double(bool, size_t, double, double, double)> FunctFactory::Set_boolD3_TableFunctor() {
+std::function<double(bool, size_t, double, double, double)> FunctFactory::Set_boolD3_TableFunctor() {
 	switch (m_Prop.FuncName) {
 	case::MyFunc::STEM_LITTERFALL_DYNAMIC:
 		return LitterFallYear(m_P_Par[0], m_P_Par[1], m_P_Par[2], m_P_Par[3], m_P_Par[4], m_P_Par[5], m_P_Par[6]);
@@ -1700,7 +1700,7 @@ function<double(bool, size_t, double, double, double)> FunctFactory::Set_boolD3_
 
 	return nullptr;
 }
-function<double(bool, size_t, double, double, double, double)> FunctFactory::Set_boolD4_TableFunctor() {
+std::function<double(bool, size_t, double, double, double, double)> FunctFactory::Set_boolD4_TableFunctor() {
 
 	switch (m_Prop.FuncName) {
 		case::MyFunc::LEAF_LITTERFALL_TSUM:

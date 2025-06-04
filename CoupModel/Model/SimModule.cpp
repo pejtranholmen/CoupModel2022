@@ -503,7 +503,7 @@ void SimModule::Define(D* ptr, NE* ptrNE, std::string name, std::vector<double> 
    ptr->Def(ModuleNo, name, vvalue, unit,AllConditions);
    ptrNE->LinkTo(ptr);
 }
-function<double(bool, size_t)> SimModule::Get_boolBlank_TableFunctor(enum  MyFunc choice)
+std::function<double(bool, size_t)> SimModule::Get_boolBlank_TableFunctor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -512,7 +512,7 @@ function<double(bool, size_t)> SimModule::Get_boolBlank_TableFunctor(enum  MyFun
 	}
 	return nullptr;
 }
-function<double(bool, size_t, double, double, double)> SimModule::Get_boolD3_TableFunctor(enum  MyFunc choice)
+std::function<double(bool, size_t, double, double, double)> SimModule::Get_boolD3_TableFunctor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -521,7 +521,7 @@ function<double(bool, size_t, double, double, double)> SimModule::Get_boolD3_Tab
 	}
 	return nullptr;
 }
-function<double(bool, size_t, double, double, double, double)> SimModule::Get_boolD4_TableFunctor(enum  MyFunc choice)
+std::function<double(bool, size_t, double, double, double, double)> SimModule::Get_boolD4_TableFunctor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -530,7 +530,7 @@ function<double(bool, size_t, double, double, double, double)> SimModule::Get_bo
 	}
 	return nullptr;
 }
-function<double(size_t, double)> SimModule::Get_D1_TableFunctor(enum  MyFunc choice)
+std::function<double(size_t, double)> SimModule::Get_D1_TableFunctor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -539,7 +539,7 @@ function<double(size_t, double)> SimModule::Get_D1_TableFunctor(enum  MyFunc cho
 	}
 	return nullptr;
 }
-function<double(size_t, double, double)> SimModule::Get_D2_TableFunctor(enum  MyFunc choice)
+std::function<double(size_t, double, double)> SimModule::Get_D2_TableFunctor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -548,7 +548,7 @@ function<double(size_t, double, double)> SimModule::Get_D2_TableFunctor(enum  My
 	}
 	return nullptr;
 }
-function<double(size_t, double, double, double)> SimModule::Get_D3_TableFunctor(enum  MyFunc choice)
+std::function<double(size_t, double, double, double)> SimModule::Get_D3_TableFunctor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -557,7 +557,7 @@ function<double(size_t, double, double, double)> SimModule::Get_D3_TableFunctor(
 	}
 	return nullptr;
 }
-function<double(size_t, double, double, double, double)> SimModule::Get_D4_TableFunctor(enum  MyFunc choice)
+std::function<double(size_t, double, double, double, double)> SimModule::Get_D4_TableFunctor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -566,7 +566,7 @@ function<double(size_t, double, double, double, double)> SimModule::Get_D4_Table
 	}
 	return nullptr;
 }
-function<double(bool)> SimModule::Get_boolBlank_Functor(enum  MyFunc choice)
+std::function<double(bool)> SimModule::Get_boolBlank_Functor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -575,7 +575,7 @@ function<double(bool)> SimModule::Get_boolBlank_Functor(enum  MyFunc choice)
 	}
 	return nullptr;
 }
-function<vector<double>(bool)> SimModule::GetVector_boolBlank_Functor(enum  MyFunc choice)
+std::function<vector<double>(bool)> SimModule::GetVector_boolBlank_Functor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -584,7 +584,7 @@ function<vector<double>(bool)> SimModule::GetVector_boolBlank_Functor(enum  MyFu
 	}
 	return nullptr;
 }
-function<vector<double>()> SimModule::GetVector_Blank_Functor(enum  MyFunc choice)
+std::function<vector<double>()> SimModule::GetVector_Blank_Functor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -593,7 +593,7 @@ function<vector<double>()> SimModule::GetVector_Blank_Functor(enum  MyFunc choic
 	}
 	return nullptr;
 }
-function<double(double)> SimModule::Get_D1_Functor(enum  MyFunc choice)
+std::function<double(double)> SimModule::Get_D1_Functor(enum  MyFunc choice)
 {
 
 	auto it=m_pModelMap->MapMyFunc.find(choice);
@@ -602,7 +602,7 @@ function<double(double)> SimModule::Get_D1_Functor(enum  MyFunc choice)
 	}
 	return nullptr;
 }
-function<double(double,double)> SimModule::Get_D2_Functor(enum  MyFunc choice)
+std::function<double(double,double)> SimModule::Get_D2_Functor(enum  MyFunc choice)
 {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
@@ -610,7 +610,7 @@ function<double(double,double)> SimModule::Get_D2_Functor(enum  MyFunc choice)
 	}
 	return nullptr;
 }
-function<double(double,double,double)> SimModule::Get_D3_Functor(enum  MyFunc choice)
+std::function<double(double,double,double)> SimModule::Get_D3_Functor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -619,7 +619,7 @@ function<double(double,double,double)> SimModule::Get_D3_Functor(enum  MyFunc ch
 	}
 	return nullptr;
 }
-function<double(double,double,double,double)> SimModule::Get_D4_Functor(enum  MyFunc choice)
+std::function<double(double,double,double,double)> SimModule::Get_D4_Functor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -628,7 +628,7 @@ function<double(double,double,double,double)> SimModule::Get_D4_Functor(enum  My
 	}
 	return nullptr;
 }
-function<double(double, double, double, double, double)> SimModule::Get_D5_Functor(enum  MyFunc choice)
+std::function<double(double, double, double, double, double)> SimModule::Get_D5_Functor(enum  MyFunc choice)
 {
 
 	auto it = m_pModelMap->MapMyFunc.find(choice);
@@ -637,7 +637,7 @@ function<double(double, double, double, double, double)> SimModule::Get_D5_Funct
 	}
 	return nullptr;
 }
-function<double(double)> SimModule::Get_D1_PhysFunctor(enum  FUNC_CHOICE choice)
+std::function<double(double)> SimModule::Get_D1_PhysFunctor(enum  FUNC_CHOICE choice)
 {
 	auto it = m_pModelMap->MapPhysFunc.find(int(choice));
 	if (it != m_pModelMap->MapPhysFunc.end()) {
@@ -645,7 +645,7 @@ function<double(double)> SimModule::Get_D1_PhysFunctor(enum  FUNC_CHOICE choice)
 	}
 	return nullptr;
 }
-function<double(double, double)> SimModule::Get_D2_PhysFunctor(enum   FUNC_CHOICE choice)
+std::function<double(double, double)> SimModule::Get_D2_PhysFunctor(enum   FUNC_CHOICE choice)
 {
 
 	auto it = m_pModelMap->MapPhysFunc.find(int(choice));
@@ -654,7 +654,7 @@ function<double(double, double)> SimModule::Get_D2_PhysFunctor(enum   FUNC_CHOIC
 	}
 	return nullptr;
 }
-function<double(double, double, double)> SimModule::Get_D3_PhysFunctor(enum   FUNC_CHOICE choice)
+std::function<double(double, double, double)> SimModule::Get_D3_PhysFunctor(enum   FUNC_CHOICE choice)
 {
 
 	auto it = m_pModelMap->MapPhysFunc.find(int(choice));
@@ -663,7 +663,7 @@ function<double(double, double, double)> SimModule::Get_D3_PhysFunctor(enum   FU
 	}
 	return nullptr;
 }
-function<double(double, double, double, double)> SimModule::Get_D4_PhysFunctor(enum   FUNC_CHOICE choice)
+std::function<double(double, double, double, double)> SimModule::Get_D4_PhysFunctor(enum   FUNC_CHOICE choice)
 {
 
 	auto it = m_pModelMap->MapPhysFunc.find(int(choice));
@@ -672,7 +672,7 @@ function<double(double, double, double, double)> SimModule::Get_D4_PhysFunctor(e
 	}
 	return nullptr;
 }
-function<double(double, double, double, double, double)> SimModule::Get_D5_PhysFunctor(enum   FUNC_CHOICE choice)
+std::function<double(double, double, double, double, double)> SimModule::Get_D5_PhysFunctor(enum   FUNC_CHOICE choice)
 {
 	auto it = m_pModelMap->MapPhysFunc.find(int(choice));
 	if (it != m_pModelMap->MapPhysFunc.end()) {
@@ -680,49 +680,49 @@ function<double(double, double, double, double, double)> SimModule::Get_D5_PhysF
 	}
 	return nullptr;
 }
-function<void(vector<double>*)>  SimModule::GetVectorPointer_D1_Functor(enum  MyFunc choice) {
+std::function<void(vector<double>*)>  SimModule::GetVectorPointer_D1_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D1_Functor();
 	}
 	return nullptr;
 }
-function<void(vector<double>*, std::vector<double>*)>  SimModule::GetVectorPointer_D2_Functor(enum  MyFunc choice) {
+std::function<void(vector<double>*, std::vector<double>*)>  SimModule::GetVectorPointer_D2_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D2_Functor();
 	}
 	return nullptr;
 }
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  SimModule::GetVectorPointer_D3_Functor(enum  MyFunc choice) {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  SimModule::GetVectorPointer_D3_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D3_Functor();
 	}
 	return nullptr;
 }
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SimModule::GetVectorPointer_D4_Functor(enum  MyFunc choice) {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SimModule::GetVectorPointer_D4_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D4_Functor();
 	}
 	return nullptr;
 }
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SimModule::GetVectorPointer_D5_Functor(enum  MyFunc choice) {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SimModule::GetVectorPointer_D5_Functor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->GetVectorPointer_D5_Functor();
 	}
 	return nullptr;
 }
-function<OrgTurnOver(double, double, double)> SimModule::Get_OrgTurnOverFunctor(enum  MyFunc choice) {
+std::function<OrgTurnOver(double, double, double)> SimModule::Get_OrgTurnOverFunctor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->Get_OrgTurnOverFunctor();
 	}
 	return nullptr;
 }
-function<OrgTurnOver(double, double, double, double, double)> SimModule::Get_D5_OrgTurnOverFunctor(enum  MyFunc choice) {
+std::function<OrgTurnOver(double, double, double, double, double)> SimModule::Get_D5_OrgTurnOverFunctor(enum  MyFunc choice) {
 	auto it = m_pModelMap->MapMyFunc.find(choice);
 	if (it != m_pModelMap->MapMyFunc.end()) {
 		return (*it).second->Get_D5_OrgTurnOverFunctor();

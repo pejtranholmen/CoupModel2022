@@ -330,7 +330,7 @@ NetCDFTransfer::NetCDFTransfer()
 		
 		string line, s_long, s_lat, s_land, code_unit;
 		float f_long, f_lat;
-		int superindex;
+		int superindex=0;
 		file.seekg(0,ios::end);
 		unsigned long long totsize=file.tellg();
 		file.seekg(0,ios::beg);

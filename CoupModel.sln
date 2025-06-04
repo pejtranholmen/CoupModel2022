@@ -9,6 +9,12 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CoupModelSetup", "CoupModel
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CoupModelx64|Any CPU = CoupModelx64|Any CPU
+		CoupModelx64|ARM = CoupModelx64|ARM
+		CoupModelx64|ARM64 = CoupModelx64|ARM64
+		CoupModelx64|ARM64EC = CoupModelx64|ARM64EC
+		CoupModelx64|x64 = CoupModelx64|x64
+		CoupModelx64|x86 = CoupModelx64|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|ARM64 = Debug|ARM64
@@ -23,6 +29,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|Any CPU.ActiveCfg = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|Any CPU.Build.0 = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|ARM.ActiveCfg = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|ARM.Build.0 = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|ARM64.ActiveCfg = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|ARM64.Build.0 = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|ARM64EC.ActiveCfg = CoupModelx64|ARM64EC
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|ARM64EC.Build.0 = CoupModelx64|ARM64EC
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|x64.ActiveCfg = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|x64.Build.0 = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|x86.ActiveCfg = CoupModelx64|Win32
+		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.CoupModelx64|x86.Build.0 = CoupModelx64|Win32
 		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.Debug|Any CPU.Build.0 = Debug|Win32
 		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.Debug|ARM.ActiveCfg = Debug|Win32
@@ -47,6 +65,12 @@ Global
 		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.Release|x64.Build.0 = Release|Win32
 		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.Release|x86.ActiveCfg = Release|Win32
 		{70AE0B07-17EB-4AFB-B3B9-3BEC86F02B8F}.Release|x86.Build.0 = Release|Win32
+		{DE593768-5167-4675-A978-3717375B47BD}.CoupModelx64|Any CPU.ActiveCfg = Release
+		{DE593768-5167-4675-A978-3717375B47BD}.CoupModelx64|ARM.ActiveCfg = Release
+		{DE593768-5167-4675-A978-3717375B47BD}.CoupModelx64|ARM64.ActiveCfg = Release
+		{DE593768-5167-4675-A978-3717375B47BD}.CoupModelx64|ARM64EC.ActiveCfg = Release
+		{DE593768-5167-4675-A978-3717375B47BD}.CoupModelx64|x64.ActiveCfg = Release
+		{DE593768-5167-4675-A978-3717375B47BD}.CoupModelx64|x86.ActiveCfg = Release
 		{DE593768-5167-4675-A978-3717375B47BD}.Debug|Any CPU.ActiveCfg = Debug
 		{DE593768-5167-4675-A978-3717375B47BD}.Debug|Any CPU.Build.0 = Debug
 		{DE593768-5167-4675-A978-3717375B47BD}.Debug|ARM.ActiveCfg = Debug

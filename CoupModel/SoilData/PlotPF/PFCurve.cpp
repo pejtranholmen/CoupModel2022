@@ -1,7 +1,8 @@
+
+#include "../../std.h"
 #ifndef COUPSTD
 #include <iostream>
 #endif
-#include "../../std.h"
 #include "PFCurve.h"
 #include "GausKreuger.h"
 #ifndef COUPSTD

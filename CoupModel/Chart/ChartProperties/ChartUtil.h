@@ -1,6 +1,10 @@
 #pragma once
 //#include "../../stdafx.h"
+#ifndef _HAS_STD_BYTE
+#define _HAS_STD_BYTE 0
+#endif
 #include "../../std.h"
+
 #include "../FileCreate/ChartFileSave.h"
 enum class CHART_OPTION{LINEWIDTH, LINESTYLE, SYMBOLSTYLE, SYMBOLSIZE };
 enum class CHART_SYMBOLS{NO_SYMBOL, FILLED_CIRCLE, OPEN_CIRCLE,FILLED_SQUARE, OPEN_SQUARE,

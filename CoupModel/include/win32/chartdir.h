@@ -15,6 +15,9 @@
 #ifndef CHARTDIR_WIDECHAR
 #define CHARTDIR_WIDECHAR void
 #endif
+#ifndef _HAS_STD_BYTE
+#define _HAS_STD_BYTE 0
+#endif
 
 #include "bchartdir.h"
 #include "memblock.h"

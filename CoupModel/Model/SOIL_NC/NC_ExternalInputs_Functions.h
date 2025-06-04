@@ -83,9 +83,9 @@ size_t NumValidInput4, NumValidDeposition;
 //Real, Dimension, Allocatable :: NDrivEcoDat	! Driving variables
 
 
-function<double(double)> f_N_DayFertization;
-function<double(double, double)> f_N_AgeStageFertilization;
-function<double(double, double)> f_N_YearStageFertilization;
+std::function<double(double)> f_N_DayFertization;
+std::function<double(double, double)> f_N_AgeStageFertilization;
+std::function<double(double, double)> f_N_YearStageFertilization;
 
 
 

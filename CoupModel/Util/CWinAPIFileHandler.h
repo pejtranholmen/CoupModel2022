@@ -48,7 +48,14 @@ public:
 
 
     std::wstring ToWString(const std::string& str) {
-        return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(str);
+
+        int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), nullptr, 0);
+        std::wstring result(size_needed, 0);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), &result[0], size_needed);
+        return result;
+
+
+       // return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(str);
     };
     HANDLE GetHandle() const  noexcept { return m_Handle; };
 

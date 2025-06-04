@@ -189,7 +189,7 @@ int NcVar::getAttCount() const
 }  
 
 // Gets the set of attributes.
-map<string,NcVarAtt> NcVar::getAtts() const
+std::map<string,NcVarAtt> NcVar::getAtts() const
 {
   // get the number of attributes
   int attCount = getAttCount();  

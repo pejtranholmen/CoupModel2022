@@ -1,6 +1,7 @@
+#include "chartdir.h"
 #include "../ChartProperties\ChartProp.h"
 #include "DrawAxisDesign.h"
-#include "chartdir.h"
+
 #include "../../Chart\ChartViewer.h"
 
 DrawAxisDesign::DrawAxisDesign(void)

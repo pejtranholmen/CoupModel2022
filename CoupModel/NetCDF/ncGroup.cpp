@@ -1246,7 +1246,7 @@ NcCompoundType NcGroup::addCompoundType(const std::string& name, size_t size) co
   
   
 // Get the collection of coordinate variables.
-map<string,NcGroup> NcGroup::getCoordVars(NcGroup::Location location) const {
+std::map<string,NcGroup> NcGroup::getCoordVars(NcGroup::Location location) const {
   map<string,NcGroup> coordVars;
 
   // search in current group and parent groups.

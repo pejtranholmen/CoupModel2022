@@ -100,41 +100,41 @@ vector<double> DailyValuesNO, DailyValuesN2O;
 ;
 vector<double> DenitUptakeMin, DenitUptakeOrg;
 
-function<double(double)> f_COS_Plant,f_COS_PlantTransp, f_COS_PlantTranspPotMax, f_COS_PlantTranspPot, f_COS_Soil;
+std::function<double(double)> f_COS_Plant,f_COS_PlantTransp, f_COS_PlantTranspPotMax, f_COS_PlantTranspPot, f_COS_Soil;
 
-function<double(double)> f_MethaneOxidation, f_MethaneOxidationRegulation, f_MethaneOxidationRegulationCH4, f_PlantRootRespRegulation;
-function<double(double,double)> f_MethaneOxidationRegulationCH4_O2;
-function<double(double, double)> f_MethaneVolatility, f_EbullitionPress;
-function<double(double)> f_GasWaterConcCH4, f_GasWaterConcO2;
-function<double(double, double, double)> f_Ebullition;
-function<double(double, double, double)> f_MethaneProduction_OneLitter;
-function<double(double, double)> f_PlantEmissionbyWaterUptake;
-function<double(double, double)> f_MethaneBoundaryLayerFlux;
-function<double(double, double, double)> f_MethaneDynResBoundaryLayerFlux;
-function<double(double)> f_MethaneOxidationInPlant;
-function<double(double, double, double, double)> f_MethaneProduction_TwoLitter;
+std::function<double(double)> f_MethaneOxidation, f_MethaneOxidationRegulation, f_MethaneOxidationRegulationCH4, f_PlantRootRespRegulation;
+std::function<double(double,double)> f_MethaneOxidationRegulationCH4_O2;
+std::function<double(double, double)> f_MethaneVolatility, f_EbullitionPress;
+std::function<double(double)> f_GasWaterConcCH4, f_GasWaterConcO2;
+std::function<double(double, double, double)> f_Ebullition;
+std::function<double(double, double, double)> f_MethaneProduction_OneLitter;
+std::function<double(double, double)> f_PlantEmissionbyWaterUptake;
+std::function<double(double, double)> f_MethaneBoundaryLayerFlux;
+std::function<double(double, double, double)> f_MethaneDynResBoundaryLayerFlux;
+std::function<double(double)> f_MethaneOxidationInPlant;
+std::function<double(double, double, double, double)> f_MethaneProduction_TwoLitter;
 
-function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>)> f_MethaneProdVector_TwoLitter;
-function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>)> f_MethaneProdVector_OneLitter;
-function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, size_t OrgIndex)> f_MethaneProdVector_ByLitterIndex;
-function<double(double, double, double, double, double)> f_MethaneResistanceSoilSurface;
-function<double(double, double, double, double, double,double,double,double,double,double)> f_PlantEmissionbyAerenchyma,f_OxygenDiffusionbyAerenchyma;
-function<double(double)> f_AnaerobicFraction;
+std::function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>)> f_MethaneProdVector_TwoLitter;
+std::function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>)> f_MethaneProdVector_OneLitter;
+std::function<vector<double>(vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>, size_t OrgIndex)> f_MethaneProdVector_ByLitterIndex;
+std::function<double(double, double, double, double, double)> f_MethaneResistanceSoilSurface;
+std::function<double(double, double, double, double, double,double,double,double,double,double)> f_PlantEmissionbyAerenchyma,f_OxygenDiffusionbyAerenchyma;
+std::function<double(double)> f_AnaerobicFraction;
 
-function<double(double, double)> f_OxygenDiffuctionCoef;
-function<double(double, double)> f_CarbonDiOxideDiffuctionCoef;
-function<double(double, double)> f_OxygenDensityFrom_Volume_Temp;
-function<double(double, double)> f_CarbonDioOxideDensityFrom_Volume_Temp, f_MethaneDensityFrom_Volume_Temp;
-function<double(double, double, double)> f_MethaneAirConcFrom_water_Temp;
+std::function<double(double, double)> f_OxygenDiffuctionCoef;
+std::function<double(double, double)> f_CarbonDiOxideDiffuctionCoef;
+std::function<double(double, double)> f_OxygenDensityFrom_Volume_Temp;
+std::function<double(double, double)> f_CarbonDioOxideDensityFrom_Volume_Temp, f_MethaneDensityFrom_Volume_Temp;
+std::function<double(double, double, double)> f_MethaneAirConcFrom_water_Temp;
 
-function<double(double)> f_NitrogenOxideProduction_Temp;
-function<double(double)> f_NO_Production_Moist;
-function<double(double)> f_N2O_Production_Moist;
-function<double(double)> f_NO_Production_PH;
-function<double(double)> f_NO_Production;
-function<double(double)> f_N2O_Production;
-function<double(double)> f_AnaerobicExchangeEfficiency;
-function<double(double)> f_DenitrifierAnaerobicFracResponse;
+std::function<double(double)> f_NitrogenOxideProduction_Temp;
+std::function<double(double)> f_NO_Production_Moist;
+std::function<double(double)> f_N2O_Production_Moist;
+std::function<double(double)> f_NO_Production_PH;
+std::function<double(double)> f_NO_Production;
+std::function<double(double)> f_N2O_Production;
+std::function<double(double)> f_AnaerobicExchangeEfficiency;
+std::function<double(double)> f_DenitrifierAnaerobicFracResponse;
 
 
 

@@ -1,9 +1,12 @@
 #pragma once
+#ifndef _HAS_STD_BYTE
+#define _HAS_STD_BYTE 0
+#endif
 #include "../../std.h"
-#include "../ChartFrames/ChartFrame.h"
 #ifndef COUPSTD
 #include "./Chartdir.h"
 #endif
+#include "../ChartFrames/ChartFrame.h"
 #include "../../ModelTypes/NewModelType.h"
 
 

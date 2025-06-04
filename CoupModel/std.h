@@ -5,6 +5,9 @@
 #define NUM_BAND 100
 #define NUM_TIME 50
 #endif
+#ifndef _HAS_STD_BYTE
+#define _HAS_STD_BYTE 0
+#endif
 #include <mutex>
 #include <vector>
 #include <string>
@@ -15,6 +18,7 @@
 #include <algorithm>
 #include <memory>
 #include <functional>
+
 
 #ifndef NOSIMMODEL
 //#include "./SoilData/GetSoilStorage.h"

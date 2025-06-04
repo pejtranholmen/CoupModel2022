@@ -465,7 +465,7 @@ double Func::GetValue(size_t index, double x1, double x2, double x3, double x4) 
 	}
 	return MISSING;
 }
-function<double(bool)> Func::Get_boolBlank_Functor()
+std::function<double(bool)> Func::Get_boolBlank_Functor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -479,7 +479,7 @@ function<double(bool)> Func::Get_boolBlank_Functor()
 	}
 	//return *m_pFunctor;
 }
-function<vector<double>()> Func::GetVector_Blank_Functor()
+std::function<vector<double>()> Func::GetVector_Blank_Functor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -493,7 +493,7 @@ function<vector<double>()> Func::GetVector_Blank_Functor()
 	}
 	//return *m_pFunctor;
 }
-function<vector<double>(bool)> Func::GetVector_boolBlank_Functor()
+std::function<vector<double>(bool)> Func::GetVector_boolBlank_Functor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -507,7 +507,7 @@ function<vector<double>(bool)> Func::GetVector_boolBlank_Functor()
 	}
 	//return *m_pFunctor;
 }
-function<double(double)> Func::Get_D1_Functor()
+std::function<double(double)> Func::Get_D1_Functor()
 {
 
 	if (m_TableType) {
@@ -533,7 +533,7 @@ function<double(double)> Func::Get_D1_Functor()
 	}
 	//return *m_pFunctor;
 }
-function<double(double, double)> Func::Get_D2_Functor()
+std::function<double(double, double)> Func::Get_D2_Functor()
 {
 	if (m_TableType) {
 
@@ -557,7 +557,7 @@ function<double(double, double)> Func::Get_D2_Functor()
 	}
 	//return *m_pFunctor;
 }
-function<double(double, double, double)> Func::Get_D3_Functor()
+std::function<double(double, double, double)> Func::Get_D3_Functor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -571,7 +571,7 @@ function<double(double, double, double)> Func::Get_D3_Functor()
 	}
 	//return *m_pFunctor;
 }
-function<double(double, double, double, double)> Func::Get_D4_Functor()
+std::function<double(double, double, double, double)> Func::Get_D4_Functor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -585,13 +585,13 @@ function<double(double, double, double, double)> Func::Get_D4_Functor()
 	}
 	//return *m_pFunctor;
 }
-function<double(double, double, double, double, double)> Func::Get_D5_Functor()
+std::function<double(double, double, double, double, double)> Func::Get_D5_Functor()
 {
 		UpdatePs_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorPs_Par);// ->Get_D1_Functor();
 		return koll.Get_D5_Functor();
 }
-function<double(bool, size_t)> Func::Get_boolBlank_TableFunctor()
+std::function<double(bool, size_t)> Func::Get_boolBlank_TableFunctor()
 {
 
 	if (m_TableType) {
@@ -613,7 +613,7 @@ function<double(bool, size_t)> Func::Get_boolBlank_TableFunctor()
 	}
 	//return *m_pFunctor;
 }
-function<double(bool, size_t, double, double, double)> Func::Get_boolD3_TableFunctor()
+std::function<double(bool, size_t, double, double, double)> Func::Get_boolD3_TableFunctor()
 {
 
 	if (m_TableType) {
@@ -626,7 +626,7 @@ function<double(bool, size_t, double, double, double)> Func::Get_boolD3_TableFun
 	}
 	//return *m_pFunctor;
 }
-function<double(bool, size_t, double, double, double, double)> Func::Get_boolD4_TableFunctor()
+std::function<double(bool, size_t, double, double, double, double)> Func::Get_boolD4_TableFunctor()
 {
 
 	if (m_TableType) {
@@ -639,7 +639,7 @@ function<double(bool, size_t, double, double, double, double)> Func::Get_boolD4_
 	}
 	//return *m_pFunctor;
 }
-function<double(size_t,double)> Func::Get_D1_TableFunctor()
+std::function<double(size_t,double)> Func::Get_D1_TableFunctor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -659,7 +659,7 @@ function<double(size_t,double)> Func::Get_D1_TableFunctor()
 	}
 	//return *m_pFunctor;
 }
-function<double(size_t, double, double)> Func::Get_D2_TableFunctor()
+std::function<double(size_t, double, double)> Func::Get_D2_TableFunctor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -682,7 +682,7 @@ function<double(size_t, double, double)> Func::Get_D2_TableFunctor()
 	}
 	//return *m_pFunctor;
 }
-function<double(size_t, double, double, double)> Func::Get_D3_TableFunctor()
+std::function<double(size_t, double, double, double)> Func::Get_D3_TableFunctor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -704,7 +704,7 @@ function<double(size_t, double, double, double)> Func::Get_D3_TableFunctor()
 	}
 	//return *m_pFunctor;
 }
-function<double(size_t, size_t, double, double, double)> Func::Get_T_D3_TableFunctor()
+std::function<double(size_t, size_t, double, double, double)> Func::Get_T_D3_TableFunctor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -726,7 +726,7 @@ function<double(size_t, size_t, double, double, double)> Func::Get_T_D3_TableFun
 	}
 }//return *m_pFunctor;
 
-function<double(size_t, double, double, double, double)> Func::Get_D4_TableFunctor()
+std::function<double(size_t, double, double, double, double)> Func::Get_D4_TableFunctor()
 {
 	if (m_TableType) {
 		UpdateP_Par();
@@ -740,7 +740,7 @@ function<double(size_t, double, double, double, double)> Func::Get_D4_TableFunct
 	}
 	//return *m_pFunctor;
 }
-function<void(vector<double>*)>  Func::GetVectorPointer_D1_Functor() {
+std::function<void(vector<double>*)>  Func::GetVectorPointer_D1_Functor() {
 	if (m_TableType) {
 		UpdateP_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorP_Par);// ->Get_D1_Functor();
@@ -753,7 +753,7 @@ function<void(vector<double>*)>  Func::GetVectorPointer_D1_Functor() {
 	}
 
 }
-function<void(vector<double>*, std::vector<double>*)>  Func::GetVectorPointer_D2_Functor() {
+std::function<void(vector<double>*, std::vector<double>*)>  Func::GetVectorPointer_D2_Functor() {
 	if (m_TableType) {
 		UpdateP_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorP_Par);// ->Get_D1_Functor();
@@ -767,7 +767,7 @@ function<void(vector<double>*, std::vector<double>*)>  Func::GetVectorPointer_D2
 	}
 
 }
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  Func::GetVectorPointer_D3_Functor() {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  Func::GetVectorPointer_D3_Functor() {
 	UpdateP_Par();
 	UpdatePs_Par();
 	if (m_FunctorP_Par.size()>0&& m_FunctorPs_Par.size()>0) {
@@ -784,7 +784,7 @@ function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  Fun
 	}
 
 }
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> Func::GetVectorPointer_D4_Functor() {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> Func::GetVectorPointer_D4_Functor() {
 	if (m_TableType) {
 		UpdateP_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorP_Par);// ->Get_D1_Functor();
@@ -797,7 +797,7 @@ function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::
 	}
 
 }
-function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> Func::GetVectorPointer_D5_Functor() {
+std::function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> Func::GetVectorPointer_D5_Functor() {
 	if (m_TableType) {
 		UpdateP_Par();
 		auto koll = FunctFactory(m_FunctorProp, m_FunctorP_Par);// ->Get_D1_Functor();
@@ -811,37 +811,37 @@ function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::
 
 }
 
-function<OrgTurnOver(double, double, double)> Func::Get_OrgTurnOverFunctor()
+std::function<OrgTurnOver(double, double, double)> Func::Get_OrgTurnOverFunctor()
 {
 	UpdatePs_Par();
 	auto koll = FunctFactory(m_FunctorProp, m_FunctorPs_Par);
 	return koll.Get_OrgTurnOverFunctor();
 }
-function<OrgTurnOver(double, double, double, double, double)> Func::Get_D5_OrgTurnOverFunctor()
+std::function<OrgTurnOver(double, double, double, double, double)> Func::Get_D5_OrgTurnOverFunctor()
 {
 	UpdatePs_Par();
 	auto koll = FunctFactory(m_FunctorProp, m_FunctorPs_Par);
 	return koll.Get_D5_OrgTurnOverFunctor();
 }
-function<pair<double, double>( double, double)> Func::Get_Pair_D2Functor()
+std::function<pair<double, double>( double, double)> Func::Get_Pair_D2Functor()
 {
 	UpdatePs_Par();
 	auto koll = FunctFactory(m_FunctorProp, m_FunctorPs_Par);
 	return koll.Get_Pair_D2Functor();
 }
-function<pair<double, double>(double, double, double)> Func::Get_Pair_D3Functor()
+std::function<pair<double, double>(double, double, double)> Func::Get_Pair_D3Functor()
 {
 	UpdatePs_Par();
 	auto koll = FunctFactory(m_FunctorProp, m_FunctorPs_Par);
 	return koll.Get_Pair_D3Functor();
 }
-function < pair<double, double>(size_t, double, double) > Func::Get_Pair_D2_TableFunctor()
+std::function < pair<double, double>(size_t, double, double) > Func::Get_Pair_D2_TableFunctor()
 {
 	UpdatePs_Par();
 	auto koll = FunctFactory(m_FunctorProp, m_FunctorPs_Par);
 	return koll.Get_Pair_D2_TableFunctor();
 }
-function<pair<double, double>(size_t, double, double, double)> Func::Get_Pair_D3_TableFunctor()
+std::function<pair<double, double>(size_t, double, double, double)> Func::Get_Pair_D3_TableFunctor()
 {
 	UpdatePs_Par();
 	auto koll = FunctFactory(m_FunctorProp, m_FunctorPs_Par);
