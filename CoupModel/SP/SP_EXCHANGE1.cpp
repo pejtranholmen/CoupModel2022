@@ -177,7 +177,7 @@ void SP_EXCHANGE1::OnMoveToMain()
 BOOL SP_EXCHANGE1::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-   CString std::string;
+   CString string;
 	 int numTab=2, Record=1;
    LPINT tabstops;
    int	tabstop[2];

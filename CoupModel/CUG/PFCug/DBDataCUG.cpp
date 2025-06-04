@@ -146,7 +146,7 @@ void DBDataCug::OnSheetSetup(int sheetNumber)
 	CString heading, number, test;
 
 	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
-	CString std::string, Defstring;
+	CString string, Defstring;
 	CString optionlist;
 	int MaxCol=8;
 	int colv=0;

@@ -1637,7 +1637,7 @@ int PGCug::OnEditVerify(int col, long row,CWnd *edit,UINT *vcKey)
 
 /////////////////////////////////////////////////////////////////////////////
 //	OnEditFinish this is send when editing is finished
-int PGCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
+int PGCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
 {
 	
 	CPG *pCPG=(CPG*)m_pPG;

@@ -70,7 +70,7 @@ Params:
 Returns:
 	width in pixels of the std::string in questoin.
 *****************************************************/
-int CUGTab::GetTabItemWidth( CString std::string )
+int CUGTab::GetTabItemWidth( CString string )
 {
 	//get the std::string width
 	CDC* dc = GetDC();
@@ -94,13 +94,13 @@ Returns:
 	UG_SUCCESS	- tab was added successfuly
 	UG_ERROR	- tab could not be added
 *****************************************************/
-int CUGTab::AddTab( CString std::string, long ID )
+int CUGTab::AddTab( CString string, long ID )
 {
 	if ( m_tabCount < UTMAXTABS )
 	{
-		m_tabStrings[m_tabCount]	= std::string;
+		m_tabStrings[m_tabCount]	= string;
 		m_tabIDs[m_tabCount]		= ID;
-		m_tabWidths[m_tabCount]		= GetTabItemWidth( std::string );
+		m_tabWidths[m_tabCount]		= GetTabItemWidth( string );
 		m_tabTextColors[m_tabCount] = GetSysColor( COLOR_WINDOWTEXT );
 		m_tabBackColors[m_tabCount] = GetSysColor( COLOR_BTNFACE );
 		m_tabTextHColors[m_tabCount] = RGB(0,0,0);
@@ -127,7 +127,7 @@ Returns:
 	UG_SUCCESS	- tab was added successfuly
 	UG_ERROR	- tab could not be added
 *****************************************************/
-int CUGTab::InsertTab( int pos, CString std::string, long ID )
+int CUGTab::InsertTab( int pos, CString string, long ID )
 {
 	if ( pos < 0 || pos > m_tabCount )
 		return UG_ERROR;
@@ -151,9 +151,9 @@ int CUGTab::InsertTab( int pos, CString std::string, long ID )
 		if ( m_currentTab >= pos )
 			m_currentTab++;
 
-		m_tabStrings[pos]		= std::string;
+		m_tabStrings[pos]		= string;
 		m_tabIDs[pos]			= ID;
-		m_tabWidths[pos]		= GetTabItemWidth( std::string );
+		m_tabWidths[pos]		= GetTabItemWidth( string );
 		m_tabTextColors[pos]	= GetSysColor( COLOR_WINDOWTEXT );
 		m_tabBackColors[pos]	= GetSysColor( COLOR_BTNFACE );
 		m_tabTextHColors[pos]	= RGB(0,0,0);

@@ -2404,7 +2404,7 @@ bool NewMap::WriteDocFile(bool ChildDocument)
 {
 	if (m_xmlFileToUse) {
 		m_ChildDocument = ChildDocument;
-		auto std::string=WriteEntireModelToXmlFile(doc_enabled::NOT_DEFAULT);
+		auto str=WriteEntireModelToXmlFile(doc_enabled::NOT_DEFAULT);
 		return true;
 	}
 	else {

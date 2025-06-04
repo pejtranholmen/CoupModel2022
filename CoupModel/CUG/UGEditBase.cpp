@@ -143,7 +143,7 @@ LRESULT CUGEditBase::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 					::SetFocus( m_ctrl->m_CUGGrid->GetSafeHwnd());
 			}
 
-			CString std::string;
+			CString string;
 			GetWindowText(string);
 
 			if(m_ctrl->EditCtrlFinished(string,m_cancel,m_continueFlag,m_continueCol,m_continueRow) == FALSE)

@@ -1111,7 +1111,7 @@ int CUGMem::FindNext(CString *string,int *col,long *row,int flags)
 							tempStr = m_colInfo->cell->GetText();
 							if( tempStr.IsEmpty() == 0 )
 							{
-								if( std::string->CompareNoCase( tempStr ) == 0 )
+								if( string->CompareNoCase( tempStr ) == 0 )
 									success = TRUE;
 							}
 						}
@@ -1129,7 +1129,7 @@ int CUGMem::FindNext(CString *string,int *col,long *row,int flags)
 							tempStr = m_colInfo->cell->GetText();
 							if( tempStr.IsEmpty() == 0 )
 							{
-								if( std::string->Compare( tempStr ) == 0 )
+								if( string->Compare( tempStr ) == 0 )
 									success = TRUE;
 							}
 						}

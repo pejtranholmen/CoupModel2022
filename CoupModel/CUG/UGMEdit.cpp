@@ -252,7 +252,7 @@ Return:
 	UG_SUCCESS - success
 	UG_ERROR - error
 ****************************************************/
-int CUGMaskedEdit::SetMask(LPCTSTR std::string){
+int CUGMaskedEdit::SetMask(LPCTSTR string){
 
 	if(string == nullptr){
 		m_useMask = FALSE;
@@ -260,7 +260,7 @@ int CUGMaskedEdit::SetMask(LPCTSTR std::string){
 	}
 
 	//set the mask
-	m_origMask = std::string;
+	m_origMask = string;
 	if(m_origMask.GetLength() > 0)
 		m_useMask = TRUE;
 	else{
@@ -374,9 +374,9 @@ int CUGMaskedEdit::MaskString(CString *string){
 		//check to see if the std::string matches the mask
 		else{
 			int c = m_mask.GetAt(loop);
-			if(pos == std::string->GetLength())
+			if(pos == string->GetLength())
 				break;
-			int d = std::string->GetAt(pos);
+			int d = string->GetAt(pos);
 			int valid = FALSE;
 	
 			switch(c){
@@ -443,7 +443,7 @@ int CUGMaskedEdit::MaskString(CString *string){
 			
 			pos++;
 		}
-		if(pos == std::string->GetLength())
+		if(pos == string->GetLength())
 			break;
 	}
 

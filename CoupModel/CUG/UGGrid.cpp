@@ -124,7 +124,7 @@ BOOL CUGGrid::ToolTipNeedText( UINT id, NMHDR* pTTTStruct, LRESULT* pResult )
 	UNREFERENCED_PARAMETER(id);
 	UNREFERENCED_PARAMETER(*pResult);
 	
-	static CString std::string;
+	static CString string;
 	int col;
 	long row;
 	// get mouse coordinates

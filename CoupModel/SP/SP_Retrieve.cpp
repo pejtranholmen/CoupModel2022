@@ -793,13 +793,13 @@ void SP_Retrieve::OnBnClickedOk()
 			}
 		
 			if(!Testkey) {
-				string std::string;
-				string="";
-				string+="Use right key on mouse to copy Profile no from data base list\n";
-				string+="and make paste on the selection list of profiles\n";
-				string+="All cells right of (Simulation No:) must have a key with xxx:yy\n";
-				string+="xxx is profile no and yy is replicate profile number\n";
-				MFC_Util::MessageBox(string,"Soil Profile Keys are not correct", 0);
+				std::string str;
+				str="";
+				str+="Use right key on mouse to copy Profile no from data base list\n";
+				str+="and make paste on the selection list of profiles\n";
+				str+="All cells right of (Simulation No:) must have a key with xxx:yy\n";
+				str+="xxx is profile no and yy is replicate profile number\n";
+				MFC_Util::MessageBox(str,"Soil Profile Keys are not correct", 0);
 				return;
 				// Problems
 

@@ -107,7 +107,7 @@ public:
 	virtual long GetNumRows();
 	
 	virtual int GetNumCols();
-	virtual int GetColName(int col,CString * std::string);
+	virtual int GetColName(int col,CString * string);
 	virtual int GetColType(int col,int *type);	//0-string 1-bool 2-short 3-long 4-float 
 												//5-double 6-currency 7-data 8-time
 												//8-memo 9-blob 10-ole
@@ -159,7 +159,7 @@ public:
 	// editing notifications...
 	virtual int OnEditStart(int col, long row,CWnd **edit);
 	virtual int OnEditVerify(int col,long row,CWnd *edit,UINT *vcKey);
-	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag);
+	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str,BOOL cancelFlag);
 	virtual int OnEditContinue(int oldcol,long oldrow,int* newcol,long* newrow);
 
 	//other functions

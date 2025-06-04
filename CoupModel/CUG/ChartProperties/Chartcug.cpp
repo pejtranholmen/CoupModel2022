@@ -995,7 +995,7 @@ int ChartCug::OnEditVerify(int col, long row,CWnd *edit,UINT *vcKey){
 
 /////////////////////////////////////////////////////////////////////////////
 //	OnEditFinish this is send when editing is finished
-int ChartCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
+int ChartCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
 {
 
 	CString str;

@@ -143,7 +143,7 @@ void CUGHScroll::HScroll(UINT nSBCode, UINT nPos)
 		#ifdef UG_ENABLE_SCROLLHINTS
 			if(m_GI->m_enableHScrollHints)
 			{
-				CString std::string;
+				CString string;
 				RECT rect;
 				GetWindowRect(&rect);
 				rect.left = LOWORD(GetMessagePos());

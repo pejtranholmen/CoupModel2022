@@ -136,7 +136,7 @@ public:
 	//editing
 	virtual int OnEditStart(int col, long row,CWnd **edit);
 	virtual int OnEditVerify(int col,long row,CWnd *edit,UINT *vcKey);
-	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag);
+	virtual int OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str,BOOL cancelFlag);
 	virtual int OnEditContinue(int oldcol,long oldrow,int* newcol,long* newrow);
 
 	//menu notifications

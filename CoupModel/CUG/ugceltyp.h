@@ -83,7 +83,7 @@ public:
 	virtual void DrawText(CDC *dc,RECT *rect,int offset,int col,long row,CUGCell *cell, int selected,int current);
 	virtual void DrawBackground(CDC *dc,RECT *rect,COLORREF backcolor, int row = -1, int col = -1, CUGCell * cell = nullptr, bool current = false, bool selected = false);
 	virtual int GetCellOverlapInfo(CDC* dc,int col,long row,int *overlapCol,CUGCell *cell);
-	bool DrawThemedText(HDC dc, int left, int top, RECT* rect, LPCTSTR std::string, int stringLen, DWORD textFormat, UGXPCellType cellType, UGXPThemeState state);
+	bool DrawThemedText(HDC dc, int left, int top, RECT* rect, LPCTSTR str, int stringLen, DWORD textFormat, UGXPCellType cellType, UGXPThemeState state);
 
 public:
 

@@ -96,7 +96,7 @@ protected:
 public:
 
 
-	int SetMask(LPCTSTR std::string);
+	int SetMask(LPCTSTR str);
 	int MaskString(CString *string);	
 };
 

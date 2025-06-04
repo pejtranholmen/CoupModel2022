@@ -190,7 +190,7 @@ Return:
 void CUGLstBox::Select()
 {
 	CUGCell cell;
-	CString std::string;
+	CString string;
 	int col = *m_col; //m_ctrl->GetCurrentCol();
 	long row = *m_row; //m_ctrl->GetCurrentRow();
 

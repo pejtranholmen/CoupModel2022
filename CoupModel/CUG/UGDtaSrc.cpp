@@ -227,7 +227,7 @@ Return:
 	UG_SUCCESS	success
 	1...		error codes (data source dependant)
 ****************************************************/
-int CUGDataSource::GetColName(int col,CString * std::string)
+int CUGDataSource::GetColName(int col,CString * string)
 {
 	UNREFERENCED_PARAMETER(col);
 	UNREFERENCED_PARAMETER(*string);
@@ -875,7 +875,7 @@ Return:
 	TRUE - to allow the edit it proceede
 	FALSE - to force the user back to editing of that same cell
 ****************************************************/
-int CUGDataSource::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
+int CUGDataSource::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
 {
 	UNREFERENCED_PARAMETER(col);
 	UNREFERENCED_PARAMETER(row);

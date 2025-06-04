@@ -148,7 +148,7 @@ void PFSheets::MakeBaseSheet(bool ExtraBase, bool NewProfile)
 	//SetColWidth(0,86);
 	//return;
 		Record=1;
-		CString std::string, tmpstring;
+		CString string, tmpstring;
 		if(NewProfile) {
 			m_NewHeader=p_PFCurve->GetHeader(ini_prof, ini_rep_prof);
 			SetDescriptionRow(0, m_NewHeader);
@@ -927,7 +927,7 @@ bool PFSheets::KeyTest(NEWHEADER header)
 void PFSheets::SetDescriptionRow(int Count, NEWHEADER header) 
 {
 		CUGCell cell; 
-		CString std::string;
+		CString string;
 		QuickSetNumber(-1,Count,Count+1);
 		GetCell(0,Count,&cell);
 		cell.SetNumber(header.KeyProf/100);

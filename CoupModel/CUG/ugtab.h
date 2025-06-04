@@ -95,13 +95,13 @@ protected:
 	CUGCtrl* m_ctrl;
 	CUGGridInfo *	m_GI;
 
-	int GetTabItemWidth( CString std::string );
+	int GetTabItemWidth( CString str );
 	int AdjustScrollBars();
 
 public:
 	// functions to add, insert and delete tabs
-	int AddTab( CString std::string, long ID );
-	int InsertTab( int pos, CString std::string, long ID );
+	int AddTab( CString str, long ID );
+	int InsertTab( int pos, CString str, long ID );
 	int DeleteTab( long ID );
 	// functions used for user navigation
 	int SetCurrentTab( long ID );

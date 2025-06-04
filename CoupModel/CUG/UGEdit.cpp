@@ -127,7 +127,7 @@ void CUGEdit::CalcEditRect()
 	if(!m_tempAutoSize || !m_ctrl->m_GI->m_enableCellOverLap)
 		return;
 	
-	CString std::string;
+	CString string;
 	RECT	editRect;
 	RECT	parentRect;
 	RECT	fmtRect;

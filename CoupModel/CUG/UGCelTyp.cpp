@@ -919,7 +919,7 @@ void CUGCellType::DrawText(CDC *dc,RECT *rect,int offset,int col,long row,CUGCel
 				offsetRect.left += m_ctrl->m_GI->m_margin + offset;
 			}
 			
-			if (!m_useThemes || !DrawThemedText(*dc, tempRect.left, tempRect.top, &tempRect, std::string, stringLen, format, cell->GetXPStyle(), state))
+			if (!m_useThemes || !DrawThemedText(*dc, tempRect.left, tempRect.top, &tempRect, string, stringLen, format, cell->GetXPStyle(), state))
 			{
 				dc->DrawText(string,-1,tempRect,format );			//draw the text			
 			}
@@ -930,7 +930,7 @@ void CUGCellType::DrawText(CDC *dc,RECT *rect,int offset,int col,long row,CUGCel
 			rect->left += 3; //set margines
 			rect->top = top;
 
-			if (!m_useThemes || !DrawThemedText(*dc, left, top, &offsetRect, std::string, stringLen, DT_END_ELLIPSIS | DT_SINGLELINE, cell->GetXPStyle(), state))
+			if (!m_useThemes || !DrawThemedText(*dc, left, top, &offsetRect, string, stringLen, DT_END_ELLIPSIS | DT_SINGLELINE, cell->GetXPStyle(), state))
 			{
 				dc->DrawText(string, rect, DT_NOPREFIX | DT_END_ELLIPSIS | DT_SINGLELINE);
 			}
@@ -977,7 +977,7 @@ void CUGCellType::DrawText(CDC *dc,RECT *rect,int offset,int col,long row,CUGCel
 			mode |= DT_SINGLELINE | DT_BOTTOM;
 		}
 
-		if (!m_useThemes || !DrawThemedText(*dc, left, top, &offsetRect, std::string, stringLen, mode, cell->GetXPStyle(), state))
+		if (!m_useThemes || !DrawThemedText(*dc, left, top, &offsetRect, string, stringLen, mode, cell->GetXPStyle(), state))
 		{
 			dc->ExtTextOut(left,orgTop,ETO_CLIPPED,rect,string,stringLen,nullptr);
 		}
@@ -990,7 +990,7 @@ void CUGCellType::DrawText(CDC *dc,RECT *rect,int offset,int col,long row,CUGCel
 		dc->SelectObject( pOldFont );
 }
 
-bool CUGCellType::DrawThemedText(HDC dc, int left, int top,  RECT* rect, LPCTSTR std::string, int stringLen, DWORD textFormat, UGXPCellType cellType, UGXPThemeState state)
+bool CUGCellType::DrawThemedText(HDC dc, int left, int top,  RECT* rect, LPCTSTR string, int stringLen, DWORD textFormat, UGXPCellType cellType, UGXPThemeState state)
 {
 	bool success = false;
 
@@ -1000,7 +1000,7 @@ bool CUGCellType::DrawThemedText(HDC dc, int left, int top,  RECT* rect, LPCTSTR
 		rcDraw.left = left;
 		rcDraw.top = top;
 
-		success = UGXPThemes::WriteText(nullptr, dc, cellType, state, std::string, stringLen, textFormat, &rcDraw);
+		success = UGXPThemes::WriteText(nullptr, dc, cellType, state, string, stringLen, textFormat, &rcDraw);
 	}
 
 	return success;

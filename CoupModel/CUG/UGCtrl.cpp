@@ -401,7 +401,7 @@ int CUGCtrl::EditCancel(){
 		TRUE - if successful
 		FALSE - if the current editing must continue
 ****************************************************/
-int CUGCtrl::EditCtrlFinished(LPCTSTR std::string,BOOL cancelFlag,
+int CUGCtrl::EditCtrlFinished(LPCTSTR string,BOOL cancelFlag,
 							  BOOL continueFlag,int continueCol,
 							  long continueRow){
 	
@@ -426,23 +426,23 @@ int CUGCtrl::EditCtrlFinished(LPCTSTR std::string,BOOL cancelFlag,
 			switch( editCell.GetDataType())
 			{
 			case UGCELLDATA_NUMBER:
-				editCell.SetText( std::string );
+				editCell.SetText( string );
 				editCell.SetDataType( UGCELLDATA_NUMBER );
 				break;
 			case UGCELLDATA_BOOL:
-				editCell.SetText( std::string );
+				editCell.SetText( string );
 				editCell.SetDataType( UGCELLDATA_BOOL );
 				break;
 			case UGCELLDATA_TIME:
-				editCell.SetText( std::string );
+				editCell.SetText( string );
 				editCell.SetDataType( UGCELLDATA_TIME );
 				break;
 			case UGCELLDATA_CURRENCY:
-				editCell.SetText( std::string );
+				editCell.SetText( string );
 				editCell.SetDataType( UGCELLDATA_CURRENCY );
 				break;
 			default:
-				editCell.SetText( std::string );
+				editCell.SetText( string );
 			}
 
 			SetCell( m_editCol, m_editRow, &editCell );
@@ -471,7 +471,7 @@ int CUGCtrl::EditCtrlFinished(LPCTSTR std::string,BOOL cancelFlag,
 				oldFont = offDc->SelectObject( cellFont );
 
 			GetCellRect( m_editCol, m_editRow, editRect );
-			offDc->DrawText( std::string, editRect, DT_CALCRECT );
+			offDc->DrawText( string, editRect, DT_CALCRECT );
 
 			// clean up after the off screen DC
 			if ( cellFont != nullptr )
@@ -3043,7 +3043,7 @@ LPCTSTR	CUGCtrl::QuickGetText(int col,long row)
 }
 /***************************************************
 ****************************************************/
-int	CUGCtrl::QuickSetText(int col,long row,LPCTSTR std::string)
+int	CUGCtrl::QuickSetText(int col,long row,LPCTSTR string)
 {
 	ASSERT(string);
 
@@ -3101,7 +3101,7 @@ int	CUGCtrl::QuickSetNumber(int col,long row,double number, bool ReadOnly)
 }
 /***************************************************
 ****************************************************/
-int	CUGCtrl::QuickSetMask(int col,long row,LPCTSTR std::string)
+int	CUGCtrl::QuickSetMask(int col,long row,LPCTSTR string)
 {
 	m_cell.ClearAll();
 	GetCell(col,row,&m_cell);
@@ -3111,7 +3111,7 @@ int	CUGCtrl::QuickSetMask(int col,long row,LPCTSTR std::string)
 }
 /***************************************************
 ****************************************************/
-int	CUGCtrl::QuickSetLabelText(int col,long row,LPCTSTR std::string)
+int	CUGCtrl::QuickSetLabelText(int col,long row,LPCTSTR string)
 {
 	m_cell.ClearAll();
 	GetCell(col,row,&m_cell);
@@ -4145,7 +4145,7 @@ LPARAM CUGCtrl::ProcessFindDialog(WPARAM,LPARAM)
 	int col = m_GI->m_currentCol;
 	long row = m_GI->m_currentRow;
 
-	CString std::string = m_findReplaceDialog->GetFindString();
+	CString string = m_findReplaceDialog->GetFindString();
 	CString string2 = m_findReplaceDialog->GetReplaceString();
 	int findFlags = 0;
 	if(!m_findReplaceDialog->MatchCase())
@@ -4165,7 +4165,7 @@ LPARAM CUGCtrl::ProcessFindDialog(WPARAM,LPARAM)
 		RedrawCell(m_GI->m_currentCol,row);
 	}
 
-	if(string2 == std::string)
+	if(string2 == string)
 		return UG_SUCCESS;
 	if(findFlags&UG_FIND_PARTIAL) 
 	{
@@ -4882,7 +4882,7 @@ int CUGCtrl::CopySelected(int cutFlag){
 }
 /***************************************************
 ****************************************************/
-void CUGCtrl::CreateSelectedString(CString& std::string,int cutFlag){
+void CUGCtrl::CreateSelectedString(CString& string,int cutFlag){
 	
 	int rt; 
 	int col;
@@ -4990,7 +4990,7 @@ CopyFromClipBoard
 	UG_SUCCESS	success
 	UG_ERROR	fail
 ****************************************************/
-int CUGCtrl::CopyFromClipBoard(CString* std::string){
+int CUGCtrl::CopyFromClipBoard(CString* string){
 
 	HGLOBAL hg;          //memory handle
 	char* data;          //memory pointer
@@ -5063,8 +5063,8 @@ int CUGCtrl::Paste(CString &string){
 	int		maxcol = col;
 	long	maxrow = row;
 
-	buf = std::string.GetBuffer(1);
-	len = std::string.GetLength();
+	buf = string.GetBuffer(1);
+	len = string.GetLength();
 
 	while(pos < len){
 		
@@ -5100,7 +5100,7 @@ int CUGCtrl::Paste(CString &string){
 
 				if ( cell.GetReadOnly() != TRUE )
 				{
-					sub = std::string.Mid(pos,endpos-pos);
+					sub = string.Mid(pos,endpos-pos);
 					cell.SetText(sub);
 					cell.SetBackColor(RGB(255,200,200));
 					SetCell(col,row,&cell);
@@ -5340,7 +5340,7 @@ int CUGCtrl::AddMenuItem(int ID,string str){
 	return AddMenuItem(ID,CString(str.c_str()));
 
 }
-int CUGCtrl::AddMenuItem(int ID,LPCTSTR std::string){
+int CUGCtrl::AddMenuItem(int ID,LPCTSTR string){
 
 	if(lstrlen(string) == 0 || ID == -1){
 		if(m_menu->AppendMenu(MF_SEPARATOR,0,_T("")) != FALSE)
@@ -5954,7 +5954,7 @@ int CUGCtrl::StartDragDrop(){
 	int res = 1;
 
 #	ifdef _UNICODE
-	char* std::string = (char*)GlobalLock(hglobal);
+	char* string = (char*)GlobalLock(hglobal);
 	
 	// convert to text for copy...
 	res = WideCharToMultiByte(CP_ACP,0,SelectString,len,string,len,nullptr,nullptr);
@@ -6920,7 +6920,7 @@ Return:
 	TRUE - to allow the edit it proceede
 	FALSE - to force the user back to editing of that same cell
 ****************************************************/
-int CUGCtrl::OnEditFinish(int col, long row,CWnd* edit,LPCTSTR std::string,BOOL cancelFlag){
+int CUGCtrl::OnEditFinish(int col, long row,CWnd* edit,LPCTSTR string,BOOL cancelFlag){
 	UNREFERENCED_PARAMETER(col);
 	UNREFERENCED_PARAMETER(row);
 	UNREFERENCED_PARAMETER(*edit);

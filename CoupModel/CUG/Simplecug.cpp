@@ -741,7 +741,7 @@ int SimpleCug::OnEditVerify(int col, long row,CWnd *edit,UINT *vcKey)
 
 /////////////////////////////////////////////////////////////////////////////
 //	OnEditFinish this is send when editing is finished
-int SimpleCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
+int SimpleCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
 {
 	CString str;
 	CUGCell cell; 

@@ -1875,8 +1875,8 @@ StringToBool
 		UG_ERROR	fail
 *********************************************/
 int CUGCell::StringToBool(CString *string,BOOL * state){
-	if(string->GetAt(0) == _T('0') || std::string->GetAt(0) == _T('F') ||
-	  std::string->GetAt(0) == _T('f'))
+	if(string->GetAt(0) == _T('0') || string->GetAt(0) == _T('F') ||
+	  string->GetAt(0) == _T('f'))
 		*state = FALSE;
 	else
 		*state = TRUE;
@@ -1901,7 +1901,7 @@ StringToTime
 		UG_SUCCESS	success
 		UG_ERROR	fail
 *********************************************/
-int CUGCell::StringToTime(CString* std::string,int* second,int* minute,int* hour,int* day, int* month,int* year)
+int CUGCell::StringToTime(CString* string,int* second,int* minute,int* hour,int* day, int* month,int* year)
 {
 	COleVariant ovStr(*string);
 	COleDateTime ovTime(ovStr);

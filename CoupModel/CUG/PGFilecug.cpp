@@ -1144,7 +1144,7 @@ int PGFileCug::OnEditVerify(int col, long row,CWnd *edit,UINT *vcKey)
 
 /////////////////////////////////////////////////////////////////////////////
 //	OnEditFinish this is send when editing is finished
-int PGFileCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR std::string,BOOL cancelFlag)
+int PGFileCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR string,BOOL cancelFlag)
 {
 	CString str;
 	edit->GetWindowText(str);

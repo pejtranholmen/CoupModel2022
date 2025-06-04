@@ -3561,21 +3561,21 @@ void MR::GetProfileFromPlotPF( bool Add_To_Multi, bool Message)
 	
 
 	if(Message) {
-		string std::string="Profile :";
-		string+=FUtil::STD_ItoAscii(p_PFCurve->GetKey() /100);
-		string+=" :"; std::string+=FUtil::STD_ItoAscii(p_PFCurve->GetKey()%100);
-		string+= p_PFCurve->GetKey();
-		string+="\nfrom county : ";
-		string+= p_PFCurve->GetCountry();
+		string str="Profile :";
+		str+=FUtil::STD_ItoAscii(p_PFCurve->GetKey() /100);
+		str+=" :"; str+=FUtil::STD_ItoAscii(p_PFCurve->GetKey()%100);
+		str+= p_PFCurve->GetKey();
+		str+="\nfrom county : ";
+		str+= p_PFCurve->GetCountry();
 	
-		string+="\nincluding ";
-		string+=FUtil::STD_ItoAscii(p_PFCurve->GetNumLayers());
-		string+= " layers has now been linked with your document";
-		string+="\n Use \"Edit - Parameter Tables - Soil hydraulics\" menu to view and/or modify the selected properties"; 
+		str+="\nincluding ";
+		str+=FUtil::STD_ItoAscii(p_PFCurve->GetNumLayers());
+		str+= " layers has now been linked with your document";
+		str+="\n Use \"Edit - Parameter Tables - Soil hydraulics\" menu to view and/or modify the selected properties"; 
 	//MessageBox(nullptr,"Model Running - Not possible to open Documents","File Open Error",MB_OK|MB_ICONEXCLAMATION);
 
 	#ifndef COUPSTD
-		if(!MultiRunChange) MFC_Util::MessageBox(string,"Soil Profile downloaded from databas",MB_OK|MB_ICONEXCLAMATION);
+		if(!MultiRunChange) MFC_Util::MessageBox(str,"Soil Profile downloaded from databas",MB_OK|MB_ICONEXCLAMATION);
 	#endif	
 	}
 

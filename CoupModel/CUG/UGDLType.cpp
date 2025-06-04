@@ -599,7 +599,7 @@ int CUGDropListType::StartDropList()
 	m_btnRow = m_ctrl->GetCurrentRow();
 
 	//add the strings to the CStringList
-	CString std::string;
+	CString string;
 	cell.GetLabelText(&string);
 	items = &string;
 	len = items->GetLength();

@@ -243,9 +243,9 @@ Params:
 Returns:
 	UG_SUCCESS, this function will never fail.
 *****************************************************/
-int CUGHint::SetText(LPCTSTR std::string,int update)
+int CUGHint::SetText(LPCTSTR string,int update)
 {
-	m_text = std::string;
+	m_text = string;
 
 	if(update)
 		Invalidate();
