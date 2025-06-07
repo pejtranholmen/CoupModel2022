@@ -1,5 +1,6 @@
  #include "G.h"
 #include "NE.h"
+using namespace std;
 
 G::~G()
 {
@@ -8,7 +9,7 @@ G::G(vector<double> *target,NE *ne, enum datatype data, enum elements elem, enum
 	:OutVector(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target;
-	SetSimType(AUX);
+	SetSimType(simtype::AUX);
 	pNE=ne;
 	;
 }

@@ -93,142 +93,142 @@ struct HYDRAULIC_COEF;
 class FunctFactory {
 public:
     FunctFactory(const FunctorProp func, std::vector<double> Parva);
-    FunctFactory(const FunctorProp func, std::vector<double> Parv, std::vector<vector<double>> Parva);
-    FunctFactory(const FunctorProp func, std::vector<vector<double>> Parva);
+    FunctFactory(const FunctorProp func, std::vector<double> Parv, std::vector<std::vector<double>> Parva);
+    FunctFactory(const FunctorProp func, std::vector<std::vector<double>> Parva);
     FunctFactory(const FunctorProp func, HYDRAULIC_COEF *pHydCoef);
 
-	function<double(double)> Get_D1_Functor() {	return Set_D1_Functor();}
-	function<double(double, double)> Get_D2_Functor() {	return Set_D2_Functor();}
-	function<double(double, double, double)> Get_D3_Functor() {return Set_D3_Functor();	}
-	function<double(double, double, double, double)> Get_D4_Functor() {	return Set_D4_Functor();}
-	function<double(double, double, double, double, double)> Get_D5_Functor() { return Set_D5_Functor(); }
-	function<double(double, double, double, double, double, double)> Get_D6_Functor() { return Set_D6_Functor(); }
+	std::function<double(double)> Get_D1_Functor() {	return Set_D1_Functor();}
+	std::function<double(double, double)> Get_D2_Functor() {	return Set_D2_Functor();}
+	std::function<double(double, double, double)> Get_D3_Functor() {return Set_D3_Functor();	}
+	std::function<double(double, double, double, double)> Get_D4_Functor() {	return Set_D4_Functor();}
+	std::function<double(double, double, double, double, double)> Get_D5_Functor() { return Set_D5_Functor(); }
+	std::function<double(double, double, double, double, double, double)> Get_D6_Functor() { return Set_D6_Functor(); }
 
-	function<double(bool)> Get_boolBlank_Functor() { return Set_boolBlank_Functor(); }
-	function<double(bool, double)> Get_boolD1_Functor() { return Set_boolD1_Functor(); }
-	function<double(bool, double, double)> Get_boolD2_Functor() { return Set_boolD2_Functor(); }
-	function<double(bool, double, double, double)> Get_boolD3_Functor() { return Set_boolD3_Functor(); }
-	function<double(bool, double, double, double, double)> Get_boolD4_Functor() { return Set_boolD4_Functor(); }
-	function<double(bool, double, double, double, double, double)> Get_boolD5_Functor() { return Set_boolD5_Functor(); }
+	std::function<double(bool)> Get_boolBlank_Functor() { return Set_boolBlank_Functor(); }
+	std::function<double(bool, double)> Get_boolD1_Functor() { return Set_boolD1_Functor(); }
+	std::function<double(bool, double, double)> Get_boolD2_Functor() { return Set_boolD2_Functor(); }
+	std::function<double(bool, double, double, double)> Get_boolD3_Functor() { return Set_boolD3_Functor(); }
+	std::function<double(bool, double, double, double, double)> Get_boolD4_Functor() { return Set_boolD4_Functor(); }
+	std::function<double(bool, double, double, double, double, double)> Get_boolD5_Functor() { return Set_boolD5_Functor(); }
 
-	function<vector<double>()> GetVector_Blank_Functor() { return SetVector_Blank_Functor(); }
-	function<vector<double>(bool)> GetVector_boolBlank_Functor() { return SetVector_boolBlank_Functor(); }
-	function<vector<double>(bool, double)> GetVector_boolD1_Functor() { return SetVector_boolD1_Functor(); }
-	function<vector<double>(bool, double, double)> GetVector_boolD2_Functor() { return SetVector_boolD2_Functor(); }
-	function<vector<double>(bool, double, double, double)> GetVector_boolD3_Functor() { return SetVector_boolD3_Functor(); }
-	function<vector<double>(bool, double, double, double, double)> GetVector_boolD4_Functor() { return SetVector_boolD4_Functor(); }
-	function<vector<double>(bool, double, double, double, double, double)> GetVector_boolD5_Functor() { return SetVector_boolD5_Functor(); }
+	std::function<std::vector<double>()> GetVector_Blank_Functor() { return SetVector_Blank_Functor(); }
+	std::function<std::vector<double>(bool)> GetVector_boolBlank_Functor() { return SetVector_boolBlank_Functor(); }
+	std::function<std::vector<double>(bool, double)> GetVector_boolD1_Functor() { return SetVector_boolD1_Functor(); }
+	std::function<std::vector<double>(bool, double, double)> GetVector_boolD2_Functor() { return SetVector_boolD2_Functor(); }
+	std::function<std::vector<double>(bool, double, double, double)> GetVector_boolD3_Functor() { return SetVector_boolD3_Functor(); }
+	std::function<std::vector<double>(bool, double, double, double, double)> GetVector_boolD4_Functor() { return SetVector_boolD4_Functor(); }
+	std::function<std::vector<double>(bool, double, double, double, double, double)> GetVector_boolD5_Functor() { return SetVector_boolD5_Functor(); }
 
 
-	function<void(vector<double>*)> GetVectorPointer_D1_Functor() { return SetVectorPointer_D1_Functor(); }
-	function<void(vector<double>*, std::vector<double>*)> GetVectorPointer_D2_Functor() { return SetVectorPointer_D2_Functor(); }
-	function<void(vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D3_Functor() { return SetVectorPointer_D3_Functor(); }
-	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D4_Functor() { return SetVectorPointer_D4_Functor(); }
-	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D5_Functor() { return SetVectorPointer_D5_Functor(); }
+	std::function<void(std::vector<double>*)> GetVectorPointer_D1_Functor() { return SetVectorPointer_D1_Functor(); }
+	std::function<void(std::vector<double>*, std::vector<double>*)> GetVectorPointer_D2_Functor() { return SetVectorPointer_D2_Functor(); }
+	std::function<void(std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D3_Functor() { return SetVectorPointer_D3_Functor(); }
+	std::function<void(std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D4_Functor() { return SetVectorPointer_D4_Functor(); }
+	std::function<void(std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> GetVectorPointer_D5_Functor() { return SetVectorPointer_D5_Functor(); }
 
-	function<double(size_t)> Get_BLANK_TableFunctor() { return Set_BLANK_TableFunctor(); }
-	function<double(size_t, double)> Get_D1_TableFunctor() { return Set_D1_TableFunctor(); }
-	function<double(size_t, double, double)> Get_D2_TableFunctor() { return Set_D2_TableFunctor(); }
-	function<double(size_t, double, double, double)> Get_D3_TableFunctor() { return Set_D3_TableFunctor(); }
-	function<double(size_t, double, double, double, double)> Get_D4_TableFunctor() { return Set_D4_TableFunctor(); }
+	std::function<double(size_t)> Get_BLANK_TableFunctor() { return Set_BLANK_TableFunctor(); }
+	std::function<double(size_t, double)> Get_D1_TableFunctor() { return Set_D1_TableFunctor(); }
+	std::function<double(size_t, double, double)> Get_D2_TableFunctor() { return Set_D2_TableFunctor(); }
+	std::function<double(size_t, double, double, double)> Get_D3_TableFunctor() { return Set_D3_TableFunctor(); }
+	std::function<double(size_t, double, double, double, double)> Get_D4_TableFunctor() { return Set_D4_TableFunctor(); }
 	
 
-	function<double(size_t, size_t, double, double)> Get_T_D2_TableFunctor() { return Set_T_D2_TableFunctor(); }
-	function<double(size_t, size_t, double, double, double)> Get_T_D3_TableFunctor() { return Set_T_D3_TableFunctor(); }
-	function<double(size_t, size_t, double, double, double, double)> Get_T_D4_TableFunctor() { return Set_T_D4_TableFunctor(); }
+	std::function<double(size_t, size_t, double, double)> Get_T_D2_TableFunctor() { return Set_T_D2_TableFunctor(); }
+	std::function<double(size_t, size_t, double, double, double)> Get_T_D3_TableFunctor() { return Set_T_D3_TableFunctor(); }
+	std::function<double(size_t, size_t, double, double, double, double)> Get_T_D4_TableFunctor() { return Set_T_D4_TableFunctor(); }
 
-	function<double(bool, size_t)> Get_boolBlank_TableFunctor() { return Set_boolBlank_TableFunctor(); }
-	function<double(bool, size_t, double)> Get_D1_boolTableFunctor() { return Set_boolD1_TableFunctor(); }
-	function<double(bool, size_t, double, double)> Get_D2_boolTableFunctor() { return Set_boolD2_TableFunctor(); }
-	function<double(bool, size_t, double, double, double)> Get_D3_boolTableFunctor() { return Set_boolD3_TableFunctor(); }
-	function<double(bool, size_t, double, double, double, double)> Get_D4_boolTableFunctor() { return Set_boolD4_TableFunctor(); }
+	std::function<double(bool, size_t)> Get_boolBlank_TableFunctor() { return Set_boolBlank_TableFunctor(); }
+	std::function<double(bool, size_t, double)> Get_D1_boolTableFunctor() { return Set_boolD1_TableFunctor(); }
+	std::function<double(bool, size_t, double, double)> Get_D2_boolTableFunctor() { return Set_boolD2_TableFunctor(); }
+	std::function<double(bool, size_t, double, double, double)> Get_D3_boolTableFunctor() { return Set_boolD3_TableFunctor(); }
+	std::function<double(bool, size_t, double, double, double, double)> Get_D4_boolTableFunctor() { return Set_boolD4_TableFunctor(); }
 
-	function<OrgTurnOver(double, double, double)> Get_OrgTurnOverFunctor() { return SetOrgTurnOverFunctor(); }
-	function<OrgTurnOver(double, double, double, double, double)> Get_D5_OrgTurnOverFunctor() { return SetOrg_D5_TurnOverFunctor(); }
+	std::function<OrgTurnOver(double, double, double)> Get_OrgTurnOverFunctor() { return SetOrgTurnOverFunctor(); }
+	std::function<OrgTurnOver(double, double, double, double, double)> Get_D5_OrgTurnOverFunctor() { return SetOrg_D5_TurnOverFunctor(); }
 	
-	function<pair<double, double>(double, double)> Get_Pair_D2Functor() { return Set_Pair_D2_Functor(); }
-	function<pair<double, double>(double, double, double)> Get_Pair_D3Functor() { return Set_Pair_D3_Functor(); }
+	std::function<std::pair<double, double>(double, double)> Get_Pair_D2Functor() { return Set_Pair_D2_Functor(); }
+	std::function<std::pair<double, double>(double, double, double)> Get_Pair_D3Functor() { return Set_Pair_D3_Functor(); }
 
-	function<pair<double, double>(size_t, double, double)> Get_Pair_D2_TableFunctor() { return Set_Pair_D2_TableFunctor(); }
-	function<pair<double, double>(size_t, double, double, double)> Get_Pair_D3_TableFunctor() { return Set_Pair_D3_TableFunctor(); }
+	std::function<std::pair<double, double>(size_t, double, double)> Get_Pair_D2_TableFunctor() { return Set_Pair_D2_TableFunctor(); }
+	std::function<std::pair<double, double>(size_t, double, double, double)> Get_Pair_D3_TableFunctor() { return Set_Pair_D3_TableFunctor(); }
 private:
 	
 
-	function<double(double)> Set_D1_Functor();
-	function<double(double, double)> Set_D2_Functor();
-	function<double(double, double, double)> Set_D3_Functor(); 
-	function<double(double, double, double, double)> Set_D4_Functor(); 
-	function<double(double, double, double, double, double)> Set_D5_Functor();
-	function<double(double, double, double, double, double,double )> Set_D6_Functor();
+	std::function<double(double)> Set_D1_Functor();
+	std::function<double(double, double)> Set_D2_Functor();
+	std::function<double(double, double, double)> Set_D3_Functor(); 
+	std::function<double(double, double, double, double)> Set_D4_Functor(); 
+	std::function<double(double, double, double, double, double)> Set_D5_Functor();
+	std::function<double(double, double, double, double, double,double )> Set_D6_Functor();
 	
-	function<double(bool)> Set_boolBlank_Functor();
-	function<double(bool, double)> Set_boolD1_Functor();
-	function<double(bool, double, double)> Set_boolD2_Functor();
-	function<double(bool, double, double, double)> Set_boolD3_Functor();
-	function<double(bool, double, double, double, double)> Set_boolD4_Functor();
-	function<double(bool, double, double, double, double, double)> Set_boolD5_Functor();
+	std::function<double(bool)> Set_boolBlank_Functor();
+	std::function<double(bool, double)> Set_boolD1_Functor();
+	std::function<double(bool, double, double)> Set_boolD2_Functor();
+	std::function<double(bool, double, double, double)> Set_boolD3_Functor();
+	std::function<double(bool, double, double, double, double)> Set_boolD4_Functor();
+	std::function<double(bool, double, double, double, double, double)> Set_boolD5_Functor();
 
-	function<vector<double>()> SetVector_Blank_Functor();
-	function<vector<double>(bool)> SetVector_boolBlank_Functor();
-	function<vector<double>(bool, double)> SetVector_boolD1_Functor();
-	function<vector<double>(bool, double, double)> SetVector_boolD2_Functor();
-	function<vector<double>(bool, double, double, double)> SetVector_boolD3_Functor();
-	function<vector<double>(bool, double, double, double, double)> SetVector_boolD4_Functor();
-	function<vector<double>(bool, double, double, double, double, double)> SetVector_boolD5_Functor();
+	std::function<std::vector<double>()> SetVector_Blank_Functor();
+	std::function<std::vector<double>(bool)> SetVector_boolBlank_Functor();
+	std::function<std::vector<double>(bool, double)> SetVector_boolD1_Functor();
+	std::function<std::vector<double>(bool, double, double)> SetVector_boolD2_Functor();
+	std::function<std::vector<double>(bool, double, double, double)> SetVector_boolD3_Functor();
+	std::function<std::vector<double>(bool, double, double, double, double)> SetVector_boolD4_Functor();
+	std::function<std::vector<double>(bool, double, double, double, double, double)> SetVector_boolD5_Functor();
 
-	function<void(vector<double>*)>  SetVectorPointer_D1_Functor(); 
-	function<void(vector<double>*, std::vector<double>*)>  SetVectorPointer_D2_Functor(); 
-	function<void(vector<double>*, std::vector<double>*, std::vector<double>*)>  SetVectorPointer_D3_Functor(); 
-	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SetVectorPointer_D4_Functor(); 
-	function<void(vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SetVectorPointer_D5_Functor(); 
+	std::function<void(std::vector<double>*)>  SetVectorPointer_D1_Functor(); 
+	std::function<void(std::vector<double>*, std::vector<double>*)>  SetVectorPointer_D2_Functor(); 
+	std::function<void(std::vector<double>*, std::vector<double>*, std::vector<double>*)>  SetVectorPointer_D3_Functor(); 
+	std::function<void(std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SetVectorPointer_D4_Functor(); 
+	std::function<void(std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*, std::vector<double>*)> SetVectorPointer_D5_Functor(); 
 
 
 
-	function<double(size_t)> Set_BLANK_TableFunctor();
-	function<double(size_t, double)> Set_D1_TableFunctor();
-	function<double(size_t, double, double)> Set_D2_TableFunctor();
-	function<double(size_t, double, double, double)> Set_D3_TableFunctor();
-	function<double(size_t, double, double, double, double)> Set_D4_TableFunctor();
+	std::function<double(size_t)> Set_BLANK_TableFunctor();
+	std::function<double(size_t, double)> Set_D1_TableFunctor();
+	std::function<double(size_t, double, double)> Set_D2_TableFunctor();
+	std::function<double(size_t, double, double, double)> Set_D3_TableFunctor();
+	std::function<double(size_t, double, double, double, double)> Set_D4_TableFunctor();
 	
-	function<double(bool, size_t)> Set_boolBlank_TableFunctor();
-	function<double(bool, size_t, double)> Set_boolD1_TableFunctor();
-	function<double(bool, size_t, double, double)> Set_boolD2_TableFunctor();
-	function<double(bool, size_t, double, double, double)> Set_boolD3_TableFunctor();
-	function<double(bool, size_t, double, double, double, double)> Set_boolD4_TableFunctor();
+	std::function<double(bool, size_t)> Set_boolBlank_TableFunctor();
+	std::function<double(bool, size_t, double)> Set_boolD1_TableFunctor();
+	std::function<double(bool, size_t, double, double)> Set_boolD2_TableFunctor();
+	std::function<double(bool, size_t, double, double, double)> Set_boolD3_TableFunctor();
+	std::function<double(bool, size_t, double, double, double, double)> Set_boolD4_TableFunctor();
 
 
-	function<double(double)> Set_D1_PhysFunctor();
-	function<double(double, double)> Set_D2_PhysFunctor();
-	function<double(double, double, double)> Set_D3_PhysFunctor();
-	function<double(double, double, double, double)> Set_D4_PhysFunctor();
-	function<double(double, double, double, double, double)> Set_D5_PhysFunctor();
-	function<double(double, double, double, double, double, double)> Set_D6_PhysFunctor();
+	std::function<double(double)> Set_D1_PhysFunctor();
+	std::function<double(double, double)> Set_D2_PhysFunctor();
+	std::function<double(double, double, double)> Set_D3_PhysFunctor();
+	std::function<double(double, double, double, double)> Set_D4_PhysFunctor();
+	std::function<double(double, double, double, double, double)> Set_D5_PhysFunctor();
+	std::function<double(double, double, double, double, double, double)> Set_D6_PhysFunctor();
 
-	function<OrgTurnOver(double, double, double)> SetOrgTurnOverFunctor();
-	function<OrgTurnOver(double, double, double, double, double)> SetOrg_D5_TurnOverFunctor();
+	std::function<OrgTurnOver(double, double, double)> SetOrgTurnOverFunctor();
+	std::function<OrgTurnOver(double, double, double, double, double)> SetOrg_D5_TurnOverFunctor();
 
-	function<pair<double, double>(size_t, double, double)> Set_Pair_D2_TableFunctor();
-	function<pair<double, double>(size_t, double, double, double)> Set_Pair_D3_TableFunctor();
-	function<pair<double, double>(double, double)> Set_Pair_D2_Functor();
-	function<pair<double, double>(double, double, double)> Set_Pair_D3_Functor();
+	std::function<std::pair<double, double>(size_t, double, double)> Set_Pair_D2_TableFunctor();
+	std::function<std::pair<double, double>(size_t, double, double, double)> Set_Pair_D3_TableFunctor();
+	std::function<std::pair<double, double>(double, double)> Set_Pair_D2_Functor();
+	std::function<std::pair<double, double>(double, double, double)> Set_Pair_D3_Functor();
 	
 	
-	function<double(size_t, size_t, double, double)> Set_T_D2_TableFunctor();
-	function<double(size_t, size_t, double, double, double)> Set_T_D3_TableFunctor();
-	function<double(size_t, size_t, double, double, double, double)> Set_T_D4_TableFunctor();
+	std::function<double(size_t, size_t, double, double)> Set_T_D2_TableFunctor();
+	std::function<double(size_t, size_t, double, double, double)> Set_T_D3_TableFunctor();
+	std::function<double(size_t, size_t, double, double, double, double)> Set_T_D4_TableFunctor();
 	
-	vector<double> m_Ps_Par;
-	vector<vector<double>> m_P_Par;
+	std::vector<double> m_Ps_Par;
+	std::vector<std::vector<double>> m_P_Par;
 
-	function<double(double)> m_functor1;
-	function<double(double, double)> m_functor2;
-	function<double(double, double, double)> m_functor3;
-	function<double(double, double, double, double)> m_functor4;
-	function<double(double, double, double, double, double)> m_functor5;
-	function<double(size_t, double)> m_Tablefunctor1;
-	function<double(size_t, double, double)> m_Tablefunctor2;
-	function<double(size_t, double, double, double)> m_Tablefunctor3;
-	function<double(size_t, double, double, double, double)> m_Tablefunctor4;
+	std::function<double(double)> m_functor1;
+	std::function<double(double, double)> m_functor2;
+	std::function<double(double, double, double)> m_functor3;
+	std::function<double(double, double, double, double)> m_functor4;
+	std::function<double(double, double, double, double, double)> m_functor5;
+	std::function<double(size_t, double)> m_Tablefunctor1;
+	std::function<double(size_t, double, double)> m_Tablefunctor2;
+	std::function<double(size_t, double, double, double)> m_Tablefunctor3;
+	std::function<double(size_t, double, double, double, double)> m_Tablefunctor4;
 	FunctorProp m_Prop;
 
 	HYDRAULIC_COEF *m_pHydCoef;

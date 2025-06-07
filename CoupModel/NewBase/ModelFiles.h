@@ -7,9 +7,9 @@ public:
 	ModelFiles();
 	~ModelFiles();
 
-	string GetOutputFileName(size_t ValidIndex = 0, bool Last = false, bool MultiModeFile = false, size_t PGMean = 0, size_t SimRunNo = 0, bool NewFile = false);
-	string GetNewOutputFileName(size_t ValidIndex = 0, bool Last = false, bool MultiModeFile = false, size_t PGMean = 0, size_t SimRunNo = 0);
-	string GetOldOutputFileName(size_t ValidIndex = 0, bool Last = false, bool MultiModeFile = false, size_t PGMean = 0, size_t SimRunNo = 0);
+	std::string GetOutputFileName(size_t ValidIndex = 0, bool Last = false, bool MultiModeFile = false, size_t PGMean = 0, size_t SimRunNo = 0, bool NewFile = false);
+	std::string GetNewOutputFileName(size_t ValidIndex = 0, bool Last = false, bool MultiModeFile = false, size_t PGMean = 0, size_t SimRunNo = 0);
+	std::string GetOldOutputFileName(size_t ValidIndex = 0, bool Last = false, bool MultiModeFile = false, size_t PGMean = 0, size_t SimRunNo = 0);
 
 
 	F* ValidationFilePointer(size_t ValFileIndex = 1);
@@ -24,7 +24,7 @@ public:
 	bool ResidualFile_AddAttachedFiles(size_t num);
 	bool ResidualFile_SetNumAttachedFiles(size_t num);
 
-	vector< std::vector<CResiduals*>> m_ResidualFileVector;
+	std::vector< std::vector<CResiduals*>> m_ResidualFileVector;
 	
 
 protected:

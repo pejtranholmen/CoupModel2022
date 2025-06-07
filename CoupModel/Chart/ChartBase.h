@@ -81,8 +81,8 @@ protected:
 	void SetMultiSequenceInfo();
 	void SetPointertoActivePGFile(int Index_In_PlotArray, PLOTv p_info);
 
-	vector<ColorAxis*> m_pColorAxis;
-	vector<DataSet*> m_DataSets;
+	std::vector<ColorAxis*> m_pColorAxis;
+	std::vector<DataSet*> m_DataSets;
 	
 	CHARTLAYERS m_Layers;
 

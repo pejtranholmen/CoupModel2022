@@ -631,15 +631,15 @@ void SoilData::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,B
 	switch (sheet) {
 		case 1:
 			case 2:
-			pSimB=m_pDoc->GetPtr(PAR_TABLE,"Air Entry");
-			pTab=(Tab*)m_pDoc->GetPtr(TABLE,"Brooks-Corey, water retention, measured horizons");
+			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Air Entry");
+			pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Brooks-Corey, water retention, measured horizons");
 			MakeChart(row, pSimB,pTab, 0);
 
 
 		break;
 		case 3:
-			pSimB=m_pDoc->GetPtr(PAR_TABLE,"Total Conductivity");
-			pTab=(Tab*)m_pDoc->GetPtr(TABLE,"Hydraulic conductivity, measured horizons");
+			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Total Conductivity");
+			pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
 			MakeChart(row, pSimB, pTab, 0);
 
 		break;

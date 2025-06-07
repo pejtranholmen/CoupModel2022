@@ -81,12 +81,12 @@ class ChartUtil
 
 
 
-	static int GetSymbolIndex(string str);
-	static int GetSymbolSizeIndex(string str);
-	static int GetLineTypeIndex(string str);
-	static int GetLineThickSizeIndex(string str);
-	static int GetVisibleIndex(string txt);
-	static int GetZoom_ValDurOption(string);
+	static int GetSymbolIndex(std::string str);
+	static int GetSymbolSizeIndex(std::string str);
+	static int GetLineTypeIndex(std::string str);
+	static int GetLineThickSizeIndex(std::string str);
+	static int GetVisibleIndex(std::string txt);
+	static int GetZoom_ValDurOption(std::string);
 
 	int GetLegendXPos();
 	void SetLegendXPos(int value){ MySingle::instance().GetChartUtilPointer()->m_LegendPositionX=value;};

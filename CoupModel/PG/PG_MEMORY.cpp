@@ -114,8 +114,8 @@ bool PG_Memory::ReAllocateDescription()
 	size_t index_ut, index_in, index_inmax = 0;
 
 	for (size_t irep = 0; irep<numrep; irep++) {
-		index_in = min(Previous.base.Name.size(), size_t((irep+1)*pg.Shape.OldNumVar));
-		index_inmax = min(Previous.base.Name.size(), size_t((irep + 1)*pg.Shape.OldNumVar));
+		index_in = std::min(Previous.base.Name.size(), size_t((irep+1)*pg.Shape.OldNumVar));
+		index_inmax = std::min(Previous.base.Name.size(), size_t((irep + 1)*pg.Shape.OldNumVar));
 		for (size_t ii = 0; ii<pg.Shape.NumVar; ii++) {
 			index_ut = irep*pg.Shape.NumVar + ii;
 			if (Previous.base.Name.size()>index_ut&&index_in < index_inmax) {

@@ -37,7 +37,7 @@ class ModelView : public ChartData
 	ChartProp *m_pProp;
 	CChartViewer *m_pChartViewer;
 	ChartUtil *m_pUtil;
-	vector<XYChart *> m_XY_Chart;
+	std::vector<XYChart *> m_XY_Chart;
 	BaseChart *m_pMC;
 
 	bool m_HeatEq;

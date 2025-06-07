@@ -6,7 +6,7 @@ class PGCalc :
 public:
 	PGCalc(void);
 	~PGCalc(void);
-	vector<size_t> GetYearStartIndex();
-	vector<size_t> GetDayStartIndex();
+	std::vector<size_t> GetYearStartIndex();
+	std::vector<size_t> GetDayStartIndex();
 };
 

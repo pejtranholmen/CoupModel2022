@@ -5,26 +5,8 @@
 #include "./Sw.h"
 
 
-SimB::SimB()
-{														 
-	m_IsNotOriginal=false;
-	_enabled=false;
-	_DBenabled = true;
-	_stype=FUNCTION;
-	_DBIntValue = 0;
-	m_ReadOnly = false;
-	pfMap = nullptr;
-	_orgIntValue = 0;
-	_DBIntValue = 0;
-	_def.data = datatype::SINGLE;
-	_def.elem = elements::WATER;
-	_def.fproc = fysprocess::STORAGE;
-	_def.bproc = bioprocess::NOBPROC;
-	_def.ulev = userlevel::NORMAL;
-	_ModuleNo = std::string::npos;
-	m_ChildChange = false;
+SimB::SimB() = default;
 
-}
 SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v, enum userlevel user_v)
 {
 	SimB();
@@ -184,7 +166,7 @@ void SimB::Decode(string ConditionString) {
 		//Initialize the values of the store variable of class condition
 		//This is done by decoding var, oper and val
 #ifndef PGONLY
-		store.variable = dynamic_cast<Sw*>(pfMap->GetPtr(SWITCH, var));
+		store.variable = dynamic_cast<Sw*>(pfMap->GetPtr(simtype::SWITCH, var));
 #else
 		store.variable = nullptr;
 #endif
@@ -298,13 +280,13 @@ SimB* SimB::GetDepPtr(size_t i) const{
 string SimB::GetGroup()  {
 	return p_ModelInfo->GetGroupNames(_ModuleNo);
 }
-string SimB::GetProcessName() const {
+string_view SimB::GetProcessName() {
 	if(_def.bproc==11&&_def.fproc==17)  return GetElementName();
 	else if(_def.fproc==17) return p_ModelInfo->GetBioProcName(_def.bproc);
 	else if(_def.bproc!=11) return p_ModelInfo->GetBioProcName(_def.bproc);
 	else return GetFysProcessName();
 }
-string SimB::GetElementName() const {
+string_view SimB::GetElementName()  {
 	return p_ModelInfo->ElementName(_def.elem);
 }
 string SimB::GetFysProcessName() const {

@@ -229,7 +229,7 @@ BOOL PGCug::OnReadTime(CPG *pCPG)
 				SetCell(0,i,&cell);
 				
 				QuickSetText(1,i,pCPG->GetVarName(i+1));
-				QuickSetText(2,i,pCPG->GetVarUnit(i+1));
+				QuickSetText(2,i,std::string(pCPG->GetVarUnit(i+1)));
 				QuickSetText(3,i,pCPG->GetVarId(i+1));
 				QuickSetText(4,i,pCPG->GetVarPos(i+1));
 				//QuickSetNumber(4,i,pCPG->GetVarMin(i+1));
@@ -408,7 +408,7 @@ bool PGCug::OnReadFileDescriptionToGrid(CPG *pCPG)
 
 
 					QuickSetText(2,ind,pCPG->GetVarName(i+1, nrep));
-					QuickSetText(3,ind,pCPG->GetVarUnit(i+1, nrep));
+					QuickSetText(3,ind,std::string(pCPG->GetVarUnit(i+1, nrep)));
 					QuickSetText(4,ind,pCPG->GetVarId(i+1, nrep));
 					QuickSetText(5,ind,pCPG->GetVarPos(i+1, nrep));
 					float v;

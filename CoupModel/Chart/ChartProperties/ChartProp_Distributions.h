@@ -75,10 +75,10 @@ private:
 	bool m_ScaleSet;
 
 
-	vector<size_t> m_XDistSteps, m_XDistColor;
+	std::vector<size_t> m_XDistSteps, m_XDistColor;
 
-	vector<bool>  m_XDistSet, m_XDistLog, m_XDistChanged;
-	vector<float> m_XDistMin, m_XDistMax;
+	std::vector<bool>  m_XDistSet, m_XDistLog, m_XDistChanged;
+	std::vector<float> m_XDistMin, m_XDistMax;
 
 	
 };

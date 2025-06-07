@@ -4,26 +4,26 @@
 
 struct CURVELABELS
 {
-string st;
-string test;
-string xtitle;
-string ytitle1;
-string ytitle2;
-string unit;
-string Legendtxt;
-string unit1;
-string unit2;
-string IndepId;
-string DocNumId;
+std::string st;
+std::string test;
+std::string xtitle;
+std::string ytitle1;
+std::string ytitle2;
+std::string unit;
+std::string Legendtxt;
+std::string unit1;
+std::string unit2;
+std::string IndepId;
+std::string DocNumId;
 };
 struct CHART_INFO
-{	string title;
-	vector<string> legends;
-	vector<string> varname;
-	vector<string> varunit;
-	string Y_AxisTitle_Left;
-	string Y_AxisTitle_right;
-	string X_AxisTitle;
+{	std::string title;
+	std::vector<std::string> legends;
+	std::vector<std::string> varname;
+	std::vector<std::string> varunit;
+	std::string Y_AxisTitle_Left;
+	std::string Y_AxisTitle_right;
+	std::string X_AxisTitle;
 };
 
 struct DATA_INFO {
@@ -101,12 +101,12 @@ class ChartData
 			}
 		};
 		CHART_INFO m_CurrentChartInfo;
-		vector<CHART_INFO> m_ChartOrigInfo;
-		vector<double> TT, TT2, ZZ;
-		vector< std::vector<double>>  TT_Indep;
+		std::vector<CHART_INFO> m_ChartOrigInfo;
+		std::vector<double> TT, TT2, ZZ;
+		std::vector< std::vector<double>>  TT_Indep;
 
-		vector< std::vector<double>>  AA, BB, BB_MIN, BB_MAX, BB_P10, BB_P50, BB_P90;
-		vector< std::vector<double>> BX, BY;
+		std::vector< std::vector<double>>  AA, BB, BB_MIN, BB_MAX, BB_P10, BB_P50, BB_P90;
+		std::vector< std::vector<double>> BX, BY;
 
 /*static double TT[NUM_TIME];
 static double TT2[NUM_TIME];

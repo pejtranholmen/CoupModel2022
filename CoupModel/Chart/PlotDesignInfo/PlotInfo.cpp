@@ -303,10 +303,10 @@ PLOTv PlotInfo::MakeOutPutChartInfo(size_t i, size_t i_doc) {
 				out.PGFileIndex=((OutSingle*)out.pBase)->GetPgSingleFileIndex();
 	}
 	auto simtype = out.pBase->GetType();
-	if (simtype >= 1 && simtype < 5)
+	if (simtype >= simtype::STATE && simtype < simtype::SWITCH)
 		out.DataType = DATA_TYPES(out.pBase->GetType());
-	else if (simtype > 7 && simtype < 12)
-		out.DataType = DATA_TYPES(simtype - 7);
+	else if (simtype > simtype::PAR_SINGLE && simtype < simtype::PAR_TABLE)
+		out.DataType = DATA_TYPES(size_t(simtype) - size_t(simtype::PAR_SINGLE));
 	else
 		out.DataType = DATA_TYPES::ANYDATA;
 
@@ -335,7 +335,7 @@ PLOTv PlotInfo::MakePGFileChartInfo(size_t i) {
 	out.DataType =DATA_TYPES::PGDATA;
 	out.PGRepitNo=m_pSimDoc->m_SelectPGFile[i].Repit;
 	out.SubChart_No=m_pSimDoc->m_SelectPGFile[i].subchart;
-	if(m_pProp->GetIndepFirst()!=DATEAXIS&&!m_pProp->IsSecondIndepSet())
+	if(m_pProp->GetIndepFirst()!=vartype::DATEAXIS&&!m_pProp->IsSecondIndepSet())
 		out.ChartType= CHART_TYPES::SCATTER;
 	else if(m_pProp->IsSecondIndepSet())
 		out.ChartType= CHART_TYPES::CONTOUR_CHART;
@@ -345,10 +345,10 @@ PLOTv PlotInfo::MakePGFileChartInfo(size_t i) {
 	if (out.pPG->GetNumRepititions() > 1) out.RepitDataType = true;
 	else out.RepitDataType = false;
 	
-	if(m_pProp->GetIndepFirst()!=DATEAXIS)
-		out.IndepAxis.First=PGVAR;
+	if(m_pProp->GetIndepFirst()!= vartype::DATEAXIS)
+		out.IndepAxis.First= vartype::PGVAR;
 	if(m_pProp->IsSecondIndepSet())
-		out.IndepAxis.Second=PGVAR;
+		out.IndepAxis.Second= vartype::PGVAR;
 
 
 	return out;
@@ -387,11 +387,11 @@ PLOTv PlotInfo::MakeMultiSumChart(size_t i, size_t i_doc) {
 	}
 	else
 		out.pSimDoc=m_pSimDoc;
-	if (m_pProp->IsFirstIndepSet() && m_pProp->GetIndepFirst() != DATEAXIS && !m_pProp->IsSecondIndepSet())
+	if (m_pProp->IsFirstIndepSet() && m_pProp->GetIndepFirst() != vartype::DATEAXIS && !m_pProp->IsSecondIndepSet())
 		out.ChartType = CHART_TYPES::SCATTER;
 	else if (m_pProp->IsSecondIndepSet())
 		out.ChartType = CHART_TYPES::CONTOUR_CHART;
-	else if (m_pProp->GetIndepFirst() == MULTIRUN_NUM)
+	else if (m_pProp->GetIndepFirst() == vartype::MULTIRUN_NUM)
 		out.ChartType = CHART_TYPES::CUM_FREQUENCE;
 	else
 		out.ChartType = m_pProp->m_ChartType;
@@ -430,7 +430,7 @@ PLOTv PlotInfo::MakeMultiValChart(size_t i, size_t i_doc) {
 		out.ChartType= CHART_TYPES::CUM_FREQUENCE;
 	else if(m_pProp->IsSecondIndepSet())
 		out.ChartType= CHART_TYPES::CONTOUR_CHART;
-	else if (m_pProp->GetIndepFirst() == MULTIRUN_NUM)
+	else if (m_pProp->GetIndepFirst() == vartype::MULTIRUN_NUM)
 		out.ChartType = CHART_TYPES::CUM_FREQUENCE;
 	else
 		out.ChartType= CHART_TYPES::TIME_SERIE;
@@ -471,7 +471,7 @@ PLOTv PlotInfo::MakeMultiParChart(size_t i, size_t i_doc) {
 		out.ChartType= CHART_TYPES::SCATTER;
 	else if(m_pProp->IsSecondIndepSet())
 		out.ChartType= CHART_TYPES::CONTOUR_CHART;
-	else if (m_pProp->GetIndepFirst() == MULTIRUN_NUM)
+	else if (m_pProp->GetIndepFirst() == vartype::MULTIRUN_NUM)
 		out.ChartType = CHART_TYPES::CUM_FREQUENCE;
 	else
 		out.ChartType= CHART_TYPES::TIME_SERIE;
@@ -491,12 +491,12 @@ PLOTv PlotInfo::MakeMultiPGChart(size_t i) {
 	out.IndepAxis.First=m_pSimDoc->m_SelectMultiPGFile[i].FirstType;
 	out.IndepAxis.Second=m_pSimDoc->m_SelectMultiPGFile[i].SecondType;
 	out.IndepAxis.Dependent=m_pSimDoc->m_SelectMultiPGFile[i].DependentType;
-	if(out.IndepAxis.First!=NO_USE&&out.IndepAxis.Second!=NO_USE) {
+	if(out.IndepAxis.First!= vartype::NO_USE&&out.IndepAxis.Second!= vartype::NO_USE) {
 		out.ChartType= CHART_TYPES::CONTOUR_CHART;
 
 
 	}
-	else if(out.IndepAxis.First!=NO_USE&&out.IndepAxis.Second==NO_USE) {
+	else if(out.IndepAxis.First!= vartype::NO_USE&&out.IndepAxis.Second== vartype::NO_USE) {
 		out.ChartType= CHART_TYPES::SCATTER;
 
 
@@ -578,9 +578,9 @@ PLOTv PlotInfo::GetDefaultPlotInfo() {
 	out.PGRepitNo=0;
 	out.ChartType= CHART_TYPES::SCATTER;
 	out.ChartNumber=0;
-	out.IndepAxis.First=NO_USE;
-	out.IndepAxis.Second=NO_USE;
-	out.IndepAxis.Dependent=NO_USE;
+	out.IndepAxis.First= vartype::NO_USE;
+	out.IndepAxis.Second= vartype::NO_USE;
+	out.IndepAxis.Dependent= vartype::NO_USE;
 	out.EnsembleNo = 0;
 	out.DataType = DATA_TYPES::ANYDATA;
 	out.EnsembleType = ENSEMBLE_TYPE::NO;
@@ -612,7 +612,7 @@ string PlotInfo::GetDepth(SimB *pBase, size_t TabIndex) {
 		return "";
 }
 string PlotInfo::GetDepth(SIMB base) {
-	if(base.pBase->GetDataType()==SIMPROFILE) {
+	if(base.pBase->GetDataType()== datatype::SIMPROFILE) {
 		if(m_pSimDepth!=nullptr) {
 			double depth=m_pSimDepth->GetValue(base.TabIndex);
 			string str;

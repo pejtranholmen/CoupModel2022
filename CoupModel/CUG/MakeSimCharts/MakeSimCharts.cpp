@@ -256,8 +256,8 @@ bool MakeSimCharts::ManagePlotWindows(int item, int sheet, bool multisum)
 						pCPG->SetPicked(index,false);
 						m_pSimDoc->m_SelectPGFile.erase(m_pSimDoc->m_SelectPGFile.begin());
 					}
-					if(m_pProp->IsFirstIndepSet(PGVAR)) {
-						m_pProp->SetFirstIndepSet(PGVAR, false);
+					if(m_pProp->IsFirstIndepSet(vartype::PGVAR)) {
+						m_pProp->SetFirstIndepSet(vartype::PGVAR, false);
 
 
 
@@ -585,19 +585,19 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 				pDoc=m_pSimDoc->m_SelectedDocuments[j];
 			if(sheet==5) {
 			
-				if(m_pProp->GetIndepFirst()==PGVARVALID) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+				if(m_pProp->GetIndepFirst()== vartype::PGVARVALID) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 
 
-				if (m_pProp->IsFirstIndepSet()&& m_pProp->GetIndepFirst()!=DATEAXIS && !m_pProp->IsSecondIndepSet()) {
+				if (m_pProp->IsFirstIndepSet()&& m_pProp->GetIndepFirst()!= vartype::DATEAXIS && !m_pProp->IsSecondIndepSet()) {
 					m_pProp->m_ChartType = CHART_TYPES::SCATTER;
 				}
-				else if (m_pProp->IsFirstIndepSet() && m_pProp->GetIndepFirst() != DATEAXIS && m_pProp->IsSecondIndepSet()) {
+				else if (m_pProp->IsFirstIndepSet() && m_pProp->GetIndepFirst() != vartype::DATEAXIS && m_pProp->IsSecondIndepSet()) {
 					m_pProp->m_ChartType = CHART_TYPES::CONTOUR_CHART;
 				}
-				else if (m_pProp->GetIndepFirst() == DATEAXIS || m_pProp->GetIndepFirst() == MULTIRUN_NUM) {
+				else if (m_pProp->GetIndepFirst() == vartype::DATEAXIS || m_pProp->GetIndepFirst() == vartype::MULTIRUN_NUM) {
 					//m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
-					m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
-					m_pProp->SetSecondIndepVarType(NO_USE);
+					m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
+					m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 				}
 				//}
 				for(int ii=0;ii<m_pSimDoc->m_SelectMultiSum.size();ii++) {
@@ -610,8 +610,8 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 				ivar=m_pSimDoc->m_SelectMultiSum.size();
 			}
 			else if(sheet==6) {
-				if (m_pProp->GetIndepFirst() == PGVARVALID) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
-				if (m_pProp->GetIndepFirst()==DATEAXIS) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+				if (m_pProp->GetIndepFirst() == vartype::PGVARVALID) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
+				if (m_pProp->GetIndepFirst()== vartype::DATEAXIS) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 				for(int ii=0;ii<m_pSimDoc->m_SelectMultiVal.size();ii++) {
 					if(pDoc->IsMultiSimulation()&&pDoc->IsFinishedSimulation()) {
 						plotinfo=m_pPlotInfo->MakeMultiValChart(ii, j);
@@ -624,8 +624,8 @@ bool MakeSimCharts::MultiPlotClick(int sheet, int col, int row, bool Add, int In
 			}
 			else if(sheet==10) {
 
-				if (m_pProp->GetIndepFirst() == PGVARVALID) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
-				if (m_pProp->GetIndepFirst() == DATEAXIS) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+				if (m_pProp->GetIndepFirst() == vartype::PGVARVALID) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
+				if (m_pProp->GetIndepFirst() == vartype::DATEAXIS) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 				for(int ii=0;ii<m_pSimDoc->m_SelectMultiPar.size();ii++) {
 					if(pDoc->IsMultiSimulation()&&pDoc->IsFinishedSimulation()) {
 						plotinfo=m_pPlotInfo->MakeMultiParChart(ii, j);
@@ -688,7 +688,7 @@ bool MakeSimCharts::MultiPlotVectorClick( std::vector<int> row_vector, size_t co
 			else
 				pDoc = m_pSimDoc->m_SelectedDocuments[j];
 
-			if (m_pProp->GetIndepFirst() == DATEAXIS) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+			if (m_pProp->GetIndepFirst() == vartype::DATEAXIS) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 
 			for (int ii = 0; ii < m_pSimDoc->m_SelectMultiPar.size(); ii++) {
 				if (pDoc->IsMultiSimulation() && pDoc->IsFinishedSimulation()) {
@@ -714,7 +714,7 @@ bool MakeSimCharts::MultiPlotVectorClick( std::vector<int> row_vector, size_t co
 			else
 				pDoc = m_pSimDoc->m_SelectedDocuments[j];
 
-			if (m_pProp->GetIndepFirst() == DATEAXIS) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+			if (m_pProp->GetIndepFirst() == vartype::DATEAXIS) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 
 			for (int ii = 0; ii < m_pSimDoc->m_SelectMultiVal.size(); ii++) {
 				if (pDoc->IsMultiSimulation() && pDoc->IsFinishedSimulation()) {
@@ -826,7 +826,7 @@ bool MakeSimCharts::CreateChart(CHART_TYPES ChartType, int ChartNum, enum class 
 
 
 				if((datatype>DATA_TYPES::SIM_VAL&&datatype<DATA_TYPES::PGDATA)/*||(datatype>10&&datatype<100)*/) {
-					if(m_pProp->GetFirstIndepVarType()==DATEAXIS) m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+					if(m_pProp->GetFirstIndepVarType()== vartype::DATEAXIS) m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 					if(pChart->m_TimeSeriePlot.InitMultiRunPlot(m_pSimDoc, ChartNum, ChartType)) {
 							pChart->m_TimeSeriePlot.MakeTimeSeriePlot();
 							return true;
@@ -985,8 +985,8 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 							vector<size_t> EnsemblesToPlot;
 							
 							
-							m_pProp->SetFirstIndepVarType(DATEAXIS);
-							m_pProp->SetSecondIndepVarType(NO_USE);
+							m_pProp->SetFirstIndepVarType(vartype::DATEAXIS);
+							m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 							m_pProp->m_multi_ResidualSequence = 0;
 
 							if (m_pUtil->GetEnsembleViewOption() == 0) {
@@ -1032,8 +1032,8 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 			else if(isheet==5) {
 				if(m_pSimDoc->m_SelectedDocuments.size()>0&&m_pSimDoc->m_SelectOut.size()>0) {
 					if (m_pUtil->m_MultiRunPlot) {
-						m_pProp->SetFirstIndepVarType(DATEAXIS);
-						m_pProp->SetSecondIndepVarType(NO_USE);
+						m_pProp->SetFirstIndepVarType(vartype::DATEAXIS);
+						m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 					}
 					m_pSimDoc->m_PrevSheet=5;
 
@@ -1531,18 +1531,18 @@ vector<SIMB> MakeSimCharts::GetAllOutPutVectorByCategory(int category, bool Also
 			if (selected_Single == 2) selected_Multi = true;
 			if (!m_ShowSoilProfile&&!m_ShowPlantVectors) continue;
 			if (m_ShowSoilProfile) {
-				if ((pSw->GetDataType() == SIMPROFILE|| pSw->GetDataType() == TOTPROFILE) && !m_ShowAllSoilLayers && !m_SelectedSoilLayers[ii]) continue;
+				if ((pSw->GetDataType() == datatype::SIMPROFILE|| pSw->GetDataType() == datatype::TOTPROFILE) && !m_ShowAllSoilLayers && !m_SelectedSoilLayers[ii]) continue;
 			}
 			else {
-				if ((pSw->GetDataType() == SIMPROFILE || pSw->GetDataType() == TOTPROFILE)) continue;
+				if ((pSw->GetDataType() == datatype::SIMPROFILE || pSw->GetDataType() == datatype::TOTPROFILE)) continue;
 
 
 			}
 			if (m_ShowPlantVectors) {
-				if (pSw->GetDataType() == PLANT && !m_ShowAllPlants && !m_SelectedPlants[ii]) continue;
+				if (pSw->GetDataType() == datatype::PLANT && !m_ShowAllPlants && !m_SelectedPlants[ii]) continue;
 			}
 			else {
-				if (pSw->GetDataType() == PLANT) continue;
+				if (pSw->GetDataType() == datatype::PLANT) continue;
 
 			}
 		}
@@ -1554,44 +1554,44 @@ vector<SIMB> MakeSimCharts::GetAllOutPutVectorByCategory(int category, bool Also
 
 		}
 		if (!m_Show_All_Elements) {
-			if (pSw->GetElement() == WATER && !m_Show_Water) continue;
+			if (pSw->GetElement() == elements::WATER && !m_Show_Water) continue;
 			if (!m_Show_Heat) {
-				if (pSw->GetElement() == HEAT && !m_Show_Heat) continue;
-				if (pSw->GetElement() == TEMPERATURE && !m_Show_Heat) continue;
+				if (pSw->GetElement() == elements::HEAT && !m_Show_Heat) continue;
+				if (pSw->GetElement() == elements::TEMPERATURE && !m_Show_Heat) continue;
 			}
 			if (!m_Show_C) {
-				if (pSw->GetElement() == CARBON) continue;
-				if (pSw->GetElement() == DOC) continue;
+				if (pSw->GetElement() == elements::CARBON) continue;
+				if (pSw->GetElement() == elements::DOC) continue;
 			}
 			if (!m_Show_N) {
-				if (pSw->GetElement() == NITROGEN) continue;
-				if (pSw->GetElement() == DON) continue;
-				if (pSw->GetElement() == AMMONIUM) continue;
-				if (pSw->GetElement() == NITRATE) continue;
-				if (pSw->GetElement() == DON) continue;
-				if (pSw->GetElement() == MINERAL_N) continue;
+				if (pSw->GetElement() == elements::NITROGEN) continue;
+				if (pSw->GetElement() == elements::DON) continue;
+				if (pSw->GetElement() == elements::AMMONIUM) continue;
+				if (pSw->GetElement() == elements::NITRATE) continue;
+				if (pSw->GetElement() == elements::DON) continue;
+				if (pSw->GetElement() == elements::MINERAL_N) continue;
 			}
 			if (!m_Show_P) {
-				if (pSw->GetElement() == PHOSPHORUS) continue;
-				if (pSw->GetElement() == DOP) continue;
-				if (pSw->GetElement() == MINERAL_P) continue;
+				if (pSw->GetElement() == elements::PHOSPHORUS) continue;
+				if (pSw->GetElement() == elements::DOP) continue;
+				if (pSw->GetElement() == elements::MINERAL_P) continue;
 			}
 			if (!m_Show_SoilGas) {
-				if (pSw->GetElement() == METHANE) continue;
-				if (pSw->GetElement() == ANAROBIC_GAS) continue;
-				if (pSw->GetElement() == OXYGEN) continue;
-				if (pSw->GetElement() == DENITRIFIERS) continue;
-				if (pSw->GetElement() == NITRIFIERS) continue;
+				if (pSw->GetElement() == elements::METHANE) continue;
+				if (pSw->GetElement() == elements::ANAROBIC_GAS) continue;
+				if (pSw->GetElement() == elements::OXYGEN) continue;
+				if (pSw->GetElement() == elements::DENITRIFIERS) continue;
+				if (pSw->GetElement() == elements::NITRIFIERS) continue;
 			}
 			if (!m_Show_Climate) {
-				if (pSw->GetElement() == RADIATION) continue;
-				if (pSw->GetElement() == ATMOSPHERE) continue;
-				if (pSw->GetElement() == HUMIDITY) continue;
-				if (pSw->GetElement() == AIR) continue;
-				if (pSw->GetElement() == SNOW) continue;
-				if (pSw->GetElement() == PRECIPITATION) continue;
-				if (pSw->GetElement() == GLOBALRADIATION) continue;
-				if (pSw->GetElement() == LONGWAVEINCOMINGRADIATION) continue;
+				if (pSw->GetElement() == elements::RADIATION) continue;
+				if (pSw->GetElement() == elements::ATMOSPHERE) continue;
+				if (pSw->GetElement() == elements::HUMIDITY) continue;
+				if (pSw->GetElement() == elements::AIR) continue;
+				if (pSw->GetElement() == elements::SNOW) continue;
+				if (pSw->GetElement() == elements::PRECIPITATION) continue;
+				if (pSw->GetElement() == elements::GLOBALRADIATION) continue;
+				if (pSw->GetElement() == elements::LONGWAVEINCOMINGRADIATION) continue;
 			}
 		}
 

@@ -10,25 +10,25 @@ class DB :public History
 
 public:
 	DB();
-	bool Retrieve(string group, std::string key, bool NoApply=false);
-	bool Read_DB_DocFile(string file, std::string key, bool Apply=false, bool ExportToCSV=false);
-	bool Write_DB_DocFile(string file);
-	bool Apply_DB_DocFile(string group, std::string key="", bool during=false);
-	bool Apply_DB_DocFile(vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_File);
-	bool Export_DB_CSVFile(vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_File);
-	bool Apply_DB_Struc(string);
-	void Actual_DB(string group="");
+	bool Retrieve(std::string group, std::string key, bool NoApply=false);
+	bool Read_DB_DocFile(std::string file, std::string key, bool Apply=false, bool ExportToCSV=false);
+	bool Write_DB_DocFile(std::string file);
+	bool Apply_DB_DocFile(std::string group, std::string key="", bool during=false);
+	bool Apply_DB_DocFile(std::vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_File);
+	bool Export_DB_CSVFile(std::vector<Sw*> AppliedSw, std::vector<Ps*> AppliedPs, std::vector<Tab*> Applied_Tab, std::vector<F*> Applied_File);
+	bool Apply_DB_Struc(std::string);
+	void Actual_DB(std::string group="");
 
-	bool ReadFrom_DB_Object(string ID_DB_Group, std::string key="", bool deletefile=false, bool NoApply=false, bool ExportToCSV=false);
-	void SaveTo_DB_Object(string, std::string key);
+	bool ReadFrom_DB_Object(std::string ID_DB_Group, std::string key="", bool deletefile=false, bool NoApply=false, bool ExportToCSV=false);
+	void SaveTo_DB_Object(std::string, std::string key);
 
-	void SetGroupConnections(string Group);
+	void SetGroupConnections(std::string Group);
 	void Reset();
 	bool m_ShortTimeRead;
-	string m_Group;
-	string m_DB_key;
+	std::string m_Group;
+	std::string m_DB_key;
 	bool m_DuringRun;
-	string m_SimFileName;
+	std::string m_SimFileName;
 	Sw *m_pSwTimeRes;
 	Sw *m_pSwPlantType;
 	Sw *m_pSwLAI, *m_pSwRoot, *m_pSwGen1, *m_pSwGen2;
@@ -36,34 +36,34 @@ public:
 	F *m_pFile;
 	bool m_HideAllTableContents;
 
-	string m_ID_DB_Group;
-	string m_SelectedId;
-	string m_SelectedKey;
+	std::string m_ID_DB_Group;
+	std::string m_SelectedId;
+	std::string m_SelectedKey;
 
-	vector<Ps*>m_P_Array;
-	vector<P*>m_Pt_Array;
-	vector<Tab*>m_Tab_Array;
-	vector<F*>m_F_Array;
-	vector<Sw*>m_Sw_Array;
-	vector<FCSV*>m_FCSV_Array;
+	std::vector<Ps*>m_P_Array;
+	std::vector<P*>m_Pt_Array;
+	std::vector<Tab*>m_Tab_Array;
+	std::vector<F*>m_F_Array;
+	std::vector<Sw*>m_Sw_Array;
+	std::vector<FCSV*>m_FCSV_Array;
 
 protected:
 	
 	int m_Read_DB_Version;
 	bool Info_DB_Switches(bool reading, int iv=0);
-	vector<Sw*> ReadWrite_DB_Switches(bool reading, int iv = 0);
+	std::vector<Sw*> ReadWrite_DB_Switches(bool reading, int iv = 0);
 	bool Info_DB_Parameters(bool reading, int iv=0);
-	vector<Ps*> ReadWrite_DB_Parameters(bool reading, int iv = 0);
+	std::vector<Ps*> ReadWrite_DB_Parameters(bool reading, int iv = 0);
 	bool Info_DB_ParTables(bool reading, int iv=0);
-	vector<Tab*> ReadWrite_DB_ParTables(bool reading, int iv = 0);
+	std::vector<Tab*> ReadWrite_DB_ParTables(bool reading, int iv = 0);
 	bool Info_DB_Files(bool reading, int iv=0);
-	vector<F*> ReadWrite_DB_Files(bool reading, int iv = 0);
+	std::vector<F*> ReadWrite_DB_Files(bool reading, int iv = 0);
 
-	ifstream m_DocFileIn;
-	ofstream m_DocFileOut; 
+	std::ifstream m_DocFileIn;
+	std::ofstream m_DocFileOut;
 	
-	string CreateFlagString(SimB* pBase, bool GDType, int FlagValue);
-	bool wString(string *str);
+	std::string CreateFlagString(SimB* pBase, bool GDType, int FlagValue);
+	bool wString(std::string *str);
 	bool wInt(int *iv);
 	bool wSize_t(size_t* iv);
 	bool wUint(unsigned int * iv);
@@ -72,7 +72,7 @@ protected:
 	bool wDouble(double *f);
 	bool wTime(time_t *time);
 	
-	bool rString(string *str);
+	bool rString(std::string *str);
 	bool rInt(int *iv);
 	bool rUint(unsigned int * iv);
 	bool rSize_t(size_t* iv);

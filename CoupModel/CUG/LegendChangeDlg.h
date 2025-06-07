@@ -11,8 +11,8 @@ class LegendChangeDlg : public CDialog
 // Construction
 public:
 	LegendChangeDlg(CWnd* pParent = nullptr);	// standard constructor
-	LegendChangeDlg(string prevtext);	
-	string m_newtext;
+	LegendChangeDlg(std::string prevtext);
+	std::string m_newtext;
 
 // Dialog Data
 	//{{AFX_DATA(LegendChangeDlg)

@@ -192,7 +192,7 @@ BOOL MultiRunTable::OnInitDialog()
 		title+=" : "+FUtil::STD_ItoAscii(m_pDB->MR_GetNumberOfSelections())+" of ";
 		title+=FUtil::STD_ItoAscii(nRow)+ " items";
 	}
-	else if (m_pCP->GetType()==PAR_SINGLE) {
+	else if (m_pCP->GetType()==simtype::PAR_SINGLE) {
 		n_lines_ini = ((Ps*)m_pCP)->MR_GetSizeTable();
 		title = m_pCP->GetName();
 		title+= " : " 

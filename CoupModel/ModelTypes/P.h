@@ -13,9 +13,9 @@ class P : public Par
 		
 		~P(void);
 		P(void) {P();};
-		void SetValue(vector<double> vec) {*_ptarget=vec;};
+		void SetValue(std::vector<double> vec) {*_ptarget=vec;};
 		double GetValue(size_t index)  noexcept { if (_ptarget->size() > index) return _ptarget->at(index); else return MISSING; };
-		vector<double> GetVector() { return *_ptarget;}
+		std::vector<double> GetVector() { return *_ptarget;}
 		void SetSize(size_t NRow) {if(pNE!=nullptr) ((NE*)pNE)->ReSizeValue(NRow);};
 		size_t  GetSize() noexcept {return _ptarget->size();};
 		void Def(size_t ModuleNo, std::string name, std::vector<double> init, std::string unit, std::string conditions, 
@@ -30,9 +30,9 @@ class P : public Par
 		double GetDBValue(size_t index) const {if(index<_DB_ValueVector.size()) return _DB_ValueVector[index];return MISSING;};
 
 		NE* GetNEPointer() { return pNE; };
-		void SetOldValue(vector<double> value) {_oldValueVector.resize(value.size()); 
+		void SetOldValue(std::vector<double> value) {_oldValueVector.resize(value.size()); 
 		_IsOldValueVector.resize(value.size()); for(size_t i=0; i<value.size();i++) {_oldValueVector[i]=value[i];_IsOldValueVector[i]=true;};};
-		void ResetOldValue(vector<double> value) {_oldValueVector.resize(value.size()); 
+		void ResetOldValue(std::vector<double> value) {_oldValueVector.resize(value.size()); 
 		_IsOldValueVector.resize(value.size()); for(size_t i=0; i<value.size();i++) {_oldValueVector[i]=value[i];_IsOldValueVector[i]=false;};};
 
 		bool IsOldValue(size_t index) {if(index<_IsOldValueVector.size() ) return _IsOldValueVector[index];return false;};
@@ -186,20 +186,20 @@ class P : public Par
 
 	private:
 
-	vector <bool> m_IsNotOriginalv;
-	vector<vector<long> > ChaDateLong;
-	vector<vector<double> > ChaParValue;
-	vector<vector<size_t> > ChaParIndex;
+	std::vector <bool> m_IsNotOriginalv;
+	std::vector<std::vector<long> > ChaDateLong;
+	std::vector<std::vector<double> > ChaParValue;
+	std::vector<std::vector<size_t> > ChaParIndex;
 	std::vector<double> *_ptarget;
 
 	std::vector<double> _min,_max,_wmin,_wmax;
 	std::vector<double> _oldValueVector, _DB_ValueVector;
-	vector<bool> _IsOldValueVector;
-	std::vector<vector<double> > _mr_Tab_Value;
-	std::vector<vector<double> > _mr_RelChange_Value;
+	std::vector<bool> _IsOldValueVector;
+	std::vector<std::vector<double> > _mr_Tab_Value;
+	std::vector<std::vector<double> > _mr_RelChange_Value;
 	NE *pNE;
-	vector<MR_PAR> _mr;
-	vector<size_t> _mrMonitoring;
+	std::vector<MR_PAR> _mr;
+	std::vector<size_t> _mrMonitoring;
 	
 };
 

@@ -739,7 +739,7 @@ int DocClick::OutPutVarSelectionClicktoStore(int col, int row) {
 			else
 				((X*)pSw)->GetFlag(Index-1, &selected);*/
 		}
-		if (pSw != nullptr && (pSw->GetType() == STATE || pSw->GetType() == FLOW || pSw->GetType() == AUX || pSw->GetType() == DRIVE)) {
+		if (pSw != nullptr && (pSw->GetType() == simtype::STATE || pSw->GetType() == simtype::FLOW || pSw->GetType() == simtype::AUX || pSw->GetType() == simtype::DRIVE)) {
 			int ityp = p_ModelInfo->GetTypeIndex(Type);
 			size_t index = Index - 1;
 			int sel = ((OutVector*)pSw)->GetStoreFlag(index);
@@ -777,7 +777,7 @@ int DocClick::OutPutVarSelectionClicktoStore(int col, int row) {
 			//return 5;
 
 		}
-		else if (pSw != nullptr && (pSw->GetType() == STATE_SINGLE || pSw->GetType() == FLOW_SINGLE || pSw->GetType() == AUX_SINGLE || pSw->GetType() == DRIVE_SINGLE)) {
+		else if (pSw != nullptr && (pSw->GetType() == simtype::STATE_SINGLE || pSw->GetType() == simtype::FLOW_SINGLE || pSw->GetType() == simtype::AUX_SINGLE || pSw->GetType() == simtype::DRIVE_SINGLE)) {
 			int ityp = p_ModelInfo->GetTypeIndex(Type);
 
 			int sel = ((OutSingle*)pSw)->GetStoreFlag();
@@ -1346,7 +1346,7 @@ int DocClick::AnnimateClick(int col, int row) {
 		pSw=m_pSimDoc->GetPtr(Type, Group, Name);
 		// Change toggle Outputs on/off
 		
-		if(pSw!=nullptr&&(pSw->GetType()==STATE||pSw->GetType()==FLOW||pSw->GetType()==AUX||pSw->GetType()==DRIVE)) {
+		if(pSw!=nullptr&&(pSw->GetType()== simtype::STATE||pSw->GetType()== simtype::FLOW||pSw->GetType()== simtype::AUX||pSw->GetType()== simtype::DRIVE)) {
 				int ityp=p_ModelInfo->GetTypeIndex(Type);
 				size_t index=Index-1;
 				bool sel=pSw->GetStoreFlag(index);

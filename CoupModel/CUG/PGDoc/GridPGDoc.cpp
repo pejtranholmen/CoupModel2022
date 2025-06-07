@@ -170,8 +170,8 @@ bool GridPGDoc::Make_PGFileSheet()
 		auto SetChartTypeOptions = [&]() {
 			if (pDoc != nullptr) {
 				if (pDoc->m_DocumentType == 2) {
-					if (m_pProp->GetFirstIndepVarType()== MULTIRUN_NUM) {
-						m_pProp->SetFirstIndepVarType(DATEAXIS);
+					if (m_pProp->GetFirstIndepVarType()== vartype::MULTIRUN_NUM) {
+						m_pProp->SetFirstIndepVarType(vartype::DATEAXIS);
 					}
 				}
 				else {
@@ -273,15 +273,15 @@ bool GridPGDoc::Make_PGFileSheet()
 				QuickSetText(6,ind,PGUtil::StringDatum(pgend));
 
 				m_XAxisCombo.Text = "Normal Time";
-				if (m_pProp->GetIndepFirst() == PGHOUR) m_XAxisCombo.Text = "Hour";
-				if (m_pProp->GetIndepFirst() == PGDAY) m_XAxisCombo.Text = "Day";
-				if (m_pProp->GetIndepFirst() == PGYEAR) m_XAxisCombo.Text = "Year";
+				if (m_pProp->GetIndepFirst() == vartype::PGHOUR) m_XAxisCombo.Text = "Hour";
+				if (m_pProp->GetIndepFirst() == vartype::PGDAY) m_XAxisCombo.Text = "Day";
+				if (m_pProp->GetIndepFirst() == vartype::PGYEAR) m_XAxisCombo.Text = "Year";
 				SetCellClickButton(m_XAxisCombo); //cell=7
 	
 				m_YAxisCombo.Text="Not Used";
-				if(m_pProp->GetIndepSecond()==PGHOUR) m_YAxisCombo.Text ="Hour";
-				if(m_pProp->GetIndepSecond()==PGDAY) m_YAxisCombo.Text ="Day";
-				if(m_pProp->GetIndepSecond()==PGYEAR) m_YAxisCombo.Text ="Year";
+				if(m_pProp->GetIndepSecond()== vartype::PGHOUR) m_YAxisCombo.Text ="Hour";
+				if(m_pProp->GetIndepSecond()== vartype::PGDAY) m_YAxisCombo.Text ="Day";
+				if(m_pProp->GetIndepSecond()== vartype::PGYEAR) m_YAxisCombo.Text ="Year";
 				SetCellClickButton(m_YAxisCombo);// cell 8
 			}
 			//cell.SetText(PGUtil::StringDatum(pgend));
@@ -324,7 +324,7 @@ bool GridPGDoc::Make_PGFileSheet()
 			SetCell(0, ind, &cell);
 
 			GetCell(1, ind, &cell);
-			cell.SetText(pCPG->GetVarUnit(j + 1).c_str());
+			cell.SetText(std::string(pCPG->GetVarUnit(j + 1)).c_str());
 			cell.SetParam(m_VarSelectOptions.param);
 			cell.SetBackColor(pCPG->GetColor(j + 1));
 			SetCell(1, ind, &cell);
@@ -383,7 +383,7 @@ bool GridPGDoc::Make_PGFileSheet()
 				pCPG->CloseFile();
 					
 		}
-		if(m_pProp->GetIndepFirst()==PGVAR) {
+		if(m_pProp->GetIndepFirst()== vartype::PGVAR) {
 
 
 			int index=m_pProp->GetFirstIndepIndex();
@@ -393,7 +393,7 @@ bool GridPGDoc::Make_PGFileSheet()
 			cell.SetBackColor(m_ColorEdit);
 			SetCell(7,index+3,&cell);
 		}
-		if(m_pProp->GetIndepSecond()==PGVAR) {
+		if(m_pProp->GetIndepSecond()== vartype::PGVAR) {
 			int index=m_pProp->GetSecondIndepIndex();
 			GetCell(8,index+3,&cell);
 			cell.SetText("Y - Indep");
@@ -561,9 +561,9 @@ bool GridPGDoc::Make_Description(int ifile)
 			Name="Normal Time";
 
 			if(nrep>1) {
-				if(m_pProp->GetIndepFirst()==GEO_LONG) Name="Longitude";
-				if(m_pProp->GetIndepFirst()==GEO_LAT) Name="Latitude";
-				if(m_pProp->GetIndepFirst()==GEO_ALT) Name="Altitude";
+				if(m_pProp->GetIndepFirst()==vartype::GEO_LONG) Name="Longitude";
+				if(m_pProp->GetIndepFirst()==vartype::GEO_LAT) Name="Latitude";
+				if(m_pProp->GetIndepFirst()==vartype::GEO_ALT) Name="Altitude";
 				cell.SetReadOnly(FALSE);
 			}
 			else {
@@ -587,9 +587,9 @@ bool GridPGDoc::Make_Description(int ifile)
 
 			Name="Not Used";
 			if(nrep>1) {
-				if(m_pProp->GetIndepSecond()==GEO_LONG) Name="Longitude";
-				if(m_pProp->GetIndepSecond()==GEO_LAT) Name="Latitude";
-				if(m_pProp->GetIndepSecond()==GEO_ALT) Name="Altitude";
+				if(m_pProp->GetIndepSecond()==vartype::GEO_LONG) Name="Longitude";
+				if(m_pProp->GetIndepSecond()==vartype::GEO_LAT) Name="Latitude";
+				if(m_pProp->GetIndepSecond()==vartype::GEO_ALT) Name="Altitude";
 				m_VarDim2Combo.Param = GetUniqueMenuNumber();
 			}
 		
@@ -608,9 +608,9 @@ bool GridPGDoc::Make_Description(int ifile)
 			
 			cell.SetParam(m_VarDim3Combo.Param);
 			Name="Not Used";
-			if(m_pProp->GetIndepDependent()==GEO_LONG) Name="Longitude";
-			if(m_pProp->GetIndepDependent()==GEO_LAT) Name="Latitude";
-			if(m_pProp->GetIndepDependent()==GEO_ALT) Name="Altitude";
+			if(m_pProp->GetIndepDependent()==vartype::GEO_LONG) Name="Longitude";
+			if(m_pProp->GetIndepDependent()==vartype::GEO_LAT) Name="Latitude";
+			if(m_pProp->GetIndepDependent()==vartype::GEO_ALT) Name="Altitude";
 			
 			cell.SetText(Name);
 			SetCell(9,ind, &cell);
@@ -690,7 +690,7 @@ bool GridPGDoc::Make_Description(int ifile)
 					}
 					else {
 						GetCell(1,ind,&cell);
-						cell.SetText(pCPG->GetVarUnit(j+1,i).c_str());
+						cell.SetText(std::string(pCPG->GetVarUnit(j+1,i)).c_str());
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
@@ -785,7 +785,7 @@ bool GridPGDoc::Make_Description(int ifile)
 					}
 					else {
 						GetCell(1,ind,&cell);
-						cell.SetText(pCPG->GetVarUnit(j+1,i).c_str());
+						cell.SetText(std::string(pCPG->GetVarUnit(j+1,i)).c_str());
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
@@ -2782,7 +2782,11 @@ auto SetNumColandRows = [&]() {
 		SetCellClickButton(m_IdentifiedFormatButton, count_timeIds);
 
 
-		m_FilterVariableButton.VectorNames= m_PGFileImport.m_CurrentFileInfo.FirstValidHeads;
+		m_FilterVariableButton.VectorNames.resize(m_PGFileImport.m_CurrentFileInfo.FirstValidHeads.size());
+		for(size_t i = 0; i < m_PGFileImport.m_CurrentFileInfo.FirstValidHeads.size(); i++) {
+			m_FilterVariableButton.VectorNames[i] = m_PGFileImport.m_CurrentFileInfo.FirstValidHeads[i];
+		}	
+
 		m_FilterVariableButton.VectorNames.insert(m_FilterVariableButton.VectorNames.begin(), "No Use of Filter");
 		if (m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse != std::string::npos)
 			m_FilterVariableButton.Text = m_FilterVariableButton.VectorNames[m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse];
@@ -2793,7 +2797,11 @@ auto SetNumColandRows = [&]() {
 
 		if (m_PGFileImport.m_CurrentFileInfo.FilterColumnToUse != std::string::npos) {
 			m_FilterUseButton.Text = m_PGFileImport.m_CurrentFileInfo.FilterItemToUse;
-			m_FilterUseButton.VectorNames = m_PGFileImport.m_CurrentFileInfo.GlobalFilterItems;
+			m_FilterUseButton.VectorNames.resize(m_PGFileImport.m_CurrentFileInfo.GlobalFilterItems.size());
+
+			for (size_t i = 0; i < m_PGFileImport.m_CurrentFileInfo.GlobalFilterItems.size(); i++) {
+				m_FilterUseButton.VectorNames[i] = m_PGFileImport.m_CurrentFileInfo.GlobalFilterItems[i];
+			}
 			SetCellClickButton(m_FilterUseButton, count_timeIds);
 		}
 
@@ -2833,7 +2841,10 @@ auto SetNumColandRows = [&]() {
 		QuickSetText(-1, 5, "Add Info");
 		QuickSetText(-1, 6, "Linkage");
 
-		m_SelectedOutputVarButton.VectorNames = m_PGFileImport.m_CurrentFileInfo.FirstValidHeads;
+		m_SelectedOutputVarButton.VectorNames.resize(m_PGFileImport.m_CurrentFileInfo.FirstValidHeads.size());
+		for(size_t i = 0; i < m_PGFileImport.m_CurrentFileInfo.FirstValidHeads.size(); i++) {
+			m_SelectedOutputVarButton.VectorNames[i] = m_PGFileImport.m_CurrentFileInfo.FirstValidHeads[i];
+		}
 		m_SelectedOutputVarButton.VectorState = m_PGFileImport.m_CurrentFileInfo.ValidVariables;
 		SetCellClickButton(m_SelectedOutputVarButton);
 
@@ -2848,30 +2859,48 @@ auto SetNumColandRows = [&]() {
 
 		}
 
-		m_IdentifiedVarSiteInfoButton.VectorNames = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads;
+		m_IdentifiedVarSiteInfoButton.VectorNames.resize(m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size());
+		for(size_t i = 0; i < m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size(); i++) {
+			m_IdentifiedVarSiteInfoButton.VectorNames[i] = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[i];
+		}
 		SetCellClickButton(m_IdentifiedVarSiteInfoButton);
 
 		QuickSetHeadingText(0, 5, "SiteName"); QuickSetHeadingText(1, 5, "Country"); QuickSetHeadingText(2, 5, "Latitute"); QuickSetHeadingText(3, 5, "Longitude"); QuickSetHeadingText(4, 5, "Altitude");
 		if (m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size()>0)
 			for (size_t i = 0; i < 5; i++) {
 				switch(i) {
-				 case 0: m_ComboIdButton.VectorNames = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads; 
+				 case 0: m_ComboIdButton.VectorNames.resize(m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size());
+					 for(size_t i = 0; i < m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size(); i++) {
+						 m_ComboIdButton.VectorNames[i] = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[i];
+					 }
 					 m_ComboIdButton.Text = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[m_PGFileImport.AddInfoLinkIndex[i]];
 					 SetCellClickButton(m_ComboIdButton);
 					 break;
-				 case 1: m_ComboCountryButton.VectorNames = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads; 
+				 case 1: m_ComboCountryButton.VectorNames.resize(m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size());
+					 for(size_t i = 0; i < m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size(); i++) {
+						 m_ComboCountryButton.VectorNames[i] = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[i];
+					 }
 					 m_ComboCountryButton.Text = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[m_PGFileImport.AddInfoLinkIndex[i]];
 					 SetCellClickButton(m_ComboCountryButton);
 					 break;
-				 case 2: m_ComboLatButton.VectorNames = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads;
+				 case 2: m_ComboLatButton.VectorNames.resize(m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size());
+					 for(size_t i = 0; i < m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size(); i++) {
+						 m_ComboLatButton.VectorNames[i] = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[i];
+					 }
 					 m_ComboLatButton.Text = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[m_PGFileImport.AddInfoLinkIndex[i]];
 					 SetCellClickButton(m_ComboLatButton);
 					 break;
-				 case 3: m_ComboLongButton.VectorNames = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads;
+				 case 3: m_ComboLongButton.VectorNames.resize(m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size());
+					 for(size_t i = 0; i < m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size(); i++) {
+						 m_ComboLongButton.VectorNames[i] = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[i];
+					 }
 					 m_ComboLongButton.Text = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[m_PGFileImport.AddInfoLinkIndex[i]]; 
 					 SetCellClickButton(m_ComboLongButton);
 					 break;
-				 case 4: m_ComboAltButton.VectorNames = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads;
+				 case 4: m_ComboAltButton.VectorNames.resize(m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size());
+					 for(size_t i = 0; i < m_PGFileImport.m_ExtraFileInfo.FirstValidHeads.size(); i++) {
+						 m_ComboAltButton.VectorNames[i] = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[i];
+					 }	
 					 m_ComboAltButton.Text = m_PGFileImport.m_ExtraFileInfo.FirstValidHeads[m_PGFileImport.AddInfoLinkIndex[i]]; 
 					 SetCellClickButton(m_ComboAltButton);
 					 break;
@@ -2920,8 +2949,8 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 			if (m_PGFileImport.m_CurrentFileInfo.ValidVariables[i]|| m_PGFileImport.m_CurrentFileInfo.CopyMode) {
 				m_PGFileImport.m_NewVarIndexSelected.push_back(i);
 				elements elem = m_PGFileImport.m_CurrentFileInfo.Des.addinfo[i].Element;
-				if (elem >= m_ElementTypeNewVariables.VectorNames.size())
-						elem = GENERAL;
+				if (size_t(elem) >= m_ElementTypeNewVariables.VectorNames.size())
+						elem = elements::GENERAL;
 
 				m_ElementTypeNewVariables.Text = p_ModelInfo->GetStringOfElement(elem);
 				SetCellClickButton(m_ElementTypeNewVariables, countvalid);
@@ -2935,7 +2964,7 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 		for (size_t i = 0; i < m_PGFileImport.m_CurrentFileInfo.ValidVariables.size(); ++i)
 			if (m_PGFileImport.m_CurrentFileInfo.ValidVariables[i]) {
 				
-				vector<string> previous = m_UnitTypeNewVariables.VectorNames;
+				vector<string_view> previous = m_UnitTypeNewVariables.VectorNames;
 				vector<UNIT_TYPES> types=GetUnitOptions(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[i].Element);
 
 				if (types.size() > 0) m_UnitTypeNewVariables.VectorNames =p_ModelInfo->GetSelectedStringBasedUnits(types);
@@ -2950,7 +2979,7 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 	SecondLine();
 	ThirdLine();
 
-	vector<string> NewItems; size_t count=0;
+	vector<string_view> NewItems; size_t count=0;
 	NewItems.push_back("Name"); NewItems.push_back("Unit"); NewItems.push_back("Id"); NewItems.push_back("Position");
 	NewItems.push_back("Country"); NewItems.push_back("Station"); NewItems.push_back("Altitude"); NewItems.push_back("Latitude");
 	NewItems.push_back("Longitude");
@@ -3450,9 +3479,9 @@ void GridPGDoc::MakePGChartMenu(int col, int row, int index) {
 								AddMenuItem(5018,"Select ("+name+") as New first Independent variable");
 							if(m_pProp->GetFirstIndepIndex()==index)
 								AddMenuItem(5019,"DeSelect ("+name+") as first Independent variable");
-							if(m_pProp->GetIndepFirst()==PGDAY)  AddMenuItem(6016,"Delect Day of Year as First Independent variable");
-							if(m_pProp->GetIndepFirst()==PGHOUR)  AddMenuItem(6015,"Delect Hour of Day as First Independent variable");
-							if(m_pProp->GetIndepFirst()==PGYEAR)  AddMenuItem(6017,"Delect Year as First Independent variable");
+							if(m_pProp->GetIndepFirst()== vartype::PGDAY)  AddMenuItem(6016,"Delect Day of Year as First Independent variable");
+							if(m_pProp->GetIndepFirst()== vartype::PGHOUR)  AddMenuItem(6015,"Delect Hour of Day as First Independent variable");
+							if(m_pProp->GetIndepFirst()== vartype::PGYEAR)  AddMenuItem(6017,"Delect Year as First Independent variable");
 
 							if(!m_pProp->IsSecondIndepSet()) {
 								if(m_pProp->GetFirstIndepIndex()!=index)
@@ -3467,9 +3496,9 @@ void GridPGDoc::MakePGChartMenu(int col, int row, int index) {
 								if(m_pProp->GetSecondIndepIndex()==index)
 									AddMenuItem(5029,"DeSelect ("+name+") as Second Independent variable");
 
-							if(m_pProp->GetIndepSecond()==PGDAY)  AddMenuItem(6026,"DeSelect Day of Year as Second Independent variable");
-							if(m_pProp->GetIndepSecond()==PGHOUR)  AddMenuItem(6025,"DeSelect Hour of Day as Second Independent variable");
-							if(m_pProp->GetIndepSecond()==PGYEAR)  AddMenuItem(6027,"DeSelect Year as Second Independent variable");
+							if(m_pProp->GetIndepSecond()== vartype::PGDAY)  AddMenuItem(6026,"DeSelect Day of Year as Second Independent variable");
+							if(m_pProp->GetIndepSecond()== vartype::PGHOUR)  AddMenuItem(6025,"DeSelect Hour of Day as Second Independent variable");
+							if(m_pProp->GetIndepSecond()== vartype::PGYEAR)  AddMenuItem(6027,"DeSelect Year as Second Independent variable");
 
 
 							}
@@ -3486,15 +3515,15 @@ void GridPGDoc::MakePGChartMenu(int col, int row, int index) {
 							AddMenuItem(4009, "Reduce from ("+FUtil::STD_ItoAscii(m_pProp->m_NumChartY)+") to ("+FUtil::STD_ItoAscii(m_pProp->m_NumChartY-1)+") verticaltal charts");
 }
 bool GridPGDoc::IsMultiPGRepPlotReady() {
-	if((m_pProp->GetIndepFirst()==GEO_ALT||m_pProp->GetIndepFirst()==GEO_LAT||m_pProp->GetIndepFirst()==GEO_LONG)
-		&&(m_pProp->GetIndepSecond()==GEO_ALT||m_pProp->GetIndepSecond()==GEO_LAT||m_pProp->GetIndepSecond()==GEO_LONG)
-		&&(m_pProp->GetIndepDependent()==GEO_ALT||m_pProp->GetIndepDependent()==GEO_LAT||m_pProp->GetIndepDependent()==GEO_LONG)) 
+	if((m_pProp->GetIndepFirst()==vartype::GEO_ALT||m_pProp->GetIndepFirst()==vartype::GEO_LAT||m_pProp->GetIndepFirst()==vartype::GEO_LONG)
+		&&(m_pProp->GetIndepSecond()==vartype::GEO_ALT||m_pProp->GetIndepSecond()==vartype::GEO_LAT||m_pProp->GetIndepSecond()==vartype::GEO_LONG)
+		&&(m_pProp->GetIndepDependent()==vartype::GEO_ALT||m_pProp->GetIndepDependent()==vartype::GEO_LAT||m_pProp->GetIndepDependent()==vartype::GEO_LONG)) 
 		return true;
 	else
 		return false;
 }
 bool GridPGDoc::IsMultiPGRepPlot() {
-	if(m_pProp->GetIndepFirst()==GEO_ALT||m_pProp->GetIndepFirst()==GEO_LAT||m_pProp->GetIndepFirst()==GEO_LONG)
+	if(m_pProp->GetIndepFirst()==vartype::GEO_ALT||m_pProp->GetIndepFirst()==vartype::GEO_LAT||m_pProp->GetIndepFirst()==vartype::GEO_LONG)
 		return true;
 	else
 		return false;
@@ -3939,16 +3968,17 @@ void GridPGDoc::Make_DescriptionHeader()
 	if (m_Changed_Data || m_Changed_Description) m_SaveCurrentFileButton.NormalState = false;
 	auto filename = pCPG->GetFileName();
 	auto prev = m_SaveCurrentFileButton.Text;
-	m_SaveCurrentFileButton.Text += " (" + filename + ")";
-	auto prevo = m_SaveCurrentFileButton.TextOptional;
-	m_SaveCurrentFileButton.TextOptional += " (" + filename + ")";
+	std::string ss = "(" + filename + ")";
+	m_SaveCurrentFileButton.Text = ss;
+	prev = string(m_SaveCurrentFileButton.TextOptional)+ss;
+	m_SaveCurrentFileButton.TextOptional = prev;
 
 
 	for (auto c = 0; c < 10; c++) for (auto r = -2; r < 0; r++) { UnJoinCells(c, r); };
 
 	SetCellClickButton(m_SaveCurrentFileButton);
 	m_SaveCurrentFileButton.Text = prev;
-	m_SaveCurrentFileButton.TextOptional = prevo;
+	m_SaveCurrentFileButton.TextOptional = prev;
 	if (!m_SaveCurrentFileButton.NormalState) QuickSetBackColor(0,buttonrow, m_ColorChanged);
 
 
@@ -4140,7 +4170,7 @@ bool GridPGDoc::OnGetFileDescriptionFillGrid(CPG *pCPG)
 			}
 
 			QuickSetText(2, ind, pCPG->GetVarName(i + 1, nrep),false);
-			QuickSetText(3, ind, pCPG->GetVarUnit(i + 1, nrep),false);
+			QuickSetText(3, ind, std::string(pCPG->GetVarUnit(i + 1, nrep)),false);
 			QuickSetText(4, ind, pCPG->GetVarId(i + 1, nrep),false);
 			QuickSetText(5, ind, pCPG->GetVarPos(i + 1, nrep),false);
 			float v;
@@ -4158,14 +4188,14 @@ bool GridPGDoc::OnGetFileDescriptionFillGrid(CPG *pCPG)
 
 				m_ElementTypeVariables.Row = ind;
 				elements elem = pCPG->GetVarElement(i + 1, nrep);
-				if (elem >= m_ElementTypeVariables.VectorNames.size())
-							elem= GENERAL;
-				m_ElementTypeVariables.Text = p_ModelInfo->ElementName(elem);
+				if (size_t(elem) >= m_ElementTypeVariables.VectorNames.size())
+							elem= elements::GENERAL;
+				m_ElementTypeVariables.Text = p_ModelInfo->ElementName(size_t(elem));
 				SetCellClickButton(m_ElementTypeVariables);
 
 				m_UnitTypeVariables.Row = ind;
 				UNIT_TYPES unit = pCPG->GetVarUnitType(i + 1, nrep);
-				vector<string> previous = m_UnitTypeVariables.VectorNames;
+				vector<string_view> previous = m_UnitTypeVariables.VectorNames;
 				vector<UNIT_TYPES> types = GetUnitOptions(elem);
 				if (types.size() > 0) m_UnitTypeVariables.VectorNames = p_ModelInfo->GetSelectedStringBasedUnits(types);
 				else m_UnitTypeNewVariables.VectorNames = p_ModelInfo->GetAllStringBasedUnits();
@@ -4424,8 +4454,7 @@ void GridPGDoc::DefineButtonInfos()
 	i.Param= GetUniqueMenuNumber();
 	i.Text = "Equal Number of Records for each site";
 	i.TextOptional = "Non Equal size of records for each site";
-	i.HintText = "With equal number of Records a single PG File with Repetitions will be created\n";
-	i.HintText += "Otherwise a single PG file is created for each site";
+	i.HintText = "With equal number of Records a single PG File with Repetitions will be created\nOtherwise a single PG file is created for each site";
 	i.Col_start = 2;
 	i.Col_end = 4;
 	i.Row = 1;
@@ -4458,8 +4487,7 @@ void GridPGDoc::DefineButtonInfos()
 	i.TextOptional = "No Variable separtor";
 	i.Row = 1;
 	i.VerticalDirection = false;
-	i.HintText = "Note that the same Variable sepatator must be used in the entire file\n";
-	i.HintText += "Avoid use of (space) and comma  if they are part of the Variable definition";
+	i.HintText = "Note that the same Variable sepatator must be used in the entire file\nAvoid use of (space) and comma  if they are part of the Variable definition";
 	m_VarSeparationButton = i;
 	SetClickButtonMap(i);
 
@@ -4493,8 +4521,7 @@ void GridPGDoc::DefineButtonInfos()
 	i.TextOptional = "No Variables Identified";
 	i.Row = 1;
 	i.VerticalDirection = false;
-	i.HintText = "Note that the same Variable sepatator must be used in the entire file\n";
-	i.HintText += "Avoid use of (space) and comma  if they are part of the Variable definition";
+	i.HintText = "Note that the same Variable sepatator must be used in the entire file\nAvoid use of (space) and comma  if they are part of the Variable definition";
 	m_IdentifiedFormatButton = i;
 	SetClickButtonMap(i);
 
@@ -4513,8 +4540,7 @@ void GridPGDoc::DefineButtonInfos()
 	m_SelectTimeButton.Param = GetUniqueMenuNumber();
 	m_SelectTimeButton.Text = "All Records";
 	m_SelectTimeButton.TextOptional = "Selected Records";
-	m_SelectTimeButton.HintText = "Single Click on Button to Select All Records or Change specific numbers in the edit fields below\n";
-	m_SelectTimeButton.HintText +="Note that the Selected records will be the records used for any type of calculations/change";
+	m_SelectTimeButton.HintText = "Single Click on Button to Select All Records or Change specific numbers in the edit fields below\nNote that the Selected records will be the records used for any type of calculations/change";
 	m_SelectTimeButton.Col_start = 3;
 	m_SelectTimeButton.Col_end = 4;
 	SetClickButtonMap(m_SelectTimeButton);
@@ -4556,9 +4582,7 @@ void GridPGDoc::DefineButtonInfos()
 	m_SiteInfoFileButton.Param = GetUniqueMenuNumber();
 	m_SiteInfoFileButton.Text = "Add Site Info File";
 	m_SiteInfoFileButton.TextOptional = "Add Site Info File";
-	m_SiteInfoFileButton.HintText = "Single Click to Add the File to add information about the site variable. \n";
-	m_SiteInfoFileButton.HintText += "The added file should contain one variable (the first) with Site Id Number. \n";
-	m_SiteInfoFileButton.HintText += "Additional variables May be Longitude, Latitude, Altitude, Country.\n";	
+	m_SiteInfoFileButton.HintText = "Single Click to Add the File to add information about the site variable. \nThe added file should contain one variable (the first) with Site Id Number. \nAdditional variables May be Longitude, Latitude, Altitude, Country.\n";	
 	m_SiteInfoFileButton.NormalState = false;
 	m_SiteInfoFileButton.Row = -2;
 	SetClickButtonMap(m_SiteInfoFileButton);
@@ -4690,8 +4714,7 @@ void GridPGDoc::DefineClickButtonInfos()
 	b.Col_end = 1;
 	b.NormalState = true;
 	b.Row = -2;
-	b.HintText = "Select Interpolate to keep only Records (timepoints) from first file and \nassign values to those timepoints by linear interpolation if they are not present in the other files\n\n";
-	b.HintText += "Select No Interpolation to keep all time point that are unique and\nassign missing values when they are not present in the other files\n";
+	b.HintText = "Select Interpolate to keep only Records (timepoints) from first file and \nassign values to those timepoints by linear interpolation if they are not present in the other files\nSelect No Interpolation to keep all time point that are unique and\nassign missing values when they are not present in the other files\n";
 	m_MixInterpolateButton = b;
 	SetClickButtonMap(b);
 
@@ -4723,7 +4746,8 @@ void GridPGDoc::DefineClickButtonInfos()
 
 	b.Text = "Create File ";
 	b.Row = -2;
-	b.HintText = ClickAdd + b.Text;
+	std::string str = ClickAdd + std::string(b.Text);
+	b.HintText = str;
 	b.Col_start = 3; b.Col_end = 4; b.Param = GetUniqueMenuNumber();
 	m_CreateNewAddButton=b;
 	SetClickButtonMap(b);
@@ -4731,7 +4755,8 @@ void GridPGDoc::DefineClickButtonInfos()
 	b.NormalState = true;
 	b.TextOptional = "Format (many lines)";
 	b.Text = " Format (Repetitions)";
-	b.HintText = "Click on button to shift between different output options" + b.Text;
+	str = "Click on button to shift between different output options" + string(b.Text);
+	b.HintText = str;
 	b.Col_start = 5, b.Col_end = 5;
 	b.Param = GetUniqueMenuNumber();
 	m_ShiftOutputFormat = b;
@@ -4739,7 +4764,8 @@ void GridPGDoc::DefineClickButtonInfos()
 	b.NormalState = true;
 	b.Text = "Create File";
 		b.Row = -2;
-		b.HintText = ClickAdd + b.Text;
+		str = ClickAdd + string(b.Text);
+		b.HintText = str;
 	b.Col_start = 3; b.Col_end = 4; b.Param = GetUniqueMenuNumber();
 	m_CreateNewReshapeButton = b;
 	SetClickButtonMap(b);
@@ -4755,7 +4781,8 @@ void GridPGDoc::DefineClickButtonInfos()
 
 	b.Text = "Change Output Name";
 	b.pPG = nullptr;
-	b.HintText = ClickAdd + b.Text;
+	str = ClickAdd + string(b.Text);
+	b.HintText = str;
 	b.Col_start = 0; b.Col_end = 0; b.Param = GetUniqueMenuNumber();
 	m_NewOutputPGFileButton = b;
 	SetClickButtonMap(b);
@@ -4777,14 +4804,17 @@ void GridPGDoc::DefineClickButtonInfos()
 
 
 	b.Text = "Create New PG File";
-	b.HintText = ClickAdd + b.Text;
+	str = ClickAdd + string(b.Text);
+	b.HintText = str;
 	b.Col_start = 0; b.Col_end = 0; b.Param = GetUniqueMenuNumber();
 	b.Row = -2;
 	m_CreateNewEmptyPGFile = b;
 	SetClickButtonMap( b);
 
 	b.Text = "Change File Name";
-	b.HintText = ClickAdd + b.Text;
+	str = ClickAdd + string(b.Text);
+	b.HintText = str;
+
 	b.Col_start = 1; b.Col_end = 3; b.Param = GetUniqueMenuNumber();
 	m_ChangeNewGridFileName = b;
 	SetClickButtonMap( b);

@@ -5,6 +5,7 @@
 #include "../PlotDesignInfo\PlotStorage.h"
 #include "../../NewBase\Doc.h"
 #include "../../Cug\ChartProperties\ChartCug.h"
+using namespace std;
 
 DrawVariableLegends::DrawVariableLegends(void)
 {
@@ -97,22 +98,22 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 		}
 
 		m_Label.test = "";
-		if (p_info.IndepAxis.Dependent == VAR_MIN) m_Label.test = "Minium of : ";
-		else if (p_info.IndepAxis.Dependent == VAR_MEAN) m_Label.test = "Mean of : ";
-		else if (p_info.IndepAxis.Dependent == VAR_MAX) m_Label.test = "Maximum of : ";
+		if (p_info.IndepAxis.Dependent == vartype::VAR_MIN) m_Label.test = "Minium of : ";
+		else if (p_info.IndepAxis.Dependent == vartype::VAR_MEAN) m_Label.test = "Mean of : ";
+		else if (p_info.IndepAxis.Dependent == vartype::VAR_MAX) m_Label.test = "Maximum of : ";
 		
 		m_Label.test += m_pPG_Active->GetVarName(p_info.PGFileIndex, repit);
 		
 		//if (repit>1) m_Label.test += m_pPG_Active->GetVarId(p_info.PGFileIndex, repit);
 		
-		if ((m_pProp->GetIndepFirst() == PGHOUR&&m_pProp->GetIndepSecond()== PGDAY) ||
-			(m_pProp->GetIndepSecond()== PGHOUR&&m_pProp->GetIndepFirst() == PGDAY) && m_pPG_Active->GetNumberofYears()>1) {
+		if ((m_pProp->GetIndepFirst() == vartype::PGHOUR&&m_pProp->GetIndepSecond()== vartype::PGDAY) ||
+			(m_pProp->GetIndepSecond()== vartype::PGHOUR&&m_pProp->GetIndepFirst() == vartype::PGDAY) && m_pPG_Active->GetNumberofYears()>1) {
 			if (m_ChartInfo.YearRepresentation == 0) 	m_Label.test += " Mean of All Years ";
 			else if (m_ChartInfo.YearRepresentation>0 && m_ChartInfo.YearRepresentation<m_pPG_Active->GetNumberofYears())
 				m_Label.test += MFC_Util::ItoAscii(m_pPG_Active->GetYear(m_pPG_Active->GetYearIndex(m_ChartInfo.YearRepresentation))) + " ";
 		}
-		else if (((m_pProp->GetIndepFirst() == PGYEAR&&m_pProp->GetIndepSecond() == PGDAY) ||
-			(m_pProp->GetIndepFirst() == PGDAY&&m_pProp->GetIndepSecond() == PGYEAR))&& m_ChartInfo.WithinDayRepresentation > 1) {		
+		else if (((m_pProp->GetIndepFirst() == vartype::PGYEAR&&m_pProp->GetIndepSecond() == vartype::PGDAY) ||
+			(m_pProp->GetIndepFirst() == vartype::PGDAY&&m_pProp->GetIndepSecond() == vartype::PGYEAR))&& m_ChartInfo.WithinDayRepresentation > 1) {		
 				if (m_pProp->m_HourValueRepresentation == 0) m_Label.test += "Mean of All Hours ";
 				else m_Label.test += _T("(") + MFC_Util::ItoAscii(m_pProp->m_HourValueRepresentation) + " of "
 					+ MFC_Util::ItoAscii(m_ChartInfo.WithinDayRepresentation) + ") ";
@@ -232,14 +233,14 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 				m_Label.st = "";
 				m_Label.st = m_pPG_Active->GetVarId(PGindex) + m_pPG_Active->GetVarPos(PGindex);
 			}
-			if ((m_pProp->GetIndepFirst() == PGHOUR&&m_pProp->GetIndepSecond()== PGDAY) ||
-				(m_pProp->GetIndepSecond()== PGHOUR&&m_pProp->GetIndepFirst() == PGDAY) && m_pPG_Active->GetNumberofYears()>1) {
+			if ((m_pProp->GetIndepFirst() == vartype::PGHOUR&&m_pProp->GetIndepSecond()== vartype::PGDAY) ||
+				(m_pProp->GetIndepSecond()== vartype::PGHOUR&&m_pProp->GetIndepFirst() == vartype::PGDAY) && m_pPG_Active->GetNumberofYears()>1) {
 				if (m_ChartInfo.YearRepresentation == 0) 	m_Label.test += " Mean of All Years ";
 				else if (m_ChartInfo.YearRepresentation>0 && m_ChartInfo.YearRepresentation<m_pPG_Active->GetNumberofYears())
 					m_Label.test += MFC_Util::ItoAscii(m_pPG_Active->GetYear(m_pPG_Active->GetYearIndex(m_ChartInfo.YearRepresentation))) + " ";
 			}
-			else if (((m_pProp->GetIndepFirst() == PGYEAR&&m_pProp->GetIndepSecond()== PGDAY) ||
-				(m_pProp->GetIndepFirst() == PGDAY&&m_pProp->GetIndepSecond()== PGYEAR)) && m_ChartInfo.WithinDayRepresentation > 1) {
+			else if (((m_pProp->GetIndepFirst() == vartype::PGYEAR&&m_pProp->GetIndepSecond()== vartype::PGDAY) ||
+				(m_pProp->GetIndepFirst() == vartype::PGDAY&&m_pProp->GetIndepSecond()== vartype::PGYEAR)) && m_ChartInfo.WithinDayRepresentation > 1) {
 				if (m_pProp->m_HourValueRepresentation == 0) m_Label.test += "Mean of All Hours ";
 				else m_Label.test += _T("(") + MFC_Util::ItoAscii(m_pProp->m_HourValueRepresentation) + " of "
 					+ MFC_Util::ItoAscii(m_ChartInfo.WithinDayRepresentation) + ") ";

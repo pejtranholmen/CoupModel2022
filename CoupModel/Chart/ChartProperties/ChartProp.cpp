@@ -135,7 +135,7 @@ string ChartProp::DefineYearWithinDayCell(CUGCell* pCell) {
 	string label;
 
 	size_t numvalues = 1440 / m_pPGSource->GetNormalTimeInterval();
-	if (m_MultiPG_dep.FirstType == PGDAY&&m_MultiPG_dep.SecondType == PGYEAR) {
+	if (m_MultiPG_dep.FirstType == vartype::PGDAY&&m_MultiPG_dep.SecondType == vartype::PGYEAR) {
 		label = "Within Day Value";
 		optionlist = "All\n";
 		for (size_t i = 0; i < numvalues; i++) {
@@ -148,7 +148,7 @@ string ChartProp::DefineYearWithinDayCell(CUGCell* pCell) {
 		else if (m_HourValueRepresentation == numvalues + 1) hourrepstring = "Mean";
 		pCell->SetText(hourrepstring);
 	}
-	else if (m_MultiPG_dep.FirstType == PGDAY&&m_MultiPG_dep.SecondType == PGHOUR) {
+	else if (m_MultiPG_dep.FirstType == vartype::PGDAY&&m_MultiPG_dep.SecondType == vartype::PGHOUR) {
 		label = "Year Value";
 		size_t numvalues = m_pPGSource->GetNumberofYears();
 		optionlist = "Mean\n";
@@ -195,8 +195,8 @@ void ChartProp::AddConstrainByMultiPar(SIMB simv, size_t Index)
 
 bool ChartProp::CheckChartType_Based_On_IndependentVar()
 {
-	if (GetIndepFirst() != DATEAXIS&&GetIndepFirst() != NO_USE&&GetIndepFirst() != MULTIRUN_NUM&&
-		GetIndepSecond() != DATEAXIS&&GetIndepSecond() != NO_USE)
+	if (GetIndepFirst() != vartype::DATEAXIS&&GetIndepFirst() != vartype::NO_USE&&GetIndepFirst() != vartype::MULTIRUN_NUM&&
+		GetIndepSecond() != vartype::DATEAXIS&&GetIndepSecond() != vartype::NO_USE)
 	{
 		return SetChartType(4);
 	}
@@ -222,10 +222,10 @@ void ChartProp::MakeCumTranformation(vector<double>* pVector)
 	else if (m_ReShape.m_Cumulated == 3) resetindex = ((PGCalc*)m_pPGSource)->GetDayStartIndex();
 
 
-	if ((GetIndepSecond() == PGHOUR&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == PGDAY)
-		|| (GetIndepSecond() == PGDAY&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == PGHOUR) ||
-		(GetIndepSecond() == PGYEAR&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == PGDAY)
-			|| (GetIndepSecond() == PGDAY&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == PGYEAR)) {
+	if ((GetIndepSecond() == vartype::PGHOUR&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == vartype::PGDAY)
+		|| (GetIndepSecond() == vartype::PGDAY&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == vartype::PGHOUR) ||
+		(GetIndepSecond() == vartype::PGYEAR&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == vartype::PGDAY)
+			|| (GetIndepSecond() == vartype::PGDAY&&m_pPGSource->GetNumberofYears() > 1 && GetIndepFirst() == vartype::PGYEAR)) {
 		if (StepInterval > 1)
 			for (size_t i = 1; i < resetindex.size(); i++)
 				resetindex[i] = resetindex[i] / StepInterval + 1;
@@ -321,9 +321,9 @@ bool ChartProp::ChangeChartTypeForward()
 	return true;
 	
 }
-string ChartProp::GetChartTypeString()
+std::string_view ChartProp::GetChartTypeString()
 {
-	string str;
+	string_view str;
 	switch (m_ChartType) {
 	case CHART_TYPES::SCATTER:
 		str = "Scatter:";
@@ -343,9 +343,9 @@ string ChartProp::GetChartTypeString()
 	}
 	return str;
 }
-vector<string> ChartProp::GetChartTypeOptions(bool Complete)
+vector<string_view> ChartProp::GetChartTypeOptions(bool Complete)
 {
-	vector<string> out;
+	vector<string_view> out;
 	if (Complete) 
 		for (size_t i = 0; i < 5; i++)	out.push_back(m_ChartTypesOptions[i].typtext);
 	else

@@ -9,18 +9,18 @@ class CWinAPIFileHandler;
 class NewMap;
 
 struct RESIDUAL_MEAN{
-	vector<vector <float>> mean;
-	vector<vector <float>> min;
-	vector<vector <float>> max;
-	vector<vector <float>> std;
-	vector<vector <float>> p10;
-	vector<vector <float>> p50;
-	vector<vector <float>> p90;
+	std::vector<std::vector <float>> mean;
+	std::vector<std::vector <float>> min;
+	std::vector<std::vector <float>> max;
+	std::vector<std::vector <float>> std;
+	std::vector<std::vector <float>> p10;
+	std::vector<std::vector <float>> p50;
+	std::vector<std::vector <float>> p90;
 };
 struct POS_ENSEMBLE {
 	bool valid;
 	size_t pos;
-	string name;
+	std::string name;
 	bool EnsembleFileRead;
 };
 
@@ -35,18 +35,18 @@ public:
 
 	bool ReadWrite_MeanEnsembleFile(bool reading, size_t ensembleno= std::string::npos);
 	bool ReadWrite_PriorStat();
-	bool ReadWrite_Ensemble(string EnsembleName);
+	bool ReadWrite_Ensemble(std::string EnsembleName);
 	bool OpenResidualFile(bool reading=false);
 	bool CloseResidualFile(bool reading);
 	bool Residuals_ReadWrite_Header(bool reading);
 	bool SetNewEnsembleByNumber(size_t ensembleno);
 	bool AlloResVector(size_t ActRecl= std::string::npos);
-	string GetXStatFileName(size_t ensembleno= std::string::npos);
+	std::string GetXStatFileName(size_t ensembleno= std::string::npos);
 	bool IsOpen(bool reading=true);
 	bool SetOneValidationVariableIndex(size_t index)  noexcept { m_ValidationFileIndex = index; if (m_ValidationFileIndex < 1000) return true; else return false; };
 	bool EnableEstimatesMade(size_t enableno=0);
 	bool m_IsUpdated, m_IsUpdated_Extra;
-	bool ShiftEnsembleName(string oldname, std::string newname);
+	bool ShiftEnsembleName(std::string oldname, std::string newname);
 	void SetResidualBaseFileNumVarScaling(size_t NumVarScaling) noexcept { m_ScalingNumVarWithDim1 = NumVarScaling; };
 	bool m_MeanDefined;
 	size_t m_ValidationFileIndex{ std::string::npos };
@@ -55,18 +55,18 @@ public:
 
 protected:
 	NewMap *m_pNewMap;
-	vector<float> m_Mean;
+	std::vector<float> m_Mean;
 	RESIDUAL_MEAN m_MeanPrior;
 	RESIDUAL_MEAN m_MeanPost;
 	RESIDUAL_MEAN m_MeanTest;
-	vector<POS_ENSEMBLE> m_Ensembles;
-	vector<float> m_Residuals;
+	std::vector<POS_ENSEMBLE> m_Ensembles;
+	std::vector<float> m_Residuals;
 	size_t m_RecL, m_NumRec, m_NumVar, m_ScalingNumVarWithDim1;
-	string m_FileName, m_ExtraFileName, m_SortedFileName;
+	std::string m_FileName, m_ExtraFileName, m_SortedFileName;
 	bool m_IsOpen, m_NewPrior;
 	bool m_EnsembleFileRead;
 	int m_ResidualFileNo;
-	string m_NewEnsembleName;
+	std::string m_NewEnsembleName;
 	
 
 private :
@@ -77,10 +77,10 @@ private :
 	bool meanValid;
 	size_t m_MaxNumRec;
 	std::streamsize m_FileSize;
-	map<string, size_t> m_MapofEnsemblePositions;
+	std::map<std::string, size_t> m_MapofEnsemblePositions;
 	std::streampos m_PosToRead, m_PosToWrite;
-	string m_EnsembleName;
-	string m_TempOutFile;
+	std::string m_EnsembleName;
+	std::string m_TempOutFile;
 	bool m_TwoFilesOpen;
 	size_t m_SizeOfMeanVector;
 

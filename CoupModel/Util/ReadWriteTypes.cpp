@@ -20,14 +20,14 @@ ReadWriteTypes::~ReadWriteTypes(void)
 {
 }
 
-bool ReadWriteTypes::OpenDocFileIn(string filename, bool binary_type )
+bool ReadWriteTypes::OpenDocFileIn(std::string filename, bool binary_type )
 {
 	if (binary_type) {
-		m_DocFileIn.open(filename, ios_base::in|ios_base::binary);
+		m_DocFileIn.open(filename, std::ios_base::in|std::ios_base::binary);
 		m_binary = true;
 	}
 	else {
-		m_DocFileIn.open(filename, ios_base::in);
+		m_DocFileIn.open(filename, std::ios_base::in);
 		m_binary = false;
 
 	}
@@ -97,12 +97,12 @@ bool ReadWriteTypes::OpenDocFileIn(string filename, bool binary_type )
 	return m_DocFileIn.good();
 }
 
-bool ReadWriteTypes::OpenDocFileout(string filename)
+bool ReadWriteTypes::OpenDocFileout(std::string filename)
 {
 	if (FUtil::IsFileExisting(filename))
-		m_DocFileOut.open(filename, ios_base::in|ios_base::out);
+		m_DocFileOut.open(filename, std::ios_base::in|std::ios_base::out);
 	else
-		m_DocFileOut.open(filename, ios_base::out);
+		m_DocFileOut.open(filename, std::ios_base::out);
 
 	size_t n = 0;
 	SetPutPosition(&n);
@@ -120,16 +120,16 @@ void ReadWriteTypes::CloseFileOut()
 	m_DocFileOut.close();
 }
 
-bool ReadWriteTypes::wString(string* str)
+bool ReadWriteTypes::wString(std::string* str)
 {
 	size_t il = str->size();
 	if (il > 0)
-		m_DocFileOut << *str << endl;
+		m_DocFileOut << *str << std::endl;
 
 	return true;
 }
 
-bool ReadWriteTypes::rString(string* str)
+bool ReadWriteTypes::rString(std::string* str)
 {
 	if (m_binary) {
 		unsigned char il;
@@ -144,7 +144,7 @@ bool ReadWriteTypes::rString(string* str)
 			m_DocFileIn.read((char*)(&s1), 1);
 			m_DocFileIn.read((char*)(&s2), 1);
 			ic = 255 + s2;
-			m_DocFileIn.seekg(s, ios::beg);
+			m_DocFileIn.seekg(s, std::ios::beg);
 			s = m_DocFileIn.tellg();
 			m_DocFileIn.read((char*)(&il), 1);
 			m_DocFileIn.read((char*)&ic, 2);
@@ -197,7 +197,7 @@ bool ReadWriteTypes::rString(string* str)
 	}
 	else {
 		size_t il;
-		string s;
+		std::string s;
 		m_DocFileIn >> s;
 		il = s.size();
 
@@ -252,7 +252,7 @@ bool ReadWriteTypes::ruint(unsigned int* iv)
 
 bool ReadWriteTypes::SetGetPosition(size_t* iv)
 {
-	m_DocFileIn.seekg(*iv, ios::beg);
+	m_DocFileIn.seekg(*iv, std::ios::beg);
 	return true;
 }
 
@@ -330,13 +330,13 @@ bool ReadWriteTypes::ruLongArray(unsigned long* v, unsigned long n)
 	return m_DocFileIn.good();
 }
 
-vector<size_t> ReadWriteTypes::rsize_tArray(size_t n,  size_t line_break)
+std::vector<size_t> ReadWriteTypes::rsize_tArray(size_t n,  size_t line_break)
 {
-	string str, str_line;
+	std::string str, str_line;
 	if(line_break<n)
 		getline(m_DocFileIn, str, ',');
 
-	vector<size_t> v; v.resize(n);
+	std::vector<size_t> v; v.resize(n);
 	for (size_t i = 0; i < n; i++)
 	{
 		if ((i + 1) % line_break == 0) {
@@ -355,7 +355,7 @@ bool ReadWriteTypes::wFloatArray(const std::vector<float> &f)
 {
 	for (size_t i = 0; i < f.size(); i++)
 		m_DocFileOut << f[i] << " ";
-	m_DocFileOut << endl;
+	m_DocFileOut << std::endl;
 	return m_DocFileOut.good();
 }
 
@@ -364,7 +364,7 @@ bool ReadWriteTypes::wFloatArray(float* f, size_t n)
 {
 	for (size_t i = 0; i < n; i++)
 		m_DocFileOut << f[i] << " ";
-	m_DocFileOut << endl;
+	m_DocFileOut << std::endl;
 	return m_DocFileOut.good();
 }
 
@@ -378,7 +378,7 @@ bool ReadWriteTypes::wFloatArray2(const std::vector<float> &v, size_t n, size_t 
 	size_t line_count = 1;
 	m_DocFileOut << line_count << ',';
 	for (size_t i = 0; i < n; i++) {
-		debug << "Failed at i=" << i << ", tellp=" << m_DocFileOut.tellp() << endl;
+		debug << "Failed at i=" << i << ", tellp=" << m_DocFileOut.tellp() << std::endl;
 		if (!m_DocFileOut.good()) return false;
 		if (abs(v[i]) < 1.E37) {
 			if (abs(v[i]) < 1.E-20)
@@ -389,21 +389,21 @@ bool ReadWriteTypes::wFloatArray2(const std::vector<float> &v, size_t n, size_t 
 		if ((i + 1) % line_break == 0) {
 			if(m_DocFileOut.good() && m_DocFileOut.tellp() > 0) // Check if the stream is good and not at the end
 			{
-				m_DocFileOut << endl << line_count << ',';
+				m_DocFileOut << std::endl << line_count << ',';
 			}
 			else
 			{
-				cerr << "Error writing to file." << endl;
+				std::cerr << "Error writing to file." << std::endl;
 				return false; // Return false if there was an error writing to the file
 			}
 			line_count++;
 			if (i < n - 1) {
-				m_DocFileOut << endl << line_count << ',';
+				m_DocFileOut << std::endl << line_count << ',';
 			}
 		}
 		else m_DocFileOut << ',';
 	}
-	m_DocFileOut << endl;
+	m_DocFileOut << std::endl;
 	return m_DocFileOut.good();
 }
 
@@ -421,20 +421,20 @@ bool ReadWriteTypes::wFloatArray2(const std::vector<float>& v, size_t line_break
 		if ((i + 1) % line_break == 0) {
 			line_count++;
 			if (i < v.size() - 1) {
-				m_DocFileOut << endl << line_count << ',';
+				m_DocFileOut << std::endl << line_count << ',';
 			}
 		}
 		else m_DocFileOut << ",";
 	}
-	m_DocFileOut << endl;
+	m_DocFileOut << std::endl;
 	return m_DocFileOut.good();
 }
 
 
-vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break) 
+std::vector<float> ReadWriteTypes::rFloatArray2(size_t n, size_t line_break) 
 {
-	vector<float> v;	v.resize(n);
-	string str, str_line;
+	std::vector<float> v;	v.resize(n);
+	std::string str, str_line;
 	getline(m_DocFileIn, str, ',');
 	for (size_t i = 0; i < n; i++)
 	{
@@ -459,7 +459,7 @@ bool ReadWriteTypes::wuLongArray(const std::vector<unsigned long> &v, size_t n)
 {
 	for (size_t i = 0; i < n; i++)
 		m_DocFileOut << v[i] << " ";
-	m_DocFileOut << endl;
+	m_DocFileOut << std::endl;
 	return m_DocFileOut.good();
 }
 
@@ -474,12 +474,12 @@ bool ReadWriteTypes::wsize_tArray(const std::vector<size_t> &v, size_t n, size_t
 		if (i + 1 % line_break == 0) {
 			line_count++;
 			if(i<n-1) {
-				m_DocFileOut << endl << line_count << ',';			
+				m_DocFileOut << std::endl << line_count << ',';
 			}
 		}
 		else m_DocFileOut << ",";
 	}
-	m_DocFileOut << endl;
+	m_DocFileOut << std::endl;
 	return m_DocFileOut.good();
 }
 
@@ -491,19 +491,19 @@ bool ReadWriteTypes::rDouble(double* f)
 
 bool ReadWriteTypes::wInt(int* iv)
 {
-	m_DocFileOut << *iv << endl;
+	m_DocFileOut << *iv << std::endl;
 	return true;
 }
 
 bool ReadWriteTypes::wInt(unsigned int* iv)
 {
-	m_DocFileOut << *iv << endl;
+	m_DocFileOut << *iv << std::endl;
 	return m_DocFileOut.good();
 }
 
 bool ReadWriteTypes::wSize_t(size_t* iv)
 {
-	m_DocFileOut << *iv << endl;
+	m_DocFileOut << *iv << std::endl;
 	return m_DocFileOut.good();
 }
 
@@ -511,37 +511,37 @@ bool ReadWriteTypes::wPosition()
 {
 	auto pos = m_DocFileOut.tellp();
 	size_t ipos = size_t(pos);
-	m_DocFileOut << ipos << endl;
+	m_DocFileOut << ipos << std::endl;
 	return m_DocFileOut.good();
 }
 
 bool ReadWriteTypes::wbool(bool* iv)
 {
-	m_DocFileOut << *iv << endl;
+	m_DocFileOut << *iv << std::endl;
 	return true;
 }
 
 bool ReadWriteTypes::wLong(long* iv)
 {
-	m_DocFileOut << *iv << endl;
+	m_DocFileOut << *iv << std::endl;
 	return true;
 }
 
 bool ReadWriteTypes::wFloat(float* f)
 {
-	m_DocFileOut << *f << endl;
+	m_DocFileOut << *f << std::endl;
 	return true;
 }
 
 bool ReadWriteTypes::wDouble(double* f)
 {
-	m_DocFileOut << *f << endl;
+	m_DocFileOut << *f << std::endl;
 	return true;
 }
 
 bool ReadWriteTypes::wTime(time_t* time)
 {
-	m_DocFileOut << *time << endl;
+	m_DocFileOut << *time << std::endl;
 	return true;
 }
 
@@ -559,17 +559,17 @@ size_t ReadWriteTypes::GetCurrentInPosition()
 
 size_t ReadWriteTypes::GetInputFileSize()
 {
-	m_DocFileIn.seekg(0, ios::end);
+	m_DocFileIn.seekg(0, std::ios::end);
 	auto actpos = m_DocFileIn.tellg();
-	m_DocFileIn.seekg(0, ios::beg);
+	m_DocFileIn.seekg(0, std::ios::beg);
 	return size_t(actpos);
 }
 
 std::streamsize ReadWriteTypes::GetStdInputFileSize()
 {
-	m_DocFileIn.seekg(0, ios::end);
+	m_DocFileIn.seekg(0, std::ios::end);
 	std::streamsize actpos = m_DocFileIn.tellg();
-	m_DocFileIn.seekg(0, ios::beg);
+	m_DocFileIn.seekg(0, std::ios::beg);
 	return actpos;
 }
 

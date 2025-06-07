@@ -23,18 +23,18 @@ struct DefinedCriteria {
 	size_t VarIndex;
 };
 struct VALIDENSEMBLE {
-	vector<float> v[10];
-	vector<CRITERIA_STATE> criteria;
-	vector<CRITERIA_STATE> meancriteria;
-	vector<DistStat> ParDist;
-	vector<float> copar;
-	vector<DefinedCriteria> History;
+	std::vector<float> v[10];
+	std::vector<CRITERIA_STATE> criteria;
+	std::vector<CRITERIA_STATE> meancriteria;
+	std::vector<DistStat> ParDist;
+	std::vector<float> copar;
+	std::vector<DefinedCriteria> History;
 	bool tobe_Plotted{ true };
 	bool is_Updated;
 	bool is_Copar_Updated;
 	size_t VarTranformed{0};
 	size_t Dim1_Par_Index{0};
-	vector<float> MeanPerFomanceIndicators[7];
+	std::vector<float> MeanPerFomanceIndicators[7];
 };
 
 enum STAT_OF_PERFORMANCE {PRIOR_MIN, PRIOR_MAX, POST_MIN, POST_MAX, SELECT_LOW, SELECT_HIGH};
@@ -42,7 +42,7 @@ enum STAT_OF_PERFORMANCE {PRIOR_MIN, PRIOR_MAX, POST_MIN, POST_MAX, SELECT_LOW, 
 struct VARTRANSFORMED {
 	size_t Transformed_index{0};
 	size_t Dim1_index{0};
-	vector<float> VarValidVector;
+	std::vector<float> VarValidVector;
 };
 struct STAT_PERF;
 
@@ -78,8 +78,8 @@ public:
 	bool ReadNewData(unsigned long InitRuns);
 	bool ReadBaseData();
 	MBIN_FILE_HEADER ReadStartData();
-	bool ReadBaseDataFromAttachedFiles(fstream *filestream, size_t istart, size_t runs_to_read);
-	MBIN_FILE_HEADER ReadStartDataFromAttachedFiles(fstream *filestream,size_t ifile);
+	bool ReadBaseDataFromAttachedFiles(std::fstream *filestream, size_t istart, size_t runs_to_read);
+	MBIN_FILE_HEADER ReadStartDataFromAttachedFiles(std::fstream *filestream,size_t ifile);
 
 	
 	bool SaveBase(bool updatetest=false);
@@ -90,15 +90,15 @@ public:
 	bool SaveRecord(unsigned long);
 	bool SaveTempFile();
 	bool SaveOrgFileSize(unsigned long newnumrun);
-	string GetNewFileName();
+	std::string GetNewFileName();
 	bool Close();
 	bool Reset();
 	
 	bool Init(MR *pMR);
-	bool InitData(string,unsigned long,unsigned long, unsigned long,unsigned long,unsigned long, MR *pMR);
-	bool OpenFile(string="", bool SetFile=true);
+	bool InitData(std::string,unsigned long,unsigned long, unsigned long,unsigned long,unsigned long, MR *pMR);
+	bool OpenFile(std::string="", bool SetFile=true);
 
-	bool AddExistingFile(string);
+	bool AddExistingFile(std::string);
 	bool ReWriteExistingFile(unsigned long);
 	bool AddMultiP(unsigned long i, unsigned long, float v);
 	bool AddValid(unsigned long i,unsigned long,  float v);
@@ -141,7 +141,7 @@ public:
 	size_t Get_ActualFilterVarValue(size_t RunNo);
 
 	size_t   m_CoCorNumValid;
-	vector<float> m_CoCorValid;
+	std::vector<float> m_CoCorValid;
 
 
 
@@ -166,9 +166,9 @@ public:
 	unsigned long  SelSumV_Index_Get(unsigned long);
 	unsigned long  SelSumV_Index_GetNum();
 	bool  SelSumV_Index_SelectAll();
-	unsigned long GetNumberOfAddedFiles(string str="");
-	string GetNameAddedFiles(unsigned long);
-	string GetNameBaseFile();
+	unsigned long GetNumberOfAddedFiles(std::string str="");
+	std::string GetNameAddedFiles(unsigned long);
+	std::string GetNameBaseFile();
 	unsigned long GetNumberOfAddedRuns(unsigned long);
 	unsigned long GetAdd_MultiPGFileIndex(unsigned long simRunNo);
 	unsigned long GetFirstRunNoAddedRuns(unsigned long);
@@ -178,8 +178,8 @@ public:
 	bool SetSumCriteria(unsigned long, unsigned long value);
 	void ResetSumCriteria();
 	
-	string GetSplitFileName();
-	string GetStatFileName(bool NewName=false);
+	std::string GetSplitFileName();
+	std::string GetStatFileName(bool NewName=false);
 	void AlloSplitPerformance(unsigned long splitperiods);
 	void AlloMinMaxUpdated(size_t NumOfEnsembles);
 	void SetPerformance(unsigned long irun,  unsigned long ind_split, STAT_PERF stat);
@@ -193,12 +193,12 @@ public:
 	size_t Get_And_UpdateTotalNumberofRuns();
 	void SetToBePlotted(size_t i, bool value=true) { if (m_Valid_TSV.size() > i) m_Valid_TSV[i].tobe_Plotted = value; };
 	bool IsToBePlotted(size_t i) { if (m_Valid_TSV.size() <= i) return false; return m_Valid_TSV[i].tobe_Plotted; };
-	bool UpdateParDist(vector<DistStat> ParDist, size_t ensemble= std::string::npos);
+	bool UpdateParDist(std::vector<DistStat> ParDist, size_t ensemble= std::string::npos);
 	DistStat GetParDist(size_t index, size_t ensemble = std::string::npos);
 	bool  GetMultiPGFileForCorrectRunNo(size_t runno, CPG *pPG);
 	size_t ChangeEnsembleNo(size_t change);
-	string GetTransformationIndicator(size_t i) {
-		string txt;
+	std::string GetTransformationIndicator(size_t i) {
+		std::string txt;
 		if (m_Valid_TSV.size() > i) {
 			switch (m_Valid_TSV[i].VarTranformed%10) {
 				case 0:	txt = "Normal"; break;
@@ -217,8 +217,8 @@ public:
 	size_t ReduceCriteria(PERFORMANCE_VAR, size_t VarIndex=0, size_t ThresholdType=0, size_t Threshold=0);
 	void ReduceUpdateStep(PERFORMANCE_VAR);
 	size_t GetNumberofEnsembles() { return m_Valid_TSV.size(); };
-	vector<size_t> GetEnsemblesToPlot() {
-		vector<size_t> out;
+	std::vector<size_t> GetEnsemblesToPlot() {
+		std::vector<size_t> out;
 		for (size_t i = 0; i < m_Valid_TSV.size(); i++) {
 			if(m_Valid_TSV[i].tobe_Plotted)
 				out.push_back(i);
@@ -240,40 +240,40 @@ public:
 	bool m_SplitFileOpen;
 	bool m_Lock;
 	bool m_New7_Stat;
-	vector< std::vector<size_t> > m_AcceptedRuns;
-	vector<string> m_AcceptedIdString;
+	std::vector< std::vector<size_t> > m_AcceptedRuns;
+	std::vector<std::string> m_AcceptedIdString;
 
 	bool m_AcceptedUpdated;
 	bool CalculateMeanValidValues(bool SV_Variables=false);
 
-	vector<float> m_ValidSumLow,m_ValidSumHigh;			// Represent mean of SV variables
-	vector<float> m_ValidSumMin,m_ValidSumMax;			// index 0-2, reprsent the various performance indicators	
-	vector<float> m_ValidSumMinAll,m_ValidSumMaxAll;
+	std::vector<float> m_ValidSumLow,m_ValidSumHigh;			// Represent mean of SV variables
+	std::vector<float> m_ValidSumMin,m_ValidSumMax;			// index 0-2, reprsent the various performance indicators	
+	std::vector<float> m_ValidSumMinAll,m_ValidSumMaxAll;
 
-	vector< std::vector<float>> m_MeanSV_STAT, m_MeanTSV_STAT;
-	vector< std::vector<float>> m_MeanSV_All, m_MeanSV_Accepted;
-	vector< std::vector<float>> m_MeanTSV_All, m_MeanTSV_Accepted;
+	std::vector< std::vector<float>> m_MeanSV_STAT, m_MeanTSV_STAT;
+	std::vector< std::vector<float>> m_MeanSV_All, m_MeanSV_Accepted;
+	std::vector< std::vector<float>> m_MeanTSV_All, m_MeanTSV_Accepted;
 
 
 
 	// 0-Mean, 1- RMSE, 2-LogLi
-	fstream m_MultiFile, m_AddFile, m_SplitPeriodFile;
+	std::fstream m_MultiFile, m_AddFile, m_SplitPeriodFile;
 	//fstream m_EvaluationFile;
 	bool m_IsSplitOpen;
 	size_t m_CumulatedPerformance;
-	map<size_t, size_t> MapOfStoredTSV; // key cumulated value, value är index in m_VarValidTransformed;
+	std::map<size_t, size_t> MapOfStoredTSV; // key cumulated value, value är index in m_VarValidTransformed;
 	size_t m_ActualEnsemble;
 	unsigned long m_NumSum, m_NumValid, m_NumSumValid, m_TotalNumAccepted, m_TotalNumBayesAccepted;
 	unsigned long m_TotalNumberRuns;
 	unsigned long m_ValidStatBase{ 7 };
 
-	vector<VALIDENSEMBLE> m_Valid_TSV, m_Valid_SV;
-	vector<VALIDENSEMBLE> m_Valid_TSV_Mean, m_Valid_SV_Mean;
+	std::vector<VALIDENSEMBLE> m_Valid_TSV, m_Valid_SV;
+	std::vector<VALIDENSEMBLE> m_Valid_TSV_Mean, m_Valid_SV_Mean;
 
-	vector<VALSUM> m_ValSumValues_Stored;
-	vector<STAT> m_PriorSumVar, m_PostSumVar;
-	vector<size_t> m_AddedFirstRunNo;
-	vector<string> m_AddedFiles;
+	std::vector<VALSUM> m_ValSumValues_Stored;
+	std::vector<STAT> m_PriorSumVar, m_PostSumVar;
+	std::vector<size_t> m_AddedFirstRunNo;
+	std::vector<std::string> m_AddedFiles;
 	
 protected:
 	size_t m_CyclicNumber, m_CyclicStartPos, m_Dim1Value;
@@ -291,8 +291,8 @@ protected:
 	MBIN_FILE_HEADER m_MBinHeader;
 	std::streampos m_HeaderStart, m_HeaderEnd;
 
-	vector<float> m_ValidLow, m_ValidHigh;
-	vector<float> m_ValidMin, m_ValidMax,m_ValidMinAll, m_ValidMaxAll;
+	std::vector<float> m_ValidLow, m_ValidHigh;
+	std::vector<float> m_ValidMin, m_ValidMax,m_ValidMinAll, m_ValidMaxAll;
 
 //	float m_ValidLow[7],m_ValidHigh[7];	
 	// Represent mean of TSV variables
@@ -304,54 +304,54 @@ protected:
 
 	//CFloatArray m_VarSum[4000], m_VarMulti[100], m_VarValid[100], m_VarValidSum[50];
 	//CUIntArray m_RunNo, m_Accepted;
-	string m_FileName;
-	vector<size_t> m_AddedNumRuns;
+	std::string m_FileName;
+	std::vector<size_t> m_AddedNumRuns;
 
 	char filestr;
-	vector<unsigned long> m_RunNo, m_Accepted;
+	std::vector<unsigned long> m_RunNo, m_Accepted;
 
 
-	vector< VARTRANSFORMED > m_VarValidTransformed;// , m_VarSumValidAdded;
-	vector<float> m_VarValidSplit;
+	std::vector< VARTRANSFORMED > m_VarValidTransformed;// , m_VarSumValidAdded;
+	std::vector<float> m_VarValidSplit;
 	std::vector <float> m_VarSplit;
 
-	vector<float> m_VarSumStart, m_VarMultiStart, m_VarValidStart, m_VarValidSumStart;
+	std::vector<float> m_VarSumStart, m_VarMultiStart, m_VarValidStart, m_VarValidSumStart;
 
 
-	vector<float> m_VarValidMin,m_VarValidMax;
-	vector<float> m_VarValidMean,m_VarValidMeanAll;
-	vector<float> m_VarValidCV,m_VarValidCVAll;
-	vector<float> m_VarValidMinSum,m_VarValidMaxSum;
-	vector<float> m_VarValidMinAll,m_VarValidMaxAll;
+	std::vector<float> m_VarValidMin,m_VarValidMax;
+	std::vector<float> m_VarValidMean,m_VarValidMeanAll;
+	std::vector<float> m_VarValidCV,m_VarValidCVAll;
+	std::vector<float> m_VarValidMinSum,m_VarValidMaxSum;
+	std::vector<float> m_VarValidMinAll,m_VarValidMaxAll;
 
 
-	vector<float> m_VarValidMeanSum,m_VarValidMeanSumAll;
-	vector<float> m_VarValidMinSumAll,m_VarValidMaxSumAll;
-	vector<float> m_VarValidCVSum,m_VarValidCVSumAll;
+	std::vector<float> m_VarValidMeanSum,m_VarValidMeanSumAll;
+	std::vector<float> m_VarValidMinSumAll,m_VarValidMaxSumAll;
+	std::vector<float> m_VarValidCVSum,m_VarValidCVSumAll;
 
 
-	vector<float> m_ParValidMin,m_ParValidMax, m_ParMin,m_ParMax;;
+	std::vector<float> m_ParValidMin,m_ParValidMax, m_ParMin,m_ParMax;;
 
 
-	vector<float> m_VarValidMean_R2,m_VarValidMean_A0, m_VarValidMean_A1;
-	vector<float> m_VarValidMean_AbsME,m_VarValidMean_RMSE;  // Mean of TSV Variables
-	vector<float> m_VarValidMean_NSE, m_VarValidSum_LogLi;
+	std::vector<float> m_VarValidMean_R2,m_VarValidMean_A0, m_VarValidMean_A1;
+	std::vector<float> m_VarValidMean_AbsME,m_VarValidMean_RMSE;  // Mean of TSV Variables
+	std::vector<float> m_VarValidMean_NSE, m_VarValidSum_LogLi;
 
 	
 
-	vector<size_t> m_VarValidCriteria, m_VarValidSumCriteria;;
-	vector<size_t> m_VarValidMeanCriteria; 	
-	vector<size_t> m_VarValidMeanSumCriteria;
-	vector<float> m_ValidDynLogLi,m_ValidDynResiduals;
+	std::vector<size_t> m_VarValidCriteria, m_VarValidSumCriteria;;
+	std::vector<size_t> m_VarValidMeanCriteria;
+	std::vector<size_t> m_VarValidMeanSumCriteria;
+	std::vector<float> m_ValidDynLogLi,m_ValidDynResiduals;
 
-	vector<unsigned long> m_VarSumSel, m_VarMultiSel, m_VarValidSel, m_VarValidSumSel;
+	std::vector<unsigned long> m_VarSumSel, m_VarMultiSel, m_VarValidSel, m_VarValidSumSel;
 	public:
-		vector< std::vector<float>> m_VarTSV_Mean, m_VarSV_Mean;
+		std::vector< std::vector<float>> m_VarTSV_Mean, m_VarSV_Mean;
 		MR *m_pNewMap;
-		vector<float> m_VarSum, m_VarMulti, m_VarValid, m_VarValidSum;
-		vector<float> m_VarValidHigh, m_VarValidSumLow, m_VarValidSumHigh;
+		std::vector<float> m_VarSum, m_VarMulti, m_VarValid, m_VarValidSum;
+		std::vector<float> m_VarValidHigh, m_VarValidSumLow, m_VarValidSumHigh;
 
-		vector<float> m_VarValidSumMean_AbsME, m_VarValidSumMean_RMSE;  // Mean of Sum Variables
+		std::vector<float> m_VarValidSumMean_AbsME, m_VarValidSumMean_RMSE;  // Mean of Sum Variables
 
 };
 

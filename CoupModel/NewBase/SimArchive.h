@@ -8,7 +8,7 @@ class SimArchive
 public:
 	SimArchive();
 	virtual ~SimArchive();
-	vector <SimObject> m_SimDocArray;
+	std::vector <SimObject> m_SimDocArray;
 	size_t GetNumSimDoc() {return m_SimDocArray.size();};
 	void AddSimDoc(SimObject fil) {m_SimDocArray.push_back(fil);};
 	void EraseSimDoc(size_t i) {m_SimDocArray.erase(m_SimDocArray.begin()+i);};

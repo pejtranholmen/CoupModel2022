@@ -174,7 +174,7 @@ bool CPlotStorage::Add(void *pXG, size_t type, size_t index, size_t chartnum, CH
 	//m_Residual_RunNo.Add(runno);
 	plot.PGSection=section_no;
 	//m_PGSection_No.Add(section_no);
-	plot.Type=type;
+	plot.Type=simtype(type);
 	//m_XTGD_Type_PlotArray.Add(type);	// Array of indicators Variable type
 	plot.Index=index;
 	//m_XTGD_Index_PlotArray.Add(index);	// Array of local indices for variables
@@ -212,7 +212,7 @@ bool CPlotStorage::Add(void *pXG, size_t type, size_t index, size_t chartnum, CH
 	plot.Residual_VarNum=vnum;
 	plot.Residual_RunNo=runno;
 	plot.PGSection=section_no;
-	plot.Type=type;
+	plot.Type=simtype(type);
 	plot.Index=index;
 	plot.Chart=chartnum;
 	plot.ChartType=charttyp;

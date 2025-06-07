@@ -5,13 +5,14 @@
 #include "../Util.h"
 
 size_t NUMCHAR = 9000;
+using namespace std;
 
 
 FCSV::~FCSV()
 {
 }
-FCSV::FCSV(ifstream *ptr, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
-	:SimB(CSVFILE, data, elem, fproc, bproc, ulev)
+FCSV::FCSV(std::ifstream *ptr, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
+	:SimB(simtype::CSVFILE, data, elem, fproc, bproc, ulev)
 {
 	SetPointer(ptr);
 

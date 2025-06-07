@@ -364,7 +364,7 @@ SetText
 		UG_ERROR	fail
 
 *********************************************/
-int CUGCell::SetText(string txt) {
+int CUGCell::SetText(std::string txt) {
 	CString stxt(txt.c_str());
 	return SetText(stxt);
 
@@ -425,7 +425,7 @@ int	CUGCell::GetText(CString *text)
 
 	return UG_ERROR;
 }
-int	CUGCell::GetStdText(string *text)
+int	CUGCell::GetStdText(std::string *text)
 {
 	if( m_propSetFlags&UGCELL_STRING_SET )
 	{
@@ -453,7 +453,7 @@ GetText
 	Return 
 		pointer to the text object
 *********************************************/
-string	CUGCell::GetStdText() {
+std::string	CUGCell::GetStdText() {
 	CString str=GetText();
 
 	return std::string(CT2A(GetText()).m_psz);
@@ -689,7 +689,7 @@ LPCTSTR	CUGCell::GetLabelText(){
 		return (LPCTSTR)m_label;
 	return _T("");
 }
-string CUGCell::GetStdLabelText(){
+std::string CUGCell::GetStdLabelText(){
 
 	if(m_propSetFlags&UGCELL_LABEL_SET)
 		return CT2A(m_label).m_psz;

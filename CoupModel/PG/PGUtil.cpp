@@ -6,6 +6,7 @@
 #include "../Util/ModelUtil.h"
 #endif
 //Changing
+using namespace std;
 extern "C" void cdatum(unsigned int &julian)
 
 {  int jul, jalpha, ja, jb, jc, jd, je;

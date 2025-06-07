@@ -56,12 +56,12 @@ bool TableView::MakeTablePlot(Tab *pTab, P *pCPt) {
 		m_Label.ytitle1="Soil Depth (m)";
 		m_pProp->m_Title=pTab->GetName().c_str();
 		if(m_pProp->m_Title.find("measured horizons")>0) {
-			pCPtUpper=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"Upper Depth");
-			pCPtLower=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"Lower Depth");
+			pCPtUpper=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"Upper Depth");
+			pCPtLower=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"Lower Depth");
 		}
 		else {
-			pCPtUpper=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"mUpper Depth");
-			pCPtLower=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"mLower Depth");
+			pCPtUpper=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"mUpper Depth");
+			pCPtLower=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"mLower Depth");
 		}
 		m_pProp->m_Title=pCPt->GetName().c_str();
 		group=pCPt->GetGroup().c_str();
@@ -75,8 +75,8 @@ bool TableView::MakeTablePlot(Tab *pTab, P *pCPt) {
 
 		if(pCPtUpper==nullptr) {
 			group="Soil Hydraulic";
-			pCPtUpper=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"mUpper Depth");	
-			pCPtLower=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"mLower Depth");
+			pCPtUpper=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"mUpper Depth");	
+			pCPtLower=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"mLower Depth");
 
 		}
 		if(pCPtUpper==nullptr) {

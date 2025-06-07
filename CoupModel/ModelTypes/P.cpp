@@ -13,7 +13,7 @@ P::P(std::vector<double> *target,NE *pE, enum datatype data, enum elements elem,
 {
 	_ptarget=target;
 	pNE=pE;
-	SetSimType(PAR_TABLE);
+	SetSimType(simtype::PAR_TABLE);
 
 	;
 }

@@ -55,7 +55,7 @@ DataSet* DrawDetails::AddDataPlot( int ivar,int TotNumPrior, bool accept_type, P
 	DataSet *pDataSet;
 		if(m_pProp->m_ChartType ==CHART_TYPES::SCATTER||m_pProp->GetFirstIndepIndex()!= std::string::npos) {
 				if(m_pProp->GetFirstIndepIndex()!= std::string::npos) {
-					if(m_pProp->GetIndepFirst()==PGVARVALID) {
+					if(m_pProp->GetIndepFirst()== vartype::PGVARVALID) {
 						m_Layers.pScatterLayer=pXY_Chart->addScatterLayer(m_pProp->m_IndepX[ivar],DoubleArray(m_pProp->viewPortDataSeries[ivar],m_ChartInfo.NumOfPoints),
 							m_Label.st.c_str(),m_Symbol.isymb,m_pUtil->m_SymbolSizePoint,m_Color.ivar);
 						pDataSet=m_Layers.pScatterLayer->getDataSet(0);
@@ -652,7 +652,7 @@ DataSet* DrawDetails::TimeSerieFrequenceChart( int ivar,int TotNumPrior, bool ac
 		}
 		//m_Label.ytitle1=m_Label.test;	
 		if(!m_pUtil->m_MultiRunPlot) 
-			m_Label.unit1=m_pPG_Active->GetVarUnit(p_info.PGFileIndex).c_str();
+			m_Label.unit1=m_pPG_Active->GetVarUnit(p_info.PGFileIndex);
 		else
 			m_Label.unit1=m_Label.unit;
 	return pDataSet;
@@ -665,11 +665,11 @@ DataSet* DrawDetails::TimeSerieScatterChart( int ivar,int TotNumPrior, bool acce
 	auto save_regline = m_pProp->m_ReShape.m_RegLine;
 	m_pProp->SetSyncAxis(false);
 	if(m_pProp->GetFirstIndepIndex()== std::string::npos||m_pProp->IsFirstIndepSet()||(xVar==ivar&&m_pUtil->m_MultiRunPlot)) {
-		if (m_pProp->GetIndepFirst() == PGVARVALID || (m_pProp->GetIndepFirst() == VALVARSUM && m_pUtil->m_AutoShiftFirstIndep)) {
+		if (m_pProp->GetIndepFirst() == vartype::PGVARVALID || (m_pProp->GetIndepFirst() == vartype::VALVARSUM && m_pUtil->m_AutoShiftFirstIndep)) {
 
 
 			size_t count_to_plot = 0;
-			if (m_pProp->GetIndepFirst() == PGVARVALID&&p_info.DataType==DATA_TYPES::SIM_VAL) m_pProp->SetSyncAxis(true);
+			if (m_pProp->GetIndepFirst() == vartype::PGVARVALID&&p_info.DataType==DATA_TYPES::SIM_VAL) m_pProp->SetSyncAxis(true);
 
 			if (p_info.EnsembleType>ENSEMBLE_TYPE::NO) {
 				size_t nbands = m_pSimDoc->m_PlotStorage.GetNumVarBands(m_pProp->m_ChartNumber);
@@ -952,7 +952,7 @@ bool DrawDetails::AddData_ToChart(size_t TotNumPrior) {
 					m_CurrentChartInfo.Y_AxisTitle_right = m_Label.ytitle2;
  				}
 
-				if(m_pProp->m_ChartType<=CHART_TYPES::TIME_SERIE||(m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART&&m_pProp->GetFirstIndepVarType()==DATEAXIS)&&!m_pSimDoc->IsMultiSimulation()) {
+				if(m_pProp->m_ChartType<=CHART_TYPES::TIME_SERIE||(m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART&&m_pProp->GetFirstIndepVarType()== vartype::DATEAXIS)&&!m_pSimDoc->IsMultiSimulation()) {
 					if(m_pProp->GetXDistMin(ivar)<Chart0_Min)
 						Chart0_Min=m_pProp->GetXDistMin(ivar);
 					if(m_pProp->GetXDistMax(ivar)>Chart0_Max)

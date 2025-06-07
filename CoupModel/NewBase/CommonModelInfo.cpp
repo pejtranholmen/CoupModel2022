@@ -1,228 +1,59 @@
 #include "../std.h"
 #include "./CommonModelInfo.h"
 #include "../ModelTypes/SimB.h"
+using namespace std;
 CommonModelInfo::CommonModelInfo() {
 
-	m_TypeNames.clear();
-	m_TypeNames.resize(13);
+
+
+
+
+	for (size_t i = 0; i < std::size(m_TypeNames); ++i) {
+		m_TypeNameToIndex[m_TypeNames[i]] = i;
+	}
+	static constexpr std::string_view m_ElementNames[] = { "Water", "Heat", "Carbon", "Nitrogen", "Phosphorus", "Radiation",
+		"Snow", "Salt", "Methane", "Vapour", "General", "Temperature", "Water Potential",
+		"Soil", "Atmosphere", "Air", "Precipitation", "Climate", "Organic",
+		"Dissolved Carbon", "Dissolved Nitrogen", "Dissolved Phosphorus", "Mineral N", "Mineral P", "Ammonium", "Nitrate",
+		"Phosphate", "Mycorrhize", "Denitrifiers", "Nitrofiers", "Anarobic gas", "Oxygen", "Manure",
+		 "Plant Shape", "Distance", "CO2 SOIL", "Time", "Area", "Plant Stress", "Wind Speed",
+		"Global Radiation", "LongWave Radiation", "Humidity", "GreenHouseGas", "Plant Biomass", "Nitric Oxide", "Nitrous Oxide" };
+
 	
-	m_TypeNames[0]="Switches";
-	m_TypeNames[1]="Parameters";
-	m_TypeNames[2]="Tables";
-	m_TypeNames[3]="Table Parameters";
-	m_TypeNames[4]="State Variables";
-	m_TypeNames[5]="Flow Variables";
-	m_TypeNames[6]="Auxiliary Variables";
-	m_TypeNames[7]="Driving Variables";
-	m_TypeNames[8]="Files";
-	m_TypeNames[9]="NE";
-	m_TypeNames[10]="DataBase";
-	m_TypeNames[11]="RunInfo";
-	m_TypeNames[12]="Validation";
+	static constexpr std::string_view m_FysProcessNames[] = { "Root Water Uptake", "Evapotranspiration", "Transpiration",
+		"Soil Evaporation", "Potential Transpiration", "Interception", "Turbulence", "Surface Runoff", "Aerodynamic Resistance",
+		"Snow Melting", "Redistribution", "Storage", "Transport", "Infiltration", "Drainage", "Percolation",
+		"Runoff", "biotic process", "Initial Flow", "Shrinking", "Physical Shape", "Heat Extraction",
+		"Heat Pipe", "Heat Source", "Lower Boundary", "Upper Boundary", "Water Source", "Salt Source",
+		"Enerby Balance Partitioning", "Heat Conduction", "Heat Convection", "Technical Regulation",
+		"Emission", "Adsorption", "Reflection", "Mass Balance","Measurement Sensor","Geographic Position","Frost Bondary","Hysteresis",
+		"Irrigation","Budget","Geometric","Scattering","Soil Freezing","Diffusion" };
 
-	m_ElementNames.resize(45);
-	m_ElementNames[0]="Water";
-	m_ElementNames[1]="Heat";
-	m_ElementNames[2]="Carbon";
-	m_ElementNames[3] ="Nitrogen";
-	m_ElementNames[4] ="Phosphorus";
-	m_ElementNames[5]="Radiation";
-	m_ElementNames[6]="Snow";
-	m_ElementNames[7]="Salt";
-	m_ElementNames[8]="Methane";
-	m_ElementNames[9]="Vapour";
-	m_ElementNames[10]="General";
-	m_ElementNames[11]="Temperature";
-	m_ElementNames[12]="Water Potential";
-	m_ElementNames[13]="Atmosphere";
-	m_ElementNames[14]="Air";
-	m_ElementNames[15]="Precipitation";
-	m_ElementNames[16]="Climate";
-	m_ElementNames[17]="Organic";
-	m_ElementNames[18]="Dissolved Carbon";
-	m_ElementNames[19]="Dissolved Nitrogen";
-	m_ElementNames[20] = "Dissolved Phosphorus";
-	m_ElementNames[21]="Mineral N";
-	m_ElementNames[22] = "Mineral P";
-	m_ElementNames[23]="Ammonium";
-	m_ElementNames[24]="Nitrate";
-	m_ElementNames[25]="Mycorrhize";
-	m_ElementNames[26]="Denitrifiers";
-	m_ElementNames[27]="Nitrofiers";
-	m_ElementNames[28]="Anarobic gas";
-	m_ElementNames[29]="Oxygen";
-	m_ElementNames[30]="Manure";
-	m_ElementNames[31]="Plant Shape";
-	m_ElementNames[32]="Distance";
-	m_ElementNames[33] = "CO2 SOIL";
-	m_ElementNames[34] = "Time";
-	m_ElementNames[35] = "Area";
-	m_ElementNames[36] = "Plant Stress";
-	m_ElementNames[37] = "Wind Speed";
-	m_ElementNames[38] = "Global Radiation";
-	m_ElementNames[39] = "LongWave Radiation";
-	m_ElementNames[40] = "Humidity";
-	m_ElementNames[41] = "GreenHouseGas";
-	m_ElementNames[42] = "Plant Biomass";
-	m_ElementNames[43] = "Nitric Oxide";
-	m_ElementNames[44] = "Nitrous Oxide";
-	
+	static constexpr std::string_view m_BioProcessNames[] = { "Decomposition", "Mineralisation", "Nitrification",
+		"Denitrification", "Respiration", "Production", "Oxidation", "Re Allocation", "Phenology", "Soil Gas Dynamics",
+		"Photosynthesis", "Litterfall", "abiotic process", "Initial NC Conditions", "Initial P Conditions",
+		"Forcing Biological Conditions", "Organic Transformation", "Balancing Ratio", "Concentration",
+		"Organic Plant Uptake", "Plant Nitrogen Uptake", "Plant Phosphorus Uptake", "Sorption", "Harvest",
+		"Grazing", "Mycon Nitrogen Uptake", "Soil mixing", "Emergence", "Plant Management",
+		"Nitrogen Fixation","Living","Non Living","Growth","WoodEating","Weathering","Methane Oxidation","Methane Production",
+		"Methane Transport","Gas Equilibrium" };
 
 
-	m_FysProcessNames.resize(46);
-	m_FysProcessNames[0]="Root Water Uptake";
-	m_FysProcessNames[1]="Evapotranspiration";
-	m_FysProcessNames[2]="Transpiration";
-	m_FysProcessNames[3]="Soil Evaporation";
-	m_FysProcessNames[4]="Potential Transpiration";
-	m_FysProcessNames[5]="Interception";
-	m_FysProcessNames[6]="Turbulence";
-	m_FysProcessNames[7]="Surface Runoff";
-	m_FysProcessNames[8]="Aerodynamic Resistance";
-	m_FysProcessNames[9]="Snow Melting";
-	m_FysProcessNames[10]="Redistribution";
-	m_FysProcessNames[11]="Storage";
-	m_FysProcessNames[12]="Transport";
-	m_FysProcessNames[13]="Infiltration";
-	m_FysProcessNames[14]="Drainage";
-	m_FysProcessNames[15]="Percolation";
-	m_FysProcessNames[16]="Runoff";
-	m_FysProcessNames[17]="biotic process";
-	m_FysProcessNames[18]="Initial Flow";
-	m_FysProcessNames[19]="Shrinking";
-	m_FysProcessNames[20]="Physical Shape";
-	m_FysProcessNames[21]="Heat Extraction";
-	m_FysProcessNames[22]="Heat Pipe";
-	m_FysProcessNames[23]="Heat Source";
-	m_FysProcessNames[24]="Lower Boundary";
-	m_FysProcessNames[25]="Upper Boundary";
-	m_FysProcessNames[26]="Water Source";
-	m_FysProcessNames[27]="Salt Source";
-	m_FysProcessNames[28]="Enerby Balance Partitioning";
-	m_FysProcessNames[29]="Heat Conduction";
-	m_FysProcessNames[30]="Heat Convection";
-	m_FysProcessNames[31]="Technical Regulation";
-	m_FysProcessNames[32]="Emission";
-	m_FysProcessNames[33]="Adsorption";
-	m_FysProcessNames[34]="Reflection";
-	m_FysProcessNames[35]="Mass Balance";
-	m_FysProcessNames[36]="Measurement Sensor";
-	m_FysProcessNames[37]="Geographic Position";
-	m_FysProcessNames[38]="Frost Bondary";
-	m_FysProcessNames[39]="Hysteresis";
-	m_FysProcessNames[40]="Irrigation";
-	m_FysProcessNames[41]="Budget";
-	m_FysProcessNames[42]="Geometric";
-	m_FysProcessNames[43]="Scattering";
-	m_FysProcessNames[44] = "Soil Freezing";
-	m_FysProcessNames[45] = "Diffusion";
+	static constexpr std::string_view m_GroupNames[] = { "Hidden", "Technical", "Model Structure", "Numerical", "Soil Profile",
+		"Soil Hydraulic", "Soil Thermal", "Meteorological Data", "Irrigation", "Plant", "Interception",
+		"Potential Transpiration", "Radiation properties", "Soil evaporation", "SnowPack", "Soil frost",
+		"Soil heat flows", "Soil heat pump", "Soil water flows", "Surface water", "Water uptake",
+		"Drainage and deep percolation", "Salt Tracer", "Additional Variables", "Plant Growth",
+		"Soil organic processes", "Soil mineral N processes", "Abiotic driving variables",
+		"Common abiotic responses","External N inputs","Soil Management","Additional Biotic Variables",
+		"Gas processes","Minteq","HBV","Validation","Soil mineral P Processes","External P Inputs" };
 
-	m_BioProcessNames.resize(39);
-	m_BioProcessNames[0]="Decomposition";
-	m_BioProcessNames[1]="Mineralisation";
-	m_BioProcessNames[2]="Nitrification";
-	m_BioProcessNames[3]="Denitrification";
-	m_BioProcessNames[4]="Respiration";
-	m_BioProcessNames[5]="Production";
-	m_BioProcessNames[6]="Oxidation";
-	m_BioProcessNames[7]="Re Allocation";
-	m_BioProcessNames[8]="Phenology";
-	m_BioProcessNames[9] = "Soil Gas Dynamics";
-	m_BioProcessNames[10]="Photosynthesis";
-	m_BioProcessNames[11]="Litterfall";
-	m_BioProcessNames[12]="abiotic process";
-	m_BioProcessNames[13]="Initial NC Conditions";
-	m_BioProcessNames[14] = "Initial P Conditions";
-	m_BioProcessNames[15]="Forcing Biological Conditions";
-	m_BioProcessNames[16]="Organic Transformation";
-	m_BioProcessNames[17]="Balancing Ratio";
-	m_BioProcessNames[18]="Concentration";
-	m_BioProcessNames[19]="Organic Plant Uptake";
-	m_BioProcessNames[20]="Plant Nitrogen Uptake";
-	m_BioProcessNames[21] = "Plant Phosphorus Uptake";
-	m_BioProcessNames[22]="Sorption";
-	m_BioProcessNames[23]="Harvest";
-	m_BioProcessNames[24]="Grazing";
-	m_BioProcessNames[25]="Mycon Nitrogen Uptake";
-	m_BioProcessNames[26]="Soil mixing";
-	m_BioProcessNames[27]="Emergence";
-	m_BioProcessNames[28]="Plant Management";
-	m_BioProcessNames[29]="Nitrogen Fixation";
-	m_BioProcessNames[30]="Living";
-	m_BioProcessNames[31] ="Non Living";
-	m_BioProcessNames[32] ="Growth";
-	m_BioProcessNames[33] ="WoodEating";
-	m_BioProcessNames[34] = "Weathering";
-	m_BioProcessNames[35] = "Methane Oxidation";
-	m_BioProcessNames[36] = "Methane Production";
-	m_BioProcessNames[37] = "Methane Transport";
-	m_BioProcessNames[38] = "Gas Equilibrium";
+	static constexpr std::string_view m_GroupCategoryNames[] = { "All Modules", "Atmospheric Related Processes",
+		"Plant Water Processes", "Soil Heat Processes", "Soil Water Processes", "Nitrogen and Carbon",
+		"Nitrogen and Carbon - Below Ground", "Model Structure", "Model Facilities" };
 
 
-
-
-	for(size_t i=0; i<m_TypeNames.size();i++)
-		m_TypeMap[m_TypeNames[i]]=m_TypeMap.size();
-
-	m_GroupNames.resize(38);
-	m_GroupNames[0]="Hidden";
-	m_GroupNames[1]="Technical";
-	m_GroupNames[2]="Model Structure";
-	m_GroupNames[3]="Numerical";
-	m_GroupNames[4]="Soil Profile";
-	m_GroupNames[5]="Soil Hydraulic";
-	m_GroupNames[6]="Soil Thermal";
-	m_GroupNames[7]="Meteorological Data";
-
-	m_GroupNames[8]="Irrigation";
-	m_GroupNames[9]="Plant";
-	m_GroupNames[10]="Interception";
-	m_GroupNames[11]="Potential Transpiration";	
-	m_GroupNames[12]="Radiation properties";	
-	m_GroupNames[13]="Soil evaporation";	
-	m_GroupNames[14]="SnowPack";
-
-	m_GroupNames[15]="Soil frost";	
-	m_GroupNames[16]="Soil heat flows";	
-	m_GroupNames[17]="Soil heat pump";	
-	m_GroupNames[18]="Soil water flows";	
-	m_GroupNames[19]="Surface water";	
-	m_GroupNames[20]="Water uptake";	
-	m_GroupNames[21]="Drainage and deep percolation";	
-	m_GroupNames[22]="Salt Tracer";	
-	m_GroupNames[23]="Additional Variables";	
-	m_GroupNames[24]="Plant Growth";	
-	m_GroupNames[25]="Soil organic processes";
-	m_GroupNames[26]="Soil mineral N processes";
-	m_GroupNames[27]="Abiotic driving variables";
-	m_GroupNames[28]="Common abiotic responses";
-	m_GroupNames[29]="External N inputs";
-	m_GroupNames[30]="Soil Management";
-	m_GroupNames[31]="Additional Biotic Variables";
-	m_GroupNames[32]="Gas processes";
-	m_GroupNames[33]="Minteq";
-	m_GroupNames[34]="HBV";
-	m_GroupNames[35]="Validation";
-	m_GroupNames[36] = "Soil mineral P Processes";
-	m_GroupNames[37] = "External P Inputs";
-
-	m_GroupMap.clear();
-	for(size_t i=0; i<m_GroupNames.size();i++)
-		m_GroupMap[m_GroupNames[i]]=i;
-
-	m_GroupCategoryNames.resize(9);
-
-	m_GroupCategoryNames[0]="All Modules";
-	m_GroupCategoryNames[1]="Atmospheric Related Processes";
-	m_GroupCategoryNames[2]="Plant Water Processes";
-	m_GroupCategoryNames[3]="Soil Heat Processes";
-	m_GroupCategoryNames[4]="Soil Water Processes";
-	m_GroupCategoryNames[5]="Nitrogen and Carbon";
-	m_GroupCategoryNames[6]="Nitrogen and Carbon - Below Ground";
-	m_GroupCategoryNames[7]="Model Structure";
-	m_GroupCategoryNames[8]="Model Facilities";
-
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(0,0));
+	m_GroupCategoryNo.insert(std:: pair<size_t, size_t>(0, 0));
 	m_GroupCategoryNo.insert(pair<size_t,size_t>(1,8));
 	m_GroupCategoryNo.insert(pair<size_t,size_t>(2,7));
 	m_GroupCategoryNo.insert(pair<size_t,size_t>(3,8));
@@ -307,46 +138,43 @@ CommonModelInfo::CommonModelInfo() {
 		m_RunInfo.Running=false;
 		m_RunInfo.MultiRunning=false;
 		m_RunInfo.ViewStatus=0;
-		size_t count = 0;
-		map <string, elements> SortedListElementNames;
+		
+		std::map <std::string_view, elements> SortedListElementNames;
 
-		for_each(m_ElementNames.begin(), m_ElementNames.end(), [&](string &ElementStr) {
-			SortedListElementNames.insert(pair<string, elements>(ElementStr, elements(count)));
-			m_ElementNamesMap.insert(pair<elements, std::string>(elements(count), ElementStr));
-			count++;
-		});
+		for(size_t count = 0; count < size(m_ElementNames); ++count) {
+			SortedListElementNames.insert(std::make_pair(m_ElementNames[count], elements(count)));
+			m_ElementNamesMap.insert(std::make_pair(elements(count), std::string(m_ElementNames[count])));
+		}
 		m_NamesElementMap = SortedListElementNames;
 		for (auto it = SortedListElementNames.begin(); it != SortedListElementNames.end(); ++it) {
 			m_ElementSorted.push_back((*it).first);
 		}
-		map <string, fysprocess> SortedListPhysProcNames;
-		count = 0;
-		for_each(m_FysProcessNames.begin(), m_FysProcessNames.end(), [&](string& PhysProc) {
-			SortedListPhysProcNames.insert(pair<string, enum fysprocess>(PhysProc, fysprocess(count)));
-			m_PhysProcNamesMap.insert(pair<enum fysprocess, std::string>(fysprocess(count), PhysProc));
-			count++;
-		});
-		m_NamesFysProcMap = SortedListPhysProcNames;
-		for (auto it = SortedListElementNames.begin(); it != SortedListElementNames.end(); ++it) {
+
+
+		std::map <std::string_view, fysprocess> SortedListPhysProcNames;
+	
+
+		for(size_t count=0; count<size(m_FysProcessNames); count++) {
+			SortedListPhysProcNames.insert(std::make_pair(m_FysProcessNames[count], fysprocess(count)));
+			m_PhysProcNamesMap.insert(std::make_pair(fysprocess(count), std::string(m_FysProcessNames[count])));
+		}
+		for(auto it = SortedListPhysProcNames.begin(); it != SortedListPhysProcNames.end(); ++it) {
 			m_FysProcessNamesSorted.push_back((*it).first);
 		}
 		map <string, bioprocess> SortedBiolProcessNames;
-		count = 0;
-		for_each(m_BioProcessNames.begin(), m_BioProcessNames.end(), [&](string& Names) {
-			SortedBiolProcessNames.insert(pair<string, enum bioprocess>(Names,bioprocess(count)));
-			m_BioProcNamesMap.insert(pair<bioprocess, std::string>(bioprocess(count), Names));
-			count++;
-		});
-		m_NamesBioProcMap = SortedBiolProcessNames;
-		for (auto it = SortedBiolProcessNames.begin(); it != SortedBiolProcessNames.end(); ++it) {
+		for(size_t count = 0; count < size(m_BioProcessNames); count++) {
+			SortedBiolProcessNames.insert(std::make_pair(m_BioProcessNames[count], bioprocess(count)));
+			m_BioProcNamesMap.insert(std::make_pair(bioprocess(count), std::string(m_BioProcessNames[count])));
+		}
+		for(auto it = SortedBiolProcessNames.begin(); it != SortedBiolProcessNames.end(); ++it) {
 			m_BioProcessNamesSorted.push_back((*it).first);
 		}
-
 
 }
 CommonModelInfo::~CommonModelInfo() {
 
 }
+
 size_t CommonModelInfo::GetTypeIndex(string str) {
 	auto it=m_TypeMap.find(str);
 	if(it!=m_TypeMap.end())
@@ -368,7 +196,7 @@ int CommonModelInfo::GetGroupCategory(string str) {
 	else
 		return std::string::npos;
 }
-void CommonModelInfo::trim_xml(string& str)
+void CommonModelInfo::trim_xml(std::string& str)
 {
 	string in, out;
 	in = str;
@@ -413,62 +241,31 @@ void CommonModelInfo::trim_xml(string& str)
 
 	}
 }
-void CommonModelInfo::insert_ChangedNames(vector<pair<string, std::string>> p)
+void CommonModelInfo::insert_ChangedNames(std::vector<std::pair<std::string, std::string>> p)
 {
 	for (auto it = p.begin(); it != p.end(); it++) {
-		string in = (*it).first;
-		string out = (*it).second;
+		std::string in = (*it).first;
+		std::string out = (*it).second;
 		changed_names.insert(pair<string, std::string>(in, out));
 
 	}
 }
-/*size_t CommonModelInfo::GetGroupCategory(size_t groupno) {
-	auto it = m_GroupCategoryNo.find(groupno);
-	if (it != m_GroupCategoryNo.end())
-		return it->second;
-	else
-		return std::string::npos;
-}*/
 
-vector<string> CommonModelInfo::GetSortedListofElements()
+vector<string_view> CommonModelInfo::GetSortedListofElements()
 {
 	return m_ElementSorted;
 }
-vector<string> CommonModelInfo::GetSortedListofElements(vector<elements> velements) {
-	vector<string> out;
-	for (elements e : velements) {
-		size_t koll = e;
-		out.push_back(m_ElementNames[koll]);
-	}
 
-	return out;
-}
-vector<string> CommonModelInfo::GetSortedListofPhysProc()
+vector<string_view> CommonModelInfo::GetSortedListofPhysProc()
 {
 	return m_FysProcessNamesSorted;
 }
-vector<string> CommonModelInfo::GetSortedListofPhysProc(vector<fysprocess> v_process) {
-	vector<string> out;
-	for (fysprocess e : v_process) {
-		size_t koll = e;
-		out.push_back(m_FysProcessNames[koll]);
-	}
 
-	return out;
-}
-vector<string> CommonModelInfo::GetSortedListofBiolProc()
+vector<string_view> CommonModelInfo::GetSortedListofBiolProc()
 {
 	return m_BioProcessNamesSorted;
 }
-vector<string> CommonModelInfo::GetSortedListofBiolProc(vector<bioprocess> v_process) {
-	vector<string> out;
-	for (bioprocess e : v_process) {
-		size_t koll = e;
-		out.push_back(m_BioProcessNames[koll]);
-	}
 
-	return out;
-}
 
 string CommonModelInfo::GetStringOfElement(elements elem) {
 	auto it = m_ElementNamesMap.find(elem);
@@ -482,26 +279,26 @@ elements CommonModelInfo::GetElementFromString(string str) {
 	if (it != m_NamesElementMap.end())
 		return (*it).second;
 	else
-		return GENERAL;
+		return elements::GENERAL;
 }
 fysprocess CommonModelInfo::GetPhysProcFromString(string str) {
 	auto it = m_NamesFysProcMap.find(str);
 	if (it != m_NamesFysProcMap.end())
 		return (*it).second;
 	else
-		return NOFPROC;
+		return fysprocess::NOFPROC;
 }bioprocess CommonModelInfo::GetBioProcFromString(string str) {
 	auto it = m_NamesBioProcMap.find(str);
 	if (it != m_NamesBioProcMap.end())
 		return (*it).second;
 	else
-		return NOBPROC;
+		return bioprocess::NOBPROC;
 }
 vector<SimB*> CommonModelInfo::SortSimB_ByGroup(vector<SimB*> v_in) {
 	vector<SimB*> v_out;
-	multimap<string, SimB*> SortMap;
+	multimap<string_view, SimB*> SortMap;
 	for(size_t i=0; i<v_in.size(); i++) {	
-		SortMap.insert(pair<string, SimB*>(v_in[i]->GetGroup(),v_in[i]));
+		SortMap.insert(std::pair<std::string_view, SimB*>(v_in[i]->GetGroup(),v_in[i]));
 	}
 
 	for(auto it=SortMap.begin(); it!=SortMap.end(); ++it) {

@@ -9,9 +9,9 @@ PGCalc::PGCalc(void)
 PGCalc::~PGCalc(void)
 {
 }
-vector<size_t> PGCalc::GetYearStartIndex()
+std::vector<size_t> PGCalc::GetYearStartIndex()
 {
-	vector<size_t> out;
+	std::vector<size_t> out;
 
 	size_t min=GetMinuteStartThisYear(1);
 	size_t rec=GetRecord(min, false);
@@ -22,9 +22,9 @@ vector<size_t> PGCalc::GetYearStartIndex()
 	}
 	return out;
 }
-vector<size_t> PGCalc::GetDayStartIndex()
+std::vector<size_t> PGCalc::GetDayStartIndex()
 {
-	vector<size_t> out;
+	std::vector<size_t> out;
 	long min=GetMinuteStartThisYear(1);
 	long rec=GetRecord(min,false);
 	if(IsEquiDistance()) {

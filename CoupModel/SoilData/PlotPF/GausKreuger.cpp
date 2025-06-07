@@ -1,4 +1,5 @@
 #include "GausKreuger.h"
+using namespace std;
 
 GaussKreuger::GaussKreuger(size_t i) {
 			if(i==0) {

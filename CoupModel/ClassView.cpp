@@ -17,7 +17,7 @@
 #include "CoupModel.h"
 #include "CoupModelDoc.h"
 #include "util.h"
-
+using namespace std;
 
 class CClassViewMenuButton : public CMFCToolBarMenuButton
 {
@@ -216,7 +216,7 @@ void CClassView::FillClassView()
 			//enum simtype _typ;
 		
 			//vvp=p_Doc->m_Doc.GetPtrVector(p_ModelInfo->GetVarType(j),-1);
-			typ=p_ModelInfo->GetVarType(j).c_str();
+			typ=string(p_ModelInfo->GetVarType(j)).c_str();
 			if(j>3&&j<8) {
 				if(j==4) {
 					CString outtext;
@@ -261,7 +261,7 @@ void CClassView::FillClassView()
 				hRoot = m_wndClassView.InsertItem(TVIF_TEXT,typ, 5, 5, 0,0,0,0,TVI_ROOT);
 				m_wndClassView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 				HasContent=FALSE;
-				vvp=p_Doc->m_Doc.GetPtrVector(p_ModelInfo->GetVarType(j),-1);
+				vvp=p_Doc->m_Doc.GetPtrVector(string(p_ModelInfo->GetVarType(j)),-1);
 				vvp=p_ModelInfo->SortSimB_ByGroup(vvp);
 			}
 			
@@ -324,7 +324,8 @@ void CClassView::FillClassView()
 								HasContent=TRUE;
 								vst=((CCoupModelDoc*)m_pDoc)->m_Doc.m_Val_Array[v_int[j]];
 								if(j==0){
-									CString typ=CString(p_ModelInfo->GetVarType(ityp).c_str());
+									string str = string(p_ModelInfo->GetVarType(ityp));
+									CString typ=CString(str.c_str());
 									hCountry = m_wndClassView.InsertItem(typ,ityp+8,0,hRoot);
 								}
 								int icat=p_ModelInfo->GetGroupCategory(vst.Group);
@@ -391,7 +392,7 @@ void CClassView::FillClassView()
 									vvp.push_back(vsimb[i].pBase);
 								}
 							}
-							typ=p_ModelInfo->GetVarType(j).c_str();
+							typ=string(p_ModelInfo->GetVarType(j)).c_str();
 							HasContent=FALSE;
 							if(vvp.size()>0) {
 									IsOutput=TRUE;
@@ -433,7 +434,7 @@ void CClassView::FillClassView()
 								HasContent=TRUE;
 								vst=((CCoupModelDoc*)m_pDoc)->m_Doc.m_Val_Array[v_int[j]];
 								if(j==0){
-									CString typ=CString(p_ModelInfo->GetVarType(ityp).c_str());
+									CString typ=CString(string(p_ModelInfo->GetVarType(ityp)).c_str());
 									hPA = m_wndClassView.InsertItem(typ,ityp+8,0,hCountry);
 								}
 								int icat=p_ModelInfo->GetGroupCategory(vst.Group);
@@ -1094,7 +1095,7 @@ BOOL CClassView::Make_Branch(HTREEITEM hRoot,vector<SimB*> v, size_t ityp, BOOL 
 						if(m_nCurrSort==ID_SORTING_SORTBYTYPE||m_nCurrSort==ID_SORTING_GROUPBYTYPE)
 							namn=pSimB->GetGroup().c_str();
 						else
-							namn=p_ModelInfo->GetVarType(ityp).c_str();
+							namn=string(p_ModelInfo->GetVarType(ityp)).c_str();
 
 						item2=pSimB->GetName().c_str();
 						int icat=p_ModelInfo->GetGroupCategory(pSimB->GetGroup());
@@ -1136,7 +1137,8 @@ BOOL CClassView::Make_Branch(HTREEITEM hRoot,vector<SimB*> v, size_t ityp, BOOL 
 								}
 							}
 							if(NewType) {
-								CString typ=CString(p_ModelInfo->GetVarType(ityp).c_str());
+								string typ1 = string(p_ModelInfo->GetVarType(ityp));
+								CString typ=CString(typ1.c_str());
 								hCountry = m_wndClassView.InsertItem(typ,ityp+8,0,hRoot);
 							}
 

@@ -18,9 +18,9 @@ double StatUtil::BIC_Func(double SSE, double n_point, double p_point) {
 	return n_point * log(SSE / n_point) +  p_point*log(n_point);
 }
 
+using namespace std;
 
-
-STAT_PERF StatUtil::Get_StatComp(vector<double> *psim, std::vector<double> *pobs) 
+STAT_PERF StatUtil::Get_StatComp(std::vector<double> *psim, std::vector<double> *pobs) 
 {
 	STAT_PERF out;
 
@@ -48,7 +48,7 @@ STAT_PERF StatUtil::Get_StatComp(vector<double> *psim, std::vector<double> *pobs
 		out.n=psim->size();
 		out.meanobs=float(mean_obs);
 		out.meansim=float(sim_acc/psim->size());
-		out.sse = me2_acc;
+		out.sse = float(me2_acc);
 	}
 	else {
 		out.n = 0;

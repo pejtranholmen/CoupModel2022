@@ -2,13 +2,14 @@
 /*=-=-=-=-=-                    CLASS: CSW                     -=-=-=-=-=*/
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 #include "Sw.h"
+using namespace std;
 //Destructor
 Sw::~Sw()
 {
 
 }
 Sw::Sw(size_t *target,enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
-	:SimB(SWITCH,data, elem, fproc, bproc, ulev)
+	:SimB(simtype::SWITCH,data, elem, fproc, bproc, ulev)
 {
 		_ptarget=target; 
 		org_value = old_value = m_recalc = 0;

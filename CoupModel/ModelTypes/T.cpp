@@ -1,5 +1,6 @@
  #include "T.h"
 #include "NE.h"
+using namespace std;
 
 T::~T()
 {
@@ -8,7 +9,7 @@ T::T(vector<double> *target,NE *pNNE, enum datatype data, enum elements elem, en
 	:OutVector(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target;
-	SetSimType(FLOW);
+	SetSimType(simtype::FLOW);
 	pNE=pNNE;
 	;
 }

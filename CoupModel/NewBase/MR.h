@@ -76,7 +76,7 @@ public:
 	SIMB MR_Get_PAR(size_t, size_t);
 	SimB*	MR_Get_pPar(size_t, size_t);
 	size_t	MR_Get_NumberOfParametersWithinDim(size_t);
-	size_t	MR_GetMethod(size_t,size_t);
+	MR_METHOD	MR_GetMethod(size_t,size_t);
 	string MR_GetMethodName(size_t, size_t);
 	size_t		MR_GetTabIndex(size_t, size_t);
 	size_t		MR_GetParType(size_t, size_t);
@@ -168,7 +168,7 @@ public:
 	size_t		MR_Get_NumTotalPar();
 	string MR_Get_CalibParName(size_t);
 	string MR_Get_BayesGroup(size_t);
-	size_t		MR_Get_BayesMethod(size_t);
+	MR_METHOD		MR_Get_BayesMethod(size_t);
 	size_t MR_GetNoTableParIndex(size_t i_noTable) {
 		if (i_noTable < m_NoTableParIndex.size())
 			return m_NoTableParIndex[i_noTable];

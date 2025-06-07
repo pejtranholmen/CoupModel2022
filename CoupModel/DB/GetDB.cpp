@@ -2,7 +2,7 @@
 #include "../Util/FUtil.h"
 #include "../NewBase/Doc.h"
 #include "../DB/DB_Header.h"
-
+using namespace std;
 
 GetDB::GetDB(void)
 {
@@ -324,7 +324,7 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 	DB_NewHeader headnew;
 
 	string group, type, name, strvalue;
-	auto checkdelim_DBType = [&]()	{
+	auto checkdelim_DBType = [&]()->CDB*	{
 		if (line.find(delim) == std::string::npos) {	
 			delim = ',';
 			if (line.find(delim) == std::string::npos) return pCDB;
@@ -393,7 +393,7 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 
 		}
 	};
-	auto read_db_values = [&]() {
+	auto read_db_values = [&]()->CDB* {
 		size_t iread = 0;
 		if (line.find("Start")==0) {
 			m_Rw.wString( &line);

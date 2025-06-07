@@ -1,5 +1,6 @@
  #include "X.h"
 #include "NE.h"
+using namespace std;
 
 X::~X()
 {
@@ -8,7 +9,7 @@ X::X(vector<double> *target,NE *pNNE,enum datatype data, enum elements elem, enu
 	:OutVector(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target;
-	SetSimType(STATE);
+	SetSimType(simtype::STATE);
 	pNE=pNNE;
 	;
 }

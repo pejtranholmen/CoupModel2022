@@ -6,7 +6,7 @@
 *************************************************************************/
 #include "..\stdafx.h"
 #include "..\std.h"
-#include "UGCtrl.h"
+#include ".\UGCtrl.h"
 #include "ugstrop.h"
 //
 #include "chartdir.h"
@@ -4959,7 +4959,7 @@ int CUGCtrl::CopyToClipBoard(CString* str){
 	EmptyClipboard();
 
 	len = (str->GetLength()+1) * sizeof(TCHAR); 
-	string sourcestr;
+	std::string sourcestr;
 	sourcestr = CT2A(*str).m_psz;
 
 
@@ -5336,7 +5336,7 @@ int CUGCtrl::EmptyMenu(){
 	Params
 	Return
 ****************************************************/
-int CUGCtrl::AddMenuItem(int ID,string str){
+int CUGCtrl::AddMenuItem(int ID,std::string str){
 	return AddMenuItem(ID,CString(str.c_str()));
 
 }

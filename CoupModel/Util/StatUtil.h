@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "FUtil.h"
 #include <cmath>
 
@@ -163,16 +164,16 @@ return;
 
 namespace StatUtil
 {
-	STAT_PERF Get_StatComp(vector<double> *sim, std::vector<double> *obs);
-	STAT_PERF Get_StatComp_ObsIndep(vector<float> *sim, std::vector<float> *obs);
+	STAT_PERF Get_StatComp(std::vector<double> *sim, std::vector<double> *obs);
+	STAT_PERF Get_StatComp_ObsIndep(std::vector<float> *sim, std::vector<float> *obs);
 	double AIC_Func(double SSE, double n_point, double p_point);
 	double BIC_Func(double SSE, double n_point, double p_point);
-	double sum(vector<double>);
-	double sum(vector<double>*);
-	double mean(vector<double>);
-	float mean(vector<float>);
-	double minimum(vector<double>);
-	double maximum(vector<double>);
+	double sum(std::vector<double>);
+	double sum(std::vector<double>*);
+	double mean(std::vector<double>);
+	float mean(std::vector<float>);
+	double minimum(std::vector<double>);
+	double maximum(std::vector<double>);
 
 	float Normal_Inv(double p, double mean, double sigma);
 	double Normal_InvD(double p, double mean, double sigma);
@@ -184,10 +185,10 @@ namespace StatUtil
 	void rand_init(size_t );
 	double frand();
 
-	string	STD_DtoAscii(double v);
-	string	STD_FtoAscii(float v) ;
-	string	STD_ItoAscii(int v) ;
-	int AtoInt(string str);
+	std::string	STD_DtoAscii(double v);
+	std::string	STD_FtoAscii(float v) ;
+	std::string	STD_ItoAscii(int v) ;
+	int AtoInt(std::string str);
 
 };
 using namespace StatUtil;

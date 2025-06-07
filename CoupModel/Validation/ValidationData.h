@@ -28,16 +28,16 @@ public:
 	int GetValFileResultIndex(size_t);
 	int GetValLocalIndex(size_t);
 	int GetValNameType(size_t);
-	string GetValGroup(size_t);
-	string GetValName(size_t);
+	std::string GetValGroup(size_t);
+	std::string GetValName(size_t);
 	int GetNumSumVarVariables();
 	int GetValSumVarOutputType(size_t);
-	string GetStringValSumVarOutputType(size_t);
+	std::string GetStringValSumVarOutputType(size_t);
 	int GetValSumVarLocalIndex(size_t);
 	bool GetValFileLogTrans(size_t);
 	int GetValSumVarNameType(size_t);
-	string GetValSumVarGroup(size_t);
-	string GetValSumVarName(size_t);
+	std::string GetValSumVarGroup(size_t);
+	std::string GetValSumVarName(size_t);
 	int GetValn(size_t);
 	float GetValNSE(size_t);
 	float GetValRMSE_O(size_t);
@@ -94,11 +94,11 @@ public:
 	bool SetValSumVarErrors(size_t,int,float,float, float);
 
 	//bool SetValCoef(size_t, int, float, float, float, float,float, float,float);
-	bool AddGroupValList(size_t, std::vector<pair<int,int>>);
-	bool AddValList(size_t, int, int,string, std::string, int);
-	bool AddValList(size_t, int, int,string, std::string, int, float, float);
-	bool AddValList(size_t, int, int,string, std::string, int, float, float, bool);
-	bool AddNewValList(size_t, int, int, int,string, std::string, int, float, float, bool, bool, int Dur=60);
+	bool AddGroupValList(size_t, std::vector<std::pair<int,int>>);
+	bool AddValList(size_t, int, int, std::string, std::string, int);
+	bool AddValList(size_t, int, int, std::string, std::string, int, float, float);
+	bool AddValList(size_t, int, int, std::string, std::string, int, float, float, bool);
+	bool AddNewValList(size_t, int, int, int, std::string, std::string, int, float, float, bool, bool, int Dur=60);
 	bool UpdateValOutIndex();
 	bool AddValSumVarList(size_t, int, int, std::string , std::string ,int ,float, float, float );
 	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, int sumvartype, SIMB selected, float, float, float);
@@ -124,7 +124,7 @@ public:
 	private:
 	NewMap *m_pSimDoc;
 	bool m_IsSumValSet;
-	vector<CPG*>m_PGCreatedPGFiles;
+	std::vector<CPG*>m_PGCreatedPGFiles;
 
 
 

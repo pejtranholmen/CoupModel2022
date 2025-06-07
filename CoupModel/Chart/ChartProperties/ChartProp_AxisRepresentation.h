@@ -27,8 +27,8 @@ struct MULTI_SUM_DEP
 	enum sumtype FirstType=sumtype::INITIAL;
 	enum sumtype SecondType= sumtype::INITIAL;
 	SIMB simbase;
-	string FirstStr;
-	string SecondStr;
+	std::string FirstStr;
+	std::string SecondStr;
 };
 struct MULTI_PAR_DEP
 {
@@ -37,8 +37,8 @@ struct MULTI_PAR_DEP
 	int First_Index;
 	int Second_Index;
 	SIMB simbase;
-	string FirstStr;
-	string SecondStr;
+	std::string FirstStr;
+	std::string SecondStr;
 };
 
 struct MULTI_VAL_DEP
@@ -50,8 +50,8 @@ struct MULTI_VAL_DEP
 	enum valtype FirstType;
 	enum valtype SecondType;
 	enum SUM_PERFORMANCE SV_PeformanceType;
-	string FirstStr;
-	string SecondStr;
+	std::string FirstStr;
+	std::string SecondStr;
 	bool FirstIndepTimeSerieType;
 	bool SecondIndepTimeSerieType;
 };
@@ -64,8 +64,8 @@ struct MULTI_PG_DEP
 	enum vartype FirstType;
 	enum vartype SecondType;
 	enum vartype Dependent;
-	string FirstStr;
-	string SecondStr;
+	std::string FirstStr;
+	std::string SecondStr;
 	CPG *pPG;
 	bool MultiPGFilePlot;
 };
@@ -88,13 +88,13 @@ public:
 	ChartProp_AxisRepresentation(void);
 	~ChartProp_AxisRepresentation(void);
 	
-	bool IsIndepSet() {if(m_Indep.First!=MULTIRUN_NUM) return true; else return false;};
-	bool IsMultiPGFilePlot() { if(m_Indep.First==PGVAR&&m_Indep.Second==PGVAR) return true; else return false;};
+	bool IsIndepSet() {if(m_Indep.First!=vartype::MULTIRUN_NUM) return true; else return false;};
+	bool IsMultiPGFilePlot() { if(m_Indep.First==vartype::PGVAR&&m_Indep.Second==vartype::PGVAR) return true; else return false;};
 
 
 
 	void SetMultiPGFilePlot() { 
-		m_Indep.First=PGVAR;m_Indep.Second=PGVAR;};
+		m_Indep.First=vartype::PGVAR;m_Indep.Second=vartype::PGVAR;};
 	size_t GetFirstIndepIndex(size_t index=0);
 	size_t GetSecondIndepIndex();
 	void SetFirstIndepIndex(enum vartype, size_t index, size_t index2=0);
@@ -103,12 +103,12 @@ public:
 	void SetSecondIndepString(enum vartype, std::string str);
 	enum vartype GetFirstIndepVarType() {return m_Indep.First;};
 	enum vartype GetSecondIndepVarType() {return m_Indep.Second;};
-	void SetFirstIndepVarType(enum vartype var) {m_Indep.First=var;if(var==NO_USE) SetFirstIndepIndex(var, 0); };
+	void SetFirstIndepVarType(enum vartype var) {m_Indep.First=var;if(var==vartype::NO_USE) SetFirstIndepIndex(var, 0); };
 	void SetSecondIndepVarType(enum vartype var) {
-		m_Indep.Second=var;if(var==NO_USE) SetSecondIndepIndex(var, 0);};
+		m_Indep.Second=var;if(var==vartype::NO_USE) SetSecondIndepIndex(var, 0);};
 	void SetDependentVarType(enum vartype var) { m_Indep.Dependent = var; };
-	string GetFirstIndepString(size_t index=0);
-	string GetSecondIndepString();
+	std::string GetFirstIndepString(size_t index=0);
+	std::string GetSecondIndepString();
 	bool IsFirstIndepSet(size_t index=0);
 	bool IsFirstIndepSet(enum vartype var, size_t index=0);
 	bool IsSecondIndepSet(enum vartype var);
@@ -126,16 +126,16 @@ public:
 	
 
 
-	size_t GetIndepFirst() { return m_Indep.First; };
-	size_t GetIndepSecond() { return m_Indep.Second; };
-	size_t GetIndepDependent() { return m_Indep.Dependent; };
+	vartype GetIndepFirst() { return m_Indep.First; };
+	vartype GetIndepSecond() { return m_Indep.Second; };
+	vartype GetIndepDependent() { return m_Indep.Dependent; };
 
 
 	MULTI_VALID m_MultiValid;
 
 	MULTI_VAL_DEP m_MultiVal_dep;
 	MULTI_PG_DEP m_MultiPG_dep;
-	vector<MULTI_PG_DEP> m_ValidationPG_dep;
+	std::vector<MULTI_PG_DEP> m_ValidationPG_dep;
 	MULTI_SUM_DEP m_MultiSum_dep;
 	MULTI_PAR_DEP m_MultiPar_dep;
 

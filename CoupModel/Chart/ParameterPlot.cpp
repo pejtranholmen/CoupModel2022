@@ -108,7 +108,7 @@ bool ParameterPlot::InitData(Doc *pDoc, SimB *pSimB, Tab *pTab, size_t index, si
 		m_pParTable=pTab;
 
 
-		if(pSimB->GetType()==PAR_SINGLE) {
+		if(pSimB->GetType()==simtype::PAR_SINGLE) {
 			m_pCP=dynamic_cast<Ps*>(pSimB);
 			m_pCP->SetSelectedFunc(FuncNo);
 			m_pCPt=nullptr;
@@ -270,7 +270,7 @@ bool ParameterPlot::IsThermalRelc() {
 }
 void ParameterPlot::MakeSoilReCalc() {
 	if(m_P.size()>0) {
-		SimB *pSimB1=m_pSimDoc->GetPtr(FUNCTION,"ReCalc Soil Function");
+		SimB *pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,"ReCalc Soil Function");
 		Func *pFunc=dynamic_cast<Func*>(pSimB1);
 		pFunc = m_pSimDoc->GetFuncPointer(MyFunc::HYDRAULIC_RECALC);
 		if(pFunc!=nullptr)
@@ -282,7 +282,7 @@ void ParameterPlot::MakeSoilReCalc() {
 		if (pFunc != nullptr) pFunc->MakeOperation();
 
 		if(m_ThermalReCalc) {
-			pSimB1=m_pSimDoc->GetPtr(FUNCTION,"ThermalScalingCoefEstimate");
+			pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,"ThermalScalingCoefEstimate");
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				pFunc->MakeOperation();
@@ -493,13 +493,13 @@ bool ParameterPlot::loadData()
 		GXmax=m_plotp.X_Max;
 		m_logscale=m_plotp.LogYScale;
 		if(m_plotp.X_MaxPar.size()>0) {
-			P* pP=(P*)m_pSimDoc->GetPtr(PAR_TABLE,m_plotp.X_MaxPar); //Table Parameter
+			P* pP=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,m_plotp.X_MaxPar); //Table Parameter
 			if (pP != nullptr) {
 				auto value = pP->GetValue(m_TableIndex);
 				if ( value> m_plotp.X_Max) GXmax =value;
 			}
 			else {
-				Ps *pPs = (Ps*)m_pSimDoc->GetPtr(PAR, m_plotp.X_MaxPar) ; // scalar parameter
+				Ps *pPs = (Ps*)m_pSimDoc->GetPtr(simtype::PAR, m_plotp.X_MaxPar) ; // scalar parameter
 				if (pPs != nullptr)	if (pPs->GetValue() > m_plotp.X_Max) GXmax = pPs->GetValue();
 			}
 
@@ -1217,7 +1217,7 @@ void ParameterPlot::ApplyNewvalue()
 
 	if(m_pCP!=nullptr) {
 		if(((Tab*)m_pCP)->GetViewFunction()==401) {
-			SimB *pSimB1=m_pSimDoc->GetPtr(FUNCTION,"ReCalc Soil Function");
+			SimB *pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,"ReCalc Soil Function");
 			Func *pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				pFunc->MakeOperation();

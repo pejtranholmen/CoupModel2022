@@ -19,8 +19,8 @@ public:
 	~TimeAggregate(void) {;};
 	bool CreateNewAggregatedFile(CPG *pPG, int option, int AggregationStep=1);
 
-	string m_DestFileName;
-	vector<string> m_ResultSum;
+	std::string m_DestFileName;
+	std::vector<std::string> m_ResultSum;
 
 protected:
 

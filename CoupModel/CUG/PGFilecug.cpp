@@ -380,7 +380,7 @@ BOOL PGFileCug::MixFiles(CPG* pPG)
 			for(int i=0;i<numvar;i++) {
 				icount++;
 				pPG->SetVarName(icount,pCPG->GetVarName(i+1,irep+1), irep+1);
-				pPG->SetVarUnit(icount,pCPG->GetVarUnit(i+1,irep+1), irep+1);
+				pPG->SetVarUnit(icount,string(pCPG->GetVarUnit(i+1,irep+1)), irep+1);
 				pPG->SetVarId(icount,pCPG->GetVarId(i+1, irep+1), irep+1);
 				pPG->SetVarPos(icount,pCPG->GetVarPos(i+1, irep+1), irep+1);
 				pPG->SetVarMin(icount,pCPG->GetVarMin(i+1, irep+1), irep+1);
@@ -491,7 +491,7 @@ BOOL PGFileCug::AddFiles(CPG* pPG)
 			fmin = abs(MISSING);
 			pCPG = (CPG*)m_PGPointers.GetAt(0);
 			pPG->SetVarName(i + 1, pCPG->GetVarName(i + 1), repet+1);
-			pPG->SetVarUnit(i + 1, pCPG->GetVarUnit(i + 1), repet+1);
+			pPG->SetVarUnit(i + 1, string(pCPG->GetVarUnit(i + 1)), repet+1);
 			pPG->SetVarId(i + 1, pCPG->GetVarId(i + 1), repet+1);
 			pPG->SetVarPos(i + 1, pCPG->GetVarPos(i + 1), repet+1);
 			if (pCPG->GetVarMin(i + 1) < fmin)
@@ -576,7 +576,7 @@ BOOL PGFileCug::MergeFiles(CPG* pPG)
 				fmax=MISSING;
 				fmin=abs(MISSING);
 				pPG->SetVarName(iv+1,pCPG->GetVarName(iv+1,nrep+1 ),count_rep);
-				pPG->SetVarUnit(iv+1,pCPG->GetVarUnit(iv+1,nrep+1), count_rep);
+				pPG->SetVarUnit(iv+1,string(pCPG->GetVarUnit(iv+1,nrep+1)), count_rep);
 				pPG->SetVarId(iv+1,pCPG->GetVarId(iv+1,nrep+1), count_rep);
 				pPG->SetVarPos(iv+1,pCPG->GetVarPos(iv+1,nrep+1), count_rep);
 

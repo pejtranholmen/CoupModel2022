@@ -121,19 +121,19 @@ bool NC_GasFlux_Functions::Def()
 
 
 ////State variables added by Marco
-	pXs= new Xs(&CH4_AccBubbles,ACCUMULATOR,METHANE, STORAGE,METHANE_PRODUCTION, NORMAL);
+	pXs= new Xs(&CH4_AccBubbles, datatype::ACCUMULATOR,METHANE, STORAGE,METHANE_PRODUCTION, NORMAL);
 		Define(pXs,   "Acc CH4 Bubble Emission",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0");
-	pXs= new Xs(&CH4_AccPlant, ACCUMULATOR,METHANE, STORAGE,METHANE_PRODUCTION, NORMAL);
+	pXs= new Xs(&CH4_AccPlant,  datatype::ACCUMULATOR,METHANE, STORAGE,METHANE_PRODUCTION, NORMAL);
 		Define(pXs,   "Acc CH4 Plant Emission",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
-	pXs= new Xs(&CH4_AccEmission,ACCUMULATOR,METHANE, STORAGE,METHANE_TRANSPORT, NORMAL);
+	pXs= new Xs(&CH4_AccEmission, datatype::ACCUMULATOR,METHANE, STORAGE,METHANE_TRANSPORT, NORMAL);
 	    Define(pXs,  "Acc CH4 Emission",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
-	pXs= new Xs(&CH4_DiffTotStorage, ACCUMULATOR,METHANE, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&CH4_DiffTotStorage,  datatype::ACCUMULATOR,METHANE, STORAGE,NOBPROC, NORMAL);
 	    Define(pXs,   "Diff CH4 Storage",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
-	pXs= new Xs(&CH4_MassBalanceCheck,ACCUMULATOR,METHANE, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&CH4_MassBalanceCheck, datatype::ACCUMULATOR,METHANE, STORAGE,NOBPROC, NORMAL);
 	    Define(pXs,   "CH4 MassbalanceCheck",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
-	pXs= new Xs(& CH4_AccProduction,ACCUMULATOR,METHANE, STORAGE,METHANE_PRODUCTION, NORMAL);
+	pXs= new Xs(& CH4_AccProduction, datatype::ACCUMULATOR,METHANE, STORAGE,METHANE_PRODUCTION, NORMAL);
 	    Define(pXs,  "Acc CH4 Production",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
-	pXs= new Xs(&CH4_AccOxidation, ACCUMULATOR,METHANE, STORAGE,METHANE_OXIDATION, NORMAL);
+	pXs= new Xs(&CH4_AccOxidation,  datatype::ACCUMULATOR,METHANE, STORAGE,METHANE_OXIDATION, NORMAL);
 	    Define(pXs,   "Acc CH4 Oxidation",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
 	initv.assign(pSoil->NL,0.);
 	pT= new T(&CH4_Prod ,pNL,SIMPROFILE,METHANE, STORAGE,METHANE_PRODUCTION, NORMAL); 

@@ -68,7 +68,7 @@ void SP_ImportDlg::OnBnClickedImport()
 {
 	int numberInput;
 	numberInput=m_grid.Import();
-	string str;
+	std::string str;
 	str=FUtil::STD_ItoAscii(numberInput);
 	str+=" profiles were succesfully imported";
 	MessageBox(LPCTSTR(str.c_str()),_T("Data imported to Soil Database"),MB_OK);

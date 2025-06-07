@@ -1,6 +1,7 @@
 #include "../../std.h"
 #include "PFStorage.h"
 #include "../../Util/FUtil.h"
+using namespace std;
 
 PFStorage::PFStorage(void)
 {

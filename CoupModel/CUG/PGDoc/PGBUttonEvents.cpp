@@ -402,7 +402,7 @@ bool PGButtonEvents::ImportListButtons(int ParV, int index, int col)
 	}
 	else if (ParV == m_FilterUseButton.Param) {
 		if (index == 0) m_PGFileImport.SetFilterToUseId("");
-		else m_PGFileImport.SetFilterToUseId(m_FilterUseButton.VectorNames[index]);
+		else m_PGFileImport.SetFilterToUseId(string(m_FilterUseButton.VectorNames[index]));
 		m_PGFileImport.ScanningInputFile();
 		m_PGFileImport.m_ExtraFileScanning = false;
 		m_PGFileImport.m_ScanningMade = false;
@@ -509,7 +509,7 @@ void PGButtonEvents::DescriptionButtons(int ParV)
 					UNIT_TYPES unit=pPG->GetVarUnitType(ivar, irep);
 
 					if (unit < UNIT_TYPES::NO_UNIT&&unit >= UNIT_TYPES(0)) {
-						pPG->SetVarUnit(ivar, p_ModelInfo->GetUnitString(unit), irep);
+						pPG->SetVarUnit(ivar, string(p_ModelInfo->GetUnitString(unit)), irep);
 						pPG->pg.status.FileModified = true;
 					}
 				}
@@ -520,8 +520,8 @@ void PGButtonEvents::DescriptionButtons(int ParV)
 				for (size_t ivar = 1; ivar <= pPG->GetNumVariables(); ivar++) {
 					string str;
 					elements elem = pPG->GetVarElement(ivar, irep);
-					if (elem != GENERAL&&elem >= elements(0) && elem < p_ModelInfo->GetNumberOfElements()) {
-						pPG->SetVarName(ivar, p_ModelInfo->ElementName(elem), irep);
+					if (elem != elements::GENERAL&&elem >= elements(0) && size_t(elem) < p_ModelInfo->GetNumberOfElements()) {
+						pPG->SetVarName(ivar, string(p_ModelInfo->ElementName(size_t(elem))), irep);
 						m_Changed_Description = true;
 						pPG->pg.status.FileModified = true;
 					}
@@ -583,7 +583,7 @@ void PGButtonEvents::ApplyElementTypeToName(bool CleanInstead)
 		if (CleanInstead)
 			m_PGFileImport.m_CurrentFileInfo.Des.base.Name[count] = "";
 		else
-			m_PGFileImport.m_CurrentFileInfo.Des.base.Name[count] = p_ModelInfo->ElementName(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[count].Element);
+			m_PGFileImport.m_CurrentFileInfo.Des.base.Name[count] = p_ModelInfo->ElementName(size_t(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[count].Element));
 		count++;
 	});
 }

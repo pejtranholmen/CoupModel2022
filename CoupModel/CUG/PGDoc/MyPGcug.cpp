@@ -163,8 +163,8 @@ void MyPGCug::SetDocument(CCoupModelDoc *pDoc)
 
 	if (m_pSimDoc->m_DocumentType == 2) {
 
-		if (m_pProp->GetFirstIndepVarType() == MULTIRUN_NUM) {
-			m_pProp->SetFirstIndepVarType(DATEAXIS);
+		if (m_pProp->GetFirstIndepVarType() == vartype::MULTIRUN_NUM) {
+			m_pProp->SetFirstIndepVarType(vartype::DATEAXIS);
 		}
 	}
 
@@ -1454,7 +1454,7 @@ int MyPGCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 			else {
 				if (ParV == m_ElementTypeNewVariables.Param) {
 
-					iopt = p_ModelInfo->GetElementFromString(After);
+					iopt = size_t(p_ModelInfo->GetElementFromString(After));
 				}
 				else
 					iopt = FUtil::GetOptionIndex(cell.GetStdLabelText(), After);
@@ -1478,7 +1478,7 @@ int MyPGCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 		}
 		if (ParV == m_ElementTypeVariables.Param) {
 
-			iopt = p_ModelInfo->GetElementFromString(After);
+			iopt = size_t(p_ModelInfo->GetElementFromString(After));
 		}
 		else
 			iopt = FUtil::GetOptionIndex(cell.GetStdLabelText(), After);

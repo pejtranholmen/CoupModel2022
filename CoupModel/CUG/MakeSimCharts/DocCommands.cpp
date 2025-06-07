@@ -879,7 +879,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 						if(((F*)pSw)->CheckFileNameAndAssignNameToPGClass()){ 
 							m_pSimDoc->TimeModified();
 							m_pSimDoc->History_Add(pSw,-1,time(nullptr),CT2A(pszFileName).m_psz);
-							if (m_pSimDoc->GetPtr(PGFILE, "Meteorological data") == ((F*)pSw)) {
+							if (m_pSimDoc->GetPtr(simtype::PGFILE, "Meteorological data") == ((F*)pSw)) {
 								m_pSimDoc->SetSimPeriodFromClimateFile();
 
 
@@ -903,7 +903,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 			else if(item==1150) {
 				if (Group == "FertTable File") {
 
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, "FertTable File"));
+					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, "FertTable File"));
 					if (pCSV != nullptr) {
 						FILEDLG FileDlg = MFC_Util::GetFileDialog("*.csv", "", "Comma separated file (*.csv)|*.csv|");
 						if (FileDlg.opengood != IDOK) {
@@ -916,7 +916,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 				}
 //Remove MASCUR opion				else if (Group == "MASCUR File") {
 
-/*					FCSV* pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, "MASCUR File"));
+/*					FCSV* pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, "MASCUR File"));
 					if (pCSV != nullptr) {
 						FILEDLG FileDlg = MFC_Util::GetFileDialog("*.csv", "", "Comma separated file (*.csv)|*.csv|");
 						if (FileDlg.opengood != IDOK) {
@@ -935,7 +935,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 				}*/
 				else if (Group.find("ParCalibrationFile") == 0) {
 
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, Group));
+					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, Group));
 					if (pCSV != nullptr) {
 						FILEDLG FileDlg = MFC_Util::GetFileDialog("*.csv", "", "Comma separated file (*.csv)|*.csv|");
 						if (FileDlg.opengood != IDOK) {
@@ -950,7 +950,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 			}
 			else if (item == 1151) {
 				if (Group == "FertTable File") {
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, "FertTable File"));
+					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, "FertTable File"));
 					size_t index=0;
 					while (m_pSimDoc->m_FCSV_Array.size() > index) {
 						if (pCSV == m_pSimDoc->m_FCSV_Array[index]) {
@@ -963,7 +963,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 				}
 				else if (Group == "MASCUR File") {
 
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, "MASCUR File"));
+					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, "MASCUR File"));
 					size_t index=0;
 					while (m_pSimDoc->m_FCSV_Array.size() > index) {
 						if (pCSV == m_pSimDoc->m_FCSV_Array[index]) {
@@ -976,7 +976,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 				}
 				else if (Group.find("ParCalibration")==0) {
 
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(CSVFILE, Group));
+					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, Group));
 					size_t index = 0;
 					while (m_pSimDoc->m_FCSV_Array.size() > index) {
 						if (pCSV == m_pSimDoc->m_FCSV_Array[index]) {
@@ -1457,7 +1457,7 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 					}
 					m_pSimDoc->m_ValidationData.CleanValList();							
 
-					pSw=dynamic_cast<Sw*>(m_pSimDoc->GetPtr(SWITCH, "ValidationMode"));
+					pSw=dynamic_cast<Sw*>(m_pSimDoc->GetPtr(simtype::SWITCH, "ValidationMode"));
 					//pSw=(SimB*)m_pDoc->GetPtr(name, Type, grp);
 					pSw->SetStrValue("off");
 					//pSw->Apply();
@@ -1938,7 +1938,7 @@ int DocCommands::MultiRunCommand(int col, int row, int item) {
 				
 		for(int i=0;i<m_pSimDoc->m_MultiRun_Array.size();i++){
 		   	for(int ii=0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-				if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==9||m_pSimDoc->MR_GetMethod(i+1,ii+1)==11) {
+				if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(9)||m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(11)) {
 					icount++;
 					pPar=m_pSimDoc->MR_Get_pPar(i+1,ii+1);
 					nTabIndex=m_pSimDoc->MR_GetTabIndex(i+1,ii+1);
@@ -2086,21 +2086,21 @@ int DocCommands::MultiRunCommand(int col, int row, int item) {
 			GetCell(0,jrow,&cell);
 			int idim=int(cell.GetNumber());
 			pPar=m_pSimDoc->MR_Get_pPar(idim,ip);
-			int imethod=m_pSimDoc->MR_GetMethod(idim,ip);
+			auto imethod=m_pSimDoc->MR_GetMethod(idim,ip);
 			if(item==1015) { // GLUE to Bayes
-				if(imethod==2)
-					imethod=9;
-				else if(imethod==3)
-					imethod=11;
+				if(imethod==MR_METHOD::STOCHASTIC_LIN_CHANGE)
+					imethod= MR_METHOD::BAYESIAN_CAL;
+				else if(imethod== MR_METHOD::STOCHASTIC_LOG_CHANGE)
+					imethod= MR_METHOD::BAYESIAN_CAL_LOG;
 			}
 			else if(item==1016) //To Table
-				imethod=4;
+				imethod= MR_METHOD::TABLE_VAL;
 			
 			else { // Bayes to Glue, item==1025
-				if(imethod==9)
-					imethod=2;
-				else if(imethod==11)
-					imethod=3;
+				if(imethod== MR_METHOD::BAYESIAN_CAL)
+					imethod= MR_METHOD::STOCHASTIC_LIN_CHANGE;
+				else if(imethod== MR_METHOD::BAYESIAN_CAL_LOG)
+					imethod= MR_METHOD::STOCHASTIC_LOG_CHANGE;
 			}
 			auto TabIndex=m_pSimDoc->MR_GetTabIndex(idim,ip);
 			if(TabIndex== std::string::npos) 
@@ -2401,14 +2401,14 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 	simb.pBase = nullptr;
 	string str;
 	VALSUMv valsum;
-	if(var==SUMVAR) {
+	if(var== vartype::SUMVAR) {
 		sheet=5;
 		simb=GetMultiSumPointer(row);
 		if (simb.pBase==nullptr) return false;
 		Index=GetMultiSumIndex(simb, col);	
 
 	}
-	else if(var==VALVAR||var==VALVARSUM) {
+	else if(var== vartype::VALVAR||var== vartype::VALVARSUM) {
 		sheet=6;
 		nselV=m_pSimDoc->m_ValidationData.GetNumberSelectedTSV_Val();
 		if(row<nselV) {
@@ -2421,7 +2421,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 			valsum=m_pSimDoc->GetValSumStruct(Index);
 
 			
-			var = VALVARSUM;
+			var = vartype::VALVARSUM;
 
 			simb=m_pSimDoc->m_ValidationData.GetSimPointer_SV(row-nselV);
 			if (simb.pBase == nullptr) {
@@ -2433,7 +2433,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 
 		}
 	}
-	else if(var==PARVAR) {
+	else if(var== vartype::PARVAR) {
 		sheet=10;
 		simb=GetMultiRunParPointer(row);
 		Index=GetMultiRunParIndex(row);
@@ -2447,7 +2447,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 		//m_pProp->SetFirstIndepSet(var, true, Index);
 		if(simb.pBase!=nullptr)
 			str=simb.pBase->GetName();
-		if(var==VALVAR) {
+		if(var== vartype::VALVAR) {
 			
 			m_pProp->SetFirstIndepValidTimeType(m_ValidTimeSerieType);
 			switch(col) {
@@ -2478,7 +2478,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 				break;
 			}
 		}
-		else if (var == VALVARSUM) {
+		else if (var == vartype::VALVARSUM) {
 			switch(col) {
 			case 7:
 				str = "R2";
@@ -2544,7 +2544,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 	}
 	else if(item==5020) {
 			switch (var) {
-				case SUMVAR:
+				case vartype::SUMVAR:
 				while(m_pSimDoc->m_SelectMultiSum.size()>0) {
 						mul=m_pSimDoc->m_SelectMultiSum[0];
 						GetCell(mul.col,mul.row,&cell);
@@ -2555,7 +2555,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 						m_pSimDoc->m_SelectMultiSum.erase(m_pSimDoc->m_SelectMultiSum.begin());
 				}
 				break;
-				case VALVAR: case VALVARSUM:
+				case vartype::VALVAR: case vartype::VALVARSUM:
 				while(m_pSimDoc->m_SelectMultiVal.size()>0) {
 						mul=m_pSimDoc->m_SelectMultiVal[0];
 						GetCell(mul.col,mul.row,&cell);
@@ -2566,7 +2566,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 						m_pSimDoc->m_SelectMultiVal.erase(m_pSimDoc->m_SelectMultiVal.begin());
 				}
 				break;
-				case PARVAR:
+				case vartype::PARVAR:
 				while(m_pSimDoc->m_SelectMultiPar.size()>0) {
 						mul=m_pSimDoc->m_SelectMultiPar[0];
 						GetCell(mul.col,mul.row,&cell);
@@ -2590,9 +2590,9 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 
 			if(m_pSimDoc->IsMultiSimulation())
-				m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+				m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 			else
-				m_pProp->SetFirstIndepVarType(NO_USE);
+				m_pProp->SetFirstIndepVarType(vartype::NO_USE);
 
 			m_pProp->SetFirstIndepString(var,"");
 			GetCell(col,row,&cell);
@@ -2610,7 +2610,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 		m_pProp->SetSecondIndepIndex(var, Index);
 		if (simb.pBase == nullptr) return false;
 		string str=simb.pBase->GetName();
-		if(var==VALVAR) {
+		if(var== vartype::VALVAR) {
 			switch(col) {
 			case 7:
 				str+=" r2";
@@ -2640,7 +2640,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 			}
 			m_pProp->SetSecondIndepValidTimeType(m_ValidTimeSerieType);
 		}
-		else if (var == VALVARSUM) {
+		else if (var == vartype::VALVARSUM) {
 			str = m_pSimDoc->m_ValSum_Array[Index].IDVarName;
 			str += " Measured";
 		}
@@ -2667,10 +2667,10 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 	else if(item==5029) {
 			m_pProp->m_ChartType=CHART_TYPES::SCATTER;	
 
-			m_pProp->SetSecondIndepVarType(NO_USE);
+			m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 
 			m_pProp->SetSecondIndepString(var,"");
-			m_pProp->SetSecondIndepIndex(NO_USE,0);
+			m_pProp->SetSecondIndepIndex(vartype::NO_USE, 0);
 			GetCell(col,row,&cell);
 			cell.SetBackColor(RGB(255,255,255));
 			SetCell(col,row, &cell);
@@ -2833,7 +2833,7 @@ void DocCommands::OnAddValFile()
 				Type="Switches";
 				Name="ValidationMode";
 									
-				pSw=m_pSimDoc->GetPtr(SWITCH,"ValidationMode");
+				pSw=m_pSimDoc->GetPtr(simtype::SWITCH,"ValidationMode");
 			
 				inumvalid=((Sw*)pSw)->GetIntValue();
 				//inumvalid=max(inumvalid,1);
@@ -2855,7 +2855,7 @@ void DocCommands::OnAddValFile()
 
 									
 				SimB* pSw;
-				pSw=m_pSimDoc->GetPtr(SWITCH, "ValidationMode");
+				pSw=m_pSimDoc->GetPtr(simtype::SWITCH, "ValidationMode");
 				((Sw*)pSw)->SetIntValue(inumvalid+1);
 				m_pSimDoc->ResidualFile_AddFile(1);
 				//pSw->Apply();
@@ -2900,7 +2900,7 @@ int DocCommands::OnAddTsvVal(bool Aggregated)
 
 		CValidationVariables dlg(m_pDoc, NumSelected, Aggregated, this);
 		if (dlg.DoModal() == IDOK) {
-			Tab* pTab = (Tab*)m_pSimDoc->GetPtr(TABLE, "Scaling of Observed Variables");
+			Tab* pTab = (Tab*)m_pSimDoc->GetPtr(simtype::TABLE, "Scaling of Observed Variables");
 			if (pTab != nullptr) {
 				F* pFile;
 				int NumSelected = 0;

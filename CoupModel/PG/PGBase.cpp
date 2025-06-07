@@ -1,6 +1,6 @@
 
 #include "PGBase.h"
-
+using namespace std;
 CPGBase::CPGBase(void)
 {
 	pg.Shape.NumVar=8;

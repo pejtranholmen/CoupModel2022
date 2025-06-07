@@ -40,7 +40,7 @@
 
 
 	m2 = "m"; m2 += char(178);
-	string str;
+	std::string str;
 	str = "day";
 	str+=char(178);
 	str += "m6/g";

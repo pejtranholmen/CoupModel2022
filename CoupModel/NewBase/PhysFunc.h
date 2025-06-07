@@ -3,6 +3,7 @@
 #include "../Model/ModelFunctions.h"
 #include "../Model/Structure/Functors/Technical_Functors.h"
 using namespace ModelFunctions;
+using namespace std;
 #include <cmath>
 
 struct RadTempAmpPar {

@@ -11,13 +11,13 @@ class Par :
 		Par(enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 		Par(definitions def);
 		~Par(void);
-		string GetUnit() {return _unit;};
-		void SetUnit(string str) {_unit=str;};
+		std::string GetUnit() {return _unit;};
+		void SetUnit(std::string str) {_unit=str;};
 		void SetViewFunction(size_t value) {_view_func=value;};
 		size_t GetViewFunction() {return _view_func;};
 		void SetReCalcOption(size_t value) {_recalc_option=value;};
 		size_t GetNumOfTitles() { return m_FuncVector.size();};
-		string GetViewTitle(size_t index=0) {if(m_FuncVector.size()>index) 
+		std::string GetViewTitle(size_t index=0) {if(m_FuncVector.size()>index) 
 			return m_FuncVector[index]->GetName(); 
 		return "";};
 		double GetViewValue(double x) { if(m_FuncVector.size()>m_SelectedFunc) return m_FuncVector[m_SelectedFunc]->GetValue(x) ;else return 0.;};
@@ -41,8 +41,8 @@ class Par :
 	return _T("");
 }*/
 
-	string GetYLabel() { if(m_FuncVector.size()>m_SelectedFunc) return m_FuncVector[m_SelectedFunc]->GetYLabel(); return "";};
-	string GetXLabel() { if(m_FuncVector.size()>m_SelectedFunc) return m_FuncVector[m_SelectedFunc]->GetXLabel();	return "";};
+	std::string GetYLabel() { if(m_FuncVector.size()>m_SelectedFunc) return m_FuncVector[m_SelectedFunc]->GetYLabel(); return "";};
+	std::string GetXLabel() { if(m_FuncVector.size()>m_SelectedFunc) return m_FuncVector[m_SelectedFunc]->GetXLabel();	return "";};
 	
 	
 	protected:
@@ -50,7 +50,7 @@ class Par :
 		
 	private:
 		size_t m_SelectedFunc;
-		vector<Func*> m_FuncVector;
+		std::vector<Func*> m_FuncVector;
 		//string _unit;
 		size_t _view_func;
 		

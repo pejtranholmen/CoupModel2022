@@ -67,7 +67,7 @@ class Ps :	public Par
 			int recalc=0,  int view=0);
 		bool IsOldValue()  noexcept {return _IsOldValue;};
 
-		string GetProcess() {return _Process;};
+		std::string GetProcess() {return _Process;};
 
 		void MR_Set_Bins(size_t nbins) {  m_n_bins = nbins;};
 		bool IsViewValid() {if(view>0) return true;	return false;};
@@ -96,7 +96,7 @@ class Ps :	public Par
 				}
 				ChaDateLong.push_back(minnew);
 				ChaParValue.push_back(newvalue);
-				ChaParIndex.push_back(string::npos);
+				ChaParIndex.push_back(std::string::npos);
 				return false;			
 
 		};
@@ -118,16 +118,16 @@ class Ps :	public Par
 	double _DBvalue;
 	double _oldValue;
 	std::vector<double> _mr_Tab_Value;
-	vector<long> ChaDateLong;
-	vector<double> ChaParValue;
-	vector<size_t> ChaParIndex;
+	std::vector<long> ChaDateLong;
+	std::vector<double> ChaParValue;
+	std::vector<size_t> ChaParIndex;
 	MR_PAR _mr;
-	string _ViewTitle;
-	string _Process;
+	std::string _ViewTitle;
+	std::string _Process;
 	size_t _mrMonitoring;
 	size_t m_n_bins;
 	size_t view;
-	string GLegend, GLeftTitle, GXTitle;
+	std::string GLegend, GLeftTitle, GXTitle;
 	double GXmin, GXmax;
 	size_t GPointType, GraphType;
 

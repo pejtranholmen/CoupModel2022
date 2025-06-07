@@ -3,7 +3,7 @@
 class D :public OutVector {
 
 public:
-	D(vector<double> *target,NE *ne, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
+	D(std::vector<double> *target,NE *ne, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 
 	~D();
 

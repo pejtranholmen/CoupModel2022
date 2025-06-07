@@ -673,14 +673,14 @@ BOOL RealTime::AddData()
 				m_NameA.clear();m_NameB.clear();m_NameC.clear();m_NameD.clear();
 				for(i=0;i<m_pSimDoc->MR_GetNumberOfDimensions();i++){
 						for(ii=0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-								if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==9||m_pSimDoc->MR_GetMethod(i+1,ii+1)==11||m_pSimDoc->MR_GetMethod(i+1,ii+1)<=3) {	
+								if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(9)||m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(11)||m_pSimDoc->MR_GetMethod(i+1,ii+1)<=MR_METHOD(3)) {	
 									if(m_pSimDoc->MR_GetMonitoring(i+1,ii+1)>0) {
 										if(ind<numser) {
 											m_dataMin[icount]=double(m_pSimDoc->MR_GetMin(i+1,ii+1));
 											m_dataMax[icount]=double(m_pSimDoc->MR_GetMax(i+1,ii+1));
 											double Value=double(m_pSimDoc->m_MStorage.GetMultiP(rec,ind));
 											double NValue;
-											if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==11) {
+											if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(11)) {
 												m_dataMin[icount]=log(m_dataMin[icount]);
 												m_dataMax[icount]=log(m_dataMax[icount]);
 												Value=log(Value);

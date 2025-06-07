@@ -1,4 +1,5 @@
 #include "GlobalInfo.h"
+using namespace std;
 
 GlobalInfo::GlobalInfo() 
 {

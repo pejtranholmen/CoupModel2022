@@ -11,6 +11,8 @@
 
 #include <sstream>
 #include <iostream>
+
+using namespace std;
 NoaaCoord::NoaaCoord(void)
 {
 	m_pPGSource=nullptr;

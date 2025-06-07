@@ -762,7 +762,7 @@ void SP_Retrieve::OnBnClickedOk()
 
 		m_pSimDoc->GetProfileFromPlotPF(false,false);
 		m_NumLayers=FUtil::STD_ItoAscii(int(p_PFCurve->m_ActProfile.NumLayers));
-		m_pDoc->DB_SetChoice(Soil_Properties, str);
+		m_pDoc->DB_SetChoice(DB_types::Soil_Properties, str);
 		m_SelectedId=str;
 
 		if(m_NumToBeSelected<=m_pDB->MR_GetNumberOfSelections()) {

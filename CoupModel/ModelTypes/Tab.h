@@ -3,7 +3,7 @@
 #include "P.h"
 class Tab : public SimB {
  public:
-	Tab(vector<P*> *target, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
+	Tab(std::vector<P*> *target, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 
 	~Tab();
 	void Def(size_t module_no, std::string varname, std::string pname, std::string cond) {SetConditions(cond); Def(module_no, varname, 1);};
@@ -20,8 +20,8 @@ class Tab : public SimB {
 	bool CheckEnabled();
 	bool CheckOriginalValue();
 	P* GetP_Pointer(size_t index) {if(index<_ptarget->size()) { return _ptarget->at(index);};return nullptr;};
-	string GetViewTitle() {return _title;};
-	void SetViewTitle(string str) {_title=str;};
+	std::string GetViewTitle() {return _title;};
+	void SetViewTitle(std::string str) {_title=str;};
 	void SetPlotIndex(size_t n) { m_IndexToPlot.push_back(n);};
 	void ResetPlotIndex() {	m_IndexToPlot.clear();};
 	size_t GetNumbersToPlot() {	return m_IndexToPlot.size();};
@@ -30,30 +30,30 @@ class Tab : public SimB {
 	void SetDB_Row(size_t rows) {db_rows=rows;};
 	void SetMainIndex(size_t index) { _mainindex=index; };
 	size_t GetMainIndex() { return _mainindex;};
-	string GetTitle(size_t index) {if(index<_ptarget->size()) {P* pP=_ptarget->at(index); return pP->GetName();} return "";};
+	std::string GetTitle(size_t index) {if(index<_ptarget->size()) {P* pP=_ptarget->at(index); return pP->GetName();} return "";};
 
 
-	string GetXLabel() {return _xlabel;};
-	string GetYLabel() {return _ylabel;};
+	std::string GetXLabel() {return _xlabel;};
+	std::string GetYLabel() {return _ylabel;};
 	double GetViewValue(double x) {return _viewYvalue;};
-	string GetLegend() { return _legend;};
+	std::string GetLegend() { return _legend;};
 	bool GetChartLog() {return _chartlog;};
 
 
 
 protected:
-	vector <P*> *_ptarget;
+	std::vector <P*> *_ptarget;
 	bool _Hidden;
 	size_t _viewvalue;
-	string _title;
-	vector<size_t> m_IndexToPlot;
+	std::string _title;
+	std::vector<size_t> m_IndexToPlot;
 	size_t db_rows;
 	size_t _mainindex;
 	bool _chartlog;
 
-	string _xlabel;
-	string _ylabel;
-	string _legend;
+	std::string _xlabel;
+	std::string _ylabel;
+	std::string _legend;
 	double _viewYvalue;
 private:
 	size_t _minp_toenable;

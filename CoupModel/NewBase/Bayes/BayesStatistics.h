@@ -24,7 +24,7 @@ protected:
 
 	void Bayes_Check();
 	void SetAccepted(bool value);
-	vector<double> Candidate_PValues, PValues;
+	std::vector<double> Candidate_PValues, PValues;
 	bool First,  CalibrationMode;
 	double mc_step;
 	size_t Num_BayesPar;

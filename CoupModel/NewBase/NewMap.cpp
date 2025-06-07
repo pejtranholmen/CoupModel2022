@@ -211,9 +211,9 @@ string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level, bool ChildDoc
 
 	WriteHeaderToXmlFile(descr);
 
-	WriteSimB_ToXmlFile(switches, simtype(SWITCH), enable_level);
-	WriteSimB_ToXmlFile(parameters, simtype(PAR_SINGLE), enable_level);
-	WriteSimB_ToXmlFile(parameters_arrays, simtype(PAR_TABLE), enable_level);
+	WriteSimB_ToXmlFile(switches, simtype(simtype::SWITCH), enable_level);
+	WriteSimB_ToXmlFile(parameters, simtype(simtype::PAR_SINGLE), enable_level);
+	WriteSimB_ToXmlFile(parameters_arrays, simtype(simtype::PAR_TABLE), enable_level);
 	WriteSimB_ToXmlFile(outputs_Xs, simtype(STATE_SINGLE), enable_level);
 	WriteSimB_ToXmlFile(outputs_Ts, simtype(FLOW_SINGLE), enable_level);
 	WriteSimB_ToXmlFile(outputs_Gs, simtype(AUX_SINGLE), enable_level);
@@ -439,7 +439,7 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 			for (pugi::xml_node group = category.first_child(); group; group = group.next_sibling()) {
 				auto groupname = group.name();
 				for (pugi::xml_node item = group.first_child(); item; item = item.next_sibling()) {
-					string item_name = std::string(item.name());
+					string_view item_name = item.name();
 					
 					if (type == simtype::SWITCH) {
 						auto pSw = static_cast<Sw*>(GetPtr(type, item_name));
@@ -581,14 +581,14 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 		}
 		else if (type == SWITCH) {
 			RemoveOriginalValues("Switches", "ALL", false);
-			m_pValidIndexSet = dynamic_cast<Sw*>(GetPtr(SWITCH, "IndexForValidation"));
+			m_pValidIndexSet = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "IndexForValidation"));
 			if (m_pValidIndexSet != nullptr) {
 				auto iv = m_pValidIndexSet->GetIntValue();
-				m_pValidIndex = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "Index in val file"));
-				m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "No of internal index loop"));
-				m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "Size of internal loop"));
+				m_pValidIndex = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Index in val file"));
+				m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "No of internal index loop"));
+				m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Size of internal loop"));
 
-				auto pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "ValidationMode"));
+				auto pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "ValidationMode"));
 				m_NumValidFiles = pSw->GetIntValue();
 				ResidualFile_Reset();
 				if (ResidualFile_AddFile(m_NumValidFiles)) {
@@ -893,14 +893,14 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 		}
 	}
 	Sw* pSw;
-	pSw = (Sw*)GetPtr(SWITCH, "ValidationMode");
+	pSw = (Sw*)GetPtr(simtype::SWITCH, "ValidationMode");
 	m_NumValidFiles = GetSw("ValidationMode")->GetIntValue();
 	if (count_valid_files > m_NumValidFiles) {
 		pSw->SetIntValue(count_valid_files);
 		m_NumValidFiles = GetSw("ValidationMode")->GetIntValue();
 	}
 
-	Tab* pTab = (Tab*)GetPtr(TABLE, "Scaling of Observed Variables");
+	Tab* pTab = (Tab*)GetPtr(simtype::TABLE, "Scaling of Observed Variables");
 	if (pTab != nullptr) {
 		auto oldnelements = pTab->GetNumOfRow();
 		if (m_Val_Array.size() != oldnelements)  pTab->SetNumOfRow(m_Val_Array.size());
@@ -910,7 +910,7 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 	if (IsFinishedSimulation())
 		m_ValidationData.SetPointersToOutputValidationFiles();
 
-	/*Tab* pTab = (Tab*)GetPtr(TABLE, "Scaling of Observed Variables");
+	/*Tab* pTab = (Tab*)GetPtr(simtype::TABLE, "Scaling of Observed Variables");
 	if (pTab != nullptr) {
 		auto oldnelements = pTab->GetNumOfRow();
 		if (iv != oldnelements)  pTab->SetNumOfRow(iv);
@@ -1129,7 +1129,7 @@ bool NewMap::Read_MultiRunSettings_FromXmlFile(pugi::xml_node node)
 							}
 							SimB* pPar;
 							//pPar=GetPtr(type,group,name);
-							pPar = GetPtr(PAR_TABLE, name);
+							pPar = GetPtr(simtype::PAR_TABLE, name);
 							P* pkoll = dynamic_cast<P*>(pPar);
 							valPAR.pBase = dynamic_cast<SimB*>(pPar);
 							if (pPar == nullptr)  return false;
@@ -2207,7 +2207,7 @@ bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 			m_DocFileIn.close();
 		}
 		auto iv=m_Val_Array.size();
-		Tab *pTab=(Tab*)GetPtr(TABLE, "Scaling of Observed Variables");
+		Tab *pTab=(Tab*)GetPtr(simtype::TABLE, "Scaling of Observed Variables");
 		if(pTab!=nullptr) {
 				auto oldnelements=pTab->GetNumOfRow();
 		  		if (iv!=oldnelements&&iv!= std::string::npos)  pTab->SetNumOfRow(iv);
@@ -2330,7 +2330,7 @@ bool NewMap::ReadXmlDocFile(string xmlfile) {
 
 	//if(IsBayesianCalibration()) {
 
-	auto pSw = (Sw*)GetPtr(SWITCH, "TimeSerie Errors File");
+	auto pSw = (Sw*)GetPtr(simtype::SWITCH, "TimeSerie Errors File");
 	if (pSw != nullptr) {
 		auto i = pSw->GetIntValue();
 		if (i > 0)
@@ -2515,7 +2515,7 @@ bool NewMap::Info_Header(bool reading)
 				rString(&m_DocFile2.m_RunId);
 				if(m_FileVersionNumberRead>=7) {
 					rSize_t(&iv);
-					pSw=dynamic_cast<Sw*>(GetPtr(SWITCH,"TimeResolution"));
+					pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,"TimeResolution"));
 					if(pSw!=nullptr) {
 						if(iv<0||iv>3) iv=0;
 						pSw->SetIntValue(iv);
@@ -2609,7 +2609,7 @@ bool NewMap::Info_Header(bool reading)
 		wSize_t(&m_DocFile.m_TimePeriodScaleFactor);
 		wString(&m_DocFile2.m_Comments);	
 		wString(&m_DocFile2.m_RunId);
-		pSw=dynamic_cast<Sw*>(GetPtr(SWITCH,"TimeResolution"));
+		pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,"TimeResolution"));
 		iv=pSw->GetIntValue();
 		wSize_t(&iv);
 		wSize_t(&m_DocFile.ipredays);	 
@@ -2651,7 +2651,7 @@ bool NewMap::Info_Switches(bool reading)
  				if(group=="Technical"&&name=="TimeResolution") group="Hidden";
  				if(group=="Irrigation"&&name=="IndexForValidation") group="Technical";
 				if(m_FileVersionNumberRead<=24&&group=="Potential Transpiration"&&name=="Aerodyn. Resistance") name="Aerodynamic Resistance";
-				pSw=dynamic_cast<Sw*>(GetPtr(SWITCH,name));
+				pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,name));
 				if(pSw!=nullptr) {
 					size_t recalc=pSw->SetIntValue(value);
 					if(recalc>0) LinkedChangeToSwitches(pSw, recalc);
@@ -2670,14 +2670,14 @@ bool NewMap::Info_Switches(bool reading)
 			}
 		}
 
-		m_pValidIndexSet=dynamic_cast<Sw*>(GetPtr(SWITCH, "IndexForValidation"));
+		m_pValidIndexSet=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "IndexForValidation"));
 		if (m_pValidIndexSet != nullptr) {
 			auto iv = m_pValidIndexSet->GetIntValue();
-			m_pValidIndex = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "Index in val file"));
-			m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "No of internal index loop"));
-			m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(PAR_SINGLE, "Size of internal loop"));
+			m_pValidIndex = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Index in val file"));
+			m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "No of internal index loop"));
+			m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Size of internal loop"));
 
-			pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "ValidationMode"));
+			pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "ValidationMode"));
 			m_NumValidFiles = pSw->GetIntValue();
 			ResidualFile_Reset();
 			ResidualFile_AddFile(m_NumValidFiles);
@@ -2731,12 +2731,12 @@ bool NewMap::Info_Parameters(bool reading)
 				if(name=="RateCoefHumus"&&m_FileVersionNumberRead<=21) {
 					fvalue=fvalue*2;
 				}
-				pPs=dynamic_cast<Ps*>(GetPtr(PAR_SINGLE,name));
+				pPs=dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE,name));
 				if(pPs==nullptr) {
 						if(name=="Intial Soil Storage") name="Initial Soil Storage";
 						if(name=="Intial Peak Storage") name="Initial Peak Storage";
 						if(name=="Intial Base Storage") name="Initial Base Storage";
-						pPs=dynamic_cast<Ps*>(GetPtr(PAR_SINGLE,name));
+						pPs=dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE,name));
 				}
 				if(pPs!=nullptr) {
 					AssignNewValue_toPs(pPs, fvalue);
@@ -2787,7 +2787,7 @@ bool NewMap::Info_ParTables(bool reading)
 				if(group=="Soil mineral nitrogen processes") group="Soil mineral N processes";	
 				rString(&name);
 				if (name == "Scaling coefficient") name = "Thermal Conductivity, Model Layers";
-				pTab=dynamic_cast<Tab*>(GetPtr(TABLE,name));
+				pTab=dynamic_cast<Tab*>(GetPtr(simtype::TABLE,name));
 				rSize_t(&nColSize);
                 
      //           cout << name << "\n";
@@ -2958,7 +2958,7 @@ bool NewMap::Info_Files(bool reading)
 				if (name == "Validation File") {
 					name = "Validation File1";
 					Sw* pSw;
-					pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "ValidationMode"));
+					pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "ValidationMode"));
 					pSw->SetIntValue(1);
 					//pSw->Apply();			
 				}
@@ -3018,7 +3018,7 @@ bool NewMap::Info_Files(bool reading)
 					rString(&fileid);
 					rString(&filename);
 					filename = GetExistingDocFileName(filename);
-					FCSV *pCSV = dynamic_cast<FCSV*>(GetPtr(CSVFILE, fileid));
+					FCSV *pCSV = dynamic_cast<FCSV*>(GetPtr(simtype::CSVFILE, fileid));
 				}
 			}
 			//m_DocFileIn.read( &iv,4);
@@ -3470,14 +3470,14 @@ bool NewMap::Info_Validation(bool reading)
 				}
 			}
 			Sw *pSw;
-			pSw=(Sw*)GetPtr(SWITCH, "ValidationMode");
+			pSw=(Sw*)GetPtr(simtype::SWITCH, "ValidationMode");
 			m_NumValidFiles=GetSw( "ValidationMode")->GetIntValue();
 			if(count_valid_files>m_NumValidFiles) {
 				pSw->SetIntValue(count_valid_files);
 				m_NumValidFiles=GetSw( "ValidationMode")->GetIntValue();
 			}
 
-			Tab *pTab=(Tab*)GetPtr(TABLE,"Scaling of Observed Variables" );
+			Tab *pTab=(Tab*)GetPtr(simtype::PAR_SINGLE,"Scaling of Observed Variables" );
 			if(pTab!=nullptr) {
 				auto oldnelements=pTab->GetNumOfRow();
 		  		if (iv!=oldnelements)  pTab->SetNumOfRow(iv);
@@ -3830,7 +3830,7 @@ bool NewMap::Info_MultiRun(bool reading)
 							
 							SimB *pPar;
 							//pPar=GetPtr(type,group,name);
-							pPar=GetPtr(PAR_TABLE, name);
+							pPar=GetPtr(simtype::PAR_TABLE, name);
 							rInt(&imethod);
 							P* pkoll= dynamic_cast<P*>(pPar);
 						   valPAR.pBase=dynamic_cast<SimB*>(pPar);
@@ -4057,7 +4057,7 @@ bool NewMap::Info_MultiRun(bool reading)
 			//if(IsBayesianCalibration()) {
 				MR_ReCalculatePostDist(IsBayesianCalibration());
 
-			auto pSw=(Sw*)GetPtr(SWITCH,"TimeSerie Errors File");
+			auto pSw=(Sw*)GetPtr(simtype::SWITCH,"TimeSerie Errors File");
 			if(pSw!=nullptr) {
 				auto i=pSw->GetIntValue();
 				if(i>0)
@@ -5025,7 +5025,7 @@ void NewMap::RemoveOriginalValues(string typ, std::string GroupSet, bool origina
 
 		if (typ=="Parameters") {
 			if(m_P_Array.size()>0)			m_P_Array.clear();
-			vp=GetPtrVector(PAR_SINGLE, false);
+			vp=GetPtrVector(simtype::PAR_SINGLE, false);
 			for(auto it=vp.begin();it!=vp.end();it++) {
 					Ps* pPs=dynamic_cast<Ps*>(*it);
 					if(original) {
@@ -5046,7 +5046,7 @@ void NewMap::RemoveOriginalValues(string typ, std::string GroupSet, bool origina
 		}
 		else if (typ=="Tables") {
 			if(m_Tab_Array.size()>0)			m_Tab_Array.clear();
-			vp=GetPtrVector(TABLE, false);
+			vp=GetPtrVector(simtype::TABLE, false);
 			for(auto it=vp.begin();it!=vp.end();it++) {
 					Tab* pTab=dynamic_cast<Tab*>(*it);
 					if(original) {
@@ -5298,7 +5298,7 @@ bool NewMap::MakeMapComplete() {
 			typ=SWITCH;
 			break;
 			case 1:
-			typ=PAR_SINGLE;
+			typ=vartype::PAR_SINGLE;
 			break;
 			case 2:
 			typ=TABLE;
@@ -6933,7 +6933,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				ws.merge_cells("A9:D9");
 
 				ws.cell(1, 10).value("Input Time Resolution");
-				auto pSw = static_cast<Sw*>(GetPtr(SWITCH, "TimeResolution"));
+				auto pSw = static_cast<Sw*>(GetPtr(simtype::SWITCH, "TimeResolution"));
 				ws.cell(2,10).value(pSw->GetOption(pSw->GetIntValue()));  ws.cell(2, 10).fill(yellow);
 				ws.merge_cells("C10:D10");
 				ws.cell(1, 11).value("Output Interval");
@@ -6944,7 +6944,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				ws.cell(1, 13).value("Number of Iterations per day");
 				ws.cell(2, 13).value(RunOpt.noofiter);  ws.cell(2, 13).fill(yellow);
 				ws.cell(3, 13).value("NC iterations per day");
-				auto pParNitStep = static_cast<Ps*>(GetPtr(PAR_SINGLE, "NC Iteration"));
+				auto pParNitStep = static_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "NC Iteration"));
 				auto numstep = pParNitStep->GetValue();
 				ws.cell(4, 13).value(numstep);	 ws.cell(4, 13).fill(yellow); 
 				ws.merge_cells("A14:D14");
@@ -6987,7 +6987,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				auto str2 = ws.cell(2, 8).value<int>();
 				m_DocFile.m_TimePeriodScaleFactor = ws.cell(2, 8).value<int>();
 				string timeres = ws.cell(2, 10).value<string>();
-				auto pSw = static_cast<Sw*>(GetPtr(SWITCH, "TimeResolution"));
+				auto pSw = static_cast<Sw*>(GetPtr(simtype::SWITCH, "TimeResolution"));
 				for (size_t i = 0; i < pSw->GetNumOptions(); i++) {
 					if (pSw->GetOption(i) == timeres) pSw->SetIntValue(i);
 				}
@@ -6995,7 +6995,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				RunOpt.oiminutes = ws.cell(2, 12).value<int>();
 				RunOpt.noofiter = ws.cell(2, 12).value<int>();
 				auto numNCSteps = ws.cell(2, 12).value<int>();;
-				auto pParNitStep = static_cast<Ps*>(GetPtr(PAR_SINGLE, "NC Iteration"));
+				auto pParNitStep = static_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "NC Iteration"));
 				pParNitStep->SetValue(numNCSteps);		  
 
 			};
@@ -7039,7 +7039,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 					}
 					cols++;
 				}
-				Sw* pSw = (Sw*)GetPtr(SWITCH, name, group);
+				Sw* pSw = (Sw*)GetPtr(simtype::SWITCH, name, group);
 				if (pSw != NULL) {
 					pSw->SetStrValue(opt);
 					pSw->SetIntValue(FUtil::AtoInt(str));
@@ -7067,7 +7067,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 			}
 			auto Saved_Array = m_Sw_Array;
 			if (AllItems) {
-				auto ptrvector = GetPtrVector(SWITCH, true);
+				auto ptrvector = GetPtrVector(simtype::SWITCH, true);
 				m_Sw_Array.clear(); m_Sw_Array.resize(ptrvector.size());
 				for (size_t i = 0; i < ptrvector.size(); i++)
 					m_Sw_Array[i] =(Sw*)ptrvector[i];			
@@ -7163,7 +7163,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 					}
 					cols++;
 				}
-				Ps* pP = (Ps*)GetPtr(PAR_SINGLE, name, group);
+				Ps* pP = (Ps*)GetPtr(simtype::PAR_SINGLE, name, group);
 				if (pP != NULL) pP->SetValue(FUtil::AtoFloat(str));				
 			}
 		}
@@ -7205,7 +7205,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 
 			auto savedArray = m_P_Array;
 			if (AllItems) {
-				auto allpararray = GetPtrVector(PAR_SINGLE, true);
+				auto allpararray = GetPtrVector(simtype::PAR_SINGLE, true);
 				m_P_Array.clear();
 				m_P_Array.resize(allpararray.size());
 				for (size_t i = 0; i < allpararray.size(); i++)
@@ -7408,7 +7408,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 
 			auto savedArray = m_Pt_Array;
 			if (AllItems) {
-				auto allpararray = GetPtrVector(PAR_TABLE, true);
+				auto allpararray = GetPtrVector(simtype::PAR_TABLE, true);
 				m_Pt_Array.clear();
 				m_Pt_Array.resize(allpararray.size());
 				for (size_t i = 0; i < allpararray.size(); i++)
@@ -7506,7 +7506,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 			vector<Func*> func_array;
 
 			if (AllItems) {
-				auto allpararray = GetPtrVector(FUNCTION, true);
+				auto allpararray = GetPtrVector(simtype::FUNCTION, true);
 				func_array.resize(allpararray.size());
 				
 				for (size_t i = 0; i < allpararray.size(); i++)
@@ -7615,7 +7615,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 							}
 							cols++;
 						}
-						Tab* pTab = (Tab*)GetPtr(TABLE, name, group);
+						Tab* pTab = (Tab*)GetPtr(simtype::TABLE, name, group);
 						if (pTab != NULL) {
 							inside_row = FUtil::AtoInt(str);
 							pTab->SetNumOfRow(inside_row);
@@ -7779,7 +7779,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 					}
 					cols++;
 				}
-				Ps* pP = (Ps*)GetPtr(PAR_SINGLE, name, group);
+				Ps* pP = (Ps*)GetPtr(simtype::PAR_SINGLE, name, group);
 				if (pP != NULL) {
 					pP->SetValue(FUtil::AtoFloat(str));
 

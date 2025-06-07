@@ -23,8 +23,8 @@ class CH :public DB
 
 public:
 	CH();
-	vector<CHPARv> m_P_CH_Array;
-	vector<CHRunv> m_CH_Run_Array;
+	std::vector<CHPARv> m_P_CH_Array;
+	std::vector<CHRunv> m_CH_Run_Array;
 	
 	size_t CH_Checker_build();
 	unsigned int	GetFirstHit();

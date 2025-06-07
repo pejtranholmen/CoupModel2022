@@ -25,8 +25,8 @@ void PFButtons::DefineButtonInfos()
 	i.Param = GetUniqueMenuNumber();
 	i.Text = "Equal Number of Records for each site";
 	i.TextOptional = "Non Equal size of records for each site";
-	i.HintText = "With equal number of Records a single PG File with Repetitions will be created\n";
-	i.HintText += "Otherwise a single PG file is created for each site";
+	i.HintText = "With equal number of Records a single PG File with Repetitions will be created\n"
+			"Otherwise a single PG file is created for each site";
 	i.Col_start = 2;
 	i.Col_end = 4;
 	i.Row = 1;

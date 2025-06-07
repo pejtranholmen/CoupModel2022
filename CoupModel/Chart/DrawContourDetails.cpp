@@ -66,13 +66,13 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 			float vmin, vmax;
 			float fint;
 
-			if(m_pProp->GetIndepSecond()!=NO_USE&&&m_Contour.ScaleContourChart||m_pProp->GetIndepSecond()!=NO_USE&&ich>0) {
+			if(m_pProp->GetIndepSecond()!=vartype::NO_USE&&&m_Contour.ScaleContourChart||m_pProp->GetIndepSecond()!=vartype::NO_USE&&ich>0) {
 				vmin=m_Contour.SecondMin;
 				vmax=m_Contour.SecondMax;
 				c->yAxis()->setLinearScale(m_Contour.SecondMin, m_Contour.SecondMax);
 				logdist=false;
 			}
-			else if(m_pProp->GetIndepSecond()!=NO_USE&&!m_Contour.ScaleContourChart) {
+			else if(m_pProp->GetIndepSecond()!=vartype::NO_USE&&!m_Contour.ScaleContourChart) {
 				c->layout();
 				DoubleArray YaxisTicks;
 				YaxisTicks=c->yAxis()->getTicks();
@@ -93,7 +93,7 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 					fint=(vmax-vmin)/10;
 					logdist=false;
 			}
-			else if(m_pProp->GetIndepSecond()==PARVAR) {
+			else if(m_pProp->GetIndepSecond()==vartype::PARVAR) {
 					vmin=m_pSimDoc->MR_GetMin(m_pProp->GetSecondIndepIndex()-1);
 					vmax=m_pSimDoc->MR_GetMax(m_pProp->GetSecondIndepIndex()-1);
 					fint=(vmax-vmin)/10;
@@ -265,8 +265,8 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 	
 
 		}
-	else if((m_pProp->GetIndepFirst()==PGVAR||m_pProp->GetIndepFirst()==GEO_LONG||m_pProp->GetIndepFirst()==PGDAY
-		||m_pProp->GetIndepFirst()==PGHOUR||m_pProp->GetIndepFirst()==PGYEAR)&&m_pProp->IsSecondIndepSet()) {
+	else if((m_pProp->GetIndepFirst()== vartype::PGVAR||m_pProp->GetIndepFirst()== vartype::GEO_LONG||m_pProp->GetIndepFirst()== vartype::PGDAY
+		||m_pProp->GetIndepFirst()== vartype::PGHOUR||m_pProp->GetIndepFirst()== vartype::PGYEAR)&&m_pProp->IsSecondIndepSet()) {
 
 			pData=SetPGVarContourChartData(c,  ich, ivar);
 
@@ -275,13 +275,13 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 			float vmin, vmax;
 			float fint;
 
-			if (m_pProp->GetIndepSecond() != NO_USE && &m_Contour.ScaleContourChart || m_pProp->GetIndepSecond() != NO_USE && ich > 0) {
+			if (m_pProp->GetIndepSecond() != vartype::NO_USE && &m_Contour.ScaleContourChart || m_pProp->GetIndepSecond() != vartype::NO_USE && ich > 0) {
 				vmin = m_Contour.SecondMin;
 				vmax = m_Contour.SecondMax;
 				c->yAxis()->setLinearScale(m_Contour.SecondMin, m_Contour.SecondMax);
 				logdist = false;
 			}
-			else if (m_pProp->GetIndepSecond() != NO_USE && !m_Contour.ScaleContourChart) {
+			else if (m_pProp->GetIndepSecond() != vartype::NO_USE && !m_Contour.ScaleContourChart) {
 				c->layout();
 				DoubleArray YaxisTicks;
 				YaxisTicks = c->yAxis()->getTicks();
@@ -298,27 +298,27 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 			}
 
 			if (!m_pProp->isXLabelChanged(ich)) {
-				if (m_pProp->GetIndepFirst() == PGHOUR)
-					m_pProp->SetFirstIndepString(PGHOUR, "Hour of Day", ich);
-				else if (m_pProp->GetIndepFirst() == PGDAY)
-					m_pProp->SetFirstIndepString(PGDAY, "Day of Year", ich);
-				else if (m_pProp->GetIndepFirst() == PGYEAR)
-					m_pProp->SetFirstIndepString(PGYEAR, "Year", ich);
+				if (m_pProp->GetIndepFirst() == vartype::PGHOUR)
+					m_pProp->SetFirstIndepString(vartype::PGHOUR, "Hour of Day", ich);
+				else if (m_pProp->GetIndepFirst() == vartype::PGDAY)
+					m_pProp->SetFirstIndepString(vartype::PGDAY, "Day of Year", ich);
+				else if (m_pProp->GetIndepFirst() == vartype::PGYEAR)
+					m_pProp->SetFirstIndepString(vartype::PGYEAR, "Year", ich);
 			}
 			if (!m_pProp->isYLabel1Changed(ich)) {
 
-				if (m_pProp->GetIndepSecond()== PGHOUR)
-					m_pProp->SetSecondIndepString(PGHOUR, "Hour of Day");
-				else if (m_pProp->GetIndepSecond()== PGDAY)
-					m_pProp->SetSecondIndepString(PGDAY, "Day of Year");
-				else if (m_pProp->GetIndepSecond()== PGYEAR)
-					m_pProp->SetSecondIndepString(PGYEAR, "Year");
-				else if (m_pProp->GetIndepSecond() == GEO_LAT)
-					m_pProp->SetSecondIndepString(PGYEAR, "Latitude");
+				if (m_pProp->GetIndepSecond()== vartype::PGHOUR)
+					m_pProp->SetSecondIndepString(vartype::PGHOUR, "Hour of Day");
+				else if (m_pProp->GetIndepSecond()== vartype::PGDAY)
+					m_pProp->SetSecondIndepString(vartype::PGDAY, "Day of Year");
+				else if (m_pProp->GetIndepSecond()== vartype::PGYEAR)
+					m_pProp->SetSecondIndepString(vartype::PGYEAR, "Year");
+				else if (m_pProp->GetIndepSecond() == vartype::GEO_LAT)
+					m_pProp->SetSecondIndepString(vartype::PGYEAR, "Latitude");
 			}
 
 		}
-	else if(m_pProp->GetIndepSecond()==PGDEPTH) {
+	else if(m_pProp->GetIndepSecond()== vartype::PGDEPTH) {
 
 			pData=SetPGDepthContourChartData(c,  ich, ivar);
 			if (pData == nullptr) return false;
@@ -345,9 +345,9 @@ bool DrawContourDetails::MakeContourPlot(XYChart *c,  int ich, int ivar)
 				m_pProp->m_Title += unit.c_str();
 				m_pProp->m_Title += ")";
 				m_pProp->SetTitle(m_pProp->m_Title);
-				m_pProp->SetSecondIndepSet(PGDEPTH, true);
-				m_pProp->SetFirstIndepSet(DATEAXIS, true);
-				m_pProp->SetSecondIndepString(PGDEPTH, "Depth (m)");
+				m_pProp->SetSecondIndepSet(vartype::PGDEPTH, true);
+				m_pProp->SetFirstIndepSet(vartype::DATEAXIS, true);
+				m_pProp->SetSecondIndepString(vartype::PGDEPTH, "Depth (m)");
 			}	
 		}
 	return true;
@@ -543,7 +543,7 @@ DataSet* DrawContourDetails::SetPGDepthContourChartData(XYChart *c, int ich, int
 	datay.resize(num_curves[ich]);
 	double ymin = 1.E38, ymax = -1.E38;
 	int PGindex;
-	m_pProp->SetFirstIndepVarType(DATEAXIS);
+	m_pProp->SetFirstIndepVarType(vartype::DATEAXIS);
 
 		TT2.clear();
 		TT2.resize(num_curves[ich] * m_ChartInfo.NumOfPoints);
@@ -572,7 +572,7 @@ DataSet* DrawContourDetails::SetPGDepthContourChartData(XYChart *c, int ich, int
 				}
 			}
 
-			if (m_pProp->GetIndepSecond() == PGDEPTH) {
+			if (m_pProp->GetIndepSecond() == vartype::PGDEPTH) {
 				PGindex = p_info.PGFileIndex;
 				float v = -0.01 * FUtil::AtoFloat(m_pPG_Active->GetVarPos(PGindex));
 
@@ -600,7 +600,7 @@ DataSet* DrawContourDetails::SetPGDepthContourChartData(XYChart *c, int ich, int
 		}
 		if (ymin == ymax) {
 			MFC_Util::MessageBox("No Depth information in Variable\n ");
-			m_pProp->SetSecondIndepVarType(NO_USE);
+			m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 			return nullptr;
 		}
 		else {
@@ -614,7 +614,7 @@ DataSet* DrawContourDetails::SetPGDepthContourChartData(XYChart *c, int ich, int
 	
 		int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0);
 		PGindex = m_pSimDoc->m_PlotStorage.GetVar_Index(j);
-		string unit = m_pPG_Active->GetVarUnit(PGindex);
+		string unit = string(m_pPG_Active->GetVarUnit(PGindex));
 		FUtil::trim(unit);
 
 		m_pProp->m_Title = m_Label.st;//m_pPG_Active->GetVarName(PGindex).c_str();
@@ -652,7 +652,7 @@ DataSet* DrawContourDetails::SetPGDepthContourChartData(XYChart *c, int ich, int
 				m_pPG_Active = m_pSimDoc->m_PlotStorage.GetPGPointer(idoc);
 			}
 		}
-		if (m_pProp->GetIndepSecond()== PGDEPTH) {
+		if (m_pProp->GetIndepSecond()== vartype::PGDEPTH) {
 			PGindex = p_info.PGFileIndex;
 			float v = -0.01*FUtil::AtoFloat(m_pPG_Active->GetVarPos(PGindex));
 

@@ -970,7 +970,7 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 		}
 			
 	}
-	if ((m_pProp->GetIndepFirst() == PGDAY || m_pProp->GetIndepFirst() == PGYEAR)) {
+	if ((m_pProp->GetIndepFirst() == vartype::PGDAY || m_pProp->GetIndepFirst() == vartype::PGYEAR)) {
 		if (m_pProp->viewPortTimeStamps != nullptr) delete[] m_pProp->viewPortTimeStamps;
 
 		m_pProp->viewPortTimeStamps = new double[m_ChartInfo.NumOfPoints * m_ChartInfo.NumVariables];
@@ -979,7 +979,7 @@ void TimeSeriePlot::CreateViewPortData(size_t TotNumPrior)
 			for (size_t ii = 0; ii < m_ChartInfo.NumOfPoints; ii++) TT[i * m_ChartInfo.NumOfPoints + ii] = TT[(i - 1) * m_ChartInfo.NumOfPoints + ii];
 		memcpy(m_pProp->viewPortTimeStamps, &TT[0], m_ChartInfo.NumOfPoints * m_ChartInfo.NumVariables * sizeof(double));
 	}
-	else if (m_pProp->GetIndepSecond() == PGDEPTH) {
+	else if (m_pProp->GetIndepSecond() == vartype::PGDEPTH) {
 		if (m_pProp->viewPortTimeStamps != nullptr) delete[] m_pProp->viewPortTimeStamps;
 		m_pProp->viewPortTimeStamps = new double[m_ChartInfo.NumOfPoints * max_numvar];
 		vector<double> NewTimeStamp;

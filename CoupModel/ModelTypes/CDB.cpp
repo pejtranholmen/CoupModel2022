@@ -1,6 +1,7 @@
 
 #include "CDB.h"
-CDB::CDB() :SimB(DB) {
+using namespace std;
+CDB::CDB() :SimB(simtype::DB) {
 	
 	ChaDatelong.resize(0);
 	ChaParIndex.resize(0);
@@ -22,43 +23,43 @@ CDB::CDB(string group)
 CDB::CDB(DB_types index)
 {
 	switch(index) {
-	case Plant_Hydrology:
+	case DB_types::Plant_Hydrology:
 		ID_Group="Plant_Hydrology";
 		DB_Index = 0;
 		break;
-	case Soil_Properties:
+	case DB_types::Soil_Properties:
 		ID_Group="Soil Properties";
 		break;
-	case Soil_Evaporation:
+	case DB_types::Soil_Evaporation:
 		ID_Group="Soil evaporation";
 		DB_Index = 1;
 		break;
-	case Snow:
+	case DB_types::Snow:
 		ID_Group="Snow";
 		DB_Index = 2;
 		break;
-	case Soil_Freezing:
+	case DB_types::Soil_Freezing:
 		ID_Group="Soil frost";
 		DB_Index = 3;
 		break;
-	case Soil_Water_Flows:
+	case DB_types::Soil_Water_Flows:
 		ID_Group="Soil water flows";
 		DB_Index = 4;
 		break;
-	case Plant_Growth:
+	case DB_types::Plant_Growth:
 		ID_Group="Plant Growth";
 		DB_Index = 5;
 		break;
-	case Soil_Manage:
+	case DB_types::Soil_Manage:
 		ID_Group="Site Management";
 		DB_Index = 6;
 		break;
 
-	case Soil_Organic:
+	case DB_types::Soil_Organic:
 		ID_Group="Soil Organic Processes";
 		DB_Index = 7;
 		break;
-	case Soil_InOrganic:
+	case DB_types::Soil_InOrganic:
 		ID_Group="Soil Mineral N Processes";
 		DB_Index = 8;
 		break;

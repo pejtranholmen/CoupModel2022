@@ -20,7 +20,7 @@ class CUGCell;
 
 struct CHART_TYPES_OPTIONS {
 	enum CHART_TYPES typ;
-	string typtext;
+	std::string_view typtext;
 };
 
 struct CHART_POS
@@ -82,9 +82,9 @@ public:
 	~ChartProp(void);
 	
 	RESHAPE m_ReShape;
-	vector<CONSTRAIN_BY> m_ConstrainProp;
+	std::vector<CONSTRAIN_BY> m_ConstrainProp;
 
-	string DefineYearWithinDayCell(CUGCell *pCell);
+	std::string DefineYearWithinDayCell(CUGCell *pCell);
 	void UpdateNumSubcharts() { m_NumSubCharts = m_NumChartX*m_NumChartY; };
 	void AddConstrainByMultiPar(SIMB simv, size_t Index);
 
@@ -105,17 +105,17 @@ public:
 
 	bool SetChartType(int chart_type);
 	bool SetChartType(CHART_TYPES chart_type);
-	bool SetChartType(string chart_type_string);
+	bool SetChartType(std::string chart_type_string);
 	void ResetChartType() {
 		SetChartType(m_PreviousChartType);
 	};
-	vector<string> GetChartTypeOptions(bool Complete = true);
+	std::vector<std::string_view> GetChartTypeOptions(bool Complete = true);
 	CHART_TYPES GetChartTypeIndex() const noexcept;
-	string GetCurrentChartTypeOption() { return m_ChartTypesOptions[size_t(m_ChartType)].typtext; };
-	string GetChartTypeString();
+	std::string_view GetCurrentChartTypeOption() { return m_ChartTypesOptions[size_t(m_ChartType)].typtext; };
+	std::string_view GetChartTypeString();
 
 	bool CheckChartType_Based_On_IndependentVar();
-	void MakeCumTranformation(vector<double> *pVector);
+	void MakeCumTranformation(std::vector<double> *pVector);
 
 
 	void SetPGSource(CPG *pPGSource) { m_pPGSource = pPGSource; };
@@ -128,7 +128,7 @@ public:
 	bool m_MakeChartTitle,m_NoXAxisScale,m_NoYAxisScale;
 	
 	COMMONSCALE m_CommonScaleValues;
-	vector<COMMONSCALE> m_CommonScaleValuesVector;
+	std::vector<COMMONSCALE> m_CommonScaleValuesVector;
 
 	TimeScale m_TimeScale;
 	bool ChangeChartTypeForward();
@@ -155,7 +155,7 @@ public:
 
 
 	private:
-		vector<CHART_TYPES_OPTIONS> m_ChartTypesOptions;
+		std::vector<CHART_TYPES_OPTIONS> m_ChartTypesOptions;
 		bool m_RightAxisExist;
 		CPG *m_pPGSource;
 	

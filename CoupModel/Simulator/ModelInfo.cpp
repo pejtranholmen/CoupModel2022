@@ -1,5 +1,6 @@
 
 #include "ModelInfo.h"
+using namespace std;
 
 ModelInfo::ModelInfo() 
 {

@@ -79,8 +79,8 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 					m_pProp->ResetZScale();
 					if(After=="TimeSerie") {
 						m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
-						m_pProp->SetFirstIndepSet(PGDEPTH,false);
-						m_pProp->SetSecondIndepSet(DATEAXIS, false);
+						m_pProp->SetFirstIndepSet(vartype::PGDEPTH,false);
+						m_pProp->SetSecondIndepSet(vartype::DATEAXIS, false);
 					}
 					else if(After=="Scatter Chart")
 						m_pProp->m_ChartType= CHART_TYPES::SCATTER;
@@ -96,14 +96,14 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 						m_pProp->m_ChartType= CHART_TYPES::CONTOUR_CHART;
 						if(m_pUtil->m_MultiRunPlot) {
 							if(m_pProp->GetFirstIndepIndex()==m_pProp->GetSecondIndepIndex()&&m_pProp->GetSecondIndepIndex()== std::string::npos) 
-								m_pProp->SetSecondIndepIndex(PARVAR,1);
+								m_pProp->SetSecondIndepIndex(vartype::PARVAR,1);
 							OnUpdate();
 
 
 						}
 						else {
-							m_pProp->SetSecondIndepSet(PGDEPTH,true);
-							m_pProp->SetFirstIndepSet(DATEAXIS, true);
+							m_pProp->SetSecondIndepSet(vartype::PGDEPTH,true);
+							m_pProp->SetFirstIndepSet(vartype::DATEAXIS, true);
 
 
 						}
@@ -120,21 +120,21 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 
 					if (After == "Normal Time") {
 						m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
-						m_pProp->SetFirstIndepSet(DATEAXIS, false);
+						m_pProp->SetFirstIndepSet(vartype::DATEAXIS, false);
 					}
 					else if (After == "Hour") {
 						m_pProp->m_ChartType = CHART_TYPES::SCATTER;
-						m_pProp->SetFirstIndepSet(PGHOUR, true);
+						m_pProp->SetFirstIndepSet(vartype::PGHOUR, true);
 
 					}
 					else if (After == "Day") {
 						m_pProp->m_ChartType = CHART_TYPES::SCATTER;
-						m_pProp->SetFirstIndepSet(PGDAY, true);
+						m_pProp->SetFirstIndepSet(vartype::PGDAY, true);
 
 					}
 					else if (After == "Year") {
 						m_pProp->m_ChartType = CHART_TYPES::SCATTER;
-						m_pProp->SetFirstIndepSet(PGYEAR, true);
+						m_pProp->SetFirstIndepSet(vartype::PGYEAR, true);
 	
 					}
 					m_pProp->ResetScales();
@@ -147,19 +147,19 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 				else if (col == 0 && row == 7) {
 					if (After == "Not Used") {
 						m_pProp->m_ChartType = CHART_TYPES::SCATTER;	
-						m_pProp->SetSecondIndepSet(NO_USE, false);
+						m_pProp->SetSecondIndepSet(vartype::NO_USE, false);
 					}
 					else if (After == "Hour") {
 						m_pProp->m_ChartType = CHART_TYPES::CONTOUR_CHART;
-						m_pProp->SetSecondIndepSet(PGHOUR, true);
+						m_pProp->SetSecondIndepSet(vartype::PGHOUR, true);
 					}
 					else if (After == "Day") {
 						m_pProp->m_ChartType = CHART_TYPES::CONTOUR_CHART;
-						m_pProp->SetSecondIndepSet(PGDAY, true);
+						m_pProp->SetSecondIndepSet(vartype::PGDAY, true);
 					}
 					else if (After == "Year") {
 						m_pProp->m_ChartType = CHART_TYPES::CONTOUR_CHART;
-						m_pProp->SetSecondIndepSet(PGYEAR, true);
+						m_pProp->SetSecondIndepSet(vartype::PGYEAR, true);
 					}
 					m_pProp->ResetScales();
 					Make_Sheet0_TimeSeriePlot();
@@ -196,11 +196,11 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 					else if (row == 7) {
 						size_t ind = MFC_Util::AtoInt(After);
 						if (After == "All") ind = 0;
-						if (m_pProp->m_MultiPG_dep.FirstType == PGDAY&&m_pProp->m_MultiPG_dep.SecondType == PGYEAR) {
+						if (m_pProp->m_MultiPG_dep.FirstType == vartype::PGDAY&&m_pProp->m_MultiPG_dep.SecondType == vartype::PGYEAR) {
 							m_pProp->m_HourValueRepresentation = ind;
 							m_pProp->m_YearValueRepresentation = 0;
 						}
-						else if (m_pProp->m_MultiPG_dep.FirstType == PGDAY&&m_pProp->m_MultiPG_dep.SecondType == PGHOUR) {
+						else if (m_pProp->m_MultiPG_dep.FirstType == vartype::PGDAY&&m_pProp->m_MultiPG_dep.SecondType == vartype::PGHOUR) {
 							m_pProp->m_YearValueRepresentation = ind;
 							m_pProp->m_HourValueRepresentation = 0;
 						}
@@ -222,7 +222,7 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 				}
 				else if(col==6) {
 					if(row==4) {
-						m_pProp->SetFirstIndepIndex(PARVAR,FUtil::GetOptionIndex(optionlist,After));
+						m_pProp->SetFirstIndepIndex(vartype::PARVAR,FUtil::GetOptionIndex(optionlist,After));
 
 						m_TimeSeriePlot.LoadTimeSerieData();
 						m_pZoomTimeSerie->OnChangeWindowWidth();
@@ -251,7 +251,7 @@ bool ChartCugCommands::ChangeActionOptions(int col, int row)
 				}
 				else if(col==9) {
 					if(row==1) {
-						m_pProp->SetSecondIndepIndex(PARVAR,FUtil::GetOptionIndex(optionlist,After));
+						m_pProp->SetSecondIndepIndex(vartype::PARVAR,FUtil::GetOptionIndex(optionlist,After));
 
 						m_TimeSeriePlot.LoadTimeSerieData();
 						m_pZoomTimeSerie->OnChangeWindowWidth();
@@ -723,7 +723,7 @@ bool ChartCugCommands::MakeAxisMenu(int col, int row)
 
 
 	if ((strscale=="Y Left" && !m_pProp->IsSecondIndepSet())
-		|| (row == 0 && m_pProp->IsSecondIndepSet() && m_pProp->GetSecondIndepVarType() != PGDEPTH)) {
+		|| (row == 0 && m_pProp->IsSecondIndepSet() && m_pProp->GetSecondIndepVarType() != vartype::PGDEPTH)) {
 		updatedirect = false;
 		Index = size_t(row);
 		int n;
@@ -806,7 +806,7 @@ bool ChartCugCommands::MakeAxisMenu(int col, int row)
 		}
 	}
 	else if (m_pProp->IsSecondIndepSet()) {
-		if (m_pProp->GetSecondIndepVarType() == PGDEPTH&&row == 0) {
+		if (m_pProp->GetSecondIndepVarType() == vartype::PGDEPTH&&row == 0) {
 				return false;
 		}
 		GetCell(-1, row, &cell);
@@ -953,7 +953,7 @@ bool ChartCugCommands::MakePGFileFromDataInCurrentChart()
 
 		if (m_extra_xy_variables > 0) {
 			m_PGExtra.SetVarName(1, "X Variable");
-			if(m_pProp->GetIndepFirst()!=DATEAXIS) m_PGExtra.SetVarId(1, m_pProp->GetFirstIndepString());
+			if(m_pProp->GetIndepFirst()!= vartype::DATEAXIS) m_PGExtra.SetVarId(1, m_pProp->GetFirstIndepString());
 			if (m_extra_xy_variables > 1) 
 				m_PGExtra.SetVarName(2, "Y Variable");
 			if (m_pProp->IsSecondIndepSet()) m_PGExtra.SetVarId(2, m_pProp->GetSecondIndepString());

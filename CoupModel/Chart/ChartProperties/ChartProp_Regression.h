@@ -18,7 +18,7 @@ public:
 	float GetRegA1(size_t index);
 	float GetRegR(size_t index);
 private:
-	vector<float> m_RegA0, m_RegA1, m_RegR;
+	std::vector<float> m_RegA0, m_RegA1, m_RegR;
 	
 };
 

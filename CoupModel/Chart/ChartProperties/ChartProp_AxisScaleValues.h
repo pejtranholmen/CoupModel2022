@@ -99,12 +99,12 @@ public:
 	void ResetZLabel(int index);
 	bool SetLegend1(int index, std::string text, bool changeset = false);
 
-	void SetYLabel1(int index,string);
-	void AddYUnit1(int index,string);
+	void SetYLabel1(int index, std::string);
+	void AddYUnit1(int index, std::string);
 	void SetYLabel2(int index, std::string);
-	string GetYLabel1(int index);
-	string GetYLabel2(int index);
-	string GetLegend(int index);
+	std::string GetYLabel1(int index);
+	std::string GetYLabel2(int index);
+	std::string GetLegend(int index);
 	void SetLengend1(size_t index, std::string str, bool changeset=false);
 	void SetYLabel1Changed(int index) {m_YLabel1Change.at(index)=true;};
 	void SetYLabel2Changed(int index) {m_YLabel2Change.at(index)=true;};
@@ -114,8 +114,8 @@ public:
 	void SetRightYScaleChanged(int index) {m_YScaleRightChanged.at(index)=true;};
 	void ResetSerie1(bool ClearAll=false);
 	void ResetSerie2(bool ClearAll=false);
-	bool AddLegend1(string, int layer=1);
-	bool AddLegend2(string);
+	bool AddLegend1(std::string, int layer=1);
+	bool AddLegend2(std::string);
 
 	bool SetLegend2(int index, std::string txt);
 	bool Open();
@@ -124,11 +124,11 @@ void SetVerticalLegends(bool value) ;
 	bool GetVerticalLegends() {return m_VerticalLegends;};
 	void SetXLabel(int index, std::string str);
 	void SetZLabel(int index, std::string str);
-	string GetZLabel(int index);
+	std::string GetZLabel(int index);
 	bool isZLabelChanged(int index);
 
 	bool isXLabelChanged(int index);
-	string GetXLabel(int index);
+	std::string GetXLabel(int index);
 
 	bool MakeLabels();
 	bool SetFreeze();
@@ -145,30 +145,30 @@ void SetVerticalLegends(bool value) ;
 	void ChangeYMax1(size_t index, float value);
 	void ChangeYInterv1(size_t index, float value);
 	void SetRemoveLabels(bool value) {m_RemoveAxisLabel=value;};
-	string GetLegend(size_t index) { if (m_Legend1.size() > index) return m_Legend1[index]; return ""; };
-	string GetLastLegend() {if (m_Legend1.size() > 0) return m_Legend1[m_Legend1.size() - 1]; else return "";	};
+	std::string GetLegend(size_t index) { if (m_Legend1.size() > index) return m_Legend1[index]; return ""; };
+	std::string GetLastLegend() {if (m_Legend1.size() > 0) return m_Legend1[m_Legend1.size() - 1]; else return "";	};
 	bool m_RemoveAxisLabel;
 	bool m_freeze;
 
 
-	vector<float> m_YScaleRightMin, m_YScaleRightMax, m_YScaleRightInterv;
-	vector<float> m_XScaleMin, m_XScaleMax, m_XScaleInterv;
-	vector<float> m_ZScaleMin, m_ZScaleMax, m_ZScaleInterv;
+	std::vector<float> m_YScaleRightMin, m_YScaleRightMax, m_YScaleRightInterv;
+	std::vector<float> m_XScaleMin, m_XScaleMax, m_XScaleInterv;
+	std::vector<float> m_ZScaleMin, m_ZScaleMax, m_ZScaleInterv;
 
 
 
 
-	vector<float> m_YScaleLeftMin, m_YScaleLeftMax, m_YScaleLeftInterv;
-	vector<bool> m_YScaleLeftChanged, m_YScaleLeftSet;
-	vector<bool>  m_YScaleRightChanged, m_YScaleRightSet;
-	vector<bool>  m_XScaleChanged, m_XScaleSet, m_ZScaleChanged, m_ZScaleSet;
-	vector<bool>  m_YLabel1Change, m_YLabel2Change, m_XLabelChange, m_ZLabelChange;
-	vector<size_t>  m_XVariableNumber;
+	std::vector<float> m_YScaleLeftMin, m_YScaleLeftMax, m_YScaleLeftInterv;
+	std::vector<bool> m_YScaleLeftChanged, m_YScaleLeftSet;
+	std::vector<bool>  m_YScaleRightChanged, m_YScaleRightSet;
+	std::vector<bool>  m_XScaleChanged, m_XScaleSet, m_ZScaleChanged, m_ZScaleSet;
+	std::vector<bool>  m_YLabel1Change, m_YLabel2Change, m_XLabelChange, m_ZLabelChange;
+	std::vector<size_t>  m_XVariableNumber;
 
-	vector<string> m_YLabel1, m_YLabel2, m_XLabel, m_ZLabel;
-	vector<string> m_Legend1, m_Legend2;
+	std::vector<std::string> m_YLabel1, m_YLabel2, m_XLabel, m_ZLabel;
+	std::vector<std::string> m_Legend1, m_Legend2;
 
-	vector<bool> m_Legend1Change, m_Legend2Change;
+	std::vector<bool> m_Legend1Change, m_Legend2Change;
 	bool m_LegendChangeAny, m_VerticalLegends;
 
 	bool m_CommonXScale;
@@ -182,6 +182,6 @@ private:
 
 
 
-	string m_LabelY, m_LabelX;
+	std::string m_LabelY, m_LabelX;
 };
 

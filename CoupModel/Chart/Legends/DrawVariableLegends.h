@@ -1,5 +1,6 @@
 #pragma once
 #include "../ChartBase.h"
+#include <string>
 struct PLOTv;
 
 class DrawVariableLegends : public ChartBase
@@ -10,7 +11,7 @@ public:
 
 	bool FindIdForVariablesToPlot(int j, PLOTv p_info, int PGindex);
 	size_t GetNumberOfEnsembles();
-	string GetEnsembleIdString(size_t i);
+	std::string GetEnsembleIdString(size_t i);
 
 
 protected:

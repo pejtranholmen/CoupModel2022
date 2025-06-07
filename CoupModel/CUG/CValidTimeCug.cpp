@@ -378,7 +378,7 @@ void CValidTimeCug::OnSetup()
 
 					}
 					lindex = vvp[i].TabIndex;
-					if (pSw->GetType() < 6) {
+					if (pSw->GetType() < simtype::PGFILE) {
 						test += MFC_Util::AddIndexStdString(1 + vvp[i].TabIndex);
 
 					}

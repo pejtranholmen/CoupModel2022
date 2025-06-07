@@ -9,7 +9,7 @@ Tab::~Tab()
 
 }
 Tab::Tab(vector<P*> *target,enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
-	:SimB(TABLE, data, elem, fproc, bproc, ulev)
+	:SimB(simtype::TABLE, data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target; 
 	;

@@ -79,8 +79,8 @@ void DBDataCug::OnUpdateDataBase()
 {
 
 	if(m_pDoc!=nullptr) {
-		m_pSwTimeRes=(Sw*)m_pDoc->GetPtr(SWITCH,"TimeResolution");
-		m_pSwPlantType=(Sw*)m_pDoc->GetPtr(SWITCH,"PlantType");
+		m_pSwTimeRes=(Sw*)m_pDoc->GetPtr(simtype::SWITCH,"TimeResolution");
+		m_pSwPlantType=(Sw*)m_pDoc->GetPtr(simtype::SWITCH,"PlantType");
 	}
 
 

@@ -14,7 +14,7 @@
 const int NUMDIM=10;
 class SimB;
 #include "ViewTree.h"
-#include "std.h"
+#include "stdAfx.h"
 
 
 class CClassToolBar : public CMFCToolBar
@@ -48,7 +48,7 @@ protected:
 	CDocument *m_pDoc;
 	CString m_type, m_group, m_typeprior, m_groupprior;
 	int m_LocalIndex;
-	map<string, int> MapMR[NUMDIM];
+	std::map<std::string, int> MapMR[NUMDIM];
 
 
 

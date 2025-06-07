@@ -203,7 +203,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 		long num;
 		if(m_Type==DB)
 			num=m_pDB->GetChaDate(i);
-		else if(m_Type==PAR_SINGLE) 
+		else if(m_Type==simtype::PAR_SINGLE) 
 			num=m_pPs->GetChaDate(i);
 		else
 			num=m_pP->GetChaDate(m_Par.TabIndex, i);
@@ -221,7 +221,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 		if(m_Type==DB) {
 			Text+=m_pDB->GetChaParValue(i).c_str();
 		}
-		else if(m_Type==PAR_SINGLE)
+		else if(m_Type==simtype::PAR_SINGLE)
 			Text+=MFC_Util::DtoAscii(m_pPs->GetChaParValue(i));
 		else {
 			Text+=MFC_Util::DtoAscii(m_pP->GetChaParValue(m_Par.TabIndex, i));
@@ -256,7 +256,7 @@ void CChaParDuringRun::OnOK()
 		else
 			m_pDoc->Reset_P_CH(m_Par.pBase);
 	}
-	else if(m_Type==PAR_SINGLE) {
+	else if(m_Type==simtype::PAR_SINGLE) {
 		if(((Ps*)m_Par.pBase)->GetNumChaDates()>0)
 			m_pDoc->Set_P_CH(m_Par.pBase,0);
 		else

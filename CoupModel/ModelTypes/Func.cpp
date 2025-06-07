@@ -26,7 +26,7 @@ Func::~Func()
 //Func::Func(double (WaterUptake_Functions::*fpoint)(double),WaterUptake_Functions *mClass,  enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
 Func::Func(enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
 
-	:SimB(FUNCTION, data, elem, fproc, bproc, ulev)
+	:SimB(simtype::FUNCTION, data, elem, fproc, bproc, ulev)
 {
 	m_Class = nullptr;
 	m_FuncType = 0;

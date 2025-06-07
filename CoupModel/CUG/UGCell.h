@@ -170,24 +170,24 @@ public:
 
 	//***** text data type functions *****
 	int		SetText(LPCTSTR text);
-	int		SetText(string text);
+	int		SetText(std::string text);
 	int		GetText(CString *text);
-	int		GetStdText(string *text);
+	int		GetStdText(std::string *text);
 	LPCTSTR	GetText();
-	string	GetStdText();
+	std::string	GetStdText();
 	int		AppendText(LPCTSTR text);
 	int		GetTextLength();
 
-	int		SetMask(string txt) { return SetMask(CString(txt.c_str()));};
+	int		SetMask(std::string txt) { return SetMask(CString(txt.c_str()));};
 	int		SetMask(LPCTSTR text);
 	int		GetMask(CString *text);
 	LPCTSTR	GetMask();
 
-	int		SetLabelText(string text) { return SetLabelText(CString(text.c_str())); };
+	int		SetLabelText(std::string text) { return SetLabelText(CString(text.c_str())); };
 	int		SetLabelText(LPCTSTR text);
 	int		GetLabelText(CString *text);
 	LPCTSTR	GetLabelText();
-	string  GetStdLabelText();
+	std::string  GetStdLabelText();
 
 	//***** BOOL data type functions *****
 	int		SetBool(BOOL state);

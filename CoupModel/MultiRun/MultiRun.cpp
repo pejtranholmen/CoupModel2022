@@ -96,7 +96,7 @@ MultiRun::MultiRun(SIMB PAR, Doc* pDoc, CWnd* pParent /*=nullptr*/)
 
 	}
 	else{  // Values later come from edit boxes.
-		if(m_Par.pBase->MR_Get_Method()<3||m_Par.pBase->MR_Get_Method()==9) {
+		if(m_Par.pBase->MR_Get_Method()<MR_METHOD(3)||m_Par.pBase->MR_Get_Method()==MR_METHOD(9)) {
 			if(!m_Par.pBase->Is_PTable()) {
 		 		m_MinValue=m_pPs->MR_Get_Min();
 				m_MaxValue=m_pPs->MR_Get_Max();
@@ -179,7 +179,7 @@ BOOL MultiRun::OnInitDialog() // Get values. Set text.
 
 
 	SetWindowText(CString(Text.c_str()));
-	int method;
+	MR_METHOD method;
 	if(!m_Par.pBase->Is_PTable()) {
 		m_Selected_Dim=m_pPs->MR_Get_Dim();  // ERROR
 		method=m_pPs->MR_Get_Method();
@@ -191,7 +191,7 @@ BOOL MultiRun::OnInitDialog() // Get values. Set text.
 	m_ctrlMin.SetWindowText(MFC_Util::DtoAscii(m_MinValue));
 	m_ctrlMax.SetWindowText(MFC_Util::DtoAscii(m_MaxValue));
 	m_ctrlStart.SetWindowText(MFC_Util::DtoAscii(m_StartValue));
-	if(method<=3||method==9){
+	if(method<=MR_METHOD(3)||method==MR_METHOD(9)){
 		if(!m_Par.pBase->Is_PTable()) {
 			m_MinValue=m_pPs->MR_Get_Min();
 			m_MaxValue=m_pPs->MR_Get_Max();
@@ -208,7 +208,7 @@ BOOL MultiRun::OnInitDialog() // Get values. Set text.
 	}
 
 
-	if(m_Selected_Dim>0&&method<=3) {
+	if(m_Selected_Dim>0&&method<= MR_METHOD(3)) {
   		GetDlgItem(IDC_EDIT1)->ModifyStyle(WS_DISABLED,0);
 		GetDlgItem(IDC_EDIT2)->ModifyStyle(WS_DISABLED,0);
 		GetDlgItem(IDC_EDIT3)->ModifyStyle(0,WS_DISABLED);
@@ -219,7 +219,7 @@ BOOL MultiRun::OnInitDialog() // Get values. Set text.
 		GetDlgItem(ID_TABLE_VALUES)->ModifyStyle(0,WS_DISABLED);
 		GetDlgItem(IDOK)->ModifyStyle(WS_DISABLED,0);
 	}
-	else if( m_Selected_Dim>0&&method==4){
+	else if( m_Selected_Dim>0&&method== MR_METHOD(4)){
   		GetDlgItem(IDC_EDIT1)->ModifyStyle(0,WS_DISABLED);
 		GetDlgItem(IDC_EDIT2)->ModifyStyle(0,WS_DISABLED);
 		GetDlgItem(IDC_STATIC1)->ModifyStyle(0,WS_DISABLED);
@@ -289,7 +289,7 @@ BOOL MultiRun::OnInitDialog() // Get values. Set text.
 	m_Num_Method.AddString(_T("Bayesian Calibration using log distribution"));
 	m_Num_Method.AddString(_T("Nelder Mead optimization"));
 
-	m_Num_Method.SetCurSel(method);  // Alternate way to set a control when it will not contain information.
+	m_Num_Method.SetCurSel(int(method));  // Alternate way to set a control when it will not contain information.
 
 	if(m_Selected_Dim<=0) {
 		GetDlgItem(IDC_BUTTON_CHANGE)->ModifyStyle(0,WS_DISABLED);

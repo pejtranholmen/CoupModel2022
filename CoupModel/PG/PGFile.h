@@ -24,7 +24,7 @@ public:
 	bool Check_Update_ActHit(size_t ivar, size_t minut);
 	void ResetPos();
 	void* GetRecordPointer(size_t irec, size_t rep=1);
-	vector<float> GetRecordDataVector(size_t irec, size_t rep = 1);
+	std::vector<float> GetRecordDataVector(size_t irec, size_t rep = 1);
 	bool SetWritePosition(size_t irec);
 
 	bool SetPointerToAllData(float *pvar);
@@ -45,18 +45,18 @@ public:
 
 
 		
-	string	ExportToFile(bool secondhalf=false);
-	string	ExportToFile(string filename, bool split=false, bool secondhalf=false);
+	std::string	ExportToFile(bool secondhalf=false);
+	std::string	ExportToFile(std::string filename, bool split=false, bool secondhalf=false);
 
 
 
 
 	void	Reset();
-	string	GetDate(size_t);
+	std::string	GetDate(size_t);
 
 
 
-	string GetFileName(bool OnlyTitle=false);
+	std::string GetFileName(bool OnlyTitle=false);
 	bool	IsAddInfoSet();
 
 
@@ -83,15 +83,15 @@ public:
 	bool	SetAllLongTimesFromMinDiff(bool WithMissingAssignment_To_Var=true);
 
 	unsigned int GetLongTimeEnd();
-	string	GetVarDateHourMean(size_t recno, size_t hours);
+	std::string	GetVarDateHourMean(size_t recno, size_t hours);
 	size_t	GetNumRecordsHour(size_t hours);
 	bool	FindKeyValues();
 
-	string	GetVarDes(size_t, size_t repit=0);
-	string	GetVarName(size_t, size_t repit=0);
-	string	GetVarUnit(size_t, size_t repit=0);
-	string	GetVarId(size_t, size_t repit=0);
-	string	GetVarPos(size_t, size_t repit=0);
+	std::string	GetVarDes(size_t, size_t repit=0);
+	std::string	GetVarName(size_t, size_t repit=0);
+	std::string_view	GetVarUnit(size_t, size_t repit=0);
+	std::string	GetVarId(size_t, size_t repit=0);
+	std::string	GetVarPos(size_t, size_t repit=0);
 	float	GetVarMin(size_t, size_t repit=0);
 	float	GetVarMax(size_t, size_t repit=0);
 	float	GetVarMean(size_t, size_t repit=0);
@@ -111,7 +111,7 @@ public:
 	void	SetVarMax(size_t, float, size_t repit=0);
 
 	size_t  GetJumpBacksNum();
-	string  GetJumpBackDates(size_t rec);
+	std::string  GetJumpBackDates(size_t rec);
 
 	size_t	GetNumVariables();
 	size_t	GetNumRecords();

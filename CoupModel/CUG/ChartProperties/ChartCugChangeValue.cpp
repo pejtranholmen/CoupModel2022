@@ -357,7 +357,7 @@ bool ChartCugChangeValue::ChangeAxis(int col, int row, CString str)
 
 
 						}
-						else if (m_pProp->GetFirstIndepVarType() != DATEAXIS) {
+						else if (m_pProp->GetFirstIndepVarType() != vartype::DATEAXIS) {
 							pV = MFC_Util::AtoFloat(str);
 							if (m_pProp->m_CommonXScale)
 								m_pProp->SetXmin(string::npos, pV);
@@ -404,7 +404,7 @@ bool ChartCugChangeValue::ChangeAxis(int col, int row, CString str)
 						else if(m_pUtil->m_MultiRunPlot) {
 							reload=true;
 							pV=MFC_Util::AtoFloat(str);
-							if (m_pProp->GetIndepFirst() == MULTIRUN_NUM) {
+							if (m_pProp->GetIndepFirst() == vartype::MULTIRUN_NUM) {
 								m_pProp->SetXmax(Index, pV);
 								if (m_pProp->m_CommonXScale)
 									m_pProp->SetXmax(string::npos, pV);
@@ -426,7 +426,7 @@ bool ChartCugChangeValue::ChangeAxis(int col, int row, CString str)
 									m_pProp->m_XScaleMin[Index] = m_pProp->m_TimeScale.min;
 							}
 						}
-						else if (m_pProp->GetFirstIndepVarType() != DATEAXIS) {
+						else if (m_pProp->GetFirstIndepVarType() != vartype::DATEAXIS) {
 							pV = MFC_Util::AtoFloat(str);
 							if (m_pProp->m_CommonXScale)
 								m_pProp->SetXmax(string::npos, pV);
@@ -472,7 +472,7 @@ bool ChartCugChangeValue::ChangeAxis(int col, int row, CString str)
 
 
 						}
-						else if (m_pProp->GetFirstIndepVarType() != DATEAXIS) {
+						else if (m_pProp->GetFirstIndepVarType() != vartype::DATEAXIS) {
 							pV = MFC_Util::AtoFloat(str);
 							if (m_pProp->m_CommonXScale)
 								m_pProp->SetXInterv(string::npos, pV);
@@ -489,10 +489,10 @@ bool ChartCugChangeValue::ChangeAxis(int col, int row, CString str)
 				
 		}
 		else if(m_pProp->IsSecondIndepSet()) {
-			if (m_pProp->GetSecondIndepVarType() == PGDEPTH&&row == 0) {
+			if (m_pProp->GetSecondIndepVarType() == vartype::PGDEPTH&&row == 0) {
 				switch (col) {
 				case 0:
-					m_pProp->SetSecondIndepString(PGDEPTH, CT2A(str).m_psz);
+					m_pProp->SetSecondIndepString(vartype::PGDEPTH, CT2A(str).m_psz);
 					m_pProp->SetYLabel1Changed(0);
 				case 1:
 					m_pProp->m_YScaleLeftChanged[0] = true;

@@ -9,6 +9,7 @@
 #include "../Util/FUtil.h"
 #include "./ModelFiles.h"
 
+using namespace std;
 ModelFiles::ModelFiles() {
 	m_NumValidFiles = 0;
 	m_ResidualFileVector.resize(m_NumValidFiles+1);

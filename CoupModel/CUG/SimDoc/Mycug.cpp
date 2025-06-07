@@ -214,7 +214,7 @@ void MyCug::SetDocument(CCoupModelDoc *pDoc)
 
 
 	MySingle::instance().GetDB_HeaderPointer()->m_pSimDoc=m_pSimDoc;
-	CDB *pDB=m_pSimDoc->DB_GetPointer(Soil_Properties);
+	CDB *pDB=m_pSimDoc->DB_GetPointer(DB_types::Soil_Properties);
 	p_PFCurve = &PlotpF::GetPointer();
 	if(pDB!=nullptr) {
 		string soilkey=pDB->GetStringValue();
@@ -3456,7 +3456,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 		}*/
 		int prev_pre_period;
 		int prev_start,change;
-		Sw* pSwTid=(Sw*)m_pSimDoc->GetPtr(SWITCH,"TimeResolution");
+		Sw* pSwTid=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH,"TimeResolution");
 		bool daily=false, hourly=false;
 		if(pSwTid->GetIntValue()==1) daily=true;
 		if(pSwTid->GetIntValue()==2) hourly=true;
@@ -3671,7 +3671,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 					fvalue=FUtil::AtoFloat(str);
 					Type="Table Parameters";
 					
-					pSw=m_pSimDoc->GetPtr(PAR_TABLE, Name);
+					pSw=m_pSimDoc->GetPtr(simtype::PAR_TABLE, Name);
 					if(pSw==nullptr) {
 						Group="Plant";
 						pSw=m_pSimDoc->GetPtr(Type, Group, Name);
@@ -3686,7 +3686,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 					if(m_ParameterTableView==0) {				
 						GetCell(2,row-index-2, &cell1);
 						Name=cell1.GetStdText();
-						pSw=m_pSimDoc->GetPtr(TABLE, Name);
+						pSw=m_pSimDoc->GetPtr(simtype::TABLE, Name);
 						pTab=(Tab*)pSw;
 					}
 					else
@@ -4066,7 +4066,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 					case 4:	
 
 						if(pPar->Is_P()) {
-							if((pPar->MR_Get_Method()==1||pPar->MR_Get_Method()==3)&&fvalue<=0) {
+							if((pPar->MR_Get_Method()== MR_METHOD(1)||pPar->MR_Get_Method()== MR_METHOD(3))&&fvalue<=0) {
 								UpdateStatusBar("Not possible to have zero or negative values for log distibutions, set new min !");
 								if(((Ps*)pPar)->MR_Get_Min()<=0)
 									((Ps*)pPar)->MR_Set_Min(0.001);
@@ -4079,7 +4079,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 								((Ps*)pPar)->MR_Set_Min(fvalue);
 						}
 						else {
-							if((((P*)pPar)->MR_Get_Method(TabIndex)==1||pPar->MR_Get_Method(TabIndex)==3)&&fvalue<=0) {
+							if((((P*)pPar)->MR_Get_Method(TabIndex)== MR_METHOD(1)||pPar->MR_Get_Method(TabIndex)== MR_METHOD(3))&&fvalue<=0) {
 								UpdateStatusBar("Not possible to have zero or negative values for log distibutions, set new min !");
 								if(((P*)pPar)->MR_Get_Min(TabIndex)<=0)
 									((P*)pPar)->MR_Set_Min(TabIndex, 0.001);
@@ -4250,7 +4250,7 @@ if ((sheet == 5 || sheet == 6 || sheet == 10) && item > 8003 && item < 8012) {
 		if(ManagePlotWindows(item, sheet,true))
 			return;
 
-		if(MultiRunPlotCommand(col, row, item, SUMVAR)) return;
+		if(MultiRunPlotCommand(col, row, item, vartype::SUMVAR)) return;
 
 	}
 	else if(col>5&&sheet==6) {
@@ -4258,7 +4258,7 @@ if ((sheet == 5 || sheet == 6 || sheet == 10) && item > 8003 && item < 8012) {
 		if(ManagePlotWindows(item, sheet,true))
 			return;
 
-		if(MultiRunPlotCommand(col, row, item, VALVAR)) return;
+		if(MultiRunPlotCommand(col, row, item, vartype::VALVAR)) return;
 
 	}
 	else if((sheet==5||sheet==6)&&item<4020){
@@ -4267,7 +4267,7 @@ if ((sheet == 5 || sheet == 6 || sheet == 10) && item > 8003 && item < 8012) {
 	}
 	else if (sheet==10) { 
 		
-		if (MultiRunPlotCommand(col, row, item, PARVAR)) {
+		if (MultiRunPlotCommand(col, row, item, vartype::PARVAR)) {
 			if(item==5050||item==5051) UpdateSheet(10);
 			return;
 		}

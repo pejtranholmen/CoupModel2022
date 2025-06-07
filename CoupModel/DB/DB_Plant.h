@@ -15,8 +15,8 @@ class DB_Plant
 // Construction
 public:
 	DB_Plant(){};
-	DB_Plant(string pszCaption, bool, void *pDoc) ;
-	DB_Plant(string pszCaption, void *pDoc, std::string key="");
+	DB_Plant(std::string pszCaption, bool, void *pDoc) ;
+	DB_Plant(std::string pszCaption, void *pDoc, std::string key="");
 
 // Attributes
 public:
@@ -28,13 +28,13 @@ public:
 
 // Implementation
 public:
-	void Init(string pszCaption, bool, void *pDoc);
-	void Init(string pszCaption,   std::string key="");
+	void Init(std::string pszCaption, bool, void *pDoc);
+	void Init(std::string pszCaption,   std::string key="");
 	virtual ~DB_Plant();
 	void Actual_DB();
 	void DB_Actual();
-	bool DB_Struc_Actual(string Name);
-	bool ReadWrite(string filename, bool writing=true);
+	bool DB_Struc_Actual(std::string Name);
+	bool ReadWrite(std::string filename, bool writing=true);
 	bool m_ReadOnly;
 
 	bool m_DuringRun;
@@ -43,9 +43,9 @@ public:
 protected:
 
 	void *m_pDoc;
-	string m_Group; 
-	string mm_name;
-	string m_DB_key;
+	std::string m_Group; 
+	std::string mm_name;
+	std::string m_DB_key;
 	Sw *m_pSwTimeRes;
 	Sw *m_pSwPlantType;
 

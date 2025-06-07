@@ -133,7 +133,7 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 				header.Country = pfheader.Country;
 				m_pDoc->m_DB_header[1] = header;
 				str=p_PFCurve->m_ActProfile.OldKey+"-"+p_PFCurve->m_ActProfile.Name;
-				m_pDoc->DB_SetChoice(Soil_Properties, str);
+				m_pDoc->DB_SetChoice(DB_types::Soil_Properties, str);
 				SIMB P_DB;
 				P_DB.pBase=m_pDoc->DB_GetPointer(DB_types(1));
 				m_pDoc->DB_SetImportTimeT(1, time(nullptr));
@@ -228,7 +228,7 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 				m_pDoc->GetProfileFromPlotPF(false, true);
 				string str;
 				str = p_PFCurve->m_ActProfile.OldKey + " " + p_PFCurve->m_ActProfile.Name;
-				m_pDoc->DB_SetChoice(Soil_Properties, str);
+				m_pDoc->DB_SetChoice(DB_types::Soil_Properties, str);
 				SIMB P_DB;
 				P_DB.pBase = m_pDoc->DB_GetPointer(DB_types(1));
 				m_pDoc->DB_ImportDate(1);
@@ -363,14 +363,14 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 			SimB *pSimB;
 			if(m_pDoc!=nullptr&&item==2600) {
 				m_pDoc->GetProfileFromPlotPF(false,false);
-				pSimB=m_pDoc->GetPtr(PAR_TABLE,"Total Conductivity");
-				Tab *pTab=(Tab*)m_pDoc->GetPtr(TABLE,"Hydraulic conductivity, measured horizons");
+				pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Total Conductivity");
+				Tab *pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
 				MakeChart(layer, pSimB,pTab, 0);
 				MySingle::instance().GetSoilDataPointer()->OnSheetSetup(3);
 			}
 			else if(item==2100||item==3100) {
-				pSimB=m_pDoc->GetPtr(PAR_TABLE,"Air Entry");
-				Tab *pTab=nullptr;//(Tab*)m_pDoc->GetPtr(TABLE,"Hydraulic conductivity, measured horizons");
+				pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Air Entry");
+				Tab *pTab=nullptr;//(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
 				MakeChart(row, pSimB,pTab, 0);
 				MySingle::instance().GetSoilDataPointer()->OnSheetSetup(8);
 			}
@@ -586,8 +586,8 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 			string results=EstimatePFCurveByPoints(row, false);
 			m_pDoc->GetProfileFromPlotPF(false,false);
 			SimB *pSimB;
-			pSimB=m_pDoc->GetPtr(PAR_TABLE,"Air Entry");
-			Tab *pTab=(Tab*)m_pDoc->GetPtr(TABLE,"Hydraulic conductivity, measured horizons");
+			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Air Entry");
+			Tab *pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
 			MakeChart(row, pSimB,pTab, 0);
 			MySingle::instance().GetSoilDataPointer()->OnSheetSetup(8);
 			//m_pSP_Retrieve_Dlg->OnAddComments(results);
@@ -598,8 +598,8 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 			string results=EstimatePFCurveByTexture(row, false);
 			m_pDoc->GetProfileFromPlotPF(false,false);
 			SimB *pSimB;
-			pSimB=m_pDoc->GetPtr(PAR_TABLE,"Air Entry");
-			Tab *pTab=(Tab*)m_pDoc->GetPtr(TABLE,"Hydraulic conductivity, measured horizons");
+			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Air Entry");
+			Tab *pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
 			MakeChart(row, pSimB,pTab, 0);
 			MySingle::instance().GetSoilDataPointer()->OnSheetSetup(8);
 		}
@@ -1146,7 +1146,7 @@ void PFCommands::MakeChart(size_t index, SimB *pSimB, Tab* pTab, size_t FuncNo) 
 	pChartCug->Init(m_pDoc);
 	pChartCug->ParameterPlotMode(TRUE);
 	if(pTab==nullptr)
-		pTab=dynamic_cast<Tab*>(m_pDoc->GetPtr(TABLE,"Brooks-Corey, water retention, measured horizons"));
+		pTab=dynamic_cast<Tab*>(m_pDoc->GetPtr(simtype::TABLE,"Brooks-Corey, water retention, measured horizons"));
 	if(pTab!=nullptr) {
 		pChartCug->m_ParameterPlot.InitData(m_pDoc, pSimB, pTab, index, FuncNo);
 		pChartCug->m_ParameterPlot.OnInit();

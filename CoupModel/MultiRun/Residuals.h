@@ -14,9 +14,9 @@ class CResiduals : public ResidualsBase
 public:
 	CResiduals();
 	virtual ~CResiduals();
-	bool OpenFile(string filename, bool SetFileName);
-	bool CreateFile(string filename, size_t NumRec, size_t RecL, size_t NumV);
-	void SetValListIndexVector(vector<size_t> ValListIndex) { m_ValListIndex = ValListIndex; };
+	bool OpenFile(std::string filename, bool SetFileName);
+	bool CreateFile(std::string filename, size_t NumRec, size_t RecL, size_t NumV);
+	void SetValListIndexVector(std::vector<size_t> ValListIndex) { m_ValListIndex = ValListIndex; };
 	bool AddResiduals(float *pFloat);
 	bool SaveMeanValues();
 	bool ReadMeanValues();
@@ -25,9 +25,9 @@ public:
 	size_t GetMaxNumRec()  noexcept {return m_MaxNumRec;};
 
 	float GetResiduals(size_t, size_t, size_t);
-	vector<float> GetResidualVector(size_t RunNo, size_t NumValues);
-	vector<float> GetResidualVectorSubSet(size_t RunNo, size_t NumValue, size_t ActPoints, size_t Section_);
-	vector<size_t> GetAcceptedRunVector();
+	std::vector<float> GetResidualVector(size_t RunNo, size_t NumValues);
+	std::vector<float> GetResidualVectorSubSet(size_t RunNo, size_t NumValue, size_t ActPoints, size_t Section_);
+	std::vector<size_t> GetAcceptedRunVector();
 	int m_ErrorCount;
 
 	float GetLogLi(size_t, size_t, size_t, bool);
@@ -61,7 +61,7 @@ public:
 	float GetP50AllResiduals(size_t, size_t);
 	float GetP90AllResiduals(size_t, size_t);
 
-	vector<float> GetMeanResidualVector(size_t ResVarNo, size_t ActPoints, size_t Section, bool Accepted, STAT_INDICATOR stat=STAT_INDICATOR::MEAN_VALUE);
+	std::vector<float> GetMeanResidualVector(size_t ResVarNo, size_t ActPoints, size_t Section, bool Accepted, STAT_INDICATOR stat=STAT_INDICATOR::MEAN_VALUE);
 
 	size_t  GetNumAccepted();
 	void SetAccepted(size_t, bool);
@@ -69,7 +69,7 @@ public:
 	void CloseFile();
 	bool SmartUpdateTimeSerieEnsembleStatistic(bool AcceptedOnly = false, void *pScanner = nullptr);
 	bool ToBeUpdated();
-	bool AddExistingFile(string, void *pScanner=nullptr);
+	bool AddExistingFile(std::string, void *pScanner=nullptr);
 	bool ReWriteExistingFile(size_t);
 	void InitDoc(NewMap*, int fileno=1);
 
@@ -100,13 +100,13 @@ protected:
 	size_t m_ExtraRecL;
 
 	bool m_Allocated;
-	fstream m_ResidualFile, m_AddFile, m_ExtraFile, m_SortedResidualFile;
+	std::fstream m_ResidualFile, m_AddFile, m_ExtraFile, m_SortedResidualFile;
 
 	bool m_IsAllUpdated, m_IsAllUpdated_Extra;
 
 
 
-	vector<float> m_CurrentRes;
+	std::vector<float> m_CurrentRes;
 	size_t m_NumAccepted;
 	float *m_MeanOfAccepted, *m_MinOfAccepted,*m_MaxOfAccepted,*m_StdOfAccepted,*m_P10OfAccepted,*m_P90OfAccepted,*m_P50OfAccepted;
 	float *m_MeanOfAll, *m_MinOfAll,*m_MaxOfAll,*m_StdOfAll, *m_P10OfAll, *m_P90OfAll,  *m_P50OfAll;
@@ -114,7 +114,7 @@ protected:
 	bool m_NewLogLiFileExist, m_NewLogLiFileOpen;
 	float *m_SortedResiduals;
 	bool m_SortedFileExist, m_SortedFileOpen;
-	vector<size_t> m_ValListIndex;
+	std::vector<size_t> m_ValListIndex;
 
 
 

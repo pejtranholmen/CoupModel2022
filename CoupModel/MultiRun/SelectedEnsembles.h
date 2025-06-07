@@ -143,17 +143,17 @@ public:
 
 
 	float GetMaxSumValidAll(unsigned long);
-	vector<bool> IsMinUpdated, IsMaxUpdated, IsCVUpdated, IsMeanUpdated, IsCVSumUpdated, IsMeanSumUpdated, IsMeanSumUpdatedAll;
-	vector<bool> IsCVSumUpdatedAll,IsMinSumUpdatedAll, IsMaxSumUpdatedAll;
+	std::vector<bool> IsMinUpdated, IsMaxUpdated, IsCVUpdated, IsMeanUpdated, IsCVSumUpdated, IsMeanSumUpdated, IsMeanSumUpdatedAll;
+	std::vector<bool> IsCVSumUpdatedAll,IsMinSumUpdatedAll, IsMaxSumUpdatedAll;
 
 	bool SelSumV_Index_Add(unsigned long);
 	void SelSumV_Index_Reset();
 	unsigned long  SelSumV_Index_Get(unsigned long);
 	unsigned long  SelSumV_Index_GetNum();
 	bool  SelSumV_Index_SelectAll();
-	unsigned long GetNumberOfAddedFiles(string str="");
-	string GetNameAddedFiles(unsigned long);
-	string GetNameBaseFile();
+	unsigned long GetNumberOfAddedFiles(std::string str="");
+	std::string GetNameAddedFiles(unsigned long);
+	std::string GetNameBaseFile();
 	unsigned long GetAdd_MultiPGFileIndex(unsigned long simRunNo);
 	unsigned long GetNumberOfRuns() { return m_TotalNumberRuns; };
 	CRITERIA_STATE GetCriteria(unsigned long, unsigned long split=0);
@@ -170,9 +170,9 @@ public:
 	bool SetMeanSumCriteria(unsigned long, CRITERIA_STATE value);
 
 	unsigned long GetNumSplitPeriods();
-	vector<float> GetPost_TSV_ValidPerformanceIndicatorVector(unsigned long, unsigned long split = 0);
-	vector<pair<float, size_t>> Get_ValidPerformanceIndicatorPairVector(bool posterior, unsigned long, unsigned long split = 0);
-	vector<float> GetPost_SV_ValidPerformanceIndicatorVector(size_t ivar, enum PERFORMANCE_VAR var=R2_STAT );
+	std::vector<float> GetPost_TSV_ValidPerformanceIndicatorVector(unsigned long, unsigned long split = 0);
+	std::vector<std::pair<float, size_t>> Get_ValidPerformanceIndicatorPairVector(bool posterior, unsigned long, unsigned long split = 0);
+	std::vector<float> GetPost_SV_ValidPerformanceIndicatorVector(size_t ivar, enum PERFORMANCE_VAR var=R2_STAT );
 
 
 	bool RemoveAddedFiles();

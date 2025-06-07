@@ -20,8 +20,8 @@ public:
 	};
 	size_t GetNumOptions();
 	bool IsOldValue() noexcept {return _IsOldValue;};
-	size_t SetStrValue(string str);
-	size_t SetDBStrValue(string str);
+	size_t SetStrValue(std::string str);
+	size_t SetDBStrValue(std::string str);
 	std::string GetName() {return SimB::GetName();};
 	void SetDBIntValue(size_t value) noexcept {_DBIntValue=value; };
 	size_t GetDBIntValue()  noexcept {return _DBIntValue;};
@@ -33,5 +33,5 @@ protected:
 	bool _IsOldValue;
 	size_t m_recalc;
 private:
-	vector <std::string> _options;
+	std::vector <std::string> _options;
 };

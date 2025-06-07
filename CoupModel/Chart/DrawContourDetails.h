@@ -19,6 +19,6 @@ class DrawContourDetails: public DrawAxisDesign
 	DataSet* SetPGVarContourChartData(XYChart *c,  int ich, int ivar);
 	DataSet* SetPGDepthContourChartData(XYChart *c,  int ich, int ivar);
 protected:
-	vector<ContourLayer*> m_pConLayer;
+	std::vector<ContourLayer*> m_pConLayer;
 
 };

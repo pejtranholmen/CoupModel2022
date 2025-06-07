@@ -3,7 +3,7 @@
 class T :public OutVector {
 
 public:
-	T(vector<double> *target, NE *p, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
+	T(std::vector<double> *target, NE *p, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 
 	~T();
 

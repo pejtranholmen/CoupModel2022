@@ -36,9 +36,9 @@ class Thermal_Coef {
 		Thermal_Coef();
 	protected:
 		ThermalCond m_ThermalCond;
-		vector<SolidMassFrac> m_SolidMass;
-		vector<SolidVolumesFrac> m_SolidVol;
-		vector<SoilThermalCond> m_ThSoil;
-		vector<double> m_BallardArp_PowerCoef;
+		std::vector<SolidMassFrac> m_SolidMass;
+		std::vector<SolidVolumesFrac> m_SolidVol;
+		std::vector<SoilThermalCond> m_ThSoil;
+		std::vector<double> m_BallardArp_PowerCoef;
 
 };

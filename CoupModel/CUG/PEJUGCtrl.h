@@ -1,6 +1,9 @@
 #pragma once
 #include "UGCtrl.h"
 #include "..\WindowNames.h"
+#include <map>
+#include <vector>
+#include <string>	
 
 enum ButtonType {INFOBUTTON, LISTBUTTON, CLICKBUTTON, COMBOBOX, INFOONLYBUTTON, CHECKBOX};
 
@@ -12,17 +15,17 @@ struct CLICK_BUTTON {
 	int Col_end;
 	int Row;
 	bool NormalState;
-	vector<string> VectorNames;
-	vector<bool> VectorState;
+	std::vector<std::string_view> VectorNames;
+	std::vector<bool> VectorState;
 	bool VerticalDirection;
-	string Text;
-	string HintText;
-	string TextOptional;
+	std::string_view Text;
+	std::string_view HintText;
+	std::string_view TextOptional;
 	CPG* pPG;
 };
 struct HINTLIST {
 	int param;
-	string HintText;
+	std::string HintText;
 };
 struct NEWPGFILE_INFO {
 	int Param;
@@ -30,10 +33,10 @@ struct NEWPGFILE_INFO {
 	size_t NumVar;
 	size_t NumRep;
 	size_t MinDiff;
-	string FileName;
-	string StartDate;
+	std::string FileName;
+	std::string StartDate;
 	bool Assigned;
-	string HintText;
+	std::string HintText;
 
 };
 class CPG;
@@ -58,11 +61,11 @@ protected:
 	void SetPGFileColumns(size_t NumCol, long Row=-1, bool OutPutName=false, int NumTopHeads=2);
 	void SetPGFileColumnsInfo(CPG *pPG, int col_start=0, int NumCol=5, long row=0, bool OnlyStruc = false, bool WithFileName=false, long Param=0);
 	void SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos=0 , int NumCol=4);
-	void SetCodeTranslateInfo(CLICK_BUTTON, std::vector<pair<string, int>>&, std::vector<string> unique_names, std::vector<size_t> num_of_names, map<int,size_t> hit_map, map<int,size_t> parc_hit_map);
+	void SetCodeTranslateInfo(CLICK_BUTTON, std::vector<std::pair<std::string, int>>&, std::vector<std::string> unique_names, std::vector<size_t> num_of_names, std::map<int,size_t> hit_map, std::map<int,size_t> parc_hit_map);
 
 
 	size_t GetUniqueMenuNumber();
-	void SetLocalWindowText(string text, WINDOW_NAMES wname=WINDOW_PG);
+	void SetLocalWindowText(std::string text, WINDOW_NAMES wname=WINDOW_PG);
 
 	void SetColWidth(int col, int width);
 	void SetRowHeight(long row, int Height);
@@ -74,11 +77,11 @@ protected:
 	
 	CFont GetDefaultLargeFont();
 
-	string GetHint(int ParV);
+	std::string GetHint(int ParV);
 
 	CLICK_BUTTON GetClick_BUTTON(int ParV);
 	void SetClickButtonMap(CLICK_BUTTON);
-	void SetHintMap(HINTLIST h) { if(h.param==0) h.param = GetUniqueMenuNumber(); m_HintMap.insert(pair<int, std::string>(h.param, h.HintText)); };
+	void SetHintMap(HINTLIST h) { if(h.param==0) h.param = GetUniqueMenuNumber(); m_HintMap.insert(std::pair<int, std::string>(h.param, h.HintText)); };
 
 
 	HINTLIST m_DoubleClickEdit;
@@ -90,9 +93,9 @@ protected:
 	COLORREF m_COLHEAD, m_ColorHeading;
 
 	CWinApp *m_pApp;
-	map<int, std::string> m_HintMap;
-	map<int, std::string> m_ClickTextMap;
-	map<int, CLICK_BUTTON> m_ClickButtonMap;
+	std::map<int, std::string> m_HintMap;
+	std::map<int, std::string> m_ClickTextMap;
+	std::map<int, CLICK_BUTTON> m_ClickButtonMap;
 	float m_ScaleColWidth;
 	float m_ScaleRowHeight;
 

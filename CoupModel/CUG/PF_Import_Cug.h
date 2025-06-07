@@ -28,8 +28,8 @@ public:
 	UINT	m_SubClayMin;
 	UINT	m_SubClayMax;
 	UINT	m_ProfMax;
-	string	m_CountyMin;
-	string	m_CountyMax;
+	std::string	m_CountyMin;
+	std::string	m_CountyMax;
 	UINT	m_TopSandMax;
 	UINT	m_TopClayMin;
 	UINT	m_TopClayMax;
@@ -37,7 +37,7 @@ public:
 	UINT	m_TopOrgMax;
 	UINT	m_SubOrgMin;
 	UINT	m_SubOrgMax;
-	string	m_PFpoints;
+	std::string	m_PFpoints;
 	UINT	m_YearMin;
 	UINT	m_YearMax;
 	unsigned int m_Min_NumHeads;

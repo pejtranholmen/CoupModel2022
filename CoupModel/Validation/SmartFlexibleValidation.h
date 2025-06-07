@@ -10,7 +10,7 @@ public:
 	SmartFlexibleValidation();
 	~SmartFlexibleValidation();
 	bool UpdateValidationPerformance_SmartFlexVariables();
-	vector<float> GetObsValueFromValSumFlex(string IDFileName, std::string  IDVarName);
+	std::vector<float> GetObsValueFromValSumFlex(std::string IDFileName, std::string  IDVarName);
 
 	size_t ImportSelectedParamtersFromCSVFile(FCSV *pCSVFile);
 

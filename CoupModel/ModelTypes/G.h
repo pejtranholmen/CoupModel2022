@@ -3,7 +3,7 @@
 class G :public OutVector {
 
 public:
-	G(vector<double> *target, NE *, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
+	G(std::vector<double> *target, NE *, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 
 	~G();
 

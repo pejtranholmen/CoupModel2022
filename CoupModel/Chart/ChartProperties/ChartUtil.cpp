@@ -1,6 +1,6 @@
 #include "ChartUtil.h"
 #include "../../Util\MFC_Util.h"
-
+using namespace std;
 
 ChartUtil::ChartUtil(void)
 {

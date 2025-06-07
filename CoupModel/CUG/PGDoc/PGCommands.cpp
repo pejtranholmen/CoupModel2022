@@ -1299,22 +1299,22 @@ if(item==5018||(item>=6010&&item<6020)) {
 		m_pProp->m_ChartType=CHART_TYPES::SCATTER;
 		string str;
 		if(item==6011) {
-			var=PGDAY;
+			var= vartype::PGDAY;
 			str="Day of Year";
 		}
 		else if(item==6010) {
-			var=PGHOUR;
+			var= vartype::PGHOUR;
 			str="Hour";
 		}
 		else if(item==6012) {
-			var=PGYEAR;
+			var= vartype::PGYEAR;
 			str="Year";
 
 		}
 		else if(item>=6015&&item<=6017) {
 			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 			m_pProp->SetFirstIndepSet(enum vartype(m_pProp->GetIndepFirst()), false);
-			m_pProp->SetFirstIndepVarType(NO_USE);
+			m_pProp->SetFirstIndepVarType(vartype::NO_USE);
 			return true;
 		}
 		m_pProp->ResetXScale();
@@ -1326,7 +1326,7 @@ if(item==5018||(item>=6010&&item<6020)) {
 			str=pPG->GetVarName(Index,Irepit );
 			FUtil::trim(str);
 			str += " ";
-			string unit = pPG->GetVarUnit(Index, Irepit);
+			string unit = string(pPG->GetVarUnit(Index, Irepit));
 			FUtil::trim(unit);
 			str+=" ("+unit+")";
 		}
@@ -1351,7 +1351,7 @@ if(item==5018||(item>=6010&&item<6020)) {
 	}
 else if(item==5020) {
 		switch (var) {
-				case PGVAR:
+		case vartype::PGVAR:
 				while(m_pSimDoc->m_SelectPGFile.size()>0) {
 						selpg=m_pSimDoc->m_SelectPGFile[0];
 						GetCell(3,selpg.row,&cell);
@@ -1396,7 +1396,7 @@ else if(item==5020) {
 	}
 	else if(item==5019) {
 			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
-			m_pProp->SetFirstIndepVarType(DATEAXIS);
+			m_pProp->SetFirstIndepVarType(vartype::DATEAXIS);
 
 			m_pProp->SetFirstIndepString(var,"");
 			m_pProp->SetSymbolStyle(0, 0);
@@ -1435,15 +1435,15 @@ else if(item==5020) {
 		}
 		else if(item>=6020) {
 			if(item==6021) {
-				var=PGDAY;
+				var= vartype::PGDAY;
 				str="Day of Year";
 			}
 			else if(item==6020) {
-				var=PGHOUR;
+				var= vartype::PGHOUR;
 				str="Hour";
 			}
 			else if(item==6022) {
-				var=PGYEAR;
+				var= vartype::PGYEAR;
 				str="Year";
 
 			}
@@ -1453,7 +1453,7 @@ else if(item==5020) {
 		else if(item>=6025&&item<=6027) {
 			m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 			m_pProp->SetSecondIndepSet(enum vartype(m_pProp->GetIndepSecond()), false);
-			m_pProp->SetSecondIndepVarType(NO_USE);
+			m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 			m_pProp->ResetXScale();
 			return true;
 		}
@@ -1477,7 +1477,7 @@ else if(item==5020) {
 	}
 	else if(item==5029) {
 			m_pProp->m_ChartType= CHART_TYPES::CONTOUR_CHART;
-			m_pProp->SetSecondIndepVarType(NO_USE);
+			m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 
 			m_pProp->SetSecondIndepString(var,"");
 			GetCell(col,row,&cell);

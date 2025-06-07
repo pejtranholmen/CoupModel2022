@@ -6,7 +6,7 @@
 #ifndef COUPSTD
 #include "../ChartProperties/ChartProp.h"
 #endif
-//enum vartype {NO_USE, DATEAXIS, MULTIRUN_NUM, PGVAR, SUMVAR, VALVAR, PARVAR, PGREPIT, PGYEAR, PGMONTH, PGDAY, PGHOUR, PGDEPTH, PGVARVALID, GEO_LAT, GEO_LONG, GEO_ALT, VAR_MIN, VAR_MAX, VAR_MISSING, VAR_FIRST, VAR_LAST, VAR_MEAN, VALVARSUM};
+//enum vartype {NO_USE, DATEAXIS, MULTIRUN_NUM, PGVAR, SUMVAR, VALVAR, PARVAR, PGREPIT, vartype::PGYEAR, PGMONTH, vartype::PGDAY, vartype::PGHOUR, vartype::PGDEPTH, vartype::PGVARVALID, GEO_LAT, GEO_LONG, GEO_ALT, vartype::VAR_MIN, vartype::VAR_MAX, VAR_MISSING, VAR_FIRST, VAR_LAST, vartype::VAR_MEAN, VALVARSUM};
 
 #ifndef INDEP_AXIS_SET
 
@@ -36,10 +36,10 @@ struct PLOTv
 	CPG *pPG=nullptr;
 	CPG *pPG_MeasValFile = nullptr;
 	Doc *pSimDoc = nullptr;
-	string PGFileName;
-	string PGDocName;
+	std::string PGFileName;
+	std::string PGDocName;
 	size_t DayValueRepresentation=0;// 0 - all, 1-n -specific modulus of day, n+1, mean of day
-	size_t Type=0;	/// Data Types_previous
+	simtype Type=simtype::PAR;	/// Data Types_previous
 	bool RepitDataType=false;
     enum DATA_TYPES DataType=DATA_TYPES::ANYDATA; // New enum DataType to replace Type
 	size_t Index=0;
@@ -64,7 +64,7 @@ struct PLOTv
 	INDEP_AXIS IndepAxis;
 	int PG_FilterVarIndex=0;
 	int PG_FilterVarValue=0;
-	vector<CONSTRAIN_BY> m_ConstrainBy;
+	std::vector<CONSTRAIN_BY> m_ConstrainBy;
 	size_t pg_start_pos{0};
 };
 
@@ -74,7 +74,7 @@ protected:
 	size_t pg_docindex[MAXPGDOC][MAXSIMVAL];
 	size_t m_SimulationRunNo;
 	size_t m_FileVersionNumberRead;
-	string m_PG_Unit,m_PG_Name;
+	std::string m_PG_Unit,m_PG_Name;
 	size_t m_NumberSavedCharts;
 	size_t m_NumberSelectedValidationVar[MAXSIMVAL];
 	
@@ -132,7 +132,7 @@ public:
 	size_t GetIndex_Chart(size_t iv);
 	size_t GetArrayIndex(size_t indexchart, size_t indexvar);
 	size_t GetNumVar(size_t indexchart);
-	vector<size_t> GetNumVarForEachSubChart(size_t indexchart);
+	std::vector<size_t> GetNumVarForEachSubChart(size_t indexchart);
 	size_t GetNumVarBands(size_t indexchart);
 	size_t GetValFileNo(size_t index);
 	size_t GetNumRecords(size_t indexchart);
@@ -141,7 +141,7 @@ public:
 	CPG *GetPGValFilePointer(size_t index);
 	CPG *GetPGValFilePointer(size_t indexdoc, size_t ValidIndex, size_t SimRunNo, bool obsfile=false);
 //	CPG *GetPGPointer(size_t indexdoc);
-	string GetDocFileName(size_t index);
+	std::string GetDocFileName(size_t index);
 	
 #ifndef COUPSTD	
 	CPG *GetPGPointer(size_t indexdoc, size_t ValidIndex=0, size_t SimRunNo=0, bool MultiModeFile=false, size_t MeanPGType=0);	
@@ -153,9 +153,9 @@ public:
 	bool IsMultiRunPlot(size_t index);
 	void SetNumberSavedCharts(size_t);
 	size_t GetNumberSavedCharts();
-	string GetMultiSubDir();
-	string GetActualVarName();
-	string GetActualVarUnit();
+	std::string GetMultiSubDir();
+	std::string GetActualVarName();
+	std::string GetActualVarUnit();
 	bool EnableSectionNo(size_t index, bool value);
 	void EnableAllSectionNo(bool value);
 	void ToggleAllSectionNo();
@@ -171,12 +171,12 @@ public:
 	bool m_CPG_Active, m_CPGVal_Active;
 	long m_PG_StartMin, m_PG_EndMin;
 
-	vector<void*> m_SelectedDocArray;
-	vector<CPG*> m_PGFileArray;
-	vector<size_t> m_PGFileArrayShow;
+	std::vector<void*> m_SelectedDocArray;
+	std::vector<CPG*> m_PGFileArray;
+	std::vector<size_t> m_PGFileArrayShow;
 
-	string GetTimeCreated();
-	string GetTimeModified();
+	std::string GetTimeCreated();
+	std::string GetTimeModified();
 	void TimeModified();
 	void TimeCreated();
 	void SetTimeModified(time_t);
@@ -210,16 +210,16 @@ public:
 	size_t CPG_GetTypeFile(size_t index);
 
 
-	vector<CPG*> m_CPG_Array, m_CPGVal_Array, m_CPGMulti_Array;
-	vector<size_t> m_CPG_MultiType;
+	std::vector<CPG*> m_CPG_Array, m_CPGVal_Array, m_CPGMulti_Array;
+	std::vector<size_t> m_CPG_MultiType;
 
-	vector<SIMB>m_X_Array;
-	vector<SIMB>m_T_Array;
-	vector<SIMB>m_G_Array;
-	vector<SIMB>m_D_Array;
-	vector<PLOTv> m_PlotArray;
-	vector<string> m_XTGD_DocNameArray;
-	vector<string> m_FailedNames;
+	std::vector<SIMB>m_X_Array;
+	std::vector<SIMB>m_T_Array;
+	std::vector<SIMB>m_G_Array;
+	std::vector<SIMB>m_D_Array;
+	std::vector<PLOTv> m_PlotArray;
+	std::vector<std::string> m_XTGD_DocNameArray;
+	std::vector<std::string> m_FailedNames;
 	void SetValidIndepPGVar(bool value) {m_ValidIndepPGVar=value;};
 	bool IsValidIndepPGVar() {return m_ValidIndepPGVar;};
 

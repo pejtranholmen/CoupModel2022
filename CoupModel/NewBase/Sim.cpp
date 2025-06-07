@@ -427,7 +427,7 @@ bool Sim::MakeMultiRun() {
 	p_ModelInfo->SetMultiRunning(true);
 	p_ModelInfo->SetRunning(true);
 
-	Sw *pSw=dynamic_cast<Sw*>(GetPtr(SWITCH,"No SingleRunSimFile"));
+	Sw *pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,"No SingleRunSimFile"));
 
 	bool test=bool(pSw->GetIntValue());
 	p_ModelInfo->SetNoSingleRun(bool(pSw->GetIntValue()));
@@ -770,7 +770,7 @@ bool Sim::OnSimMultiStart()
 
    // Sw=(Sw*)GetPtr("Switches","Technical","No SingleRunSimFile");
 	
-	pSw=dynamic_cast<Sw*>(GetPtr(SWITCH,"No SingleRunSimFile"));
+	pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,"No SingleRunSimFile"));
 
 	bool test=bool(pSw->GetIntValue());
 	p_ModelInfo->SetNoSingleRun(bool(pSw->GetIntValue()));

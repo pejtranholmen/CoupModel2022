@@ -12,10 +12,10 @@ public:
 	size_t GetNumberofSumVariables();
 
 	float Get_SV_Value(size_t variable, size_t SV_Index, size_t RunNo);
-	bool Get_SV_MeanAllPerformance(size_t RunNo, std::vector<vector<float>> &Values);
+	bool Get_SV_MeanAllPerformance(size_t RunNo, std::vector<std::vector<float>> &Values);
 
-	bool Get_SV_Value_Accepted(vector<vector <float>>& values);
-	bool Get_SV_Value_All(vector<vector <float>>& values);
+	bool Get_SV_Value_Accepted(std::vector<std::vector <float>>& values);
+	bool Get_SV_Value_All(std::vector<std::vector <float>>& values);
 
 	bool Are_SV_Values_Defined(size_t variable=0);
 	bool m_Are_MeanValues_SV_VariablesEstimated;

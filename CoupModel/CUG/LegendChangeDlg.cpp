@@ -18,7 +18,7 @@ LegendChangeDlg::LegendChangeDlg(CWnd* pParent /*=nullptr*/)
 {
 
 }
-LegendChangeDlg::LegendChangeDlg(string  prevtext)
+LegendChangeDlg::LegendChangeDlg(std::string  prevtext)
 	: CDialog(LegendChangeDlg::IDD, nullptr)
 {
 	m_newtext = prevtext;

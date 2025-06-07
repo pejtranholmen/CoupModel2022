@@ -1734,13 +1734,13 @@ void GridSimDoc::MakeMultiRunPriorMenu(int col, int row) {
 		if(col==6)
 		AddMenuItem(1000,"Set all start values to actual values in current sim document");
 
-		if(m_pSimDoc->MR_GetMethod(idim,ip)==4)
+		if(m_pSimDoc->MR_GetMethod(idim,ip)==MR_METHOD(4))
 			AddMenuItem(1005,"Edit/show all Tables");
-		else if (m_pSimDoc->MR_GetMethod(idim,ip)==2||m_pSimDoc->MR_GetMethod(idim,ip)==3) {
+		else if (m_pSimDoc->MR_GetMethod(idim,ip)== MR_METHOD(2)||m_pSimDoc->MR_GetMethod(idim,ip)== MR_METHOD(3)) {
 			AddMenuItem(1015,"Change from General GLUE to Bayesian Calibration");
 			AddMenuItem(1016,"Change from General GLUE to Table method");
 		}
-		else if (m_pSimDoc->MR_GetMethod(idim,ip)==9||m_pSimDoc->MR_GetMethod(idim,ip)==11) {
+		else if (m_pSimDoc->MR_GetMethod(idim,ip)== MR_METHOD(9)||m_pSimDoc->MR_GetMethod(idim,ip)== MR_METHOD(11)) {
 			AddMenuItem(1025,"Change from Bayesian Calibration to GLUE");
 		}
 

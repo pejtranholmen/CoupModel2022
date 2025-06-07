@@ -33,14 +33,14 @@ public:
 	};
 	void SetStartMinuteWhenImport(size_t min) { m_itimbase = min; m_minst_a = min; };
 
-	vector<string> m_SuccessFullImportedFileNames;
+	std::vector<string_view> m_SuccessFullImportedFileNames;
 
 
 
 
 	bool m_AddFromFile;
 	bool m_ScanningMade;
-	map<size_t, size_t> m_CheckedTimeMap;
+	std::map<size_t, size_t> m_CheckedTimeMap;
 
 
 
@@ -48,8 +48,8 @@ public:
 
 protected:
 	size_t m_MinStartCol;
-	bool ConvColLine(vector<float> *vv, std::string line, size_t option);
-	bool ConvLine(vector<float> *vv, std::string line, size_t option);
+	bool ConvColLine(std::vector<float> *vv, std::string line, size_t option);
+	bool ConvLine(std::vector<float> *vv, std::string line, size_t option);
 
 
 	bool CreateNewFileAndDefineSize(FILEINFO, size_t ActualId = 0);
@@ -65,8 +65,8 @@ protected:
 
 
 	size_t m_nprevrec;
-	string m_linebreak;
-	string m_datestring;
+	std::string m_linebreak;
+	std::string m_datestring;
 
 
 protected:
@@ -85,7 +85,7 @@ protected:
 
 	
 	size_t GetStartMinute();
-	fstream m_FileText;
+	std::fstream m_FileText;
 
 	vector<pair<size_t, double> > To_Convert;
 	

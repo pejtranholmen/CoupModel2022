@@ -4,14 +4,14 @@ namespace ModelFunctions
 {
 
 	struct PlantInterp {
-		vector<double> Start;
-		vector<double> Opt;
-		vector<double> End;
-		vector<double> ShapeStart;
-		vector<double> ShapeEnd;
-		vector<double> StartValue;
-		vector<double> OptValue;
-		vector<double> EndValue;
+		std::vector<double> Start;
+		std::vector<double> Opt;
+		std::vector<double> End;
+		std::vector<double> ShapeStart;
+		std::vector<double> ShapeEnd;
+		std::vector<double> StartValue;
+		std::vector<double> OptValue;
+		std::vector<double> EndValue;
 	};
 
 

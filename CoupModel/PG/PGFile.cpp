@@ -978,7 +978,7 @@ string CPGFile::GetVarName(size_t index, size_t repit)
 	else
 		return "";
 }
-string CPGFile::GetVarUnit(size_t index, size_t repit)
+string_view CPGFile::GetVarUnit(size_t index, size_t repit)
 {   size_t add=0;
 	add=repit*pg.Shape.NumVar;
 	index+=add;

@@ -417,7 +417,7 @@ void History::History_NewAdd(size_t RunInfo, std::string Group, std::string Type
 		ityp=p_ModelInfo->GetTypeIndex("DataBase");
 	}
 	else if (Type == "Validation") {
-		pBase = (SimB*)GetPtr(PAR_TABLE, Name);
+		pBase = (SimB*)GetPtr(simtype::PAR_TABLE, Name);
 		if (pBase != nullptr) {
 			pBase->AddHistoryIndex(intValue, i);
 			Type = "Table Parameters";

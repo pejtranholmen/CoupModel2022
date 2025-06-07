@@ -105,7 +105,7 @@ protected:
 
 
 	bool m_ResetTransformedPerformance;
-	vector<POS_ENSEMBLE> m_Ensembles;
+	std::vector<POS_ENSEMBLE> m_Ensembles;
 
 
 

@@ -187,7 +187,7 @@ string MR::MR_GetParName(size_t index1, size_t index2)
 	return " ";
 }
 
-size_t MR::MR_GetMethod(size_t index1, size_t index2)
+MR_METHOD MR::MR_GetMethod(size_t index1, size_t index2)
 {
 	SimB* pPar;
 	size_t counter=0;
@@ -212,13 +212,14 @@ size_t MR::MR_GetMethod(size_t index1, size_t index2)
 			}
 		}
 	}	
-	return 0;
+	return MR_METHOD(0);
 }
 string MR::MR_GetMethodName(size_t index1, size_t index2)
 {
 	SimB* pPar;
 	size_t counter=0;
-	size_t nTabIndex, nDim,imethod;
+	size_t nTabIndex, nDim;
+	MR_METHOD imethod;
 	string test;
 	for (size_t i=0;i<m_P_MR_Array.size();i++){
 		pPar=(Ps*)m_P_MR_Array[i].pBase;
@@ -239,36 +240,37 @@ string MR::MR_GetMethodName(size_t index1, size_t index2)
 					imethod=pPar->MR_Get_Method(nTabIndex);
 
 				switch (imethod) {
-						case 0:
+						case MR_METHOD::LINEAR_CHANGE:
 							test="Linear";
 							break;
-						case 1: test="Logarithmic";
+						case MR_METHOD::LOG_CHANGE: test="Logarithmic";
 								break;
-						case 2: test="Stochastic Linear";
+						case MR_METHOD::STOCHASTIC_LIN_CHANGE:
+							test="Stochastic Linear";
 							break;
-						case 3: test="Stochastic Log";
+						case MR_METHOD::STOCHASTIC_LOG_CHANGE: test="Stochastic Log";
 							break;
-						case 4: test="Table";
+						case MR_METHOD::TABLE_VAL: test="Table";
 							break;
-						case 5: test="Database Record";
+						case MR_METHOD::DB_RECORD: test="Database Record";
 							break;
-						case 6: test="Same As";
+						case MR_METHOD::SAME_AS: test="Same As";
 							break;
-						case 7: test="Relative Change As";
+						case MR_METHOD::REL_SAME_AS: test="Relative Change As";
 							break;
-						case 8: test="Relative Opposite Change As";
+						case MR_METHOD::OP_REL_SAME_AS: test="Relative Opposite Change As";
 							break;
-						case 9: if(MR_UseBayesianCoVar)
+						case MR_METHOD::BAYESIAN_CAL: if(MR_UseBayesianCoVar)
 									test="Apply Bayesian results";
 								else
 									test="Bayesian Calibration";
 							break;
-						case 10: test="Connected";
+						case MR_METHOD::CONNECTED: test="Connected";
 							break;
-						case 11: 
+						case MR_METHOD::BAYESIAN_CAL_LOG: 
 						    test="Bayesian Calibration using log distribution\n";
 							break;
-						case 12:
+						case MR_METHOD::NELDER_MEAD:
 							test = "Nelder Mead Optimization\n";
 							break;
 						}
@@ -300,14 +302,14 @@ size_t MR::MR_GetMonitoring(size_t index1, size_t index2)
 			counter++;
 			if(counter==index2) {
 					if(nTabIndex== std::string::npos) {
-						if(pPar->MR_Get_Method()==10)
+						if(pPar->MR_Get_Method()==MR_METHOD::CONNECTED)
 							return 0;
 						else
 							return ((Ps*)pPar)->MR_Get_Monitoring();
 
 					}
 					else {
-						if(pPar->MR_Get_Method(nTabIndex)==10)
+						if(pPar->MR_Get_Method(nTabIndex)==MR_METHOD::CONNECTED)
 							return 0;
 						else
 							return ((P*)pPar)->MR_Get_Monitoring(nTabIndex);
@@ -339,13 +341,13 @@ void MR::MR_SetMonitoring(size_t index1, size_t index2, size_t value)
 			counter++;
 			if(counter==index2) {
 					if(nTabIndex== std::string::npos) {
-						if(pPar->MR_Get_Method()!=10)
+						if(pPar->MR_Get_Method()!= MR_METHOD::CONNECTED)
 							((Ps*)pPar)->MR_Set_Monitoring(value);
 						return;
 
 					}
 					else {
-						if(pPar->MR_Get_Method(nTabIndex)!=10)
+						if(pPar->MR_Get_Method(nTabIndex)!= MR_METHOD::CONNECTED)
 							return ((P*)pPar)->MR_Set_Monitoring(nTabIndex, value);
 						return;
 
@@ -376,14 +378,14 @@ double MR::MR_GetMin(size_t index1, size_t index2)
 			counter++;
 			if(counter==index2) {
 					if(nTabIndex== std::string::npos) {
-						if(pPar->MR_Get_Method()==10)
+						if(pPar->MR_Get_Method()== MR_METHOD::CONNECTED)
 							return 0;
 						else
 							return ((Ps*)pPar)->MR_Get_Min();
 
 					}
 					else {
-						if(pPar->MR_Get_Method(nTabIndex)==10)
+						if(pPar->MR_Get_Method(nTabIndex)== MR_METHOD::CONNECTED)
 							return 0;
 						else
 							return ((P*)pPar)->MR_Get_Min(nTabIndex);
@@ -430,9 +432,9 @@ double  MR::MR_GetMin(size_t indexp)
 			counter++;
 			if(counter==index2) {
 					if(nTabIndex== std::string::npos) {
-						if(pPar->MR_Get_Method()==10)
+						if(pPar->MR_Get_Method()== MR_METHOD::CONNECTED)
 							return 0;
-						else if(MR_GetMethod(index1,index2)>=6&&MR_GetMethod(index1,index2)<9) {
+						else if(MR_GetMethod(index1,index2)>= MR_METHOD::SAME_AS &&MR_GetMethod(index1,index2)<MR_METHOD::BAYESIAN_CAL) {
 								pParDependent=((Ps*)pPar)->Get_MR_ParDependence();
 								nTabIndexDep=((Ps*)pPar)->Get_MR_ParDependenceIndex();
 								if(nTabIndexDep>=0&& nTabIndexDep!= std::string::npos)
@@ -445,9 +447,9 @@ double  MR::MR_GetMin(size_t indexp)
 
 					}
 					else {
-						if(pPar->MR_Get_Method(nTabIndex)==10)
+						if(pPar->MR_Get_Method(nTabIndex)== MR_METHOD::CONNECTED)
 							return 0;
-						else if(pPar->MR_Get_Method(nTabIndex)==6&&MR_GetMethod(index1,index2)<9) {
+						else if(pPar->MR_Get_Method(nTabIndex)== MR_METHOD::SAME_AS &&MR_GetMethod(index1,index2)< MR_METHOD::BAYESIAN_CAL) {
 								pParDependent=((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 								nTabIndexDep=((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
 								if(nTabIndexDep>=0 && nTabIndexDep != std::string::npos)
@@ -575,9 +577,9 @@ double MR::MR_GetMax(size_t indexp)
 			counter++;
 			if(counter==index2) {
 				if(nTabIndex== std::string::npos) {
-					if(pPar->MR_Get_Method()==10)
+					if(pPar->MR_Get_Method()== MR_METHOD::CONNECTED)
 							return 0;
-					else if(MR_GetMethod(index1,index2)>=6&&MR_GetMethod(index1,index2)<9) {
+					else if(MR_GetMethod(index1,index2)>=MR_METHOD::SAME_AS&&MR_GetMethod(index1,index2)<MR_METHOD::BAYESIAN_CAL) {
 							pParDependent=((Ps*)pPar)->Get_MR_ParDependence();
 							nTabIndexDep=((Ps*)pPar)->Get_MR_ParDependenceIndex();
 							if(nTabIndexDep>=0&&nTabIndexDep!= std::string::npos)
@@ -590,9 +592,9 @@ double MR::MR_GetMax(size_t indexp)
 						return ((Ps*)pPar)->MR_Get_Max();
 				}
 				else  {
-					if(pPar->MR_Get_Method()==10)
+					if(pPar->MR_Get_Method()== MR_METHOD::CONNECTED)
 							return 0;
-					else if(MR_GetMethod(index1,index2)>=6&&MR_GetMethod(index1,index2)<9) {
+					else if(MR_GetMethod(index1,index2)>= MR_METHOD::SAME_AS &&MR_GetMethod(index1,index2)< MR_METHOD::BAYESIAN_CAL) {
 							pParDependent=((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 							nTabIndexDep=((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
 							if(nTabIndexDep>=0 && nTabIndexDep != std::string::npos)
@@ -625,7 +627,7 @@ bool MR::MR_GetLogDist(size_t indexp)
 					if(icount==indexp) {
 						index1=i+1;
 						index2=ii+1;
-						if(MR_GetMethod(index1, index2)==3||MR_GetMethod(index1, index2)==11)
+						if(MR_GetMethod(index1, index2)== MR_METHOD::STOCHASTIC_LOG_CHANGE ||MR_GetMethod(index1, index2)== MR_METHOD::BAYESIAN_CAL_LOG)
 							return true;
 						else
 							return false;
@@ -1024,7 +1026,7 @@ void MR::MR_UpdateValues()
 				min = MR_GetMin(i + 1, ii + 1); // This variable does not always have realistic values.
 				max = MR_GetMax(i + 1, ii + 1); // " "
 				switch (MR_GetMethod(i + 1, ii + 1)) {
-				case 0: Ratio = (float)(icount - 1) / (float)(irep - 1);// linear
+				case MR_METHOD::LINEAR_CHANGE: Ratio = (float)(icount - 1) / (float)(irep - 1);// linear
 					Float = Ratio * max + (1 - Ratio)*min;
 					if (nTabIndex == std::string::npos) {
 						recalc = pPar->SetValue(Float);
@@ -1039,7 +1041,7 @@ void MR::MR_UpdateValues()
 					}
 					if (recalc == 1 || recalc == 2) recalculate_profile = true; // Threshold to indicate change of soil profile					
 					break;
-				case 1: //Logarithmic
+				case MR_METHOD::LOG_CHANGE: //Logarithmic
 					Ratio = (float)(icount - 1) / (float)(irep - 1);
 					Float = exp(Ratio*log(max) + (1 - Ratio)*log(min));
 					if (nTabIndex == std::string::npos) {
@@ -1056,7 +1058,7 @@ void MR::MR_UpdateValues()
 					if (recalc == 1 || recalc == 2) recalculate_profile = true; // Threshold to indicate change of soil profile
 
 					break;
-				case 2:	//PARAMETERS_mp_RAND_LOCAL(); // (Uniform) randomly distributed variables
+				case MR_METHOD::STOCHASTIC_LIN_CHANGE:	//PARAMETERS_mp_RAND_LOCAL(); // (Uniform) randomly distributed variables
 					if (NewRandomEstimate) {
 						Ratio = StatUtil::frand();//://PARAMETERS_mp_RANDOMVALUE;					
 						Float = Ratio * max + (1 - Ratio)*min;
@@ -1080,7 +1082,7 @@ void MR::MR_UpdateValues()
 						};
 					}
 					break;
-				case 3:	//PARAMETERS_mp_RAND_LOCAL();
+				case MR_METHOD::STOCHASTIC_LOG_CHANGE:	//PARAMETERS_mp_RAND_LOCAL();
 					if (NewRandomEstimate) {
 						Ratio = StatUtil::frand();//PARAMETERS_mp_RANDOMVALUE;
 						Float = exp(Ratio*log(max) + (1 - Ratio)*log(min));
@@ -1108,18 +1110,18 @@ void MR::MR_UpdateValues()
 					}
 					break;
 					// MR_Extract_MidpointValue expects the final argument to be
-				case 4: // Table  
+				case MR_METHOD::TABLE_VAL: // Table  
 					if (nTabIndex == std::string::npos) // Table, Note that ii is not incremented during MRs!!
 						Float = pPar->MR_Get_TabValue(icount - 1);  // Ps case
 					else
 						Float = ((P*)pPar)->MR_Get_TabValue(nTabIndex, icount - 1);  // Ps case
 					break;
 					// 	Float=MR_GetTableValue(i+1,ii+1,icount-1);				 	    break;
-				case 5: // Database Records
+				case MR_METHOD::DB_RECORD: // Database Records
 					strname = ((CDB*)pPar)->GetName();
 					strkey = ((CDB*)pPar)->MR_GetKeySelection(icount - 1);
 					break;
-				case 6: // Same as another parameter
+				case MR_METHOD::SAME_AS: // Same as another parameter
 					if (nTabIndex != std::string::npos) {
 						pParDependent = (Ps*)((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 						nTabIndexDep = ((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
@@ -1137,7 +1139,7 @@ void MR::MR_UpdateValues()
 							Float = pParDependent->GetValue();
 					}
 					break;
-				case 7: // Same Relative another parameter
+				case MR_METHOD::REL_SAME_AS: // Same Relative another parameter
 					if (nTabIndex != std::string::npos) {
 						pParDependent = (Ps*)((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 						nTabIndexDep = ((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
@@ -1156,7 +1158,7 @@ void MR::MR_UpdateValues()
 					}
 					Float = Ratio * max + (1 - Ratio)*min;
 					break;
-				case 8: // Same Opposite Relative another parameter
+				case MR_METHOD::OP_REL_SAME_AS : // Same Opposite Relative another parameter
 					if (nTabIndex != std::string::npos) {
 						pParDependent = (Ps*)((P*)pPar)->Get_MR_ParDependence(nTabIndex);
 						nTabIndexDep = ((P*)pPar)->Get_MR_ParDependenceIndex(nTabIndex);
@@ -1175,12 +1177,12 @@ void MR::MR_UpdateValues()
 					}
 					Float = Ratio * min + (1 - Ratio)*max;
 					break;
-				case 9: case 11: // Bayesian calibration
+				case MR_METHOD::BAYESIAN_CAL: case MR_METHOD::BAYESIAN_CAL_LOG: // Bayesian calibration
 
 					Ratio = GetBayes_PCandidateValue(icountBayes);
 					//Float=0.5; // Waiting for new implementation
 					Float = min + Ratio * (max - min);
-					if (MR_GetMethod(i + 1, ii + 1) == 11 && min > 0) {
+					if (MR_GetMethod(i + 1, ii + 1) == MR_METHOD::BAYESIAN_CAL_LOG && min > 0) {
 
 						//Ratio=(Float-log(min))/(log(max)-log(min));
 						Float = exp(Ratio*log(max) + (1 - Ratio)*log(min));
@@ -1194,9 +1196,9 @@ void MR::MR_UpdateValues()
 
 					icountBayes++;
 					break;
-				case 10:
+				case MR_METHOD::CONNECTED:
 					break;	// No Action
-				case NELDER_MEAD:
+				case MR_METHOD::NELDER_MEAD:
 				//	m_ActualSimplex[icountNelderMead] = max(min, max(min, m_ActualSimplex[icountNelderMead]));
 					Float = m_ActualSimplex[icountNelderMead];
 
@@ -1216,7 +1218,7 @@ void MR::MR_UpdateValues()
 
 				};
 				
-				if (MR_GetMethod(i + 1, ii + 1) != 5 && MR_GetMethod(i + 1, ii + 1) <= 9 || MR_GetMethod(i + 1, ii + 1) == 11 || MR_GetMethod(i + 1, ii + 1) == NELDER_MEAD) {
+				if (MR_GetMethod(i + 1, ii + 1) != MR_METHOD::DB_RECORD && MR_GetMethod(i + 1, ii + 1) <= MR_METHOD::BAYESIAN_CAL || MR_GetMethod(i + 1, ii + 1) == MR_METHOD::BAYESIAN_CAL_LOG || MR_GetMethod(i + 1, ii + 1) == MR_METHOD::NELDER_MEAD) {
 
 					if (nTabIndex == std::string::npos) {
 						recalc = pPar->SetValue(Float);
@@ -1249,7 +1251,7 @@ void MR::MR_UpdateValues()
 					}
 
 				}
-				if (MR_GetMethod(i + 1, ii + 1) == 6) {
+				if (MR_GetMethod(i + 1, ii + 1) == MR_METHOD::SAME_AS) {
 
 
 
@@ -1294,7 +1296,7 @@ bool MR::SetParametersRandomForMultiRun(vector<SIMB> simv, FCSV * pCSVFile)
 					dynamic_cast<P*>(simv[i].pBase)->MR_Set_Max(simv[i].TabIndex, max_values[i]);
 					dynamic_cast<P*>(simv[i].pBase)->MR_Set_Start(simv[i].TabIndex, (min_values[i] + max_values[i]) / 2.);
 
-					dynamic_cast<P*>(simv[i].pBase)->MR_Set_Method(simv[i].TabIndex, STOCHASTIC_LIN_CHANGE);
+					dynamic_cast<P*>(simv[i].pBase)->MR_Set_Method(simv[i].TabIndex, MR_METHOD::STOCHASTIC_LIN_CHANGE);
 					dynamic_cast<P*>(simv[i].pBase)->MR_Set_Dim(simv[i].TabIndex, Dimension);
 					dynamic_cast<MR*>(this)->MR_CP_Set(simv[i].pBase, simv[i].TabIndex);
 				}
@@ -1302,7 +1304,7 @@ bool MR::SetParametersRandomForMultiRun(vector<SIMB> simv, FCSV * pCSVFile)
 					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Min(min_values[i]);
 					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Max(max_values[i]);
 					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Start((min_values[i] + max_values[i]) / 2.);
-					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Method(STOCHASTIC_LIN_CHANGE);
+					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Method(MR_METHOD::STOCHASTIC_LIN_CHANGE);
 					dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Dim(Dimension);
 					dynamic_cast<MR*>(this)->MR_CP_Set(simv[i].pBase, std::string::npos);
 
@@ -1318,7 +1320,7 @@ size_t MR::MR_Get_NumBayesPar()
 size_t icount=0;
 	for(size_t i=0;i<MR_GetNumberOfDimensions();i++){
 			for(size_t ii=0; ii<MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-				if(MR_GetMethod(i+1,ii+1)<4|| MR_GetMethod(i + 1, ii + 1) > 8) {
+				if(MR_GetMethod(i+1,ii+1)< MR_METHOD::TABLE_VAL || MR_GetMethod(i + 1, ii + 1) > MR_METHOD::OP_REL_SAME_AS) {
 					icount++;
 				}
 			}
@@ -1332,7 +1334,7 @@ size_t MR::MR_Get_NumNotTablePar()
 	m_NoTableParIndex.clear();
 	for (size_t i = 0; i < MR_GetNumberOfDimensions(); i++) {
 		for (size_t ii = 0; ii < MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
-			if (MR_GetMethod(i + 1, ii + 1) != 4) {
+			if (MR_GetMethod(i + 1, ii + 1) != MR_METHOD::TABLE_VAL) {
 				icount++;
 				m_NoTableParIndex.push_back(count_all);
 			}
@@ -1361,7 +1363,7 @@ string name;
 
 	for(size_t i=0;i<MR_GetNumberOfDimensions();i++){
 			for(size_t ii=0; ii<MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-				if(MR_GetMethod(i+1,ii+1)!=5) {
+				if(MR_GetMethod(i+1,ii+1)!= MR_METHOD::DB_RECORD) {
 					if(icount==index) {
 						name=MR_GetParGroup(i+1,ii+1);
 						return name;
@@ -1374,7 +1376,7 @@ string name;
 	return "-";
 
 }
-size_t MR::MR_Get_BayesMethod(size_t index)
+MR_METHOD MR::MR_Get_BayesMethod(size_t index)
 {
 size_t icount;
 string name;
@@ -1384,7 +1386,7 @@ string name;
 
 	for(size_t i=0;i<MR_GetNumberOfDimensions();i++){
 			for(size_t ii=0; ii<MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-				if(MR_GetMethod(i+1,ii+1)!=5) {
+				if(MR_GetMethod(i+1,ii+1)!= MR_METHOD::DB_RECORD) {
 					if(icount==index) {
 						return MR_GetMethod(i+1,ii+1);
 					}
@@ -1393,7 +1395,7 @@ string name;
 				}
 			}
 	}
-	return -1;
+	return MR_METHOD::CONNECTED;
 
 }
 bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
@@ -2255,7 +2257,7 @@ SimB *pPar;
 
 	for(size_t i=0;i<MR_GetNumberOfDimensions();i++){
 			for(size_t ii=0; ii<MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-				if(MR_GetMethod(i+1,ii+1)!=5) {
+				if(MR_GetMethod(i+1,ii+1)!= MR_METHOD::DB_RECORD) {
 					if(icount==index) {
 						pPar=MR_Get_pPar(i+1,ii+1);
 						nTabIndex=MR_GetTabIndex(i+1,ii+1);
@@ -2301,7 +2303,7 @@ void MR::MR_CHECK_Bayesian(bool UpdateExt)
 						m_NelderMead.insert(m_ActualSimplex, -actualobjectivefunction);
 						for (size_t i = 0; i < MR_GetNumberOfDimensions(); i++) {
 							for (size_t ii = 0; ii < MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
-								if (MR_GetMethod(i + 1, ii + 1) == NELDER_MEAD) {
+								if (MR_GetMethod(i + 1, ii + 1) == MR_METHOD::NELDER_MEAD) {
 									icount_NelderMead++;
 									auto max = MR_GetMax(i + 1, ii + 1);
 									auto min = MR_GetMin(i + 1, ii + 1);
@@ -2403,10 +2405,10 @@ void MR::MR_CheckCalibMethod() {
 	m_IsMakingNelderMeadCalib = false;
 	for(size_t i=0;i<MR_GetNumberOfDimensions();i++){
 			for(size_t ii=0; ii<MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-				if(MR_GetMethod(i+1,ii+1)==9||MR_GetMethod(i+1,ii+1)==11) {
+				if(MR_GetMethod(i+1,ii+1)== MR_METHOD::BAYESIAN_CAL ||MR_GetMethod(i+1,ii+1)== MR_METHOD::BAYESIAN_CAL_LOG) {
 					icount++;
 				}
-				if (MR_GetMethod(i + 1, ii + 1) == NELDER_MEAD)  m_IsMakingNelderMeadCalib = true;
+				if (MR_GetMethod(i + 1, ii + 1) == MR_METHOD::NELDER_MEAD)  m_IsMakingNelderMeadCalib = true;
 			}
 	}
 
@@ -2470,11 +2472,11 @@ void MR::MR_INIT_Bayesian_Nelder_Mead()
 				nTabIndex = MR_GetTabIndex(i + 1, ii + 1);
 
 
-				if(MR_GetMethod(i+1,ii+1)==BAYESIAN_CAL) {
+				if(MR_GetMethod(i+1,ii+1)==MR_METHOD::BAYESIAN_CAL) {
 					SetStart_PValues(icount, (MR_GetStart(i+1,ii+1)-MR_GetMin(i + 1, ii + 1)) /(MR_GetMax(i+1,ii+1)-MR_GetMin(i+1,ii+1)));
 					icount++;
 				}
-				else if(MR_GetMethod(i+1,ii+1)==BAYESIAN_CAL_LOG) {
+				else if(MR_GetMethod(i+1,ii+1)== MR_METHOD::BAYESIAN_CAL_LOG) {
 					double max, min, rel;
 					max=abs(MR_GetMax(i+1,ii+1));
 					min=abs(MR_GetMin(i+1, ii+1));
@@ -2485,7 +2487,7 @@ void MR::MR_INIT_Bayesian_Nelder_Mead()
 					SetStart_PValues(icount,rel);
 					icount++;
 				}
-				else if (MR_GetMethod(i + 1, ii + 1) == NELDER_MEAD) {
+				else if (MR_GetMethod(i + 1, ii + 1) == MR_METHOD::NELDER_MEAD) {
 					icount_NelderMead++;
 					auto max = MR_GetMax(i + 1, ii + 1);
 					auto min = MR_GetMin(i + 1, ii + 1);
@@ -2754,7 +2756,7 @@ bool MR::SetParametersTableForMultiRun(vector<SIMB> simv, FCSV *pCSVFile)
 			dynamic_cast<P*>(simv[i].pBase)->MR_Set_Max(simv[i].TabIndex, max_values[i]);
 			dynamic_cast<P*>(simv[i].pBase)->MR_Set_Start(simv[i].TabIndex, (min_values[i] + max_values[i]) / 2.);
 
-			dynamic_cast<P*>(simv[i].pBase)->MR_Set_Method(simv[i].TabIndex, TABLE_VAL);
+			dynamic_cast<P*>(simv[i].pBase)->MR_Set_Method(simv[i].TabIndex, MR_METHOD::TABLE_VAL);
 			dynamic_cast<P*>(simv[i].pBase)->MR_Set_Dim(simv[i].TabIndex, Dimension);
 			MR_CP_Set(simv[i].pBase, simv[i].TabIndex);
 		}
@@ -2762,7 +2764,7 @@ bool MR::SetParametersTableForMultiRun(vector<SIMB> simv, FCSV *pCSVFile)
 			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Min(min_values[i]);
 			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Max(max_values[i]);
 			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Start((min_values[i] + max_values[i]) / 2.);
-			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Method(TABLE_VAL);
+			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Method(MR_METHOD::TABLE_VAL);
 			dynamic_cast<Ps*>(simv[i].pBase)->MR_Set_Dim(Dimension);
 			MR_CP_Set(simv[i].pBase, std::string::npos);
 
@@ -3324,7 +3326,7 @@ void MR::GetProfileFromPlotPF( bool Add_To_Multi, bool Message)
 	Sw *pPedo, *pEquation;
 
 		Tab* pCTab;
-		pCTab=(Tab*)GetPtr(TABLE,"Hydraulic conductivity, measured horizons");
+		pCTab=(Tab*)GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
 		pCTab->SetNumOfRow(p_PFCurve->GetNumLayers());
 				
 
@@ -3363,9 +3365,9 @@ void MR::GetProfileFromPlotPF( bool Add_To_Multi, bool Message)
 	Name="ProfileLayer";
     pProfLayer=(P*)GetPtr(Type,Group,Name);
 	Name="Upper Depth";
-    pUDep=(P*)GetPtr(PAR_TABLE,Name);
+    pUDep=(P*)GetPtr(simtype::PAR_TABLE,Name);
 	Name="Lower Depth";
-    pLDep=(P*)GetPtr(PAR_TABLE,Name);
+    pLDep=(P*)GetPtr(simtype::PAR_TABLE,Name);
 	Name="Upper Boundary";
 	pUBound=(P*)GetPtr(Type,Group,Name);
 	Name="Macro Pore";
@@ -3684,7 +3686,7 @@ bool MR::LinkedChangeToSwitches(Sw *pSw1, size_t option) {
 	SimB *pSimB1;
 	switch (option) {
 	case 4:
-			pSimB1=GetPtr(FUNCTION,"ReCalc Soil Thermal Function");
+			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Soil Thermal Function");
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -3695,12 +3697,12 @@ bool MR::LinkedChangeToSwitches(Sw *pSw1, size_t option) {
 
 	case 100:	// WaterEq
 	case 101:   // HeatEq
-		if(option==101) pSw1=(Sw*)GetPtr(SWITCH,"WaterEq");
+		if(option==101) pSw1=(Sw*)GetPtr(simtype::SWITCH,"WaterEq");
 
-		pSw2=(Sw*)GetPtr(SWITCH,"HeatEq");
-		pSw3=(Sw*)GetPtr(SWITCH,"Growth");
-		pSw4=(Sw*)GetPtr(SWITCH,"Nitrogen and Carbon");
-		(Sw*)GetPtr(SWITCH,"RadiationInput");
+		pSw2=(Sw*)GetPtr(simtype::SWITCH,"HeatEq");
+		pSw3=(Sw*)GetPtr(simtype::SWITCH,"Growth");
+		pSw4=(Sw*)GetPtr(simtype::SWITCH,"Nitrogen and Carbon");
+		(Sw*)GetPtr(simtype::SWITCH,"RadiationInput");
 		if(pSw3->GetIntValue()<=2&&pSw1->GetIntValue()==0&&pSw2->GetIntValue()==0) {
 			GetSw("TAirGlobRad")->SetIntValue(0);
 			GetSw("RadiationInput")->SetIntValue(0);
@@ -3722,17 +3724,17 @@ bool MR::LinkedChangeToSwitches(Sw *pSw1, size_t option) {
 
 		case 102: //Evaporation
 			if(pSw1->GetIntValue()>1) {
-				pTarget1=(Sw*)GetPtr(SWITCH,"RadiationInput");
+				pTarget1=(Sw*)GetPtr(simtype::SWITCH,"RadiationInput");
 				if(pTarget1!=nullptr)
 					pTarget1->SetIntValue(1);
 			}
 			else if(pSw1->GetIntValue()==0) {
-				pTarget1=(Sw*)GetPtr(SWITCH,"PlantType");
+				pTarget1=(Sw*)GetPtr(simtype::SWITCH,"PlantType");
 				if(pTarget1!=nullptr)
 					pTarget1->SetIntValue(0);
 			}
 			else if(pSw1->GetIntValue()==1) {
-				pTarget1=(Sw*)GetPtr(SWITCH,"PlantType");
+				pTarget1=(Sw*)GetPtr(simtype::SWITCH,"PlantType");
 				if(pTarget1!=nullptr)
 					pTarget1->SetIntValue(1);
 			}

@@ -218,7 +218,7 @@ size_t SmartFlexibleValidation::ImportSelectedParamtersFromCSVFile(FCSV *pCSVFil
 	if (pCSVFile == nullptr) {
 
 		ifstream stream;
-		FCSV file(&stream, FILEDEFINEDPARAMETERS, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		FCSV file(&stream, datatype::FILEDEFINEDPARAMETERS, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		pCSVFile = &file;
 #ifndef COUPSTD
 		MFC_Util::MessageBox("Specify File Name for Multi Run Parameter CSV File");
@@ -650,7 +650,7 @@ double SmartFlexibleValidation::SumLikelihoodSingleValue(size_t index, double si
 	else E_Meas = 1;
 
 
-Sw* pSw = dynamic_cast<Sw*>(GetPtr(SWITCH, "Likelihood Function"));
+Sw* pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "Likelihood Function"));
 	
 
 enum BAYES {GAUSSIAN, SIVIAS};

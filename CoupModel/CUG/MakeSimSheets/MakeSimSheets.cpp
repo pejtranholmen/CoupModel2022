@@ -313,7 +313,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				//QuickSetFont(2,5,&m_largeFont);
 				QuickSetText(2,5,"EndDate");
 				
-				pSw=static_cast<Sw*>(m_pSimDoc->GetPtr(SWITCH,"TimeResolution"));
+				pSw=static_cast<Sw*>(m_pSimDoc->GetPtr(simtype::SWITCH,"TimeResolution"));
 				GetCell(1,5,&cell);
 				//cell.SetFont(&m_largeFont);
 				cell.SetParam(102);
@@ -441,9 +441,9 @@ bool MakeSimSheets::Make_RunInfoSheet()
 
 
 					
-					auto pSwNit=(Sw*)m_pSimDoc->GetPtr(SWITCH,"Nitrogen and Carbon");
+					auto pSwNit=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH,"Nitrogen and Carbon");
 					if(pSwNit->GetIntValue()>0) {
-						auto pSwNitRes=(Sw*)m_pSimDoc->GetPtr(SWITCH,"NitrogenCarbonStep");
+						auto pSwNitRes=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH,"NitrogenCarbonStep");
 						UnJoinCells(2,8);
 						UnJoinCells(3,8);
 						QuickSetText(2,8,"Nitrogen Carbon TimeStep");
@@ -465,7 +465,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						SetCell(3,8, &cell);
 						if(ivalue==2) {
 							// Independent value of Nitrogen Balance time step
-							auto pParNitStep=(Ps*)m_pSimDoc->GetPtr(PAR_SINGLE,"NC Iteration");
+							auto pParNitStep=(Ps*)m_pSimDoc->GetPtr(simtype::PAR_SINGLE,"NC Iteration");
 							auto numstep=pParNitStep->GetValue();
 							QuickSetText(2,11,"NC Iteration");
 							GetCell(3,11,&cell);
@@ -869,10 +869,11 @@ bool MakeSimSheets::Make_SwitchesSheet()
 					nval=pSw->GetIntValue();
 					size_t defnval=pSw->GetOriginalIntValue();
 					Name=CString(pSw->GetName().c_str());
+					string strview;
 					if(m_ShowProcesses)
-						Process=pSw->GetProcessName().c_str();
+						strview=pSw->GetProcessName();
 					else 
-						Process=pSw->GetElementName().c_str();
+						strview=pSw->GetElementName();
 
 					Group=pSw->GetGroup().c_str();
 					if(Name==CString(m_SelName.c_str())) {
@@ -910,7 +911,7 @@ bool MakeSimSheets::Make_SwitchesSheet()
 
 					QuickSetText(0,i, Group);
 					QuickSetBackColor(0,i,MFC_Util::GetGroupColor(p_ModelInfo->GetGroupCategoryNo(pSw->GetGroupNo())));
-					QuickSetText(1,i, Process);
+					QuickSetText(1,i, strview);
 					QuickSetText(2,i, Name);
 
 					GetCell(3,i, &cell); 
@@ -1062,10 +1063,11 @@ bool MakeSimSheets::Make_ParameterSheet()
 
 
 		GTitle=pCP1->GetViewTitle().c_str();
+		string str;
 		if(m_ShowProcesses)
-			Process=pCP1->GetProcessName().c_str();
+			str=pCP1->GetProcessName();
 		else
-			Process=pCP1->GetElementName().c_str();
+			str=pCP1->GetElementName();
 
 		if(m_pSimDoc->IsFinishedSimulation())
 			QuickSetBackColor(-1,i,m_ColorCompleted);
@@ -1073,7 +1075,7 @@ bool MakeSimSheets::Make_ParameterSheet()
 			QuickSetBackColor(-1,i,m_ColorClick);
 		QuickSetText(0,i, Group);
 		QuickSetBackColor(0,i,MFC_Util::GetGroupColor(p_ModelInfo->GetGroupCategoryNo(pCP1->GetGroupNo())));
-		QuickSetText(1,i, Process);
+		QuickSetText(1,i, str);
 		QuickSetText(2,i, Name);
 
 		GetCell(3,i, &cell); 
@@ -1375,7 +1377,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
 	Tab *pTab;
 	float fvalue, DefValue;
-	CString str, Defstring, Process;
+	CString str, Defstring;
 	CString optionlist;
 	int NumLines, NumTabRows;
 	int LastRow, StartRow;
@@ -1483,10 +1485,11 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 					NumTabRows=pTab->GetNumOfRow();
 					Name=pTab->GetName().c_str();
 					Group=pTab->GetGroup().c_str();
+					string strprocess;
 					if(m_ShowProcesses)
-						Process=pTab->GetProcessName().c_str();
+						strprocess=pTab->GetProcessName();
 					else
-						Process=pTab->GetElementName().c_str();
+						strprocess=pTab->GetElementName();
 					if(m_pSimDoc->IsFinishedSimulation()) {
 					}
 					else {
@@ -1496,7 +1499,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 					QuickSetText(0,newline, Group);
 					QuickSetBackColor(0,newline,MFC_Util::GetGroupColor(p_ModelInfo->GetGroupCategoryNo(pTab->GetGroupNo())));
 					QuickSetFont(1,newline,&m_font);
-					QuickSetText(1,newline, Process);
+					QuickSetText(1,newline, strprocess);
 					//JoinCells(0,newline,1,newline);
 					
 					QuickSetFont(2,newline,&m_font);
@@ -2055,7 +2058,7 @@ bool MakeSimSheets::Make_ModelFileSheet()
 										cell.SetBackColor(pCPG->GetColor(j+1));
 										SetCell(0,ind,&cell);
 										GetCell(1,ind,&cell);
-										cell.SetText(pCPG->GetVarUnit(j+1).c_str());
+										cell.SetText(string(pCPG->GetVarUnit(j+1)));
 										cell.SetParam(2000);
 										cell.SetBackColor(pCPG->GetColor(j+1));
 										SetCell(1,ind,&cell);
@@ -2435,22 +2438,19 @@ bool MakeSimSheets::Make_OutputSheet()
 					
 						pSw=vvp[ij].pBase;	
 						ii=vvp[ij].TabIndex;
-						int typ=pSw->GetType();
+						auto typ=pSw->GetType();
 						switch 	(typ){
-							case 1:
-							case 8:
-								Type="State Variables";
-								break;
-							case 2:
-							case 9:
+							case simtype::STATE:
+							case simtype::STATE_SINGLE:
+							Type="State Variables";
+							break;
+							case simtype::FLOW: case simtype::FLOW_SINGLE:
 								Type="Flow Variables";
 								break;
-							case 3:
-							case 10:
+							case simtype::AUX: case simtype::AUX_SINGLE:
 								Type="Auxiliary Variables";
 								break;
-							case 4:
-							case 11:
+							case simtype::DRIVE: case simtype::DRIVE_SINGLE:
 								Type="Driving Variables";
 								break;
 						}	
@@ -2528,12 +2528,12 @@ bool MakeSimSheets::Make_OutputSheet()
 								QuickSetBackColor(1,newline,MFC_Util::GetGroupColor(p_ModelInfo->GetGroupCategoryNo(pSw->GetGroupNo())));
 
 								GetCell(2, newline, &cell);
-								string Process;
+								string process;
 								if (m_ShowProcesses)
-									Process = pSw->GetProcessName().c_str();
+									process = string(pSw->GetProcessName());
 								else
-									Process = pSw->GetElementName().c_str();
-								cell.SetText(Process);
+									process = string(pSw->GetElementName());
+								cell.SetText(process);
 								SetCell(2, newline, &cell);
 
 
@@ -3104,8 +3104,8 @@ bool MakeSimSheets::Make_ValidationSheet()
 
 		SimB *pSw;
 		P *pObserved=nullptr;
-		pSw=m_pSimDoc->GetPtr(TABLE,"Scaling of Observed Variables");
-		pObserved=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"Scaling Observed");
+		pSw=m_pSimDoc->GetPtr(simtype::TABLE,"Scaling of Observed Variables");
+		pObserved=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"Scaling Observed");
 		if(pSw!=nullptr&&NumLines>0) {
 				int oldnelements=((Tab*)pSw)->GetNumOfRow();
 				if (NumLines!=oldnelements)  {
@@ -6354,8 +6354,8 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 	int ind;
 	SimB *pSw;
 	P *pObserved = nullptr;
-	pSw = m_pSimDoc->GetPtr(TABLE, "Scaling of Observed Variables");
-	pObserved=(P*)m_pSimDoc->GetPtr(PAR_TABLE,"Scaling Observed");
+	pSw = m_pSimDoc->GetPtr(simtype::TABLE, "Scaling of Observed Variables");
+	pObserved=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"Scaling Observed");
 
 	int numtsv;
 	if(NumLinesSV>0)
@@ -6593,7 +6593,7 @@ CString str;
 						if(nTabIndex>=0)				
 							namep+="("+FUtil::STD_ItoAscii(nTabIndex+1)+")";
 						ind++;
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 4) 	pnames.push_back(namep);
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(4)) 	pnames.push_back(namep);
 						
 						QuickSetText(1+ind,-1,namep);
 					}
@@ -6657,7 +6657,7 @@ CString str;
 			
 
 				m_pSimDoc->MR_ReCalculatePostDist(false, iens);
-				int imethod;
+				
 				for (int i = 0; i < pnames.size(); i++) { 
 					GetCell(0, ii_count, &cell);
 					str.Format(_T("%u"), iens + 1);
@@ -6690,17 +6690,18 @@ CString str;
 
 						DistStat dist = m_pSimDoc->GetPostDist(i, iens);
 						float v, vmean;
+						MR_METHOD imethod;
 						switch (ii) {
 						case 0:
 							imethod = m_pSimDoc->MR_Get_BayesMethod(i);
-							if (imethod == 11 && m_pSimDoc->m_MStorage.m_Lock)
+							if (imethod == MR_METHOD::BAYESIAN_CAL_LOG && m_pSimDoc->m_MStorage.m_Lock)
 								v = dist.Mean;//exp(double(m_pSimDoc->MR_Get_BayesMean(i)));
 							else
 								v = dist.Mean;//m_pSimDoc->MR_Get_BayesMean(i);
 							break;
 						case 1:
 							imethod = m_pSimDoc->MR_Get_BayesMethod(i);
-							if (imethod == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+							if (imethod == MR_METHOD::BAYESIAN_CAL_LOG && m_pSimDoc->m_MStorage.m_Lock) {
 								v = dist.Std;//exp(sqrt(m_pSimDoc->MR_Get_BayesCoCor(i,i)));
 							}
 							else {
@@ -6709,7 +6710,7 @@ CString str;
 							break;
 						case 2:
 							imethod = m_pSimDoc->MR_Get_BayesMethod(i);
-							if (imethod == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+							if (imethod == MR_METHOD::BAYESIAN_CAL_LOG && m_pSimDoc->m_MStorage.m_Lock) {
 								vmean = exp(double(m_pSimDoc->MR_Get_BayesMean(i)));
 								v = exp(double(m_pSimDoc->MR_Get_BayesMean(i) - m_pSimDoc->MR_Get_BayesCoCor(i, i)));
 								v = (vmean - v) / vmean;
@@ -6813,7 +6814,7 @@ void MakeSimSheets::Multi_Post_CoVarList() {
 		for(int i=0;i<m_pSimDoc->m_MultiRun_Array.size();i++){
 		   	for(int ii=0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
 
-				if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==9||m_pSimDoc->MR_GetMethod(i+1,ii+1)==11||m_pSimDoc->MR_GetMethod(i+1,ii+1)<=5){
+				if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(9)||m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(11)||m_pSimDoc->MR_GetMethod(i+1,ii+1)<=MR_METHOD(5)){
 					icount_bayes++;
 					ParameterCalib=true;
 				}
@@ -6880,7 +6881,7 @@ void MakeSimSheets::Multi_Post_CoVarList() {
 			QuickSetCellType(i, ncount+1, UGCT_NORMAL);
 			QuickSetCellType(i, ncount+2, UGCT_NORMAL);
 
-			if(m_pSimDoc->MR_Get_BayesMethod(i)==11&&m_pSimDoc->m_MStorage.m_Lock) {
+			if(m_pSimDoc->MR_Get_BayesMethod(i)==MR_METHOD(11)&&m_pSimDoc->m_MStorage.m_Lock) {
 				float fmean=exp(double(m_pSimDoc->MR_Get_BayesMean(i)));
 
 				QuickSetNumber(i, ncount, fmean);
@@ -7007,7 +7008,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 			COLORREF scale_color;
 
 			icount++;
-			if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 4) {
+			if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(4)) {
 				icount_bayes++;
 				ParameterCalib = true;
 				dist = m_pSimDoc->GetPostDist(icount_bayes, m_pSimDoc->m_MStorage.m_ActualEnsemble);
@@ -7070,7 +7071,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 					SetCell(ifn, icount, &cell);
 				}
 				else if (ifn == 4) {
-					if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 4) {
+					if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(4)) {
 						SimB *pPar;
 						int index;
 						float fmin, fmin1, fact;
@@ -7095,13 +7096,13 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMin(i + 1, ii + 1));
 
 					}
-					else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > 3)
+					else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > MR_METHOD(3))
 						test = "-";
 					else
 						test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMin(i + 1, ii + 1));
 				}
 				else if (ifn == 5) {
-					if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 4) {
+					if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(4)) {
 						test = "-";
 						SimB *pPar;
 						size_t index;
@@ -7137,15 +7138,15 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i + 1, ii + 1));
 
 					}
-					else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > 3)
+					else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > MR_METHOD(3))
 						test = "-";
 					else
 						test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i + 1, ii + 1));
 				}
 				else if (ifn == 6) {
-					if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 9)
+					if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(9))
 						test = "-";
-					else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 5) {
+					else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(5)) {
 						test = "-";
 
 					}
@@ -7197,7 +7198,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						test = _T("");
 				}
 				else if (ifn == 9) {	//Prior Mean	
-					if (ParameterCalib && !(m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 6 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9)) {
+					if (ParameterCalib && !(m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(6) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9))) {
 						float fmean = (m_pSimDoc->MR_GetMin(i + 1, ii + 1) + m_pSimDoc->MR_GetMax(i + 1, ii + 1)) / 2.;
 						test = MFC_Util::FtoAscii(fmean);
 					}
@@ -7209,20 +7210,20 @@ void MakeSimSheets::Multi_Post_NormalList() {
 					if (ParameterCalib) {
 						test = MFC_Util::FtoAscii(dist.Mean);
 
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) ==  MR_METHOD(11) && m_pSimDoc->m_MStorage.m_Lock) {
 							float fmean = exp(double(m_pSimDoc->MR_Get_BayesMean(icount_bayes)));
 							test = MFC_Util::FtoAscii(fmean);
 						}
 						test = MFC_Util::FtoAscii(dist.Mean);
 						float f_norm = FUtil::GetNormalValue(dist.Mean, m_pSimDoc->MR_GetMin(i + 1, ii + 1), m_pSimDoc->MR_GetMax(i + 1, ii + 1));
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) && m_pSimDoc->m_MStorage.m_Lock) {
 							float fmean = exp(double(m_pSimDoc->MR_Get_BayesMean(icount_bayes)));
 							float f_norm = FUtil::GetNormalValue(fmean, m_pSimDoc->MR_GetMin(i + 1, ii + 1), m_pSimDoc->MR_GetMax(i + 1, ii + 1));
 							test = MFC_Util::FtoAscii(fmean);
 						}
 
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 2
-							|| m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 9 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 3) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(2)
+							|| m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(9) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(3)) {
 							if (f_norm<0.45 || f_norm>0.55) {
 								rgb_color rgb = FUtil::Get_RGB(f_norm);
 								scale_color = RGB(rgb.red, rgb.green, rgb.blue);
@@ -7242,7 +7243,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 							float fcv = dist.Std;//sqrt(m_pSimDoc->MR_Get_BayesCoCor(icount_bayes,icount_bayes));
 							test = MFC_Util::FtoAscii(fcv);
 						}
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) && m_pSimDoc->m_MStorage.m_Lock) {
 							float fcv = exp(sqrt((m_pSimDoc->MR_Get_BayesCoCor(icount_bayes, icount_bayes))));
 							test = MFC_Util::FtoAscii(fcv);
 						}
@@ -7257,7 +7258,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 							float fcv = dist.Std / abs(dist.Mean);//sqrt(m_pSimDoc->MR_Get_BayesCoCor(icount_bayes,icount_bayes))/m_pSimDoc->MR_Get_BayesMean(icount_bayes);
 							test = MFC_Util::FtoAscii(fcv);
 						}
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) && m_pSimDoc->m_MStorage.m_Lock) {
 							float fmean = exp(double(m_pSimDoc->MR_Get_BayesMean(icount_bayes)));
 							float fcv = exp(double(m_pSimDoc->MR_Get_BayesCoCor(icount_bayes, icount_bayes)));
 							fcv = exp(double(m_pSimDoc->MR_Get_BayesMean(icount_bayes) - m_pSimDoc->MR_Get_BayesCoCor(icount_bayes, icount_bayes)));
@@ -7269,7 +7270,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						test = _T("");
 				}
 				else if (ifn == 13) {	//Post distribution
-					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 						float v;
 						v = (dist.Max - dist.Min) /
 							(m_pSimDoc->MR_GetMax(i + 1, ii + 1) - m_pSimDoc->MR_GetMin(i + 1, ii + 1));
@@ -7279,21 +7280,21 @@ void MakeSimSheets::Multi_Post_NormalList() {
 						test = _T("");
 				}
 				else if (ifn == 14) {	//Post distribution
-					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 						test = MFC_Util::FtoAscii(dist.P5);
 					}
 					else
 						test = _T("");
 				}
 				else if (ifn == 15) {	//Post distribution
-					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 						test = MFC_Util::FtoAscii(dist.P50);
 					}
 					else
 						test = _T("");
 				}
 				else if (ifn == 16) {	//Post distribution
-					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+					if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 						test = MFC_Util::FtoAscii(dist.P95);
 					}
 					else
@@ -7465,7 +7466,7 @@ void MakeSimSheets::Multi_Post_SensitivityTest() {
 				COLORREF scale_color;
 
 				icount++;
-				if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 5) {
+				if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(5)) {
 					icount_bayes++;
 					ParameterCalib = true;
 					dist = m_pSimDoc->GetPostDist(icount_bayes);
@@ -7517,7 +7518,7 @@ void MakeSimSheets::Multi_Post_SensitivityTest() {
 						SetCell(ifn, icount, &cell);
 					}
 					else if (ifn == 4) {
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 4) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(4)) {
 							SimB *pPar;
 							int index;
 							float fmin, fmin1, fact;
@@ -7542,13 +7543,13 @@ void MakeSimSheets::Multi_Post_SensitivityTest() {
 							test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMin(i + 1, ii + 1));
 
 						}
-						else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > 3)
+						else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > MR_METHOD(3))
 							test = "-";
 						else
 							test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMin(i + 1, ii + 1));
 					}
 					else if (ifn == 5) {
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 4) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(4)) {
 							test = "-";
 							SimB *pPar;
 							size_t index;
@@ -7584,7 +7585,7 @@ void MakeSimSheets::Multi_Post_SensitivityTest() {
 							test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i + 1, ii + 1));
 
 						}
-						else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > 3)
+						else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > MR_METHOD(3))
 							test = "-";
 						else
 							test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i + 1, ii + 1));
@@ -7779,7 +7780,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 		for (int ii = 0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i + 1); ii++) {
 			for (size_t ensemble_no = 0; ensemble_no < num_ensembles; ensemble_no++) {
 				icount++;
-				if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 5) {
+				if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(5)) {
 					if(ensemble_no==0) icount_bayes++;
 					ParameterCalib = true;
 					dist = m_pSimDoc->GetPostDist(icount_bayes);
@@ -7833,7 +7834,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 							SetCell(ifn, icount, &cell);
 						}
 						else if (ifn == 4) {
-							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 4) {
+							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(4)) {
 								SimB *pPar;
 								int index;
 								float fmin, fmin1, fact;
@@ -7858,13 +7859,13 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 								test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMin(i + 1, ii + 1));
 
 							}
-							else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > 3)
+							else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > MR_METHOD(3))
 								test = "-";
 							else
 								test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMin(i + 1, ii + 1));
 						}
 						else if (ifn == 5) {
-							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 4) {
+							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(4)) {
 								test = "-";
 								SimB *pPar;
 								size_t index;
@@ -7900,15 +7901,15 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 								test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i + 1, ii + 1));
 
 							}
-							else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > 3)
+							else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > MR_METHOD(3))
 								test = "-";
 							else
 								test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i + 1, ii + 1));
 						}
 						else if (ifn == 6) {
-							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 9)
+							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(9))
 								test = "-";
-							else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 5) {
+							else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(5)) {
 								test = "-";
 
 							}
@@ -7916,7 +7917,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 								test = MFC_Util::FtoAscii(m_pSimDoc->MR_GetStart(i + 1, ii + 1));
 						}
 						else if (ifn == 7) {
-							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 6 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9) {
+							if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(6) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9)) {
 								SimB *pPar, *pParDep;
 								size_t index, indexdep;
 								index = m_pSimDoc->MR_GetTabIndex(i + 1, ii + 1);
@@ -7952,7 +7953,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 								test = _T("");
 						}
 						else if (ifn == 9) {	//Prior Mean	
-							if (ParameterCalib&&!(m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 6 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9)) {
+							if (ParameterCalib&&!(m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(6) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9))) {
 								float fmean = (m_pSimDoc->MR_GetMin(i + 1, ii + 1) + m_pSimDoc->MR_GetMax(i + 1, ii + 1)) / 2.;
 								test = MFC_Util::FtoAscii(fmean);
 							}
@@ -7964,7 +7965,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 							if (ParameterCalib) {
 								test = MFC_Util::FtoAscii(dist.Mean);
 								float f_norm = FUtil::GetNormalValue(dist.Mean, m_pSimDoc->MR_GetMin(i + 1, ii + 1), m_pSimDoc->MR_GetMax(i + 1, ii + 1));
-								if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+								if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) && m_pSimDoc->m_MStorage.m_Lock) {
 									float fmean = exp(double(m_pSimDoc->MR_Get_BayesMean(icount_bayes)));
 									float f_norm = FUtil::GetNormalValue(fmean, m_pSimDoc->MR_GetMin(i + 1, ii + 1), m_pSimDoc->MR_GetMax(i + 1, ii + 1));							
 									test = MFC_Util::FtoAscii(fmean);
@@ -7985,7 +7986,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 									float fcv = dist.Std;//sqrt(m_pSimDoc->MR_Get_BayesCoCor(icount_bayes,icount_bayes));
 									test = MFC_Util::FtoAscii(fcv);
 								}
-								if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+								if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) && m_pSimDoc->m_MStorage.m_Lock) {
 									float fcv = exp(sqrt((m_pSimDoc->MR_Get_BayesCoCor(icount_bayes, icount_bayes))));
 									test = MFC_Util::FtoAscii(fcv);
 								}
@@ -8000,7 +8001,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 									float fcv = dist.Std / abs(dist.Mean);//sqrt(m_pSimDoc->MR_Get_BayesCoCor(icount_bayes,icount_bayes))/m_pSimDoc->MR_Get_BayesMean(icount_bayes);
 									test = MFC_Util::FtoAscii(fcv);
 								}
-								if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 && m_pSimDoc->m_MStorage.m_Lock) {
+								if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) && m_pSimDoc->m_MStorage.m_Lock) {
 									float fmean = exp(double(m_pSimDoc->MR_Get_BayesMean(icount_bayes)));
 									float fcv = exp(double(m_pSimDoc->MR_Get_BayesCoCor(icount_bayes, icount_bayes)));
 									fcv = exp(double(m_pSimDoc->MR_Get_BayesMean(icount_bayes) - m_pSimDoc->MR_Get_BayesCoCor(icount_bayes, icount_bayes)));
@@ -8012,7 +8013,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 								test = _T("");
 						}
 						else if (ifn == 13) {	//Post distribution
-							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3)|| m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 								float v;
 								v = (dist.Max - dist.Min) /
 									(m_pSimDoc->MR_GetMax(i + 1, ii + 1) - m_pSimDoc->MR_GetMin(i + 1, ii + 1));
@@ -8022,21 +8023,21 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 								test = _T("");
 						}
 						else if (ifn == 14) {	//Post distribution
-							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 								test = MFC_Util::FtoAscii(dist.P5);
 							}
 							else
 								test = _T("");
 						}
 						else if (ifn == 15) {	//Post distribution
-							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 								test = MFC_Util::FtoAscii(dist.P50);
 							}
 							else
 								test = _T("");
 						}
 						else if (ifn == 16) {	//Post distribution
-							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= 3 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= 9)) {
+							if (ParameterCalib && (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) <= MR_METHOD(3) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) >= MR_METHOD(9))) {
 								test = MFC_Util::FtoAscii(dist.P95);
 							}
 							else
@@ -8258,7 +8259,7 @@ CString test;
 						}
 					}
 					else if(ifn==3) {
-						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 5) {
+						if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(5)) {
 							SimB *pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
 							if (pPar->Is_DB()) {
 								CString optionlistBase;
@@ -8316,7 +8317,7 @@ CString test;
 						}
 					}
 					else if(ifn==4) {
-						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==1||m_pSimDoc->MR_GetMethod(i+1,ii+1)==3||m_pSimDoc->MR_GetMethod(i+1,ii+1)==11 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == NELDER_MEAD) {
+						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(1)||m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(3)||m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(11) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD::NELDER_MEAD) {
 							float fval=m_pSimDoc->MR_GetMin(i+1,ii+1);
 							if(fval<=0&&m_SetUpDone)  {
 								MFC_Util::MessageBox("Your seetings with a log distribution can not be combined with a value that is <=0\n A new value is set to be 0.001 - Please modify to a valid new value!","Error in Value for parameter range",MB_OK);
@@ -8331,9 +8332,9 @@ CString test;
 							test=MFC_Util::FtoAscii(fval);
 
 						}
-						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)>6&&m_pSimDoc->MR_GetMethod(i+1,ii+1)<9)
+						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)> MR_METHOD(6)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)< MR_METHOD(9))
 							test=MFC_Util::FtoAscii(m_pSimDoc->MR_GetMin(i+1,ii+1));
-						else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < 9 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > 3) {
+						else if (m_pSimDoc->MR_GetMethod(i + 1, ii + 1) < MR_METHOD(9) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) > MR_METHOD(3)) {
 
 							 SimB *pPar = m_pSimDoc->MR_Get_pPar(i + 1, ii + 1);
 							 if (pPar->Is_DB()) {
@@ -8352,7 +8353,7 @@ CString test;
 							string caption;
 							SimB *pPar=m_pSimDoc->MR_Get_pPar(i+1,ii+1);
 							caption=pPar->GetName();
-							if(m_pSimDoc->MR_GetMethod(i+1,ii+1)>6&&m_pSimDoc->MR_GetMethod(i+1,ii+1)<9||(m_pSimDoc->MR_GetMethod(i+1,ii+1)>0&&m_pSimDoc->MR_GetMethod(i+1,ii+1)<=3)) {
+							if(m_pSimDoc->MR_GetMethod(i+1,ii+1)>MR_METHOD(6)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)< MR_METHOD(9)||(m_pSimDoc->MR_GetMethod(i+1,ii+1)> MR_METHOD(0)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)<= MR_METHOD(3))) {
 								MFC_Util::MessageBox("Your seetings with a min value larger than the max value may cause errors!\n - Please modify to a valid new value!","Error in Value for parameter range for -"+caption,MB_OK);
 
 							}
@@ -8360,44 +8361,44 @@ CString test;
 
 						}
 
-						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==4) {
+						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(4)) {
 
 							test="Edit/Copy/Paste Values";
 							clickcell=TRUE;
 							JoinCells(4,icount,7,icount);
 
 						}
-						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==10) {
+						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(10)) {
 							test="Connected to Database";
 							JoinCells(4,icount,7,icount);
 						}
-						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==6) {
+						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(6)) {
 							JoinCells(3,icount,6,icount);
 						}
-						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)>6&&m_pSimDoc->MR_GetMethod(i+1,ii+1)<9) {
+						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)> MR_METHOD(6)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)< MR_METHOD(9)) {
 							JoinCells(5,icount,6,icount);
 						}
-						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)!=9&&m_pSimDoc->MR_GetMethod(i+1,ii+1)!=11 && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 5
-							&& m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != 12) {
+						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)!= MR_METHOD(9)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)!= MR_METHOD(11) && m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(5)
+							&& m_pSimDoc->MR_GetMethod(i + 1, ii + 1) != MR_METHOD(12)) {
 							JoinCells(5,icount,7,icount);
 						}
 					}
 					else if(ifn==5) {
-						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)>6&&m_pSimDoc->MR_GetMethod(i+1,ii+1)<9)
+						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)> MR_METHOD(6)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)< MR_METHOD(9))
 							test=MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i+1,ii+1));
-						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)<9&&m_pSimDoc->MR_GetMethod(i+1,ii+1)>3)
+						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)< MR_METHOD(9)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)> MR_METHOD(3))
 							test="-";
 						else
 							test=MFC_Util::FtoAscii(m_pSimDoc->MR_GetMax(i+1,ii+1));
 					}
 					else if(ifn==6) {
-						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)<9)
+						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)< MR_METHOD(9))
 							test="-";
-						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==9 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == 11 || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == NELDER_MEAD)
+						else if(m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(9) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD(11) || m_pSimDoc->MR_GetMethod(i + 1, ii + 1) == MR_METHOD::NELDER_MEAD)
 							test=MFC_Util::FtoAscii(m_pSimDoc->MR_GetStart(i+1,ii+1));
 					}
 					else if(ifn==7) {
-						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)>=6&&m_pSimDoc->MR_GetMethod(i+1,ii+1)<9) {
+						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)>= MR_METHOD(6)&&m_pSimDoc->MR_GetMethod(i+1,ii+1)< MR_METHOD(9)) {
 							SimB *pPar, *pParDep;
 							size_t index, indexdep;
 							index=m_pSimDoc->MR_GetTabIndex(i+1,ii+1);
@@ -8474,7 +8475,7 @@ CString test;
 						test=MFC_Util::ItoAscii(m_pSimDoc->m_MultiRun_Array[i].NumberOfRepeatitionsWithinDimension);
 					}
 					else if(ifn==9) {	// Bayesian step size		
-						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==9||m_pSimDoc->MR_GetMethod(i+1,ii+1)==11) 
+						if(m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(9)||m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(11))
 							test=MFC_Util::FtoAscii(m_pSimDoc->MR_GetBayesianStepSize());
 						else
 							test=_T("");

@@ -11,7 +11,7 @@
 #include "../../Util/FUtil.h"
 #include "./GetPFCurve.h"
 
-
+using namespace std;
 PFCurve::PFCurve(void)
 {
 	m_IniPressure.resize(6);

@@ -5,24 +5,24 @@ class Doc;
 struct DB_OldHeader
 {
 	size_t Type;
-	string Name;
-	string SiteName;
-	string Latitude;
-	string Longitude;
-	string Country;
-	string DriveFile;
-	string Details;
-	string IdUser;
-	size_t IdNum;
-	string keyId;
+	std::string Name;
+	std::string SiteName;
+	std::string Latitude;
+	std::string Longitude;
+	std::string Country;
+	std::string DriveFile;
+	std::string Details;
+	std::string IdUser;
+	std::size_t IdNum;
+	std::string keyId;
 };
 struct DB_NewHeader
 {
-	string ModelVersion;
-	string CreateDate;
-	string ModifiedDate;
-	string CreatedBy;
-	string ModifiedBy;
+	std::string ModelVersion;
+	std::string CreateDate;
+	std::string ModifiedDate;
+	std::string CreatedBy;
+	std::string ModifiedBy;
 	bool CompareGroup;
 
 };
@@ -34,7 +34,7 @@ public:
 	Doc *m_pSimDoc;
 	size_t GetNumGroups(size_t db_index) {return m_Group[db_index].size();};
 
-	string GetGroupString(size_t db_index, size_t index);
+	std::string GetGroupString(size_t db_index, size_t index);
 	size_t GetCurrentDBIndex(bool AsIs=false) { if (m_DB_Index > 0&&!AsIs) return m_DB_Index + 1; else return m_DB_Index; };
 	void SetCurrentDBIndex(size_t index) { m_DB_Index=index;};
 	size_t GetCurrentKeyIndex(size_t db_index) {return m_DB_KeyIndex[db_index];};
@@ -44,7 +44,7 @@ public:
 		SetCompareLinkNewHeader(db_index, keyindex, true);
 	; };
 	size_t GetNumOriginal(size_t db_index) {return m_NumOriginalRec[db_index];};
-	vector<string> m_PlantType[6];
+	std::vector<std::string> m_PlantType[6];
 	size_t m_PlantTypeIndex[9];
 	size_t GetPlantTypeIndex(size_t db_index, std::string name);
 	bool SetCompareLinkNewHeader(size_t db_index, size_t keyindex, bool Compare) {
@@ -59,8 +59,8 @@ public:
 		else
 			return false;
 	}
-	vector<size_t> GetCompareLinkVector(size_t db_index) {
-		vector<size_t> IndexToCompare;
+	std::vector<size_t> GetCompareLinkVector(size_t db_index) {
+		std::vector<size_t> IndexToCompare;
 		if (db_index<9 && db_index >= 0) {
 			for (size_t index = 0; index < m_NewHeader[db_index].size(); index++) {
 				if(m_NewHeader[db_index][index].CompareGroup) IndexToCompare.push_back(index);
@@ -115,15 +115,15 @@ public:
 protected:
 	bool m_IniDataBaseMade;
 	bool m_EditHeaders[9];
-	vector<DB_OldHeader> m_OldHeader[9];
-	vector<DB_NewHeader> m_NewHeader[9];
+	std::vector<DB_OldHeader> m_OldHeader[9];
+	std::vector<DB_NewHeader> m_NewHeader[9];
 	
-	vector<size_t> m_Group[9];
+	std::vector<size_t> m_Group[9];
 	int m_NumOriginalRec[9]; 
 	bool m_ReadInDone[9];
-	map<string, DB_NewHeader> m_ValidNewHeader[9];
+	std::map<std::string, DB_NewHeader> m_ValidNewHeader[9];
 	
-	fstream m_HeaderFile;
+	std::fstream m_HeaderFile;
 	size_t m_DB_Index;
 private:
 	

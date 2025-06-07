@@ -35,7 +35,7 @@ void ChartCugSheets::ShowDataInGrid(bool createfile)
 		}
 
 		m_extra_xy_variables = 0;
-		if(m_pProp->GetIndepFirst()!=DATEAXIS)
+		if(m_pProp->GetIndepFirst()!= vartype::DATEAXIS)
 			m_extra_xy_variables = 1;
 		if (m_pProp->IsSecondIndepSet())
 			m_extra_xy_variables = 2;
@@ -1182,9 +1182,9 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 				if (m_pProp->GetPGSource()->GetNumberofYears() > 1) optionlist += "Year\n";
 				cell.SetLabelText(optionlist);
 				string Name = "Normal Time";
-				if (m_pProp->GetIndepFirst() == PGHOUR) Name = "Hour";
-				if (m_pProp->GetIndepFirst() == PGDAY) Name = "Day";
-				if (m_pProp->GetIndepFirst() == PGYEAR) Name = "Year";
+				if (m_pProp->GetIndepFirst() == vartype::PGHOUR) Name = "Hour";
+				if (m_pProp->GetIndepFirst() == vartype::PGDAY) Name = "Day";
+				if (m_pProp->GetIndepFirst() == vartype::PGYEAR) Name = "Year";
 				cell.SetText(Name);
 				SetCell(0, 5, &cell);
 
@@ -1203,9 +1203,9 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 					if (m_pProp->GetPGSource()->GetNumberofYears() > 1) optionlist += "Year\n";
 					cell.SetLabelText(optionlist);
 					Name = "Not Used";
-					if (m_pProp->GetIndepSecond()== PGHOUR) Name = "Hour";
-					if (m_pProp->GetIndepSecond()== PGDAY) Name = "Day";
-					if (m_pProp->GetIndepSecond()== PGYEAR) Name = "Year";
+					if (m_pProp->GetIndepSecond()== vartype::PGHOUR) Name = "Hour";
+					if (m_pProp->GetIndepSecond()== vartype::PGDAY) Name = "Day";
+					if (m_pProp->GetIndepSecond()== vartype::PGYEAR) Name = "Year";
 
 
 					cell.SetText(Name);
@@ -1542,8 +1542,8 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 					}
 					enum vartype var=m_pProp->GetFirstIndepVarType();
 					enum vartype var2=m_pProp->GetSecondIndepVarType();
-					m_pProp->SetFirstIndepVarType(PARVAR);
-					m_pProp->SetSecondIndepVarType(PARVAR);
+					m_pProp->SetFirstIndepVarType(vartype::PARVAR);
+					m_pProp->SetSecondIndepVarType(vartype::PARVAR);
 					string selected_str=FUtil::GetOptionString(optionlist,m_pProp->GetFirstIndepIndex()+1);
 					cell.SetText(selected_str.c_str());
 					cell.SetLabelText(optionlist.c_str());
@@ -2060,7 +2060,7 @@ void ChartCugSheets::Make_Sheet2_RealTime()
 				int npar=m_pSimDoc->MR_Get_NumTotalPar()+1;
 				for(size_t i=0;i<m_pSimDoc->MR_GetNumberOfDimensions();i++){
 						for(size_t ii=0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
-								if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==9||m_pSimDoc->MR_GetMethod(i+1,ii+1)==11||m_pSimDoc->MR_GetMethod(i+1,ii+1)<=3) {	
+								if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(9)||m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(11)||m_pSimDoc->MR_GetMethod(i+1,ii+1)<= MR_METHOD(3)) {
 									GetCell(0,ind,&cell);
 									cell.SetText(m_pSimDoc->MR_GetParGroup(i+1,ii+1).c_str());
 									cell.SetParam(i);
@@ -2173,7 +2173,7 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 				for(int i=1;i<6;i++)
 					SetColWidth(i,106);
 
-				string legend = m_pProp->GetChartTypeString();
+				string legend = string(m_pProp->GetChartTypeString());
 				legend += "Label on axis";
 				GetCell(0, -1, &cell);
 				cell.SetText(legend);
@@ -2190,7 +2190,7 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 
 				size_t ratio = m_TimeSeriePlot.m_ChartInfo.NumVariables / m_TimeSeriePlot.m_ChartInfo.NumPriorVariables;
 
-				if (m_pUtil->m_MultiRunPlot&&m_pProp->GetFirstIndepVarType()==MULTIRUN_NUM)
+				if (m_pUtil->m_MultiRunPlot&&m_pProp->GetFirstIndepVarType()== vartype::MULTIRUN_NUM)
 						m_NumUsedSubCharts = min(m_TimeSeriePlot.m_ChartInfo.NumPriorVariables, m_NumUsedSubCharts);
 				else if(m_pUtil->m_MultiRunPlot)
 						m_NumUsedSubCharts = min(m_TimeSeriePlot.m_ChartInfo.NumPriorVariables, m_NumUsedSubCharts);
@@ -2265,7 +2265,7 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 					}
 					lineacc=2*m_NumUsedSubCharts;
 				}
-				if(XLabels||m_pProp->GetIndepFirst()!=DATEAXIS) /*||m_pProp->IsSecondIndepSet()*/ {
+				if(XLabels||m_pProp->GetIndepFirst()!= vartype::DATEAXIS) /*||m_pProp->IsSecondIndepSet()*/ {
 
 					for (size_t jc=0;jc<numy;jc++) {
 						QuickSetNumber(-1,lineacc+jc,jc+1);
@@ -2277,7 +2277,7 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 								QuickSetBackColor(0, lineacc + jc, m_ColorClick);
 
 						}
-						if((m_pProp->m_ChartType!= CHART_TYPES::TIME_SERIE||m_pProp->m_ReShape.m_SortedSeries||m_pProp->m_ReShape.m_NormalDist)&&(!m_pProp->IsSecondIndepSet()|| m_pProp->GetFirstIndepVarType() != DATEAXIS)) {
+						if((m_pProp->m_ChartType!= CHART_TYPES::TIME_SERIE||m_pProp->m_ReShape.m_SortedSeries||m_pProp->m_ReShape.m_NormalDist)&&(!m_pProp->IsSecondIndepSet()|| m_pProp->GetFirstIndepVarType() != vartype::DATEAXIS)) {
 							if (jc < m_pProp->m_XScaleMin.size()) {
 								QuickSetNumber(1, lineacc + jc, m_pProp->m_XScaleMin.at(jc), false);
 								QuickSetNumber(2, lineacc + jc, m_pProp->m_XScaleMax.at(jc), false);
@@ -2290,7 +2290,7 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 							}
 						} 
 
-						else  if(!m_pUtil->m_MultiRunPlot&&m_pProp->GetFirstIndepVarType()==DATEAXIS)  {
+						else  if(!m_pUtil->m_MultiRunPlot&&m_pProp->GetFirstIndepVarType()== vartype::DATEAXIS)  {
 							size_t min=size_t(m_pProp->m_TimeScale.MinX/60+2880.);
 							string txt=PGUtil::StringDatum(min);
 							QuickSetText(1,lineacc+jc ,txt, false);
@@ -2317,9 +2317,9 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 
 
 						}
-						else if (m_pUtil->m_MultiRunPlot || m_pUtil->m_MultiPGPlot || m_pProp->GetSecondIndepVarType() != DATEAXIS) {
-							if ((m_pProp->GetFirstIndepIndex() != std::string::npos&&m_pProp->IsSecondIndepSet() && m_pProp->GetSecondIndepVarType() == DATEAXIS)|| m_pProp->GetFirstIndepVarType()==MULTIRUN_NUM) {
-								if (m_pProp->GetIndepFirst() == MULTIRUN_NUM) {
+						else if (m_pUtil->m_MultiRunPlot || m_pUtil->m_MultiPGPlot || m_pProp->GetSecondIndepVarType() != vartype::DATEAXIS) {
+							if ((m_pProp->GetFirstIndepIndex() != std::string::npos&&m_pProp->IsSecondIndepSet() && m_pProp->GetSecondIndepVarType() == vartype::DATEAXIS)|| m_pProp->GetFirstIndepVarType()== vartype::MULTIRUN_NUM) {
+								if (m_pProp->GetIndepFirst() == vartype::MULTIRUN_NUM) {
 									QuickSetNumber(1, lineacc + jc, m_pProp->GetXmin(jc), false);
 									QuickSetNumber(2, lineacc + jc, m_pProp->GetXmax(jc), false);
 									QuickSetNumber(3, lineacc + jc, m_pProp->GetXInterv(jc), false);
@@ -2471,7 +2471,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 			for(int i=6;i<9;i++)
 				SetColWidth(i,60);
 
-			string legend = m_pProp->GetChartTypeString();
+			string legend = string(m_pProp->GetChartTypeString());
 			legend += "Legend";
 			GetCell(0, -1, &cell);
 			cell.SetText(legend);
@@ -2932,7 +2932,7 @@ void ChartCugSheets::Make_Sheet4_TimeSeriePlot(int rows)
 			for(int i=1;i<6;i++)
 				SetColWidth(i,114);
 
-			string legend = m_pProp->GetChartTypeString();
+			string legend = string(m_pProp->GetChartTypeString());
 			legend += "Legends";
 			GetCell(0, -1, &cell);
 			cell.SetText(legend);
@@ -2984,7 +2984,7 @@ void ChartCugSheets::Make_Sheet5_TimeSeriePlot(int rows) {
 			SetColWidth(0,240);
 			for(int i=1;i<6;i++)
 				SetColWidth(i,114);
-			string legend = m_pProp->GetChartTypeString();
+			string legend = string(m_pProp->GetChartTypeString());
 			legend += "Legends";
 			CUGCell cell;
 			GetCell(0, -1, &cell);
@@ -3140,7 +3140,7 @@ void ChartCugSheets::AddTimeData(DoubleArray data, DoubleArray data_y, size_t x_
 			m_PGExtra.SetCompleteRead(true);
 			m_PGExtra.AdjustSize(data.len, m_PGExtra.GetNumVariables()+ m_extra_xy_variables);
 			if (m_pUtil->m_MultiRunPlot || m_pProp->m_ReShape.m_NormalDist || m_pProp->m_ReShape.m_SortedSeries || m_pProp->m_ChartType !=CHART_TYPES::TIME_SERIE||
-				m_pProp->GetIndepFirst()!=DATEAXIS) {
+				m_pProp->GetIndepFirst()!=vartype::DATEAXIS) {
 				m_PGExtra.AddDummySequenceTimeVector();
 				m_PGExtra.AddVariableVector(data, 1);
 				if(m_pProp->IsSecondIndepSet())

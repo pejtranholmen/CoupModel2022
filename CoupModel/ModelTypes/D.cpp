@@ -1,6 +1,6 @@
  #include "D.h"
 #include "NE.h"
-
+using namespace std;
 D::~D()
 {
 }
@@ -8,7 +8,7 @@ D::D(vector<double> *target,NE *ne,enum datatype data, enum elements elem, enum 
 	:OutVector(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target;
-	SetSimType(DRIVE);
+	SetSimType(simtype::DRIVE);
 	pNE=ne;
 	;
 }

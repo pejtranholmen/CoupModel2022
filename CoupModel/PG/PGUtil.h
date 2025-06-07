@@ -23,7 +23,7 @@ struct LINKED_FILEINFO {
 	size_t Records;
 	size_t RecordsSelected;
 	size_t Ids;
-	vector<string> FilterItems;
+	std::vector<std::string> FilterItems;
 	TIMECHECK TimeCheck;
 };
 struct DEC_COORD
@@ -36,7 +36,7 @@ struct DEC_COORD
 
 struct FILEINFO
 {	
-	string InputfileName;
+	std::string InputfileName;
 	bool CopyMode;
 	size_t MaxVar;
 	size_t NumHeads;
@@ -54,14 +54,14 @@ struct FILEINFO
 	size_t HourColumn;
 	size_t MinuteColumn;
 	size_t PG_MinColumn;
-	vector<bool> ValidVariables;
-	vector<size_t> ValidVariableIndex;
-	vector<string> FirstValidHeads;
+	std::vector<bool> ValidVariables;
+	std::vector<size_t> ValidVariableIndex;
+	std::vector<std::string> FirstValidHeads;
 	DESCRIPTIONS Des;
-	vector<string> UnitsFromHead;
-	vector<string> IdFromHead;
-	vector<string> PosFromHead;
-	vector<LINKED_FILEINFO> LinkedSites;
+	std::vector<std::string> UnitsFromHead;
+	std::vector<std::string> IdFromHead;
+	std::vector<std::string> PosFromHead;
+	std::vector<LINKED_FILEINFO> LinkedSites;
 	bool EqualSizeOfSiteRecords;
 	size_t IdentifiedDelimiter;
 	size_t IdentifiedLineEnd;
@@ -69,12 +69,12 @@ struct FILEINFO
 	size_t IdentifiedMinDiff;
 	formats IdentifiedFormat;
 	dateformats IdentifiedDateFormat;
-	string StatNo;
-	string StatName;
+	std::string StatNo;
+	std::string StatName;
 	DEC_COORD dec_cord;
 	size_t FilterColumnToUse;
-	vector<string> GlobalFilterItems;
-	string FilterItemToUse;
+	std::vector<std::string> GlobalFilterItems;
+	std::string FilterItemToUse;
 };
 
 struct SWISSCORD
@@ -103,7 +103,7 @@ public:
 	PGUtil(void);
 	virtual ~PGUtil(void);
 	
-	static float AtoFloat(string str);
+	static float AtoFloat(std::string str);
 	static std::string DateConv(enum dateformats, std::string instr);
 	static std::string ItoNumAscii(int);
 	static std::string	STD_FtoAscii(float v) ;
@@ -111,12 +111,12 @@ public:
 	static std::string	STD_DtoAscii(double v) ;
 	static std::string	STD_ItoAscii(int v) ;
 	static std::string	STD_ItoAsciiHex(int v);
-	static int	AtoInt(string str);
+	static int	AtoInt(std::string str);
 	static unsigned int cminutx(int, int,int, int,int);
-	static IPGTID Ato_IPGTID(string str);
+	static IPGTID Ato_IPGTID(std::string str);
 	static IPGTID MinToPGTID(unsigned int min);
 	static unsigned int MinutConv(IPGTID);
-	static unsigned int MinutConv(string str, bool daily=false, bool hourly=false);  
+	static unsigned int MinutConv(std::string str, bool daily=false, bool hourly=false);  
 	//static std::string StringDatum(unsigned int min) { return StringDatum(unsigned int(min)); };
 	static std::string StringDatum(unsigned int);
 	static std::string StringDatumSec(double);
@@ -137,8 +137,8 @@ public:
 	static unsigned int cminut(char *date);
 	static std::string cdatum(unsigned int &julian);
 	static int LengthOfMonth(unsigned int min);
-	static std::string CheckedForExistingBinFileName(string filename);
-	static bool CheckForPossiblePGDateString(string str);
+	static std::string CheckedForExistingBinFileName(std::string filename);
+	static bool CheckForPossiblePGDateString(std::string str);
 
 };
 

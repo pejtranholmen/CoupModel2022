@@ -4,7 +4,7 @@ class NE;
 class X :public OutVector {
 
 public:
-	X(vector<double> *target, NE *pNE,enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
+	X(std::vector<double> *target, NE *pNE,enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 
 	~X();
 

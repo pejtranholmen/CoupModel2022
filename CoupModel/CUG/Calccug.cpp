@@ -1881,7 +1881,7 @@ int CalcCug::OnHint(int col,long row,int section,CString *str1)
 	GetCell(col, row, &cell);
 	ParV = cell.GetParam();
 	if (ParV > 0) {
-		string txt = GetHint(ParV);
+		std::string txt = GetHint(ParV);
 		if (txt.size() > 0) *str1 = txt.c_str();
 		return TRUE;
 	}
@@ -2252,14 +2252,14 @@ void CalcCug::DefineClickButtonInfos()
 	i.Param = GetUniqueMenuNumber();
 	i.Text = "Enable Conditions";
 	i.TextOptional = "Disable Conditions";
-	i.HintText = "By Adding Conditions you will constrain your calculations to the conditions\n";
-	i.HintText += "that will be satisfied\n";
-	i.HintText += "v(1)<=V(3) are valid code\n";
-	i.HintText += "V(1)>2.0 are valid code to compare with a static value\n";
-	i.HintText += "m>200 are valid code to the minute of day function with a static value\n";
-	i.HintText += "d>120 are valid code to the day of year function with a static value\n";
-	i.HintText += "The 5 Valid operators are: < <= = >= > \n";
-	i.HintText += "Note that more than one conditions will be added type\n";
+	i.HintText = "By Adding Conditions you will constrain your calculations to the conditions\n"
+	"that will be satisfied\n"
+	"v(1)<=V(3) are valid code\n"
+	"V(1)>2.0 are valid code to compare with a static value\n"
+	"m>200 are valid code to the minute of day function with a static value\n"
+	"d>120 are valid code to the day of year function with a static value\n"
+	"The 5 Valid operators are: < <= = >= > \n"
+	"Note that more than one conditions will be added type\n";
 
 	i.Col_start = 1;
 	i.Col_end = 1;
@@ -2270,10 +2270,10 @@ void CalcCug::DefineClickButtonInfos()
 	i.Param = GetUniqueMenuNumber();
 	i.Text = "No Conditons Set";
 	i.TextOptional = "Reset Defined Conditions";
-	i.HintText = "By Adding Conditions you will constrain your calculations to the conditions\n";
-	i.HintText += "Set Conditions will be saved until you reset those";
-	i.HintText += "Reset Conditions to start with new conditions";
-	i.HintText += "You can also edit current conditions when they are visible after you Enable Conditions";
+	i.HintText = "By Adding Conditions you will constrain your calculations to the conditions\n"
+	"Set Conditions will be saved until you reset those"
+	"Reset Conditions to start with new conditions"
+	"You can also edit current conditions when they are visible after you Enable Conditions";
 
 	i.Col_start = 0;
 	i.Col_end = 0;
@@ -2288,10 +2288,10 @@ void CalcCug::DefineHintList()
 
 	HINTLIST h;
 	h.param = GetUniqueMenuNumber();
-	h.HintText = "Edit this cell to Add a new condition - Note that you can Values by 3 methods:\n";
-	h.HintText += "1 -Variables V(#) where # is the Variable Number\n";
-	h.HintText += "2 -Time Function of Minutes of Day or Day of Year, codes are m or d for respectively function\n";
-	h.HintText += "3 -A static value as specified on the line";
+	h.HintText = "Edit this cell to Add a new condition - Note that you can Values by 3 methods:\n"
+	"1 -Variables V(#) where # is the Variable Number\n"
+	"2 -Time Function of Minutes of Day or Day of Year, codes are m or d for respectively function\n"
+	"3 -A static value as specified on the line";
 
 
 	SetHintMap(h); m_NewCondHint = h;

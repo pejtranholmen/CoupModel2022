@@ -1938,8 +1938,8 @@ void DB::Actual_DB(string group)
 	vector<SimB*> vptr;
 	string Type, str, Group, Name;
 	if(m_pSwTimeRes==nullptr) {
-		m_pSwTimeRes=(Sw*)GetPtr(SWITCH,"TimeResolution");
-		m_pSwPlantType=(Sw*)GetPtr(SWITCH,"PlantType");
+		m_pSwTimeRes=(Sw*)GetPtr(simtype::SWITCH,"TimeResolution");
+		m_pSwPlantType=(Sw*)GetPtr(simtype::SWITCH,"PlantType");
 	}
 
 	m_pSwTimeRes->SetDBIntValue(m_pSwTimeRes->GetIntValue());

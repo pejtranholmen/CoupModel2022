@@ -357,7 +357,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 		if (m_Add_Second_Independent) txt = "2 Independent Par";
 		else {
 			txt = "1 Independent Par";
-			m_pProp->SetSecondIndepVarType(NO_USE);
+			m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 		}
 		cell.SetText(txt);
 		SetCell(1, -2, &cell);
@@ -737,7 +737,7 @@ if(m_NumValidVar>1) {
 
 		SetCell(1, line, &cell);
 		if (m_Add_Second_Independent) {
-			if (m_pProp->GetIndepFirst() > 0) {
+			if (m_pProp->GetIndepFirst() > vartype(0)) {
 				GetCell(5, line, &cell);
 				cell.SetCellType(UGCT_DROPLIST);
 				var = m_pProp->GetSecondIndepVarType();
@@ -2660,16 +2660,16 @@ void ValidationCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point
 		if (row < GetNumberRows()) {
 			if (m_Distribution_As_Independent) {
 				m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
-				m_pProp->SetFirstIndepSet(PARVAR, false);
-				m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+				m_pProp->SetFirstIndepSet(vartype::PARVAR, false);
+				m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 				MultiPlotClick(isheet, col, row, true);
 			}
 			else {
 
-				m_pProp->SetFirstIndepVarType(PARVAR);
+				m_pProp->SetFirstIndepVarType(vartype::PARVAR);
 				m_pProp->m_ChartType = CHART_TYPES::SCATTER;
 				m_pProp->ResetXScale(string::npos);
-				m_pProp->SetFirstIndepSet(PARVAR, true);
+				m_pProp->SetFirstIndepSet(vartype::PARVAR, true);
 				MultiPlotClick(isheet, col, row, true);
 			}
 			
@@ -2731,12 +2731,12 @@ void ValidationCug::OnTH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 	CUGCell cell;
 	if (updn && row == -2 && col == 1) {
 		if (m_Distribution_As_Independent) {
-			m_pProp->SetFirstIndepSet(PARVAR, false);
+			m_pProp->SetFirstIndepSet(vartype::PARVAR, false);
 			//if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
 			//else if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->m_ChartType = CHART_TYPES::FREQUENCE;
 			//else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 			//else if (m_pProp->m_ChartType == CHART_TYPES::SCATTER) m_pProp->m_ChartType = CHART_TYPES::CUM_FREQUENCE;
-			if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->SetFirstIndepVarType(NO_USE);
+			if (m_pProp->m_ChartType == CHART_TYPES::TIME_SERIE) m_pProp->SetFirstIndepVarType(vartype::NO_USE);
 			auto ivar = m_pSimDoc->m_SelectMultiVal.size();
 			if (ivar > 0) m_pCUG->CreateZoomPlotWindow(true);
 		}
@@ -3063,14 +3063,14 @@ int ValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param
 			}
 			mr_par_index +=test ;
 			if (cell.GetParam() == 100) {
-				m_pProp->SetFirstIndepIndex(PARVAR, mr_par_index);
-				m_pProp->SetFirstIndepString(PARVAR, m_After);
-				m_pProp->SetFirstIndepVarType(PARVAR);
+				m_pProp->SetFirstIndepIndex(vartype::PARVAR, mr_par_index);
+				m_pProp->SetFirstIndepString(vartype::PARVAR, m_After);
+				m_pProp->SetFirstIndepVarType(vartype::PARVAR);
 			}
 			else if (cell.GetParam() == 300) {
-				m_pProp->SetSecondIndepIndex(PARVAR, mr_par_index);
-				m_pProp->SetSecondIndepString(PARVAR, m_After);
-				m_pProp->SetSecondIndepVarType(PARVAR);
+				m_pProp->SetSecondIndepIndex(vartype::PARVAR, mr_par_index);
+				m_pProp->SetSecondIndepString(vartype::PARVAR, m_After);
+				m_pProp->SetSecondIndepVarType(vartype::PARVAR);
 			}
 
 			MultiPlotClick(sheetNumber, col, row_of_par, false);
@@ -4357,7 +4357,7 @@ BOOL ValidationCug::TimeSeriePlotClick(int sheet, int col, int row, long mrunno,
 					}
 
 
-					m_pProp->SetFirstIndepVarType(MULTIRUN_NUM);
+					m_pProp->SetFirstIndepVarType(vartype::MULTIRUN_NUM);
 					if(!m_pSimDoc->m_PlotStorage.Add(Sw, itype, Index, m_pCUG->m_CurrentChart, m_pProp->m_ChartType,m_pSimDoc->GetCurrentSimFile(), ValFileNo, ValFileIndex, mrunno,0,numvar+1, loglistyle))
 							m_pSimDoc->SetMultiStorageBinFileMissing();
 

@@ -7,12 +7,12 @@ class GlobalInfo {
 	public:
 	GlobalInfo();
 	~GlobalInfo();
-	void AddModule(string, void*);
-	void* GetModulePtr(string);
+	void AddModule(std::string, void*);
+	void* GetModulePtr(std::string);
 	
 
 	 bool StartStateValue;
-	 map<string, void*> ptrModule;
+	 std::map<std::string, void*> ptrModule;
 
 
 

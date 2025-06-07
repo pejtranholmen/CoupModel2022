@@ -154,7 +154,7 @@ Ps* ModelMap::GetPsPointer(string name)
             
 			for (auto it=GlobalMap.equal_range(name).first; it!=GlobalMap.equal_range(name).second; ++it) {
 				 pSim=(*it).second;
-				 if(pSim->GetType()==PAR_SINGLE) {
+				 if(pSim->GetType()==simtype::PAR_SINGLE) {
 					 return (Ps*)pSim;
 				 }
 			}

@@ -93,7 +93,7 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 		m_pProp->SetNumberOfValidationPG_Dep(ncurves);
 		AllocateNumberOf_IndepCurves(ncurves);
 	}
-	else if (m_pProp->GetIndepSecond() == PGDEPTH) {
+	else if (m_pProp->GetIndepSecond() == vartype::PGDEPTH) {
 		AllocateNumberOf_IndepCurves(1);
 	}
 	else if (m_pUtil->m_AutoShiftFirstIndep) {
@@ -171,7 +171,7 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 
 		if (icurve == 0) {
 			SetChartInfo(c_info, p_info);
-			if (m_pProp->GetIndepSecond() == PGDEPTH)
+			if (m_pProp->GetIndepSecond() == vartype::PGDEPTH)
 				AllocateNumberOfPointsinCurves(m_ChartInfo.NumOfPoints);
 			else
 				AllocateNumberOfPointsinCurves(m_ChartInfo.NumOfPoints);
@@ -313,7 +313,7 @@ CURVEINFO LoadDataToChart::OpenCurvePG_File(PLOTv p_info, int j) {
 		pDocAct = m_pSimDoc->m_SelectedDocuments[p_info.Doc];
 	else
 		pDocAct = m_pSimDoc;
-	if (m_pProp->GetIndepFirst() == PGVAR&&m_pProp->GetIndepSecond() == PGVAR) {
+	if (m_pProp->GetIndepFirst() == vartype::PGVAR&&m_pProp->GetIndepSecond() == vartype::PGVAR) {
 		out.pPG1 = p_info.pPG;
 		if (out.pPG1 != nullptr)
 			out.pPG1->ReOpen();
@@ -631,8 +631,8 @@ void LoadDataToChart::SetChartInfo(CURVEINFO c_info, PLOTv plotv) {
 		m_ChartInfo.NumOfYears = c_info.pPG1->GetNumberofYears();
 		m_pProp->SetPGSource(c_info.pPG1);
 		if (c_info.pPG1->GetNormalTimeInterval() > 0) {
-			if ((m_pProp->GetIndepSecond() == PGHOUR&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == PGDAY)
-				|| (m_pProp->GetIndepSecond() == PGDAY&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == PGHOUR)) {
+			if ((m_pProp->GetIndepSecond() == vartype::PGHOUR&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == vartype::PGDAY)
+				|| (m_pProp->GetIndepSecond() == vartype::PGDAY&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == vartype::PGHOUR)) {
 				size_t nvalues = 1440 / c_info.pPG1->GetNormalTimeInterval();
 				size_t nextra = c_info.pPG1->GetRecordsInYear(1) / nvalues;
 				m_ChartInfo.NumExtraPointFreq = nvalues + 1;
@@ -640,8 +640,8 @@ void LoadDataToChart::SetChartInfo(CURVEINFO c_info, PLOTv plotv) {
 				m_ChartInfo.NumOfYears = c_info.pPG1->GetNumberofYears();
 				m_ChartInfo.YearRepresentation = m_pProp->m_YearValueRepresentation;
 			}
-			else if ((m_pProp->GetIndepSecond() == PGYEAR&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == PGDAY)
-				|| (m_pProp->GetIndepSecond() == PGDAY&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == PGYEAR)) {
+			else if ((m_pProp->GetIndepSecond() == vartype::PGYEAR&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == vartype::PGDAY)
+				|| (m_pProp->GetIndepSecond() == vartype::PGDAY&&c_info.pPG1->GetNumberofYears() > 1 && m_pProp->GetIndepFirst() == vartype::PGYEAR)) {
 				size_t nvalues = 1440 / c_info.pPG1->GetNormalTimeInterval();
 				if (nvalues >= 1) {
 					size_t nextra = c_info.pPG1->GetNumRecords() / nvalues;
@@ -1227,8 +1227,8 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 			m_pProp->SetFirstIndepIndex(VALVARSUM, p_info.Index);
 		}
 		else*/ if (p_info.DataType == DATA_TYPES::SIM_SUMVAR) {
-			m_pProp->SetFirstIndepVarType(VALVARSUM);
-			m_pProp->SetFirstIndepIndex(VALVARSUM, p_info.Index);
+			m_pProp->SetFirstIndepVarType(vartype::VALVARSUM);
+			m_pProp->SetFirstIndepIndex(vartype::VALVARSUM, p_info.Index);
 		}
 	}
 
@@ -1245,8 +1245,8 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 
 	VALSUMv valsum;
 	switch (m_pProp->GetIndepFirst()) {
-	case NO_USE:
-	case MULTIRUN_NUM:
+	case vartype::NO_USE:
+	case vartype::MULTIRUN_NUM:
 		m_Time.MinDate = double(1); m_Time.MaxDate = double(m_ChartInfo.NumOfPoints);
 		for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
 
@@ -1263,7 +1263,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		//m_pProp->ResetXScale();
 
 		break;
-	case SUMVAR:
+	case vartype::SUMVAR:
 		index = m_pProp->GetFirstIndepIndex();
 		index = p_info.Index;
 		index = m_pProp->GetFirstIndepIndex();
@@ -1274,7 +1274,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 			if (TT[i]<m_Time.MinDate) m_Time.MinDate = TT[i];
 		}
 		break;
-	case VALVARSUM:
+	case vartype::VALVARSUM:
 		index = m_pProp->GetFirstIndepIndex();
 
 		valsum = m_pSimDoc->GetValSumStruct(index);
@@ -1337,7 +1337,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 
 		}
 		break;
-	case VALVAR:
+	case vartype::VALVAR:
 		index = m_pProp->GetFirstIndepIndex();
 		for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
 			if (!m_pProp->GetFirstIndepValidTimeType()) {
@@ -1365,7 +1365,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 			}
 		}
 		break;
-	case PARVAR:
+	case vartype::PARVAR:
 		m_Time.MinDate = 1.1E38;
 		m_Time.MaxDate = -1.1E38;
 		index = m_pProp->GetFirstIndepIndex();
@@ -1393,7 +1393,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 		size_t index = m_pProp->GetSecondIndepIndex();
 		switch (m_pProp->GetIndepSecond()) {
 
-		case MULTIRUN_NUM:
+		case vartype::MULTIRUN_NUM:
 			m_Time.MinDate = double(1); m_Time.MaxDate = double(m_ChartInfo.NumOfPoints);
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
 	
@@ -1406,7 +1406,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 				if (TT2[i]<m_Time.MinDate) m_Time.MinDate = TT2[i];
 			}
 			break;
-		case SUMVAR:
+		case vartype::SUMVAR:
 			index = m_pProp->GetSecondIndepIndex();
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
 					long irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(i);
@@ -1416,11 +1416,11 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 				if (TT2[i]<m_Contour.SecondMin) m_Contour.SecondMin = TT2[i];
 			}
 			break;
-		case VALVARSUM:
+		case vartype::VALVARSUM:
 			index = m_pProp->GetSecondIndepIndex();
 			
 			break;
-		case VALVAR:
+		case vartype::VALVAR:
 			index = m_pProp->GetSecondIndepIndex();
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
 				if (!m_pProp->GetSecondIndepValidTimeType()) {
@@ -1451,7 +1451,7 @@ bool LoadDataToChart::CurveData_MultiRun(size_t icurve, PLOTv p_info)
 
 			}
 			break;
-		case PARVAR:
+		case vartype::PARVAR:
 			m_Time.MinDate = 1.1E38;
 			m_Time.MaxDate = -1.1E38;
 			for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
@@ -1625,7 +1625,7 @@ bool LoadDataToChart::CurveData_SingleTime(size_t icurve, size_t i_band, CURVEIN
 		if (p_info.RepitDataType || pg_control.MeanValueBand) ReSizeBandDataVectors(i_band, ActNoPoints);
 		if (icurve == 0 && (!m_pProp->m_ReShape.m_CommonDayNo && !m_pProp->m_ReShape.m_CommonWithDay)) SetTimeDataValues(ActNoPoints, pg_control);
 		if (pg_control.MeanValueBand) SetMeanDataValues(ActNoPoints, pg_control, icurve, i_band, c_info);
-		else if (m_pProp->m_MultiPG_dep.SecondType == PGHOUR) {
+		else if (m_pProp->m_MultiPG_dep.SecondType == vartype::PGHOUR) {
 			if(!SetDataValuesForYearSelection(ActNoPoints, pg_control, icurve, p_info.PGFileIndex)) return false;
 		}
 		else if(!SetDataValues(ActNoPoints, pg_control, icurve, i_band, c_info)) return false;
@@ -1643,11 +1643,11 @@ bool LoadDataToChart::CurveData_SingleTime(size_t icurve, size_t i_band, CURVEIN
 }
 bool LoadDataToChart::CurveData_MultiPG(size_t icurve, PLOTv p_info) {
 	if (p_info.PGFileIndex == 0) p_info.PGFileIndex = 1;
-	if (m_pProp->GetIndepFirst() == PGREPIT) {
+	if (m_pProp->GetIndepFirst() == vartype::PGREPIT) {
 
 		m_ChartInfo.NumOfPoints = m_pPG_Active->GetNumRepititions();
-		m_pProp->SetFirstIndepVarType( PGVAR);
-		m_pProp->SetSecondIndepVarType( PGVAR);
+		m_pProp->SetFirstIndepVarType(vartype::PGVAR);
+		m_pProp->SetSecondIndepVarType(vartype::PGVAR);
 		//m_pProp->IsFirstIndepSet()=true;
 		//m_pProp->IsSecondIndepSet()=true;
 		for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
@@ -1656,8 +1656,8 @@ bool LoadDataToChart::CurveData_MultiPG(size_t icurve, PLOTv p_info) {
 			TT2[i] = m_pPG_Active->GetVarLat(p_info.PGFileIndex, i + 1);
 		}
 	}
-	if (p_info.IndepAxis.First == GEO_LONG || p_info.IndepAxis.First == GEO_LAT || p_info.IndepAxis.First == GEO_ALT
-		|| p_info.IndepAxis.First == VAR_MIN || p_info.IndepAxis.First == VAR_MAX) {
+	if (p_info.IndepAxis.First == vartype::GEO_LONG || p_info.IndepAxis.First == vartype::GEO_LAT || p_info.IndepAxis.First == vartype::GEO_ALT
+		|| p_info.IndepAxis.First == vartype::VAR_MIN || p_info.IndepAxis.First == vartype::VAR_MAX) {
 		m_ChartInfo.NumOfPoints = m_pPG_Active->GetNumRepititions();
 		m_pProp->SetFirstIndepVarType(p_info.IndepAxis.First);
 		m_pProp->SetSecondIndepVarType(p_info.IndepAxis.Second);
@@ -1668,40 +1668,40 @@ bool LoadDataToChart::CurveData_MultiPG(size_t icurve, PLOTv p_info) {
 		m_Contour.SecondMin = abs(MISSING);
 
 		for (int i = 0; i<m_ChartInfo.NumOfPoints; i++) {
-			if (p_info.IndepAxis.Dependent == GEO_ALT)
+			if (p_info.IndepAxis.Dependent == vartype::GEO_ALT)
 				AA[icurve][i] = m_pPG_Active->GetVarAlt(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Dependent == VAR_MIN)
+			else if (p_info.IndepAxis.Dependent == vartype::VAR_MIN)
 				AA[icurve][i] = m_pPG_Active->GetVarMin(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Dependent == VAR_MAX)
+			else if (p_info.IndepAxis.Dependent == vartype::VAR_MAX)
 				AA[icurve][i] = m_pPG_Active->GetVarMax(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Dependent == VAR_FIRST)
+			else if (p_info.IndepAxis.Dependent == vartype::VAR_FIRST)
 				AA[icurve][i] = m_pPG_Active->GetVarValue(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Dependent == VAR_LAST)
+			else if (p_info.IndepAxis.Dependent == vartype::VAR_LAST)
 				AA[icurve][i] = m_pPG_Active->GetVarValue(p_info.PGFileIndex, 1);
-			else if (p_info.IndepAxis.Dependent == VAR_MEAN) {
+			else if (p_info.IndepAxis.Dependent == vartype::VAR_MEAN) {
 				AA[icurve][i] = m_pPG_Active->GetVarMean(p_info.PGFileIndex, i + 1);
 			}
 
-			if (p_info.IndepAxis.First == GEO_LONG)
+			if (p_info.IndepAxis.First == vartype::GEO_LONG)
 				TT[i] = m_pPG_Active->GetVarLong(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.First == GEO_LAT)
+			else if (p_info.IndepAxis.First == vartype::GEO_LAT)
 				TT[i] = m_pPG_Active->GetVarLat(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.First == VAR_MIN)
+			else if (p_info.IndepAxis.First == vartype::VAR_MIN)
 				TT[i] = m_pPG_Active->GetVarMin(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.First == VAR_MAX)
+			else if (p_info.IndepAxis.First == vartype::VAR_MAX)
 				TT[i] = m_pPG_Active->GetVarMax(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.First == GEO_ALT)
+			else if (p_info.IndepAxis.First == vartype::GEO_ALT)
 				TT[i] = m_pPG_Active->GetVarAlt(p_info.PGFileIndex, i + 1);
 
-			if (p_info.IndepAxis.Second == GEO_LONG)
+			if (p_info.IndepAxis.Second == vartype::GEO_LONG)
 				TT2[i] = m_pPG_Active->GetVarLong(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Second == GEO_LAT)
+			else if (p_info.IndepAxis.Second == vartype::GEO_LAT)
 				TT2[i] = m_pPG_Active->GetVarLat(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Second == VAR_MIN)
+			else if (p_info.IndepAxis.Second == vartype::VAR_MIN)
 				TT2[i] = m_pPG_Active->GetVarMin(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Second == VAR_MAX)
+			else if (p_info.IndepAxis.Second == vartype::VAR_MAX)
 				TT2[i] = m_pPG_Active->GetVarMax(p_info.PGFileIndex, i + 1);
-			else if (p_info.IndepAxis.Second == GEO_ALT)
+			else if (p_info.IndepAxis.Second == vartype::GEO_ALT)
 				TT2[i] = m_pPG_Active->GetVarAlt(p_info.PGFileIndex, i + 1);
 			if (TT[i]>m_Contour.FirstMax) m_Contour.FirstMax = TT[i];
 			if (TT[i]<m_Contour.FirstMin) m_Contour.FirstMin = TT[i];
@@ -1709,22 +1709,22 @@ bool LoadDataToChart::CurveData_MultiPG(size_t icurve, PLOTv p_info) {
 			if (TT2[i]<m_Contour.SecondMin) m_Contour.SecondMin = TT2[i];
 		}
 		string str;
-		if (p_info.IndepAxis.First == GEO_LONG) str = "Longitude";
-		else if (p_info.IndepAxis.First == GEO_LAT) str = "Latitude";
-		else if (p_info.IndepAxis.First == VAR_MIN) { str = "Min of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
-		else if (p_info.IndepAxis.First == VAR_MAX) { str = "Max of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
-		else if (p_info.IndepAxis.First == GEO_ALT) str = "Altitude";
+		if (p_info.IndepAxis.First == vartype::GEO_LONG) str = "Longitude";
+		else if (p_info.IndepAxis.First == vartype::GEO_LAT) str = "Latitude";
+		else if (p_info.IndepAxis.First == vartype::VAR_MIN) { str = "Min of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
+		else if (p_info.IndepAxis.First == vartype::VAR_MAX) { str = "Max of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
+		else if (p_info.IndepAxis.First == vartype::GEO_ALT) str = "Altitude";
 		m_pProp->SetFirstIndepSet(p_info.IndepAxis.First, true);
 		m_pProp->SetFirstIndepString(p_info.IndepAxis.First, str);
 
 
-		if (p_info.IndepAxis.Second == GEO_LONG) str = "Longitude";
-		else if (p_info.IndepAxis.Second == GEO_LAT) str = "Latitude";
-		else if (p_info.IndepAxis.Second == VAR_MIN) { str = "Min of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
-		else if (p_info.IndepAxis.Second == VAR_MAX) { str = "Max of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
-		else if (p_info.IndepAxis.Second == GEO_ALT) str = "Altitude";
+		if (p_info.IndepAxis.Second == vartype::GEO_LONG) str = "Longitude";
+		else if (p_info.IndepAxis.Second == vartype::GEO_LAT) str = "Latitude";
+		else if (p_info.IndepAxis.Second == vartype::VAR_MIN) { str = "Min of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
+		else if (p_info.IndepAxis.Second == vartype::VAR_MAX) { str = "Max of : "; str += m_pPG_Active->GetVarName(p_info.PGFileIndex); }
+		else if (p_info.IndepAxis.Second == vartype::GEO_ALT) str = "Altitude";
 
-		if (p_info.IndepAxis.Second != NO_USE) {
+		if (p_info.IndepAxis.Second != vartype::NO_USE) {
 			m_pProp->SetSecondIndepSet(p_info.IndepAxis.Second, true);
 			m_pProp->SetSecondIndepString(p_info.IndepAxis.Second, str);
 		}
@@ -1779,7 +1779,7 @@ PG_TIMECONTROL LoadDataToChart::AdjustForNormalTimeControl(size_t icurve) {
 	out.YearStartIndex = 0;
 	out.StartIndex = 1;
 	if (icurve == 0) {
-		if (m_pProp->GetIndepSecond() == PGHOUR&&m_pPG_Active->GetNumberofYears()>1) {
+		if (m_pProp->GetIndepSecond() == vartype::PGHOUR&&m_pPG_Active->GetNumberofYears()>1) {
 			size_t nvalues = 1440 / m_pPG_Active->GetNormalTimeInterval();
 			size_t nextra = m_pPG_Active->GetRecordsInYear(1) / nvalues;
 			m_ChartInfo.NumOfPoints = m_pPG_Active->GetRecordsInYear(1) + nextra;
@@ -2576,9 +2576,9 @@ void LoadDataToChart::SetDataValue(size_t icurve, PG_TIMECONTROL pg_control, siz
 	}
 }
 double LoadDataToChart::GetDataFromPGFile(PG_TIMECONTROL pg_control, size_t i, int PGindex, size_t act_rep) {
-	if (m_ChartInfo.WithinDayRepresentation == 1 && m_pProp->GetIndepSecond() != PGHOUR)
+	if (m_ChartInfo.WithinDayRepresentation == 1 && m_pProp->GetIndepSecond() != vartype::PGHOUR)
 		return double(m_pPG_Active->GetVarValue(PGindex, i + pg_control.StartIndex,act_rep));
-	else if (m_pProp->GetIndepSecond() == PGHOUR&&m_pPG_Active->GetNumberofYears()>1) {
+	else if (m_pProp->GetIndepSecond() == vartype::PGHOUR&&m_pPG_Active->GetNumberofYears()>1) {
 
 		return double(m_pPG_Active->GetVarValue(PGindex, i + pg_control.StartIndex + pg_control.YearStartIndex, act_rep));
 
@@ -2615,7 +2615,7 @@ void LoadDataToChart::SetTimeDataMinMax(int Type) {
 			m_pProp->m_TimeScale.max = m_Time.MaxDate;
 		}
 	}
-	else if (m_pProp->GetIndepFirst() == DATEAXIS || (m_pProp->GetIndepFirst() == NO_USE)) {
+	else if (m_pProp->GetIndepFirst() == vartype::DATEAXIS || (m_pProp->GetIndepFirst() == vartype::NO_USE)) {
 		m_Time.MinDate = m_pPG_Active->GetDoubleTimeStart();
 		m_Time.MaxDate = m_pPG_Active->GetDoubleTimeEnd();
 	}
@@ -2678,9 +2678,9 @@ bool LoadDataToChart::SetIndependentMeasuredValidVar(PLOTv p_info, CURVEINFO c_i
 	}
 		//pPG_Measured->GetVarValue(PGFileMeasuredIndex, i + 1);
 
-	m_pProp->SetFirstIndepIndex(PGVARVALID, PGFileMeasuredIndex, icurve);
+	m_pProp->SetFirstIndepIndex(vartype::PGVARVALID, PGFileMeasuredIndex, icurve);
 	m_pProp->SetChartType(0);
-	m_pProp->SetFirstIndepSet(PGVARVALID, true, icurve);
+	m_pProp->SetFirstIndepSet(vartype::PGVARVALID, true, icurve);
 	string str;
 	str = pPG_Measured->GetVarName(PGFileMeasuredIndex);
 	FUtil::trim(str);
@@ -2688,7 +2688,7 @@ bool LoadDataToChart::SetIndependentMeasuredValidVar(PLOTv p_info, CURVEINFO c_i
 	stru = pPG_Measured->GetVarUnit(PGFileMeasuredIndex);
 	FUtil::trim(stru);
 	str += " (" + stru + ")";
-	m_pProp->SetFirstIndepString(PGVARVALID, str, icurve);
+	m_pProp->SetFirstIndepString(vartype::PGVARVALID, str, icurve);
 
 	return true;
 }
@@ -2705,8 +2705,8 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 
 	switch (m_pProp->GetIndepFirst()) {
 
-	case NO_USE:
-	case DATEAXIS:
+	case vartype::NO_USE:
+	case vartype::DATEAXIS:
 		m_Time.MinDate = TT[0];
 		m_Time.MaxDate = TT[m_ChartInfo.NumOfPoints - 1];
 		check = true;
@@ -2715,7 +2715,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 
 		break;
 
-	case PGVAR:
+	case vartype::PGVAR:
 		m_Time.MinDate = double(m_pPG_Active->GetVarMin(index)); m_Time.MaxDate = double(m_pPG_Active->GetVarMax(index));
 
 		for (int i = 0; i < m_ChartInfo.NumOfPoints; i++) {
@@ -2735,16 +2735,16 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 
 		check = true;
 		break;
-	case PGVARVALID:
+	case vartype::PGVARVALID:
 		// Return to time serie mode
 		m_pProp->SetChartType(1);
-		m_pProp->SetFirstIndepSet(PGVARVALID, false);
+		m_pProp->SetFirstIndepSet(vartype::PGVARVALID, false);
 		check = true;
 		break;
-	case PGDEPTH:
+	case vartype::PGDEPTH:
 		check = true;
 		break;
-	case PGDAY:
+	case vartype::PGDAY:
 		check = true;
 		m_Time.MinDate = 366;
 		m_Time.MaxDate = 1;
@@ -2762,7 +2762,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 		m_Contour.FirstInterval = 30.5;
 
 		break;
-	case PGHOUR:
+	case vartype::PGHOUR:
 		check = true;
 		m_Time.MinDate = 0;
 		m_Time.MaxDate = 24;
@@ -2775,7 +2775,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 			TT[i] = minut % 1440 / 60;
 		}
 		break;
-	case PGYEAR:
+	case vartype::PGYEAR:
 		check = true;
 		m_Time.MinDate = 5000;
 		m_Time.MaxDate = 1;
@@ -2801,7 +2801,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 		index = m_pProp->GetSecondIndepIndex();
 		switch (m_pProp->GetIndepSecond()) {
 
-		case PGVAR:
+		case vartype::PGVAR:
 			m_Time.MinDate = double(m_pPG_Active->GetVarMin(index)); m_Time.MaxDate = double(m_pPG_Active->GetVarMax(index));
 			m_Contour.SecondMax = MISSING;
 			m_Contour.SecondMin = abs(MISSING);
@@ -2818,7 +2818,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 			m_Contour.SecondInterval = m_pUtil->GetScaleInterval(m_Contour.SecondMax, m_Contour.SecondMin);
 
 			break;
-		case PGDAY:
+		case vartype::PGDAY:
 			m_Time.MinDate = 1;
 			m_Contour.SecondMax = MISSING;
 			m_Contour.SecondMin = abs(MISSING);
@@ -2830,7 +2830,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 			}
 			m_Contour.SecondInterval = 30.5;
 			break;
-		case PGHOUR:
+		case vartype::PGHOUR:
 			m_Time.MinDate = 0;
 			m_Time.MaxDate = 24;
 			m_Contour.SecondMax = 0.;
@@ -2853,7 +2853,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 			m_Contour.SecondInterval = m_pUtil->GetScaleInterval(m_Contour.SecondMax, m_Contour.SecondMin);
 
 			break;
-		case PGYEAR:
+		case vartype::PGYEAR:
 			m_Time.MinDate = 5000;
 			m_Time.MaxDate = 1;
 			m_Contour.SecondMax = 1;
@@ -2870,7 +2870,7 @@ bool LoadDataToChart::SetIndependentSingleTime(PLOTv p_info) {
 			m_Contour.SecondInterval = m_pUtil->GetScaleInterval(m_Contour.SecondMax, m_Contour.SecondMin);
 
 			break;
-		case PGDEPTH:
+		case vartype::PGDEPTH:
 
 			auto value = FUtil::AtoFloat(m_pPG_Active->GetVarPos(index));
 			if (value > m_Contour.SecondMax) 	m_Contour.SecondMax = value;

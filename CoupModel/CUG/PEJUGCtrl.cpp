@@ -39,7 +39,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 			JoinCells(button.Col_start, i + button.Row, button.Col_end, i + button.Row);
 			GetCell(button.Col_start, i + button.Row, &cell);
 			cell.SetBackColor(m_ColorClick);
-			cell.SetText(button.VectorNames[i]);
+			cell.SetText(string(button.VectorNames[i]));
 			cell.SetParam(button.Param);
 			SetCell(button.Col_start, i + button.Row, &cell);
 			QuickSetText(-1, i + button.Row, FUtil::STD_ItoAscii(i + 1));
@@ -62,7 +62,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 		string optionlist="";
 		cell.SetCellType(UGCT_DROPLIST);
 		for (size_t i = 0; i < button.VectorNames.size(); i++)
-			optionlist += button.VectorNames[i] + "\n";
+			optionlist += string(button.VectorNames[i]) + "\n";
 		cell.SetLabelText(optionlist);
 		if (button.VectorNames.size() < 1) {
 			cell.SetReadOnly(true);
@@ -86,8 +86,8 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 				GetCell(button.Col_start+i, button.Row, &cell);
 			}
 			cell.SetCellType(UGCT_CHECKBOX);
-			cell.SetText(button.VectorNames[i]);
-			cell.SetLabelText(button.VectorNames[i]);
+			cell.SetText(string(button.VectorNames[i]));
+			cell.SetLabelText(string(button.VectorNames[i]));
 			cell.SetParam(button.Param);
 			if (button.VectorState.size() > i) {
 				if (button.VectorState[i])
@@ -109,9 +109,9 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 			JoinCells(button.Col_start + ShiftPos, button.Row, button.Col_end + ShiftPos, button.Row);
 		GetCell(button.Col_start + ShiftPos, button.Row , &cell);
 		if (!button.NormalState)
-				cell.SetText(button.TextOptional);
+				cell.SetText(string(button.TextOptional));
 		else
-			cell.SetText(button.Text);
+			cell.SetText(string(button.Text));
 		
 		if (button.Type == INFOONLYBUTTON) {
 			cell.SetBackColor(m_ColorInfo);
@@ -401,7 +401,7 @@ string PEJUGCtrl::GetHint(int ParV)
 {
 	auto it = m_ClickButtonMap.find(ParV);
 	if (it != m_ClickButtonMap.end()) {
-		return (*it).second.HintText;
+		return string((*it).second.HintText);
 	}
 	else {
 		auto iter = m_HintMap.find(ParV);

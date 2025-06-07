@@ -1,11 +1,15 @@
 #pragma once
 #include "pugixml.hpp"
-static std::vector<string> output_col_names={ "Index", "Initial", "Final", "Min", "Max", "Mean", "Accumulated", "StoreFlag" };
+#include <vector>
+#include <string>
+#include <fstream>
+
+static std::vector<std::string_view> output_col_names={ "Index", "Initial", "Final", "Min", "Max", "Mean", "Accumulated", "StoreFlag" };
 struct Output_InXml { std::string name{ "" }; int Index{ -1 }; double dvalues[8]{0.,0.,0.,0.,0.,0.,0.,0.}; int flag{ -1 }; };
 struct Multi_InXml {
 	int numrepeat; std::string group; std::string name; int tabindex; int imethod; int imon; double fmin;
 	double fmax; double fstart; int nCount; std::string group_dep; std::string name_dep; int tabindex_dep; std::vector<double> tablevalues;
-	string db_opt; std::string db_key;
+	std::string db_opt; std::string db_key;
 };
 class VALv;
 class CHPARv;
@@ -46,7 +50,7 @@ public:
         return false;
     }
 
-    void setColumnAtt(vector<string> att, std::string Tag = "ColumnAtt") {
+    void setColumnAtt(std::vector<std::string> att, std::string Tag = "ColumnAtt") {
         /*	auto child = demoData->getChildByName(Tag);
             if (child == nullptr) {
                 child = demoData->createNewChildElement(Tag);
@@ -106,7 +110,8 @@ public:
         std::vector<std::pair<std::string, std::string>> out;
         // Implementation of the method goes here
         return out;
-    }
+    };
+
 
     void setValue(const char *name, std::string newvalue)  noexcept {
         /*	auto child = currentList->getChildByName(name);
@@ -172,8 +177,8 @@ public:
         void setValue(const char *name, int newvalue) {
             auto child = currentList.child(name);
         };
-        void setTable(const char *module, const char *type, const char *name, std::vector<string> colnames,
-                      std::vector<vector<double>> values)  noexcept {
+        void setTable(const char *module, const char *type, const char *name, std::vector<std::string> colnames,
+                      std::vector<std::vector<double>> values)  noexcept {
 
            /* auto child3 = getLevel3(module, type, name);
             if (child3 == nullptr) {
@@ -256,9 +261,9 @@ public:
 
 
         bool IsRegisterOpen()  noexcept { return m_IsOpen; };
-        void setModelGroup(vector<SimB *>, CommonModelInfo *);
-        void setModelItems(vector<SimB *>, CommonModelInfo *);
-        void setModelNE_All(vector<NE *>);
+        void setModelGroup(std::vector<SimB*>, CommonModelInfo *);
+        void setModelItems(std::vector<SimB*>, CommonModelInfo *);
+        void setModelNE_All(std::vector<NE*>);
 
         void setRegister(const std::string tag, const int value)  noexcept {
             /*auto child = dataList.node(tag);
@@ -360,15 +365,15 @@ public:
 
             return 0;
         }
-        std::vector<pair<string, int>> getAllInt(const char *type);
-        std::vector<pair<string, double>> getAllDouble(const char *type);
-        std::vector<pair<string, std::string>> getAllstring(const char *type);
-        std::vector<string> getAllNames(const char *type);
-        std::vector<pair<string, std::string>> getAllChangedItems();
-        void insert_ChangedNames(vector<pair<string, std::string>>);
-        std::vector<pair<string, pair<vector<string>, std::vector<vector<double>>>>> getAllDoubleTables(const char *type);
-        void setSimFileName(string file) { m_xmlSimfileName = file; };
-        void setModelFileName(string file) { m_xmlModelfileName = file; };
+        std::vector<std::pair<std::string, int>> getAllInt(const char *type);
+        std::vector<std::pair<std::string, double>> getAllDouble(const char *type);
+        std::vector<std::pair<std::string, std::string>> getAllstring(const char *type);
+        std::vector<std::string> getAllNames(const char *type);
+        std::vector<std::pair<std::string, std::string>> getAllChangedItems();
+        void insert_ChangedNames(std::vector<std::pair<std::string, std::string>>);
+        std::vector<std::pair<std::string, std::pair<std::vector<std::string>, std::vector<std::vector<double>>>>> getAllDoubleTables(const char *type);
+        void setSimFileName(std::string file) { m_xmlSimfileName = file; };
+        void setModelFileName(std::string file) { m_xmlModelfileName = file; };
         std::string getSimFileName() { return m_xmlSimfileName; };
         std::string getModelFileName() { return m_xmlModelfileName; };
 
@@ -386,7 +391,7 @@ public:
 
         bool m_IsOpen;
         bool m_typeAsHighestLevel{true};
-        fstream m_register;
+        std::fstream m_register;
         std::string m_xmlfileName;
         std::string m_xmlSimfileName;
         std::string m_xmlModelfileName;

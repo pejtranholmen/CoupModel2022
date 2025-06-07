@@ -187,7 +187,7 @@ void PGClick::ChangeChartChoice(int isheet,int col, int row, int ind,CString Aft
 		OnSheetSetup(0);
 		if (m_pProp->GetChartTypeIndex() == CHART_TYPES::TIME_SERIE) {
 			m_pProp->ResetXScale();
-			m_pProp->SetFirstIndepSet(DATEAXIS,true);
+			m_pProp->SetFirstIndepSet(vartype::DATEAXIS,true);
 			m_pUtil->m_FileSave.OnReDraw(false, m_pSimDoc);
 
 		}
@@ -217,23 +217,23 @@ void PGClick::ChangeChartChoice(int isheet,int col, int row, int ind,CString Aft
 	else if(ParV==m_XAxisCombo.Param|| ParV == m_VarDim1Combo.Param) {
 		if(isheet==0) {
 			string str="";
-			if(ind==0) {	m_pProp->SetFirstIndepVarType(NO_USE);
+			if(ind==0) {	m_pProp->SetFirstIndepVarType(vartype::NO_USE);
 
 			}
 			if(ind==1) {
-				m_pProp->SetFirstIndepVarType(PGHOUR);
+				m_pProp->SetFirstIndepVarType(vartype::PGHOUR);
 				str="Hour";
 			}
 			if(ind==2) {
-				m_pProp->SetFirstIndepVarType(PGDAY);
+				m_pProp->SetFirstIndepVarType(vartype::PGDAY);
 				str="Day of Year";
 			}
 			if(ind==3) {
-				m_pProp->SetFirstIndepVarType(PGYEAR);
+				m_pProp->SetFirstIndepVarType(vartype::PGYEAR);
 				str="Year";
 
 			}
-			if(m_pProp->GetIndepFirst()!=NO_USE) {
+			if(m_pProp->GetIndepFirst()!= vartype::NO_USE) {
 				m_pProp->SetFirstIndepSet(enum vartype(m_pProp->GetIndepFirst()) ,true);
 				m_pProp->SetFirstIndepString(enum vartype(m_pProp->GetIndepFirst()), str);
 			}
@@ -244,31 +244,31 @@ void PGClick::ChangeChartChoice(int isheet,int col, int row, int ind,CString Aft
 			
 		}
 		else {
-			if(ind==1) 	m_pProp->SetFirstIndepVarType(GEO_LONG);
-			if(ind==2) 	m_pProp->SetFirstIndepVarType(GEO_LAT);
-			if(ind==3) 	m_pProp->SetFirstIndepVarType(GEO_ALT);
+			if(ind==1) 	m_pProp->SetFirstIndepVarType(vartype::GEO_LONG);
+			if(ind==2) 	m_pProp->SetFirstIndepVarType(vartype::GEO_LAT);
+			if(ind==3) 	m_pProp->SetFirstIndepVarType(vartype::GEO_ALT);
 		}
 	}
 	else if(ParV==m_YAxisCombo.Param||ParV == m_VarDim2Combo.Param) {
 		if(isheet==0) {
-			if((m_pProp->m_MultiPG_dep.FirstType==PGDAY&&m_pProp->m_MultiPG_dep.SecondType==PGYEAR)
-				|| (m_pProp->m_MultiPG_dep.FirstType == PGYEAR&&m_pProp->m_MultiPG_dep.SecondType == PGDAY)) {
+			if((m_pProp->m_MultiPG_dep.FirstType== vartype::PGDAY&&m_pProp->m_MultiPG_dep.SecondType== vartype::PGYEAR)
+				|| (m_pProp->m_MultiPG_dep.FirstType == vartype::PGYEAR&&m_pProp->m_MultiPG_dep.SecondType == vartype::PGDAY)) {
 				m_pProp->m_HourValueRepresentation=ind;
 				m_pProp->m_YearValueRepresentation=0;
 			}
-			else if((m_pProp->m_MultiPG_dep.FirstType==PGDAY&&m_pProp->m_MultiPG_dep.SecondType==PGHOUR)
-				|| (m_pProp->m_MultiPG_dep.FirstType == PGHOUR&&m_pProp->m_MultiPG_dep.SecondType == PGDAY)) {
+			else if((m_pProp->m_MultiPG_dep.FirstType== vartype::PGDAY&&m_pProp->m_MultiPG_dep.SecondType== vartype::PGHOUR)
+				|| (m_pProp->m_MultiPG_dep.FirstType == vartype::PGHOUR&&m_pProp->m_MultiPG_dep.SecondType == vartype::PGDAY)) {
 				m_pProp->m_YearValueRepresentation=ind;
 				m_pProp->m_HourValueRepresentation=0;
 			}
 
 			string str="";
-			if(ind==0) 	m_pProp->SetSecondIndepVarType(NO_USE);
-			if(ind==1) 	{m_pProp->SetSecondIndepVarType(PGHOUR);str="Hour";}
-			if(ind==2) {m_pProp->SetSecondIndepVarType(PGDAY);str="Day of Year";}
-			if(ind==3) {m_pProp->SetSecondIndepVarType(PGYEAR);str="Year";}
+			if(ind==0) 	m_pProp->SetSecondIndepVarType(vartype::NO_USE);
+			if(ind==1) 	{m_pProp->SetSecondIndepVarType(vartype::PGHOUR);str="Hour";}
+			if(ind==2) {m_pProp->SetSecondIndepVarType(vartype::PGDAY);str="Day of Year";}
+			if(ind==3) {m_pProp->SetSecondIndepVarType(vartype::PGYEAR);str="Year";}
 
-			if(m_pProp->GetIndepSecond()!=NO_USE) {
+			if(m_pProp->GetIndepSecond()!= vartype::NO_USE) {
 				m_pProp->SetSecondIndepSet(enum vartype(m_pProp->GetIndepSecond()) ,true);
 				m_pProp->SetSecondIndepString(enum vartype(m_pProp->GetIndepSecond()), str);
 			}
@@ -279,19 +279,19 @@ void PGClick::ChangeChartChoice(int isheet,int col, int row, int ind,CString Aft
 
 		}
 		else {
-			if(ind==1) 	m_pProp->SetSecondIndepVarType(GEO_LONG);
-			if(ind==2) 	m_pProp->SetSecondIndepVarType(GEO_LAT);
-			if(ind==3) 	m_pProp->SetSecondIndepVarType(GEO_ALT);
+			if(ind==1) 	m_pProp->SetSecondIndepVarType(vartype::GEO_LONG);
+			if(ind==2) 	m_pProp->SetSecondIndepVarType(vartype::GEO_LAT);
+			if(ind==3) 	m_pProp->SetSecondIndepVarType(vartype::GEO_ALT);
 		}
 	}
 	else if (ParV == m_SelectWithinDay.param) {
 		size_t ind = MFC_Util::AtoInt(After);
 		if (After == "All") ind = 0;
-		if (m_pProp->m_MultiPG_dep.FirstType == PGDAY&&m_pProp->m_MultiPG_dep.SecondType == PGYEAR) {
+		if (m_pProp->m_MultiPG_dep.FirstType == vartype::PGDAY&&m_pProp->m_MultiPG_dep.SecondType == vartype::PGYEAR) {
 			m_pProp->m_HourValueRepresentation = ind;
 			m_pProp->m_YearValueRepresentation = 0;
 		}
-		else if (m_pProp->m_MultiPG_dep.FirstType == PGDAY&&m_pProp->m_MultiPG_dep.SecondType == PGHOUR) {
+		else if (m_pProp->m_MultiPG_dep.FirstType == vartype::PGDAY&&m_pProp->m_MultiPG_dep.SecondType == vartype::PGHOUR) {
 			m_pProp->m_YearValueRepresentation = ind;
 			m_pProp->m_HourValueRepresentation = 0;
 		}
@@ -304,9 +304,9 @@ void PGClick::ChangeChartChoice(int isheet,int col, int row, int ind,CString Aft
 
 
 	if(col==9) {
-			if(ind==1) 	m_pProp->SetDependentVarType(VAR_MEAN);
-			if(ind==2) 	m_pProp->SetDependentVarType(VAR_MIN);
-			if(ind==3) 	m_pProp->SetDependentVarType(VAR_MAX);
+			if(ind==1) 	m_pProp->SetDependentVarType(vartype::VAR_MEAN);
+			if(ind==2) 	m_pProp->SetDependentVarType(vartype::VAR_MIN);
+			if(ind==3) 	m_pProp->SetDependentVarType(vartype::VAR_MAX);
 	}
 		
 
@@ -326,7 +326,7 @@ void PGClick::MultiPGChartCheck() {
 		else if(m_CurrentSubChart<m_pProp->m_NumChartX*m_pProp->m_NumChartY)
 				m_CurrentSubChart++;
 		val.subchart=m_CurrentSubChart;
-		if(val.FirstType==NO_USE||val.SecondType==NO_USE||val.DependentType==NO_USE) return;
+		if(val.FirstType== vartype::NO_USE||val.SecondType== vartype::NO_USE||val.DependentType== vartype::NO_USE) return;
 		m_pSimDoc->m_SelectMultiPGFile.push_back(val);
 		m_PGCharts.MultiPGChartClick();
 	}
@@ -340,16 +340,16 @@ void PGClick::MultiPGChartDepChoice(int PGIndex, size_t Option, bool erase) {
 	SelectMultiPG val;
 
 	enum vartype Type;
-	Type=NO_USE;
+	Type= vartype::NO_USE;
 	if(Option==0) {Type=VAR_MIN;
 		m_pGSource->SetPickedMin(PGIndex, true);
 	}
 	else if(Option==1) {
-		Type=VAR_MAX;
+		Type= vartype::VAR_MAX;
 		m_pGSource->SetPickedMax(PGIndex, true);
 	}
 	else if(Option==2) {
-		Type=VAR_MEAN;
+		Type= vartype::VAR_MEAN;
 		m_pGSource->SetPickedMean(PGIndex, true);
 
 	}

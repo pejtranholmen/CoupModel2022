@@ -445,7 +445,7 @@ bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, 
 		if(index<m_pSimDoc->m_ValSum_Array.size()) {
 		VALSUMv Node=m_pSimDoc->m_ValSum_Array[index];
 		Node.SumVarType=sumvartype;
-		Node.OutputType=outtype;
+		Node.OutputType=simtype(outtype);
 		Node.Group=group;
 		Node.Name=name;
 		Node.LocalIndex=localindex;
@@ -457,7 +457,7 @@ bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, 
 		}
 	 VALSUMv Node;
  	 Node.SumVarType=sumvartype;
-	 Node.OutputType=outtype;
+	 Node.OutputType=simtype(outtype);
  	 Node.Group=group;
 	 Node.Name=name;
 	 Node.LocalIndex=localindex;
@@ -1580,10 +1580,10 @@ SIMB ValidationData::GetSimPointer_SV(size_t Index) {
 		string group=m_pSimDoc->m_ValSum_Array[Index].Group;
 		string typstr="";
 		switch(m_pSimDoc->m_ValSum_Array[Index].OutputType) {
-		case 1:;case 8:	typstr = "State Variables"; break;
-		case 2:; case 9:	typstr = "Flow Variables"; break;
-		case 3:; case 10:	typstr = "Auxiliary Variables"; break;
-		case 4:; case 11:	typstr = "Driving Variables"; break;
+		case simtype::STATE:; case simtype::STATE_SINGLE:;	typstr = "State Variables"; break;
+		case simtype::FLOW:; case simtype::FLOW_SINGLE:	typstr = "Flow Variables"; break;
+		case simtype::AUX:; case simtype::AUX_SINGLE:	typstr = "Auxiliary Variables"; break;
+		case simtype::DRIVE:; case simtype::DRIVE_SINGLE:	typstr = "Driving Variables"; break;
 		}
 		out.pBase=m_pSimDoc->GetPtr(typstr,group, name);
 		out.TabIndex=m_pSimDoc->m_ValSum_Array[Index].LocalIndex;

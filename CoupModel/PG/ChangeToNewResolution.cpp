@@ -1,6 +1,7 @@
 #include "./ChangeToNewResolution.h"
 #include "../stdafx.h"
 #include "../MainFrm.h"
+using namespace std;
 
 bool SortByValue(const MONTHPAIR &lhs, const MONTHPAIR &rhs) { return lhs.value < rhs.value;};
 size_t FindInSortedVector(vector<MONTHPAIR> &v, float value) {

@@ -3,6 +3,7 @@
 #endif
 #include "../../std.h"
 #include "ChartFrame.h"
+using namespace std;
 
 
 ChartFrame::ChartFrame(void)

@@ -11,8 +11,8 @@ public:
 	ChartFrame(void);
 	~ChartFrame(void);
 
-	string GetTitle();
-	void SetTitle(string);
+	std::string GetTitle();
+	void SetTitle(std::string);
 	
 
 
@@ -77,15 +77,15 @@ public:
 
 /// Member variables
 
-	vector<size_t> m_LineWidth, m_DashStyle;
-	vector<size_t> m_SymbolStyle, m_SymbolSize;
-	vector<int> m_PointType, m_SymbolType;
+	std::vector<size_t> m_LineWidth, m_DashStyle;
+	std::vector<size_t> m_SymbolStyle, m_SymbolSize;
+	std::vector<int> m_PointType, m_SymbolType;
 #ifndef COUPSTD
 	DoubleArray m_IndepX[NUM_SERIES];
 	DoubleArray m_timeStamps, m_timeStamps2;
 #endif
-	vector<double> m_ViewPortData_A[NUM_SERIES];
-	vector<double> m_ViewPortTime;
+	std::vector<double> m_ViewPortData_A[NUM_SERIES];
+	std::vector<double> m_ViewPortTime;
     double* viewPortTimeStamps, *viewPortTimeStamps2;
 	double* viewPortDataSeries[NUM_SERIES];
 	double* viewPortDataSeriesB[NUM_BAND];
@@ -96,7 +96,7 @@ public:
 	double* viewPortDataSeriesP90[NUM_BAND];
 
 
-	vector<size_t> m_AxisLayer;
+	std::vector<size_t> m_AxisLayer;
 
 	
 	bool m_CommonColorForSubCharts;
@@ -116,7 +116,7 @@ public:
 
 	size_t m_NumVariable;
 
-	string m_Title;
+	std::string m_Title;
 	
 	int m_cx, m_cy;
 	int m_ChartNumber, m_PrevChartNumber;
