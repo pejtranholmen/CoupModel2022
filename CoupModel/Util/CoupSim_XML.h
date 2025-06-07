@@ -102,16 +102,9 @@ public:
             return child->getstringAttribute("Value").toStdstring();*/
     };
 
-    std::vector<pair<string, std::string>> getAllCurrentListstring()  noexcept {
-        std::vector<pair<string, std::string>> out;
-        /*	pair<string, std::string> node;
-            auto num = currentList->getNumChildElements();
-            for (int i = 0; i < num; i++) {
-                auto child = currentList->getChildElement(i);
-                node.first = child->getTagName().toStdstring();
-                node.second = child->getstringAttribute("Value").toStdstring();
-                out.push_back(node);
-            }*/
+    std::vector<std::pair<std::string, std::string>> getAllCurrentListstring() noexcept {
+        std::vector<std::pair<std::string, std::string>> out;
+        // Implementation of the method goes here
         return out;
     }
 
