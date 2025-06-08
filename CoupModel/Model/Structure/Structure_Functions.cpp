@@ -30,35 +30,35 @@ bool Structure_Functions::Def()
 
 
 	Sw* pSw;
-	pSw= new Sw(&SaltTracer,SINGLE,  SALT, TRANSPORT, NOBPROC, NORMAL);
+	pSw= new Sw(&SaltTracer, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
     //Define(pSw, "CanopyHeightInput",0,"Parameters|Driving variable|Simulated","Roughness = 2|PlantType > 1")
 	Define(pSw, "SaltTracer",0,"off|on","WaterEq > 0");
-	pSw= new Sw(&GroundWaterFlow,SINGLE,  WATER, TRANSPORT, NOBPROC, NORMAL);
+	pSw= new Sw(&GroundWaterFlow, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw,"GroundWaterFlow",0,"off|on","WaterEq > 0",104);
-	pSw= new Sw(&WaterEq,SINGLE,  WATER, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&WaterEq, datatype::SINGLE, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw, "WaterEq",0,"off|On with complete soil profile|On but without Richards equation","",100);
-	pSw= new Sw(&HeatEq,SINGLE,  HEAT, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&HeatEq, datatype::SINGLE, elements::HEAT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw, "HeatEq",1,"off|on","",101);
-	pSw= new Sw(&Irrigation,SINGLE,  WATER, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&Irrigation, datatype::SINGLE, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw,"Irrigation",0,"off|on","WaterEq > 0");
-	pSw= new Sw(&SoilVapour,SINGLE,  VAPOUR, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&SoilVapour, datatype::SINGLE, elements::VAPOUR, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw, "SoilVapour",0,"off|Only SoilVapourflow|Soil- and SnowVapourflow|Only SnowVapourflow","WaterEq > 0|HeatEq > 0");
-	pSw= new Sw(&SnowPack_Option,SINGLE,  SNOW, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&SnowPack_Option, datatype::SINGLE, elements::SNOW, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw, "SnowPack",0,"off|on","WaterEq > 0",108);
-	pSw= new Sw(&PlantType,PLANT,  WATER, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&PlantType, datatype::PLANT, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw, "PlantType",0,"No vegetation|Implicit big leaf|Explicit single big leaf|Explicit big leafes","WaterEq > 0",103);
-	pSw= new Sw(&Evaporation,SINGLE,  WATER, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&Evaporation, datatype::SINGLE, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw,"Evaporation",0,"off|Simple input style|Radiation input style","WaterEq > 0",102);
-	pSw= new Sw(&Nitrogen_Carbon,SINGLE,  ORGANIC, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&Nitrogen_Carbon, datatype::SINGLE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw, "Nitrogen and Carbon",0,"off|Dynamic interaction with abiotics|Using abiotic driving variables","",109);
-	pSw= new Sw(&LateralInput,SINGLE,  WATER, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&LateralInput, datatype::SINGLE, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw, "LateralInput",0,"No lateral input|In driving file|WaterShed approach","WaterEq > 0",110);
 	//Define(pSw,  Sw_Minteq, "Minteq", 0, "off|on","WaterEq >0")
-	pSw= new Sw(&HBV_Soil,SINGLE,  WATER, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&HBV_Soil, datatype::SINGLE, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw,"HBV Soil Module",0,"off|As a complementary model|Excluding Richard equation","",203);
-	pSw= new Sw(&OnlyNC,SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&OnlyNC, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "OnlyNC",0,"No|Yes","");
-	pSw = new Sw(&Phosphorus_Model, SINGLE, PHOSPHORUS, NOFPROC, NOBPROC, NORMAL);
+	pSw = new Sw(&Phosphorus_Model, datatype::SINGLE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Phosphorus", 0, "off|Simple|Detailed", "Nitrogen and Carbon > 0");
 
 	

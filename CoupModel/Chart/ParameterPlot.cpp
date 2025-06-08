@@ -270,8 +270,8 @@ bool ParameterPlot::IsThermalRelc() {
 }
 void ParameterPlot::MakeSoilReCalc() {
 	if(m_P.size()>0) {
-		SimB *pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,"ReCalc Soil Function");
-		Func *pFunc=dynamic_cast<Func*>(pSimB1);
+		SimB *pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,string("ReCalc Soil Function"));
+		Func *pFunc=static_cast<Func*>(pSimB1);
 		pFunc = m_pSimDoc->GetFuncPointer(MyFunc::HYDRAULIC_RECALC);
 		if(pFunc!=nullptr)
 			pFunc->MakeOperation();
@@ -282,8 +282,8 @@ void ParameterPlot::MakeSoilReCalc() {
 		if (pFunc != nullptr) pFunc->MakeOperation();
 
 		if(m_ThermalReCalc) {
-			pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,"ThermalScalingCoefEstimate");
-			pFunc=dynamic_cast<Func*>(pSimB1);
+			pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,string("ThermalScalingCoefEstimate"));
+			pFunc=static_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				pFunc->MakeOperation();
 		}
@@ -1217,7 +1217,7 @@ void ParameterPlot::ApplyNewvalue()
 
 	if(m_pCP!=nullptr) {
 		if(((Tab*)m_pCP)->GetViewFunction()==401) {
-			SimB *pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,"ReCalc Soil Function");
+			SimB *pSimB1=m_pSimDoc->GetPtr(simtype::FUNCTION,string("ReCalc Soil Function"));
 			Func *pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				pFunc->MakeOperation();

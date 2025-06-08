@@ -232,7 +232,7 @@ size_t ModelBase::MR_Get_NumberofRuns()
 bool ModelBase::SetSimPeriodFromClimateFile()
 {
 	// 1 Check Switch
-	auto pSW = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "Apply Simulation Period from Sim File"));
+	auto pSW = static_cast<Sw*>(GetPtr(simtype::SWITCH, string("Apply Simulation Period from Sim File")));
 	if (pSW != nullptr) {
 		if (pSW->GetIntValue() == 0) return false;
 	}
@@ -240,7 +240,7 @@ bool ModelBase::SetSimPeriodFromClimateFile()
 		return false;
 	// 2 Check PG Climate File
 	CPG* pPG = nullptr;
-	auto pF = dynamic_cast<F*>(GetPtr(simtype::PGFILE, "Meteorological data"));
+	auto pF = static_cast<F*>(GetPtr(simtype::PGFILE, string("Meteorological data")));
 	if (pF != nullptr) {
 		pPG=pF->GetPointer();
 		if (!pF->CheckFileNameAndAssignNameToPGClass()) return false;
@@ -250,7 +250,7 @@ bool ModelBase::SetSimPeriodFromClimateFile()
 	// 3 Read Start and End from File
 
 	//4 Read Time Resolution
-	auto pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "TimeResolution"));
+	auto pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("TimeResolution")));
 	// 4 Assign the values
 	size_t adjustTime = 0;
 	if (pSw->GetIntValue() == 1) adjustTime = 720;
@@ -650,7 +650,7 @@ SimB* ModelBase::GetPtr(enum simtype typ, std::string name, std::string group) {
 		if(GlobalMap.count(name)>0) {
 			for (auto it=GlobalMap.equal_range(name).first; it!=GlobalMap.equal_range(name).second; ++it) {
 				 pSimB=(*it).second;
-				 if(size_t(typ)==pSimB->GetType()) {
+				 if(typ==pSimB->GetType()) {
 					 if(group=="")
 						 return pSimB;
 					 else if(pSimB->GetGroup()==group)
@@ -660,6 +660,23 @@ SimB* ModelBase::GetPtr(enum simtype typ, std::string name, std::string group) {
 		}
 
 		return nullptr;
+}
+SimB* ModelBase::GetPtr(enum simtype typ, std::string_view name, std::string group) {
+	SimB* pSimB;
+	auto in = GlobalMap.count(string(name));
+	if (GlobalMap.count(string(name)) > 0) {
+		for (auto it = GlobalMap.equal_range(string(name)).first; it != GlobalMap.equal_range(string(name)).second; ++it) {
+			pSimB = (*it).second;
+			if (typ == pSimB->GetType()) {
+				if (group == "")
+					return pSimB;
+				else if (pSimB->GetGroup() == group)
+					return pSimB;
+			}
+		}
+	}
+
+	return nullptr;
 }
 SimB* ModelBase::GetPtrByName(std::string name, std::string group) {
 		SimB *pSimB;
@@ -863,23 +880,23 @@ vector<SimB*> ModelBase::GetPtrVector(size_t itype, size_t igroup)
 	 	index_e=index_s+1;
 	}
 	if(itype==0)
-		_typ=SWITCH;
+		_typ= simtype::SWITCH;
 	else if(itype==1)
 		_typ=simtype::PAR_SINGLE;
 	else if(itype==2)
-		_typ=TABLE;
+		_typ= simtype::TABLE;
 	else if(itype==3)
-		_typ=PAR_TABLE;
+		_typ= simtype::PAR_TABLE;
 	else if(itype==4)
-		_typ=STATE;
+		_typ= simtype::STATE;
 	else if(itype==5)
-		_typ=FLOW;
+		_typ= simtype::FLOW;
 	else if(itype==6)
-		_typ=AUX;
+		_typ= simtype::AUX;
 	else if(itype==7)
-		_typ=DRIVE;
+		_typ= simtype::DRIVE;
 	else if (itype == 8)
-		_typ = PGFILE;
+		_typ = simtype::PGFILE;
 	else
 		return vptr;
 
@@ -997,10 +1014,11 @@ void ModelBase::DB_SetChoice(DB_types index, std::string value)
    CDB *pDB=(CDB*)m_DB_Array[size_t(index)];
    if(pDB!=nullptr)  pDB->SetValue(value);
 }
-CDB* ModelBase::DB_GetPointer(DB_types index)
+CDB* ModelBase::DB_GetPointer(DB_types db)
 {
-	if(m_DB_Array.size()>size_t(DB_types(index)))
-		return (CDB*)m_DB_Array[index];
+	auto db_index= static_cast<size_t>(db);
+	if(m_DB_Array.size()>size_t(db_index))
+		return (CDB*)m_DB_Array[db_index];
 	else
 		return nullptr;
 }
@@ -1203,11 +1221,11 @@ vector<SimB*> ModelBase::GetAllPtrOutputs(size_t choice) {
 
 	vp.clear();
 	if(choice== std::string::npos||choice==0) {
-		vp=GetPtrVector(STATE, false);
+		vp=GetPtrVector(simtype::STATE, false);
 		for(size_t i=0; i<vp.size(); i++)
 			allout.push_back(vp[i]);
 
-		vp=GetPtrVector(STATE_SINGLE,false);
+		vp=GetPtrVector(simtype::STATE_SINGLE,false);
 		for(size_t i=0; i<vp.size(); i++)
 			allout.push_back(vp[i]);
 
@@ -1464,7 +1482,7 @@ vector<string> ModelBase::GetAllSelectedNameList(bool MultiFlag) {
 vector<size_t> ModelBase::GetPressureHeadOutputIndex(vector<SIMB> allout) {
 	vector<size_t> out;
 	SimB* pPressureHead;
-	pPressureHead=GetPtr(simtype::AUX,"PressureHead");
+	pPressureHead=GetPtr(simtype::AUX, string("PressureHead"));
 	for(size_t i=0; i<allout.size(); i++) 
 		if(allout[i].pBase==pPressureHead) out.push_back(i);
 	return out;
@@ -1503,7 +1521,7 @@ vector<SIMB> ModelBase::GetWShedOutputs() {
 
 	OutVector *pVector;
 
-	pSimB=GetPtr(simtype::FLOW,"WaterDrainflow");
+	pSimB=GetPtr(simtype::FLOW, string("WaterDrainflow"));
 
 	pVector=dynamic_cast<OutVector*>(pSimB);
 	if(pVector!=nullptr) {
@@ -1514,7 +1532,7 @@ vector<SIMB> ModelBase::GetWShedOutputs() {
 		}
 	}
 
-	pSimB=GetPtr(simtype::FLOW,"SaltDrainFlow");
+	pSimB=GetPtr(simtype::FLOW, string("SaltDrainFlow"));
 	if(pSimB->IsEnabled()) {
 		pVector=dynamic_cast<OutVector*>(pSimB);
 		if(pVector!=nullptr) {
@@ -1527,10 +1545,10 @@ vector<SIMB> ModelBase::GetWShedOutputs() {
 	}
 
 
-	simb.pBase=GetPtr(simtype::FLOW_SINGLE,"SpoolRunoff");
+	simb.pBase=GetPtr(simtype::FLOW_SINGLE, string("SpoolRunoff"));
 	simb.TabIndex= std::string::npos;
 	allout.push_back(simb);
-	simb.pBase=GetPtr(simtype::FLOW_SINGLE,"DeepPerc");
+	simb.pBase=GetPtr(simtype::FLOW_SINGLE, string("DeepPerc"));
 	allout.push_back(simb);
 
 	return allout;

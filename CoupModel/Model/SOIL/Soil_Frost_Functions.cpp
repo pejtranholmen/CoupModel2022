@@ -34,26 +34,26 @@ bool Soil_Frost_Functions::Def()
 	ps_vec.clear();
 
 
- 	pSw= new Sw(&FrostInteract   ,SIMPROFILE,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+ 	pSw= new Sw(&FrostInteract, datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,  "FrostInteract",1,"No|InfluencingWater","WaterEq > 0|HeatEq > 0");
- 	pSw= new Sw(&LoadPotential,SIMPROFILE,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+ 	pSw= new Sw(&LoadPotential, datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,  "LoadPotential",1,"Off|On", "WaterEq > 0|HeatEq > 0");
- 	pSw= new Sw(&FrostInfil,SIMPROFILE,WATER  , INFILTRATION, NOBPROC, NORMAL);
+ 	pSw= new Sw(&FrostInfil, datatype::SIMPROFILE, elements::WATER, fysprocess::INFILTRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,     "Infiltration"   ,1,"No reduction|In Low FlowDomain|Low+High FlowD", "WaterEq > 0|HeatEq > 0");
- 	pSw= new Sw(&FrostKUpward,SIMPROFILE,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+ 	pSw= new Sw(&FrostKUpward, datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,"k-estimate" ,1,"CentralDifference|MinimiumValues", "WaterEq > 0|HeatEq > 0|FrostInteract > 0");
- 	pSw= new Sw(&FrostSwelling,  SIMPROFILE,WATER  , SHRINKING, NOBPROC, NORMAL);
+ 	pSw= new Sw(&FrostSwelling, datatype::SIMPROFILE, elements::WATER, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,  "FrostSwelling",1,"Off|On", "WaterEq > 0|HeatEq > 0|FrostInteract > 0");
- 	pSw= new Sw(&FrFlowDomain   ,SIMPROFILE,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+ 	pSw= new Sw(&FrFlowDomain   , datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "FlowDomains" ,1,"Low Domain|Low + High Domain","WaterEq > 0|HeatEq > 0|FrostInteract > 0");
-	pSw = new Sw(&FreezingPointOptions, SIMPROFILE, WATER, SOIL_FREEZING, NOBPROC, NORMAL);
+	pSw = new Sw(&FreezingPointOptions, datatype::SIMPROFILE, elements::WATER, fysprocess::SOIL_FREEZING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "Freezing Point Options", 0, "Original Version|By Extra Parameter|By Osmotic Potential", "WaterEq > 0|HeatEq > 0|FrostInteract > 0");
 
 		
 		Ps *pPs;
-	pPs= new Ps(&HighFlowDampC  ,ALL_SOIL_LAYERS,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs= new Ps(&HighFlowDampC, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs  , "HighFlowDampC", 5.,"vol %","HeatEq > 0|FrostInteract > 0|WaterEq > 0",0.1,80.);
-	pPs= new Ps(&FrCondImped  ,ALL_SOIL_LAYERS,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs= new Ps(&FrCondImped  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs       ,"LowFlowCondImped", 4.,"-","HeatEq > 0|FrostInteract > 0|WaterEq > 0",0., 10.);
 
 	functorprop.FuncName = MyFunc::HEAT_TEMP_THQUAL; functorprop.Arg = MyArgType::Pair_T_D2;
@@ -70,18 +70,18 @@ bool Soil_Frost_Functions::Def()
 		plotpar.X2_Vec = { 20. };
 
 	
-	pPs = new Ps(&FreezingStartTemp, ALL_SOIL_LAYERS, WATER, REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs = new Ps(&FreezingStartTemp, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs, "FreezingStartTemp", 0., "-", "HeatEq > 0|WaterEq > 0|Freezing Point Options=1", -3., 0.); ps_vec.push_back(pPs);
-	pPs = new Ps(&OsmoticScaleSens, ALL_SOIL_LAYERS, WATER, SOIL_FREEZING, NOBPROC, NORMAL);
+	pPs = new Ps(&OsmoticScaleSens, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::SOIL_FREEZING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs, "OsmoticScaleSens", 0., "-", "HeatEq > 0|WaterEq > 0|Freezing Point Options=2", -2., 2.); ps_vec.push_back(pPs);
-	pPs = new Ps(&FpointFWi, ALL_SOIL_LAYERS, WATER, REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs = new Ps(&FpointFWi, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs, "FreezepointFWi", .5, "-", "HeatEq > 0|WaterEq > 0", 0.01, 2., 0.1, 1.);	ps_vec.push_back(pPs);
-	pPs= new Ps(&FpointF0  ,ALL_SOIL_LAYERS,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs= new Ps(&FpointF0  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs  		 ,"FreezepointF0"  , 10.,"-","HeatEq > 0|WaterEq > 0",0., 100.); ps_vec.push_back(pPs);
-	pPs= new Ps(&FpointF1  ,ALL_SOIL_LAYERS,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs= new Ps(&FpointF1  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs  		 ,"FreezepointF1"  , 0.,"-","HeatEq > 0|WaterEq > 0",0., 200.); ps_vec.push_back(pPs);
 	
-	pFunc = new Func(MPROFILE, HEAT, STORAGE, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::MPROFILE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::HEAT_TEMP_THQUAL_OSMOTIC; functorprop.Arg = MyArgType::Pair_T_D3;
@@ -93,49 +93,49 @@ bool Soil_Frost_Functions::Def()
 
 
 
-	pFunc = new Func(MPROFILE, HEAT, STORAGE, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::MPROFILE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
 
-	pPs= new Ps(&AlphaHT  ,ALL_SOIL_LAYERS,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs= new Ps(&AlphaHT  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs  		 ,"AlphaHeatCoef" , 1000.,"W/mC","HeatEq > 0|FrFlowDomain > 0|WaterEq > 0",0.01, 20000.,0.1, 100000.);
 
-	pPs= new Ps(&MaxSwell  ,ALL_SOIL_LAYERS,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs= new Ps(&MaxSwell  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs 	,"MaxSwell", 0.05,"-","HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0.,1.);
-	pPs= new Ps(&ShrinkRateFraction  ,ALL_SOIL_LAYERS,WATER  , REDISTRIBUTION, NOBPROC, NORMAL);
+	pPs= new Ps(&ShrinkRateFraction, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs  ,"ShrinkRateFraction", 0.05,"1/day","HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0., 0.1);
 
 	X* pX;
 	NE* pNL;
 	pNL= m_pModelMap->GetNEPointer("Number of Layers");
 	WaterHFD.resize(NL);
-	pX= new X(&WaterHFD,pNL, SIMPROFILE,WATER, STORAGE, NOBPROC, NORMAL);
+	pX= new X(&WaterHFD,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	vector<double> initv;
 	initv.assign(NL,0.);
 	Define(pX,pNL,"WaterHFD", initv,"mm","HeatEq > 0|FrFlowDomain = 1|FrostInteract = 1|WaterEq > 0");
 
 	T* pT;
 	Infreeze.resize(NL);
-	pT= new T(&Infreeze,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
+	pT= new T(&Infreeze,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT,pNL ,"InFreeze",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrFlowDomain = 1|FrostInteract = 1|WaterEq > 0");
-	pT= new T(&WaterflowHFD,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
+	pT= new T(&WaterflowHFD,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT,pNL  	,"WaterflowHFD",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
-	pT= new T(&WaterflowHD_LD,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
+	pT= new T(&WaterflowHD_LD,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT,pNL  ,"WaterflowHD_LD",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
-	pT= new T(&WaterflowLD_HD,pNL, SIMPROFILE,WATER, REDISTRIBUTION, NOBPROC, NORMAL);
+	pT= new T(&WaterflowLD_HD,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT,pNL  ,"WaterflowLD_HD",initv,UNIT_TYPES::WATERFLOW_UNIT,"HeatEq > 0|FrlowDomain = 1|FrostInteract =1|WaterEq > 0");
 	
 //!	Call Pne(NFL,2,2,2)
-	Gs *pGs= new Gs(&FrostUpperB_1  ,ALL_SOIL_LAYERS,HEAT, FROST_BOUNDARY, NOBPROC, NORMAL);
+	Gs *pGs= new Gs(&FrostUpperB_1  , datatype::ALL_SOIL_LAYERS, elements::HEAT, fysprocess::FROST_BOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "FrostUpperBoundary1", 0., "m","HeatEq > 0");
-	pGs= new Gs(&FrostLowerB_1  ,ALL_SOIL_LAYERS,HEAT, FROST_BOUNDARY, NOBPROC, NORMAL);
+	pGs= new Gs(&FrostLowerB_1  , datatype::ALL_SOIL_LAYERS, elements::HEAT, fysprocess::FROST_BOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "FrostLowerBoundary1", 0., "m","HeatEq > 0");
-	pGs= new Gs(&FrostUpperB_2  ,ALL_SOIL_LAYERS,HEAT, FROST_BOUNDARY, NOBPROC, NORMAL);
+	pGs= new Gs(&FrostUpperB_2  , datatype::ALL_SOIL_LAYERS, elements::HEAT, fysprocess::FROST_BOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "FrostUpperBoundary2", 0., "m","HeatEq > 0");
-	pGs= new Gs(&FrostLowerB_2  ,ALL_SOIL_LAYERS,HEAT, FROST_BOUNDARY, NOBPROC, NORMAL);
+	pGs= new Gs(&FrostLowerB_2  , datatype::ALL_SOIL_LAYERS, elements::HEAT, fysprocess::FROST_BOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,"FrostLowerBoundary2", 0., "m","HeatEq > 0");
-	pGs= new Gs(&Swelling  ,ALL_SOIL_LAYERS,HEAT, FROST_BOUNDARY, NOBPROC, NORMAL);
+	pGs= new Gs(&Swelling  , datatype::ALL_SOIL_LAYERS, elements::HEAT, fysprocess::FROST_BOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "Swelling", 0., "m", "HeatEq > 0|FrostSwelling =1|WaterEq > 0");
 	
 	NL_Swell=0;

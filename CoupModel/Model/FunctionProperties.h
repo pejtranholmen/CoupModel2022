@@ -14,7 +14,7 @@ public:
 		return out;	
 		} };
 	size_t GetIndex(std::string str) {
-		map<string,size_t>:: iterator it;
+		std::map<std::string,size_t>:: iterator it;
 		it=m_FuncIndex.find(str);
 		if(it!=m_FuncIndex.end())
 			return it->second;

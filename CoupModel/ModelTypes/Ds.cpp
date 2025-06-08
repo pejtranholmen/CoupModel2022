@@ -7,7 +7,7 @@ Ds::Ds(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	:OutSingle(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target; 
-	SetSimType(DRIVE_SINGLE);
+	SetSimType(simtype::DRIVE_SINGLE);
 	;
 }
 void Ds::Def(int ModuleNo, std::string name, double init, std::string unit, std::string conditions)

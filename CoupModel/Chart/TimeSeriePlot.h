@@ -1,8 +1,10 @@
 #pragma once
 #include "DrawDetails.h"
+#include <vector>
 class Doc;
 class CCoupModelView;
 class CChartViewer;
+class MultiChart;
 
 class CResiduals;
 class CPG;
@@ -66,12 +68,12 @@ class TimeSeriePlot :public DrawDetails	{
 			Made = true;
 		}
 		return Made;
-	};
+	} ;
 
 	private: // Member pointer
-		vector< std::vector<double>> A, T;
+		std::vector< std::vector<double>> A, T;
 		MultiChart *m_PrevMC;
-		vector <XYChart*> m_PrevBaseChart;
+		std::vector <XYChart*> m_PrevBaseChart;
 		CCoupModelView *m_pView;
 		ZoomTimeSerie *m_pZoomTimeSerie;
 		bool m_Started;

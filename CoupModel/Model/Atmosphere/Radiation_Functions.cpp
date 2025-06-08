@@ -34,11 +34,11 @@ bool Radiation_Functions::Def()
 	//    ! Snow surface energy balance
 	Sw* pSw;    //! PEJ Introduced RadiationInput to avoid crazy use of PlantType
 
-	pSw = new Sw(&m_pModelStructure->RadiationInput, SINGLE, RADIATION, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pSw = new Sw(&m_pModelStructure->RadiationInput, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pSw, "RadiationInput", 0, "No|Yes", "Develop < -100", 200);
 
-	pSw = new Sw(&NetLongRad, SINGLE, RADIATION, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pSw = new Sw(&NetLongRad, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pSw, "LongWaveBalance", 0, "One formula f(AirTemp)|Two seperate formulas", "RadiationInput  > 0");
 
@@ -49,19 +49,19 @@ bool Radiation_Functions::Def()
 	 //   !                   Beers law is used in both cases for the transmissivity,
 	 //   !                   but only alternative 1 uses outgoing longwave from Tempcanopy explicitly.
 	 //   !                   Therefor implicit/explicit is better than Beer law/f(Tempcanopy).
-	pSw = new Sw(&LongRadCanopy, SINGLE, RADIATION, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pSw = new Sw(&LongRadCanopy, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "LongRadCanopy", 0, "implicit|explicit f(TempCanopy)", "RadiationInput > 0|LongWaveBalance >= 1|PlantType=3");
 
 	// ! DG 19/6														
-	pSw = new Sw(&InLongRad, SINGLE, RADIATION, EMISSION, NOBPROC, NORMAL);
+	pSw = new Sw(&InLongRad, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "InLongRad", 0, "Konzelmann et al equation|Satterlunds equation|Brunts equation", "RadiationInput > 0|LongWaveBalance >= 1");
 	// ! DG 24/4-99 Switch between old Potential radiation formulation and new from Pluss
-	pSw = new Sw(&Turbidity, SINGLE, RADIATION, ADSORPTION, NOBPROC, NORMAL);
+	pSw = new Sw(&Turbidity, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Turbidity", 0, "Constant|Function of solar angle", "RadiationInput > 0|TimeResolution!=1");
 	//    ! SWITCHES AND AUXILIARY VARIABLES FOR SNOWMIP2 - MIGHT BE INCLUDED IN OFFICIAL RELEASE LATER
-	pSw = new Sw(&SplitGlobal, SINGLE, RADIATION, ADSORPTION, NOBPROC, NORMAL);
+	pSw = new Sw(&SplitGlobal, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "SplitGlobal", 0, "no|yes", "RadiationInput > 0|LongWaveBalance >= 1|LongRadCanopy = 1", 202);// ! Set to 1 if CanopyShade is set to 1
-	pSw = new Sw(&CanopyShade, SINGLE, RADIATION, ADSORPTION, NOBPROC, NORMAL);
+	pSw = new Sw(&CanopyShade, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "CanopyShade", 0, "constant|f(solar elevation)", "RadiationInput > 0|LongWaveBalance >= 1|PlantType=3|LongRadCanopy=1|LongRadCanopy = 1", 202);
 
 
@@ -103,16 +103,16 @@ bool Radiation_Functions::Def()
 
 
 
-	pPs = new Ps(&Latitude, SINGLE, RADIATION, GEOPOS, NOBPROC, NORMAL);
+	pPs = new Ps(&Latitude, datatype::SINGLE, elements::RADIATION, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Latitude", 58.5, "-", "RadiationInput  > 0", -80., 80., -75., 75., 6);  ps_vec.push_back(pPs);
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pFunc, functorprop, funcname, ps_vec,plotpar);
 
 
 
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.PhysFuncName = FUNC_CHOICE::POTRISDAILY; functorprop.Arg = MyArgType::D1;
 	funcname = "Potential Global Radiation Function"; functorprop.FunctorInitOption = std::string::npos;
 	plotpar.Y_Label = "Global Radiation "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::MEGA_HEATFLOW_UNIT, true);
@@ -126,9 +126,9 @@ bool Radiation_Functions::Def()
 
 
 
-	pPs = new Ps(&Solar_Time_Adjust, SINGLE, RADIATION, GEOMETRIC, NOBPROC, NORMAL);  ps_vec.push_back(pPs);
+	pPs = new Ps(&Solar_Time_Adjust, datatype::SINGLE, elements::RADIATION, fysprocess::GEOMETRIC, bioprocess::NOBPROC, userlevel::NORMAL);  ps_vec.push_back(pPs);
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Solar Time Adjust", 0., "minutes", "RadiationInput > 0", -600., 600., -240., 240.);
 	functorprop.PhysFuncName = FUNC_CHOICE::POTRISHOUR; functorprop.Arg = MyArgType::D2;
 	functorprop.FuncName = MyFunc::NO_PARFUNC;
@@ -162,12 +162,12 @@ bool Radiation_Functions::Def()
 
 
 	ps_vec.clear();
-	pPs = new Ps(&RadFracAng1, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL);  ps_vec.push_back(pPs);
+	pPs = new Ps(&RadFracAng1, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL);  ps_vec.push_back(pPs);
 		Define(pPs, "RadFracAng1", 0.22, "-", "Evaporation > 0|RadiationInput  > 0", 0.15, 0.3, 0.2, 0.25);
-	pPs = new Ps(&RadFracAng2, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL);  ps_vec.push_back(pPs);
+	pPs = new Ps(&RadFracAng2, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL);  ps_vec.push_back(pPs);
 		Define(pPs, "RadFracAng2", 0.50, "-", "Evaporation > 0|RadiationInput  > 0", 0.4, 0.6, 0.45, 0.55);
 	
-	pFunc = new Func(ATMBOUNDARY, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::ATMBOUNDARY, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname,  ps_vec, plotpar);  ps_vec.clear();
 
 
@@ -181,10 +181,10 @@ bool Radiation_Functions::Def()
 	plotpar.X_Label = "Hour of Day";   plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	plotpar.Y_ScalingCoef = 0;
 
-	pPs= new Ps(&RntLAI, SINGLE,RADIATION, ADSORPTION,NOBPROC, NORMAL);
+	pPs= new Ps(&RntLAI, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs,   "RntLAI", 0.5,"-","Evaporation > 0|PlantType =2",0.2,1.0,0.3,0.7); ps_vec.push_back(pPs);
 
-	pFunc = new Func(ATMBOUNDARY, RADIATION, NOFPROC, NOBPROC, NORMAL); 
+	pFunc = new Func( datatype::ATMBOUNDARY, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL); 
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar);  ps_vec.clear();
 
 
@@ -195,7 +195,7 @@ bool Radiation_Functions::Def()
 	P* pP;
 	vector<P*> p_vec;
 
-	pP = new P(&RntLAIv, pNumPlants, PLANT, RADIATION, ADSORPTION, NOBPROC, NORMAL); p_vec.push_back(pP);
+	pP = new P(&RntLAIv, pNumPlants, datatype::PLANT, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP);
 
 	
 	initv.assign(p_Plant->NumPlants, 0.5);
@@ -203,7 +203,7 @@ bool Radiation_Functions::Def()
 	Define(pP, pNumPlants, "RntLAIv", initv, "-", "PlantType>=3", 0., 1.);
 	mTab_Beer.push_back(pP);
 
-	pFunc = new Func(ATMBOUNDARY, RADIATION, NOFPROC, NOBPROC, NORMAL);  
+	pFunc = new Func( datatype::ATMBOUNDARY, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);  
 	functorprop.FuncName = MyFunc::BEER_LAW_PERLEAF; functorprop.Arg = MyArgType::D1;
 	funcname = "Beer's Law multi canopy"; functorprop.FunctorInitOption = std::string::npos;
 	
@@ -211,11 +211,11 @@ bool Radiation_Functions::Def()
 	Define(pFunc, functorprop, funcname,  p_vec, plotpar);  ps_vec.clear();
 
 
-	pPs = new Ps(&AlbedoDry, SINGLE, RADIATION, REFLECTION, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&AlbedoDry, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs,  "AlbedoDry", 30., "%", "Evaporation > 0|RadiationInput  > 0|PlantType !=1",10.,80.,20., 40.);
-	pPs= new Ps(&AlbedoKExp, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&AlbedoKExp, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs,  "AlbedoKExp",1.,"-", "Evaporation > 0|SoilEvap > 0|RadiationInput  > 0|PlantType !=1", 0.1, 4., 0.5, 1.5);
-	pPs = new Ps(&AlbedoWet, SINGLE, RADIATION, REFLECTION, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&AlbedoWet, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "AlbedoWet", 15., "%", "Evaporation > 0|RadiationInput  > 0|PlantType !=1", 5., 25., 10., 20.);
 	plotpar.Num_Of_Curves = 1;
 	plotpar.Num_Of_Points = 100;
@@ -229,19 +229,19 @@ bool Radiation_Functions::Def()
 	plotpar.Num_Of_Opt = 1;
 	functorprop.FuncName = MyFunc::ALBEDO_SOIL; functorprop.Arg = MyArgType::D1;
 	funcname = "Bare Soil Albedo Function"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SOILSURFACE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SOILSURFACE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec,plotpar);  ps_vec.clear();
 
 	NE* pNumAlbSnow;
 	pNumAlbSnow = new NE(&NumAlbSnow, 3, 3, 3, 3, 3);
 	Define(pNumAlbSnow, "Number of Snow Albedo");
-	pPs = new Ps(&AlbSnowCoef_1, SINGLE, RADIATION, REFLECTION, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&AlbSnowCoef_1, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "AlbSnowCoef_1", 50., "-", "RadiationInput  > 0", 40., 55.);
-	pPs = new Ps(&AlbSnowCoef_2, SINGLE, RADIATION, REFLECTION, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&AlbSnowCoef_2, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "AlbSnowCoef_2", -0.05, "-", "RadiationInput  > 0", -0.1, 0.);
-	pPs = new Ps(&AlbSnowCoef_3, SINGLE, RADIATION, REFLECTION, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&AlbSnowCoef_3, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "AlbSnowCoef_3", -0.1, "-", "RadiationInput  > 0", -0.2, 0.);
-	pPs = new Ps(&AlbSnowMin, SINGLE, RADIATION, REFLECTION, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&AlbSnowMin, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "AlbSnowMin", 40., "-", "Evaporation > 0|SnowPack > 0", 20., 70., 30., 60.);//			! DG 8/7-97
 
 
@@ -260,7 +260,7 @@ bool Radiation_Functions::Def()
 
 	functorprop.FuncName = MyFunc::ALBEDO_SNOW_TSUMAIR; functorprop.Arg = MyArgType::D2;
 	funcname = "Snow Age Albedo TempSum Function"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SOILSURFACE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SOILSURFACE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);  
 
 
@@ -268,7 +268,7 @@ bool Radiation_Functions::Def()
 
 	functorprop.FuncName = MyFunc::ALBEDO_SNOW_TAIR; functorprop.Arg = MyArgType::D2;
 	funcname = "Snow Age Albedo Function"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SOILSURFACE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SOILSURFACE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pFunc, functorprop, funcname,  ps_vec,plotpar); 
 	
@@ -276,7 +276,7 @@ bool Radiation_Functions::Def()
 
 
 
-	pPs= new Ps(&Albedo, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
+	pPs= new Ps(&Albedo, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs,  "Albedo",25.,"%","Evaporation >0|PlantType =1",5.,50.,8.,40.);
 
 
@@ -296,10 +296,10 @@ bool Radiation_Functions::Def()
 	plotpar.LegendsVec = { ""};
 	plotpar.X2_Vec = { };
 
-	pPs= new Ps(&Emissivity, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL);
+	pPs= new Ps(&Emissivity, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs, "Emissivity", 1., "-", "RadiationInput > 0|LongWaveBalance >= 1", .8, 1., .1, 1.);  ps_vec.push_back(pPs);
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname,  ps_vec, plotpar);  ps_vec.clear();
 
 
@@ -307,41 +307,41 @@ bool Radiation_Functions::Def()
 	functorprop.FuncName = MyFunc::BRISTOW_FIXEDB; functorprop.Arg = MyArgType::D2;
 	funcname = "Atmospheric Transparency from Daily Temp Range"; functorprop.FunctorInitOption = std::string::npos;
 	
-	pPs= new Ps(&ParB.Bristow_Turb, SINGLE,RADIATION, SCATTERING,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&ParB.Bristow_Turb, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "Bristow_Turb", 0.72, "-", "RadiationInput > 0|CloudInput=4", 0., 1., 0.5, 0.8); 
-	pPs= new Ps(&ParB.Bristow_B, SINGLE,RADIATION, SCATTERING,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&ParB.Bristow_B, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,  "Bristow_B",0.07,"-","RadiationInput > 0|CloudInput=4",.01,.2);    
-	pPs= new Ps(&ParB.Bristow_C, SINGLE,RADIATION, SCATTERING,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&ParB.Bristow_C, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,  "Bristow_C",1.5,"-","RadiationInput > 0|CloudInput=4",1.,2.,1.2,1.8);
 
 
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec,plotpar);
     
-	pPs= new Ps(&ParB.Thornton_B0, SINGLE,RADIATION, SCATTERING,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&ParB.Thornton_B0, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,  "Thornton B0",0.031,"-","RadiationInput > 0|CloudInput=4",0.01,.05);    
-	pPs= new Ps(&ParB.Thornton_B1, SINGLE,RADIATION, SCATTERING,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&ParB.Thornton_B1, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
  	Define(pPs,  "Thornton B1",0.201,"-","RadiationInput > 0|CloudInput=4",0.1,.3);
-	pPs= new Ps(&ParB.Thornton_B2, SINGLE,RADIATION, SCATTERING,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&ParB.Thornton_B2, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,  "Thornton B2",-0.185,"-","RadiationInput > 0|CloudInput=4",-0.3,-0.1);
 
-	pPs = new Ps(&ParB.DTR_YEAR_MEAN, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&ParB.DTR_YEAR_MEAN, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "DTR Year Mean", 15.,UNIT_TYPES::TEMP_UNIT, "RadiationInput > 0|CloudInput=4", 0., 30., 3., 25.);
-	pPs = new Ps(&ParB.DTR_YEAR_AMP, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&ParB.DTR_YEAR_AMP, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "DTR Year Amp", 10.,UNIT_TYPES::TEMP_UNIT, "RadiationInput > 0|CloudInput=4", 0., 10., 3., 20.);
-	pPs = new Ps(&ParB.DTR_YEAR_SHIFT, SINGLE, RADIATION, SCATTERING, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&ParB.DTR_YEAR_SHIFT, datatype::SINGLE, elements::RADIATION, fysprocess::SCATTERING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "DTR Year Shift", 15., "DayNo", "RadiationInput > 0|CloudInput=4", 0., 30., 3., 25.);
 
 	functorprop.FuncName = MyFunc::BRISTOW_SEASONALB; functorprop.Arg = MyArgType::D2;
 	funcname = "Atmospheric Transparency from Daily Temp Range with seasonality"; functorprop.FunctorInitOption = std::string::npos;
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec); ps_vec.clear();
 
     
     //! Treated by new snow interception model!!
-	pPs= new Ps(&AlbLeafSnowCoef, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
+	pPs= new Ps(&AlbLeafSnowCoef, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs,  "AlbLeafSnowCoef", 0.5, "-", "Evaporation > 0|RadiationInput  > 0|PlantType !=1|SnowInterception > 0 ",0., 1., 0.,1. );
 
     //! New Gryning Coefficient
@@ -358,26 +358,26 @@ bool Radiation_Functions::Def()
 	plotpar.LegendsVec = { ""};
 	plotpar.Y_ScalingCoef = 0;
 
-	pPs = new Ps(&DiffuseRadCoef, SINGLE, RADIATION, ADSORPTION, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&DiffuseRadCoef, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
     Define(pPs,  "DiffuseRadCoef", 0.2, "-", "Evaporation > 0|RadiationInput  > 0|SplitGlobal > 0",0.1, 0.5, 0.1,0.3 );
 
 	
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);  ps_vec.clear();
 
 
 
-	pPs= new Ps(&ViewScalingMax, SINGLE,RADIATION, ADSORPTION,NOBPROC, NORMAL);
+	pPs= new Ps(&ViewScalingMax, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs,  "ViewScalingMax", 1000., "-", "Evaporation > 0|RadiationInput  > 0|SplitGlobal > 0",100., 10000., 900.,1100. );
 	
-/*	pPs = new Ps(&CanopyDiameterHeightRatio_Common, SINGLE, RADIATION, GEOMETRIC, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+/*	pPs = new Ps(&CanopyDiameterHeightRatio_Common, datatype::SINGLE, elements::RADIATION, fysprocess::GEOMETRIC, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs,  "DiameterHeightRatio", 0.2, "-", "Evaporation > 0|RadiationInput  > 0|SplitGlobal > 0",0.001, 10., .05,5. );*/
 	
 
-	pPs = new Ps(&CanopyShadeCoef, SINGLE, RADIATION, ADSORPTION, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&CanopyShadeCoef, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "CanopyShadeCoef", .01, "-", "Evaporation > 0|RadiationInput  > 0|SplitGlobal > 0", 0., 10., 0.001, 2.);
 	
-	pPs = new Ps(&CanopyShadeCoef_Base, SINGLE, RADIATION, ADSORPTION, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&CanopyShadeCoef_Base, datatype::SINGLE, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "CanopyShadeCoef_Base", .5, "-", "Evaporation > 0|RadiationInput  > 0|SplitGlobal > 0", 0., 1., 0.001, 1.);
 
 
@@ -391,7 +391,7 @@ bool Radiation_Functions::Def()
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 1.57;
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar);  ps_vec.clear();
 
 	NE* pNumBrunt;
@@ -400,13 +400,13 @@ bool Radiation_Functions::Def()
 	ps_vec.clear();
 	initv.resize(NumBrunt);
 	initv[0]=0.56;initv[1]=0.00779;initv[2]=0.1;initv[3]=0.9;
-	pPs= new Ps(&BruntAirCoef_1, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&BruntAirCoef_1, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs,"BruntAirCoef_1",0.56,"-","LongWaveBalance=0|RadiationInput  > 0", 0.51, 0.61);
-	pPs= new Ps(&BruntAirCoef_2, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&BruntAirCoef_2, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs,"BruntAirCoef_2",0.00779,"-","LongWaveBalance=0|RadiationInput  > 0", 0.007, 0.009);
-	pPs= new Ps(&BruntAirCoef_3, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&BruntAirCoef_3, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,"BruntAirCoef_3",0.1,"-","LongWaveBalance=0|RadiationInput  > 0", 0.05, 0.15);
-	pPs= new Ps(&BruntAirCoef_4, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&BruntAirCoef_4, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,"BruntAirCoef_4",0.9,"-","LongWaveBalance=0|RadiationInput  > 0", 0.8, 1.);
 
 	functorprop.FuncName = MyFunc::RADNETLONG_SATURATED_AIR; functorprop.Arg = MyArgType::D2;
@@ -427,7 +427,7 @@ bool Radiation_Functions::Def()
 	functorprop.Set_PlotPar = true;
 
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.FuncName = MyFunc::RADNETLONG_AIR; functorprop.Arg = MyArgType::D3;
 	Define(pFunc, functorprop, funcname,  ps_vec,plotpar);
 
@@ -436,21 +436,21 @@ bool Radiation_Functions::Def()
 	ps_vec.clear();
 
 
-	pPs= new Ps(&KonzelmannCoef_1, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL);
+	pPs= new Ps(&KonzelmannCoef_1, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs,"KonzelmannCoef_1",0.23,"-","LongWaveBalance > 0|InLongRad=0", 0.15, 0.31); ps_vec.push_back(pPs); 
-	pPs= new Ps(&KonzelmannCoef_2, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL);
+	pPs= new Ps(&KonzelmannCoef_2, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs,"KonzelmannCoef_2",0.483,"-","LongWaveBalance > 0|InLongRad=0", 0.4, 0.56); ps_vec.push_back(pPs); 
-	pPs= new Ps(&KonzelmannCoef_3, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL);
+	pPs= new Ps(&KonzelmannCoef_3, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs,"KonzelmannCoef_3",0.963,"-","LongWaveBalance > 0|InLongRad=0", 0.9, 0.99); ps_vec.push_back(pPs);
 	
 	functorprop.FuncName = MyFunc::RADLONGIN_KONZELMANN_EMISSIVITY; functorprop.Arg = MyArgType::D3;
 	funcname = "Emissivity Long Wave Radiation (Konzelmann)"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.Set_PlotPar = false;
 	plotpar.Y_Label = "Emissivity atmosphere (-)";
 	plotpar.Y_ScalingCoef = 0;
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar);
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.Set_PlotPar = true; functorprop.Arg = MyArgType::D2;
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
@@ -458,12 +458,12 @@ bool Radiation_Functions::Def()
 	functorprop.FuncName = MyFunc::RADLONGIN_KONZELMANN; functorprop.Arg = MyArgType::D3;
 
 	funcname = "Incoming Long Wave Radiation (Konzelmann)"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.Set_PlotPar = false;
 	plotpar.Y_Label = "Incomining Longwave Radiation (J/m2/day)";
 	Define(pFunc, functorprop, funcname,  ps_vec,plotpar);	 
 
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.Set_PlotPar = true; functorprop.Arg = MyArgType::D2;
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	 ps_vec.clear();
 
@@ -473,7 +473,7 @@ bool Radiation_Functions::Def()
 	NE *pNumKonz;
 	pNumKonz = new NE(&NumKonz,3,3,3,3,3);
 	Define(pNumKonz, "Number of Konzelmann");
-	pP= new P(&KonzelmannCoef,pNumKonz, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL);
+	pP= new P(&KonzelmannCoef,pNumKonz, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.resize(3); initv[0]=0.23; initv[1]=0.483; initv[2]=0.963;
 		Define(pP,pNumKonz  ,"KonzelmannCoef",initv,"-","RadiationInput  > 0");
 
@@ -486,18 +486,18 @@ bool Radiation_Functions::Def()
 	Define(pNumSatterl, "Number of Satterlund");
 	initv.resize(NumSatterl);
 	initv[0]=2016; initv[1]=0.3;
-	pPs= new Ps(&SatterlundCoef_1, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&SatterlundCoef_1, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 		Define(pPs,"SatterlundCoef_1",2016.,"-","RadiationInput  > 0|InLongRad=1", 2000., 2032.);
-	pPs= new Ps(&SatterlundCoef_2, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&SatterlundCoef_2, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 		Define(pPs,"SatterlundCoef_2",.3,"-","RadiationInput  > 0|InLongRad=1", 0.1, 0.7);
 		
 	functorprop.FuncName = MyFunc::RADLONGIN_SATTERLUND_EMISSIVITY; functorprop.Arg = MyArgType::D3;
 	funcname = "Emissivity Long Wave Radiation (Satterlund)"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec);
 	functorprop.FuncName = MyFunc::RADLONGIN_SATTERLUND; functorprop.Arg = MyArgType::D3;
 	funcname = "Incoming Long Wave Radiation (Satterlund)"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec);	 ps_vec.clear();
 
 	
@@ -508,106 +508,106 @@ bool Radiation_Functions::Def()
 	Define(pNumBruntIn, "Number of Brunt In");
 	initv.resize(NumBruntIn);
 	initv[0]=0.605; initv[1]=0.048;initv[2]=0.3;
-	pPs= new Ps(&BruntCoef_1, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&BruntCoef_1, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 		Define(pPs, "BruntCoef_1",0.605,"-","RadiationInput  > 0|InLongRad=2",0.5,0.7);
-	pPs= new Ps(&BruntCoef_2, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&BruntCoef_2, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 		Define(pPs, "BruntCoef_2",0.048,"-","RadiationInput  > 0|InLongRad=2",0.04,0.056);
-	pPs= new Ps(&BruntCoef_3, SINGLE,RADIATION, EMISSION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&BruntCoef_3, datatype::SINGLE, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 		Define(pPs, "BruntCoef_3",0.3,"-","RadiationInput  > 0|InLongRad=2",0.2,0.4);
 		mTab_BruntInLong.push_back(pP);
 	functorprop.FuncName = MyFunc::RADLONGIN_BRUNT_EMISSIVITY; functorprop.Arg = MyArgType::D3;
 	funcname = "Emissivity Long Wave Radiation (Brunt)"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec);
 	functorprop.FuncName = MyFunc::RADLONGIN_BRUNT; functorprop.Arg = MyArgType::D3;
 	funcname = "Incoming Long Wave Radiation (Brunt)"; functorprop.FunctorInitOption = std::string::npos;
-	pFunc = new Func(SINGLE, RADIATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec);	 ps_vec.clear();
 
 	Tab *pTab;
-	pTab= new Tab(&mTab_Beer,  PLANT,RADIATION, ADSORPTION,NOBPROC, NORMAL);
+	pTab= new Tab(&mTab_Beer, datatype::PLANT, elements::RADIATION, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTab, "Beers law - multiple plants","RntLAIv","Evaporation > 0|PlantType>=3");
 
 
 	G* pG;
 	initv.assign(p_Plant->NumPlants,0.);
-	pG = new G(&MC_RntDist,pNumPlants,PLANT,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);   
+	pG = new G(&MC_RntDist,pNumPlants, datatype::PLANT, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);   
     Define(pG,pNumPlants,  "Net radiation Canopy" ,initv,	"-","PlantType=3");
-	pG = new G(&MC_LAIAbove,pNumPlants,PLANT,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL); 
+	pG = new G(&MC_LAIAbove,pNumPlants, datatype::PLANT, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL); 
     Define(pG, pNumPlants,  "LAI Above canopy" ,initv,	"-","PlantType=3");
-	pG = new G(&MC_TempCanopy,pNumPlants,PLANT,RADIATION, EMISSION,NOBPROC, NORMAL); 
+	pG = new G(&MC_TempCanopy,pNumPlants, datatype::PLANT, elements::RADIATION, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL); 
     Define(pG, pNumPlants,  "MC Temp Canopy" ,initv,	"-","PlantType=3");
 
 
 	Gs *pGs;
-	pGs= new Gs(&RadNetGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetGround, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 
     Define(pGs,  "RadNetGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0");
-	pGs= new Gs(&RadNetShort, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetShort, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetShort",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0");
-	pGs= new Gs(&AlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
+	pGs= new Gs(&AlbedoVar, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "AlbedoVar",0.,"%","RadiationInput > 0");
-	pGs= new Gs(&CanopyFracRad, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&CanopyFracRad, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "CanopyFracRad",0.,"-","RadiationInput > 0");
-	pGs= new Gs(&RadInLongGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadInLongGround, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadInLongGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1");
 //    ! AUXILIARY VARIABLES FOR PARTITIONING OF RADIATION AT GROUND SURFACE ON IRRIGATED AND NON-IRRIGATED
-	pGs= new Gs(&RadNetGround1, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetGround1, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetGround1",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0|SoilPartitioningArea>1");
-	pGs= new Gs(&RadNetGround2, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetGround2, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetGround2",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|PlantType >= 2|Evaporation > 0|SoilPartitioningArea>1");
 
-	pGs= new Gs(&CanopyFracRad1, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&CanopyFracRad1, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "CanopyFracRad1",0.,"-","RadiationInput > 0|SoilPartitioningArea>1");
-	pGs= new Gs(&CanopyFracRad2, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&CanopyFracRad2, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "CanopyFracRad2",0.,"-","RadiationInput > 0|SoilPartitioningArea>1");
 
-	pGs= new Gs(&RadInLongGround1, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadInLongGround1, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadInLongGround1",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1|SoilPartitioningArea>1");
-	pGs= new Gs(&RadInLongGround2, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadInLongGround2, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadInLongGround2",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|LongRadCanopy = 1|SoilPartitioningArea>1");
     
 //    ! AUXILIARY NEEDED FOR CALCULATIONS
-	pGs= new Gs(&CanopyFracRadDirect, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&CanopyFracRadDirect, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "CanopyFracRadDirect",0.,"-","RadiationInput > 0|PlantType > 2|CanopyShade>0|LongRadCanopy = 1");
-	pGs= new Gs(&CanopyFracRadDiffuse, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&CanopyFracRadDiffuse, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "CanopyFracRadDiffuse",0.,"-","RadiationInput > 0|PlantType > 2|CanopyShade>0|LongRadCanopy = 1");
-	pGs= new Gs(&CanopyFracRadLong, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&CanopyFracRadLong, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "CanopyFracRadLong",0.,"-","RadiationInput > 0|PlantType > 2|CanopyShade>0|LongRadCanopy = 1");
-	pGs= new Gs(&RadInDirect, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadInDirect, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadInDirect",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SplitGlobal>0|LongRadCanopy = 1");
-	pGs= new Gs(&RadInDiffuse, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadInDiffuse, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadInDiffuse",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SplitGlobal>0|LongRadCanopy = 1");
 
 //    ! AUXILIARY NEEDED FOR SNOWMIP2I
-	pGs= new Gs(&RadNetCanopy, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetCanopy, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetCanopy",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 0|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
-	pGs= new Gs(&RadNetLongCanopy, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetLongCanopy, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetLongCanopy",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
-	pGs= new Gs(&RadNetLongGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetLongGround, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetLongGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
-	pGs= new Gs(&RadLongOutVar, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadLongOutVar, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadLongOut",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SoilEvap > 0|Evaporation > 0");
-	pGs= new Gs(&RadNetShortCanopy, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetShortCanopy, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetShortCanopy",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
-	pGs= new Gs(&RadInShortGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadInShortGround, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadInShortGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
-	pGs= new Gs(&RadNetShortGround, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadNetShortGround, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadNetShortGround",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|PlantType > 2|SoilEvap > 0|Evaporation > 0|CanopyShade>0");
-	pGs= new Gs(&RadShortOut, SINGLE,RADIATION, EBAL_PARTITIONING,NOBPROC, NORMAL);
+	pGs= new Gs(&RadShortOut, datatype::SINGLE, elements::RADIATION, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "RadShortOut",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|SoilEvap > 0|Evaporation > 0");
 
-	pGs= new Gs(&SnowAlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
+	pGs= new Gs(&SnowAlbedoVar, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "Snow Albedo",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
-	pGs= new Gs(&SoilAlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
+	pGs= new Gs(&SoilAlbedoVar, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "Soil Albedo",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
-	pGs= new Gs(&GroundAlbedoVar, SINGLE,RADIATION, REFLECTION,NOBPROC, NORMAL);
+	pGs= new Gs(&GroundAlbedoVar, datatype::SINGLE, elements::RADIATION, fysprocess::REFLECTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "Ground Albedo",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilEvap > 0|Evaporation > 0|SnowPack >0");
 
 
 	return FunctionDef();
 
-	//pSw= new Sw(&SnowSurEbal,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+	//pSw= new Sw(&SnowSurEbal, datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 }
 bool Radiation_Functions::FunctionDef() {
 	Func *pFunc;
@@ -618,14 +618,14 @@ bool Radiation_Functions::FunctionDef() {
 		f_potrisday = Physf(FUNC_CHOICE::POTRISDAILY, Latitude, AltSimPosition, RadFracAng1, RadFracAng2);
 /*		double (PhysFunctions::*fpointfys1)(double);
 		fpointfys1=&PhysFunctions::DayLengthFunction;
-		pFunc= new Func(SINGLE,  RADIATION, NOFPROC,NOBPROC, NORMAL);
+		pFunc= new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pFunc, m_fPhyspointer0_1.size(),100,this, "Day Length During Year Function"); m_fPhyspointer0_1.push_back(fpointfys1);
 		//res=pFunc->GetValue(1.);
 
 
 		auto yy = f_daylength(269);
 		fpointfys1=&PhysFunctions::PotRisDaily;
-		pFunc= new Func(SINGLE,  RADIATION, NOFPROC,NOBPROC, NORMAL);
+		pFunc= new Func( datatype::SINGLE, elements::RADIATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pFunc, m_fPhyspointer0_1.size(),100,this, "Potential Global Radiation Function"); m_fPhyspointer0_1.push_back(fpointfys1);
 		//res=pFunc->GetValue(1.);*/
 

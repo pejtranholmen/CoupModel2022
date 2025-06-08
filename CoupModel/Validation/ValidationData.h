@@ -31,11 +31,11 @@ public:
 	std::string GetValGroup(size_t);
 	std::string GetValName(size_t);
 	int GetNumSumVarVariables();
-	int GetValSumVarOutputType(size_t);
+	sumvartype GetValSumVarOutputType(size_t) noexcept;
 	std::string GetStringValSumVarOutputType(size_t);
 	int GetValSumVarLocalIndex(size_t);
 	bool GetValFileLogTrans(size_t);
-	int GetValSumVarNameType(size_t);
+	simtype GetValSumVarNameType(size_t);
 	std::string GetValSumVarGroup(size_t);
 	std::string GetValSumVarName(size_t);
 	int GetValn(size_t);
@@ -91,7 +91,7 @@ public:
 	bool SetValErrors(size_t, float, float, bool, bool LogT=false);
 	bool SetValNewLogLi(size_t, float, float, float, float);
 	void SetValNewLogLiOptions(size_t func, int box){m_NewLogFunc=func; m_NewBoxCox=box;};
-	bool SetValSumVarErrors(size_t,int,float,float, float);
+	bool SetValSumVarErrors(size_t,sumvartype,float,float, float);
 
 	//bool SetValCoef(size_t, int, float, float, float, float,float, float,float);
 	bool AddGroupValList(size_t, std::vector<std::pair<int,int>>);
@@ -100,9 +100,9 @@ public:
 	bool AddValList(size_t, int, int, std::string, std::string, int, float, float, bool);
 	bool AddNewValList(size_t, int, int, int, std::string, std::string, int, float, float, bool, bool, int Dur=60);
 	bool UpdateValOutIndex();
-	bool AddValSumVarList(size_t, int, int, std::string , std::string ,int ,float, float, float );
-	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, int sumvartype, SIMB selected, float, float, float);
-	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, int sumvartype, SIMB selected, std::string, std::string csvfile, float, float);
+	bool AddValSumVarList(size_t, sumvartype, int, std::string , std::string ,int ,float, float, float );
+	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, sumvartype sumvartyp, SIMB selected, float, float, float);
+	bool AddValSumVarList(size_t, SIMSUMSOURCE simsource, size_t res_index, sumvartype sumvartyp, SIMB selected, std::string, std::string csvfile, float, float);
 	bool SetValFileLogTrans(size_t, bool);	
 	bool SetValFileNumber(size_t, int);
 	bool SetValDuration(size_t, int);

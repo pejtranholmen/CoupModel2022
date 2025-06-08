@@ -277,10 +277,10 @@ size_t GetDB::CreateNewHeader(size_t db_index) {
 		head.Details="Sim File:"+ m_pSimDoc->m_CurrentFile+"\n";
 
 
-		pPs=dynamic_cast<Ps*>(m_pSimDoc->GetPtr(PAR_SINGLE,"Y-coordinate"));
-		if(pPs->GetValue()==0) pPs = dynamic_cast<Ps*>(m_pSimDoc->GetPtr(PAR_SINGLE, "Latitude"));
+		pPs=dynamic_cast<Ps*>(m_pSimDoc->GetPtr(simtype::PAR_SINGLE,string("Y-coordinate")));
+		if(pPs->GetValue()==0) pPs = dynamic_cast<Ps*>(m_pSimDoc->GetPtr(simtype::PAR_SINGLE, string("Latitude")));
 		if(pPs!=nullptr) head.Latitude=FUtil::STD_DtoAscii(pPs->GetValue());
-		pPs=dynamic_cast<Ps*>(m_pSimDoc->GetPtr(PAR_SINGLE,"X-coordinate"));
+		pPs=dynamic_cast<Ps*>(m_pSimDoc->GetPtr(simtype::PAR_SINGLE,string("X-coordinate")));
 		if(pPs!=nullptr) head.Longitude=FUtil::STD_DtoAscii(pPs->GetValue());
 	}
 	else
@@ -393,7 +393,7 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 
 		}
 	};
-	auto read_db_values = [&]()->CDB* {
+	auto read_db_values = [&]() {
 		size_t iread = 0;
 		if (line.find("Start")==0) {
 			m_Rw.wString( &line);
@@ -538,8 +538,6 @@ CDB* GetDB::CreateNewDBObject_FromCSVFile(string FileName)
 		else if (line.find("End") == 0) {
 			m_Rw.wString(&line);
 		}
-
-
 	};
 	std::getline(stream, line);
 

@@ -7,7 +7,7 @@ Xs::Xs(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	:OutSingle(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target;
-	SetSimType(STATE_SINGLE);
+	SetSimType(simtype::STATE_SINGLE);
 	;
 }
 void Xs::Def(size_t ModuleNo, std::string name, double init, std::string unit, std::string conditions)

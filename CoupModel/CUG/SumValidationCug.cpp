@@ -650,7 +650,7 @@ int SumValidationCug::OnCellTypeNotify(long ID,int col,long row,long msg,long pa
 		string After = cell.GetStdText();
 		auto optionlist = cell.GetStdLabelText();
 		size_t newoption = FUtil::GetOptionIndex(optionlist, After);
-		m_pSimDoc->m_ValSum_Array[row].SumVarType = newoption;
+		m_pSimDoc->m_ValSum_Array[row].SumVarType = sumvartype(newoption);
 
 	}
 	else if (msg == 103 && col == 3) {

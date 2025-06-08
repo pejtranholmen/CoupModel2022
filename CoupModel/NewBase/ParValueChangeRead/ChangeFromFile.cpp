@@ -23,15 +23,15 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 	switch (option) {
 		case 1:
 
-			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Profile Function");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ReCalc Profile Function"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				pFunc->MakeOperation();
-			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Soil Function");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ReCalc Soil Function"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
-			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Soil Thermal Function");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ReCalc Soil Thermal Function"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -39,7 +39,7 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 		case 2:
 
 
-			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Soil Function");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ReCalc Soil Function"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -48,7 +48,7 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 		case 3:
 
 
-			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Organic Soil Profile");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ReCalc Organic Soil Profile"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -57,7 +57,7 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 		case 4:
 
 
-			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Soil Thermal Function");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ReCalc Soil Thermal Function"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -66,7 +66,7 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 		case 5:
 
 
-			pSimB1=GetPtr(simtype::FUNCTION,"ThermalScalingCoefEstimate");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ThermalScalingCoefEstimate"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -75,7 +75,7 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 		case 6:
 
 
-			pSimB1=GetPtr(simtype::FUNCTION,"Init Sunshine Function");
+			pSimB1=GetPtr(simtype::FUNCTION, string("Init Sunshine Function"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -87,7 +87,7 @@ bool ChangeFromFile::LinkedChangeToParameters(Par *pSimB,  size_t option, size_t
 
 				
 				Sw *pSw;
-				pSw = (Sw*)GetPtr(simtype::SWITCH, "CalibrationMode");
+				pSw = (Sw*)GetPtr(simtype::SWITCH, string("CalibrationMode"));
 				pSw->SetIntValue(index + 1);
 				auto value = dynamic_cast<P*>(pSimB)->GetValue(index);
 				FCSV *pFCSV;
@@ -241,13 +241,13 @@ bool ChangeFromFile::ReCalculateNewSoilProfile()
 	bool good=true;
 
 
-	pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Profile Function");
+	pSimB1=GetPtr(simtype::FUNCTION,string("ReCalc Profile Function"));
 	pFunc=dynamic_cast<Func*>(pSimB1);
 	if(pFunc!=nullptr)
 		good=pFunc->MakeOperation();
 	else
 		return false;
-	pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Soil Function");
+	pSimB1=GetPtr(simtype::FUNCTION,string("ReCalc Soil Function"));
 	pFunc=dynamic_cast<Func*>(pSimB1);
 	if(pFunc!=nullptr&&good)
 			return pFunc->MakeOperation();

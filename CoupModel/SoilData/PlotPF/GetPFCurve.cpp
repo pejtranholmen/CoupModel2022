@@ -10,7 +10,7 @@
 #ifndef COUPSTD
 #include "../../Util/MFC_Util.h"
 #endif
-
+using namespace std;
 //#include "..\..\Model\SOIL\PedoFunctions.h"
 char buffer[84];
 
@@ -250,7 +250,7 @@ bool GetPFCurve::InitSaveRecord(size_t numprofile)
 	return true;
 }
 bool GetPFCurve::InitNewScan(bool Extra) {
-	fstream *stream;
+	std::fstream *stream;
 	if(Extra) 
 		stream=&m_HeaderExtraFile;
 	else 

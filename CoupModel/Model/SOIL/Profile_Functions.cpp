@@ -24,38 +24,38 @@ bool Profile_Functions::Def()
 	P* pP;
 	ModuleConditions="";
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.0;
-	pP= new		P(&UpperDepth,pNE, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&UpperDepth,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define	(pP,pNE,"Upper Depth",initv,"m","",0.,1000.,0.,100.,1,2);
 	mTab_MeasTexture.push_back(pP);
 
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.1;
-	pP= new		P(&LowerDepth,pNE, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&LowerDepth,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define	(pP,pNE,"Lower Depth",initv,"m","",0.,1000.,0.,100.,1,2);
 	mTab_MeasTexture.push_back(pP);
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=5.0;
-	pP= new		P(&ClayContent,pNE, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&ClayContent,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define	(pP,pNE,"Clay Content",initv,"Mass %","Thermal Conductivity Function>0",0.,100.,0.,100.,4);
 	mTab_MeasTexture.push_back(pP);
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=50.0;
-	pP= new		P(&SandContent,pNE, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&SandContent,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define	(pP,pNE,"Sand Content",initv,"Mass %","Thermal Conductivity Function>0",0.,100.,0.,100.,4);
 	mTab_MeasTexture.push_back(pP);
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.0;
-	pP= new		P(&GravelContent,pNE, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&GravelContent,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define	(pP,pNE,"Gravel Content",initv,"Mass %","Thermal Conductivity Function>0",0.,100.,0.,100.,4);
 	mTab_MeasTexture.push_back(pP);
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=2.0;
-	pP= new		P(&OrganicContent,pNE, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&OrganicContent,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define	(pP,pNE,"Organic Content",initv,"Mass %","Thermal Conductivity Function>0",0.,100.,0.,100.,4);
 	mTab_MeasTexture.push_back(pP);
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=10.0;
-	pP= new		P(&QuartsFraction,pNE, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&QuartsFraction,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define	(pP,pNE,"Quarts fraction of Sand",initv,"Mass %","Thermal Conductivity Function>0",0.,100.,0.,100.,4);
 	mTab_MeasTexture.push_back(pP);
 
@@ -72,21 +72,21 @@ bool Profile_Functions::Def()
 	for(size_t i=1; i<initu.size();i++) initu[i]=initu[i-1]+initv[i-1];
 
 
-	pP= new		P(&ThicknessLayers,pNL, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);	
+	pP= new		P(&ThicknessLayers,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);	
 		Define(pP,pNL,"Thickness Layers",initv,"m","",0.001,100.,0.01,10.,1) ;
 		pP->SetReadOnly(false);
 		mTab_Compartment.push_back(pP);
 	
-	pP= new		P(&AThicknessLayers,pNL, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);	
+	pP= new		P(&AThicknessLayers,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);	
 		Define(pP,pNL, "AThicknessLayers",initv,"m","",0.001,100.,.01,1.,20);
 	
-	pP= new		P(&ModelUpperDepth,pNL, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);	
+	pP= new		P(&ModelUpperDepth,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);	
 	Define(pP,pNL, "mUpper Depth",initu,"m","",0.001,100.,0.01,10.,2) ;
 	mTab_BC_Model.push_back(pP); pP->SetReadOnly(true); mTab_Gen_Model.push_back(pP);
 
 	initu.erase(initu.begin());
 	initu.push_back(*(initu.end()-1)+*(initv.end()-1));
-	pP= new		P(&ModelLowerDepth,pNL, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&ModelLowerDepth,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define(pP,pNL, "mLower Depth",initu,"m","",0.001,100.,0.01,10.,2) ;
 	pP->SetReadOnly(true);
 	mTab_BC_Model.push_back(pP);mTab_HC_Model.push_back(pP); mTab_Gen_Model.push_back(pP);
@@ -96,9 +96,9 @@ bool Profile_Functions::Def()
 	for(size_t i=0; i<initm.size();++i) {
 	   initm[i]=initu[i]-initv[i]/2;
 	}
-	pP= new		P(&DepthMidpLayer,pNL, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new		P(&DepthMidpLayer,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define(pP,pNL,"DepthMidpLayers",initu,"m","",0.001,100.)	;
-	pP= new	P(&DepthLayers,pNL, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new	P(&DepthLayers,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define(pP,pNL,"DepthLayers",initu,"m","",0.001,100.,0.01,100.);
 	
 	vector<double> initd;
@@ -107,15 +107,15 @@ bool Profile_Functions::Def()
 	for(size_t i=1; i<initd.size();++i) {
 	   initd[i]=initm[i]-initm[i-1];
 	}
-	pP= new	P(&DistanceMidpLayers,pNL, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pP= new	P(&DistanceMidpLayers,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
     Define(pP,pNL, "DistanceMidpLayers",initd,"m");
 	Tab *pTab;
 
-	pTab= new Tab(&mTab_Compartment, SIMPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pTab= new Tab(&mTab_Compartment, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define(pTab,"Compartment Sizes", "Thickness Layers","",1);
 
 
-	pTab= new Tab(&mTab_MeasTexture, MPROFILE, GENERAL, FYS_SHAPE, NOBPROC, SIMPLE);
+	pTab= new Tab(&mTab_MeasTexture, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
 	Define(pTab,"Soil Texture", 3);
 
 
@@ -131,7 +131,7 @@ bool Profile_Functions::FunctionDef() {
 	Func *pFunc;
 	//bool (Profile_Functions::*fpoint)();
 	//fpoint=&Profile_Functions::Profile_ReCalc;
-		pFunc= new Func(SIMPROFILE,DISTANCE, NOFPROC,NOBPROC, NORMAL);
+		pFunc= new Func( datatype::SIMPROFILE, elements::DISTANCE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		functorprop.FuncName = MyFunc::PROFILE_RECALC;
 		functorprop.Arg = MyArgType::BLANK;
 		Define(pFunc, functorprop,this, "ReCalc Profile Function"); 

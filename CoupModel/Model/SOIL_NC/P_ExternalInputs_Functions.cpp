@@ -32,32 +32,32 @@ bool P_ExternalInputs_Functions::Def()
 
 
 
-	pXs = new Xs(&P_Fert, SOILSURFACE, PHOSPHORUS, STORAGE, FORCING_BIOLOGY, NORMAL);
+	pXs = new Xs(&P_Fert, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pXs, "P Fertilizer", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus> 0|N Fertilization >0");
 
-	pTs = new Ts(&P_Fert_App, SOILSURFACE, PHOSPHORUS, TRANSPORT, FORCING_BIOLOGY, NORMAL);
+	pTs = new Ts(&P_Fert_App, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pTs, "P Fert Appl Rate", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus >= 1|N Fertilization >0");
-	pTs = new Ts(&P_Fert_Sol, SOILSURFACE, PHOSPHORUS, TRANSPORT, FORCING_BIOLOGY, NORMAL);
+	pTs = new Ts(&P_Fert_Sol, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pTs, "P Fert Solution Rate", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus >= 1|N Fertilization >0");
 
 	vector<double> initv; 
 	NE *pNFertDayNo=GetNEPointer("Num of Fert Days");
 	pP = m_pModelMap->GetPPointer("Fert DayNo");
 	mTab_PFert.push_back(pP);
-	pP = new P(&P_Fert_Rate, pNFertDayNo, SOILSURFACE, PHOSPHORUS, TRANSPORT, FORCING_BIOLOGY, NORMAL); initv.assign(NFertDayNo, 0.);
+	pP = new P(&P_Fert_Rate, pNFertDayNo, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); initv.assign(NFertDayNo, 0.);
 	Define(pP, pNFertDayNo, "P Fert Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus >= 1", 0., 100.);
 
 	mTab_PFert.push_back(pP);
 
 
 	Tab *pTab;
-	pTab = new Tab(&mTab_PFert, SOILSURFACE, PHOSPHORUS, TRANSPORT, FORCING_BIOLOGY, NORMAL);
+	pTab = new Tab(&mTab_PFert, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 
 	Define(pTab, "P Fertilization", "Fert DayNo|N Fert Rate", "Phosphorus >= 1|N Fertilization =1");
 
-	pPs = new Ps(&Dep_P_DryRate, SOILSURFACE, PHOSPHORUS, TRANSPORT, FORCING_BIOLOGY, NORMAL);
+	pPs = new Ps(&Dep_P_DryRate, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pPs, "Dep P DryRate", 0.000074,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus >= 1|N Deposition >0", 0., 0.1);
-	pPs = new Ps(&P_FertDiss_k, SOILSURFACE, PHOSPHORUS, TRANSPORT, FORCING_BIOLOGY, NORMAL);
+	pPs = new Ps(&P_FertDiss_k, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pPs, "P Fert Dis k", 0.015, "-", " Phosphorus >= 1|N Fertilization >=1", 0.001, 1.0);
 
 

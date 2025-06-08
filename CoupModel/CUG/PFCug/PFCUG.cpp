@@ -567,15 +567,15 @@ void PFCug::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *point,BOOL
 	switch (sheet) {
 		case 0:
 			case 1:
-			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Air Entry");
-			pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Brooks-Corey, water retention, measured horizons");
+			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE, string("Air Entry"));
+			pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE, string("Brooks-Corey, water retention, measured horizons"));
 			MakeChart(row, pSimB, 0);
 
 
 		break;
 		case 2:
-			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE,"Total Conductivity");
-			pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
+			pSimB=m_pDoc->GetPtr(simtype::PAR_TABLE, string("Total Conductivity"));
+			pTab=(Tab*)m_pDoc->GetPtr(simtype::TABLE, string("Hydraulic conductivity, measured horizons"));
 			MakeChart(row, pSimB, pTab, 0);
 
 		break;

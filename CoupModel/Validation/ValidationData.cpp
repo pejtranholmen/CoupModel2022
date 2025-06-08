@@ -272,14 +272,14 @@ bool ValidationData::AddValList(size_t index,int valFileIndex, int outtype, std:
 
 	 return false;
 }
-bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, size_t res_index, int sumvartype, SIMB Selected, std::string linkvarname, std::string linkfilename, float perror, float aerror)
+bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, size_t res_index, sumvartype sumvartyp, SIMB Selected, std::string linkvarname, std::string linkfilename, float perror, float aerror)
 {
 	string Type;
 
 
 	if (index<m_pSimDoc->m_ValSum_Array.size()) {
 		VALSUMv Node = m_pSimDoc->m_ValSum_Array[index];
-		Node.SumVarType = sumvartype;
+		Node.SumVarType = sumvartyp;
 		if (source_type == SIMSUMSOURCE::MULTIFILESTAT) {
 			Node.OutputType = Selected.pBase->GetType();
 			Node.Group = Selected.pBase->GetGroup();
@@ -310,7 +310,7 @@ bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, si
 		return true;
 	}
 	VALSUMv Node;
-	Node.SumVarType = sumvartype;
+	Node.SumVarType = sumvartyp;
 	if (source_type == SIMSUMSOURCE::MULTIFILESTAT) {
 		Node.OutputType = Selected.pBase->GetType();
 		Node.Group = Selected.pBase->GetGroup();
@@ -348,7 +348,7 @@ bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, si
 
 	return false;
 }
-bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, size_t res_index, int sumvartype, SIMB Selected, float obsvalue, float perror, float aerror)
+bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, size_t res_index, sumvartype sumvartyp, SIMB Selected, float obsvalue, float perror, float aerror)
 {
 	string Type;
 
@@ -359,7 +359,7 @@ bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, si
 
 	if (index<m_pSimDoc->m_ValSum_Array.size()) {
 		VALSUMv Node = m_pSimDoc->m_ValSum_Array[index];
-		Node.SumVarType = sumvartype;
+		Node.SumVarType = sumvartyp;
 		if (source_type == SIMSUMSOURCE(0)) {
 			Node.OutputType = Selected.pBase->GetType();
 			Node.Group = Selected.pBase->GetGroup();
@@ -382,7 +382,7 @@ bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, si
 		return true;
 	}
 	VALSUMv Node;
-	Node.SumVarType = sumvartype;
+	Node.SumVarType = sumvartyp;
 	if (source_type == SIMSUMSOURCE(0)) {
 		Node.OutputType = Selected.pBase->GetType();
 		Node.Group = Selected.pBase->GetGroup();
@@ -414,7 +414,7 @@ bool ValidationData::AddValSumVarList(size_t index, SIMSUMSOURCE source_type, si
 
 	return false;
 }
-bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, std::string group, std::string name, int localindex, float obsvalue, float perror, float aerror )
+bool ValidationData::AddValSumVarList(size_t index, sumvartype sumvartyp, int outtype, std::string group, std::string name, int localindex, float obsvalue, float perror, float aerror )
 {	string Type;
 	SimB* Sw;
 
@@ -444,7 +444,7 @@ bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, 
 		}
 		if(index<m_pSimDoc->m_ValSum_Array.size()) {
 		VALSUMv Node=m_pSimDoc->m_ValSum_Array[index];
-		Node.SumVarType=sumvartype;
+		Node.SumVarType=sumvartype(sumvartyp);
 		Node.OutputType=simtype(outtype);
 		Node.Group=group;
 		Node.Name=name;
@@ -456,7 +456,7 @@ bool ValidationData::AddValSumVarList(size_t index,int sumvartype, int outtype, 
 		return true;
 		}
 	 VALSUMv Node;
- 	 Node.SumVarType=sumvartype;
+ 	 Node.SumVarType=sumvartype(sumvartyp);
 	 Node.OutputType=simtype(outtype);
  	 Node.Group=group;
 	 Node.Name=name;
@@ -579,7 +579,7 @@ bool ValidationData::SetValErrors(size_t index, float perr, float aerr, bool ATe
 	
 	 return false;
 }
-bool ValidationData::SetValSumVarErrors(size_t index, int ityp, float obs, float perr, float aerr)
+bool ValidationData::SetValSumVarErrors(size_t index, sumvartype ityp, float obs, float perr, float aerr)
 {	
 
 
@@ -1036,40 +1036,40 @@ string ValidationData::GetValSumVarName(size_t index)
 	}
 	return "-";
 }
-int ValidationData::GetValSumVarNameType(size_t index)
+simtype ValidationData::GetValSumVarNameType(size_t index)
 {
 
 		if(index<m_pSimDoc->m_ValSum_Array.size()) {
 		return m_pSimDoc->m_ValSum_Array[index].OutputType;
 	}
-	return -1;
+	return simtype::PAR;
 }
-int ValidationData::GetValSumVarOutputType(size_t index)
+sumvartype ValidationData::GetValSumVarOutputType(size_t index) noexcept
 {
 
-		if(index<m_pSimDoc->m_ValSum_Array.size()) {
+	if(index<m_pSimDoc->m_ValSum_Array.size()) {
 		return m_pSimDoc->m_ValSum_Array[index].SumVarType;
 	}
-	return -1;
+	return sumvartype::INITIAL;
 }
 string ValidationData::GetStringValSumVarOutputType(size_t index)
 {
-	int ityp;
+	sumvartype ityp;
 	string test;
 
 	if(index<m_pSimDoc->m_ValSum_Array.size()) {
 		ityp=m_pSimDoc->m_ValSum_Array[index].SumVarType;
 	}
 	else 
-		ityp=-1;
+		sumvartype::INITIAL;
+
 	switch (ityp) {
-	case -1: test="-"; break;
-	case 0: test="Initial"; break;
-	case 1: test="Final"; break;
-	case 2: test="Minimum"; break;
-	case 3: test="Maximum"; break;
-	case 4: test="Mean"; break;
-	case 5: test="Accumulated"; break;
+	case sumvartype::INITIAL: test="Initial"; break;
+	case sumvartype::FINAL: test="Final"; break;
+	case sumvartype::MINIMUM: test="Minimum"; break;
+	case sumvartype::MAXIMUM : test = "Maximum"; break;
+	case sumvartype::MEAN: test="Mean"; break;
+	case sumvartype::ACCUMULATED: test="Accumulated"; break;
 	}
 	return test;
 }

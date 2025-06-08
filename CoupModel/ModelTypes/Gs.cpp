@@ -7,7 +7,7 @@ Gs::Gs(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	:OutSingle(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target; 
-	SetSimType(AUX_SINGLE);
+	SetSimType(simtype::AUX_SINGLE);
 	;
 }
 void Gs::Def(int ModuleNo, std::string name, double init, std::string unit, std::string conditions)

@@ -2979,7 +2979,7 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 	SecondLine();
 	ThirdLine();
 
-	vector<string_view> NewItems; size_t count=0;
+	vector<string> NewItems; size_t count=0;
 	NewItems.push_back("Name"); NewItems.push_back("Unit"); NewItems.push_back("Id"); NewItems.push_back("Position");
 	NewItems.push_back("Country"); NewItems.push_back("Station"); NewItems.push_back("Altitude"); NewItems.push_back("Latitude");
 	NewItems.push_back("Longitude");
@@ -4190,7 +4190,7 @@ bool GridPGDoc::OnGetFileDescriptionFillGrid(CPG *pCPG)
 				elements elem = pCPG->GetVarElement(i + 1, nrep);
 				if (size_t(elem) >= m_ElementTypeVariables.VectorNames.size())
 							elem= elements::GENERAL;
-				m_ElementTypeVariables.Text = p_ModelInfo->ElementName(size_t(elem));
+				m_ElementTypeVariables.Text = p_ModelInfo->ElementName(elem);
 				SetCellClickButton(m_ElementTypeVariables);
 
 				m_UnitTypeVariables.Row = ind;

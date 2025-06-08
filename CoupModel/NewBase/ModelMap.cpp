@@ -3,6 +3,7 @@
 #include "./ModelMap.h"
 #include "../PG/PGUtil.h"
 #include "../ModelTypes/P.h"
+#include "../ModelTypes/Gs.h"
 
 ModelMap::ModelMap() {
 	
@@ -98,7 +99,7 @@ SimB* ModelMap::GetP_Pointer(string name) {
 		if(GlobalMap.count(name)>0) {
 			for (auto it=GlobalMap.equal_range(name).first; it!=GlobalMap.equal_range(name).second; ++it) {
 				 pSimB=(*it).second;
-				 if(pSimB->GetType()==PAR_TABLE) {
+				 if(pSimB->GetType()== simtype::PAR_TABLE) {
 					 return pSimB;
 				 }
 			}
@@ -167,7 +168,7 @@ P* ModelMap::GetPPointer(string name)
 		if(GlobalMap.count(name)>0) {
 			for (auto it=GlobalMap.equal_range(name).first; it!=GlobalMap.equal_range(name).second; ++it) {
 				 pSim=(*it).second;
-				 if(pSim->GetType()==PAR_TABLE) {
+				 if(pSim->GetType()== simtype::PAR_TABLE) {
 					 return (P*)pSim;
 				 }
 			}
@@ -192,18 +193,17 @@ Func* ModelMap::GetFuncPointer(MyFunc myfunc)
 		return nullptr;
 }
 
-Gs* ModelMap::GetGsPointer(string name)
-{    SimB *pSim;
-    auto in=GlobalMap.count(name);
-    if(GlobalMap.count(name)>0) {
-        for (auto it=GlobalMap.equal_range(name).first; it!=GlobalMap.equal_range(name).second; ++it) {
-            pSim=(*it).second;
-            
-            cout << pSim->GetType() << "\n";
-            //            if(pSim->GetType()==PAR_TABLE) {
-            return (Gs*)pSim;
-            //            }
-        }
-    }
-    return nullptr;
+Gs* ModelMap::GetGsPointer(string name)  
+{    
+    SimB *pSim;  
+    auto in = GlobalMap.count(name);  
+    if (GlobalMap.count(name) > 0) {  
+        for (auto it = GlobalMap.equal_range(name).first; it != GlobalMap.equal_range(name).second; ++it) {  
+            pSim = (*it).second;  
+            if (pSim->GetType() == simtype::PAR_SINGLE || pSim->GetType() == simtype::PAR_TABLE) {  
+                return dynamic_cast<Gs*>(pSim);  
+            }  
+        }  
+    }  
+    return nullptr;  
 }

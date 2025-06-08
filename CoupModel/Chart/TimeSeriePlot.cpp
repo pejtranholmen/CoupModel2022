@@ -62,8 +62,8 @@ bool TimeSeriePlot::InitData(Doc *pDoc, int chartnum,  std::string PGFile, CChar
 bool TimeSeriePlot::InitMultiPGFilePlot(Doc *pSimDoc) {
 	m_pSimDoc=pSimDoc;
 	m_pProp->m_ChartNumber=m_pSimDoc->m_PlotStorage.GetCurrentChart();
-	if(m_pProp->GetIndepFirst()==PGDAY) {
-		m_pProp->SetFirstIndepSet(PGDAY, true);
+	if(m_pProp->GetIndepFirst()==vartype::PGDAY) {
+		m_pProp->SetFirstIndepSet(vartype::PGDAY, true);
 	}
 	else {
 		m_pProp->m_ChartType= CHART_TYPES::CONTOUR_CHART;
@@ -73,7 +73,7 @@ bool TimeSeriePlot::InitMultiPGFilePlot(Doc *pSimDoc) {
 	m_pChartCug=MySingle::instance().GetChartCugPointer();
 
 	m_pChartViewer=&m_pView->m_ChartViewer;
-	if(m_pProp->GetIndepFirst()==PGDAY) {
+	if(m_pProp->GetIndepFirst()==vartype::PGDAY) {
 		m_pUtil->m_MultiRunPlot=false;
 		m_pUtil->m_MultiPGPlot=false;
 	}
@@ -105,7 +105,7 @@ bool TimeSeriePlot::InitMultiRunPlot(Doc *pSimDoc,int chartnum, CHART_TYPES char
 
 			if (m_pProp->IsFirstIndepSet() && !m_pProp->IsSecondIndepSet() && charttype == CHART_TYPES::CONTOUR_CHART)
 				charttype = CHART_TYPES::SCATTER;
-			if (m_pProp->IsFirstIndepSet() && m_pProp->IsSecondIndepSet()&&m_pProp->GetIndepSecond()!=DATEAXIS)
+			if (m_pProp->IsFirstIndepSet() && m_pProp->IsSecondIndepSet()&&m_pProp->GetIndepSecond()!=vartype::DATEAXIS)
 				charttype = CHART_TYPES::CONTOUR_CHART;
 
 
@@ -1037,7 +1037,7 @@ void TimeSeriePlot::AggregateData() {
 	
 	Resolution = max(m_ChartSize.xplotwidth, 520);
 
-  if (m_ChartInfo.NumOfPoints >= Resolution&&(m_pProp->m_ChartType== CHART_TYPES::TIME_SERIE/*||m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART*/)&&!m_pProp->m_ReShape.m_NormalDist&&m_pProp->GetFirstIndepIndex()== std::string::npos&&m_pProp->GetIndepFirst()==DATEAXIS&&m_pProp->m_AggregateTime)
+  if (m_ChartInfo.NumOfPoints >= Resolution&&(m_pProp->m_ChartType== CHART_TYPES::TIME_SERIE/*||m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART*/)&&!m_pProp->m_ReShape.m_NormalDist&&m_pProp->GetFirstIndepIndex()== std::string::npos&&m_pProp->GetIndepFirst()==vartype::DATEAXIS&&m_pProp->m_AggregateTime)
     {
         //
         // Zoomable chart with high zooming ratios often need to plot many thousands of 

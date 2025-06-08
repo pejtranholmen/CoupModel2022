@@ -879,7 +879,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 						if(((F*)pSw)->CheckFileNameAndAssignNameToPGClass()){ 
 							m_pSimDoc->TimeModified();
 							m_pSimDoc->History_Add(pSw,-1,time(nullptr),CT2A(pszFileName).m_psz);
-							if (m_pSimDoc->GetPtr(simtype::PGFILE, "Meteorological data") == ((F*)pSw)) {
+							if (m_pSimDoc->GetPtr(simtype::PGFILE, string("Meteorological data")) == ((F*)pSw)) {
 								m_pSimDoc->SetSimPeriodFromClimateFile();
 
 
@@ -903,7 +903,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 			else if(item==1150) {
 				if (Group == "FertTable File") {
 
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, "FertTable File"));
+					FCSV *pCSV = static_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, string("FertTable File")));
 					if (pCSV != nullptr) {
 						FILEDLG FileDlg = MFC_Util::GetFileDialog("*.csv", "", "Comma separated file (*.csv)|*.csv|");
 						if (FileDlg.opengood != IDOK) {
@@ -950,7 +950,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 			}
 			else if (item == 1151) {
 				if (Group == "FertTable File") {
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, "FertTable File"));
+					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, string("FertTable File")));
 					size_t index=0;
 					while (m_pSimDoc->m_FCSV_Array.size() > index) {
 						if (pCSV == m_pSimDoc->m_FCSV_Array[index]) {
@@ -963,7 +963,7 @@ int DocCommands::ModelFileCommand(int col, int row, int item) {
 				}
 				else if (Group == "MASCUR File") {
 
-					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, "MASCUR File"));
+					FCSV *pCSV = dynamic_cast<FCSV*>(m_pSimDoc->GetPtr(simtype::CSVFILE, string("MASCUR File")));
 					size_t index=0;
 					while (m_pSimDoc->m_FCSV_Array.size() > index) {
 						if (pCSV == m_pSimDoc->m_FCSV_Array[index]) {
@@ -1457,7 +1457,7 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 					}
 					m_pSimDoc->m_ValidationData.CleanValList();							
 
-					pSw=dynamic_cast<Sw*>(m_pSimDoc->GetPtr(simtype::SWITCH, "ValidationMode"));
+					pSw=dynamic_cast<Sw*>(m_pSimDoc->GetPtr(simtype::SWITCH, string("ValidationMode")));
 					//pSw=(SimB*)m_pDoc->GetPtr(name, Type, grp);
 					pSw->SetStrValue("off");
 					//pSw->Apply();
@@ -2833,7 +2833,7 @@ void DocCommands::OnAddValFile()
 				Type="Switches";
 				Name="ValidationMode";
 									
-				pSw=m_pSimDoc->GetPtr(simtype::SWITCH,"ValidationMode");
+				pSw=m_pSimDoc->GetPtr(simtype::SWITCH, string("ValidationMode"));
 			
 				inumvalid=((Sw*)pSw)->GetIntValue();
 				//inumvalid=max(inumvalid,1);
@@ -2855,7 +2855,7 @@ void DocCommands::OnAddValFile()
 
 									
 				SimB* pSw;
-				pSw=m_pSimDoc->GetPtr(simtype::SWITCH, "ValidationMode");
+				pSw=m_pSimDoc->GetPtr(simtype::SWITCH, string("ValidationMode"));
 				((Sw*)pSw)->SetIntValue(inumvalid+1);
 				m_pSimDoc->ResidualFile_AddFile(1);
 				//pSw->Apply();
@@ -2900,7 +2900,7 @@ int DocCommands::OnAddTsvVal(bool Aggregated)
 
 		CValidationVariables dlg(m_pDoc, NumSelected, Aggregated, this);
 		if (dlg.DoModal() == IDOK) {
-			Tab* pTab = (Tab*)m_pSimDoc->GetPtr(simtype::TABLE, "Scaling of Observed Variables");
+			Tab* pTab = (Tab*)m_pSimDoc->GetPtr(simtype::TABLE, string("Scaling of Observed Variables"));
 			if (pTab != nullptr) {
 				F* pFile;
 				int NumSelected = 0;

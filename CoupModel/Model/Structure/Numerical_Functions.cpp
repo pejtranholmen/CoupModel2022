@@ -27,30 +27,30 @@ bool Numerical_Functions::Def()
  //	SoilModel* pSoil=(SoilModel*)pMod->GetModelPtr("Soil Model");
 //	p_Soil_WaterF=&pSoil->m_SoilFrost;
 Sw* pSw;
-pSw= new Sw(&m_pModelInfo->NumMethod,SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pSw= new Sw(&m_pModelInfo->NumMethod, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  
 Define(pSw, "NumMethod", 1, "Central Difference|Forward Difference","OnlyNC <1");
-pSw= new Sw(&TimeStepOption,SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pSw= new Sw(&TimeStepOption, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pSw, "TimeStepOption",0,"Empirical|Mathematical|Constant","OnlyNC <1");
-pSw= new Sw(&FindTimeStep,SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pSw= new Sw(&FindTimeStep, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pSw, "FindTimeStep",0,"No|Yes","OnlyNC < 1");
-pSw= new Sw(&NitrogenCarbonStep,SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pSw= new Sw(&NitrogenCarbonStep, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pSw, "NitrogenCarbonStep",0,"TimeResolution determined|As Water and Heat|Independent","Nitrogen and Carbon >0");
 
 Ps* pPs;
-pPs= new Ps(&Xloop,   SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pPs= new Ps(&Xloop, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pPs, "Xloop", 1.,"#","TimeStepOption=0|OnlyNC < 1",1.,10.);
-pPs= new Ps(&m_pModelInfo->XNLev,   SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pPs= new Ps(&m_pModelInfo->XNLev, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pPs, "XNLev", 10.,"#","TimeStepOption=0|OnlyNC < 1",1., 100.);
-pPs= new Ps(&XADiv,   SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pPs= new Ps(&XADiv, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pPs, "XADiv", 4.,"#","TimeStepOption=0|OnlyNC < 1",1., 16.,1., 8.);
-pPs= new Ps(&SaftyPerCent,   SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pPs= new Ps(&SaftyPerCent, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pPs,  "SaftyPerCent", 80., "%", "TimeStepOption=1|OnlyNC < 1", 10.,30., 90., 1000.);
-pPs= new Ps(&Precision,   SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pPs= new Ps(&Precision, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pPs,  "Precision", 2., "%", "FindTimeStep=1|OnlyNC < 1", 0.01,5., 3., 5.);
-pPs= new Ps(&NC_Iterations,   SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+pPs= new Ps(&NC_Iterations, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pPs,  "NC Iteration", 8., "#", "Nitrogen and Carbon >0|NitrogenCarbonStep =2", 1.,2048.);
-Gs *pGs= new Gs(&Timestep,   SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+Gs *pGs= new Gs(&Timestep, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pGs, "Timestep", 0.,"log(day)","OnlyNC < 1");
 
 

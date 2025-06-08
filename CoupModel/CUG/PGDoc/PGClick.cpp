@@ -341,7 +341,7 @@ void PGClick::MultiPGChartDepChoice(int PGIndex, size_t Option, bool erase) {
 
 	enum vartype Type;
 	Type= vartype::NO_USE;
-	if(Option==0) {Type=VAR_MIN;
+	if(Option==0) {Type=vartype::VAR_MIN;
 		m_pGSource->SetPickedMin(PGIndex, true);
 	}
 	else if(Option==1) {

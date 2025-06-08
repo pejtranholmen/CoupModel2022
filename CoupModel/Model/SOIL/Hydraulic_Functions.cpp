@@ -25,38 +25,38 @@ bool Hydraulic_Functions::Def()
 
 	Sw* pSw;
 	ModuleNo=5;
-	pSw= new Sw(&HydraulicFunc, SIMPROFILE, WATER, STORAGE, NOBPROC, NORMAL);
+	pSw= new Sw(&HydraulicFunc, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pSw,"Hydraulic Functions",0,"Brooks & Corey|Genuchten");
- 	pSw= new Sw(&MatricCondFunc, SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+ 	pSw= new Sw(&MatricCondFunc, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,"Matric Conductivity",0,"Independent|Same as Total Conductivity|Function of total conductivity");
-	pSw= new Sw(&ConductivityFunc, SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pSw= new Sw(&ConductivityFunc, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,"Conductivity Function",0,"Mualem|Power of relative saturation|Power of effective saturation","",1);
-	pSw= new Sw(&ScalingRetention, SINGLE, WATER, STORAGE, NOBPROC, NORMAL);
+	pSw= new Sw(&ScalingRetention, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,"Scaling retention",0,"No|Yes","",1);
-	pSw= new Sw(&PedoFunction, SINGLE, WATER, NOFPROC, NOBPROC, NORMAL);
+	pSw= new Sw(&PedoFunction, datatype::SINGLE, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,"Pedo Functions",0,"Not Used|Texture parameters|Texture (database)|pF- points|pF- points (fixed residual)","",1);
-	pSw= new Sw(&Replace_MissingLowCond, SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pSw= new Sw(&Replace_MissingLowCond, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,"Replace K-values",0,"No|Yes","",1);		
 
 	Ps* pPs;
-	pPs= new Ps(&A0Temp,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pPs= new Ps(&A0Temp, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	
 	Define(pPs,"TempFacAtZero",.54,"-","WaterEq = 1", 0.4,1.0,0.5,0.6,0,0,403);	//!Scalar parameter
-	pPs= new Ps(&A1Temp,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pPs= new Ps(&A1Temp, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pPs, "TempFacLinIncrease",0.023,"-","WaterEq = 1", 0.,0.03,0.02,0.025,0,0,403);	//!Scalar parameter
-	pPs= new Ps(&CMinUC,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pPs= new Ps(&CMinUC, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,"MinimumCondValue",1.E-5,"mm/day","WaterEq = 1", 1.E-20,1.E-1,1.E-14,1.E-3,0,0,402);	//!Scalar parameter
-	pPs= new Ps(&CommonConductivityValue,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pPs= new Ps(&CommonConductivityValue, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,"Common value", 10.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|Matric Conductivity =2", 1.E-03,100.,1.E-4,1000.,1,0,422);
-	pPs= new Ps(&SensAboveThreshold,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pPs= new Ps(&SensAboveThreshold, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,"Sensivity", 0.5,"-","WaterEq = 1|Matric Conductivity =2", 0.,1.,1,0,422);
 	
-/*	pPs= new Ps(&ScaleCoefResidual,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+/*	pPs= new Ps(&ScaleCoefResidual, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,"Scale Coef Residual", 1.0,"-","WaterEq = 1|Scaling retention > 0", 0.,2.,1,0,423);
-	pPs= new Ps(&SaturationDiff,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pPs= new Ps(&SaturationDiff, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,"Saturation Diff", 0.,"-","WaterEq = 1|Scaling retention > 0", -1.,5.,1,0,424);
-	pPs= new Ps(&FixedResidualPar,SINGLE, WATER, TRANSPORT, NOBPROC, NORMAL);
+	pPs= new Ps(&FixedResidualPar, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs,"Fixed Residual", 1.,"vol %","WaterEq = 1|Pedo Functions>3", 0.001,30., 0.01,30.);*/
 	
 	NE *pNoLayerM =m_pModelMap->GetNEPointer("No Measured Layers");
@@ -76,131 +76,131 @@ bool Hydraulic_Functions::Def()
 		mTab_BC_Measured.push_back(pP);mTab_HC_Measured.push_back(pP); mTab_Pedo.push_back(pP);mTab_Gen_Measured.push_back(pP); 	
 		initv.resize(NoLayerM);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.5;
-	pP= new		P(&GM	,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&GM	,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM, "m-value",initv,"-","Hydraulic Functions = 1", 0.1, 10.,0.1,10.);
 		mTab_Gen_Measured.push_back(pP);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.5;
 	
-	pP= new		P(&GN,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&GN,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM, "n-value",initv,"-","Hydraulic Functions = 1", 0.01, 10.,.01,10.);
 		mTab_Gen_Measured.push_back(pP);
 		
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.5;
-	pP= new		P(&Galpha,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&Galpha,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM, "Alpha",initv,"1/cm","Hydraulic Functions = 1", 0.01, 10.,.01,10.);
 		mTab_Gen_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.3;
-	pP= new		P(&Lambda,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&Lambda,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
   		Define(pP,pNoLayerM,"Lambda",initv,"-","Hydraulic Functions = 0",0.001,50.,0.01);
 		mTab_BC_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=10.;
-	pP= new		P(&PsiEntry,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);	
+	pP= new		P(&PsiEntry,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);	
 		Define(pP,pNoLayerM,"Air Entry",initv,"cm","Hydraulic Functions = 0",0.001,1000.,0.01,100.);
 		mTab_BC_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=45.;
-	pP= new		P(&Saturation,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&Saturation,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM, "Saturation",initv,"vol %","Kalle 0",1.,99.,4.,90.);
 		mTab_BC_Measured.push_back(pP);mTab_Pedo.push_back(pP);mTab_Gen_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=4.0;
-	pP= new		P(&Wilting,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&Wilting,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Wilting Point",initv,"vol %","Kalle 0",0.,50.,0.1,30.);
 		mTab_BC_Measured.push_back(pP);mTab_Gen_Measured.push_back(pP);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.0;
-	pP= new		P(&ResWater,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ResWater,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Residual Water",initv,"vol %","Hydraulic Functions != 2",0.0,50.,0.1,50.);
 		mTab_BC_Measured.push_back(pP);mTab_Gen_Measured.push_back(pP);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=4.0;
-	pP= new		P(&MacroPore,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&MacroPore,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Macro Pore", initv,"vol %","WaterEq = 1",0.1,10.,1.,6.);
 		mTab_BC_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=8000.;
-	pP= new		P(&UpperBoundary,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&UpperBoundary,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Upper Boundary",initv,"cm","Hydraulic Functions != 2",50.,1.5E6,500.,10000.,1);
 		mTab_BC_Measured.push_back(pP); mTab_Gen_Measured.push_back(pP);
 		
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1000.;
-	pP= new		P(&UpperBoundaryTheta,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&UpperBoundaryTheta,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Upper ThetaBoundary",initv,"vol %","Hydraulic Functions != 2",0.,100.);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=5.0;
-	pP= new		P(&ClayContent,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ClayContent,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"ClayContent",initv,"mass %","Pedo Functions>0|Pedo Functions<3",0,100);
 		mTab_BC_Measured.push_back(pP);mTab_Pedo.push_back(pP);
 
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=70;
-	pP= new		P(&SandContent,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&SandContent,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"SandContent",initv,"mass %","Pedo Functions>0|Pedo Functions<3",0,100);
 		mTab_BC_Measured.push_back(pP);mTab_Pedo.push_back(pP);
 		
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=800.;
-	pP= new		P(&ProfileNo,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ProfileNo,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"ProfileNo",initv,"#","Hydraulic Functions>100",1,999);
 		mTab_BC_Measured.push_back(pP);mTab_Gen_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.;
-	pP= new		P(&ProfileRepNo,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ProfileRepNo,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"ProfileRepNo",initv,"#","Hydraulic Functions>100",1,99);
 		mTab_BC_Measured.push_back(pP);mTab_Gen_Measured.push_back(pP);
 		
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.;
-	pP= new		P(&ProfileLayer,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ProfileLayer,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"ProfileLayer",initv,"#","Hydraulic Functions>100",1,999) ;
 		mTab_BC_Measured.push_back(pP);mTab_Gen_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
-	pP= new		P(&ScalePsi,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ScalePsi,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
    	Define(pP,pNoLayerM,"Scaling pF",initv,"-","Hydraulic Functions = 0",-2.,2.,-1.,1.);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=4000.;
-	pP= new		P(&ValidRangeUpper,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ValidRangeUpper,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
    	Define(pP,pNoLayerM,"Upper Valid",initv,"-","Pedo Functions>2",100.,50000.,100,50000,0,2);
 		mTab_Pedo.push_back(pP);
    	
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=10.;
-	pP= new		P(&ValidRangeLower,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&ValidRangeLower,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Lower Valid",initv,"-","Pedo Functions>2",.5,500.,.5,500.,0,2);
 		mTab_Pedo.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
-	pP= new		P(&RegLine_R2,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&RegLine_R2,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Regline R2",initv,"-","Pedo Functions>2",0.,1.,0.,1.,0,2);
 		mTab_Pedo.push_back(pP);
 
 
    		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
-	pP= new		P(&RegLine_N,pNoLayerM, MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&RegLine_N,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Regline N",initv,"-","Pedo Functions>2",0.,50.,0.,50.,0,2) ;
 		mTab_Pedo.push_back(pP);
 
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=100;
-	pP= new		P(&SatMatCond,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&SatMatCond,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Matrix Conductivity",initv,"mm/day","Hydraulic Functions != 2",1.E-7,1.E7, 1.E-2, 1.E5);
 		mTab_HC_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1000;
-	pP= new		P(&SatTotCond,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&SatTotCond,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"Total Conductivity",initv,"mm/day","Hydraulic Functions != 2",1.E-7,1.E8, 1.E-2, 1.E6);
 		mTab_HC_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.;
-	pP= new		P(&NTortuosity,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&NTortuosity,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"n Tortuosity",initv,"-","Conductivity Function = 0",-2., 4., -1., 2.);
 		mTab_HC_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=3.;
-	pP= new		P(&NSR,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&NSR,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"n Power (SatRel)",initv,"-","Conductivity Function = 1",0., 15., 0.5, 6.);
 		mTab_HC_Measured.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=3.0;
-	pP= new		P(&NSE,pNoLayerM, MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&NSE,pNoLayerM, datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNoLayerM,"n Power (SatEffective)",initv,"-","Conductivity Function = 2",0., 15., 0.5, 6.);
 		mTab_HC_Measured.push_back(pP);
 
@@ -211,188 +211,188 @@ bool Hydraulic_Functions::Def()
 	NL=pNL->GetNEValue();
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=1.5;
-	pP= new		P(&M_GM	,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_GM	,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP	,pNL,"m_m-value",initv,"-","Hydraulic Functions = 1", 0.001, 10.,.001, 10., 0,0,405);
 		pP->SetReadOnly(true);
 		mTab_Gen_Model.push_back(pP);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.5;
-	pP= new		P(&M_GN    , pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_GN    , pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP  ,pNL,"m_n-value",initv,"-","Hydraulic Functions = 1", 0.01, 10., .01, 10.,0,0,405);
 		pP->SetReadOnly(true);
 		mTab_Gen_Model.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.5;
-	pP= new		P(&M_Galpha,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_Galpha,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL, "mAlpha",initv,"1/cm","Hydraulic Functions = 1", 0.01, 10.,0.01, 10.,0,0,405);
 		pP->SetReadOnly(true);
 		mTab_Gen_Model.push_back(pP);
-	pP= new		P(&M_Lambda,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_Lambda,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mLambda",initv,"-","Hydraulic Functions = 0",0.01,5.,0.001,50.);
 		pP->SetReadOnly(true); mTab_BC_Model.push_back(pP);
 
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.1;
-	pP= new		P(&M_PsiEntry,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_PsiEntry,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mAir Entry",initv,"cm","Hydraulic Functions = 0",0.01,1000.,0.1,100.);
 		pP->SetReadOnly(true); mTab_BC_Model.push_back(pP);
 
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=45;
-	pP= new		P(&M_Saturation,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_Saturation,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mSaturation",initv,"vol %","Kalle 0",1.,99.,4.,90.);
 		pP->SetReadOnly(true); mTab_BC_Model.push_back(pP); mTab_Gen_Model.push_back(pP);
 		
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=4;
-	pP= new		P(&M_Wilting,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_Wilting,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mWilting Point", initv,"vol %","Kalle 0",0.,50.,0.1,30.);
 		pP->SetReadOnly(true); mTab_BC_Model.push_back(pP); mTab_Gen_Model.push_back(pP);
 		
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1;
-	pP= new		P(&M_ResWater,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_ResWater,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mResidual Water",initv,"vol %","Hydraulic Functions != 2",0.0,50.,0.1,50.);
 		pP->SetReadOnly(true); mTab_BC_Model.push_back(pP); 	mTab_Gen_Model.push_back(pP);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=4;
-	pP= new		P(&M_MacroPore,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_MacroPore,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mMacro Pore", initv,"vol %","Hydraulic Functions = 0",0.1,10.,1.,6.);
 		pP->SetReadOnly(true); mTab_BC_Model.push_back(pP);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=15.;
-	pP= new		P(&M_UpperBPsi,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_UpperBPsi,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mUpper Boundary",initv,"cm","Hydraulic Functions != 2",25.,1.E6,500.,2.E4);
 		pP->SetReadOnly(true); mTab_BC_Model.push_back(pP); mTab_Gen_Model.push_back(pP);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=15.;
-	pP= new		P(&M_UpperBTheta,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_UpperBTheta,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mUpper Boundary (Theta)",initv,"m","Hydraulic Functions != 2",0.5,100.,1.,50.);
 		pP->SetReadOnly(true);
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
-	pP= new		P(&M_ScalePsi,pNL, SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pP= new		P(&M_ScalePsi,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"M_Scaling pF",initv,"-","Hydraulic Functions = 0",-2.,2.,-1.,1.);
 		pP->SetReadOnly(true);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.0;
-	pP= new		P(&M_SatMatCond,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_SatMatCond,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mMatrix Conductivity",initv,"-","Hydraulic Functions < 2",1.E-7,1.E4, 1.E-2, 1.E2);
 		pP->SetReadOnly(true);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=10.;
-	pP= new		P(&M_SatTotCond,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_SatTotCond,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"mTotal Conductivity",initv,"-","Hydraulic Functions < 2",1.E-7,1.E6, 1.E-2, 1.E4);
 		pP->SetReadOnly(true);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=1.;
-	pP= new		P(&M_NTortuosity,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_NTortuosity,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"m_n Tortuosity",initv,"-","Conductivity Function =0",-2., 4., -1., 2.);
 		pP->SetReadOnly(true);
 
  	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=3.;
-	pP= new		P(&M_NSR,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_NSR,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"m_n Power (SatRel)",initv,"-","Conductivity Function = 1",0., 15., 0.5, 6.);
 		pP->SetReadOnly(true);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=3.0;
-	pP= new		P(&M_NSE,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&M_NSE,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"m_n Power (SatEffective)",initv,"-","Conductivity Function = 2",0., 15., 0.5, 6.);
 		pP->SetReadOnly(true);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.3;
-	pP= new		P(&B_Lambda,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_Lambda,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bLambda",initv,"-","Hydraulic Functions = 0",0.01,5.,0.001,50.);
 		pP->SetReadOnly(true);
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.1;
-	pP= new		P(&B_PsiEntry,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_PsiEntry,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bAir Entry",initv,"cm","Hydraulic Functions = 0",0.01,1000.,0.1,100.);
 		pP->SetReadOnly(true);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=45.;
-	pP= new		P(&B_Saturation,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_Saturation,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bSaturation",initv,"vol %","Kalle 0",1.,99.,4.,90.);
 		pP->SetReadOnly(true);
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=4.;
-	pP= new		P(&B_Wilting,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_Wilting,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bWilting Point", initv,"vol %","Kalle 0",0.,50.,0.1,30.);
 		pP->SetReadOnly(true);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.;
-	pP= new		P(&B_ResWater,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_ResWater,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bResidual Water",initv,"vol %","Hydraulic Functions <2",0.0,50.,0.1,50.,0,0,405);
 		pP->SetReadOnly(true);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=4.;
-	pP= new		P(&B_MacroPore,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_MacroPore,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL, "bMacro Pore", initv,"vol %","Hydraulic Functions = 0",0.1,10.,1.,6.);
 		pP->SetReadOnly(true);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=15;
-	pP= new		P(&B_UpperBPsi,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_UpperBPsi,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bUpper Boundary",initv,"m","Hydraulic Functions <2",50.,15000.,500.,10000.);
 		pP->SetReadOnly(true);
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=15.;
-	pP= new		P(&B_UpperBTheta,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_UpperBTheta,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"Upper Boundary (Theta)",initv,"cm","Hydraulic Functions < 2",0.5,100.,1.,50.);
 		pP->SetReadOnly(true);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
-	pP= new		P(&B_ScalePsi,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_ScalePsi,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bScaling pF",initv,"-","Hydraulic Functions = 0",-2.,2.,-1.,1.);
 		pP->SetReadOnly(true);
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=1.;
-	pP= new		P(&B_SatMatCond,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_SatMatCond,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bMatrix Conductivity",initv,"-","Hydraulic Functions < 2",1.E-7,1.E4, 1.E-2, 1.E2);
 		mTab_HC_Model.push_back(pP); 	
 		pP->SetReadOnly(true);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=10.;
-	pP= new		P(&B_SatTotCond,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_SatTotCond,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"bTotal Conductivity",initv,"-","Hydraulic Functions < 2",1.E-7,1.E6, 1.E-2, 1.E4);
 		pP->SetReadOnly(true);
 	 	mTab_HC_Model.push_back(pP);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=1.0;
-	pP= new		P(&B_NTortuosity,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_NTortuosity,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"b_n Tortuosity",initv,"-","Conductivity Function = 0",-2., 4., -1., 2.);
 		pP->SetReadOnly(true);
 		mTab_HC_Model.push_back(pP);
  	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=3.;
-	pP= new		P(&B_NSR,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_NSR,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"b_n Power (SatRel)",initv,"-","Conductivity Function = 1",0., 15., 0.5, 6.);
 		pP->SetReadOnly(true); mTab_HC_Model.push_back(pP);
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=3.0;
-	pP= new		P(&B_NSE,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_NSE,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pP,pNL,"b_n Power (SatEffective)",initv,"-","Conductivity Function = 2",0., 15., 0.5, 6.);
 		pP->SetReadOnly(true); mTab_HC_Model.push_back(pP);
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.5;
-	pP= new		P(&B_Galpha,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_Galpha,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 	    pP->SetReadOnly(true); Define(pP,pNL, "bAlpha",initv,"1/cm","Hydraulic Functions = 1", 0.01, 10.,.01,10.,0,0,405);
 	
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.5;
-	pP= new		P(&B_GN   ,pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_GN   ,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 	    pP->SetReadOnly(true); Define(pP  ,pNL, "b_n-value",initv,"-","Hydraulic Functions = 1", 0.01, 10.,0.01, 10., 0,0,405);
 
 	 	for(auto i=initv.begin(); i!=initv.end();++i) *i=1.5;
-	pP= new		P(&B_GM	, pNL, SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pP= new		P(&B_GM	, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 	pP->SetReadOnly(true); Define(pP,pNL,"b_m-value",initv,"-","Hydraulic Functions = 1", 0.1, 10.,.1,10.,0,0,405);
 
 	Tab *pTab;
 
-	pTab= new Tab(&mTab_BC_Measured , MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pTab= new Tab(&mTab_BC_Measured , datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 
 	Define(pTab,  "Brooks-Corey, water retention, measured horizons",9);
 
 //!	CALL Tab("Hidden", "measured horizons",TINDEXCHECK, NolayerM, &
 //!			"ClayContent|SandContent")
 
-	pTab= new Tab(&mTab_BC_Model , SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pTab= new Tab(&mTab_BC_Model , datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pTab,  "Brooks-Corey, water retention, model layers",9);
 	
-	pTab= new Tab(&mTab_Pedo , MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);	
+	pTab= new Tab(&mTab_Pedo , datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);	
 		Define(pTab,  "Pedo Functions Inputs, measured horizons",4);
 
 	pP=(P*)m_pModelMap->GetP_Pointer("Macro Pore"); if(pP!=nullptr) mTab_HC_Measured.push_back(pP);
 
-	pTab= new Tab(&mTab_HC_Measured , MPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pTab= new Tab(&mTab_HC_Measured , datatype::MPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
  		Define(pTab,  "Hydraulic conductivity, measured horizons",6);
 	pP=(P*)m_pModelMap->GetP_Pointer("bMacro Pore"); if(pP!=nullptr) mTab_HC_Model.push_back(pP);
-	pTab= new Tab(&mTab_HC_Model , SIMPROFILE, WATER, TRANSPORT, NOBPROC, SIMPLE);
+	pTab= new Tab(&mTab_HC_Model , datatype::SIMPROFILE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pTab,  "Hydraulic conductivity, model boundaries",5);
 	
-	pTab= new Tab(&mTab_Gen_Measured , MPROFILE, WATER, STORAGE, NOBPROC, SIMPLE);
+	pTab= new Tab(&mTab_Gen_Measured , datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE);
 		Define(pTab, "Genuchten, water retention, measured horizons",8);
 
-	pTab= new Tab(&mTab_Gen_Model , SIMPROFILE, WATER, STORAGE, NOBPROC, SIMPLE); 	
+	pTab= new Tab(&mTab_Gen_Model , datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::SIMPLE); 	
 		Define(pTab, "Genuchten, water retention, model layers",6);
 
 	return FunctionDef();
@@ -422,7 +422,7 @@ bool Hydraulic_Functions::FunctionDef() {
 
 
 	funcname = "ReCalc Soil Function";
-	pFunc= new Func(MPROFILE,WATER, WATERUPTAKE,NOBPROC, NORMAL);
+	pFunc= new Func( datatype::MPROFILE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 
 	functorprop.FuncName = MyFunc::HYDRAULIC_RECALC;
@@ -437,7 +437,7 @@ bool Hydraulic_Functions::FunctionDef() {
 	functorprop.FuncName = MyFunc::HYDRAULIC_CONDTEMPFACTOR;
 	functorprop.Arg = MyArgType::D1;
 	funcname = "Temperature Dependence Hydraulic Conductivity Function";
-	pFunc= new Func(ALL_SOIL_LAYERS,WATER, WATERUPTAKE,NOBPROC, NORMAL);
+	pFunc= new Func( datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, this, funcname, plotpar); 
 
 	auto vv=f_CondTempFactor(12.);
@@ -457,7 +457,7 @@ bool Hydraulic_Functions::FunctionDef() {
 
 
 		funcname = "Measured Water Retention Curve";
-		pFunc = new Func(MPROFILE, WATER, STORAGE, NOBPROC, NORMAL);
+		pFunc = new Func( datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		p_vec.clear();
 		p_vec.push_back(m_pModelMap->GetPPointer("Air Entry"));
 		p_vec.push_back(m_pModelMap->GetPPointer("Lambda"));
@@ -468,7 +468,7 @@ bool Hydraulic_Functions::FunctionDef() {
 		p_vec.push_back(m_pModelMap->GetPPointer("Upper Boundary"));
 		Define(pFunc, functorprop,funcname,p_vec, plotpar);
 		
-		pFunc= new Func(MPROFILE,WATER, STORAGE,NOBPROC, NORMAL);
+		pFunc= new Func( datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		functorprop.FuncName = MyFunc::PSI_THETA;
 		funcname = "Water Retention Curve";
 		p_vec.clear();
@@ -485,7 +485,7 @@ bool Hydraulic_Functions::FunctionDef() {
 		Define(pFunc, functorprop, funcname,p_vec, plotpar);
 
 		p_vec.clear();
-		pFunc = new Func(MPROFILE, WATER, STORAGE, NOBPROC, NORMAL);
+		pFunc = new Func( datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		functorprop.FuncName = MyFunc::HYDRAULIC_COND_THETA;
 		functorprop.Arg = MyArgType::T_D2;
 		plotpar.Y_Label = "Hydraulic Conductivity (mm/day)";
@@ -497,7 +497,7 @@ bool Hydraulic_Functions::FunctionDef() {
 		p_vec.push_back(m_pModelMap->GetPPointer("b_n Tortuosity"));
 		Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
-		pFunc= new Func(MPROFILE,WATER, STORAGE,NOBPROC, NORMAL);
+		pFunc= new Func( datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		functorprop.FuncName = MyFunc::HYDRAULIC_COND_PSI;
 		funcname = "Unsaturated Conductivity Psi Function";
 		plotpar.X_Max = 400;
@@ -507,7 +507,7 @@ bool Hydraulic_Functions::FunctionDef() {
 
 
 		p_vec.clear();
-		pFunc= new Func(MPROFILE,WATER, STORAGE,NOBPROC, NORMAL);
+		pFunc= new Func( datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		functorprop.FuncName = MyFunc::HYDRAULIC_COND_THETA_MEASURED;
 		funcname = "Measured Unsaturated Conductivity Theta Function";
 		p_vec.push_back(m_pModelMap->GetPPointer("Matrix Conductivity"));
@@ -519,7 +519,7 @@ bool Hydraulic_Functions::FunctionDef() {
 		Define(pFunc, functorprop, funcname,p_vec,  plotpar);
 		
 
-		pFunc= new Func(MPROFILE,WATER, STORAGE,NOBPROC, NORMAL);
+		pFunc= new Func( datatype::MPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		functorprop.FuncName = MyFunc::HYDRAULIC_COND_PSI_MEASURED;
 		funcname = "Measured Unsaturated Conductivity Psi Function";
 		plotpar.X_Max = 400;

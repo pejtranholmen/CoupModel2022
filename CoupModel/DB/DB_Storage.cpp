@@ -1,7 +1,7 @@
 #include "../std.h"
 #include "DB_Storage.h"
 #include "../NewBase/CommonModelInfo.h"
-
+using namespace std;
 
 DB_Storage::DB_Storage(void)
 {

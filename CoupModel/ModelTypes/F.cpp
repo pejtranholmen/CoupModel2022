@@ -10,7 +10,7 @@ F::~F()
 {
 }
 F::F(CPG *ptr, enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
-	:SimB(PGFILE, data, elem, fproc, bproc, ulev)
+	:SimB(simtype::PGFILE, data, elem, fproc, bproc, ulev)
 {
 	SetPointer(ptr);
 	m_pPGRes=nullptr;

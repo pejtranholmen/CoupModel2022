@@ -7,7 +7,7 @@ Ts::Ts(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	:OutSingle(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target; 
-	SetSimType(FLOW_SINGLE);
+	SetSimType(simtype::FLOW_SINGLE);
 	;
 }
 void Ts::Def(size_t ModuleNo, std::string name, double init, std::string unit, std::string conditions)

@@ -12,8 +12,8 @@ Ps::Ps(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	:Par(data, elem, fproc, bproc, ulev)
 {
 	_ptarget=target;
-	SetSimType(PAR_SINGLE);
-	if(fproc==LOWERBOUNDARY)
+	SetSimType(simtype::PAR_SINGLE);
+	if(fproc==fysprocess::LOWERBOUNDARY)
 		_Process="Lower Boundary";
 	else
 		_Process="";

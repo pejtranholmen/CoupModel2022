@@ -31,127 +31,127 @@ bool Technical_Functions::Def()
 		SoilOrgModel *pSoilNC=(SoilOrgModel*)m_pModelInfo->GetModelPtr("Soil Org Model");
 		p_NC_Soil=&pSoilNC->m_NC_SoilOrg;
 		Sw* pSw;
-		pSw= new Sw(&Develop_Option, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&Develop_Option, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,  "Develop",0,"No|Yes","Develop <100");
-		pSw= new Sw(&EnableInputPGSalt, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&EnableInputPGSalt, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,  "EnableInputPGSalt",0,"No|Yes","Develop <100");
-	   	pSw= new Sw(&EnableInputN, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&EnableInputN, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,  "EnableInputN",0,"off|on","Develop < 100");
 		
 	
-		pSw= new Sw(&AVERAGEX, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&AVERAGEX, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Average_State",1,"off|on");
-		pSw= new Sw(&AVERAGET, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&AVERAGET, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Average_Flow",1,"off|on");
-		pSw= new Sw(&AVERAGEG, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&AVERAGEG, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Average_Auxiliary",1,"off|on");
-		pSw= new Sw(&AVERAGED, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&AVERAGED, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Average_Driving",1,"off|on");
-	   	pSw= new Sw(&StartWithPrevious, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&StartWithPrevious, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "StartWithPrevious",0,"off|on");
 	//!   	Define(pSw,   DeleteOutFile,"DeleteOutputBinFile",0,"off|on")	   	
-	   	pSw= new Sw(&CreateFileResiduals, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&CreateFileResiduals, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "TimeSerie Errors File",1,"off|on", "ValidationMode>0");
 	//!   
-		pSw= new Sw(&OUTFORN, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&OUTFORN, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "OUTFORN",0,"off|on","Develop <100");
 
-		pSw= new Sw(&INSTATE, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&INSTATE, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "INSTATE",0,"off|on","Develop <100");
-		pSw= new Sw(&OUTSTATE, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&OUTSTATE, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "OUTSTATE",0,"off|on","Develop <100");
-		pSw= new Sw(&DRIVPG, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&DRIVPG, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "TypeOfDrivingFile",0,"No standard climate file|Standard driving file|Standard+Additional file", "Develop < 100");
-		pSw= new Sw(&DRIVNPG, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&DRIVNPG, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "TypeOfNDrivingFile",0,"No standard N input file|Standard driving file", "Develop <100");
-	   	pSw= new Sw(&LISALLV, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&LISALLV, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "LISALLV",1,"off|on","Develop <100");
-	   	pSw= new Sw(&CHAPAR, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&CHAPAR, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "CHAPAR",0,"off|on","Develop < 100");
-	   	pSw= new Sw(&ADDSIM, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&ADDSIM, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "ADDSIM",0,"off|on","Develop < 100");
 
-	   	pSw= new Sw(&EnableSaltSource, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&EnableSaltSource, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "EnableSaltSource",0,"off|on","Develop < 100");
-        pSw= new Sw(&DrainFileUse, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&DrainFileUse, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,  "DrainFileUse",0,"off/on","Develop <0");
 	   	
-	   	pSw= new Sw(&ValidationMode, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	   	pSw= new Sw(&ValidationMode, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,"ValidationMode",0,"off|one|two|three|four|five|six|seven|eight|nine|ten|eleven|tvelve|firteen|fourteen|fithteen|sixteen");
         
 		//! Deleted by pej nov 05 if(StartStateValues) StartWithPrevious=1
-		pSw= new Sw(&PressureHeadSign, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&PressureHeadSign, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "PressureHeadSign",0,"Negative|Positive","Develop < 100");
-		pSw= new Sw(&TimeResolution, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw= new Sw(&TimeResolution, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "TimeResolution",0,"Within day (timestep)|Daily mean values|Hourly|10 minutes");
-	    pSw= new Sw(&IndexForValid, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	    pSw= new Sw(&IndexForValid, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "IndexForValidation",0,"From Curson in Menu|From serie","Develop <100");
 
-		pSw = new Sw(&DynamicValidFileIndex, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&DynamicValidFileIndex, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "Dynamic Validation File", 0, "Off|On", "Develop <100");
 
 
-	    pSw= new Sw(&LateralInputFile, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	    pSw= new Sw(&LateralInputFile, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Lateral Input File",0,"By given name|From previous RunNo","LateralInput =1");
-        pSw= new Sw(&NoSingleRunSimFile, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&NoSingleRunSimFile, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "No SingleRunSimFile",1,"off|on");
         
-        pSw= new Sw(&TimeSerieOutputLevels, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&TimeSerieOutputLevels, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Time Serie Outputs",1,"Allways PG time serie file|No PG File for MultiRun|No PG File and no statistics");
-        pSw= new Sw(&ValidationOutputLevels, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&ValidationOutputLevels, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Validation Outputs",1,"Allway PG file|only statistics", "ValidationMode>0");
-        pSw= new Sw(&BayesianStepFunction, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&BayesianStepFunction, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Marcov Chain Step",1,"Constant|Exponential decrease|Linear decrease|Cycling","ValidationMode > 0");
-        pSw= new Sw(&BayesianLikelihoodFunction, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&BayesianLikelihoodFunction, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Likelihood Function",0,"Gaussian|Sivias","ValidationMode > 0");
-        pSw= new Sw(&BoxCoxTransformed, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&BoxCoxTransformed, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Box-Cox Tranformation",0,"No|Yes","ValidationMode > 0");
     
-        pSw= new Sw(&HeatFluxUnit, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+        pSw= new Sw(&HeatFluxUnit, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,   "Heat Flux Unit",0,"J/day|Watt");
 
-		pSw = new Sw(&DataBaseCSV, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&DataBaseCSV, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "CSV File for Smart Change of Parameter Values", 0, "No|MASCUR project", "CalibrationMode>0");
   
-		pSw = new Sw(&UserDefinedCalibrationMode, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&UserDefinedCalibrationMode, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "CalibrationMode", 0, "off|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen");
 
-		pSw = new Sw(&Mascur_Soil_Data, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&Mascur_Soil_Data, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "Mascur soil info file", 0, "No|MASCUR project", "IGBP LandInfo>0");
 		
-		pSw = new Sw(&SimulationPeriodFromMetFile, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&SimulationPeriodFromMetFile, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "Apply Simulation Period from Sim File", 0, "No|Yes", "TypeOfDrivingFile >= 1");
 
-		pSw = new Sw(&Nelder_Mead_Objective, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&Nelder_Mead_Objective, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "Nelder-Mead Objective", 0, "SSE|AIC|BIC", "ValidationMode > 0");
 
-		pSw = new Sw(&PreDefinedEnsembles, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&PreDefinedEnsembles, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "PreDefinedEnsembles", 0, "off|on","ValidationMode > 0");
 
-		pSw = new Sw(&UseFilterParameters_Validation, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pSw = new Sw(&UseFilterParameters_Validation, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw, "UseFilterParameters", 0, "off|on","ValidationMode > 0");
 
           	    
   //!	CALL F(Group_01, FileDriv7a,"Lateral Water Inflow","GWInflow","LateralInputFile=0|WaterEq > 0|LaterInput=1")
   Ps *pPs;
-  pPs= new Ps(&Val_Index, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+  pPs= new Ps(&Val_Index, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		
 	Define(pPs,  		"Index in val file",1.,"#","IndexForValidation>0",1.,100.);
-	  pPs= new Ps(&Val_IndexMax, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	  pPs= new Ps(&Val_IndexMax, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,  		"Size of internal loop",1.,"#","IndexForValidation>0",1.,100.);
-	  pPs= new Ps(&ValFile_Index, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	  pPs= new Ps(&ValFile_Index, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,  	"Index for selection of File (first val file)",1.,"#","Dynamic Validation File=1",1.,100.);
-	pPs = new Ps(&Val_IndexRepeat, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Val_IndexRepeat, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "No of internal index loop", 1., "#", "IndexForValidation>0", 1., 100.);
-	  pPs= new Ps(&FRandomSeed, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	  pPs= new Ps(&FRandomSeed, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,  	"Random Seed",1.,"#","Develop<100",1.,100000.);
-	  pPs= new Ps(&BayesianStepChangeSens, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	  pPs= new Ps(&BayesianStepChangeSens, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,   "BayesianChangeCoef", 0.003,"-","Marcov Chain Step=1",0., 0.1);
-	  pPs= new Ps(&BayesianStepMinimumScaling, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	  pPs= new Ps(&BayesianStepMinimumScaling, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,   "BayesianMinScaling", 0.001,"-","Marcov Chain Step>0",0.1E-10, 1.);
-	  pPs= new Ps(&MCStepChangePeriod, SINGLE,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	  pPs= new Ps(&MCStepChangePeriod, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,   "MC StepChangePeriod", 1000.,"-","Marcov Chain Step>1",100., 1.E6);
-		pPs = new Ps(&AggregateCalibNumber, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pPs = new Ps(&AggregateCalibNumber, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Aggregate Calib Number", 1., "-", "Develop<100", 1., 100.);
     
 	Tab *pTab;
@@ -166,36 +166,36 @@ bool Technical_Functions::Def()
 	initv.assign(NumScaling,0.);
 //	call PnE(,10,1,100,2,100)	
 	P* pP;
-	 pP= new P(&ObservedScaling ,pScaling, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	 pP= new P(&ObservedScaling ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP,  pScaling, "Scaling Observed", initv,"-","ValidationMode>1",-0.5, 0.5);
 		ScalingObsTab.push_back(pP);
-	pP= new P(&ObservedScalingIndex ,pScaling, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP= new P(&ObservedScalingIndex ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP,  pScaling,  "Scaling Index", initv,"-","ValidationMode>1",0., 1000.);
 		ScalingObsTab.push_back(pP);
 
 	
-	pP= new P(&BoxCox_p1, pScaling, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP= new P(&BoxCox_p1, pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumScaling,0.);
 		Define(pP,  pScaling,   "Box Cox power", initv,"-","Box-Cox Tranformation>1",0., 1.);
 		ScalingObsTab.push_back(pP);
-	pP= new P(&BoxCox_p2 ,pScaling, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP= new P(&BoxCox_p2 ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP,  pScaling, "Box Cox offset", initv,"-","Box-Cox Tranformation>1",0., 1.E10);
 		initv.assign(NumScaling,.10);
 		ScalingObsTab.push_back(pP);
 
-	pTab= new Tab(&ScalingObsTab, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pTab= new Tab(&ScalingObsTab, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTab,"Scaling of Observed Variables","Scaling Observed|Scaling Index|Box Cox power|Box Cox offset","");
 
 		initv.assign(NumScaling, 0.);
-	pP = new P(&FilterVarIndex, pScaling, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&FilterVarIndex, pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP, pScaling, "Filter Var Index", initv, "-", "ValidationMode>0", -0.5, 0.5);
 		FilterIndexTab.push_back(pP);
 		initv.assign(NumScaling, 1.);
-		pP = new P(&FilterVarValue, pScaling, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+		pP = new P(&FilterVarValue, pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP, pScaling, "Filter Var Value", initv, "-", "ValidationMode>0", -0.5, 0.5);
 		FilterIndexTab.push_back(pP);
 
-	pTab = new Tab(&FilterIndexTab, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pTab = new Tab(&FilterIndexTab, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTab, "Filter Index and Values for Validation", "Scaling Observed|Scaling Index|Box Cox power|Box Cox offset", "UseFilterParameters>0");
 
 
@@ -203,49 +203,49 @@ bool Technical_Functions::Def()
 		pCriteria = new NE(&NumCriteria, 1, 0, 100, 2, 100);
 		Define(pCriteria, "Number of Criteria");
 
-	pP = new P(&Criterion.Ensemble, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&Criterion.Ensemble, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 1.);
 		Define(pP, pCriteria, "Ensemble", initv, "-", "PreDefinedEnsembles>0", 0., 16., 0., 16.,0,2024,2024); CriteriaTab.push_back(pP);
 		initv.assign(NumCriteria, 0.);
 
-	pP = new P(&Criterion.Criterion, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&Criterion.Criterion, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP, pCriteria, "Transformation", initv, "-", "PreDefinedEnsembles>0", 0., 4., 0., 4., 0, 2024, 2024); CriteriaTab.push_back(pP);
-	pP = new P(&Criterion.Transformation, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&Criterion.Transformation, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "ZeroAdjustment", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6.,0, 2024, 2024); CriteriaTab.push_back(pP);
-	pP = new P(&Criterion.ZeroAdjustment, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&Criterion.ZeroAdjustment, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "Performance Indicator", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0.,6., 0,2024, 2024); CriteriaTab.push_back(pP);
-	pP = new P(&Criterion.ValVarIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&Criterion.ValVarIndex, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "Var Index", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0.,6.,0,2024, 2024); CriteriaTab.push_back(pP);
-	pP = new P(&Criterion.ThresholdType, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&Criterion.ThresholdType, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
 		Define(pP, pCriteria, "ThresholdType", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
 
-	pP = new P(&Criterion.Threshold, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&Criterion.Threshold, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 10., 100.,10.,100.,0,2024); CriteriaTab.push_back(pP);
 
-		pP = new P(&Criterion.MultiParIndex, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);	
+		pP = new P(&Criterion.MultiParIndex, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);	
 	Define(pP, pCriteria, "MR Dim1 Index", initv, "-", "PreDefinedEnsembles>0", 0., 100., 0., 10., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	
 	//Define(pP, pCriteria, "MultiRun Par Value", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
-	//	pP = new P(&Criterion.MultiParValue, pCriteria, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	//	pP = new P(&Criterion.MultiParValue, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	pTab = new Tab(&CriteriaTab, OBSERVED, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pTab = new Tab(&CriteriaTab, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTab, "Criteria for Ensembles", "", "");
 
 
 	size_t nss=pTab->GetNumOfRow();
-	pP= new P(&Abs_Error ,pScaling, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP= new P(&Abs_Error ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
       Define(pP,  pScaling,  "Abs Error", initv,"-","Develop<100",0., 100.);
 		initv.assign(NumScaling,.15);
 		ErrorTab.push_back(pP);
-	pP= new P(&Rel_Error ,pScaling, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP= new P(&Rel_Error ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP,  pScaling,   "Rel Error", initv,"-","Develop<100",0., 1.);
 		ErrorTab.push_back(pP);
 
-	pTab= new Tab(&ErrorTab, OBSERVED,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pTab= new Tab(&ErrorTab, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTab,"Errors for Calibration","Abs Error|Rel Error","");
 
 
@@ -256,107 +256,107 @@ bool Technical_Functions::Def()
 
 
 	initv.assign(NumberParGroups, 1);
-	pP = new P(&IndexParGroups,pIndexNum,  FILEDEFINEDPARAMETERS, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pP = new P(&IndexParGroups,pIndexNum, datatype::FILEDEFINEDPARAMETERS, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pP, pIndexNum, "Key Index", initv, "", "Develop<100", 0., 100000.,0.,10000.,7);
 		IndexMultiParGroups.push_back(pP);
 		
-	pTab = new Tab(&IndexMultiParGroups, FILEDEFINEDPARAMETERS, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pTab = new Tab(&IndexMultiParGroups, datatype::FILEDEFINEDPARAMETERS, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTab, "Index in User Defined Parameter Files", "Key Index","");
 
 
 	Gs* pGs;
 
-	pGs = new Gs(&Filter_Id1, TOTPROFILE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pGs = new Gs(&Filter_Id1, datatype::TOTPROFILE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "Filter_Id1", 0.0, UNIT_TYPES::NO_UNIT, "ValidationMode> 0");
-	pGs = new Gs(&Filter_Id2, TOTPROFILE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pGs = new Gs(&Filter_Id2, datatype::TOTPROFILE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "Filter_Id2", 0.0, UNIT_TYPES::NO_UNIT, "ValidationMode> 0");
-	pGs = new Gs(&Filter_Id3, TOTPROFILE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pGs = new Gs(&Filter_Id3, datatype::TOTPROFILE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "Filter_Id3", 0.0, UNIT_TYPES::NO_UNIT, "ValidationMode> 0");
 
 
 	F* pF;
-	pF = new F(&FileValidation[0], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[0], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
   	Define(pF,"ValidationFile_01","Valid1.bin","ValidationMode>0");
-	pF = new F(&FileValidation[1], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[1], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_02","Valid2.bin","ValidationMode>1");
-	pF = new F(&FileValidation[2], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[2], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_03","Valid3.bin","ValidationMode>2");
-	pF = new F(&FileValidation[3], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[3], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_04","Valid4.bin","ValidationMode>3");
-	pF = new F(&FileValidation[4], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[4], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_05","Valid5.bin","ValidationMode>4");
-	pF = new F(&FileValidation[5], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[5], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_06","Valid6.bin","ValidationMode>5");
-	pF = new F(&FileValidation[6], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[6], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_07","Valid7.bin","ValidationMode>6");
-	pF = new F(&FileValidation[7], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[7], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_08","Valid8.bin","ValidationMode>7");			
-	pF = new F(&FileValidation[8], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[8], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_09","Valid9.bin","ValidationMode>8");
-	pF = new F(&FileValidation[9], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[9], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_10","Valid10.bin","ValidationMode>9");
-	pF = new F(&FileValidation[10], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[10], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_11","Valid11.bin","ValidationMode>10");
-	pF = new F(&FileValidation[11], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[11], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_12","Valid12.bin","ValidationMode>11");
-	pF = new F(&FileValidation[12], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[12], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_13","Valid13.bin","ValidationMode>12");
-	pF = new F(&FileValidation[13], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[13], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_14","Valid14.bin","ValidationMode>13");
-	pF = new F(&FileValidation[14], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[14], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_15","Valid15.bin","ValidationMode>14");
-	pF = new F(&FileValidation[15], ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileValidation[15], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pF,"ValidationFile_16","Valid16.bin","ValidationMode>15");
 
-	pF = new F(&FileOutputVal[0], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[0], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_01", "ValidOutput_01.bin", "ValidationMode>0");
-	pF = new F(&FileOutputVal[1], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[1], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_02", "ValidOutput_02.bin", "ValidationMode>1");
-	pF = new F(&FileOutputVal[2], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[2], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_03", "ValidOutput_03.bin", "ValidationMode>2");
-	pF = new F(&FileOutputVal[3], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[3], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_04", "ValidOutput_04.bin", "ValidationMode>3");
-	pF = new F(&FileOutputVal[4], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[4], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_05", "ValidOutput_05.bin", "ValidationMode>4");
-	pF = new F(&FileOutputVal[5], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[5], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_06", "ValidOutput_06.bin", "ValidationMode>5");
-	pF = new F(&FileOutputVal[6], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[6], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_07", "ValidOutput_07.bin", "ValidationMode>6");
-	pF = new F(&FileOutputVal[7], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[7], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_08", "ValidOutput_08.bin", "ValidationMode>7");
-	pF = new F(&FileOutputVal[8], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[8], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_09", "ValidOutput_09.bin", "ValidationMode>8");
-	pF = new F(&FileOutputVal[9], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[9], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_10", "ValidOutput_10.bin", "ValidationMode>9");
-	pF = new F(&FileOutputVal[10], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[10], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_11", "ValidOutput_11.bin", "ValidationMode>10");
-	pF = new F(&FileOutputVal[11], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[11], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_12", "ValidOutput_12.bin", "ValidationMode>11");
-	pF = new F(&FileOutputVal[12], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[12], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_13", "ValidOutput_13.bin", "ValidationMode>12");
-	pF = new F(&FileOutputVal[13], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[13], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_14", "ValidOutput_14.bin", "ValidationMode>13");
-	pF = new F(&FileOutputVal[14], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[14], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_15", "ValidOutput_15.bin", "ValidationMode>14");
-	pF = new F(&FileOutputVal[15], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pF = new F(&FileOutputVal[15], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "ValidationOutputFile_16", "ValidOutput_16.bin", "ValidationMode>15");
     
-	pF = new F(&OutputFile, ATMBOUNDARY,  GENERAL, NOFPROC, NOBPROC, NORMAL);                            	
+	pF = new F(&OutputFile, datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);                            	
  	Define(pF, "Output File","COUP_XXXXX.bin");
 
 	FCSV *pCSV;
-	pCSV = new FCSV(&m_DataBaseCSV, OTHER, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pCSV = new FCSV(&m_DataBaseCSV, datatype::OTHER, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pCSV, "MASCUR File", "SOIL_WP1_Beckuma.csv", "Mascur soil info file>0", 2);
 
-	pCSV = new FCSV(&m_MultiParStream[0], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pCSV = new FCSV(&m_MultiParStream[0], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pCSV, "ParCalibrationFile1", "ParameterCalFile1.csv", "CalibrationMode>0",7);
-	pCSV = new FCSV(&m_MultiParStream[1], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pCSV = new FCSV(&m_MultiParStream[1], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pCSV, "ParCalibrationFile2", "ParameterCalFile2.csv", "CalibrationMode>1",7);
-	pCSV = new FCSV(&m_MultiParStream[2], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pCSV = new FCSV(&m_MultiParStream[2], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pCSV, "ParCalibrationFile3", "ParameterCalFile3.csv", "CalibrationMode>2", 7);
-	pCSV = new FCSV(&m_MultiParStream[3], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pCSV = new FCSV(&m_MultiParStream[3], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pCSV, "ParCalibrationFile4", "ParameterCalFile4.csv", "CalibrationMode>3");
-	pCSV = new FCSV(&m_MultiParStream[4], ATMBOUNDARY, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pCSV = new FCSV(&m_MultiParStream[4], datatype::ATMBOUNDARY, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pCSV, "ParCalibrationFile5", "ParameterCalFile5.csv", "CalibrationMode>4");
 
 

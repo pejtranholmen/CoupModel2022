@@ -313,7 +313,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				//QuickSetFont(2,5,&m_largeFont);
 				QuickSetText(2,5,"EndDate");
 				
-				pSw=static_cast<Sw*>(m_pSimDoc->GetPtr(simtype::SWITCH,"TimeResolution"));
+				pSw=static_cast<Sw*>(m_pSimDoc->GetPtr(simtype::SWITCH, string("TimeResolution")));
 				GetCell(1,5,&cell);
 				//cell.SetFont(&m_largeFont);
 				cell.SetParam(102);
@@ -441,9 +441,9 @@ bool MakeSimSheets::Make_RunInfoSheet()
 
 
 					
-					auto pSwNit=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH,"Nitrogen and Carbon");
+					auto pSwNit=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH, string("Nitrogen and Carbon"));
 					if(pSwNit->GetIntValue()>0) {
-						auto pSwNitRes=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH,"NitrogenCarbonStep");
+						auto pSwNitRes=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH, string("NitrogenCarbonStep"));
 						UnJoinCells(2,8);
 						UnJoinCells(3,8);
 						QuickSetText(2,8,"Nitrogen Carbon TimeStep");
@@ -465,7 +465,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						SetCell(3,8, &cell);
 						if(ivalue==2) {
 							// Independent value of Nitrogen Balance time step
-							auto pParNitStep=(Ps*)m_pSimDoc->GetPtr(simtype::PAR_SINGLE,"NC Iteration");
+							auto pParNitStep=(Ps*)m_pSimDoc->GetPtr(simtype::PAR_SINGLE, string("NC Iteration"));
 							auto numstep=pParNitStep->GetValue();
 							QuickSetText(2,11,"NC Iteration");
 							GetCell(3,11,&cell);
@@ -3104,8 +3104,8 @@ bool MakeSimSheets::Make_ValidationSheet()
 
 		SimB *pSw;
 		P *pObserved=nullptr;
-		pSw=m_pSimDoc->GetPtr(simtype::TABLE,"Scaling of Observed Variables");
-		pObserved=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"Scaling Observed");
+		pSw=m_pSimDoc->GetPtr(simtype::TABLE, string("Scaling of Observed Variables"));
+		pObserved=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE, string("Scaling Observed"));
 		if(pSw!=nullptr&&NumLines>0) {
 				int oldnelements=((Tab*)pSw)->GetNumOfRow();
 				if (NumLines!=oldnelements)  {
@@ -4175,7 +4175,7 @@ bool MakeSimSheets::Make_ChartListSheet()
 						str.TrimRight();
 						
 						QuickSetText(nindex+j,-3,str);
-						str=pPG->GetVarUnit(pgindex).c_str();
+						str=string(pPG->GetVarUnit(pgindex)).c_str();
 						str.TrimRight();
 						QuickSetText(nindex+j,-2,str);
 						
@@ -6354,8 +6354,8 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 	int ind;
 	SimB *pSw;
 	P *pObserved = nullptr;
-	pSw = m_pSimDoc->GetPtr(simtype::TABLE, "Scaling of Observed Variables");
-	pObserved=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,"Scaling Observed");
+	pSw = m_pSimDoc->GetPtr(simtype::TABLE, string("Scaling of Observed Variables"));
+	pObserved=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE, string("Scaling Observed"));
 
 	int numtsv;
 	if(NumLinesSV>0)

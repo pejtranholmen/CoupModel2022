@@ -143,7 +143,7 @@ bool Simulator::Start(bool MultiFlag, bool First)
 	m_Outputs=m_pSim->GetAllSelectedOutputs();
 	m_pModelInfo->m_NumOutputs=m_Outputs.size();
 	m_ShiftSign=m_pSim->GetPressureHeadOutputIndex(m_Outputs);
-	m_ShiftPointer=m_pSim->GetPtr(simtype::AUX,"PressureHead");
+	m_ShiftPointer=m_pSim->GetPtr(simtype::AUX, string("PressureHead"));
 
 
 
@@ -588,7 +588,7 @@ void Simulator::Stat_Reset()
 {
 	OutSingle *pSingle;
 	OutVector *pVector;
-	SimB *pHead=m_pSim->GetPtr(simtype::AUX,"PressureHead");
+	SimB *pHead=m_pSim->GetPtr(simtype::AUX, string("PressureHead"));
 	double final;
 	double min;
 
@@ -679,7 +679,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 			m_pSim->m_PG_OutPutFile.SetVarName(i+1,m_Outputs[i].pBase->GetName());
 			m_pSim->m_PG_OutPutFile.SetVarUnit(i+1,m_Outputs[i].pBase->GetUnit());
 			m_pSim->m_PG_OutPutFile.SetVarId(i+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo) );
-			if(m_Outputs[i].pBase->GetDataType()==SIMPROFILE&&m_Outputs[i].pBase->Is_Vector()) {
+			if(m_Outputs[i].pBase->GetDataType()==datatype::SIMPROFILE&&m_Outputs[i].pBase->Is_Vector()) {
 				size_t index=m_Outputs[i].TabIndex;
 				if(index<m_SoilModel.m_SoilFrost.DepthMidpLayer.size()) {
 					string str=FUtil::STD_ItoAscii(int(100*m_SoilModel.m_SoilFrost.DepthMidpLayer[index]+1.E-4));
@@ -699,7 +699,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 
 
 			}
-			else if(m_Outputs[i].pBase->GetDataType()==PLANT&&m_Outputs[i].pBase->Is_Vector()) {
+			else if(m_Outputs[i].pBase->GetDataType()== datatype::PLANT&&m_Outputs[i].pBase->Is_Vector()) {
 				size_t index=m_Outputs[i].TabIndex;
 				string str=FUtil::STD_ItoAscii(index+1);
 				str="Plant "+str+" "+FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo);
@@ -730,7 +730,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 			m_pSim->m_PG_WShed_Out.SetVarName(i+1,m_WshedOutputs[i].pBase->GetName());
 			m_pSim->m_PG_WShed_Out.SetVarUnit(i+1,m_WshedOutputs[i].pBase->GetUnit());
 			m_pSim->m_PG_WShed_Out.SetVarId(i+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo) );
-			if(m_WshedOutputs[i].pBase->GetDataType()==SIMPROFILE&&m_WshedOutputs[i].pBase->Is_Vector()) {
+			if(m_WshedOutputs[i].pBase->GetDataType()==datatype::SIMPROFILE&&m_WshedOutputs[i].pBase->Is_Vector()) {
 				size_t index=m_Outputs[i].TabIndex;
 				if(index<m_SoilModel.m_SoilFrost.DepthMidpLayer.size()) {
 					string str=FUtil::STD_ItoAscii(int(100*m_SoilModel.m_SoilFrost.DepthMidpLayer[index] + 1.E-4));

@@ -598,7 +598,7 @@ void NewPGVariables::OnBnClickedButtonadd()
 				m_pPG_Created->SetVarMin(i+1, pPGN->GetVarMin(i+1));
 				m_pPG_Created->SetVarMax(i+1, pPGN->GetVarMax(i+1));
 				m_pPG_Created->SetVarName(i+1,pPGN->GetVarName(i+1));
-				m_pPG_Created->SetVarUnit(i+1,pPGN->GetVarUnit(i+1));
+				m_pPG_Created->SetVarUnit(i+1,string(pPGN->GetVarUnit(i+1)));
 				m_pPG_Created->SetVarId(i+1,pPGN->GetVarId(i+1));
 			}
 		}

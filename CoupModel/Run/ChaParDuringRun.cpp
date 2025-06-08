@@ -172,7 +172,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 // List of Dates
 	NumSelected = 0;
 	switch (m_Type) {
-		case PAR_SINGLE:
+		case simtype::PAR_SINGLE:
 	 		Text="ChangeParameterValues : ";
 			Text+=m_Par.pBase->GetName().c_str();
 			Text+=+" (";
@@ -180,7 +180,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 			Text+=")";
 			NumSelected=m_pPs->GetNumChaDates();
 			break;
-		case PAR_TABLE:
+		case simtype::PAR_TABLE:
 	 		Text="ChangeParameterValues : ";
 			Text+=m_Par.pBase->GetName().c_str();
 			Text+=+" (";
@@ -189,7 +189,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 			Text+=_T(", index=")+MFC_Util::ItoAscii(m_Par.TabIndex+1);
 			NumSelected=m_pP->GetNumChaDates(m_Par.TabIndex);
 			break;
-		case DB:
+		case simtype::DB:
 	 		Text="ChangeParameterValues : ";
 			Text+=m_pDB->GetName().c_str();
 			NumSelected=m_pDB->GetNumChaDates();
@@ -201,7 +201,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 	int count=0;
 	for(int i=0;i<NumSelected;i++) {
 		long num;
-		if(m_Type==DB)
+		if(m_Type== simtype::DB)
 			num=m_pDB->GetChaDate(i);
 		else if(m_Type==simtype::PAR_SINGLE) 
 			num=m_pPs->GetChaDate(i);
@@ -218,7 +218,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 		}
 		else Text="    ";
 		Text+="  - ";
-		if(m_Type==DB) {
+		if(m_Type== simtype::DB) {
 			Text+=m_pDB->GetChaParValue(i).c_str();
 		}
 		else if(m_Type==simtype::PAR_SINGLE)
@@ -228,7 +228,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 		}
 		pList->AddString(Text);
 	}
-	if(m_Type==DB) {
+	if(m_Type== simtype::DB) {
 		GetDlgItem(IDC_BUTTON_SELECT)->ModifyStyle(WS_DISABLED,0);
 		if(m_strNewValue.GetLength()<=0)
 			GetDlgItem(IDC_BUTTON_ADD)->ModifyStyle(0,WS_DISABLED);
@@ -250,7 +250,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 
 void CChaParDuringRun::OnOK() 
 {
-	if(m_Type==DB) {
+	if(m_Type== simtype::DB) {
 		if(m_pDB->GetNumChaDates()>0) 
 			m_pDoc->Set_P_CH(m_pDB, -1);
 		else

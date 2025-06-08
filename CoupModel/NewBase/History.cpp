@@ -32,7 +32,7 @@ History::History() {
 }
 bool History::History_Add(SimB *pBase,int Lindex, time_t t, float v, std::string User) {
 	int itype;
-	if (pBase->GetType() == PAR_TABLE)
+	if (pBase->GetType() == simtype::PAR_TABLE)
 		itype = int(HIST_INFO::PARTABLE_INFO);
 	else
 		itype = int(HIST_INFO::PARSINGLE_INFO);
@@ -47,13 +47,13 @@ bool History::History_Add(SimB *pBase,int Lindex, time_t t, std::string str, std
 	int itype=0;
 
 	
-	if (pBase->GetType() == PAR_TABLE)
+	if (pBase->GetType() == simtype::PAR_TABLE)
 		itype = int(HIST_INFO::PARTABLE_INFO);
-	else if(pBase->GetType()== SWITCH)
+	else if(pBase->GetType()== simtype::SWITCH)
 		itype = int(HIST_INFO::SWITCH_INFO);
-	else if (pBase->GetType()== DB) 
+	else if (pBase->GetType()== simtype::DB)
 		itype = int(HIST_INFO::DATA_BASE_INFO);
-	else if (pBase->GetType() == PGFILE)
+	else if (pBase->GetType() == simtype::PGFILE)
 		itype = int(HIST_INFO::MODELFILE_INFO);
 
 	if (m_ChildDocument) pBase->SetChildChange(true);

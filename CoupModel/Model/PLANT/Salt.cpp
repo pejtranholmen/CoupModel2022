@@ -408,274 +408,274 @@ bool Salt::Def()
 
 
 	Sw* pSw;
-	pSw = new Sw(&RoadSaltApplication, ROADSURFACE, SALT, STORAGE, NOBPROC, NORMAL);
+	pSw = new Sw(&RoadSaltApplication, datatype::ROADSURFACE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "RoadSaltApplication", 0, "Parameter Driven|On Road- PG File", "SaltRoadStorage>0", 116);
-	pSw = new Sw(&SaltRoadStorage, ROADSURFACE, SALT, STORAGE, NOBPROC, NORMAL);
+	pSw = new Sw(&SaltRoadStorage, datatype::ROADSURFACE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "SaltRoadStorage", 0, "off|on", "");
-	pSw = new Sw(&SaltSnowStorage, ROADSURFACE, SALT, STORAGE, NOBPROC, NORMAL);
+	pSw = new Sw(&SaltSnowStorage, datatype::ROADSURFACE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "SaltSnowStorage", 0, "off|on", "SnowPack >0");
 
-	pSw = new Sw(&SaltDeposition, ROADSURFACE, SALT, STORAGE, NOBPROC, NORMAL);
+	pSw = new Sw(&SaltDeposition, datatype::ROADSURFACE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "SaltDeposition", 0, "Parameter Driven|From Road- PG File|From PG File(par)", "SaltRoadStorage=0", 116);//	 !fixa common true Salt road pg file
-	pSw = new Sw(&BlomquistEquation, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pSw = new Sw(&BlomquistEquation, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Blomquist Equation", 0, "off|on", "|SaltRoadStorage=0");
-	pSw = new Sw(&TraceElementUptake, PLANT, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pSw = new Sw(&TraceElementUptake, datatype::PLANT, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "TraceElementUptake", 0, "off|on", "");
-	pSw = new Sw(&PassiveUptake, PLANT, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pSw = new Sw(&PassiveUptake, datatype::PLANT, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pSw, "PassiveUptake", 0, "off|on", "TraceElementUptake >0");
 	//! To be handled in Wateruptake module
-	pSw = new Sw(&ActiveUptake, PLANT, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pSw = new Sw(&ActiveUptake, datatype::PLANT, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "ActiveUptake", 0, "off|on", "TraceElementUptake >0");
 	//! To be handled in NC_Plant module
-	pSw = new Sw(&InitialSaltConc, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pSw = new Sw(&InitialSaltConc, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Initial Salt Concentration", 0, "Uniform conc|conc(z)", "");
-	pSw = new Sw(&Adsorption, SIMPROFILE, SALT, ADSORPTION, NOBPROC, NORMAL);
+	pSw = new Sw(&Adsorption, datatype::SIMPROFILE, elements::SALT, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Adsorption", 0, "off|on", "");
-	pSw = new Sw(&IrrigConcInput, SINGLE, SALT, INFILTRATION, NOBPROC, NORMAL);
+	pSw = new Sw(&IrrigConcInput, datatype::SINGLE, elements::SALT, fysprocess::INFILTRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "IrrigConcInput", 0, "Parameter|PG-file", "|Irrigation>0");
 
-	pSw = new Sw(&SaltGWSource, SINGLE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	pSw = new Sw(&SaltGWSource, datatype::SINGLE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Salt GW Source", 0, "off|Lateral Input File", "|GroundWaterFlow >=1", 114);
-	pSw = new Sw(&ResistivityOutput, SIMPROFILE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pSw = new Sw(&ResistivityOutput, datatype::SIMPROFILE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Resisitivy Output", 0, "off|on", "");
 
-	Xs *pXs = new Xs(&AccSaltInput, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	Xs *pXs = new Xs(&AccSaltInput, datatype::SINGLE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "AccSaltInput", 0.,UNIT_TYPES::mMASS_UNIT, "");
-	pXs = new Xs(&AccSaltOutput, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pXs = new Xs(&AccSaltOutput, datatype::SINGLE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "AccSaltOutput", 0.,UNIT_TYPES::mMASS_UNIT, "");
-	pXs = new Xs(&TE_Balance, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pXs = new Xs(&TE_Balance, datatype::SINGLE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "TE_Balance", 0.,UNIT_TYPES::mMASS_UNIT, "");
-	pXs = new Xs(&SaltOnRoad, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pXs = new Xs(&SaltOnRoad, datatype::ROADSURFACE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "SaltOnRoad", 0.,UNIT_TYPES::mMASS_UNIT, "SaltRoadStorage >0");
-	pXs = new Xs(&SaltCloseToRoad, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pXs = new Xs(&SaltCloseToRoad, datatype::ROADSURFACE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "SaltCloseToRoad", 0.,UNIT_TYPES::mMASS_UNIT, "SaltRoadStorage >0");
-	pXs = new Xs(&SaltInSnow, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pXs = new Xs(&SaltInSnow, datatype::ROADSURFACE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "Salt in SnowPack", 0.,UNIT_TYPES::mMASS_UNIT, "SaltSnowStorage >0");
 	X* pX;
 	NE *pNL; pNL = m_pModelMap->GetNEPointer("Number of Layers");
 	vector<double> initv;
 	initv.assign(p_Soil_WaterF->NL, 0.);
-	pX = new X(&SaltStorage, pNL, SIMPROFILE, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&SaltStorage, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNL, "SaltStorage", initv,UNIT_TYPES::mMASS_UNIT, "");
-	T* pT = new T(&SaltFlow, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	T* pT = new T(&SaltFlow, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "SaltFlow", initv,UNIT_TYPES::mMASSFLOW_UNIT, "");
-	pT = new T(&SaltDrainFlow, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pT = new T(&SaltDrainFlow, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "SaltDrainFlow", initv,UNIT_TYPES::mMASSFLOW_UNIT, "");
-	pT = new T(&SaltSourceFlow, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pT = new T(&SaltSourceFlow, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "SaltSourceFlow", initv,UNIT_TYPES::mMASSFLOW_UNIT, "EnableSaltSource =1");
 
-	Ts *pTs = new Ts(&TotSaltSourceFlow, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	Ts *pTs = new Ts(&TotSaltSourceFlow, datatype::SINGLE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "TotSaltSourceFlow", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "EnableSaltSource =1");
-	pT = new T(&SaltPlantUptake, pNL, SIMPROFILE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pT = new T(&SaltPlantUptake, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "SaltPlantUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "TraceElementUptake > 0");
 
-	pTs = new Ts(&SaltToSnow, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltToSnow, datatype::SINGLE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt To SnowPack", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltSnowStorage>0");
-	pTs = new Ts(&SaltFromSnow, SINGLE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltFromSnow, datatype::SINGLE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt From SnowPack", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltSnowStorage>0");
 
-	pTs = new Ts(&SaltInfiltration, SINGLE, SALT, INFILTRATION, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltInfiltration, datatype::SINGLE, elements::SALT, fysprocess::INFILTRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "SaltInfiltration", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 
-	pTs = new Ts(&SaltEmissions, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltEmissions, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "SaltEmissions", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 	//! New Emission variables created August 2005
-	pTs = new Ts(&SaltAirEmission, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltAirEmission, datatype::ROADSURFACE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt AirEmission", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
-	pTs = new Ts(&SaltPloughEmission, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltPloughEmission, datatype::ROADSURFACE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt PloughEmission", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
-	pTs = new Ts(&SaltRunOffEmission, ROADSURFACE, SALT, MASSBALANCE, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltRunOffEmission, datatype::ROADSURFACE, elements::SALT, fysprocess::MASSBALANCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt RunoffEmission", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 
 
 	//! New Outputs Resisvity
 	//call PnE(NRESPROBE,1,1,10,1,10)	
 
-	Ps *pPs = new Ps(&Archie_A, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	Ps *pPs = new Ps(&Archie_A, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Archie A", 1., "-", "Resisitivy Output>0", 0.5, 2.5);
-	pPs = new Ps(&Archie_M, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Archie_M, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Archie M", 1.5, "-", "Resisitivy Output>0", 1.3, 2.5);
-	pPs = new Ps(&Archie_N, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Archie_N, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Archie N", 2., "-", "Resisitivy Output>0", 1., 3.);
 
 
-	pPs = new Ps(&Res_Temp_N, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Res_Temp_N, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Resisitivy NormT", 25.,UNIT_TYPES::TEMP_UNIT, "Resisitivy Output>0", 15., 30.);
-	pPs = new Ps(&Res_Temp_Sens, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Res_Temp_Sens, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Resisitivy SensT", 0.019, "", "Resisitivy Output>0", 0.00, 0.020);
-	pPs = new Ps(&Res_IonCoef, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Res_IonCoef, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Resisitivy IonCoef", 35.5, "g/mol", "Resisitivy Output>0", 20., 100.);
 
 
-	pPs = new Ps(&Dep_IndexStart, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Dep_IndexStart, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Dep Index Start", 0., "-", "SaltDeposition=2", 0., 100000.);
-	pPs = new Ps(&Dep_IndexInc, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&Dep_IndexInc, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Dep Index Add", 1., "-", "SaltDeposition=2", 0., 100000.);
 
-	pT = new T(&WaterResistivity, pNL, SIMPROFILE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pT = new T(&WaterResistivity, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "Water Resistivity", initv, "Ohm m", "");
-	pT = new T(&SoilResistivity, pNL, SIMPROFILE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pT = new T(&SoilResistivity, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "Soil Resistivity", initv, "Ohm m", "");
 
 
-	pTs = new Ts(&SaltToRoad, ROADSURFACE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltToRoad, datatype::ROADSURFACE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "SaltToRoad", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
-	pTs = new Ts(&SaltDeepPercolation, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltDeepPercolation, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "SaltDeepPercolation", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
-	pTs = new Ts(&SaltSurfaceOutFlow, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltSurfaceOutFlow, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "SaltSurfaceOutflow", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 
-	pTs = new Ts(&SaltRunOffEmission2, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltRunOffEmission2, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt RunoffTotal", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
-	pTs = new Ts(&SaltRoadCaptured, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltRoadCaptured, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt RoadCaptured", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
-	pTs = new Ts(&SaltRoadLossed, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pTs = new Ts(&SaltRoadLossed, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "Salt RoadLossed", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltRoadStorage >0");
 
 
-	Gs *pGs = new Gs(&DepthofFront, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	Gs *pGs = new Gs(&DepthofFront, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "Depth of Front", 0.0, "m", "");
-	pPs = new Ps(&ConcForFront, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&ConcForFront, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "ConcForFront", 2., "mg/l", "", 1.E-20, 1.E3);
-	pPs = new Ps(&SaltInitConc, SINGLE, SALT, INITF, NOBPROC, NORMAL);
+	pPs = new Ps(&SaltInitConc, datatype::SINGLE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "SaltInitConc", 2., "mg/l", "Initial Salt Concentration =0", 1.E-20, 1.E5);
-	pPs = new Ps(&SaltInputConcPar, SINGLE, SALT, INITF, NOBPROC, NORMAL);
+	pPs = new Ps(&SaltInputConcPar, datatype::SINGLE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "SaltInputConc", 1., "mg/l", "SaltTracer = 1", 1.E-6, 1.E6);
-	pPs = new Ps(&SaltIrrigationConcPar, SINGLE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	pPs = new Ps(&SaltIrrigationConcPar, datatype::SINGLE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "SaltIrrigationConc", 1., "mg/l", "SaltTracer = 1|Irrigation > 0|IrrigConcInput < 1", 1.E-20, 1.E6);
 
-	pPs = new Ps(&SaltGWSoFlowConc, SINGLE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	pPs = new Ps(&SaltGWSoFlowConc, datatype::SINGLE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "SaltGW Source Conc", 1., "mg/l", "SaltTracer = 1|Irrigation > 0|IrrigConcInput < 1|GroundWaterFlow >= 1", 1.E-20, 1.E6);
-	pPs = new Ps(&ConcV_Index, SINGLE, SALT, NOFPROC, NOBPROC, NORMAL);
+	pPs = new Ps(&ConcV_Index, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Index in PG-file", 1., "#", "IrrigConcInput >= 1", 1., 100.);
 
 
-	pPs = new Ps(&SaltAppRate, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	pPs = new Ps(&SaltAppRate, datatype::ROADSURFACE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Salt Application Rate", 10000.,UNIT_TYPES::mMASSFLOW_UNIT, "RoadSaltApplication = 0", 0., 10000.);
-	pPs = new Ps(&TempSaltLowLimit, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	pPs = new Ps(&TempSaltLowLimit, datatype::ROADSURFACE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Temp Salt Low Limit", -6.,UNIT_TYPES::TEMP_UNIT, "RoadSaltApplication = 0", -20., 1.);
-	pPs = new Ps(&TempSaltHighLimit, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	pPs = new Ps(&TempSaltHighLimit, datatype::ROADSURFACE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Temp Salt High Limit", 2.,UNIT_TYPES::TEMP_UNIT, "RoadSaltApplication = 0", -1., 20.);
-	pPs = new Ps(&FractionOfRoad, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	pPs = new Ps(&FractionOfRoad, datatype::ROADSURFACE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Fraction of Road", 0.01, "-", "SaltRoadStorage >0|RoadSaltApplication >= 1", 0., 1.);
-	pPs = new Ps(&EmissionRateCoef, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&EmissionRateCoef, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "EmissonRateCoef", 0.05, "-", "SaltRoadStorage >0", 0., 10.);
 	//! New August 2005
-	pPs = new Ps(&SaltRunOffEffCoef, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&SaltRunOffEffCoef, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "SaltRunOffEffCoef", 0.5, "-", "SaltRoadStorage >0", 0., 10.);
-	pPs = new Ps(&SaltPloughEffCoef, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&SaltPloughEffCoef, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "SaltPloughEffCoef", 0.5, "-", "SaltRoadStorage >0", 0., 10.);
-	pPs = new Ps(&FractAirEmission, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&FractAirEmission, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "FractAirEmission", 0.1, "-", "Blomquist Equation=0|SaltRoadStorage =0", 0., 10.);
-	pPs = new Ps(&FractPloughEmission, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&FractPloughEmission, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "FractPloughEmission", 0.1, "-", "Blomquist Equation=0|SaltRoadStorage =0", 0., 10.);
 
-	pPs = new Ps(&FractRunOffEmission, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&FractRunOffEmission, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "FractRunOffEmission", 0.1, "-", "SaltRoadStorage =0", 0., 10.);
 
-	pPs = new Ps(&CaptureFracEmission, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&CaptureFracEmission, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "FractCapturedEmission", 0.0, "-", "SaltRoadStorage >0", 0., 10.);
 
-	pPs = new Ps(&DistKSplash, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&DistKSplash, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Dist k Splash", 0.5, "-", "SaltRoadStorage = 0|Blomquist Equation>0|", 0., 10.);
-	pPs = new Ps(&DistKAir1, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&DistKAir1, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Dist k Air1", 0.5, "-", "SaltRoadStorage = 0|Blomquist Equation>0|", 0., 10.);
-	pPs = new Ps(&SnowPloughFrac, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&SnowPloughFrac, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Snow Plough Frac", 0.2, "-", "SaltRoadStorage = 0|Blomquist Equation>0", 0., 10.);
-	pPs = new Ps(&DistFromRoad, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&DistFromRoad, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Dist From Road", 20., "m", "SaltRoadStorage = 0", 0., 1000.);
 
-	pPs = new Ps(&DistKAir2, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&DistKAir2, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Dist k Air2", 0.05, "-", "SaltRoadStorage = 0|Blomquist Equation>0", 0., 10.);
-	pPs = new Ps(&FracAir1, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&FracAir1, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Frac Air1", 0.5, "-", "SaltRoadStorage = 0|Blomquist Equation>0", 0., 10.);
-	pPs = new Ps(&RoadWidth, ROADSURFACE, SALT, EMISSION, NOBPROC, NORMAL);
+	pPs = new Ps(&RoadWidth, datatype::ROADSURFACE, elements::SALT, fysprocess::EMISSION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Road Width", 6., "-", "SaltRoadStorage = 0|Blomquist Equation>0", 0., 100.);
 
 	P* pP;
 	NE *pNumPlants;
 	pNumPlants = m_pModelMap->GetNEPointer("Number of Plants");
 
-	pP = new P(&SaltInitConcDist, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pP = new P(&SaltInitConcDist, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(p_Soil_WaterF->NL, 2.);
 	Define(pP, pNL, "Init Salt Conc", initv, "mg/l", "Initial Salt Concentration > 0", 0., 1.E3);
 	mTab_Salt.push_back(pP);
 	Tab *pTab;
-	pTab = new Tab(&mTab_Salt, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Salt, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Initial Salt Concentrations", "mUpper Depth|mLower Depth|Init Salt Conc", "Initial Salt Concentration > 0");
 
-	pP = new P(&Ad_c, pNL, SIMPROFILE, SALT, NOFPROC, SORPTION, NORMAL);
+	pP = new P(&Ad_c, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::NOFPROC, bioprocess::SORPTION, userlevel::NORMAL);
 	initv.assign(p_Soil_WaterF->NL, 1.);
 	Define(pP, pNL, "Ad_c", initv, "-", "SaltTracer>0|Adsorption>0", 0., 1.);
 	mTab_Ad.push_back(pP);
-	pTab = new Tab(&mTab_Ad, SIMPROFILE, SALT, NOFPROC, SORPTION, NORMAL);
+	pTab = new Tab(&mTab_Ad, datatype::SIMPROFILE, elements::SALT, fysprocess::NOFPROC, bioprocess::SORPTION, userlevel::NORMAL);
 	Define(pTab, "Adsorption Coefficients", "mUpper Depth|mLower Depth|Ad_c", "SaltTracer>0|Adsorption>0");
 
 
-	G* pG = new G(&SaltConc, pNL, SIMPROFILE, SALT, STORAGE, NOBPROC, NORMAL);
+	G* pG = new G(&SaltConc, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNL, "SaltConc", initv, "mg/l", "SaltTracer >= 1");
-	pG = new G(&OsmoticPressure, pNL, SIMPROFILE, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&OsmoticPressure, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNL, "OsmoticPressure", initv, "cm", "SaltTracer >= 1");
-	pGs = new Gs(&TotalSaltDrainFlow, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&TotalSaltDrainFlow, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TotalSaltDrainFlow", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 
-	Ds *pDs = new Ds(&SaltInfilConc, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	Ds *pDs = new Ds(&SaltInfilConc, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs, "SaltInfilConc", 0., "mg/l", "SaltTracer >= 1");
-	pDs = new Ds(&SaltIrrigationConc, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pDs = new Ds(&SaltIrrigationConc, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs, "SaltIrrigationConc", 0., "mg/l", "SaltTracer >= 1");
-	pDs = new Ds(&SaltAirDeposition, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pDs = new Ds(&SaltAirDeposition, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs, "SaltAirDeposition", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
-	pDs = new Ds(&SaltPloughDeposition, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pDs = new Ds(&SaltPloughDeposition, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs, "SaltPloughDeposition", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
-	pDs = new Ds(&SaltRunOffDeposition, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pDs = new Ds(&SaltRunOffDeposition, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs, "SaltRunOffDeposition", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
 
 
 	//! Trace Elements below
 	initv.assign(NumPlants, 0.);
-	pX = new X(&TE_OldRoots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&TE_OldRoots, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNumPlants, "TE OldRoots", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
-	pX = new X(&TE_Grain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&TE_Grain, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pX, pNumPlants, "TE Grain", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
-	pX = new X(&TE_Stem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&TE_Stem, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNumPlants, "TE Stem", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
-	pX = new X(&TE_Roots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&TE_Roots, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNumPlants, "TE Roots", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
-	pX = new X(&TE_Leaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&TE_Leaf, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNumPlants, "TE Leaf", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
-	pX = new X(&TE_OldStem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&TE_OldStem, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNumPlants, "TE OldStem", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
-	pX = new X(&TE_OldLeaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&TE_OldLeaf, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNumPlants, "TE OldLeaf", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
-	pXs = new Xs(&TE_SurfaceLitter, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&TE_SurfaceLitter, datatype::SINGLE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "TE Surface Litter", 0.,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
-	pX = new X(&TE_Litter1, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pX = new X(&TE_Litter1, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(p_Soil_WaterF->NL, 10.);
 	Define(pX, pNL, "TE Litter1", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
-	pX = new X(&TE_Humus, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pX = new X(&TE_Humus, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pX, pNL, "TE Humus", initv,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake >0");
 
 
 	//! Trace elements Transfer
-	pT = new T(&TE_PlantLeafUptake, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_PlantLeafUptake, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pT, pNumPlants, "TE PlantLeafUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_PlantStemUptake, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_PlantStemUptake, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE PlantStemUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_PlantRootUptake, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_PlantRootUptake, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE PlantRootUptake", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_StemGrain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_StemGrain, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE StemGrain", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
-	pT = new T(&TE_LeafGrain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_LeafGrain, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE LeafGrain", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
-	pT = new T(&TE_RootsGrain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_RootsGrain, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE RootsGrain", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0|TraceElementUptake>0");
 	//! Define(pT,  NGrainHarvest		,"N GrainHarvest" 	,NumPlants,		0.,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 	//!	Define(pT,  NStemHarvest		,"N StemHarvest"  	,NumPlants,		0.,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
@@ -684,104 +684,104 @@ bool Salt::Def()
 	//!	Define(pT,  NOldLeafHarvest	,"N OldLeafHarvest"  	,initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 	//!	Define(pT,  NRootsHarvest		,"N RootsHarvest"  	,NumPlants,		0.,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
 	//!	Define(pT,  NOldRootsHarvest	,"N OldRootsHarvest"  	,initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0|Grain Development > 0");
-	pT = new T(&TE_RootsLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_RootsLitter, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE RootsLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_LeafSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_LeafSurfaceLitter, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE LeafSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_StemSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_StemSurfaceLitter, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE StemSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_GrainSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_GrainSurfaceLitter, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE GrainSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 	//!	Call T("Hidden", N_NewMobileSurfaceLitter,"N NewMobilSurfLitter",initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0")	!LK 010906
 	//!	Call T("Hidden", NMobileSurfaceLitter,"N MobileSurfLitter",initv,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0")	!LK 010906
 	//!	Define(pT,  NPlantUptake		,"N SoilNewMobile"	,initv0D0,MassFlowUnit, "Nitrogen and Carbon >= 1|Growth >0")
-	pT = new T(&TE_OldRootsLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_OldRootsLitter, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE OldRootsLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_OldLeafSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_OldLeafSurfaceLitter, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE OldLeafSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_OldStemSurfaceLitter, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_OldStemSurfaceLitter, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE OldStemSurfaceLitter", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_StemOldStem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_StemOldStem, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE StemOldStem", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_LeafOldLeaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_LeafOldLeaf, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE LeafOldLeaf", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pT = new T(&TE_RootsOldRoots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pT = new T(&TE_RootsOldRoots, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNumPlants, "TE RootsOldRoots", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
 
-	pTs = new Ts(&TE_SurfaceLitter_L1, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pTs = new Ts(&TE_SurfaceLitter_L1, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "TE SurfaceLitter_L1", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
-	pTs = new Ts(&TE_SurfaceLitter_Hum, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pTs = new Ts(&TE_SurfaceLitter_Hum, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTs, "TE SurfaceLitter_Humus", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes >0|TraceElementUptake>0");
 
-	pT = new T(&TE_RootsLitter1, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pT = new T(&TE_RootsLitter1, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(p_Soil_WaterF->NL, 0.);
 	Define(pT, pNL, "TE RootsLitter1", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
 
-	pT = new T(&TE_Litter1MinRate, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pT = new T(&TE_Litter1MinRate, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "TE Litter1MinRate", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Microbes = 0|TraceElementUptake>0");
-	pT = new T(&TE_HumusMinRate, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pT = new T(&TE_HumusMinRate, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "TE HumusMinRate", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
-	pT = new T(&TE_Litter1HumusRate, pNL, SIMPROFILE, SALT, INITF, NOBPROC, NORMAL);
+	pT = new T(&TE_Litter1HumusRate, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pT, pNL, "TE Litter1HumusRate", initv,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|TraceElementUptake>0");
 
 
-	pG = new G(&TEC_RatioLeaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&TEC_RatioLeaf, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pG, pNumPlants, "TEC RatioLeaf", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pG = new G(&TEC_RatioStem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&TEC_RatioStem, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "TEC RatioStem", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pG = new G(&TEC_RatioGrain, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&TEC_RatioGrain, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "TEC RatioGrain", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pG = new G(&TEC_RatioRoots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&TEC_RatioRoots, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "TEC RatioRoots", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
-	pG = new G(&TEC_RatioOldLeaf, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&TEC_RatioOldLeaf, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "TEC RatioOldLeaf", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pG = new G(&TEC_RatioOldStem, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&TEC_RatioOldStem, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "TEC RatioOldStem", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pG = new G(&TEC_RatioOldRoots, pNumPlants, PLANT, SALT, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&TEC_RatioOldRoots, pNumPlants, datatype::PLANT, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "TEC RatioOldRoots", initv, "-", "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
-	pGs = new Gs(&TE_TotPlant, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotPlant, datatype::SINGLE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total Plant", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
-	pGs = new Gs(&TE_TotHumus, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotHumus, datatype::SINGLE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total Humus", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pGs = new Gs(&TE_TotLitter, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotLitter, datatype::SINGLE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total Litter", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pGs = new Gs(&TE_TotMineral, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotMineral, datatype::SINGLE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total Mineral", 0.0,UNIT_TYPES::mMASS_UNIT, "");
 	//!	Define(pGs,  TE_TotMinDiss,"TE Total Mineral Dissolved", 0.0,mMASS_UNIT, "");
 	//!	Define(pGs,  TE_TotMinAds,"TE Total Mineral Adsorbed", 0.0,mMASS_UNIT, "");
 
-	pGs = new Gs(&TE_TotStorage, SINGLE, SALT, STORAGE, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotStorage, datatype::SINGLE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total Storage", 0.0,UNIT_TYPES::mMASS_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
-	pGs = new Gs(&TE_TotPlantUptake, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotPlantUptake, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total PlantUptake", 0.0,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pGs = new Gs(&TE_TotLitterFall, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotLitterFall, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total Litterfall", 0.0,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
-	pGs = new Gs(&TE_TotMineralisation, SINGLE, SALT, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&TE_TotMineralisation, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TE Total Mineralisation", 0.0,UNIT_TYPES::mMASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Growth >0|TraceElementUptake>0");
 
-	pPs = new Ps(&PassiveUptScaling, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
+	pPs = new Ps(&PassiveUptScaling, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "PassiveUptScaling", 1.E-3, "-", "TraceElementUptake>0|PassiveUptake>0", 0., 1.);
-	pPs = new Ps(&PassiveUptAlloFLeaf, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
+	pPs = new Ps(&PassiveUptAlloFLeaf, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "PassiveUptAll0FLeaf", .2, "-", "TraceElementUptake>0|PassiveUptake>0", 0., 1.);
-	pPs = new Ps(&PassiveUptAlloFStem, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
+	pPs = new Ps(&PassiveUptAlloFStem, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "PassiveUptAll0FStem", .1, "-", "TraceElementUptake>0|PassiveUptake>0", 0., 1.);
 
-	pPs = new Ps(&ActiveUptEffLeaf, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
+	pPs = new Ps(&ActiveUptEffLeaf, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "ActiveUptEffLeaf", 1.E-6, "mg/g", "TraceElementUptake>0|ActiveUptake>0", 0., 10.);
-	pPs = new Ps(&ActiveUptEffStem, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
+	pPs = new Ps(&ActiveUptEffStem, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "ActiveUptEffStem", 1.E-6, "mg/g", "TraceElementUptake>0|ActiveUptake>0", 0., 10.);
-	pPs = new Ps(&ActiveUptEffRoots, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
+	pPs = new Ps(&ActiveUptEffRoots, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "ActiveUptEffRoots", 1.E-6, "mg/g", "TraceElementUptake>0|ActiveUptake>0", 0., 10.);
-	pPs = new Ps(&ActiveUptMaxEffConc, SINGLE, SALT, WATERUPTAKE, NOBPROC, NORMAL);
+	pPs = new Ps(&ActiveUptMaxEffConc, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "ActiveUptMaxEffConc", 1.E-6, "mg/l", "TraceElementUptake>0|ActiveUptake>0", 0., 10.);
 
-	F* pF = new F(&m_PG_RoadSurface, ROADSURFACE, SALT, SALTSOURCE, NOBPROC, NORMAL);
+	F* pF = new F(&m_PG_RoadSurface, datatype::ROADSURFACE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "Salt Road Deposition", "SaltRoadFile.bin", "WaterEq = 1|SaltTracer>0|EnableInputPGSalt>=1");
 
 	//	CALL F(Group_22, FileDriv11a,"Salt Road Deposition","BIN",.TRUE.,"SaltRoadFile","WaterEq = 1|SaltTracer>0|EnableInputPGSalt>=1");

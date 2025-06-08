@@ -261,8 +261,8 @@ class SimB
 		//int GetGroupCategory() {return ::GetGroupCategory(GetGroup());};
 		size_t GetFysProcess()  noexcept {return size_t(_def.fproc);};
 		size_t GetBioProcess()  noexcept {return size_t(_def.bproc);};
-		std::string GetFysProcessName() const ;
-		std::string GetBioProcessName() const;
+		std::string_view GetFysProcessName() const;
+		std::string_view GetBioProcessName() const;
 
 		enum elements GetElement()   noexcept { return _def.elem; };
 		enum datatype GetDataType() noexcept {return _def.data;};
@@ -276,7 +276,7 @@ class SimB
 		std::string_view GetElementName();
 
 		enum simtype GetSim()   noexcept {return _stype;};
-		void SetSimType(enum simtype value)  noexcept {_stype=value;};
+		void SetSimType(simtype value)  noexcept {_stype=value;};
 		bool	IsTrue(size_t) const;	
 		virtual void	Notice();
 		virtual void	SetIsOriginalValue()  noexcept {m_IsNotOriginal=false;};

@@ -20,7 +20,7 @@ CHistoryList::CHistoryList(SimB *pBase, int itype, Doc *pDoc, int index, CWnd* p
 	m_Init=true;
 
 	string par, grp;
-	if(pBase->GetType()==DB){
+	if(pBase->GetType()==simtype::DB){
 		par=pBase->GetName();	
 		grp=((CDB*)pBase)->GetGroup().c_str();
 		m_WindowText="History List for : ";

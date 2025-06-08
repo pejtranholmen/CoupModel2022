@@ -233,7 +233,7 @@ BOOL MultiRun::OnInitDialog() // Get values. Set text.
 		else
 			GetDlgItem(IDOK)->ModifyStyle(0,WS_DISABLED);
    	}
-		else if(m_Selected_Dim>0&&method==9) {
+		else if(m_Selected_Dim>0&&method==MR_METHOD(9)) {
   		GetDlgItem(IDC_EDIT1)->ModifyStyle(WS_DISABLED,0);
 		GetDlgItem(IDC_EDIT2)->ModifyStyle(WS_DISABLED,0);
 		GetDlgItem(IDC_EDIT3)->ModifyStyle(WS_DISABLED,0);

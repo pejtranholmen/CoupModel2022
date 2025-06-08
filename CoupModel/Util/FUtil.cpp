@@ -793,7 +793,7 @@ vector<SIMB> FUtil::SortSimB_ByProcess(vector<SIMB> v_in) {
 #ifndef NOSIMMODEL
 	multimap<string, SIMB> SortMap;
 	for (size_t i = 0; i < v_in.size(); i++) {
-		string str = v_in[i].pBase->GetProcessName();
+		string str = string(v_in[i].pBase->GetProcessName());
 		SortMap.insert(pair<string, SIMB>(str, v_in[i]));
 	}
 
@@ -809,7 +809,7 @@ vector<SIMB> FUtil::SortSimB_ByElement(vector<SIMB> v_in) {
 #ifndef NOSIMMODEL
 	multimap<string, SIMB> SortMap;
 	for (size_t i = 0; i < v_in.size(); i++) {
-		string str = v_in[i].pBase->GetElementName();
+		string str = string(v_in[i].pBase->GetElementName());
 		SortMap.insert(pair<string, SIMB>(str, v_in[i]));
 	}
 

@@ -41,38 +41,38 @@ bool Additional_Variables_Functions::Def()
 
 	ModuleNo=23;
 	Sw* pSw;
-	pSw= new Sw(&ResetAccValues,SINGLE, GENERAL, NOFPROC, NOBPROC,NORMAL); 
+	pSw= new Sw(&ResetAccValues, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL); 
 	Define(pSw, "Reset Acc Variables",0,"Off|On","WaterEq = 1");
-	pSw= new Sw(&Soil_TempSensors,SINGLE, TEMPERATURE, SENSOR, NOBPROC,NORMAL);
+	pSw= new Sw(&Soil_TempSensors, datatype::SINGLE, elements::TEMPERATURE, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,  "Soil Temp Sensors",0,"Off|On","HeatEq = 1") ; 
-	pSw= new Sw(&Soil_ThetaSensors,SINGLE,WATER ,SENSOR , NOBPROC,NORMAL);
+	pSw= new Sw(&Soil_ThetaSensors, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,  "Soil Theta Sensors",0,"Off|On","WaterEq = 1");  
 
-	pSw= new Sw(&IGBP_LandID_Selector,SINGLE,WATER ,SENSOR , NOBPROC,NORMAL);
+	pSw= new Sw(&IGBP_LandID_Selector, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,  "IGBP LandInfo",0,"Off|for Latitude|for Also CSoil|For All Soil Properties|Read info Multi-PG Metfile","WaterEq = 1");  
 
-	pSw= new Sw(&Multi_PGFile_Var_Selector,SINGLE,WATER ,SENSOR , NOBPROC,NORMAL);
+	pSw= new Sw(&Multi_PGFile_Var_Selector, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,  "MetFile Extended Use",0,"Off|Retrieve GeoRef info|Also Retrieve Soil Info|Also Soil and Plant Info","WaterEq = 1");  
-	pSw= new Sw(&Multi_PGFile_ID_Selector,SINGLE,GENERAL, NOFPROC , NOBPROC,NORMAL);
+	pSw= new Sw(&Multi_PGFile_ID_Selector, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw,  "MetFile Station Selection",0,"MultiRunNo|Sequence No|Station ID No","WaterEq = 1|Dynamic indexed input file=2");  
 
 	Ps *pPs;
-	pPs= new Ps(&X_coordinate,SINGLE, GENERAL, GEOPOS,NOBPROC, NORMAL); 
+	pPs= new Ps(&X_coordinate, datatype::SINGLE, elements::GENERAL, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL); 
 
    	Define(pPs,"X-coordinate",0.,"m"," ",-1000.,1.E8);
-	pPs= new Ps(&Y_coordinate ,SINGLE, GENERAL, GEOPOS,NOBPROC, NORMAL); 
+	pPs= new Ps(&Y_coordinate , datatype::SINGLE, elements::GENERAL, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL); 
 	Define(pPs,"Y-coordinate",0.,"m"," ",-1000.,1.E8);
-	pPs= new Ps(&Z_coordinate,SINGLE, GENERAL, GEOPOS,NOBPROC, NORMAL);    	
+	pPs= new Ps(&Z_coordinate, datatype::SINGLE, elements::GENERAL, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL);    	
 	Define(pPs,"Z-coordinate",0.,"m"," ",0.,1.E6);
-	pPs= new Ps(&Land_ID,SINGLE, GENERAL, GEOPOS,NOBPROC, NORMAL);    	
+	pPs= new Ps(&Land_ID, datatype::SINGLE, elements::GENERAL, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL);    	
 	Define(pPs,"LandID",0.,"-","IGBP LandInfo>0",1.,1.E8,1.,1.E8,10001);
 
-	pPs= new Ps(&SeqNo_MetFile,SINGLE, GENERAL, GEOPOS,NOBPROC, NORMAL);    	
+	pPs= new Ps(&SeqNo_MetFile, datatype::SINGLE, elements::GENERAL, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL);    	
 	Define(pPs,"SeqNo Met File",1.,"-","Dynamic indexed input file=2|MetFile Station Selection=1",1.,1.E8);
-	pPs= new Ps(&IDNo_MetFile,SINGLE, GENERAL, GEOPOS,NOBPROC, NORMAL);    	
+	pPs= new Ps(&IDNo_MetFile, datatype::SINGLE, elements::GENERAL, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL);    	
 	Define(pPs,"IDno Met File",0.,"-","Dynamic indexed input file=2|MetFile Station Selection=2"  ,1.,1.E8);
 
-	pPs= new Ps(&Scale,SINGLE, GENERAL, GEOPOS,NOBPROC, NORMAL);    	
+	pPs= new Ps(&Scale, datatype::SINGLE, elements::GENERAL, fysprocess::GEOPOS, bioprocess::NOBPROC, userlevel::NORMAL);    	
 	Define(pPs,"Spatial_Scale",1.,"m"," ",1.,1.E7);
 
 //	call PnE(NSonds,1,1,100,1,100)				!Element is Table
@@ -85,13 +85,13 @@ bool Additional_Variables_Functions::Def()
 	Tab* pTab;
 	G* pG;
 
-	pP = new P(&ZadokDays, pNZadokDays, SINGLE, GENERAL, SENSOR, NOBPROC, NORMAL);
+	pP = new P(&ZadokDays, pNZadokDays, datatype::SINGLE, elements::GENERAL, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv = { 30.,55.,90. };
 	Define(pP, pNZadokDays, "Zadok_Stages", initv, "Zadok", "ZadokScale>0", 1., 100., 0., 100.);
 	mTab_Zadoks.push_back(pP);
-	pTab = new Tab(&mTab_Zadoks, SINGLE, TEMPERATURE, SENSOR, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Zadoks, datatype::SINGLE, elements::TEMPERATURE, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "ZadokStages", "Zadok", "ZadokScale>0");
-	pG = new G(&ZadokDayValues, pNZadokDays, ATMBOUNDARY, TEMPERATURE, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pG = new G(&ZadokDayValues, pNZadokDays, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv = { 0.,0.,0. };
 	Define(pG, pNZadokDays, "ZadokDays", initv, "Days", "ZadokScale>0");
 
@@ -102,7 +102,7 @@ bool Additional_Variables_Functions::Def()
 	pNSonds= new NE(&NSonds,1,1,100,1,20);
 	Define(pNSonds, "Number of Sonds");
 
-	pP= new P(&SondDepth,pNSonds, SINGLE, GENERAL, SENSOR,NOBPROC, NORMAL); 
+	pP= new P(&SondDepth,pNSonds, datatype::SINGLE, elements::GENERAL, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 	
 	initv.assign(NSonds,0.2);
 		Define(pP,pNSonds,"Depth",initv,"m","",0.001,100.,0.1, 100.);
@@ -114,105 +114,105 @@ bool Additional_Variables_Functions::Def()
 	Define(pNThetaSensors, "Number of Theta Sonds");
 	initv.assign(NTempSensors,0.15);
 
-	pP= new P(&TempSensorHigh,pNTempSensors, SINGLE, TEMPERATURE, SENSOR,NOBPROC, NORMAL); 
+	pP= new P(&TempSensorHigh,pNTempSensors, datatype::SINGLE, elements::TEMPERATURE, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 
 		Define(pP,pNTempSensors,"Upper TempSensor",initv,"m","",0.001,100.,0.01,10.);
 		mTab_Temp.push_back(pP);
-	pP= new P(&TempSensorLow,pNTempSensors, SINGLE, TEMPERATURE, SENSOR,NOBPROC, NORMAL); 
+	pP= new P(&TempSensorLow,pNTempSensors, datatype::SINGLE, elements::TEMPERATURE, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 		initv.assign(NTempSensors,0.17);
 		Define(pP,pNTempSensors,"Lower TempSensor",initv,"m","",0.001,100.,0.01,10.);
 		mTab_Temp.push_back(pP);
 		initv.assign(NThetaSensors,0.15);
-	pP= new P(&ThetaSensorHigh,pNThetaSensors, SINGLE, WATER, SENSOR,NOBPROC, NORMAL); 
+	pP= new P(&ThetaSensorHigh,pNThetaSensors, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pP,pNThetaSensors ,"Upper ThetaSensor",initv,"m","",0.001,100.,0.01,10.);
 		mTab_Theta.push_back(pP);
 	initv.assign(NThetaSensors,0.17);
-	pP= new P(&ThetaSensorLow,pNThetaSensors, SINGLE, WATER, SENSOR,NOBPROC, NORMAL); 
+	pP= new P(&ThetaSensorLow,pNThetaSensors, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pP,pNThetaSensors,"Lower ThetaSensor",initv,"m","", 0.001,100.,0.01,10.);	
 		mTab_Theta.push_back(pP);
 
 	
-	pTab= new Tab(&mTab_Temp, SINGLE, TEMPERATURE, SENSOR,NOBPROC, NORMAL); 
+	pTab= new Tab(&mTab_Temp, datatype::SINGLE, elements::TEMPERATURE, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pTab, "Temperature Sensors", "Upper TempSensor|Lower TempSensor","HeatEq = 1|Soil Temp Sensors =1");
-	pTab= new Tab(&mTab_Theta, SINGLE, WATER, SENSOR,NOBPROC, NORMAL); 
+	pTab= new Tab(&mTab_Theta, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pTab,"Theta Sensors", "Upper ThetaSensor|Lower ThetaSensor","WaterEq = 1|Soil Theta Sensors = 1");
-	pTab= new Tab(&mTab_Sonds, SINGLE, GENERAL, SENSOR,NOBPROC, NORMAL); 
+	pTab= new Tab(&mTab_Sonds, datatype::SINGLE, elements::GENERAL, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pTab,"Depths of Sonds", "Depth","WaterEq = 1");
 
-	pG= new G(&ThetaSensors ,pNThetaSensors, SINGLE, WATER, SENSOR,NOBPROC, NORMAL); 
+	pG= new G(&ThetaSensors ,pNThetaSensors, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 	initv.assign(NThetaSensors,0.);
    Define(pG,pNThetaSensors ,"Theta Sensors" ,initv,"vol %","WaterEq = 1");
 	initv.assign(NTempSensors,0.);
-	pG= new G(&TempSensors ,pNTempSensors, SINGLE, WATER, SENSOR,NOBPROC, NORMAL); 
+	pG= new G(&TempSensors ,pNTempSensors, datatype::SINGLE, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL); 
 	initv.assign(NTempSensors,0.);
    Define(pG, pNTempSensors,"Temp Sensors" ,initv,UNIT_TYPES::TEMP_UNIT,"HeatEq = 1");
    Gs *pGs;
-   pGs= new Gs(&Evapotranspiration, ATMBOUNDARY, WATER, EVAPOTRANSPIRATION,NOBPROC, NORMAL);
+   pGs= new Gs(&Evapotranspiration, datatype::ATMBOUNDARY, elements::WATER, fysprocess::EVAPOTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	  Define(pGs, "Evapotranspiration", 5.,UNIT_TYPES::WATERFLOW_UNIT,"Evaporation > 0|WaterEq = 1");
-  pGs= new Gs(&TotalLatentFlow, ATMBOUNDARY, HEAT, EVAPOTRANSPIRATION,NOBPROC, NORMAL);
+  pGs= new Gs(&TotalLatentFlow, datatype::ATMBOUNDARY, elements::HEAT, fysprocess::EVAPOTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "TotalLatentFlow", 5.,UNIT_TYPES::HEATFLOW_UNIT,"Evaporation > 0|WaterEq = 1");
-  pGs= new Gs(&TotalSensibleFlow, ATMBOUNDARY, HEAT, EVAPOTRANSPIRATION,NOBPROC, NORMAL);
+  pGs= new Gs(&TotalSensibleFlow, datatype::ATMBOUNDARY, elements::HEAT, fysprocess::EVAPOTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,"TotalSensibleFlow",5.,UNIT_TYPES::HEATFLOW_UNIT,"Evaporation >0|WaterEq = 1");
 
   NE *pNumPlants;
   pNumPlants=m_pModelMap->GetNEPointer("Number of Plants");
 
 
-  pGs= new Gs(&p_Plant->TempCanopy, ATMBOUNDARY, TEMPERATURE, EBAL_PARTITIONING,NOBPROC, NORMAL);
+  pGs= new Gs(&p_Plant->TempCanopy, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs ,"TempCanopy",5.,UNIT_TYPES::TEMP_UNIT,"Evaporation >0|WaterEq = 1");
 
-  pGs= new Gs(&PlantWaterStorage,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pGs= new Gs(&PlantWaterStorage, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs, "PlantAvailableWater" ,0.,"mm","WaterEq = 1");
 
 	initv.assign(NSonds,0.);
-  pG= new G(&AccWStorage,pNSonds,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pG= new  G(&AccWStorage,pNSonds, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG,pNSonds ,"Acc_WStorage" ,initv,"mm","WaterEq = 1");
-  pG= new G(&AccSStorage,pNSonds,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pG= new G(&AccSStorage,pNSonds, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pG,pNSonds, "Acc_Salt_Storage" ,initv,"mg/m2","WaterEq = 1|SaltTracer>0");
-  pG= new G(&AccNH4Storage, pNSonds,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pG= new  G(&AccNH4Storage, pNSonds, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG,pNSonds, "Acc_NH4_Storage" ,initv,"gN/m2","WaterEq = 1|Nitrogen and Carbon>0");
-  pG= new G(&AccNO3Storage,pNSonds,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pG= new  G(&AccNO3Storage,pNSonds, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG,pNSonds, "Acc_NO3_Storage" ,initv,"gN/m2","WaterEq = 1|Nitrogen and Carbon>0");
-  pG= new G(&AccMinNStorage,pNSonds,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pG= new  G(&AccMinNStorage,pNSonds, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG,pNSonds, "Acc_MinN_Storage" ,initv,"g/Nm2","WaterEq = 1|Nitrogen and Carbon>0");
-  pG= new G(&AccCSoilStorage,pNSonds,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pG= new  G(&AccCSoilStorage,pNSonds, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG,pNSonds ,"Acc_OrgC_Storage" ,initv,"g/Nm2","WaterEq = 1|Nitrogen and Carbon>0");
-  pG= new G(&AccNSoilStorage,pNSonds,  datatype::ACCUMULATOR , WATER, SENSOR,NOBPROC, NORMAL);
+  pG= new G(&AccNSoilStorage,pNSonds, datatype::ACCUMULATOR, elements::WATER, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG,pNSonds,"Acc_OrgN_Storage" ,initv,"g/Nm2","WaterEq = 1|Nitrogen and Carbon>0");
-  pG= new G(&AccRStorage,pNSonds,  datatype::ACCUMULATOR , SALT, SENSOR,NOBPROC, NORMAL);
+  pG= new G(&AccRStorage,pNSonds, datatype::ACCUMULATOR, elements::SALT, fysprocess::SENSOR, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pG,pNSonds, "AccM_Resistivity" ,initv,"Ohm m","WaterEq = 1|SaltTracer>0");
 
 //	Call G(Hidden, MC_TDiff,"MC_TDiff" ,NumPlants,0.,	"-","PlantType = 3");
 //	Call G(Hidden, MC_TDiffC,"MC_TDiffC" ,NumPlants,0.,	"-","PlantType = 3");
 
 	Xs *pXs;
-	pXs= new Xs(&AccSurfaceRunoff,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccSurfaceRunoff, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,  "AccSurfaceRunoff", 0.0,"mm","WaterEq >= 1");
-	pXs= new Xs(&AccTotalRunoff,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccTotalRunoff, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,  "AccTotalRunoff", 0.0,"mm","WaterEq >= 1");
-	pXs= new Xs(&AccSoilEvap,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccSoilEvap, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,  "AccSoilEvap", 0.0,"mm","Evaporation > 0|WaterEq >= 1");
-	pXs= new Xs(&AccSoilEvapAndTransp,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccSoilEvapAndTransp, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,  "AccSoilEvapAndTransp", 0.0,"mm","Evaporation > 0|WaterEq >= 1");
-	pXs= new Xs(&AccTotalEvap,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccTotalEvap, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,  "AccTotalEvap", 0.0,"mm","Evaporation > 0|WaterEq >= 1");
-	pXs= new Xs(&TotalDiffStorage,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&TotalDiffStorage, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "TotalDiffStorage",0.0,"mm","WaterEq >= 1");
-	pXs= new Xs(&WaterBalanceCheck,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&WaterBalanceCheck, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "WaterBalanceCheck",0.0,"mm","WaterEq >= 1");
-	pXs= new Xs(&AccPrecipitation,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccPrecipitation, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "AccPrecipitation",0.0,"mm","WaterEq >= 1");
-	pXs= new Xs(&AccPrecAdjustSnow	,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccPrecAdjustSnow	, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "AccPrecAdjustSnow",0.0,"mm","WaterEq >= 1|SnowAdjustment>0");
-	pXs= new Xs(&AccPrecandIrrig	,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccPrecandIrrig	, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "AccPrecandIrrig",0.0,"mm","WaterEq >= 1|Irrigation >= 1");
-	pXs= new Xs(&AccLateralInflowWater,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccLateralInflowWater, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "AccLateral_WInflow",0.0,"mm","WaterEq >= 1|LateralInput = 1");
-	pXs= new Xs(&AccSpoolRunOn,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccSpoolRunOn, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "AccSpoolRunOn",0.0,"mm","WaterEq >= 1|LateralInput = 1");
-	pXs= new Xs(&AccTotalWaterInput,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccTotalWaterInput, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "AccTotalWaterInput",0.0,"mm","WaterEq >= 1|LateralInput = 1");
-	pXs= new Xs(&AccThroughfall,  datatype::ACCUMULATOR , WATER, BUDGET,NOBPROC, NORMAL);
+	pXs= new Xs(&AccThroughfall, datatype::ACCUMULATOR, elements::WATER, fysprocess::BUDGET, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "AccThroughFall",0.0,"mm","WaterEq >= 1")	;
 
 

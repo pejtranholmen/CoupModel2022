@@ -12,6 +12,7 @@ class CDB;
 #include "../DB/DB_Storage.h"
 enum class SIMSUMSOURCE { MULTIFILESTAT, CSVFLEXFILE, MULTI_OUTPGFILE };
 enum SUM_PERFORMANCE { SUM_R2, SUM_INTERCEPT, SUM_SLOPE, SUM_ME, SUM_RMSE, SUM_LOGLI, SUM_OBS, SUM_SIM, SUM_NSE, SUM_NOVALUE };
+enum class sumvartype { INITIAL, FINAL, MINIMUM, MAXIMUM, MEAN, ACCUMULATED};
 
 struct CONSTRAIN_BY {
 	size_t IndepMultiPar;
@@ -62,7 +63,7 @@ public:
 class VALSUMv
 {
 public:
-	size_t	SumVarType=0; // 0 = Original, 1- Obs Scaled, 2- Sim Scaled
+	sumvartype	SumVarType=sumvartype::INITIAL; // 
 	enum  SIMSUMSOURCE  SimValueSource=SIMSUMSOURCE::MULTI_OUTPGFILE; // 0 = Sim Sum Values, 1 - Residuals from other Sum Variables, 2 - Multi Bin file
 	bool m_xmlFileToUse{ false };
 	size_t  Sim_Value_Residual_Index=0;
@@ -234,6 +235,7 @@ class ModelBase : public ModelMap{
 	SimB* GetPtr(std::string type, std::string group, std::string name);
 	SimB* GetPtr(std::string type, std::string name);
 	SimB* GetPtr(enum simtype, std::string name, std::string group="");
+	SimB* GetPtr(enum simtype, std::string_view name, std::string group = "");
 	SimB* GetPtrByName(std::string name, std::string group="");
 	P* GetP(std::string name)  {return (P*)GetPtr(simtype::PAR_TABLE, name);};
 	Ps* GetPs(std::string name) {return (Ps*)GetPtr(simtype::PAR_SINGLE, name);};
@@ -419,6 +421,7 @@ protected:
 	std::string CreateFlagString(SimB* currentParameter, size_t FlagValue=1);
 
 private:
+	static constexpr std::string_view SumVarTypeNames[] = { "Initial","Final","Minimum","Maximum", "Mean"," Accumulated" };
 	std::vector<size_t> m_UpdatedGroupNoVector;
 	std::vector<elements> m_UpdatedElementsVector;
 	std::vector<elements> m_EnabledElementsVector;

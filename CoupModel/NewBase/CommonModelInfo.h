@@ -35,9 +35,9 @@ public:
             return m_TypeNames[ityp]; 
         return ""; 
     };
-	std::string_view GetFysProcName(size_t index) {if(index<m_FysProcessNames.size()) return m_FysProcessNames[index]; else return "";};
-	std::string_view GetBioProcName(size_t index) {if(index<m_BioProcessNames.size()) return m_BioProcessNames[index]; else return "";};
-	std::string_view ElementName(size_t index) {if(index<m_ElementNames.size()) return m_ElementNames[index]; else return "";};
+	std::string_view GetFysProcName(fysprocess fys_proc) { auto index = static_cast<size_t>(fys_proc); if(index < m_FysProcessNames.size()) return m_FysProcessNames[index]; else return "";};
+	std::string_view GetBioProcName(bioprocess bioproc) { auto index = static_cast<size_t>(bioproc); if (index < m_BioProcessNames.size()) return m_BioProcessNames[index]; else return "";	};
+	std::string_view ElementName(elements elem) { auto index = static_cast<size_t>(elem); if (index < m_ElementNames.size()) return m_ElementNames[index]; else return ""; };
 
 	int GetGroupCategory(std::string str);
 	void trim_xml(std::string& str);

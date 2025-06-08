@@ -29,29 +29,29 @@ bool NC_Mineral_Functions::Def()
 	NE *pNumPlants=m_pModelMap->GetNEPointer("Number of Plants");
 
 	Sw* pSw; Ps *pPs; P *pP; X *pX; T *pT; G *pG;  Gs *pGs;
-	pSw= new Sw(&InitialMineral_N ,  SIMPROFILE,MINERAL_N, NOFPROC,INITB, NORMAL);
+	pSw= new Sw(&InitialMineral_N , datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pSw, "Initial Mineral N",0,"Uniform concentration|Concentration(z)","Nitrogen and Carbon > 0");
-	pSw= new Sw(&Denitrification ,  SIMPROFILE,MINERAL_N, NOFPROC,DENITRIFICATION, NORMAL);
+	pSw= new Sw(&Denitrification , datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pSw, "Denitrification",1,"off|Old SOILN|Microbial based","Nitrogen and Carbon > 0",3102);
-	pSw= new Sw(&DenitrifierGrowth ,  SIMPROFILE,MINERAL_N, NOFPROC,DENITRIFICATION, NORMAL);
+	pSw= new Sw(&DenitrifierGrowth , datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pSw, "Denitrifier Growth",0,"Mineral N|Organic N|Both Sources","Nitrogen and Carbon > 0|Denitrification=2|Dissolved Organics=1");
-	pSw= new Sw(&NitrifierGrowth ,  SIMPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL);
+	pSw= new Sw(&NitrifierGrowth , datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pSw,"Nitrifier Growth",0,"Mineral N|Organic N","Nitrogen and Carbon > 0|Nitrification>0|Dissolved Organics=1");
-	pSw= new Sw(&Denit_Temp_Response,  SIMPROFILE,MINERAL_N, NOFPROC,DENITRIFICATION, NORMAL);
+	pSw= new Sw(&Denit_Temp_Response, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pSw, "Denit Temp Response",0,"Common|Q10 whole range|Q10 above threshold|Ratkowsky function","Nitrogen and Carbon > 0|Denitrification > 0");
-	pSw= new Sw(&Nitrific_Temp_Response,  SIMPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL);
+	pSw= new Sw(&Nitrific_Temp_Response, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pSw, "Nitrific Temp Response",0,"Common|Q10 whole range|Q10 above threshold|Ratkowsky function","Nitrogen and Carbon > 0|Denitrification > 0");
-	pSw= new Sw(&Denit_Depth_Distribution,  SIMPROFILE,MINERAL_N, NOFPROC,INITB, NORMAL);
+	pSw= new Sw(&Denit_Depth_Distribution, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pSw, "Denit Depth Distribution",1,"Table|Linear decrease|Constant|Exponential","Nitrogen and Carbon > 0|Denitrification > 0");
-	pSw= new Sw(&Ammonium_Mobility,  SIMPROFILE,AMMONIUM, TRANSPORT,NOBPROC, NORMAL);
+	pSw= new Sw(&Ammonium_Mobility, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pSw,"Ammonium Mobility",0,"No|Linear isotherm","Nitrogen and Carbon > 0");
-	pSw= new Sw(&Nitrification,  SIMPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL);
+	pSw= new Sw(&Nitrification, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pSw, "Nitrification",0,"Old SOILN|Microbial based","Nitrogen and Carbon > 0");
-	pSw= new Sw(&Initial_Nitrifier,  SIMPROFILE,MINERAL_N, NOFPROC,INITB, NORMAL);
+	pSw= new Sw(&Initial_Nitrifier, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pSw, "Initial Nitrifier",0,"Linear decrease|Constant|Exponential","Nitrogen and Carbon > 0|Nitrification >0");
-//	pSw= new Sw(&AmmoniaVolatilisation,  SIMPROFILE,MINERAL_N, NOFPROC,INITB, NORMAL);
+//	pSw= new Sw(&AmmoniaVolatilisation, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 //		Define(pSw, "AmmoniaVolatilisation",0,"off|on","Nitrogen and Carbon > 0");
-	pSw= new Sw(&Flexible_Uptake,  SIMPROFILE,MINERAL_N, TRANSPORT,PLANT_NUPTAKE, NORMAL);
+	pSw= new Sw(&Flexible_Uptake, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);
 		Define(pSw, "Flexible Uptake",0,"Common for all plants|Specific for each plant","Nitrogen and Carbon > 0");
 
 
@@ -85,9 +85,9 @@ bool NC_Mineral_Functions::Def()
 
 
 // Initial conditions 
-	pPs= new Ps(&InitNitrateConc, TOTPROFILE,NITRATE, NOFPROC,INITB, NORMAL);
+	pPs= new Ps(&InitNitrateConc, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 	Define(pPs,   "InitNitrateConc", 10., "mg-N/l","Initial Mineral N = 0|Nitrogen and Carbon > 0",0.0001, 1000., 0.01, 50.);
-	pPs= new Ps(&InitAmmoniumConc, TOTPROFILE,AMMONIUM, NOFPROC,INITB, NORMAL);
+	pPs= new Ps(&InitAmmoniumConc, datatype::TOTPROFILE, elements::AMMONIUM, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pPs,   "InitAmmoniumConc", 10., "mg-N/l","Initial Mineral N = 0|Nitrogen and Carbon > 0",0.0001, 1000., 0.01, 50.);
 
 
@@ -99,13 +99,13 @@ bool NC_Mineral_Functions::Def()
 
 
 // Denitrification responses
-	pPs = new Ps(&DenitThetaRange, TOTPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&DenitThetaRange, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "DenitThetaRange", 10., "vol %","Denitrification = 1|Nitrogen and Carbon > 0",0.0001, 100., 0.01, 50.);
-	pPs= new Ps(&DenitThetaPowerC, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&DenitThetaPowerC, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "DenitThetaPowerC2", 10., "-","Denitrification = 1|Nitrogen and Carbon > 0",0.0001, 100., 0.01, 50.);
 
 	p_vec.push_back(m_pModelMap->GetPPointer("mSaturation"));
-	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
+	pFunc = new Func( datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, p_vec, plotpar);
 
 
@@ -118,20 +118,20 @@ bool NC_Mineral_Functions::Def()
 		ps_vec.clear();
 
 
-	pPs = new Ps(&DenitTemQ10, TOTPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&DenitTemQ10, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "DenitTemQ10", 2., "-","Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response < 3|Denit Temp Response > 0",0.0, 5., 0.5, 4.);
-	pPs= new Ps(&DenitTemQ10Bas, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&DenitTemQ10Bas, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "DenitTemQ10Bas", 20.,UNIT_TYPES::TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response < 3|Denit Temp Response > 0",0.0001, 100., 10., 30.);
 
-	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
+	pFunc = new Func( datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::DENIT_TEMP_Q10THRESHOLD_RESPONSE; functorprop.Arg = MyArgType::D1;
 	funcname = "Q10  with Threshold Temperature Response";
-	pPs = new Ps(&DenitTemQ10Threshold, TOTPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&DenitTemQ10Threshold, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "DenitTemQ10Threshold", 5.,UNIT_TYPES::TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 2",0.0001, 20., 2., 10.);
 
-	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
+	pFunc = new Func( datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
@@ -140,14 +140,14 @@ bool NC_Mineral_Functions::Def()
 	funcname = "Ratkowsky Temperature Response";
 	ps_vec.clear();
 
-	pPs = new Ps(&DenitTempMin, TOTPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&DenitTempMin, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs, "DenitTempMin", -8.,UNIT_TYPES::TEMP_UNIT, "Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 3", -20., 10., -10., 5.);
-	pPs= new Ps(&DenitTempMax, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&DenitTempMax, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "DenitTempMax", 20.,UNIT_TYPES::TEMP_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0|Denit Temp Response = 3",0.0001, 100., 10., 30.);
 
 
 
-	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
+	pFunc = new Func( datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::DENIT_NITRATE_RESPONSE; functorprop.Arg = MyArgType::D1;
@@ -157,15 +157,15 @@ bool NC_Mineral_Functions::Def()
 	plotpar.X_Max = 30;
 	ps_vec.clear();
 
-	pPs= new Ps(&DenitNitrateHalfSat, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DenitNitrateHalfSat, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pPs, "DenitNitrateHalfSat", 10., UNIT_TYPES::mMASS_LITER_UNIT, "Denitrification > 0|Nitrogen and Carbon > 0", 0.0001, 100., 0.01, 50.); ps_vec.push_back(pPs);
 
-	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, DENITRIFICATION, NORMAL);
+	pFunc = new Func( datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
 // Denitification potential and distribution;
-	pPs= new Ps(&DenitPotentialRate, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DenitPotentialRate, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,   "DenitPotentialRate", 0.04,UNIT_TYPES::MASSFLOW_UNIT,"Denitrification > 0|Nitrogen and Carbon > 0",0., 1., 0.001, 0.4);
 
 
@@ -176,28 +176,28 @@ bool NC_Mineral_Functions::Def()
 	pP=m_pModelMap->GetPPointer("mLower Depth");
 		mTab_InitMin.push_back(pP); mTab_DenitPot.push_back(pP);
 
-	pP= new P(&InitNitrateConcZ,pNL,SIMPROFILE,NITRATE, NOFPROC,INITB, NORMAL);
+	pP= new P(&InitNitrateConcZ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		initv.assign(pSoil->NL,10.);
 		Define(pP, pNL  ,"I Nitrate Conc",initv,"mg-N/l", "Initial mineral N Conditions = 1|Nitrogen and Carbon > 0",1.E-3,100.);
 		mTab_InitMin.push_back(pP);
-	pP= new P(&InitAmmoniumConcZ,pNL,SIMPROFILE,AMMONIUM, NOFPROC,INITB, NORMAL);
+	pP= new P(&InitAmmoniumConcZ,pNL, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pP, pNL  ,"I Ammonium Conc",initv,"mg-N/l", "Initial mineral N Conditions = 1|Nitrogen and Carbon > 0",1.E-3, 100.);
 		mTab_InitMin.push_back(pP);
 
-	pTab = new Tab(&mTab_InitMin, SIMPROFILE,MINERAL_N, NOFPROC,INITB, NORMAL);
+	pTab = new Tab(&mTab_InitMin, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pTab, "Initial mineral-N concentrations",3);
 
 
-	pP= new P(&DenitDistributionTab,pNL,SIMPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
+	pP= new P(&DenitDistributionTab,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		initv.assign(pSoil->NL,0.1);
 		Define(pP, pNL  ,"DenitDistZ",initv,"-", "Denit Depth Distribution = 0|Nitrogen and Carbon > 0");
 		mTab_DenitPot.push_back(pP);
 
-	pPs= new Ps(&DenitFracExpTail, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DenitFracExpTail, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "DenitFracExpTail",0.1,"-", "Denit Depth Distribution = 3|Nitrogen and Carbon > 0",0.,1.);
-	pPs= new Ps(&DenitDepth, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DenitDepth, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs, "DenitDepth",-1.,"-", "Denit Depth Distribution > 0|Nitrogen and Carbon >0",-10.,-0.001,-4.,-0.01);
-	pTab= new Tab(&mTab_DenitPot, SIMPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
+	pTab= new Tab(&mTab_DenitPot, datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pTab,"Potential denitrification distribution ",3);
 
 	// Nitrification;
@@ -214,12 +214,12 @@ bool NC_Mineral_Functions::Def()
 		for(size_t i=0; i<3; ++i) plotpar.LegendsVec[i]+= p_ModelInfo->GetUnitString(UNIT_TYPES::MASS_UNIT, true);
 		ps_vec.clear();
 
-	pPs= new Ps(&Nitr_Amm_Ratio, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&Nitr_Amm_Ratio, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs, "NitrateAmmRatio", 8., UNIT_TYPES::MASS_RATIO_UNIT, "Nitrogen and Carbon > 0|Nitrification = 0", 0.1, 100., 1., 15.); ps_vec.push_back(pPs);
-	pPs= new Ps(&Nitr_Specific_Rate, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&Nitr_Specific_Rate, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,   "NitrificSpecificRate", .2, UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon > 0|Nitrification =0",0.01, 1., .01, .8); ps_vec.push_back(pPs);
 
-	pFunc = new Func(SIMPROFILE, NITRATE, NOFPROC, NITRIFICATION, NORMAL);
+	pFunc = new Func( datatype::SIMPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::NITRI_TEMP_Q10_RESPONSE; functorprop.Arg = MyArgType::D1;
@@ -235,31 +235,31 @@ bool NC_Mineral_Functions::Def()
 	ps_vec.clear();
 
 ;
-pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+pPs = new Ps(&NitriTemQ10, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "NitriTemQ10", 2., "-","Nitrogen and Carbon > 0|Nitrific Temp Response < 3|Nitrific Temp Response > 0",0.0, 5., 0.5, 4.);
-	pPs= new Ps(&NitriTemQ10Bas, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&NitriTemQ10Bas, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "NitriTemQ10Bas", 20.,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response < 3|Nitrific Temp Response > 0",0.0001, 100., 10., 30.);
 
-		pFunc = new Func(PLANT, CARBON, NOFPROC, NITRIFICATION, NORMAL);
+		pFunc = new Func( datatype::PLANT, elements::CARBON, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 		functorprop.FuncName = MyFunc::NITRI_TEMP_Q10THRESHOLD_RESPONSE; functorprop.Arg = MyArgType::D1;
 		funcname = "Q10  with Threshold Temperature Response";
 
 
-	pPs= new Ps(&NitriTemQ10Threshold, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&NitriTemQ10Threshold, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "NitriTemQ10Threshold", 5.,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response = 2",0.0001, 20., 2., 10.);
-		pFunc = new Func(PLANT, CARBON, NOFPROC, NITRIFICATION, NORMAL);
+		pFunc = new Func( datatype::PLANT, elements::CARBON, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 		
 		functorprop.FuncName = MyFunc::NITRI_TEMP_RATKOWSKY_RESPONSE; functorprop.Arg = MyArgType::D1;
 		funcname = "Ratkowsky Temperature Response";
 		ps_vec.clear();
-		pPs = new Ps(&NitriTempMin, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+		pPs = new Ps(&NitriTempMin, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs, "NitriTempMin", -8.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Nitrific Temp Response = 3", -20., 10., -10., 5.);
-	pPs= new Ps(&NitriTempMax, TOTPROFILE,MINERAL_N, NOFPROC,NITRIFICATION, NORMAL); ps_vec.push_back(pPs);
+	pPs= new Ps(&NitriTempMax, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs,   "NitriTempMax", 20.,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Nitrific Temp Response = 3",0.0001, 100., 10., 30.);
-		pFunc = new Func(PLANT, CARBON, NOFPROC, NITRIFICATION, NORMAL);
+		pFunc = new Func( datatype::PLANT, elements::CARBON, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 	
 
@@ -269,119 +269,119 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 	pP=m_pModelMap->GetPPointer("mLower Depth");
 		mTab_Nitrific.push_back(pP);mTab_AmIso.push_back(pP);	
 
-	pP= new P(&Nitri_pH_Response,pNL,SIMPROFILE,MINERAL_N, NOFPROC, NITRIFICATION, NORMAL);initv.assign(pSoil->NL,1.);
+	pP= new P(&Nitri_pH_Response,pNL, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);initv.assign(pSoil->NL,1.);
 		Define(pP, pNL  ,"RelScale Response",initv,"-","Nitrogen and Carbon > 0",0.,1.);
 		mTab_Nitrific.push_back(pP);
-	pTab= new Tab(&mTab_Nitrific,SIMPROFILE,MINERAL_N, NOFPROC, NITRIFICATION, NORMAL); 
+	pTab= new Tab(&mTab_Nitrific, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL); 
 		Define(pTab, "Nitrification pH-response distribution ",3);
 ;	initv.assign(pSoil->NL,.99);
 
-	pP= new P(&AmmoniumAdsFrac,pNL,SIMPROFILE,AMMONIUM, TRANSPORT,SORPTION, NORMAL);
+	pP= new P(&AmmoniumAdsFrac,pNL, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::SORPTION, userlevel::NORMAL);
 		Define(pP, pNL  ,"NH4 Ads Frac",initv,"-","Nitrogen and Carbon > 0",0.,1.);
 		mTab_AmIso.push_back(pP);
-		pTab= new Tab(&mTab_AmIso, SIMPROFILE,AMMONIUM, TRANSPORT,SORPTION, NORMAL);
+		pTab= new Tab(&mTab_AmIso, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::SORPTION, userlevel::NORMAL);
 		Define(pTab,"Linear Ammonium isotherm",3);
 ;
 // Uptake of mineral N and P;
-	pPs= new Ps(&NUptMaxAvailFrac, TOTPROFILE,MINERAL_N, NOFPROC,PLANT_NUPTAKE, NORMAL);
+	pPs= new Ps(&NUptMaxAvailFrac, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);
 		Define(pPs,   "NUptMaxAvailFrac", 0.08,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0",0.001, 0.7, .01, 0.2);
-	pPs= new Ps(&NUptFlexDegree, TOTPROFILE,MINERAL_N, NOFPROC,PLANT_NUPTAKE, NORMAL);
+	pPs= new Ps(&NUptFlexDegree, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);
 		Define(pPs,   	"NUptFlexibilityDeg", .5,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Flexible Uptake = 0",0.0, 1.);
-	pPs= new Ps(&NUptRootCoefMin, TOTPROFILE,MINERAL_N, NOFPROC,PLANT_NUPTAKE, NORMAL);
+	pPs= new Ps(&NUptRootCoefMin, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);
 		Define(pPs,   	"NUptRootCoefMin", .01,UNIT_TYPES::TEMP_UNIT,"Nitrogen and Carbon > 0|Root_Density_Influence>0",0.0001, 1.);
-	pPs = new Ps(&PUptMaxAvailFrac, TOTPROFILE, MINERAL_P, NOFPROC, PLANT_NUPTAKE, NORMAL);
+	pPs = new Ps(&PUptMaxAvailFrac, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);
 		Define(pPs, "PUptMaxAvailFrac", 0.08,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Phosphorus>0", 0.001, 0.7, .01, 0.2);
 ;
 ;
-	pP= new P(&NUptPlantFlexDegree,pNumPlants,SIMPROFILE,AMMONIUM, TRANSPORT,SORPTION, NORMAL);
+	pP= new P(&NUptPlantFlexDegree,pNumPlants, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::SORPTION, userlevel::NORMAL);
 	initv.assign(p_Plant->NumPlants,0.5);
 	Define(pP, pNumPlants ,"Flex Degree",initv,"-","Nitrogen and Carbon > 0|Flexible Uptake > 0",0.,1.);
 	mTab_Flex.push_back(pP);
-	pTab= new Tab(&mTab_Flex, SIMPROFILE,AMMONIUM, TRANSPORT,SORPTION, NORMAL);
+	pTab= new Tab(&mTab_Flex, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::SORPTION, userlevel::NORMAL);
 	Define(pTab,"Plant specific flexible uptake","Flex Degree","Flexible Uptake > 0");
 	
-	pPs= new Ps(&DeniActivityRateCoef, TOTPROFILE,NITRATE, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DeniActivityRateCoef, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pPs,    "DeniActivityRateCoef", 0.5, "1/day","Nitrogen and Carbon > 0|Denitrification > 1",0.1, 1.);
-	pPs= new Ps(&InitDenitBiomass, TOTPROFILE,DENITRIFIERS, NOFPROC,INITB, NORMAL);
+	pPs= new Ps(&InitDenitBiomass, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 	Define(pPs,  "InitDenitBiomass",2.,"gN/m2", "Denitrification =2",0.,500.);
-	pPs= new Ps(&NXOY_HalfRateCoef, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&NXOY_HalfRateCoef, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	Define(pPs,  "NXOY_HalfRateCoef",87.,"mg/l", "Denitrification =2",0.,500.);
-	pPs= new Ps(&NXOY_DOC_HalfRateCoef, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&NXOY_DOC_HalfRateCoef, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "NXOY_Doc_HalfRateCoef",17.,"mg/l", "Denitrification =2",0.,100.);
 ;
-	pPs= new Ps(&DMic_GrowthCoef_NO3, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_GrowthCoef_NO3, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"DMic_GrowthCoef_NO3",16.,"/day", "Denitrification =2",0.,100.);
-	pPs= new Ps(&DMic_GrowthCoef_NO2, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_GrowthCoef_NO2, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"DMic_GrowthCoef_NO2",16.,"/day", "Denitrification =2",0.,100.);
-	pPs= new Ps(&DMic_GrowthCoef_NO, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_GrowthCoef_NO, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"DMic_GrowthCoef_NO",8.2,"/day", "Denitrification =2",0.,100.);
-	pPs= new Ps(&DMic_GrowthCoef_N2O, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_GrowthCoef_N2O, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"DMic_GrowthCoef_N2O",8.2,"/day", "Denitrification =2",0.,100.);
 ;
-	pPs= new Ps(&DMic_RespCoef_NO3, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_RespCoef_NO3, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	 	Define(pPs,  	"Dmic_RespCoef_NO3",2.2,"/day", "Denitrification =2",0.,100.);
-	pPs= new Ps(&DMic_RespCoef_NO2, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_RespCoef_NO2, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"Dmic_RespCoef_NO2",0.84,"/day", "Denitrification =2",0.,100.);
-	pPs= new Ps(&DMic_RespCoef_NO, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_RespCoef_NO, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"Dmic_RespCoef_NO",0.84,"/day", "Denitrification =2",0.,100.);
-	pPs= new Ps(&DMic_RespCoef_N2O, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_RespCoef_N2O, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"Dmic_RespCoef_N2O",1.9,"/day", "Denitrification =2",0.,100.);
 ;
-	pPs= new Ps(&DMic_EffCoef_NO3, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_EffCoef_NO3, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	 	Define(pPs,  	"Dmic_EffCoef_NO3",0.401,"-", "Denitrification =2",0.1,1.);
-	pPs= new Ps(&DMic_EffCoef_NO2, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_EffCoef_NO2, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"Dmic_EffCoef_NO2",0.428,"-", "Denitrification =2",0.1,1.);
-	pPs= new Ps(&DMic_EffCoef_NO, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_EffCoef_NO, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"Dmic_EffCoef_NO",0.428,"-", "Denitrification =2",0.1,1.);
-	pPs= new Ps(&DMic_EffCoef_N2O, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_EffCoef_N2O, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"Dmic_EffCoef_N2O",0.151,"-", "Denitrification =2",0.1,1.);
 ;
-	pPs= new Ps(&D_InhiHalfRateNO3_N2O, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&D_InhiHalfRateNO3_N2O, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"D_InhiHalfRateNO3_N2O",0.3,"mg/l", "Denitrification =2",0.,1.E5);
 ;
-	pPs= new Ps(&DMic_DeathRateCoef, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_DeathRateCoef, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"DMic_DeathRateCoef",0.01,"/day", "Denitrification =2",0.,1.);
-	pPs= new Ps(&DMic_DeathCDormancy, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_DeathCDormancy, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"DMic_DeathCDormancy",0.0001,"/day", "Denitrification =2",0.,0.01);
-	pPs= new Ps(&DMic_DormancyThreshold, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&DMic_DormancyThreshold, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "DMic_DormancyThreshold",0.1,"g/N/m", "Denitrification =2",0.,10.)	;
 ;
-	pPs= new Ps(&D_pH_HalfCoef, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&D_pH_HalfCoef, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"D_pH_HalfCoef",4.25,"-", "Denitrification =2",0.,100.);
-	pPs= new Ps(&D_pH_ShapeCoef, TOTPROFILE,DENITRIFIERS, NOFPROC,DENITRIFICATION, NORMAL);
+	pPs= new Ps(&D_pH_ShapeCoef, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  	"D_pH_ShapeCoef",0.5,"-", "Denitrification =2",0.,100.);
 	
-	pPs= new Ps(&NitriGrowthCoef, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&NitriGrowthCoef, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		
 	Define(pPs, "NitriGrowthCoef", .01, "1/day","Nitrogen and Carbon > 0|Nitrification > 0",0.00001, 10.);
-	pPs= new Ps(&NitriHalfRateDOC, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&NitriHalfRateDOC, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,     "NitriHalfRateDOC", 5.25, "mg/l","Nitrogen and Carbon > 0|Nitrification > 0",1.E-10, 10.);
-	pPs= new Ps(&NitriHalfRateNO3, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&NitriHalfRateNO3, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,     "NitriHalfRateNO3", 1.6, "mg/l","Nitrogen and Carbon > 0|Nitrification > 0",1.E-10, 10.);
 
-	pPs= new Ps(&NitriDeathCoef, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&NitriDeathCoef, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,    "NitriDeathCoef", .005, "1/day","Nitrogen and Carbon > 0|Nitrification > 0",1.E-7, 10.);
 
-	pPs= new Ps(&InitNitriFracExpTail, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&InitNitriFracExpTail, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "InitNitriFracExpTail",0.1,"-", "Initial Nitrifier = 2|Nitrification >0",0.,1.);
-	pPs= new Ps(&NitrifierDepth, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&NitrifierDepth, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "NitrifierDepth",-1.,"m", "Nitrification >0",-5.,0.);
-	pPs= new Ps(&InitNitrifier, TOTPROFILE,NITRIFIERS, NOFPROC,INITB, NORMAL);
+	pPs= new Ps(&InitNitrifier, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pPs,  "InitNitrifier",1.,UNIT_TYPES::MASS_UNIT, "Nitrification >0",0.,100.);
-	pPs= new Ps(&NitrificationRateCoef, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&NitrificationRateCoef, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "NitrificationRateCoef",.25,"mg ha/(l day kg)", "Nitrification >0",0.1E-5,1.);
-	pPs= new Ps(&NitriHalfRateNH4, TOTPROFILE,NITRIFIERS, NOFPROC,NITRIFICATION, NORMAL);
+	pPs= new Ps(&NitriHalfRateNH4, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "NitriHalfRateNH4",6.18,"mg/l", "Nitrification >0",0.,50.);
 
 		// To be used in Fungi Uptake function;
-		pPs = new Ps(&FungiCoverRedCoef, TOTPROFILE, MYCORRHIZA, NOFPROC, DENITRIFICATION, NORMAL);
+		pPs = new Ps(&FungiCoverRedCoef, datatype::TOTPROFILE, elements::MYCORRHIZA, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs, "FungiCoverRedCoef", 10., "-", "Denitrification > 0|Nitrogen and Carbon > 0|Mycorrhiza Fungal Growth>0", 0., 10.);
-		pPs = new Ps(&FungiMinEnhanceCoef, TOTPROFILE, MYCORRHIZA, NOFPROC, DENITRIFICATION, NORMAL);
+		pPs = new Ps(&FungiMinEnhanceCoef, datatype::TOTPROFILE, elements::MYCORRHIZA, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs, "FungiMinEnhanceCoef", 1., "-", "Denitrification > 0|Nitrogen and Carbon > 0|Mycorrhiza Fungal Growth>0", 0., 10.);
-		pPs = new Ps(&FungiNH4_Enhance, TOTPROFILE, MYCORRHIZA, NOFPROC, DENITRIFICATION, NORMAL);
+		pPs = new Ps(&FungiNH4_Enhance, datatype::TOTPROFILE, elements::MYCORRHIZA, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs, "Fungi NH4 Enhance", 2., "-", "Denitrification > 0|Nitrogen and Carbon > 0|Mycorrhiza Fungal Growth>0", 0., 5.);
 		//Why Denitrification>0??? 
-		pPs = new Ps(&FungiPO4EnhanceCoef, TOTPROFILE, MYCORRHIZA, NOFPROC, DENITRIFICATION, NORMAL);
+		pPs = new Ps(&FungiPO4EnhanceCoef, datatype::TOTPROFILE, elements::MYCORRHIZA, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs, "FungiPO4EnhanceCoef", 4., "-", "Nitrogen and Carbon > 0|Mycorrhiza Fungal Growth>0|Phosphorus>0", 0., 50.);
 
 
@@ -391,196 +391,196 @@ pPs = new Ps(&NitriTemQ10, TOTPROFILE, MINERAL_N, NOFPROC, NITRIFICATION, NORMAL
 ;
 ;
 ;
-	pX= new X(&SoilNitrate ,pNL,SIMPROFILE,AMMONIUM, STORAGE,NOBPROC, NORMAL);
+	pX= new X(&SoilNitrate ,pNL, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(pSoil->NL,10.);
 	Define(pX, pNL ,			"SoilNitrate",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1");
-	pX= new X(&SoilAmmonium ,pNL,SIMPROFILE,AMMONIUM, STORAGE,NOBPROC, NORMAL);
+	pX= new X(&SoilAmmonium ,pNL, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,			"SoilAmmonium",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1");
 	initv.assign(pSoil->NL,0.);
-	pT= new T(&SoilNitrateFlow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilNitrateFlow ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL ,		"SoilNitrateFlow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
-	pT= new T(&SoilNitrateDrainage ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilNitrateDrainage ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL ,	"SoilNitrateDrainage",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|SoilDrainageInput > 0");
-	pT= new T(&SoilNitrateInflow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilNitrateInflow ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL ,	"SoilNitrateInflow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Irrigation > 0|Dripper>0");
-	pT= new T(&SoilNitrateUptake ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilNitrateUptake ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL ,	"SoilNitrateUptake",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
 	
-	pT= new T(&SoilAmmoniumFlow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilAmmoniumFlow ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	    Define(pT, pNL ,		"SoilAmmoniumFlow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Ammonium Mobility > 0");
-	pT= new T(&SoilAmmoniumDrainage ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilAmmoniumDrainage ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL , "SoilAmmoniumDrainage",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|SoilDrainageInput > 0|Ammonium Mobility > 0");
-	pT= new T(&SoilAmmoniumUptake ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilAmmoniumUptake ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL ,	"SoilAmmoniumUptake",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
-	pT= new T(&SoilAmmoniumInflow ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&SoilAmmoniumInflow ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL , "SoilAmmoniumInflow",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Irrigation >0|Dripper>0");
 	
-	pT= new T(&DenitrificationRate ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&DenitrificationRate ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	    Define(pT, pNL ,	"DenitrificationRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification > 0");
-	pT= new T(&NitrificationRate ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pT= new T(&NitrificationRate ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL   ,	"NitrificationRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1");
 ;
-	pG= new G(&DenitResponse ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pG= new G(&DenitResponse ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pG, pNL , "DenitResponse",initv,"-", "Nitrogen and Carbon >= 1|Denitrification > 0");
 ;
-	pG= new G(&SoilNitrateConc ,pNL,SIMPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pG= new G(&SoilNitrateConc ,pNL, datatype::SIMPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pG, pNL , "SoilNitrateConc",initv,"mg-N/l", "Nitrogen and Carbon >= 1");
-	pG= new G(&SoilAmmoniumConc ,pNL,SIMPROFILE,AMMONIUM, TRANSPORT,NOBPROC, NORMAL);
+	pG= new G(&SoilAmmoniumConc ,pNL, datatype::SIMPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pG, pNL , "SoilAmmoniumConc",initv,"mg-N/l", "Nitrogen and Carbon >= 1");
 ;
-	pGs= new Gs(&NTotMinN_Drainage,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotMinN_Drainage, datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Tot MinN Drainage", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotNO3_Drainage,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNO3_Drainage, datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Tot NO3 Drainage", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotNH4_Drainage ,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNH4_Drainage , datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "N Tot NH4 Drainage", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 
-	pGs= new Gs(&NTotMinNConc_Drainage ,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotMinNConc_Drainage , datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "N Conc MinN Drainage", 0.,"mg-N/l" , "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotNO3Conc_Drainage ,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNO3Conc_Drainage , datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Conc NO3 Drainage", 0.,"mg-N/l" , "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotNH4Conc_Drainage,TOTPROFILE,AMMONIUM, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNH4Conc_Drainage, datatype::TOTPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Conc NH4 Drainage", 0.,"mg-N/l" , "Nitrogen and Carbon >0");
 	
-	pGs= new Gs(&NTotDenitrification,TOTPROFILE ,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotDenitrification, datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Tot Denitrification", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotNitrification,TOTPROFILE ,MINERAL_N, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNitrification, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Tot Nitrification", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 ;
-	pGs= new Gs(&NTotMin_PlantUptake,TOTPROFILE ,MINERAL_N, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotMin_PlantUptake, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Tot Min Plant Uptake", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotNO3_PlantUptake,TOTPROFILE,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNO3_PlantUptake, datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Tot NO3 Plant Uptake", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotNH4_PlantUptake,TOTPROFILE ,AMMONIUM, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNH4_PlantUptake, datatype::TOTPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,  "N Tot NH4 Plant Uptake", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >0");
 ;
-	pGs= new Gs(&NTotNitrate,TOTPROFILE ,NITRATE, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotNitrate, datatype::TOTPROFILE, elements::NITRATE, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "N Tot Nitrate Soil", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotAmmonium,TOTPROFILE ,AMMONIUM, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotAmmonium, datatype::TOTPROFILE, elements::AMMONIUM, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "N Tot Ammonium Soil", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >0");
-	pGs= new Gs(&NTotMinN_Soil,TOTPROFILE ,MINERAL_N, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&NTotMinN_Soil, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "N Tot MinN Soil", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >0");
 ;
 // Microbial based variables
 	initv.assign(pSoil->NL, 10.);
-	pX= new X(&Nitrifier_Biomass ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);
+	pX= new X(&Nitrifier_Biomass ,pNL, datatype::SIMPROFILE, elements::NITRIFIERS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"Nitrifier_Biomass",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
-	pT= new T(&Nitrifier_GrowthRate ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);	
+	pT= new T(&Nitrifier_GrowthRate ,pNL, datatype::SIMPROFILE, elements::NITRIFIERS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);	
 	initv.assign(pSoil->NL, 0.);
 	Define(pT, pNL ,	"Nitrifier GrowthRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
-	pT= new T(&Nitrifier_DeathRate ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);	
+	pT= new T(&Nitrifier_DeathRate ,pNL, datatype::SIMPROFILE, elements::NITRIFIERS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);	
 		Define(pT, pNL ,	"Nitrifier DeathRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
-	pT= new T(&Nitrifier_RespRate ,pNL,SIMPROFILE,NITRIFIERS, STORAGE,NOBPROC, NORMAL);	
+	pT= new T(&Nitrifier_RespRate ,pNL, datatype::SIMPROFILE, elements::NITRIFIERS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);	
 		Define(pT, pNL ,	"Nitrifier_RespRate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification > 0");
 ;
 
 // Microbial base Denitrification
 	initv.assign(pSoil->NL,25.);
-	pX= new X(&Denitrifier_Biomass ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,NOBPROC, NORMAL);
+	pX= new X(&Denitrifier_Biomass ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"Denitrifier_Biomass",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	initv.assign(pSoil->NL,0.5);
-	pX= new X(&Denitrifier_Activity ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,NOBPROC, NORMAL);
+	pX= new X(&Denitrifier_Activity ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"Denitrifier_Activity",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 ;	initv.assign(pSoil->NL,0.);
-	pX= new X(&An_NO3 ,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,NOBPROC, NORMAL);
+	pX= new X(&An_NO3 ,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"An_NO3",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pX= new X(&An_NO2 ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
+	pX= new X(&An_NO2 ,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"An_NO2",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pX= new X(&An_NO ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
+	pX= new X(&An_NO ,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"An_NO",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pX= new X(&An_N2O ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
+	pX= new X(&An_N2O ,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"An_N20",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pX= new X(&An_N2 ,pNL,SIMPROFILE,ANAROBIC_GAS , STORAGE,NOBPROC, NORMAL);
+	pX= new X(&An_N2 ,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pX, pNL ,	"An_N2",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&Denitrifier_Growth ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&Denitrifier_Growth ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 	initv.assign(pSoil->NL,0.);
 		Define(pT, pNL , "Denitrifier_Growth",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&Denitrifier_Death ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&Denitrifier_Death ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "Denitrifier_Death",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	initv.assign(pSoil->NL,0.);
-	pT= new T(&Denitrifier_ActivityRate ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&Denitrifier_ActivityRate ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "Denitrifier_ActivityRate",initv,"-", "Nitrogen and Carbon >= 1|Denitrification = 2");
 
-	pT= new T(&An_Cons_NO3 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Cons_NO3 ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Cons_NO3",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&An_Cons_NO2 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Cons_NO2 ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Cons_NO2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&An_Cons_NO ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Cons_NO ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Cons_NO",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&An_Cons_N2O ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Cons_N2O ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Cons_N20",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 
-	pT= new T(&An_Prod_NO2 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Prod_NO2 ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Prod_NO2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&An_Prod_NO ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Prod_NO ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Prod_NO",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&An_Prod_N2O ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Prod_N2O ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Prod_N2O",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pT= new T(&An_Prod_N2 ,pNL,SIMPROFILE,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);	
+	pT= new T(&An_Prod_N2 ,pNL, datatype::SIMPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pT, pNL , "An_Prod_N2",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_TotCons_NO3,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&An_TotCons_NO3, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs,   "NTot_An_Cons_NO3", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_TotCons_NO2,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
-		Define(pGs,   "NTot_An_Cons_NO2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_TotCons_NO,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&An_TotCons_NO2, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
+		Define(pGs,"NTot_An_Cons_NO2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
+	pGs= new Gs(&An_TotCons_NO, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_Cons_NO", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_TotCons_N2O, TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,NOBPROC, NORMAL);
+	pGs= new Gs(&An_TotCons_N2O, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_Cons_N20", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 
-	pGs= new Gs(&An_TotProd_NO2,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_TotProd_NO2, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_Prod_NO2",0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_TotProd_NO,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_TotProd_NO, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_Prod_NO", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_TotProd_N2O,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_TotProd_N2O, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_Prod_N2O", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_TotProd_N2,TOTPROFILE ,ANAROBIC_GAS, TRANSPORT,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_TotProd_N2, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_Prod_N2", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 
-	pGs= new Gs(&An_Tot_NO3,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_Tot_NO3, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_NO3", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_Tot_NO2, TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_Tot_NO2, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  "NTot_An_NO2", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_Tot_NO,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_Tot_NO, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_NO", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_Tot_N2O,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_Tot_N2O, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,   "NTot_An_N20", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&An_Tot_N2,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&An_Tot_N2, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	    Define(pGs,   "NTot_An_N2", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	initv.assign(pSoil->NL,0.);
-	pG= new G(&An_NO3_Conc,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);	
+	pG= new G(&An_NO3_Conc,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 	Define(pG, pNL, 	"An_NO3_Conc",initv,"mg/l", "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pG= new G(&An_NO2_Conc,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);	
+	pG= new G(&An_NO2_Conc,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pG, pNL, 	"An_NO2_Conc",initv,"mg/l", "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pG= new G(&An_NO_Conc,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);	
+	pG= new G(&An_NO_Conc,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pG, pNL, 	"An_NO_Conc",initv,"mg/l", "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pG= new G(&An_N2O_Conc,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);	
+	pG= new G(&An_N2O_Conc,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pG, pNL, 	"An_N2O_Conc",initv,"mg/l", "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pG= new G(&An_N2_Conc,pNL,SIMPROFILE,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);	
+	pG= new G(&An_N2_Conc,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);	
 		Define(pG, pNL, 	"An_N2_Conc",initv,"mg/l", "Nitrogen and Carbon >= 1|Denitrification = 2");
 	
-	pGs= new Gs(&N_Tot_AnarobicGasStorage ,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_AnarobicGasStorage, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  "NTotGasStorage", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&N_Tot_DenitMicrobeStorage,TOTPROFILE ,DENITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_DenitMicrobeStorage, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  	"NTotDenitMicrobe", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&N_Tot_NitriMicrobeStorage ,TOTPROFILE ,NITRIFIERS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_NitriMicrobeStorage , datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  	"NTotNitriMicrobe", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
-	pGs= new Gs(&N_Tot_DenitGrowthRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_DenitGrowthRate, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  	"NTotDenitMicGrowthRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&N_Tot_NitriGrowthRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_NitriGrowthRate, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  	"NTotNitriMicGrowthRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
-	pGs= new Gs(&N_Tot_DenitDeathRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_DenitDeathRate, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  	"NTotDenitMicDeathRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&N_Tot_NitriDeathRate,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_NitriDeathRate, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pGs,  	"NTotNitriMicDeathRate", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Nitrification = 1");
 
 
-	pGs= new Gs(&N_Tot_DenitGrowth_NO3,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_DenitGrowth_NO3, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	    Define(pGs,	"NTotDenitMicGrowth_NO3", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&N_Tot_DenitGrowth_NO2,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_DenitGrowth_NO2, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	    Define(pGs,  	"NTotDenitMicGrowth_NO2", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&N_Tot_DenitGrowth_NO,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_DenitGrowth_NO, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	    Define(pGs,  	"NTotDenitMicGrowth_NO", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
-	pGs= new Gs(&N_Tot_DenitGrowth_N2O,TOTPROFILE ,ANAROBIC_GAS, STORAGE,DENITRIFICATION, NORMAL);
+	pGs= new Gs(&N_Tot_DenitGrowth_N2O, datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	    Define(pGs,  	"NTotDenitMicGrowth_N2O", 0.0,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Denitrification = 2");
 	
 	return true;

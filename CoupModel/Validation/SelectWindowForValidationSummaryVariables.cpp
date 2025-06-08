@@ -497,10 +497,10 @@ void SelectWindowForValidationSummaryVariables::OnApply()
 	}
 
 	if (m_VariableFromFile)
-		m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim, m_TypeVal, selected, m_LinkName,m_LinkFileName, m_RelError, m_AbsError);
+		m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim, sumvartype(m_TypeVal), selected, m_LinkName,m_LinkFileName, m_RelError, m_AbsError);
 
 	else
-		m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim,  m_TypeVal , selected, m_ObsValue, m_RelError, m_AbsError);
+		m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim,  sumvartype(m_TypeVal) , selected, m_ObsValue, m_RelError, m_AbsError);
 
 	m_pDoc->m_Doc.m_ValSum_Array[m_NumSelected].MultiBin_StartMin = m_MultiSumPeriod_Start;
 	m_pDoc->m_Doc.m_ValSum_Array[m_NumSelected].MultiBin_EndMin = m_MultiSumPeriod_End;
@@ -537,10 +537,10 @@ void SelectWindowForValidationSummaryVariables::OnApplyAllId()
 		vv = m_pDoc->m_Doc.GetAllSelectedOutputsSortedByName();
 		SIMB selected = FUtil::GetPointerforNumberinList(vv, isim);
 		if (m_VariableFromFile)
-			m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim, m_TypeVal, selected, id, m_LinkFileName, m_RelError, m_AbsError);
+			m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim, sumvartype(m_TypeVal), selected, id, m_LinkFileName, m_RelError, m_AbsError);
 
 		else
-			m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim, m_TypeVal, selected, m_ObsValue, m_RelError, m_AbsError);
+			m_pDoc->m_Doc.m_ValidationData.AddValSumVarList(m_NumSelected, m_DependentVarTypeSelected, isim, sumvartype(m_TypeVal), selected, m_ObsValue, m_RelError, m_AbsError);
 
 		m_pDoc->m_Doc.m_ValSum_Array[m_NumSelected].MultiBin_StartMin = m_MultiSumPeriod_Start;
 		m_pDoc->m_Doc.m_ValSum_Array[m_NumSelected].MultiBin_EndMin = m_MultiSumPeriod_End;
@@ -675,8 +675,8 @@ void SelectWindowForValidationSummaryVariables::OnHdnItemclickList1(NMHDR *pNMHD
 
 	pList=(CListBox*)GetDlgItem(IDC_SimulatedVarList2);
 	int isim=pList->GetCurSel();
-
-	int iOutputs=m_pDoc->m_Doc.m_ValidationData.GetValSumVarOutputType(m_ItemSelected);
+	sumvartype sumvartyp = m_pDoc->m_Doc.m_ValidationData.GetValSumVarOutputType(m_ItemSelected);
+	auto iOutputs = static_cast<size_t>(sumvartyp);// m_pDoc->m_Doc.m_ValidationData.GetValSumVarOutputType(m_ItemSelected);
 	m_SumTypeVariable.SetCurSel(iOutputs);
 	/*m_SimVariableSel=m_pDoc->GetValSumVarName(m_ItemSelected);
 	int localindex=m_pDoc->GetValSumVarLocalIndex(m_ItemSelected);
@@ -761,7 +761,7 @@ void SelectWindowForValidationSummaryVariables::OnEnKillfocusEdit4()
 	m_TypeVal = m_SumTypeVariable.GetCurSel();
 	if(m_ChangeEnable) {
 	
-		m_pDoc->m_Doc.m_ValidationData.SetValSumVarErrors(m_ItemSelected,m_TypeVal, m_ObsValue, m_RelError, m_AbsError);
+		m_pDoc->m_Doc.m_ValidationData.SetValSumVarErrors(m_ItemSelected,sumvartype(m_TypeVal), m_ObsValue, m_RelError, m_AbsError);
 		OnInitDialog();
 	}
 
@@ -866,18 +866,18 @@ void SelectWindowForValidationSummaryVariables::OnBnClickedSavetoexcel()
 			sval=m_pDoc->m_Doc.m_ValidationData.GetValSumVarGroup(i).c_str();
 			sheet->Cell(i+1,0)->SetString(sval.c_str());
 		
-			int itype=m_pDoc->m_Doc.m_ValidationData.GetValSumVarNameType(i);
+			auto itype=m_pDoc->m_Doc.m_ValidationData.GetValSumVarNameType(i);
 			switch (itype){
-				case (1):
+			case (simtype::STATE):
 					sval="State";
 					break;
-				case (2):
+			case (simtype::FLOW):
 					sval="Flow";
 					break;
-				case (3):
+			case (simtype::AUX):
 					sval="Auxiliary";
 					break;
-				case (4):
+			case (simtype::DRIVE):
 					sval="Drivings";
 					break;
 			}
@@ -892,24 +892,25 @@ void SelectWindowForValidationSummaryVariables::OnBnClickedSavetoexcel()
 			}
 			sheet->Cell(i+1,2)->SetString(sval.c_str());
 
-			itype=m_pDoc->m_Doc.m_ValidationData.GetValSumVarOutputType(i);
-			switch (itype){
-				case (0):
+			auto sumvartype=m_pDoc->m_Doc.m_ValidationData.GetValSumVarOutputType(i);
+			
+			switch (sumvartype){
+				case (sumvartype::INITIAL):
 					sval="Initial";
 					break;
-				case (1):
+				case (sumvartype::FINAL):
 					sval="Final";
 					break;
-				case (2):
+				case (sumvartype::MINIMUM):
 					sval="Min";
 					break;
-				case (3):
+				case (sumvartype::MAXIMUM):
 					sval="Max";
 					break;
-				case (4):
+				case (sumvartype::MEAN):
 					sval="Mean";
 					break;
-				case (5):
+				case (sumvartype::ACCUMULATED):
 					sval="Accumulated";
 					break;
 			}

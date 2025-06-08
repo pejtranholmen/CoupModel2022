@@ -356,7 +356,7 @@ bool PGButtonEvents::ImportListButtons(int ParV, int index, int col)
 	}
 	else if (ParV == m_ImportedFiles.Param) {
 		if (index >= 1 && m_ImportedFiles.VectorNames.size() >= index) {
-			string filename = m_ImportedFiles.VectorNames[index - 1];
+			string filename = string(m_ImportedFiles.VectorNames[index - 1]);
 			AddPGFile(filename);
 			OnSheetSetup(0);
 		}
@@ -366,7 +366,7 @@ bool PGButtonEvents::ImportListButtons(int ParV, int index, int col)
 			Make_ImportFromCSV_File_Prior();
 	}
 	else if (ParV == m_AddFileList.Param&&index > 0 && index <= m_AddFileList.VectorNames.size()) {
-		string filename = m_AddFileList.VectorNames[index - 1];
+		string filename = string(m_AddFileList.VectorNames[index - 1]);
 		MFC_Util m;
 		auto ans = m.MessageBoxReturn("Do you Want to remove file: " + filename + " from list", "RemoveFrom Add List", IDOK);
 		if (ans == IDOK) {
@@ -521,7 +521,7 @@ void PGButtonEvents::DescriptionButtons(int ParV)
 					string str;
 					elements elem = pPG->GetVarElement(ivar, irep);
 					if (elem != elements::GENERAL&&elem >= elements(0) && size_t(elem) < p_ModelInfo->GetNumberOfElements()) {
-						pPG->SetVarName(ivar, string(p_ModelInfo->ElementName(size_t(elem))), irep);
+						pPG->SetVarName(ivar, string(p_ModelInfo->ElementName(elem)), irep);
 						m_Changed_Description = true;
 						pPG->pg.status.FileModified = true;
 					}
@@ -583,7 +583,7 @@ void PGButtonEvents::ApplyElementTypeToName(bool CleanInstead)
 		if (CleanInstead)
 			m_PGFileImport.m_CurrentFileInfo.Des.base.Name[count] = "";
 		else
-			m_PGFileImport.m_CurrentFileInfo.Des.base.Name[count] = p_ModelInfo->ElementName(size_t(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[count].Element));
+			m_PGFileImport.m_CurrentFileInfo.Des.base.Name[count] = p_ModelInfo->ElementName(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[count].Element);
 		count++;
 	});
 }

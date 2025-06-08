@@ -1285,7 +1285,7 @@ bool PGCommands::SplitIntoNoRepetionsFiles(int col, int row){
 bool PGCommands::SetNewIndependenceVar(int item, int col, int row) {
  enum vartype var;
  CUGCell cell;
- var=PGVAR;
+ var= vartype::PGVAR;
  size_t Index;
  Index=row+1;
  GetCell(-1, row, &cell);
@@ -1429,7 +1429,7 @@ else if(item==5020) {
 			str=pPG->GetVarName(Index,Irepit );
 			FUtil::trim(str);
 			str += " ";
-			string unit = pPG->GetVarUnit(Index, Irepit);
+			string unit = string(pPG->GetVarUnit(Index, Irepit));
 			FUtil::trim(unit);
 			str += " (" + unit + ")";
 		}

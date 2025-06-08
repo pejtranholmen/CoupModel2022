@@ -78,12 +78,12 @@ private:
 		void grs80_params() {
             axis = 6378137.0; // GRS 80.
             flattening = 1.0 / 298.257222101; // GRS 80.
-            central_meridian = numeric_limits<double>::min();
+            central_meridian = std::numeric_limits<double>::min();
 		};
 		void bessel_params() {
             axis = 6377397.155; // Bessel 1841.
             flattening = 1.0 / 299.1528128; // Bessel 1841.
-            central_meridian = numeric_limits<double>::min();
+            central_meridian = std::numeric_limits<double>::min();
             scale = 1.0;
             false_northing = 0.0;
             false_easting = 1500000.0;
@@ -92,7 +92,7 @@ private:
         {
             axis = 6378137.0; // GRS 80.
             flattening = 1.0 / 298.257222101; // GRS 80.
-            central_meridian =numeric_limits<double>::min() ;
+            central_meridian =std::numeric_limits<double>::min() ;
             scale = 1.0;
             false_northing = 0.0;
             false_easting = 150000.0;

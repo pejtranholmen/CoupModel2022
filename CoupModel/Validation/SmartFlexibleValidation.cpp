@@ -42,14 +42,14 @@ bool SmartFlexibleValidation::UpdateValidationPerformance_SmartFlexVariables() {
 			auto valsum = m_pSimDoc->GetValSumStruct(i);
 			bool vectortype = false;
 			SIMB sumv;
-			sumv.pBase = GetPtrFromIntType(valsum.OutputType, valsum.Group, valsum.Name);
+			sumv.pBase = GetPtr(valsum.OutputType, valsum.Group, valsum.Name);
 			sumv.TabIndex = valsum.LocalIndex;
 			float simvalue;
 			vector<float> sumsimvector;
 			if (valsum.SimValueSource == SIMSUMSOURCE(0)) {
 				if (sumv.pBase->Is_Vector()) {
 					SumValue = ((OutVector*)sumv.pBase)->GetSumList(sumv.TabIndex);
-					auto sumindex = ((OutVector*)sumv.pBase)->GetSumVarIndex(sumv.TabIndex - 1, valsum.SumVarType + 7);
+					auto sumindex = ((OutVector*)sumv.pBase)->GetSumVarIndex(sumv.TabIndex - 1, static_cast<size_t>(valsum.SumVarType) + 7);
 					for (size_t runno = 0; runno < m_MStorage.GetNumAccepted(); runno++) {
 						simvalue = m_MStorage.GetSumV(runno, sumindex - 6);
 						sumsimvector.push_back(simvalue);
@@ -57,7 +57,7 @@ bool SmartFlexibleValidation::UpdateValidationPerformance_SmartFlexVariables() {
 				}
 				else {
 					SumValue = ((OutSingle*)sumv.pBase)->GetSumList();
-					auto sumindex = ((OutSingle*)sumv.pBase)->GetSumVarIndex(valsum.SumVarType + 7);
+					auto sumindex = ((OutSingle*)sumv.pBase)->GetSumVarIndex(static_cast<size_t>(valsum.SumVarType) + 7);
 					for (size_t runno = 0; runno < m_MStorage.GetNumAccepted(); runno++) {
 						simvalue = m_MStorage.GetSumV(runno, sumindex - 6);
 						sumsimvector.push_back(simvalue);
@@ -297,7 +297,7 @@ bool SmartFlexibleValidation::CalculatePerformanceAndSetValues() {
 			valsum.NSE.clear();
 
 			SIMB sumv;
-			sumv.pBase = pDoc->GetPtrFromIntType(valsum.OutputType, valsum.Group, valsum.Name);
+			sumv.pBase = pDoc->GetPtr(valsum.OutputType, valsum.Group, valsum.Name);
 			sumv.TabIndex = valsum.LocalIndex;
 			bool vectortype = false;
 			size_t sumindex = 6;
@@ -310,10 +310,10 @@ bool SmartFlexibleValidation::CalculatePerformanceAndSetValues() {
 				vectortype = sumv.pBase->Is_Vector();
 
 				if (sumv.pBase->Is_Vector()) {
-					sumindex = ((OutVector*)sumv.pBase)->GetSumVarIndex(sumv.TabIndex - 1, valsum.SumVarType + 7);
+					sumindex = ((OutVector*)sumv.pBase)->GetSumVarIndex(sumv.TabIndex - 1, static_cast<size_t>(valsum.SumVarType) + 7);
 				}
 				else {
-					sumindex = ((OutSingle*)sumv.pBase)->GetSumVarIndex(valsum.SumVarType + 7);
+					sumindex = ((OutSingle*)sumv.pBase)->GetSumVarIndex(static_cast<size_t>(valsum.SumVarType) + 7);
 				}
 			}
 			vector<float> residual_vector;
@@ -526,17 +526,17 @@ bool SmartFlexibleValidation::SetSimObsRatio() {
 			valsum.SimValueVector.clear();
 
 			SIMB sumv;
-			sumv.pBase = m_pSimDoc->GetPtrFromIntType(valsum.OutputType, valsum.Group, valsum.Name);
+			sumv.pBase = m_pSimDoc->GetPtr(valsum.OutputType, valsum.Group, valsum.Name);
 			sumv.TabIndex = valsum.LocalIndex;
 			bool vectortype = false;
 			size_t sumindex=6;
 			if (sumv.pBase != nullptr) {
 				vectortype = sumv.pBase->Is_Vector();
 				if (sumv.pBase->Is_Vector()) {
-					sumindex = ((OutVector*)sumv.pBase)->GetSumVarIndex(sumv.TabIndex - 1, valsum.SumVarType + 7);
+					sumindex = ((OutVector*)sumv.pBase)->GetSumVarIndex(sumv.TabIndex - 1, static_cast<size_t>(valsum.SumVarType) + 7);
 				}
 				else {
-					sumindex = ((OutSingle*)sumv.pBase)->GetSumVarIndex(valsum.SumVarType + 7);
+					sumindex = ((OutSingle*)sumv.pBase)->GetSumVarIndex(static_cast<size_t>(valsum.SumVarType) + 7);
 				}
 			}
 			double SimAcc, ObsAcc;
@@ -650,7 +650,7 @@ double SmartFlexibleValidation::SumLikelihoodSingleValue(size_t index, double si
 	else E_Meas = 1;
 
 
-Sw* pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "Likelihood Function"));
+Sw* pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("Likelihood Function")));
 	
 
 enum BAYES {GAUSSIAN, SIVIAS};

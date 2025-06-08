@@ -445,7 +445,7 @@ void Doc::SetDefaultAnnimationSelection()
 		Name="Temperature";
 		Group="Soil heat flows";
 		Type="Auxiliary Variables";
-		pSimB=GetPtr(AUX,Name);
+		pSimB=GetPtr(simtype::AUX,Name);
 
 		anode.pBase=pSimB;
 		anode.iChart=1;
@@ -461,7 +461,7 @@ void Doc::SetDefaultAnnimationSelection()
 		Name="WaterContent";
 		Group="Soil water flows";
 		Type="Auxiliary Variables";
-		pSimB=GetPtr(AUX,Name);
+		pSimB=GetPtr(simtype::AUX,Name);
 
 		anode.pBase=pSimB;
 		anode.iChart=2;
@@ -476,7 +476,7 @@ void Doc::SetDefaultAnnimationSelection()
 		Name="Snow Depth";
 		Group="SnowPack";
 		Type="State Variables";
-		pSimB=GetPtr(STATE_SINGLE,Name);
+		pSimB=GetPtr(simtype::STATE_SINGLE,Name);
 
 
 		anode.pBase=pSimB;
@@ -497,18 +497,18 @@ void Doc::SetDefaultAnnimationSelection()
 		anode.LocalIndex=0;
 
 		Name="AccSoilEvap";
-		anode.pBase=GetPtr(STATE_SINGLE,Name);
+		anode.pBase=GetPtr(simtype::STATE_SINGLE,Name);
 		AnnimVarList.push_back(anode);
 		((OutSingle*)anode.pBase)->SetAnnimateChart(anode.iChart,seq);
 			seq++;
 		Name="AccSoilEvapAndTransp";
-		anode.pBase=(SimB*)GetPtr(STATE_SINGLE,Name);
+		anode.pBase=(SimB*)GetPtr(simtype::STATE_SINGLE,Name);
 
 		AnnimVarList.push_back(anode);
 		((OutSingle*)anode.pBase)->SetAnnimateChart(anode.iChart,seq);
 			seq++;
 		Name="AccTotalEvap";
-		anode.pBase=(SimB*)GetPtr(STATE_SINGLE,Name);
+		anode.pBase=(SimB*)GetPtr(simtype::STATE_SINGLE,Name);
 
 		AnnimVarList.push_back(anode);
 		((OutSingle*)anode.pBase)->SetAnnimateChart(anode.iChart,seq);

@@ -25,38 +25,38 @@ bool SnowPack_Functions::Def()
 
 //    ! Snow surface energy balance
 	Sw* pSw;
-	pSw= new Sw(&SnowSurEbal,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+	pSw= new Sw(&SnowSurEbal, datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw  ,"SnowSurfTemperature",0,"Air Temperature|f(E-balance Solution)","WaterEq > 0|SnowPack >0",201);
 
-	pSw= new Sw(&StabilitySnow ,SINGLE,SNOW, TURBULENCE,NOBPROC, NORMAL);
+	pSw= new Sw(&StabilitySnow , datatype::SINGLE, elements::SNOW, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw    ,"StabilityCorrection",1,"f(Richardson Number)|f(Monin-Obukhov Length)","WaterEq > 0|SnowPack >0|SnowSurfTemperature >0");
 
 //    ! Snow melt
-	pSw= new Sw(&SnowMeltFunctionSwitch ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL);
+	pSw= new Sw(&SnowMeltFunctionSwitch , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL);
      Define(pSw  	,"SnowMeltFunction",0,"Empirical|Heat balance","WaterEq > 0|SnowPack >0|SnowSurfTemperature >0",202);
 
 //    ! Snow density
-	pSw= new Sw(&NewSnowDensityModel ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+	pSw= new Sw(&NewSnowDensityModel , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw 	,"NewSnowDensity",0,"Linear f(air temp)|Exponential f(air temp)","WaterEq > 0|SnowPack >0");
  	
-	pSw= new Sw(&SnowDensification ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+	pSw= new Sw(&SnowDensification , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw,"SnowDensification",0,"f(ice and liq. content)|f(compaction rate)","WaterEq > 0|SnowPack >0");
 
 //    ! Snow adjustment
 //    ! ---------------
- 	pSw= new Sw(&SnowAdjustment ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+ 	pSw= new Sw(&SnowAdjustment , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw 	,"SnowAdjustment",0,"No correction|Forced to match continous|Forced to match discrete","WaterEq > 0|SnowPack >0");
 
  //   ! Snow Roughness
- 	pSw= new Sw(&SnowRoughness ,SINGLE,SNOW, TURBULENCE,NOBPROC, NORMAL);
+ 	pSw= new Sw(&SnowRoughness , datatype::SINGLE, elements::SNOW, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw 	,"SnowRoughness",0,"Individual|Common roughness","WaterEq > 0|SnowPack >0|SnowSurfTemperature >0");
 
  //   ! Snow Ploughing
- 	pSw= new Sw(&SnowPloughing ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+ 	pSw= new Sw(&SnowPloughing , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw 	,"SnowPloughing",0,"off|Driven by SnowMass","WaterEq > 0|SnowPack >0");
- 	pSw= new Sw(&SnowPloughInput ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+ 	pSw= new Sw(&SnowPloughInput , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw 	,"SnowPloughInput",0,"off|LateralInput File","WaterEq > 0|SnowPack >0|LateralInput = 1");
- 	pSw= new Sw(&ChlorideMelt ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL);
+ 	pSw= new Sw(&ChlorideMelt , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pSw 	,"RoadSalt Melting",0,"off|on","WaterEq > 0|SnowPack >0|SaltRoadStorage >0");
 
 
@@ -87,16 +87,16 @@ bool SnowPack_Functions::Def()
 	ps_vec.clear();
 
  //   ! Snow surface age
- 	pPs= new Ps(&SAgeZP ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&SAgeZP , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs	,"AgeUpdatePrec",5.,"Kg/m2day","SnowPack >= 1",0.,20.);	
-	pPs= new Ps(&SAgeZQ ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL);
+	pPs= new Ps(&SAgeZQ , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL);
      Define(pPs			,"AgeUpdatePrecThQ",.9,"-","SnowPack >= 1", 0.0,1.);    	
- 	pPs= new Ps(&AgeUpdateSnowDepthCorr ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&AgeUpdateSnowDepthCorr , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  ,"AgeUpdateSDepthCorr",0.01,"m/day","SnowPack >= 1|SnowAdjustment=1",0.,0.1);
 
 //    ! Snow mass balance
 
- 	pPs= new Ps(&SRetens ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+ 	pPs= new Ps(&SRetens , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 			,"WaterRetention",.07,"-","SnowPack >= 1",0.001, 0.5, 0.02, 0.1);
 	ps_vec.clear();
 
@@ -111,26 +111,26 @@ bool SnowPack_Functions::Def()
 	plotpar.X_Label = "Temperature";  plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
 	plotpar.Y_Label = "Factor "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
  
-	pPs= new Ps(&PRainLim ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);	ps_vec.push_back(pPs);
+	pPs= new Ps(&PRainLim , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);	ps_vec.push_back(pPs);
 	Define(pPs, "OnlyRainPrecTemp", 2., "C", "SnowPack >= 1", -4., 10.);
-	pPs = new Ps(&PSnowLim, SINGLE, SNOW, STORAGE, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&PSnowLim, datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "OnlySnowPrecTemp", 0., "C", "SnowPack >= 1", -10., 4.);
 	
 	ps_vec.push_back(m_pModelMap->GetPsPointer("PrecA0Corr"));
 	ps_vec.push_back(m_pModelMap->GetPsPointer("PrecA1Corr"));
 
-	pFunc = new Func(ATMBOUNDARY, PRECIPITATION, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	 	ps_vec.clear();
 
 	ps_vec.push_back(m_pModelMap->GetPsPointer("OnlyRainPrecTemp"));
 
-	pPs = new Ps(&SDensNew, SINGLE, SNOW, SHRINKING, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&SDensNew, datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "DensityOfNewSnow", 100., "Kg/m3", "SnowPack >= 1|WaterEq > 0", 10., 300., 50., 200.);
 
 	functorprop.FuncName = MyFunc::NEWSNOW_DENSITY_LINEAR; functorprop.Arg = MyArgType::D2;
 
 	funcname = "Density of  Snow - Linear";
-	pFunc = new Func(SINGLE, SNOW, TRANSPORT, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 1.;
 	plotpar.X_Label = "Degree of Ice in Snow";
@@ -144,21 +144,21 @@ bool SnowPack_Functions::Def()
 
 	functorprop.FuncName = MyFunc::NEWSNOW_DENSITY_EXP; functorprop.Arg = MyArgType::D2;
 	funcname = "Density of New Snow - Exp";
-	pFunc = new Func(SINGLE, SNOW, TRANSPORT, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec); ps_vec.clear(); 
 
 
 
-	pPs= new Ps(&SnowDepthInitial ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+	pPs= new Ps(&SnowDepthInitial , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 	,"SnowDepthInitial", 0., "m", "SnowPack >= 1",0.,10.);
- 	pPs= new Ps(&SnowMassInitial ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+ 	pPs= new Ps(&SnowMassInitial , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 	,"SnowMassInitial", 0., "mm", "SnowPack >= 1",0.,4000.);
  	
- 	pPs= new Ps(&SDensNewImport ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&SDensNewImport , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 	    ,"DensityOfImportSnow",300.,"Kg/m3","SnowPack >= 1|WaterEq > 0|SnowPloughInput>0",100.,920.);
 
  //   ! Snow heat balance
- 	pPs= new Ps(&Temp0Li ,SINGLE,SNOW, LOWERBOUNDARY,NOBPROC, NORMAL);
+ 	pPs= new Ps(&Temp0Li , datatype::SINGLE, elements::SNOW, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 				,"ZeroTemp_WaterLimit",3.,"Kg/m2","SnowPack >= 1",0.01, 1000.);
 
 	ps_vec.clear();
@@ -170,11 +170,11 @@ functorprop.FuncName = MyFunc::SNOW_THERMALCOND; functorprop.Arg = MyArgType::D1
 	plotpar.Y_Label = "Thermal Conductivity ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, true);
 	plotpar.X_Label = "Density "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::KILO_MASSDENSITY_UNIT, true);
 
- 	pPs= new Ps(&SThCon ,SINGLE,SNOW, HEAT_CONVECTION,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+ 	pPs= new Ps(&SThCon , datatype::SINGLE, elements::SNOW, fysprocess::HEAT_CONVECTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs,"SThermalCondCoef",2.86E-6,"Wm5/°C·Kg²","SnowPack >= 1", 1.E-9,1.E-5);
  	
 
-	pFunc = new Func(SINGLE, SNOW, TRANSPORT, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar); ps_vec.clear(); 
 
 	
@@ -193,13 +193,13 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	plotpar.X2_Vec = { 2. };
 	plotpar.LogYScale = true;
 
- 	pPs= new Ps(&WindlessExChangeSnow ,SINGLE,SNOW, TURBULENCE,NOBPROC, NORMAL); 	ps_vec.push_back(pPs);
+ 	pPs= new Ps(&WindlessExChangeSnow , datatype::SINGLE, elements::SNOW, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL); 	ps_vec.push_back(pPs);
     Define(pPs 	,"WindlessExChangeSnow",0.,"s-1","SnowPack >=1|WaterEq > 0|SnowSurfTemperature>=1",0.,0.01);
 	ps_vec.push_back(m_pModelMap->GetPsPointer("KBMinusOne"));
-	pPs = new Ps(&RoughLMomSnow, SINGLE, SNOW, TURBULENCE, NOBPROC, NORMAL);  ps_vec.push_back(pPs);
+	pPs = new Ps(&RoughLMomSnow, datatype::SINGLE, elements::SNOW, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);  ps_vec.push_back(pPs);
 	Define(pPs, "RoughLMomSnow", 0.001, "m", "SnowPack >=1|PlantType =< 2|WaterEq > 0|SnowSurfTemperature>=1", 0.00001, 5., 0.0001, .05);
 
-	pFunc = new Func(SINGLE, SNOW, TRANSPORT, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);  ps_vec.clear();
 
@@ -220,14 +220,14 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	ps_vec.push_back(m_pModelMap->GetPsPointer("StabCoefUnstableExp"));
 
 
-	pFunc = new Func(SINGLE, SNOW, TRANSPORT, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
 
 	functorprop.FuncName = MyFunc::RA_SNOW_NUMERICAL; functorprop.Arg = MyArgType::D4;
 	funcname = "Aerodynamic Resistance Snow - Monin-Obokuv Stability)";
-	pFunc = new Func(SINGLE, SNOW, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();
 
 
@@ -241,9 +241,9 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	plotpar.X_Label = "Snow Height "; plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::LENGTH_UNIT, true);
 	plotpar.Y_Label = "Bare Soil "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
-	pPs = new Ps(&HCSnowCover, SINGLE, SNOW, LOWERBOUNDARY, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&HCSnowCover, datatype::SINGLE, elements::SNOW, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
     Define(pPs 	,"CritDepthSnowCover", .01, "m", "SnowPack >= 1",0.0001,3.,0.01,0.3);
-	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLEPLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
@@ -269,20 +269,20 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 
 
 	ps_vec.clear(); 
-	pPs = new Ps(&MeltRis, SINGLE, SNOW, SNOW_MELTING, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&MeltRis, datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "MeltCoefGlobRad", 1.5E-7, "Kg/J", "SnowPack >= 1|SnowMeltFunction=0", 0., 3.E-6);
- 	pPs= new Ps(&SAgeM1 ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+ 	pPs= new Ps(&SAgeM1 , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs 		,"MeltCoefGlobRadAge1",2.,"-","SnowPack >= 1|SnowMeltFunction=0", 0.,10.);	
- 	pPs= new Ps(&SAgeM2 ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+ 	pPs= new Ps(&SAgeM2 , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs 		,"MeltCoefGlobRadAge2",0.1,"1/day","SnowPack >= 1|SnowMeltFunction=0",0.,1.);	
-	pPs = new Ps(&MeltTemp, SINGLE, SNOW, SNOW_MELTING, NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs = new Ps(&MeltTemp, datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "MeltCoefAirTemp", 2., "Kg/Cm2day", "SnowPack >= 1|SnowMeltFunction=0", 0., 10.);
-	pPs= new Ps(&MeltReFr ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+	pPs= new Ps(&MeltReFr , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs 	,"MeltCoefReFreeze",0.1,"m","SnowPack >= 1|SnowMeltFunction=0",0., 1.);
- 	pPs= new Ps(&MeltFSoil ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+ 	pPs= new Ps(&MeltFSoil , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs 	,"MeltCoefSoilHeatF",.5,"-","SnowPack >= 1|SnowMeltFunction=0",0., 1.);
 	
-	pFunc = new Func(SINGLE, SNOW, SNOW_MELTING, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
  //   ! Compaction of snow: Jansson(1998)
@@ -303,41 +303,41 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	plotpar.X3_Vec = { 50.f, 50.f, 50.f };
 
 	ps_vec.push_back(m_pModelMap->GetPsPointer("DensityOfNewSnow"));
- 	pPs= new Ps(&SDensLi ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&SDensLi , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "DensityCoefWater", 200., "Kg/m3", "SnowPack >= 1|WaterEq > 0|SnowDensification=0", 0., 800., 50., 200.); ps_vec.push_back(pPs);
- 	pPs= new Ps(&SDensMass ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&SDensMass , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 	,"DensityCoefMass",0.5,"1/m","SnowPack >= 1|WaterEq > 0|SnowDensification=0", 0., 4.);  ps_vec.push_back(pPs);
 
-	pFunc = new Func(SINGLE, SNOW, SHRINKING, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 
 
 
  //   ! Compaction of snow: Jordan(1991)
- 	pPs= new Ps(&CRMetaMorphTemp1 ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CRMetaMorphTemp1 , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CRMetaMorphTemp1"	  ,2.777e-6	,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
- 	pPs= new Ps(&CRMetaMorphTemp2 ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CRMetaMorphTemp2 , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CRMetaMorphTemp2"	  ,0.04		,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
- 	pPs= new Ps(&CRMetaMorphLiq ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CRMetaMorphLiq , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CRMetaMorphLiq"	  ,2.0		,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
- 	pPs= new Ps(&CRMetaMorphDens ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CRMetaMorphDens , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CRMetaMorphDens"	  ,46.0e-3	,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
- 	pPs= new Ps(&CRMetaMorphDensMin ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CRMetaMorphDensMin , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  ,"CRMetaMorphDensMin" ,100.0	,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
- 	pPs= new Ps(&CROverburdenDens ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CROverburdenDens , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CROverburdenDens"	  ,23.e-3	,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
- 	pPs= new Ps(&CROverburdenTemp ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CROverburdenTemp , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CROverburdenTemp"	  ,0.04		,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
- 	pPs= new Ps(&CROverburdenVisc ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CROverburdenVisc , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CROverburdenVisc"	  ,9.e5		,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,100000000.);
- 	pPs= new Ps(&CRCompMeltCutOff ,SINGLE,SNOW, SHRINKING,NOBPROC, NORMAL);
+ 	pPs= new Ps(&CRCompMeltCutOff , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"CRCompMeltCutOff"	  ,300.0	,"-","SnowPack >=1|WaterEq > 0|SnowDensification>=1",0.,1000.);
 
 //    ! Snow Ploughing parameter
- 	pPs= new Ps(&PloughSnowMass ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+ 	pPs= new Ps(&PloughSnowMass , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  	,"PloughSnowMass"	  ,3.0	,"-","SnowPack >=1|WaterEq > 0|SnowPloughing>=1",0.,1000.);
- 	pPs= new Ps(&PloughEffSnow ,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+ 	pPs= new Ps(&PloughEffSnow , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs  		,"PloughEffSnow"	  ,0.9	,"-","SnowPack >=1|WaterEq > 0|SnowPloughing>=1",0.,1.);
 
 
@@ -357,15 +357,15 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	for (size_t i = 0; i < 4; ++i) plotpar.LegendsVec[i]+= p_ModelInfo->GetUnitString(UNIT_TYPES::mMASS_UNIT, true);
 	plotpar.X2_Vec = { 50.f,	100.f , 150.f, 200.f};
 
- 	pPs= new Ps(&ChlorideMeltConc ,SINGLE,SNOW, SNOW_MELTING,NOBPROC, NORMAL); ps_vec.push_back(pPs); 
+ 	pPs= new Ps(&ChlorideMeltConc , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs  		,"ChlorideMeltConc"	  ,900.,"mg/l","SnowPack >=1|WaterEq > 0|SnowPloughing>=1|RoadSalt Melting>0",0.,1.E5);
 
 	funcname = "Road Ice Melting by Salt";
-	pFunc = new Func(SINGLE, SNOW, SNOW_MELTING, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar);
 
 
- 	pPs= new Ps(&SnowReduceLAIThreshold ,SINGLE,SNOW, INTERCEPTION,NOBPROC, NORMAL);
+ 	pPs= new Ps(&SnowReduceLAIThreshold , datatype::SINGLE, elements::SNOW, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs ,"SnowReduceLAIThreshold",0.001,"-","SnowPack >= 1|WaterEq > 0|PlantType >= 2|Evaporation > 0",0.0001, 1., 0.001, .1);
 
 
@@ -373,121 +373,121 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
 	functorprop.FuncName = MyFunc::NO_PARFUNC; 
 	functorprop.PhysFuncName = FUNC_CHOICE::SENSHEAT_AIRFLUX; functorprop.Arg = MyArgType::BLANK;
 	funcname = "Sensible heat flux as Function Resistance";
-	pFunc = new Func(SOILSURFACE, HEAT, SOILEVAPORATION, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SOILSURFACE, elements::HEAT, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec);
 
 	functorprop.FuncName = MyFunc::NO_PARFUNC;
 	functorprop.PhysFuncName = FUNC_CHOICE::LATENTHEAT_AIRFLUX; functorprop.Arg = MyArgType::BLANK;
 	funcname = "Latent heat flux as Function Resistance";
-	pFunc = new Func(SOILSURFACE, HEAT, SOILEVAPORATION, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SOILSURFACE, elements::HEAT, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec);
 
 
 	Xs* pXs;
-	pXs= new Xs(&WTotSnow,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&WTotSnow, datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs, "TotalSnowMass", 0.,"mm" );
-	pXs= new Xs(&HSnow,SINGLE,SNOW, STORAGE,NOBPROC, NORMAL);
+	pXs= new Xs(&HSnow, datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,"Snow Depth"   ,0., "m");
-	pXs= new Xs(&SWATS, SINGLE,	SNOW, STORAGE, NOBPROC, NORMAL);
+	pXs= new Xs(&SWATS, datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,"WaterInSnowPack"  , 0., "Kg/m³");
-	pXs= new Xs(&WICE, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pXs= new Xs(&WICE, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pXs,   "IceInSnowPack"  , 0.,"Kg/m³","SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
 
 
 //   ! Flow Variable	(August 2005)
 	Ts* pTs;
-	pTs= new Ts(&SnowExport,SINGLE,SNOW, TRANSPORT,NOBPROC, NORMAL);
+	pTs= new Ts(&SnowExport, datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	    Define(pTs,"Snow mass export", 0.0,UNIT_TYPES::WATERFLOW_UNIT, "SnowPack>=1|SnowPloughing>=1");
-	pTs= new Ts(&SnowImport,SINGLE,SNOW, TRANSPORT,NOBPROC, NORMAL);    
+	pTs= new Ts(&SnowImport, datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);    
 		Define(pTs,"Snow mass import", 0.0,UNIT_TYPES::WATERFLOW_UNIT , "SnowPack>=1|SnowPloughinput>=1");
 
-	pTs= new Ts(&SnowOutFlow, SINGLE,	SNOW, TRANSPORT, NOBPROC, NORMAL);
+	pTs= new Ts(&SnowOutFlow, datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTs,"SnowWaterOutflow",0.,"mm/day");
-	pTs= new Ts(&SnowInFlow, SINGLE,	SNOW, TRANSPORT, NOBPROC, NORMAL);
+	pTs= new Ts(&SnowInFlow, datatype::SINGLE, elements::SNOW, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTs,"SnowInflow",0.,"mm/day");
-	pTs= new Ts(&SnowEvaporation, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pTs= new Ts(&SnowEvaporation, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTs ,"SnowEvaporation"  , 0.,"mm/day","SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
  
 
 	//    ! Always visible
     //! --------------
 	Gs *pGs;
-	pGs= new Gs(&DENSS, SINGLE,	SNOW, SHRINKING, NOBPROC, NORMAL);
+	pGs= new Gs(&DENSS, datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,"Snow Density"  , 0., "Kg/m³")	;
-	pGs= new Gs(&SnowAge, SINGLE,	SNOW, SHRINKING, NOBPROC, NORMAL);
+	pGs= new Gs(&SnowAge, datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 	    Define(pGs,"SnowSurfaceAge"   , 0., "days");
-	pGs= new Gs(&ThQualP, SINGLE,	SNOW, SHRINKING, NOBPROC, NORMAL);
+	pGs= new Gs(&ThQualP, datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs ,"ThermQualOfThroughF" , 0., "-");
-	pGs= new Gs(&FracBare, SINGLE,	SNOW, SHRINKING, NOBPROC, NORMAL);
+	pGs= new Gs(&FracBare, datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,"FracBareSoil",0.,"-");
-	pGs= new Gs(&TempSnowSoil, SINGLE,	SNOW, SHRINKING, NOBPROC, NORMAL);
+	pGs= new Gs(&TempSnowSoil, datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs,"TempSoilSUnderSnow",0.,"°C");
 	
 	G* pG;
 	vector<double> initv;
 	initv.assign(p_Plant->NumPlants,1.);
 	NE *pNumPlants=m_pModelMap->GetNEPointer("Number of Plants");
-	pG= new G(&SnowReduceLAIFactor,pNumPlants, PLANT,	SNOW, FYS_SHAPE, NOBPROC, NORMAL);
+	pG= new G(&SnowReduceLAIFactor,pNumPlants, datatype::PLANT, elements::SNOW, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
  //   ! Only if vegetation is explicit
     Define(pG, pNumPlants, "SnowReduceLAIFactor",initv,"-","SnowPack >= 1|WaterEq > 0|PlantType >= 2|Evaporation > 0");
 
 //    ! Snow surface energy balance variables
  
 //    ! snow surface temperature
-	pGs= new Gs(&TempSnowSurf, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pGs= new Gs(&TempSnowSurf, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
  
     Define(pGs ,"TempSnowSurface"  , 0.,"C","SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
 
  //   ! H,LE,G & Rn
-	 pGs= new Gs(&SnowSensF, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	 pGs= new Gs(&SnowSensF, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
      Define(pGs ,"SnowSensibleFlow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
- 	 pGs= new Gs(&SnowLatentF, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&SnowLatentF, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"SnowLatentFlow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
- 	 pGs= new Gs(&SnowSurfHeatF, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&SnowSurfHeatF, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"SnowSurfHeatFlow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
- 	 pGs= new Gs(&RadNetSnowCover, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&RadNetSnowCover, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"RadNetSnowCover"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
- 	 pGs= new Gs(&RadNetShortSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&RadNetShortSnow, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"RadNetShortSnow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
- 	 pGs= new Gs(&RadNetLongSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&RadNetLongSnow, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"RadNetLongSnow"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
 
 //    ! Rn-H-LE-G=residual energy balance error
- 	 pGs= new Gs(&SnowEbal, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&SnowEbal, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"SnowEbalClosure"  , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
- 	 pGs= new Gs(&RaSnowSurf, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&RaSnowSurf, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"ResAirAboveSnow"  , 0.,"s/m","SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
- 	 pGs= new Gs(&VapourPSnowSurf, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&VapourPSnowSurf, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"VapourPSnowSurface"  , 0.,"PA","SnowPack >= 1|HeatEq > 0|SnowSurfTemperature>=1");
 
    // ! Auxiliaries in Monin-Obukhov stability correction
- 	 pGs= new Gs(&EtaSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&EtaSnow, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
      Define(pGs ,"MO-StabParSnow"  , 0.,"-","SnowPack >= 1|WaterEq > 0|SnowSurfTemperature>=1|StabilityCorrection>=1");
   //  !	call Gs(Group_14,WindspeedError,"WindSpeedErrorSnow"  , 0.,"-","SnowPack >= 1|WaterEq > 0|SnowSurfTemperature>=1|StabilityCorrection>=1")
   //  !	call Gs(Group_14,UstarSnow,"UstarSnow"  , 0.,"-","SnowPack >= 1|WaterEq > 0|SnowSurfTemperature>=1|StabilityCorrection>=1")
- 	 pGs= new Gs(&WindSpeedSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&WindSpeedSnow, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs ,"WindSpeedSnow"  , 0.,"-","SnowPack >= 1|WaterEq > 0|SnowSurfTemperature>=1|StabilityCorrection>=1|CommonRefHeight = 0");
  //   !	call Gs(Group_14,EtaSnowIterations,"EtaSnowIterations"  , 0.,"-","SnowPack >= 1|WaterEq > 0|SnowSurfTemperature>=1|StabilityCorrection>=1")
 
  //   ! Heat balance snow melt approach
- 	 pGs= new Gs(&TempSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&TempSnow, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pGs,  "TempSnowPack"   , 0.,"°C","SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
 
- 	 pGs= new Gs(&QMeltSurface, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+ 	 pGs= new Gs(&QMeltSurface, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
      Define(pGs ,"QMeltSurface"   , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
-   	 pGs= new Gs(&QSnowSoil, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+   	 pGs= new Gs(&QSnowSoil, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
    Define(pGs ,   "QSnowSoil"         , 0.,UNIT_TYPES::HEATFLOW_UNIT,"SnowPack >= 1|HeatEq > 0|SnowMeltFunction>=1");
 
 //    ! Snow adjustment variables
-    pGs= new Gs(&PrecAdjustSnow, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+    pGs= new Gs(&PrecAdjustSnow, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs ,"PrecAdjustSnow"  , 0.,UNIT_TYPES::WATERFLOW_UNIT,"SnowPack >= 1|SnowAdjustment > 0");
 	Ds *pDs;
-	pDs= new Ds(&SnowMeasured, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+	pDs= new Ds(&SnowMeasured, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pDs,"SnowMeasured"  , 0.,"m","SnowPack >= 1|SnowAdjustment > 0");
 
  //   ! Snow Reduce LAI parameter and variable
-     pGs= new Gs(&SnowReduceLAIMax, SINGLE,	SNOW, EBAL_PARTITIONING, NOBPROC, NORMAL);
+     pGs= new Gs(&SnowReduceLAIMax, datatype::SINGLE, elements::SNOW, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 
      Define(pGs ,"SnowReduceLAIMax"  , 1.,"-","SnowPack >= 1|WaterEq > 0|PlantType >= 2|Evaporation > 0");
 

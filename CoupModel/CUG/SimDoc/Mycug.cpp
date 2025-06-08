@@ -3028,7 +3028,7 @@ int MyCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
 		perr=m_pSimDoc->m_ValidationData.GetValSumVarP_Error(ind);
 		aerr=m_pSimDoc->m_ValidationData.GetValSumVarA_Error(ind);
 		obsvalue=m_pSimDoc->m_ValidationData.GetValSumVarMVAL(ind);
-		if(m_pSimDoc->m_ValidationData.SetValSumVarErrors(ind, ip, obsvalue, perr, aerr)) {
+		if(m_pSimDoc->m_ValidationData.SetValSumVarErrors(ind, sumvartype(ip), obsvalue, perr, aerr)) {
 			EnableUpdate(FALSE); 
 			while(GetNumberRows()>0)
 					DeleteRow(0);
@@ -3456,7 +3456,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 		}*/
 		int prev_pre_period;
 		int prev_start,change;
-		Sw* pSwTid=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH,"TimeResolution");
+		Sw* pSwTid=(Sw*)m_pSimDoc->GetPtr(simtype::SWITCH, string("TimeResolution"));
 		bool daily=false, hourly=false;
 		if(pSwTid->GetIntValue()==1) daily=true;
 		if(pSwTid->GetIntValue()==2) hourly=true;
@@ -3571,7 +3571,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 						break;
 				}
 				if(col==3&&row==11) {
-					auto pParNitStep=(Ps*)m_pSimDoc->GetPtr(PAR_SINGLE,"NC Iteration");
+					auto pParNitStep=(Ps*)m_pSimDoc->GetPtr(simtype::PAR_SINGLE,string("NC Iteration"));
 					fvalue=FUtil::AtoFloat(str);
 					pParNitStep->SetValue(fvalue);
 				}
@@ -3744,9 +3744,10 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 			break;
 			case (6) :  // Change of Validation variables
 				if(!m_pSimDoc->IsFinishedSimulation()) {
-										if(col>=6||col<=16) {
+					if(col>=6||col<=16) {
 						float perr, aerr, obsvalue;
-						int ind, itypvalue;
+						int ind;
+						sumvartype sumvartyp;
 						GetCell(6,row,&cell);
 						int typ=cell.GetCellType();
 						if(typ!=UGCT_CHECKBOX) {
@@ -3754,7 +3755,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 							GetCell(0,row,&cell);
 						
 							ind=int(cell.GetNumber())-1;
-							itypvalue=m_pSimDoc->m_ValidationData.GetValSumVarOutputType(ind);
+							sumvartyp=m_pSimDoc->m_ValidationData.GetValSumVarOutputType(ind);
 							perr=m_pSimDoc->m_ValidationData.GetValSumVarP_Error(ind);
 							aerr=m_pSimDoc->m_ValidationData.GetValSumVarA_Error(ind);
 							obsvalue=m_pSimDoc->m_ValidationData.GetValSumVarMVAL(ind);
@@ -3771,7 +3772,7 @@ int MyCug::OnEditFinish(int col, long row,CWnd *edit,LPCTSTR str1,BOOL cancelFla
 
 
 
-							if(m_pSimDoc->m_ValidationData.SetValSumVarErrors(ind, itypvalue, obsvalue, perr, aerr)) {
+							if(m_pSimDoc->m_ValidationData.SetValSumVarErrors(ind, sumvartyp, obsvalue, perr, aerr)) {
 								EnableUpdate(FALSE); 
 								while(GetNumberRows()>0)
 										DeleteRow(0);
@@ -6912,7 +6913,7 @@ void MyCug::UpdateSelected_MR(int idim, int irow_in)
 void MyCug::OnGetHelp(SimB *pBase)
 {
 	
-	OnGetHelp(pBase->GetName().c_str(), pBase->GetGroup().c_str(), pBase->GetType());
+	OnGetHelp(pBase->GetName().c_str(), pBase->GetGroup().c_str(), static_cast<size_t>(pBase->GetType()));
 	
 }
 void MyCug::UpdateChartInfo()

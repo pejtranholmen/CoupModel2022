@@ -105,7 +105,7 @@ void SimpleCug::SetMultiTable(int row, SimB *pPar, int tabindex, Doc *pDoc , CDi
 		for(size_t i=0;i<m_pDoc->MR_GetNumberOfDimensions();i++){
 					for(size_t ii=0; ii<m_pDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
 						PAR=m_pDoc->MR_Get_PAR(i+1,ii+1);
-						if(m_pDoc->MR_GetMethod(i+1,ii+1)==4) {
+						if(m_pDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(4)) {
 							m_PtrArray.push_back(PAR);
 							ind++;
 						}

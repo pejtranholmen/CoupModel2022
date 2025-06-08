@@ -34,14 +34,14 @@ bool P_Mineral_Functions::Def()
 
 	Sw* pSw; Ps *pPs; P *pP; X *pX; T *pT; G *pG;  Gs *pGs; Xs *pXs; Ts *pTs;
 
-	pSw = new Sw(&InitialMineral_P, SIMPROFILE, MINERAL_N, NOFPROC, INITB, NORMAL);
+	pSw = new Sw(&InitialMineral_P, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 	Define(pSw, "Initial Mineral P", 0, "Uniform concentration|Concentration(z)", "Phosphorus > 0");
 
-	pSw = new Sw(&Weath_Temp_Response, SIMPROFILE, PHOSPHORUS, NOFPROC, WEATHERING, NORMAL);
+	pSw = new Sw(&Weath_Temp_Response, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::WEATHERING, userlevel::NORMAL);
 	Define(pSw, "Weath Temp Response", 0, "Common|Q10 whole range|Q10 above threshold|Ratkowsky function|Arrhenius function", "Nitrogen and Carbon > 0|Phosphorus > 0");
-	pSw = new Sw(&Flexible_Uptake_P, SIMPROFILE, MINERAL_N, TRANSPORT, PLANT_NUPTAKE, NORMAL);
+	pSw = new Sw(&Flexible_Uptake_P, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);
 	Define(pSw, "Flexible Uptake P", 0, "Common for all plants|Specific for each plant", "Nitrogen and Carbon > 0|Phosphorus>0");
-//	pSw= new Sw(&AmmoniaVolatilisation,  SIMPROFILE,MINERAL_N, NOFPROC,INITB, NORMAL);
+//	pSw= new Sw(&AmmoniaVolatilisation, datatype::SIMPROFILE, elements::MINERAL_N, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 //		Define(pSw, "AmmoniaVolatilisation",0,"off|on","Nitrogen and Carbon > 0");
 
 
@@ -79,12 +79,12 @@ bool P_Mineral_Functions::Def()
 	plotpar.X_Min = 3;
 	plotpar.X_Max = 10;
 
-	pPs = new Ps(&Weath_pH_Shape, TOTPROFILE, MINERAL_P, NOFPROC, WEATHERING, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Weath_pH_Shape, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::WEATHERING, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "Delta Power Coef pH", 0.27,UNIT_TYPES::NO_UNIT, "Phosphorus > 0", 0.027, 1.); 
 	
-	pPs = new Ps(&Weath_pH0, TOTPROFILE, MINERAL_P, NOFPROC, WEATHERING, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Weath_pH0, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::WEATHERING, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "pH Optimal", 7,UNIT_TYPES::NO_UNIT, "Phosphorus > 0", 5, 10., 3., 12.); 
-	pFunc = new Func(TOTPROFILE, MINERAL_P, NOFPROC, WEATHERING , NORMAL);
+	pFunc = new Func( datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::WEATHERING, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
@@ -95,10 +95,10 @@ bool P_Mineral_Functions::Def()
 	plotpar.X_Min = 0;
 	plotpar.X_MaxPar = "Inital P content";
 	plotpar.Y_Label = "Weathering Rate (g/m2/day)";
-	pPs = new Ps(&Weath_RateCoef, TOTPROFILE, MINERAL_P, NOFPROC, WEATHERING, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Weath_RateCoef, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::WEATHERING, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "Weathering Rate Coef", 1.E-6,UNIT_TYPES::NO_UNIT, "Phosphorus > 0", 0., 0.001);
 
-	pFunc = new Func(TOTPROFILE, MINERAL_P, ADSORPTION, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
@@ -111,13 +111,13 @@ bool P_Mineral_Functions::Def()
 	plotpar.X_MaxPar = "Inital P content";
 	plotpar.Y_Label = "Phosphate in solution (g P/m2)";
 
-	pPs = new Ps(&Langmuir_max, TOTPROFILE, MINERAL_P, ADSORPTION , NOBPROC,NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Langmuir_max, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::ADSORPTION , bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "Langmuir max", 10.,UNIT_TYPES::NO_UNIT, "Phosphorus > 0", 5.E-6, 1.E4, 3., 12.); 
 
-	pPs = new Ps(&Langmuir_c50, TOTPROFILE, MINERAL_P, ADSORPTION,NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Langmuir_c50, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::ADSORPTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "Langmuir half sat", 1.E-3,UNIT_TYPES::NO_UNIT, "Phosphorus > 0", 0., 10.); 
 
-	pFunc = new Func(TOTPROFILE, MINERAL_P, SURFACERUNOFF, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
@@ -128,22 +128,22 @@ bool P_Mineral_Functions::Def()
 	plotpar.X_Min = 0.;
 	plotpar.X_Max = 50.;
 	plotpar.Y_Label = "P Conc (mg/1)";
-	pPs = new Ps(&Psurf_Conc2, SINGLE, MINERAL_P, SURFACERUNOFF, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Psurf_Conc2, datatype::SINGLE, elements::MINERAL_P, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs, "DeltaConc", 0.07, "mg-P/l", "Phosphorus > 0", 0., 10.); 
-	pPs = new Ps(&Psurf_Conc1, SINGLE, MINERAL_P, SURFACERUNOFF, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Psurf_Conc1, datatype::SINGLE, elements::MINERAL_P, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs, "BaseConc", 0.027, "mg-P/l", "Phosphorus > 0", 0., 10.); 
-	pPs = new Ps(&Psurf_ThresFlow, SINGLE, MINERAL_P, SURFACERUNOFF, NOBPROC, NORMAL); ps_vec.push_back(pPs);
+	pPs = new Ps(&Psurf_ThresFlow, datatype::SINGLE, elements::MINERAL_P, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 		Define(pPs, "Psurf_ThresFlow", 10.,UNIT_TYPES::WATERFLOW_UNIT, "Phosphorus > 0", 0., 100.); 
 		
-	pFunc = new Func(TOTPROFILE, MINERAL_P, SURFACERUNOFF, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
 
 
 // Initial conditions 
-	pPs = new Ps(&InitPhosphateConc, TOTPROFILE, MINERAL_P, NOFPROC, INIT_P, NORMAL);
+	pPs = new Ps(&InitPhosphateConc, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::INIT_P, userlevel::NORMAL);
 		Define(pPs, "InitPhosphateConc", 0.0001, "mg-P/l", "Initial Mineral P = 0|Phosphorus > 0", 0.000001, 100., 0.0001, 50.);
-	pPs = new Ps(&InitMineral_P_Content, TOTPROFILE, MINERAL_P, NOFPROC, INIT_P, NORMAL);
+	pPs = new Ps(&InitMineral_P_Content, datatype::TOTPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::INIT_P, userlevel::NORMAL);
 		Define(pPs, "Inital P content", 0.001, UNIT_TYPES::MASSDENSITY_UNIT, "Initial Mineral P = 0|Phosphorus > 0", 0.0000001, 0.1, 0.000001, 0.01);
 
 		
@@ -156,69 +156,69 @@ bool P_Mineral_Functions::Def()
 	pP=m_pModelMap->GetPPointer("mLower Depth");
 		 mTab_InitConcP.push_back(pP);
  
-	pP = new P(&InitPhosphateConcZ, pNL, SIMPROFILE, MINERAL_P, NOFPROC, INIT_P, NORMAL); initv.assign(pSoil->NL, 0.0001);
+	pP = new P(&InitPhosphateConcZ, pNL, datatype::SIMPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::INIT_P, userlevel::NORMAL); initv.assign(pSoil->NL, 0.0001);
 		Define(pP, pNL, "I Labile Phosphate Conc", initv, "mg-P/l", "Initial mineral P = 1|Phosphorus > 0",0., 10.);
 		mTab_InitConcP.push_back(pP);
 	
-	pP = new P(&InitMineral_P_ContentZ, pNL, SIMPROFILE, MINERAL_P, NOFPROC, INIT_P, NORMAL); initv.assign(pSoil->NL, 0.001);
+	pP = new P(&InitMineral_P_ContentZ, pNL, datatype::SIMPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::INIT_P, userlevel::NORMAL); initv.assign(pSoil->NL, 0.001);
 		Define(pP, pNL, "Inital P content", initv, UNIT_TYPES::MASS_RATIO_UNIT , "Initial mineral P = 1|Phosphorus > 0", 0., 10.);
 	mTab_InitConcP.push_back(pP);
 
 
-	pTab = new Tab(&mTab_InitConcP, SIMPROFILE,MINERAL_P, NOFPROC,INIT_P, NORMAL);
+	pTab = new Tab(&mTab_InitConcP, datatype::SIMPROFILE, elements::MINERAL_P, fysprocess::NOFPROC, bioprocess::INIT_P, userlevel::NORMAL);
 		Define(pTab, "Initial mineral-P concentrations",3);
 
-	pXs = new Xs(&PMineral_MassBalanceCheck,SINGLE , PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pXs = new Xs(&PMineral_MassBalanceCheck, datatype::SINGLE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs, "P Min Balance Check",0.,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
 
 
 	initv.assign(pSoil->NL,0.);
-	pX = new X(&Soil_PO4, pNL, SIMPROFILE, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&Soil_PO4, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNL, "Soil Phosphate", initv,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
 	initv.assign(pSoil->NL, 0.001);
-	pX = new X(&Soil_Mineral_P, pNL, SIMPROFILE, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pX = new X(&Soil_Mineral_P, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pX, pNL, "Soil mineral P", initv,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
 
-	pG = new G(&Soil_PO4_Sol, pNL, SIMPROFILE, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&Soil_PO4_Sol, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNL, "Soil P Solution", initv,UNIT_TYPES::MASS_UNIT, "Phosphorus > 0");
-	pG = new G(&Soil_PO4_Conc, pNL, SIMPROFILE, PHOSPHORUS, STORAGE, NOBPROC, NORMAL);
+	pG = new G(&Soil_PO4_Conc, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNL, "Soil P conc", initv, UNIT_TYPES::mMASS_LITER_UNIT, "Phosphorus > 0");
 	// Phosphorus added 
 	initv.assign(pSoil->NL, 0.);
-	pT = new T(&WeatheringRate, pNL, SIMPROFILE, PHOSPHORUS, TRANSPORT, WEATHERING, NORMAL);
+	pT = new T(&WeatheringRate, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::WEATHERING, userlevel::NORMAL);
 	Define(pT, pNL, "Weathering Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus > 0");
 
-	pT = new T(&SoilPhosphateFlow, pNL, SIMPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pT = new T(&SoilPhosphateFlow, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL, "SoilPhosphateFlow", initv,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus > 0");
-	pT = new T(&SoilPhosphateDrainage, pNL, SIMPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pT = new T(&SoilPhosphateDrainage, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL, "SoilPhosphateDrainage", initv,UNIT_TYPES::MASSFLOW_UNIT, "SoilDrainageInput > 0|Phosphorus > 0");
-	pT = new T(&SoilPhosphateUptake, pNL, SIMPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pT = new T(&SoilPhosphateUptake, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pT, pNL, "SoilPhosphateUptake", initv,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus > 0");
-	pTs = new Ts(&PSurfRunoff, SINGLE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pTs = new Ts(&PSurfRunoff, datatype::SINGLE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pTs, "PSurfaceRunoff", 1.,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus > 0");
-//	pT = new T(&SoilPhosphateInflow, pNL, SIMPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+//	pT = new T(&SoilPhosphateInflow, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 //		Define(pT, pNL, "SoilPhosphateInflow", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Irrigation >0|Dripper>0|Phosphorus > 0");
 
 
 ;
-	pGs = new Gs(&PTotPO4_Drainage, TOTPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&PTotPO4_Drainage, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "P Tot PO4 Drainage", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus > 0");
-	pGs = new Gs(&PTotPO4Conc_Drainage, TOTPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&PTotPO4Conc_Drainage, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "P Conc PO4 Drainage", 0., UNIT_TYPES::mikro_MASS_LITER_UNIT, "Phosphorus > 0");
 
-	pGs = new Gs(&Tot_MinP_DrainageConc, TOTPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);// Tot MinP conc by HH
+	pGs = new Gs(&Tot_MinP_DrainageConc, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);// Tot MinP conc by HH
 		Define(pGs, "Tot MinP Drainage Conc", 0.0, "mg/l", "Nitrogen and Carbon >= 1|Phosphorus>0");
 
 	
-	pGs = new Gs(&PTotPO4_PlantUptake, TOTPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&PTotPO4_PlantUptake, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "P Tot PO4 Plant Uptake", 0.,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus>0");
 ;
-	pGs = new Gs(&PTot_PSolidMinerals, TOTPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&PTot_PSolidMinerals, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "P Tot Solid Pminerals", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus>0");
 
-	pGs = new Gs(&PTotPhosphate_Soil, TOTPROFILE, PHOSPHORUS, TRANSPORT, NOBPROC, NORMAL);
+	pGs = new Gs(&PTotPhosphate_Soil, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pGs, "P Tot Phosphate Soil", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus>0");
-	pGs = new Gs(&Tot_PWeatheringRate_Soil, TOTPROFILE, PHOSPHORUS, TRANSPORT, WEATHERING, NORMAL);
+	pGs = new Gs(&Tot_PWeatheringRate_Soil, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::WEATHERING, userlevel::NORMAL);
 		Define(pGs, "P Tot Weathering Soil", 0.,UNIT_TYPES::MASS_UNIT, "Phosphorus>0");
 
 	return true;

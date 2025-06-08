@@ -48,7 +48,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 			JoinCells(button.Col_start+i,  button.Row, button.Col_end+i, button.Row);
 			GetCell(button.Col_start+i, button.Row, &cell);
 			cell.SetBackColor(m_ColorInfo);
-			cell.SetText(button.VectorNames[i]);
+			cell.SetText(string(button.VectorNames[i]));
 			cell.SetParam(button.Param);
 			SetCell(button.Col_start+i, button.Row, &cell);
 		};
@@ -70,7 +70,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 		else
 			cell.SetReadOnly(false);
 
-		cell.SetText(button.Text);
+		cell.SetText(string(button.Text));
 		cell.SetParam(button.Param);
 		SetCell(button.Col_start + ShiftPos, button.Row, &cell);
 
@@ -219,7 +219,7 @@ void PEJUGCtrl::SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos,
 	GetCellIndirect(button.Col_start, button.Row, &cell);
 	cell.SetParam(button.Param);
 	cell.SetBackColor(m_ColorClick);
-	cell.SetText(button.Text);
+	cell.SetText(string(button.Text));
 	SetCell(button.Col_start, button.Row, &cell);
 	auto ParEdit = m_DoubleClickEdit.param;
 	bool ReadOnly = false;

@@ -14,8 +14,8 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v, enum userle
 	_stype=d_vt;
 	_def.data=d_v;
 	_def.elem=el_v;
-	_def.fproc=NOFPROC;
-	_def.bproc=NOBPROC;
+	_def.fproc = fysprocess::NOFPROC;
+	_def.bproc= bioprocess::NOBPROC;
 	_def.ulev=user_v;
 	m_ChildChange = false;
 }
@@ -25,7 +25,7 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v,enum fysproc
 	_stype=d_vt;
 	_def.data=d_v;
 	_def.elem=el_v;
-	_def.fproc=fproc;
+	_def.fproc= fproc;
 	_def.bproc=bproc;
 	_def.ulev=user_v;
 	m_ChildChange = false;
@@ -36,9 +36,9 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v)
 	_stype=d_vt;
 	_def.data=d_v;
 	_def.elem=el_v;
-	_def.fproc=NOFPROC;
-	_def.bproc=NOBPROC;
-	_def.ulev=NORMAL;
+	_def.fproc= fysprocess::NOFPROC;
+	_def.bproc= bioprocess::NOBPROC;
+	_def.ulev=userlevel::NORMAL;
 	m_ChildChange = false;
 }
 SimB::SimB(enum simtype d_vt, definitions def) 
@@ -281,27 +281,27 @@ string SimB::GetGroup()  {
 	return p_ModelInfo->GetGroupNames(_ModuleNo);
 }
 string_view SimB::GetProcessName() {
-	if(_def.bproc==11&&_def.fproc==17)  return GetElementName();
-	else if(_def.fproc==17) return p_ModelInfo->GetBioProcName(_def.bproc);
-	else if(_def.bproc!=11) return p_ModelInfo->GetBioProcName(_def.bproc);
+	if(_def.bproc==bioprocess::NOBPROC&&_def.fproc==fysprocess::NOFPROC)  return GetElementName();
+	else if(_def.fproc== fysprocess::NOFPROC) return p_ModelInfo->GetBioProcName(_def.bproc);
+	else if(_def.bproc!= bioprocess::NOBPROC) return p_ModelInfo->GetBioProcName(_def.bproc);
 	else return GetFysProcessName();
 }
 string_view SimB::GetElementName()  {
 	return p_ModelInfo->ElementName(_def.elem);
 }
-string SimB::GetFysProcessName() const {
+string_view SimB::GetFysProcessName() const {
 	return p_ModelInfo->GetFysProcName(_def.fproc);
 }
-string SimB::GetBioProcessName() const {
+string_view SimB::GetBioProcessName() const {
 	return p_ModelInfo->GetBioProcName(_def.bproc);
 }
 string SimB::GetTypeName() const 
  {	switch(_stype) { 
-	case STATE: case STATE_SINGLE:
+ case simtype::STATE: case simtype::STATE_SINGLE:
 		return "State Variables";
-	case FLOW:	case FLOW_SINGLE:
+	case simtype::FLOW:	case simtype::FLOW_SINGLE:
 		return "Flow Variables";	
-	case AUX: case AUX_SINGLE: return "Auxiliary Variables";
-	case DRIVE: case DRIVE_SINGLE: return "Driving Variables";}
+	case simtype::AUX: case simtype::AUX_SINGLE: return "Auxiliary Variables";
+	case simtype::DRIVE: case simtype::DRIVE_SINGLE: return "Driving Variables";}
 	return "";
 }

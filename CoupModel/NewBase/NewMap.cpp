@@ -211,18 +211,18 @@ string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level, bool ChildDoc
 
 	WriteHeaderToXmlFile(descr);
 
-	WriteSimB_ToXmlFile(switches, simtype(simtype::SWITCH), enable_level);
-	WriteSimB_ToXmlFile(parameters, simtype(simtype::PAR_SINGLE), enable_level);
-	WriteSimB_ToXmlFile(parameters_arrays, simtype(simtype::PAR_TABLE), enable_level);
-	WriteSimB_ToXmlFile(outputs_Xs, simtype(STATE_SINGLE), enable_level);
-	WriteSimB_ToXmlFile(outputs_Ts, simtype(FLOW_SINGLE), enable_level);
-	WriteSimB_ToXmlFile(outputs_Gs, simtype(AUX_SINGLE), enable_level);
-	WriteSimB_ToXmlFile(outputs_Ds, simtype(DRIVE_SINGLE), enable_level);
-	WriteSimB_ToXmlFile(outputs_X, simtype(STATE), enable_level);
-	WriteSimB_ToXmlFile(outputs_T, simtype(FLOW), enable_level);
-	WriteSimB_ToXmlFile(outputs_G, simtype(AUX), enable_level);
-	WriteSimB_ToXmlFile(outputs_D, simtype(DRIVE), enable_level);
-	WriteSimB_ToXmlFile(model_files, simtype(PGFILE), enable_level);
+	WriteSimB_ToXmlFile(switches, simtype::SWITCH, enable_level);
+	WriteSimB_ToXmlFile(parameters, simtype::PAR_SINGLE, enable_level);
+	WriteSimB_ToXmlFile(parameters_arrays, simtype::PAR_TABLE, enable_level);
+	WriteSimB_ToXmlFile(outputs_Xs, simtype::STATE_SINGLE, enable_level);
+	WriteSimB_ToXmlFile(outputs_Ts, simtype::FLOW_SINGLE, enable_level);
+	WriteSimB_ToXmlFile(outputs_Gs, simtype::AUX_SINGLE, enable_level);
+	WriteSimB_ToXmlFile(outputs_Ds, simtype::DRIVE_SINGLE, enable_level);
+	WriteSimB_ToXmlFile(outputs_X, simtype::STATE, enable_level);
+	WriteSimB_ToXmlFile(outputs_T, simtype::FLOW, enable_level);
+	WriteSimB_ToXmlFile(outputs_G, simtype::AUX, enable_level);
+	WriteSimB_ToXmlFile(outputs_D, simtype::DRIVE, enable_level);
+	WriteSimB_ToXmlFile(model_files, simtype::PGFILE, enable_level);
 
 	WriteValidationToXmlFile(validation);
 	WriteMultiRunSettingsToXmlFile(multi_run);
@@ -252,7 +252,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 		v_all.clear();
 		if (m_pCommonModelInfo->GetGroupCategoryNo(groupno) == group_cat_no) {
 			v_simb = GetPtrVector(type, groupno, true);
-			if (type == PAR_TABLE) {
+			if (type == simtype::PAR_TABLE) {
 				bool Original = true;
 				for (size_t i = 0; i < v_simb.size(); i++) {
 					P* pP = (P*)v_simb[i];
@@ -267,16 +267,16 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 			for (auto it = v_simb.begin(); it != v_simb.end(); it++) {
 				if ((*it)->IsEnabled() && _doc_enabled == doc_enabled::ENABLED)
 					v_all.push_back(*it);
-				else if ((*it)->IsNotOriginalValue() && _doc_enabled == doc_enabled::NOT_DEFAULT&& (type== SWITCH|| type == PAR_SINGLE || type== PAR_TABLE))
+				else if ((*it)->IsNotOriginalValue() && _doc_enabled == doc_enabled::NOT_DEFAULT&& (type== simtype::SWITCH|| type == simtype::PAR_SINGLE || type== simtype::PAR_TABLE))
 					v_all.push_back(*it);
 				else if (_doc_enabled == doc_enabled::ALL)
 					v_all.push_back(*it);
 				else if ((*it)->IsEnabled()) {
-					if (type >= STATE_SINGLE && type <= DRIVE_SINGLE && _doc_enabled == doc_enabled::NOT_DEFAULT)
+					if (type >= simtype::STATE_SINGLE && type <= simtype::DRIVE_SINGLE && _doc_enabled == doc_enabled::NOT_DEFAULT)
 					v_all.push_back(*it);
-					else if (type >= STATE && type <= DRIVE && _doc_enabled == doc_enabled::NOT_DEFAULT )
+					else if (type >= simtype::STATE && type <= simtype::DRIVE && _doc_enabled == doc_enabled::NOT_DEFAULT )
 					v_all.push_back(*it);
-					else if (type == PGFILE && _doc_enabled == doc_enabled::NOT_DEFAULT )
+					else if (type == simtype::PGFILE && _doc_enabled == doc_enabled::NOT_DEFAULT )
 					v_all.push_back(*it);
 				}
 
@@ -295,7 +295,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 				string swname = v_all[isw]->GetName();
 				m_pCommonModelInfo->trim_xml(swname);
 				auto n = group_node.append_child(swname.c_str());
-				if (type == SWITCH) {
+				if (type == simtype::SWITCH) {
 					Sw* pSw = static_cast<Sw*>(v_all[isw]);
 					n.append_attribute("Current") = int(pSw->GetIntValue());
 					n.append_attribute("Default") = int(pSw->GetOriginalIntValue());
@@ -305,7 +305,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 						n.append_attribute(opt_no.c_str()) = pSw->GetOption(i).c_str();
 					}
 				}
-				else if (type == PAR_SINGLE) {
+				else if (type == simtype::PAR_SINGLE) {
 					Ps* pPs = static_cast<Ps*>(v_all[isw]);
 					n.append_attribute("Current") = pPs->GetValue();
 					n.append_attribute("Default") = pPs->GetOriginalValue();
@@ -313,7 +313,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 					n.append_attribute("Max") = pPs->GetMaxValue();
 
 				}
-				else if (type == PAR_TABLE) {
+				else if (type == simtype::PAR_TABLE) {
 					P* pP = static_cast<P*>(v_all[isw]);
 					n.append_attribute("SizeofArray") = pP->GetSize();
 					NE* pNE = pP->GetNEPointer();
@@ -335,12 +335,12 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 					}
 
 				}
-				else if (type >= STATE_SINGLE && type <= DRIVE_SINGLE) {
+				else if (type >= simtype::STATE_SINGLE && type <= simtype::DRIVE_SINGLE) {
 					OutSingle* pO = static_cast<OutSingle*>(v_all[isw]);
 					n.append_attribute("OutSingle") = pO->GetStoreFlag();
 					n.append_attribute("OutMulti") = pO->GetMultiStoreFlag();
 				}
-				else if (type >= STATE && type <= DRIVE) {
+				else if (type >= simtype::STATE && type <= simtype::DRIVE) {
 					OutVector* pO = static_cast<OutVector*>(v_all[isw]);
 					n.append_attribute("SizeofArray") = pO->GetNumberOfFlags();
 					NE* pNE = pO->GetNEPointer();
@@ -356,13 +356,13 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 						n_array.append_attribute("MultiRunFlag") = pO->GetMultiStoreFlag(i);
 					}
 				}
-				else if (type == PGFILE) {
+				else if (type == simtype::PGFILE) {
 					F* pF = static_cast<F*>(v_all[isw]);
 					string str = pF->GetStrValue();
 					FUtil::trim_xmlstring(str);
 					n.append_attribute("PG_File") = str.c_str();
 				}
-				if (type == PAR_SINGLE) {
+				if (type == simtype::PAR_SINGLE) {
 					auto test = pSimB->GetUnit();
 					m_pCommonModelInfo->trim_xml(test);
 				}
@@ -439,7 +439,7 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 			for (pugi::xml_node group = category.first_child(); group; group = group.next_sibling()) {
 				auto groupname = group.name();
 				for (pugi::xml_node item = group.first_child(); item; item = item.next_sibling()) {
-					string_view item_name = item.name();
+					string item_name = item.name();
 					
 					if (type == simtype::SWITCH) {
 						auto pSw = static_cast<Sw*>(GetPtr(type, item_name));
@@ -575,20 +575,20 @@ bool NewMap::Read_SimB_FromXmlFile(pugi::xml_node node) {
 				}
 			}
 		}
-		if (type == PAR_TABLE) {
+		if (type == simtype::PAR_TABLE) {
 			RemoveOriginalValues("Tables", "ALL", true);
 			RemoveOriginalValues("Tables", "ALL", false);
 		}
-		else if (type == SWITCH) {
+		else if (type == simtype::SWITCH) {
 			RemoveOriginalValues("Switches", "ALL", false);
-			m_pValidIndexSet = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "IndexForValidation"));
+			m_pValidIndexSet = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("IndexForValidation")));
 			if (m_pValidIndexSet != nullptr) {
 				auto iv = m_pValidIndexSet->GetIntValue();
-				m_pValidIndex = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Index in val file"));
-				m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "No of internal index loop"));
-				m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Size of internal loop"));
+				m_pValidIndex = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("(Index in val file")));
+				m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("No of internal index loop")));
+				m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("Size of internal loop")));
 
-				auto pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "ValidationMode"));
+				auto pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("ValidationMode")));
 				m_NumValidFiles = pSw->GetIntValue();
 				ResidualFile_Reset();
 				if (ResidualFile_AddFile(m_NumValidFiles)) {
@@ -672,7 +672,7 @@ bool NewMap::WriteHeaderToXmlFile(pugi::xml_node node) {
 
 	sim_period.append_attribute("LengthPostPeriod") = int(m_DocFile.ipostdays);
 
-	auto pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "TimeResolution"));
+	auto pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("TimeResolution")));
 	auto iv = pSw->GetIntValue();
 
 	time_resolution.append_attribute("TimeResoluton") = int(iv);
@@ -893,14 +893,14 @@ bool NewMap::Read_Validation_FromXmlFile(pugi::xml_node node) {
 		}
 	}
 	Sw* pSw;
-	pSw = (Sw*)GetPtr(simtype::SWITCH, "ValidationMode");
+	pSw = (Sw*)GetPtr(simtype::SWITCH, string("ValidationMode"));
 	m_NumValidFiles = GetSw("ValidationMode")->GetIntValue();
 	if (count_valid_files > m_NumValidFiles) {
 		pSw->SetIntValue(count_valid_files);
 		m_NumValidFiles = GetSw("ValidationMode")->GetIntValue();
 	}
 
-	Tab* pTab = (Tab*)GetPtr(simtype::TABLE, "Scaling of Observed Variables");
+	Tab* pTab = (Tab*)GetPtr(simtype::TABLE, string("Scaling of Observed Variables"));
 	if (pTab != nullptr) {
 		auto oldnelements = pTab->GetNumOfRow();
 		if (m_Val_Array.size() != oldnelements)  pTab->SetNumOfRow(m_Val_Array.size());
@@ -966,10 +966,10 @@ bool NewMap::WriteMultiRunSettingsToXmlFile(pugi::xml_node node)
 			par.append_attribute("Index") = valPAR.TabIndex;
 
 			auto imethod = MR_GetMethod(i + 1, ii + 1);
-			par.append_attribute("Method") = imethod;
+			par.append_attribute("Method") = static_cast<size_t>(imethod);
 			auto imon = MR_GetMonitoring(i + 1, ii + 1);
 			par.append_attribute("Monitoring") = imon;
-			if (imethod == 4) {
+			if (imethod == MR_METHOD(4)) {
 				for (size_t iii = 0; iii < valMr.NumberOfRepeatitionsWithinDimension; iii++) {
 					string rowstring = "row_" + FUtil::STD_ItoAscii(iii + 1);
 					auto row = par.append_child(rowstring.c_str());
@@ -981,7 +981,7 @@ bool NewMap::WriteMultiRunSettingsToXmlFile(pugi::xml_node node)
 					row.append_attribute("Value") = value;
 				}
 			}
-			else if (imethod == 5) {
+			else if (imethod == MR_METHOD(5)) {
 				CDB* pCDB = (CDB*)valPAR.pBase;
 				for (size_t iii = 0; iii < valMr.NumberOfRepeatitionsWithinDimension; iii++) {
 					string rowstring = "row_" + FUtil::STD_ItoAscii(iii + 1);
@@ -990,7 +990,7 @@ bool NewMap::WriteMultiRunSettingsToXmlFile(pugi::xml_node node)
 					row.append_attribute("Key") = pCDB->MR_GetSelection(iii).c_str();
 				}
 			}
-			else if (imethod > 5 && imethod < 9) {
+			else if (imethod > MR_METHOD(5) && imethod < MR_METHOD(9)) {
 				SimB* pParDep;
 				SimB* pCP = MR_Get_pPar(i + 1, ii + 1);
 				size_t indpar, ind_dep;
@@ -1011,7 +1011,7 @@ bool NewMap::WriteMultiRunSettingsToXmlFile(pugi::xml_node node)
 					par.append_attribute("NameDepPar") = name_psw.c_str();
 					par.append_attribute("IndexDepPar") = ind_dep;
 
-					if (imethod > 6) {
+					if (imethod > MR_METHOD(6)) {
 						par.append_attribute("MinValue") = MR_GetMin(i + 1, ii + 1);
 						par.append_attribute("MaxValue") = MR_GetMax(i + 1, ii + 1);
 					}
@@ -1129,7 +1129,7 @@ bool NewMap::Read_MultiRunSettings_FromXmlFile(pugi::xml_node node)
 							}
 							SimB* pPar;
 							//pPar=GetPtr(type,group,name);
-							pPar = GetPtr(simtype::PAR_TABLE, name);
+							pPar = GetPtr(simtype::PAR_TABLE, string(name));
 							P* pkoll = dynamic_cast<P*>(pPar);
 							valPAR.pBase = dynamic_cast<SimB*>(pPar);
 							if (pPar == nullptr)  return false;
@@ -1794,8 +1794,9 @@ bool NewMap::Read_OutputSummary_FromXmlFile(pugi::xml_node node)
 
 			if (output.StoreFlag >= 1) output.PgFileIndex++;
 			if (output.StoreFlag == 2) output.PgMultiFileIndex++;
+			auto tyid_7 = simtype(static_cast<size_t>(type_id) + 7);
 
-			pSimB = GetPtr(enum simtype(type_id + 7), varstr);
+			pSimB = GetPtr(tyid_7, varstr);
 
 
 			if (varstr.rfind("_") != std::string::npos&&pSimB == nullptr) {
@@ -1814,10 +1815,10 @@ bool NewMap::Read_OutputSummary_FromXmlFile(pugi::xml_node node)
 				}
 			}
 			else {
-				pSimB = GetPtr(enum simtype(type_id+7),varstr);
+				pSimB = GetPtr(tyid_7,varstr);
 				if (pSimB == nullptr) {
 					string newname = p_ModelInfo->getOrigName(varstr);
-					pSimB = GetPtr(enum simtype(type_id+7), newname);
+					pSimB = GetPtr(tyid_7, newname);
 					if (pSimB == nullptr) {
 
 						auto koll = 1;
@@ -1836,10 +1837,10 @@ bool NewMap::Read_OutputSummary_FromXmlFile(pugi::xml_node node)
 			out.pBase = pSimB;
 			out.TabIndex = output.LocalIndex;
 			if (pSimB != nullptr) {
-				if (type_id == STATE) m_X_Array.push_back(out);
-				if (type_id == FLOW) m_T_Array.push_back(out);
-				if (type_id == AUX) m_G_Array.push_back(out);
-				if (type_id == DRIVE) m_D_Array.push_back(out);
+				if (type_id == simtype::STATE) m_X_Array.push_back(out);
+				if (type_id == simtype::FLOW) m_T_Array.push_back(out);
+				if (type_id == simtype::AUX) m_G_Array.push_back(out);
+				if (type_id == simtype::DRIVE) m_D_Array.push_back(out);
 			}
 
 		}
@@ -2207,7 +2208,7 @@ bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 			m_DocFileIn.close();
 		}
 		auto iv=m_Val_Array.size();
-		Tab *pTab=(Tab*)GetPtr(simtype::TABLE, "Scaling of Observed Variables");
+		Tab *pTab=(Tab*)GetPtr(simtype::TABLE, string("Scaling of Observed Variables"));
 		if(pTab!=nullptr) {
 				auto oldnelements=pTab->GetNumOfRow();
 		  		if (iv!=oldnelements&&iv!= std::string::npos)  pTab->SetNumOfRow(iv);
@@ -2330,7 +2331,7 @@ bool NewMap::ReadXmlDocFile(string xmlfile) {
 
 	//if(IsBayesianCalibration()) {
 
-	auto pSw = (Sw*)GetPtr(simtype::SWITCH, "TimeSerie Errors File");
+	auto pSw = (Sw*)GetPtr(simtype::SWITCH, string("TimeSerie Errors File"));
 	if (pSw != nullptr) {
 		auto i = pSw->GetIntValue();
 		if (i > 0)
@@ -2369,8 +2370,8 @@ void NewMap::Init_BlankDocument()
 		OutVector* pStore;
 		OutSingle* pSingle;
 
-		pStore=dynamic_cast<OutVector*>(GetPtr(AUX,"Temperature"));
-		pSingle=dynamic_cast<OutSingle*>(GetPtr(AUX_SINGLE,"TempSoilSurf"));
+		pStore=static_cast<OutVector*>(GetPtr(simtype::AUX,string("Temperature")));
+		pSingle=static_cast<OutSingle*>(GetPtr(simtype::AUX_SINGLE,string("TempSoilSurf")));
 		if(pStore!=nullptr) {
 				pStore->SetStoreFlag(7,true);
 				pStore->SetStoreFlag(5,true);
@@ -2515,7 +2516,7 @@ bool NewMap::Info_Header(bool reading)
 				rString(&m_DocFile2.m_RunId);
 				if(m_FileVersionNumberRead>=7) {
 					rSize_t(&iv);
-					pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,"TimeResolution"));
+					pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,string("TimeResolution")));
 					if(pSw!=nullptr) {
 						if(iv<0||iv>3) iv=0;
 						pSw->SetIntValue(iv);
@@ -2609,7 +2610,7 @@ bool NewMap::Info_Header(bool reading)
 		wSize_t(&m_DocFile.m_TimePeriodScaleFactor);
 		wString(&m_DocFile2.m_Comments);	
 		wString(&m_DocFile2.m_RunId);
-		pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,"TimeResolution"));
+		pSw=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH,string("TimeResolution")));
 		iv=pSw->GetIntValue();
 		wSize_t(&iv);
 		wSize_t(&m_DocFile.ipredays);	 
@@ -2670,14 +2671,14 @@ bool NewMap::Info_Switches(bool reading)
 			}
 		}
 
-		m_pValidIndexSet=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "IndexForValidation"));
+		m_pValidIndexSet=dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("IndexForValidation")));
 		if (m_pValidIndexSet != nullptr) {
 			auto iv = m_pValidIndexSet->GetIntValue();
-			m_pValidIndex = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Index in val file"));
-			m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "No of internal index loop"));
-			m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "Size of internal loop"));
+			m_pValidIndex = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("Index in val file")));
+			m_pValidIndexRep = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("No of internal index loop")));
+			m_pValidIndexLoopSize = dynamic_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("Size of internal loop")));
 
-			pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "ValidationMode"));
+			pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("ValidationMode")));
 			m_NumValidFiles = pSw->GetIntValue();
 			ResidualFile_Reset();
 			ResidualFile_AddFile(m_NumValidFiles);
@@ -2958,7 +2959,7 @@ bool NewMap::Info_Files(bool reading)
 				if (name == "Validation File") {
 					name = "Validation File1";
 					Sw* pSw;
-					pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, "ValidationMode"));
+					pSw = dynamic_cast<Sw*>(GetPtr(simtype::SWITCH, string("ValidationMode")));
 					pSw->SetIntValue(1);
 					//pSw->Apply();			
 				}
@@ -2974,7 +2975,7 @@ bool NewMap::Info_Files(bool reading)
 				}
 				rString(&FileName);
 				FileName = GetExistingDocFileName(FileName);
-				pF = dynamic_cast<F*>(GetPtr(PGFILE, name));
+				pF = dynamic_cast<F*>(GetPtr(simtype::PGFILE, name));
 				if (pF != nullptr&&group != "Hidden") {
 					pF->SetValue(FileName);
 					pF->CheckFileNameAndAssignNameToPGClass();
@@ -3082,7 +3083,7 @@ bool NewMap::Info_Outputs(bool reading)
 	size_t iv;
 	size_t pgindex=0, pgmulindex=0;
 	size_t iType;
-	enum simtype typ { PAR };
+	simtype typ {simtype::PAR };
 	float initial,final,min,max,mean,accumulated;
 	size_t localindex{ 0 }, validFlagIndex;
 	size_t ivalue;
@@ -3121,24 +3122,24 @@ bool NewMap::Info_Outputs(bool reading)
 				switch (iType) {
 				case 1:
 				case 8:
-					typ=STATE;
+					typ= simtype::STATE;
 					break;
 				case 2:
 				case 9:
-					typ=FLOW;
+					typ= simtype::FLOW;
 					break;
 				case 3:
 				case 10:
-					typ=AUX;
+					typ= simtype::AUX;
 					break;
 				case 4:
 				case 11:
-					typ=DRIVE;
+					typ= simtype::DRIVE;
 					break;
 				}
 					OutVector *ptest;
 					pVector=dynamic_cast<OutVector*>(GetPtr(typ,name));
-					ptest=dynamic_cast<OutVector*>(GetPtr(AUX,name));
+					ptest=dynamic_cast<OutVector*>(GetPtr(simtype::AUX,name));
 					if(ptest!=nullptr&&pVector==nullptr) {
 						pVector=ptest;
 
@@ -3146,7 +3147,7 @@ bool NewMap::Info_Outputs(bool reading)
 					if(ptest==nullptr&&pVector==nullptr) {
 						name = FUtil::NameRevision2018(name);
 						pVector = dynamic_cast<OutVector*>(GetPtr(typ, name));
-						ptest = dynamic_cast<OutVector*>(GetPtr(AUX, name));
+						ptest = dynamic_cast<OutVector*>(GetPtr(simtype::AUX, name));
 
 
 					}
@@ -3212,8 +3213,8 @@ bool NewMap::Info_Outputs(bool reading)
 						if(pSingle==nullptr) {
 							if(name=="Soil Resp no roots") name="Soil Resp (no roots)";
 							pSingle=(OutSingle*)GetPtr(typ,name);
-							if(typ==AUX_SINGLE&&pSingle==nullptr) {
-								typ=FLOW_SINGLE;
+							if(typ== simtype::AUX_SINGLE&&pSingle==nullptr) {
+								typ= simtype::FLOW_SINGLE;
 								pSingle=(OutSingle*)GetPtr(typ,name);
 
 							}
@@ -3299,14 +3300,15 @@ bool NewMap::Info_Outputs(bool reading)
 
 			for(size_t i=0; i<pvv.size();i++) {
 				auto itt=pvv[i].pBase->GetType();
-				wSize_t(&itt);
-				if(itt==1||itt==8) 
+				size_t itemp=static_cast<size_t>(itt);
+				wSize_t(&itemp);
+				if(itemp==1||itemp==8) 
 						m_X_Array.push_back(pvv[i]);
-				else if(itt==2||itt==9)
+				else if(itemp==2||itemp==9)
 						m_T_Array.push_back(pvv[i]);
-				else if(itt==3||itt==10)
+				else if(itemp==3||itemp==10)
 						m_G_Array.push_back(pvv[i]);
-				else if(itt==4||itt==11)
+				else if(itemp==4||itemp==11)
 						m_D_Array.push_back(pvv[i]);
 
 				pVector=dynamic_cast<OutVector*>(pvv[i].pBase);
@@ -3450,7 +3452,7 @@ bool NewMap::Info_Validation(bool reading)
 				}
 				m_Val_Array.push_back(vst);				
 				if(pSimB!=nullptr) {
-					if(pSimB->GetType()<5)
+					if(pSimB->GetType()<simtype::SWITCH)
 						((OutVector*)pSimB)->SetValidFlagIndex(vst.LocalIndex, i+1);
 					else 
 						((OutSingle*)pSimB)->SetValidFlagIndex( i+1);
@@ -3470,14 +3472,14 @@ bool NewMap::Info_Validation(bool reading)
 				}
 			}
 			Sw *pSw;
-			pSw=(Sw*)GetPtr(simtype::SWITCH, "ValidationMode");
+			pSw=(Sw*)GetPtr(simtype::SWITCH, string("ValidationMode"));
 			m_NumValidFiles=GetSw( "ValidationMode")->GetIntValue();
 			if(count_valid_files>m_NumValidFiles) {
 				pSw->SetIntValue(count_valid_files);
 				m_NumValidFiles=GetSw( "ValidationMode")->GetIntValue();
 			}
 
-			Tab *pTab=(Tab*)GetPtr(simtype::PAR_SINGLE,"Scaling of Observed Variables" );
+			Tab *pTab=(Tab*)GetPtr(simtype::PAR_SINGLE, string("Scaling of Observed Variables" ));
 			if(pTab!=nullptr) {
 				auto oldnelements=pTab->GetNumOfRow();
 		  		if (iv!=oldnelements)  pTab->SetNumOfRow(iv);
@@ -3485,7 +3487,7 @@ bool NewMap::Info_Validation(bool reading)
 			}
 			if(m_FileVersionNumberRead>48) {
 				rSize_t(&m_NewLogFunc);rSize_t(&m_NewBoxCox);
-				enum simtype typ=SWITCH;
+				enum simtype typ=simtype::SWITCH;
 				group="Technical";
 				name="Likelihood Function";
 				pSw=(Sw*)GetPtr(typ,  name);
@@ -3522,7 +3524,7 @@ bool NewMap::Info_Validation(bool reading)
 		}
 
 
-		enum simtype typ=SWITCH;
+		enum simtype typ=simtype::SWITCH;
 		name="Likelihood Function";
 		group="Technical";
 		pSw=(Sw*)GetPtr(typ, name);
@@ -3556,7 +3558,10 @@ bool NewMap::Info_SumValidation(bool reading)
 			for(size_t i=0; i<iv;i++) {
 				vst.ObsScaling = false;
 				vst.MultiBin_StartMin = vst.MultiBin_EndMin = 0;
-				rSize_t(&vst.OutputType);rSize_t(&vst.SumVarType);
+				size_t itemp;
+				rSize_t(&itemp); vst.OutputType = simtype(itemp);
+				
+				rSize_t(&itemp); vst.SumVarType = sumvartype(itemp);
 				rString(&vst.Group);rString(&vst.Name);
 				rSize_t(&vst.LocalIndex);
 				float fvalue; double dvalue;
@@ -3600,24 +3605,21 @@ bool NewMap::Info_SumValidation(bool reading)
 				}
 				m_ValSum_Array.push_back(vst);
 				switch(vst.OutputType) {
-					case 1:
+					case simtype::STATE:
 						type="State Variables";
 						break;
-					case 2:
+					case simtype::FLOW:
 		 				type="Flow Variables";
 		 				break;
-					case 3:
+					case simtype::AUX:
 						type="Auxiliary Variables";
 	 					break;
-					 case 4:
+					case simtype::DRIVE:
 		 				type="Driving Variables";
 	 					break;
 				}
 				
-				pSimB=GetPtrFromIntType(vst.OutputType, vst.Group, vst.Name);
-				if(pSimB==nullptr)  pSimB=GetPtrFromIntType(1, vst.Group, vst.Name);
-				if(pSimB==nullptr)  pSimB=GetPtrFromIntType(2, vst.Group, vst.Name);
-				if(pSimB==nullptr)  pSimB=GetPtrFromIntType(3, vst.Group, vst.Name);
+				pSimB=GetPtr(vst.OutputType, vst.Group, vst.Name);
 
 				if(pSimB!=nullptr) {
 					if(pSimB->Is_Vector())
@@ -3660,7 +3662,8 @@ bool NewMap::Info_SumValidation(bool reading)
 
 		for (size_t i = 0; i < iv; i++) {
 			vst = m_ValSum_Array[i];
-			wSize_t(&vst.OutputType); wSize_t(&vst.SumVarType);
+			auto item=static_cast<size_t>(vst.OutputType);
+			wSize_t(&item); //wSize_t(&vst.SumVarType);
 			wString(&vst.Group); wString(&vst.Name);
 			wSize_t(&vst.LocalIndex);
 			wFloat(&vst.ME_mean); wFloat(&vst.RMSE_mean); wFloat(&vst.SimValue);
@@ -4057,7 +4060,7 @@ bool NewMap::Info_MultiRun(bool reading)
 			//if(IsBayesianCalibration()) {
 				MR_ReCalculatePostDist(IsBayesianCalibration());
 
-			auto pSw=(Sw*)GetPtr(simtype::SWITCH,"TimeSerie Errors File");
+			auto pSw=(Sw*)GetPtr(simtype::SWITCH,string("TimeSerie Errors File"));
 			if(pSw!=nullptr) {
 				auto i=pSw->GetIntValue();
 				if(i>0)
@@ -4116,10 +4119,11 @@ bool NewMap::Info_MultiRun(bool reading)
 					wSize_t(&valPAR.TabIndex);
 	
 					auto imethod=MR_GetMethod(i+1,ii+1);
-					wSize_t(&imethod);
+					auto im = size_t(imethod);
+					wSize_t(&im);
 					auto imon=MR_GetMonitoring(i+1,ii+1);
 					wSize_t(&imon);
-					if(imethod==4) {
+					if(imethod==MR_METHOD(4)) {
 						SimB* pCP=MR_Get_pPar(i+1,ii+1);
 						for(size_t iii=0;iii<MR_GetNumberOfRepeationsForThisDimension(i);iii++){
 							if(MR_GetTabIndex(i+1,ii+1)==-1)
@@ -4129,7 +4133,7 @@ bool NewMap::Info_MultiRun(bool reading)
 							wFloat(&fvalue);
 						}
 					}
-					else if(imethod==5) {
+					else if(imethod==MR_METHOD(5)) {
 						CDB* pCP=(CDB*)MR_Get_pPar(i+1,ii+1);
                         std::string selection_pcp;
                         std::string keyselection_pcp;
@@ -4140,7 +4144,7 @@ bool NewMap::Info_MultiRun(bool reading)
 							wString(&keyselection_pcp);
 						}
 					}
-					else if(imethod>5&&imethod<9) {
+					else if(imethod>MR_METHOD(5)&&imethod<MR_METHOD(9)) {
 						SimB* pParDep;
 						SimB* pCP=MR_Get_pPar(i+1,ii+1);
 						size_t indpar,ind_dep;
@@ -4159,7 +4163,7 @@ bool NewMap::Info_MultiRun(bool reading)
 							wString(&group_psw);
 							wString(&name_psw);
 							wSize_t(&ind_dep);
-							if (MR_GetMethod(i + 1, ii + 1)>6) {
+							if (MR_GetMethod(i + 1, ii + 1)>MR_METHOD(6)) {
 								fvalue = float(MR_GetMin(i + 1, ii + 1)); wFloat(&fvalue);
 								fvalue = float(MR_GetMax(i + 1, ii + 1)); wFloat(&fvalue);
 							}
@@ -4370,7 +4374,7 @@ bool NewMap::Info_FinalStateVariables(bool reading)
 					rString(&group);
 					rString(&name);
 					rSize_t(&nindex);
-					pXT=(X*)GetPtr(STATE,name);
+					pXT = dynamic_cast<X*>(GetPtr(simtype::STATE, name));
 					for( size_t i=0; i<nindex;i++) {
 						rFloat(&fvalue);
 						if(pXT!=nullptr) pXT->SetOptInitialValue(i,fvalue);
@@ -4544,31 +4548,31 @@ bool NewMap::Info_Plottings(bool reading)
 
 				bool Add=true;
 				enum simtype typ;
-				typ=STATE;
+				typ= simtype::STATE;
 		   		switch (iType) {
 					case 0:
 						type="Files";
-						typ=PGFILE;
+						typ= simtype::PGFILE;
 						break;
 					case 11: ;case 21:;
 					case 1:; case 101:;
 						type="State Variables";
-						typ=STATE;
+						typ= simtype::STATE;
 						break;
 					case 12:; case 22:;
 					case 2:;case 102:;
 						type="Flow Variables";
-						typ=FLOW;
+						typ= simtype::FLOW;
 						break;
 					case 13:; case 23:;
 					case 3: case 103:;
 						type="Auxiliary Variables";
-						typ=AUX;
+						typ= simtype::AUX;
 						break;
 					case 14:; case 24:;
 					case 4:; case 104:;
 						type="Driving Variables";
-						typ=DRIVE;
+						typ= simtype::DRIVE;
 						break;
 					case 5: // Validation Variables
 						Ptr=nullptr;
@@ -4921,7 +4925,7 @@ bool NewMap::Info_Annim(bool reading)
 					anode.iChart=ich;
 					AnnimVarList.push_back(anode);
 					auto seq=AnnimVarList.size();
-					if(pBase->GetType()<<5)
+					if(pBase->GetType()<simtype::SWITCH)
 						pBase->SetAnnimateChart(ind,size_t(ich),size_t(seq));
 					else 
 						pBase->SetAnnimateChart(size_t(ich),size_t(seq));
@@ -5086,8 +5090,8 @@ void NewMap::RemoveOriginalValues(string typ, std::string GroupSet, bool origina
 		
 		if(typ=="State Variables"||typ==""||typ=="Outputs") {
 			if(m_X_Array.size()>0)		  m_X_Array.clear();
-			vp=GetPtrVector(STATE,true);
-			vp_single=GetPtrVector(STATE_SINGLE,true);
+			vp=GetPtrVector(simtype::STATE,true);
+			vp_single=GetPtrVector(simtype::STATE_SINGLE,true);
 			for(size_t i=0; i<vp_single.size(); i++)
 				vp.push_back(vp_single[i]);
 			m_X_Array=UpdateOutVector(vp, GroupSet, original, ViewCategory_to_use);	
@@ -5095,8 +5099,8 @@ void NewMap::RemoveOriginalValues(string typ, std::string GroupSet, bool origina
 		}
 		if(typ=="Flow Variables"||typ==""||typ=="Outputs") {
 			if(m_T_Array.size()>0)		  m_T_Array.clear();
-			vp=GetPtrVector(FLOW, false);
-			vp_single=GetPtrVector(FLOW_SINGLE, false);
+			vp=GetPtrVector(simtype::FLOW, false);
+			vp_single=GetPtrVector(simtype::FLOW_SINGLE, false);
 			for(size_t i=0; i<vp_single.size(); i++)
 				vp.push_back(vp_single[i]);
 			m_T_Array=UpdateOutVector(vp, GroupSet, original, ViewCategory_to_use);
@@ -5104,8 +5108,8 @@ void NewMap::RemoveOriginalValues(string typ, std::string GroupSet, bool origina
 		}
 		if(typ=="Auxiliary Variables"||typ==""||typ=="Outputs") {
 			if(m_G_Array.size()>0)		  m_G_Array.clear();
-			vp=GetPtrVector(AUX, false);
-			vp_single=GetPtrVector(AUX_SINGLE, false);
+			vp=GetPtrVector(simtype::AUX, false);
+			vp_single=GetPtrVector(simtype::AUX_SINGLE, false);
 			for(size_t i=0; i<vp_single.size(); i++)
 				vp.push_back(vp_single[i]);
 			m_G_Array=UpdateOutVector(vp, GroupSet, original, ViewCategory_to_use);
@@ -5113,8 +5117,8 @@ void NewMap::RemoveOriginalValues(string typ, std::string GroupSet, bool origina
 		}
 		if(typ=="Driving Variables"||typ==""||typ=="Outputs") {
 			if(m_D_Array.size()>0)		  m_D_Array.clear();
-			vp=GetPtrVector(DRIVE, false);
-			vp_single=GetPtrVector(DRIVE_SINGLE, false);
+			vp=GetPtrVector(simtype::DRIVE, false);
+			vp_single=GetPtrVector(simtype::DRIVE_SINGLE, false);
 			for(size_t i=0; i<vp_single.size(); i++)
 				vp.push_back(vp_single[i]);
 			m_D_Array=UpdateOutVector(vp, GroupSet, original, ViewCategory_to_use);
@@ -5292,35 +5296,7 @@ void NewMap::UpdateArchiveLists(size_t iType){
 bool NewMap::MakeMapComplete() {
 	vector<SimB*> vptr;
 	for(size_t i=0;i<14;i++) {
-		enum simtype typ { PAR };
-		switch (i) {
-			case 0:
-			typ=SWITCH;
-			break;
-			case 1:
-			typ=vartype::PAR_SINGLE;
-			break;
-			case 2:
-			typ=TABLE;
-			break;
-			case 3:
-			typ=PAR_TABLE;
-			break;
-			case 4:
-			typ=STATE;
-			break;
-			case 5:
-			typ=FLOW;break;
-			case 6:	typ=AUX;break;
-			case 7:	typ=DRIVE; break;
-			case 8:	typ=PGFILE; break;
-			case 9:	typ=FLOW_SINGLE;break;
-			case 10:	typ=AUX_SINGLE;break;
-			case 11:	typ=DRIVE_SINGLE; break;
-			case 12:	typ=STATE_SINGLE; break;
-			case 13:	typ = CSVFILE; break;
-			
-		}
+		auto typ=simtype(i);
 		vptr=GetPtrVector(typ, true);
 		for( size_t j=0; j<vptr.size();j++) {
 			vptr[j]->BuildDependencies(this);
@@ -5328,6 +5304,10 @@ bool NewMap::MakeMapComplete() {
 			p_ModelInfo->trim_xml(name);
 		}
 	}
+	auto typ = simtype(16);
+	vptr = GetPtrVector(typ, true);
+	for (size_t j = 0; j < vptr.size(); j++) 
+		vptr[j]->BuildDependencies(this);
 	return true;
 }
 vector<SIMB> NewMap::SortSimB_ByGroup(vector<SIMB> v_in) {
@@ -5935,7 +5915,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 		ws.column_properties("G").width = 30.;
 		ws.column_properties("H").width = 30.;
 
-		Tab* pTab=static_cast<Tab*>(GetPtr(simtype::TABLE, "Criteria for Ensembles"));
+		Tab* pTab=static_cast<Tab*>(GetPtr(simtype::TABLE, string("Criteria for Ensembles")));
 		size_t icount = 3;
 		xlnt::alignment center;
 		center.horizontal(xlnt::horizontal_alignment::center);
@@ -6933,7 +6913,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				ws.merge_cells("A9:D9");
 
 				ws.cell(1, 10).value("Input Time Resolution");
-				auto pSw = static_cast<Sw*>(GetPtr(simtype::SWITCH, "TimeResolution"));
+				auto pSw = static_cast<Sw*>(GetPtr(simtype::SWITCH, string("TimeResolution")));
 				ws.cell(2,10).value(pSw->GetOption(pSw->GetIntValue()));  ws.cell(2, 10).fill(yellow);
 				ws.merge_cells("C10:D10");
 				ws.cell(1, 11).value("Output Interval");
@@ -6944,7 +6924,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				ws.cell(1, 13).value("Number of Iterations per day");
 				ws.cell(2, 13).value(RunOpt.noofiter);  ws.cell(2, 13).fill(yellow);
 				ws.cell(3, 13).value("NC iterations per day");
-				auto pParNitStep = static_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "NC Iteration"));
+				auto pParNitStep = static_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("NC Iteration")));
 				auto numstep = pParNitStep->GetValue();
 				ws.cell(4, 13).value(numstep);	 ws.cell(4, 13).fill(yellow); 
 				ws.merge_cells("A14:D14");
@@ -6987,7 +6967,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				auto str2 = ws.cell(2, 8).value<int>();
 				m_DocFile.m_TimePeriodScaleFactor = ws.cell(2, 8).value<int>();
 				string timeres = ws.cell(2, 10).value<string>();
-				auto pSw = static_cast<Sw*>(GetPtr(simtype::SWITCH, "TimeResolution"));
+				auto pSw = static_cast<Sw*>(GetPtr(simtype::SWITCH, string("TimeResolution")));
 				for (size_t i = 0; i < pSw->GetNumOptions(); i++) {
 					if (pSw->GetOption(i) == timeres) pSw->SetIntValue(i);
 				}
@@ -6995,7 +6975,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				RunOpt.oiminutes = ws.cell(2, 12).value<int>();
 				RunOpt.noofiter = ws.cell(2, 12).value<int>();
 				auto numNCSteps = ws.cell(2, 12).value<int>();;
-				auto pParNitStep = static_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, "NC Iteration"));
+				auto pParNitStep = static_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, string("NC Iteration")));
 				pParNitStep->SetValue(numNCSteps);		  
 
 			};
@@ -7711,7 +7691,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 						cols++;
 
 					}
-					F* pF = (F*)GetPtr(PGFILE, name, group);
+					F* pF = (F*)GetPtr(simtype::PGFILE, name, group);
 					if (pF != NULL && group != "Hidden") {
 						pF->SetValue(str);
 					}

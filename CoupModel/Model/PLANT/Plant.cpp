@@ -40,29 +40,29 @@ bool Plant::Def()
 
 
 	Sw* pSw;
-	pSw = new Sw(&CanopyHeightInput, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&CanopyHeightInput, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "CanopyHeightInput", 0, "Parameters|Driving variable|Simulated", "Roughness = 2|PlantType > 1", 206);
-	pSw = new Sw(&PlantDev, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&PlantDev, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pSw, "PlantDevelopment", 0, "Static|Start=f(TempSum)", "PlantType >= 2|Evaporation >= 1|PlantDrive < 1|WaterEq = 1");
-	pSw = new Sw(&RootInput, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&RootInput, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "RootInput", 0, "Parameters|Driving variable|Simulated", "PlantType > 0|WaterEq = 1|Evaporation >= 1|WUptake > 0", 200);
-	pSw = new Sw(&RootDistribution, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&RootDistribution, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "RootDistribution", 3, "Table|Linear|Constant|Exponential", "PlantType > 0|WUptake > 0|WaterEq = 1|Evaporation >= 1");
-	pSw = new Sw(&LAIInput, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&LAIInput, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pSw, "LaiInput", 0, "Parameters|Driving variable|Simulated|PG File Dynamic Index style", "WUptake > 0|PlantType > 1|WaterEq = 1|Evaporation >= 1", 200);
-	pSw = new Sw(&AlbedoVeg, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&AlbedoVeg, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "AlbedoVeg", 0, "Static|Parameters|Driving variable|Simulated", "PlantType > 1", 200);
-	pSw = new Sw(&SpatialPlantDist, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&SpatialPlantDist, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "SpatialDistribution", 0, "Random - Within unit area|Fixed - Within unit area|Fixed - Unrestricted area", "PlantType >= 3", 200);
-	pSw = new Sw(&SLA_Dynamic, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pSw = new Sw(&SLA_Dynamic, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Dynamic Specific Leaf Area", 0, "off|on", "LaiInput = 2");
 
-	pSw = new Sw(&AboveTable, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pSw = new Sw(&AboveTable, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "AboveTable", 1, "No|Yes", "PlantType > 1");
 	
-	pSw = new Sw(&RootDistribution_Outputs, SINGLE, GENERAL, NOFPROC, NOBPROC, NORMAL);
+	pSw = new Sw(&RootDistribution_Outputs, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "Selected Plant RootDistOutput", 0, "No Outputs|First Plant|Second Plant", "PlantType > 1");
 
 	NE* pNumPlants;
@@ -84,16 +84,16 @@ bool Plant::Def()
 
 
 	Ps* pPs;
-	pPs = new Ps(&PlantV_Index, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pPs = new Ps(&PlantV_Index, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Plant, Index in PG-file", 1., "-", "LaiInput=1", 1., 400.);
-	pPs = new Ps(&PlantDynamic_IndexFile, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pPs = new Ps(&PlantDynamic_IndexFile, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Plant FileName Index", 1., "-", "LaiInput=3", 1., 4000.);
 
 
-	pPs = new Ps(&RFracLow, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pPs = new Ps(&RFracLow, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "RootFracExpTail", .1, "-", "PlantType > 0|RootDistribution = 3|WaterEq = 1", 0.001, 1., 0.01, 0.2);
 	ps_vec.push_back(pPs);
-	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.FuncName = MyFunc::ROOTDEPTH_EXP_DISTRIBUTION; functorprop.Arg = MyArgType::D2;
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Depth Exp Function";
@@ -104,13 +104,13 @@ bool Plant::Def()
 
 
 
-	pPs = new Ps(&TSumStart, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pPs = new Ps(&TSumStart, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "TempSumStart", 50., UNIT_TYPES::TEMPSUM_UNIT, "PlantType > 0|PlantDevelopment = 1|WaterEq = 1", 10., 400., 20., 100.);
-	pPs = new Ps(&TSumCrit, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pPs = new Ps(&TSumCrit, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "TempSumCrit", 5., UNIT_TYPES::TEMP_UNIT, "PlantType > 0|PlantDevelopment = 1|WaterEq = 1", 0., 10., 3., 7.);
-	pPs = new Ps(&AlbedoLeaf, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pPs = new Ps(&AlbedoLeaf, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "AlbedoLeaf", 25., "%", "AlbedoVeg = 0|PlantType >= 2", 1., 100., 8., 30.);
-	pPs = new Ps(&RandomNumberSeed, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pPs = new Ps(&RandomNumberSeed, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pPs, "RandomNumberSeed", 1., "-", "PlantType >= 3|SpatialDistribution=0", 1., 10000., 1., 10000.);
 
@@ -131,13 +131,13 @@ bool Plant::Def()
 	initv.resize(pNL->GetNEValue());
 	for (size_t i = 0; i < pNL->GetNEValue(); i++)
 		initv[i] = 1. / double(pNL->GetNEValue());
-	pP = new P(&RootF, pNL, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&RootF, pNL, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pP, pNL, "RootFraction", initv, "-", "WUptake >= 1|RootDistribution = 0|WaterEq = 1", 0.0001, 1., 0.005, 1., 50);
 	mTab_RootDist.push_back(pP);
-	pTab = new Tab(&mTab_RootDist, SIMPROFILE, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_RootDist, datatype::SIMPROFILE, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Root distribution with depth", "RootFraction", "WUptake >0|RootDistribution = 0|WaterEq = 1|PlantType > 0");
 
-	pP = new P(&PRootDayNumber, pNRootDayN, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PRootDayNumber, pNRootDayN, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.resize(NRootDayN);
 	initv[0] = 120.;
 	for (size_t i = 1; i<initv.size(); i++)
@@ -147,13 +147,13 @@ bool Plant::Def()
 
 	p_vec.push_back(pP);
 
-	pP = new P(&PRootDepth, pNRootDayN, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PRootDepth, pNRootDayN, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NRootDayN, -0.1);
 	Define(pP, pNRootDayN, "pRoot Depth", initv, "m", "WUptake >= 1|RootInput = 0|WaterEq = 1|PlantType > 0", -10., .0001, -3., 0.000001);
 	mTab_RootDepth_t.push_back(pP);
 	p_vec.push_back(pP);
 
-	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLEPLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.FuncName = MyFunc::ROOTDEPTH_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Depth Day Number Function";
@@ -162,14 +162,14 @@ bool Plant::Def()
 	p_vec.erase(p_vec.begin() + 1);
 
 
-	pP = new P(&PRootLength, pNRootDayN, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PRootLength, pNRootDayN, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NRootDayN, 10000.);
 	Define(pP, pNRootDayN, "pRoot Length", initv, "m", "WUptake >= 1|RootInput = 0|WaterEq = 1|Basic equation = 1", 0., 1000., .01, 1.E6);
 	mTab_RootDepth_t.push_back(pP);
 
 	p_vec.push_back(pP);
 
-	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLEPLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.FuncName = MyFunc::ROOTLENGTH_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Length Day Number Function";
@@ -177,7 +177,7 @@ bool Plant::Def()
 	Define(pFunc, functorprop, funcname, p_vec);
 	p_vec.clear();
 
-	pTab = new Tab(&mTab_RootDepth_t, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_RootDepth_t, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Root depths development with time", "pDay Number|pRoot Depth|pRoot Length", "WUptake >0|PlantType >= 1|PlantType <3|WaterEq = 1|RootInput = 0");
 
 
@@ -189,37 +189,37 @@ bool Plant::Def()
 	for (size_t i = 1; i<initv.size(); i++)
 		initv[i] = initv[i - 1] + 15;
 
-	pP = new P(&DayNum, pNoDayNum, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);  p_vec.push_back(pP);
+	pP = new P(&DayNum, pNoDayNum, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);  p_vec.push_back(pP);
 	Define(pP, pNoDayNum, "DayNumber", initv, "#", "PlantType = 2|WaterEq = 1", 1., 365., 1., 365.);
 	initv.assign(NoDayNum, 1.5);
 	mTab_Above_t.push_back(pP);
 
 
 
-	pP = new P(&LaiV, pNoDayNum, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&LaiV, pNoDayNum, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pP, pNoDayNum, "LeafAreaIndex", initv, "-", "PlantType = 2|WaterEq = 1|LaiInput = 0", 0., 20., 0.01, 10.);
 	mTab_Above_t.push_back(pP);
-	pP = new P(&AlbedoV, pNoDayNum, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&AlbedoV, pNoDayNum, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NoDayNum, 25.);
 	Define(pP, pNoDayNum, "AlbedoV", initv, "%", "AlbedoVeg = 1|PlantType > 1", 0., 10.);
 	mTab_Above_t.push_back(pP);
 
-	pP = new P(&CanopyHeight, pNoDayNum, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&CanopyHeight, pNoDayNum, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NoDayNum, .1);
 	Define(pP, pNoDayNum, "CanopyHeight", initv, "m", "Roughness = 2|PlantType > 1", 0., 150., 0., 40.);
 	mTab_Above_t.push_back(pP);
 
 	initv.assign(NoDayNum, 1.);
-	pP = new P(&CForm, pNoDayNum, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);  p_vec.push_back(pP);
+	pP = new P(&CForm, pNoDayNum, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);  p_vec.push_back(pP);
 	Define(pP, pNoDayNum, "CForm", initv, "-", "PlantType = 2|WaterEq = 1", 0.01, 10., 0.1, 3.);
 
 	mTab_Above_t.push_back(pP);
 
-	pTab = new Tab(&mTab_Above_t, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Above_t, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Above ground characteristics with time", "DayNumber|LeafAreaIndex|AlbedoV|CForm", "AboveTable = 1|PlantType = 2|WaterEq = 1");
 
 	p_vec.push_back(mTab_Above_t[1]);
-	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLEPLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.FuncName = MyFunc::LAI_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Leaf Area Index Day of year function";
@@ -240,27 +240,27 @@ bool Plant::Def()
 	functorprop.FuncName = MyFunc::ALBEDO_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Albedo Day of year function";
-	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLEPLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
 	p_vec.erase(p_vec.end() - 1);  p_vec.push_back(mTab_Above_t[3]);
 
 	functorprop.FuncName = MyFunc::CANOPYHEIGHT_DAYOFYEAR; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Height Day of year function";
-	pFunc = new Func(SINGLEPLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::SINGLEPLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
 
 
 
 
-	pP = new P(&SpecificLeafAreaBegin, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&SpecificLeafAreaBegin, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 20.);
 	Define(pP, pNumPlants, "Spec LeafArea Begin", initv, "gC/m2", "Nitrogen and Carbon >= 1|LaiInput = 2|Dynamic Specific Leaf Area=1", 0.01, 200.);//	!LK 010906 Changed from "Growth = 3".
 	mTab_Size.push_back(pP);
 	p_vec.clear();
 
 	p_vec.push_back(pP);
-	pP = new P(&SpecificLeafArea, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&SpecificLeafArea, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 30.);
 	Define(pP, pNumPlants, "Specific LeafArea", initv, "gC/m2", "Nitrogen and Carbon >= 1|LaiInput = 2", 0.01, 200.);	//!LK 010906 Changed from "Growth = 3".
 	mTab_Size.push_back(pP);
@@ -282,7 +282,7 @@ bool Plant::Def()
 
 
 
-	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	functorprop.FuncName = MyFunc::LEAFAREAINDEX_PER_MASS_STAGE; functorprop.Arg = MyArgType::T_D2;
@@ -291,22 +291,22 @@ bool Plant::Def()
 	plotpar.LegendsVec = { "GSI 1.0","GSI 1.25", "GSI 1.5", "GSI 2.0" };
 
 	funcname = "LAI - per mass and development stage";
-	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 
 
 
-	pP = new P(&PlantMaxHeight, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PlantMaxHeight, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 1.);
 	Define(pP, pNumPlants, "Max Height", initv, "m", "Nitrogen and Carbon >= 1|CanopyHeightInput = 2", .01, 100.);
 	mTab_Size.push_back(pP);
 
-	pP = new P(&PlantHeightC1, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PlantHeightC1, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, .1);
 	Define(pP, pNumPlants, "Height MassCoef", initv, "m2/g", "Nitrogen and Carbon >= 1|CanopyHeightInput = 2", .0, 1.);
 	mTab_Size.push_back(pP);
-	pP = new P(&PlantHeightC2, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PlantHeightC2, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pP, pNumPlants, "Height AgeCoef", initv, "1/days", "Nitrogen and Carbon >= 1|CanopyHeightInput = 2", 0., 1.);//	!LK 010906 Changed from "Growth = 3".
 	mTab_Size.push_back(pP);
 
@@ -327,41 +327,41 @@ bool Plant::Def()
 	plotpar.LegendsVec = { };
 	plotpar.Num_Of_Opt = 1;
 
-	pP = new P(&RootLowestDepth, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&RootLowestDepth, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, -1.);
 	Define(pP, pNumPlants, "Root LowestDepth", initv, "m", "Nitrogen and Carbon >= 1", -5., -0.01);
 	mTab_Size.push_back(pP); p_vec.push_back(pP);
-	pP = new P(&RootIncDepth, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&RootIncDepth, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pP, pNumPlants, "Root IncDepth", initv, "m", "Nitrogen and Carbon >= 1", -100., -0.01);
 	mTab_Size.push_back(pP); p_vec.push_back(pP);
 
 
-	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar); p_vec.clear();
 
 
 
 
 
-	pP = new P(&SpecificRootLength, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&SpecificRootLength, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.0001);
 	Define(pP, pNumPlants, "Specific RootLength", initv, "gC/m", "Nitrogen and Carbon >= 1|RootInput = 2|Basic equation = 1", 0.1E-6, 1.);
 	mTab_Size.push_back(pP); p_vec.push_back(pP);
 
 	functorprop.FuncName = MyFunc::ROOTLENGTH_PER_MASS; functorprop.Arg = MyArgType::D1;
 	funcname = "Root Length - per mass roots";
-	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec); p_vec.clear();
 
 
 
 
-	pP = new P(&AlbedoVegStage, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&AlbedoVegStage, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 25.);
 	Define(pP, pNumPlants, "AlbedoVegStage", initv, "%", "Nitrogen and Carbon >= 1|AlbedoVeg=3", 10., 30.);
 	mTab_Size.push_back(pP); p_vec.push_back(pP);
 
-	pP = new P(&AlbedoGrainStage, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&AlbedoGrainStage, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 40.);
 	Define(pP, pNumPlants, "AlbedoGrainStage", initv, "%", "Nitrogen and Carbon >= 1|AlbedoVeg=3", 20., 70.);
 	mTab_Size.push_back(pP); p_vec.push_back(pP);
@@ -369,7 +369,7 @@ bool Plant::Def()
 	functorprop.FuncName = MyFunc::ALBEDOVEG_PER_GROWTHSTAGE; functorprop.Arg = MyArgType::D1;
 	funcname = "Albedo - per growth stage";
 	
-	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec); p_vec.clear();
 
 
@@ -379,11 +379,11 @@ bool Plant::Def()
 	p_vec.push_back((P*)m_pModelMap->GetP_Pointer("Height AgeCoef"));
 
 
-	pP = new P(&PlantHeightC3, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PlantHeightC3, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
 	Define(pP, pNumPlants, "Height GrainCoef", initv, "m2/g", "Nitrogen and Carbon >= 1|CanopyHeightInput = 2", 0., 1.);//	!LK 010906 Changed from "Growth = 3".
 	mTab_Size.push_back(pP); p_vec.push_back(pP);
-	pP = new P(&PlantHeightC4, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&PlantHeightC4, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, .1); p_vec.push_back(pP);
 	Define(pP, pNumPlants, "Height MaxGrain", initv, "", "Nitrogen and Carbon >= 1|CanopyHeightInput = 2", 0.01, 1.);//	!LK 010906 Changed from "Growth = 3".
 	mTab_Size.push_back(pP);
@@ -405,7 +405,7 @@ bool Plant::Def()
 	plotpar.Num_Of_Opt = 1;
 
 
-	pFunc = new Func(PLANT, PLANT_SHAPE, NOFPROC, NOBPROC, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 	plotpar.Num_Of_Curves = 1;
@@ -413,11 +413,11 @@ bool Plant::Def()
 
 
 
-	pTab = new Tab(&mTab_Size, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Size, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Size and shape of growing plant", "Specific LeafArea|Max Height|Height MassCoef|Height AgeCoef|Root LowestDepth|Root IncDepth|Specific RootLength|AlbedoVegStage|AlbedoGrainStage|Height GrainCoef|Height MaxGrain|Spec LeafArea Begin",
 		"Nitrogen and Carbon > 0|Growth != 0");
 	p_vec.clear();
-	pP = new P(&StartDayNo, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&StartDayNo, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 121.);
 
 	Define(pP, pNumPlants, "Start DayNo", initv, "#", "PlantType >= 3", 1., 365.);
@@ -425,25 +425,25 @@ bool Plant::Def()
 	//Define(pP,pNoDayNum,"CanopyHeight"  ,initv,"m","Roughness = 2|PlantType > 1",0.,150., 0., 40.);
 	mTab_LAI.push_back(pP);		mTab_Height.push_back(pP); mTab_Albedo.push_back(pP); mTab_RootDepth.push_back(pP); mTab_RootLength.push_back(pP);
 	mTab_RoughMulti.push_back(pP); mTab_DisplMulti.push_back(pP);
-	pP = new P(&OptDayNo, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&OptDayNo, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 210.);
 	Define(pP, pNumPlants, "Optimum DayNo", initv, "#", "PlantType >= 3", 1., 365.);
 	p_vec.push_back(pP);
 	mTab_LAI.push_back(pP);		mTab_Height.push_back(pP); mTab_Albedo.push_back(pP); mTab_RootDepth.push_back(pP); mTab_RootLength.push_back(pP);
 	mTab_RoughMulti.push_back(pP); mTab_DisplMulti.push_back(pP);
-	pP = new P(&EndDayNo, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&EndDayNo, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 270.);
 	Define(pP, pNumPlants, "End DayNo", initv, "#", "PlantType >= 3", 1., 365.);
 	p_vec.push_back(pP);
 	mTab_LAI.push_back(pP);		mTab_Height.push_back(pP); mTab_Albedo.push_back(pP); mTab_RootDepth.push_back(pP); mTab_RootLength.push_back(pP);
 	mTab_RoughMulti.push_back(pP); mTab_DisplMulti.push_back(pP);
-	pP = new P(&ShapeStart, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&ShapeStart, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, .3);
 	Define(pP, pNumPlants, "Shape Start", initv, "#", "PlantType >= 3", 0.01, 9.);
 	p_vec.push_back(pP);
 	mTab_LAI.push_back(pP);		mTab_Height.push_back(pP); mTab_Albedo.push_back(pP); mTab_RootDepth.push_back(pP); mTab_RootLength.push_back(pP);
 	mTab_RoughMulti.push_back(pP); mTab_DisplMulti.push_back(pP);
-	pP = new P(&ShapeEnd, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&ShapeEnd, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 3.);
 	Define(pP, pNumPlants, "Shape End", initv, "#", "PlantType >= 3", 0.01, 9.);
 	p_vec.push_back(pP);
@@ -451,23 +451,23 @@ bool Plant::Def()
 	mTab_RoughMulti.push_back(pP); mTab_DisplMulti.push_back(pP);
 
 
-	pP = new P(&L_StartValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&L_StartValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
 	Define(pP, pNumPlants, "lStart Value", initv, "#", "PlantType >= 3|LaiInput =0", 0., 12.);
 	p_vec.push_back(pP);
 	mTab_LAI.push_back(pP);
-	pP = new P(&L_OptValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&L_OptValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 5.);
 	Define(pP, pNumPlants, "lOptimum Value", initv, "#", "PlantType >= 3|LaiInput =0", 0., 20.);
 	p_vec.push_back(pP);
 	mTab_LAI.push_back(pP);
-	pP = new P(&L_EndValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&L_EndValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
 	Define(pP, pNumPlants, "lEnd Value", initv, "#", "PlantType >= 3|LaiInput =0", 0., 12.);
 	p_vec.push_back(pP);
 	mTab_LAI.push_back(pP);
 
-	pTab = new Tab(&mTab_LAI, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_LAI, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Leaf Area Index - multiple canopies", "Start DayNo|Optimum DayNo|End DayNo|Shape Start|Shape End|lStart Value|lOptimum Value|lEnd Value",
 		"PlantType > 2|LaiInput =0", 6);
 
@@ -481,7 +481,7 @@ bool Plant::Def()
 	plotpar.Y_Label = "Leaf Area Index (-)";
 	plotpar.LegendsVec = { "" };
 
-	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::EVAPOTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec,plotpar);
 
 
@@ -491,17 +491,17 @@ bool Plant::Def()
 
 	for (size_t i = 0; i < 3; i++) { p_vec.erase(p_vec.begin() + 5); }
 
-	pP = new P(&H_StartValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&H_StartValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pP, pNumPlants, "hStart Value", initv, "#", "PlantType >= 3|CanopyHeightInput =0", 0., 120.);
 	p_vec.push_back(pP);
 	mTab_Height.push_back(pP);
-	pP = new P(&H_OptValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&H_OptValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, .5);
 	Define(pP, pNumPlants, "hOptimum Value", initv, "#", "PlantType >= 3|CanopyHeightInput =0", 0., 120.);
 	p_vec.push_back(pP);
 
 	mTab_Height.push_back(pP);
-	pP = new P(&H_EndValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&H_EndValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
 	Define(pP, pNumPlants, "hEnd Value", initv, "#", "PlantType >= 3|CanopyHeightInput =0", 0., 120.);
 	p_vec.push_back(pP);
@@ -510,7 +510,7 @@ bool Plant::Def()
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Canopy Height - with season";
 	plotpar.Y_Label = "Height (m)";
-	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::EVAPOTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 
@@ -519,32 +519,32 @@ bool Plant::Def()
 	for (size_t i = 0; i < 3; i++) { p_vec.erase(p_vec.begin() + 5); }
 
 
-	pTab = new Tab(&mTab_Height, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Height, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Canopy height - multiple canopies", "Start DayNo|Optimum DayNo|End DayNo|Shape Start|Shape End|hStart Value|hOptimum Value|hEnd Value",
 		"PlantType > 2|CanopyHeightInput =0");
 
-	pP = new P(&A_StartValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&A_StartValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 25.);
 	Define(pP, pNumPlants, "aStart Value", initv, "%", "PlantType >= 3|AlbedoVeg =1", 10., 50.);
 	p_vec.push_back(pP);
 	mTab_Albedo.push_back(pP);
-	pP = new P(&A_OptValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&A_OptValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 20.);
 	Define(pP, pNumPlants, "aOptimum Value", initv, "%", "PlantType >= 3|AlbedoVeg =1", 5., 80.);
 	p_vec.push_back(pP);
 	mTab_Albedo.push_back(pP);
-	pP = new P(&A_EndValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&A_EndValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 40.);
 	Define(pP, pNumPlants, "aEnd Value", initv, "%", "PlantType >= 3|AlbedoVeg =1", 5., 80.);
 	p_vec.push_back(pP);
 	mTab_Albedo.push_back(pP);
 
-	pTab = new Tab(&mTab_Albedo, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Albedo, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.FuncName = MyFunc::ALBEDOVEG_SEASON; functorprop.Arg = MyArgType::T_D1;
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Albedo Vegetation - with season";
 	plotpar.Y_Label = "Albedo (%)";
-	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::EVAPOTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 
@@ -559,18 +559,18 @@ bool Plant::Def()
 		"PlantType > 2|AlbedoVeg =1");
 
 
-	pP = new P(&R_StartValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&R_StartValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
 	mTab_RootDepth.push_back(pP);
 	Define(pP, pNumPlants, "rStart Value", initv, "m", "PlantType >=2|RootInput =0", -20., 0.0);
 	p_vec.push_back(pP);
 
-	pP = new P(&R_OptValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&R_OptValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, -0.5);
 	Define(pP, pNumPlants, "rOptimum Value", initv, "m", "PlantType >= 3|RootInput =0", -20., 0.0);
 	p_vec.push_back(pP);
 	mTab_RootDepth.push_back(pP);
-	pP = new P(&R_EndValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&R_EndValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.0);
 	Define(pP, pNumPlants, "rEnd Value", initv, "m", "PlantType >= 3|RootInput =0", -20., 0.0);
 	p_vec.push_back(pP);
@@ -579,7 +579,7 @@ bool Plant::Def()
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Depth - with season";
 	plotpar.Y_Label = "Depth (m)";
-	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::EVAPOTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar);
 
 
@@ -588,21 +588,21 @@ bool Plant::Def()
 	for (size_t i = 0; i < 3; i++) { p_vec.erase(p_vec.begin() + 5); }
 
 
-	pTab = new Tab(&mTab_RootDepth, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_RootDepth, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Root depths - multiple canopies", "Start DayNo|Optimum DayNo|End DayNo|Shape Start|Shape End|rStart Value|rOptimum Value|rEnd Value",
 		"PlantType > 2|RootInput =0");
 
-	pP = new P(&RL_StartValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&RL_StartValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pP, pNumPlants, "rlStart Value", initv, UNIT_TYPES:: INVERSE_AREA_UNIT, "PlantType >=2|RootInput =0", -20., -0.01);
 	mTab_RootLength.push_back(pP);
 	p_vec.push_back(pP);
 
-	pP = new P(&RL_OptValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&RL_OptValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 10000.);
 	Define(pP, pNumPlants, "rlOptimum Value", initv, UNIT_TYPES::INVERSE_AREA_UNIT, "PlantType >= 3|RootInput =0", -20., -0.01);
 	mTab_RootLength.push_back(pP);
 	p_vec.push_back(pP);
-	pP = new P(&RL_EndValue, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&RL_EndValue, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
 	Define(pP, pNumPlants, "rlEnd Value", initv, UNIT_TYPES::INVERSE_AREA_UNIT, "PlantType >= 3|RootInput =0", -20., -0.01);
 	mTab_RootLength.push_back(pP);
@@ -611,27 +611,27 @@ bool Plant::Def()
 	functorprop.FunctorInitOption = std::string::npos;
 	funcname = "Root Length - with season";
 	plotpar.Y_Label = "Length ";	  plotpar.Y_Label += +"()";
-	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::EVAPOTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec);
 
 
 	f_test = Get_D1_TableFunctor(MyFunc::ROOTLENGTH_SEASON);
 	p_vec.clear();
 
-	pTab = new Tab(&mTab_RootLength, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_RootLength, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Root lengths - multiple canopies", "Start DayNo|Optimum DayNo|End DayNo|Shape Start|Shape End|rlStart Value|rlOptimum Value|rlEnd Value",
 		"PlantType > 2|RootInput =0");
 
 
-	pP = new P(&MaxPlantCover, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&MaxPlantCover, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 1.);
 	Define(pP, pNumPlants, "Max Cover", initv, UNIT_TYPES::NO_UNIT, "PlantType >=3", 0., 10., 0., 1.); p_vec.push_back(pP);
 	mTab_CanCover.push_back(pP);
-	pP = new P(&KExpPlantCover, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&KExpPlantCover, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, .5);
 	Define(pP, pNumPlants, "Area kExp", initv, "-", "PlantType >=3", 0., 10.); p_vec.push_back(pP);
 	mTab_CanCover.push_back(pP);
-	pTab = new Tab(&mTab_CanCover, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_CanCover, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Surface canopy cover - multiple canopies", "Max Cover|Area kExp", "PlantType > 2");
 
 	functorprop.FuncName = MyFunc::CANOPYCOVER; functorprop.Arg = MyArgType::T_D1;
@@ -644,73 +644,73 @@ bool Plant::Def()
 
 	plotpar.Y_Label = "Degree of Cover (-)";
 	plotpar.LegendsVec = {""};
-	pFunc = new Func(PLANT, PLANT_SHAPE, EVAPOTRANSPIRATION, PHOTOSYNTHESIS, NORMAL);
+	pFunc = new Func( datatype::PLANT, elements::PLANT_SHAPE, fysprocess::EVAPOTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, p_vec, plotpar); p_vec.clear();
 
 
 
 
-	pP = new P(&DiameterHeightRatio, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&DiameterHeightRatio, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, .2);
 	Define(pP, pNumPlants, "DiameterHeightRatio", initv, "-", "RadiationInput > 0|CanopyShade>0|PlantType >=3", 0.01, 10.);
 	mTab_Diam.push_back(pP);
 
-	pTab = new Tab(&mTab_Diam, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Diam, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Plant diameter - multiple canopies", "DiameterHeightRatio", "RadiationInput > 0|CanopyShade>0|PlantType > 12");
 
-	pP = new P(&Xcenter, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pP = new P(&Xcenter, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.5);
 	Define(pP, pNumPlants, "XcenterPos", initv, "m", "RadiationInput > 0|PlantType >= 3|SpatialDistribution>=1", 0., 1.);
 	mTab_Pos.push_back(pP);
-	pTab = new Tab(&mTab_Pos, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pTab = new Tab(&mTab_Pos, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pTab, "Spatial orientation - multiple canopies", "XcenterPos", "RadiationInput > 0|PlantType >=3|SpatialDistribution>=1");
 
 	G* pG;
 	initv.assign(NumPlants, 0);
 
-	pG = new G(&SoilCoverFraction, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&SoilCoverFraction, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "Soil Cover Fraction", initv, "-", "WaterEq = 1|PlantType >= 2|Evaporation > 0");
 	Gs* pGs;
-	pGs = new Gs(&TotSoilCovFrac, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pGs = new Gs(&TotSoilCovFrac, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "Tot Soil Cover Fraction", 0., "-", "WaterEq = 1|PlantType = 3|Evaporation > 0");
-	pG = new G(&PlantHeight, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&PlantHeight, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "Canopy Height", initv, "m", "WaterEq = 1|PlantType >= 2|Evaporation > 0");
-	pG = new G(&PlantAlbedo, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&PlantAlbedo, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "Plant Albedo", initv, "%", "WaterEq = 1|PlantType >= 2|Evaporation > 0");
-	pG = new G(&LAI, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&LAI, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "LeafAreaIndex", initv, "-", "WaterEq = 1|PlantType >= 2|Evaporation > 0");
-	pGs = new Gs(&LAI_Total, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pGs = new Gs(&LAI_Total, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "LeafAreaIndexSum", 0., "-", "WaterEq = 1|PlantType = 3|Evaporation > 0");
-	pG = new G(&RootDepth, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&RootDepth, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "RootDepth", initv, "m", "WUptake > 0|WaterEq = 1|Evaporation > 0|PlantType >0");
-	pG = new G(&RootLength, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&RootLength, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "RootLength", initv, "m", "WaterEq = 1|Evaporation > 0|Basic equation =1");
-	pGs = new Gs(&RootLength_Total, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pGs = new Gs(&RootLength_Total, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "RootLength_Total", 0., "-", "WaterEq = 1|PlantType = 3|Evaporation > 0|Basic equation =1");
 
-	pG = new G(&SimRootDepth, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&SimRootDepth, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "SimRootDepth", initv, "m", "Nitrogen and Carbon >= 1|Growth >0");
-	pG = new G(&SimRootLength, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&SimRootLength, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "SimRootLength", initv, "m", "Nitrogen and Carbon >= 1|Growth >0");
-	pG = new G(&SimPlantHeight, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&SimPlantHeight, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "SimPlantHeight", initv, "m", "Nitrogen and Carbon >= 1|Growth >0");
-	pG = new G(&SimPlantAlbedo, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&SimPlantAlbedo, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "SimPlantAlbedo", initv, "%", "Nitrogen and Carbon >= 1|Growth >0");
-	pG = new G(&SimLeafAreaIndex, pNumPlants, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pG = new G(&SimLeafAreaIndex, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "SimLeafAreaIndex", initv, "-", "Nitrogen and Carbon >= 1|Growth >0");
 
 
-	pG = new G(&RelRootDist, pNL, SIMPROFILE, WATER, FYS_SHAPE, NOBPROC, NORMAL); initv.assign(pNL->GetNEValue(), 0.);
+	pG = new G(&RelRootDist, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL); initv.assign(pNL->GetNEValue(), 0.);
 	Define(pG, pNL, "RootDepthDistribution", initv,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Growth >0|Selected Plant RootDistOutput>0");
 
-	pGs = new Gs(&TsumPlant, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pGs = new Gs(&TsumPlant, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TsumPlant", 0., "CDay", "PlantType > 0|PlantDevelopment = 1|WaterEq = 1");
 
 
 
 
 	F* pF;
-	pF = new F(&m_PG_Crop, PLANT, WATER, FYS_SHAPE, NOBPROC, NORMAL);
+	pF = new F(&m_PG_Crop, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "Crop data", "Crop.bin", "TypeOfDrivingFile >= 2");
 
 

@@ -74,7 +74,7 @@ CDB::CDB(DB_types index)
 	ChaParKeySelection.resize(0);
 	MR_KeySelection.clear();
 }
-CDB::CDB(int index):SimB(DB)
+CDB::CDB(int index):SimB(simtype::DB)
 {
 	if (index > 1)
 		DB_Index = index - 1;

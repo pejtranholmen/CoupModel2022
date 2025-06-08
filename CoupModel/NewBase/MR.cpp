@@ -3326,7 +3326,7 @@ void MR::GetProfileFromPlotPF( bool Add_To_Multi, bool Message)
 	Sw *pPedo, *pEquation;
 
 		Tab* pCTab;
-		pCTab=(Tab*)GetPtr(simtype::TABLE,"Hydraulic conductivity, measured horizons");
+		pCTab=(Tab*)GetPtr(simtype::TABLE, string("Hydraulic conductivity, measured horizons"));
 		pCTab->SetNumOfRow(p_PFCurve->GetNumLayers());
 				
 
@@ -3686,7 +3686,7 @@ bool MR::LinkedChangeToSwitches(Sw *pSw1, size_t option) {
 	SimB *pSimB1;
 	switch (option) {
 	case 4:
-			pSimB1=GetPtr(simtype::FUNCTION,"ReCalc Soil Thermal Function");
+			pSimB1=GetPtr(simtype::FUNCTION, string("ReCalc Soil Thermal Function"));
 			pFunc=dynamic_cast<Func*>(pSimB1);
 			if(pFunc!=nullptr)
 				return pFunc->MakeOperation();
@@ -3697,12 +3697,12 @@ bool MR::LinkedChangeToSwitches(Sw *pSw1, size_t option) {
 
 	case 100:	// WaterEq
 	case 101:   // HeatEq
-		if(option==101) pSw1=(Sw*)GetPtr(simtype::SWITCH,"WaterEq");
+		if(option==101) pSw1=(Sw*)GetPtr(simtype::SWITCH, string("WaterEq"));
 
-		pSw2=(Sw*)GetPtr(simtype::SWITCH,"HeatEq");
-		pSw3=(Sw*)GetPtr(simtype::SWITCH,"Growth");
-		pSw4=(Sw*)GetPtr(simtype::SWITCH,"Nitrogen and Carbon");
-		(Sw*)GetPtr(simtype::SWITCH,"RadiationInput");
+		pSw2=(Sw*)GetPtr(simtype::SWITCH, string("HeatEq"));
+		pSw3=(Sw*)GetPtr(simtype::SWITCH, string("Growth"));
+		pSw4=(Sw*)GetPtr(simtype::SWITCH, string("Nitrogen and Carbon"));
+		(Sw*)GetPtr(simtype::SWITCH, string("RadiationInput"));
 		if(pSw3->GetIntValue()<=2&&pSw1->GetIntValue()==0&&pSw2->GetIntValue()==0) {
 			GetSw("TAirGlobRad")->SetIntValue(0);
 			GetSw("RadiationInput")->SetIntValue(0);
@@ -3724,17 +3724,17 @@ bool MR::LinkedChangeToSwitches(Sw *pSw1, size_t option) {
 
 		case 102: //Evaporation
 			if(pSw1->GetIntValue()>1) {
-				pTarget1=(Sw*)GetPtr(simtype::SWITCH,"RadiationInput");
+				pTarget1=(Sw*)GetPtr(simtype::SWITCH, string("RadiationInput"));
 				if(pTarget1!=nullptr)
 					pTarget1->SetIntValue(1);
 			}
 			else if(pSw1->GetIntValue()==0) {
-				pTarget1=(Sw*)GetPtr(simtype::SWITCH,"PlantType");
+				pTarget1=(Sw*)GetPtr(simtype::SWITCH, string("PlantType"));
 				if(pTarget1!=nullptr)
 					pTarget1->SetIntValue(0);
 			}
 			else if(pSw1->GetIntValue()==1) {
-				pTarget1=(Sw*)GetPtr(simtype::SWITCH,"PlantType");
+				pTarget1=(Sw*)GetPtr(simtype::SWITCH, string("PlantType"));
 				if(pTarget1!=nullptr)
 					pTarget1->SetIntValue(1);
 			}
