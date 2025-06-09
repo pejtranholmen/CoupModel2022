@@ -534,7 +534,8 @@ void CClassView::FillClassView()
 				if(vvp.size()>0) {
 					SimB *p;
 					p=(SimB*)vvp[0];
-					grp=p->GetGroup().c_str();
+					string tmp= string(p->GetGroup());
+					grp = tmp.c_str();
 					int icat=p_ModelInfo->GetGroupCategory(CT2A(grp).m_psz);
 					if(icat<0) icat=0;
 			
@@ -1092,8 +1093,10 @@ BOOL CClassView::Make_Branch(HTREEITEM hRoot,vector<SimB*> v, size_t ityp, BOOL 
 					};
 					if(pSimB->IsEnabled()&&set){
 						int numrow;
-						if(m_nCurrSort==ID_SORTING_SORTBYTYPE||m_nCurrSort==ID_SORTING_GROUPBYTYPE)
-							namn=pSimB->GetGroup().c_str();
+						if (m_nCurrSort == ID_SORTING_SORTBYTYPE || m_nCurrSort == ID_SORTING_GROUPBYTYPE) {
+							string tmp= string(pSimB->GetGroup());
+							namn = tmp.c_str();	
+						}
 						else
 							namn=string(p_ModelInfo->GetVarType(ityp)).c_str();
 

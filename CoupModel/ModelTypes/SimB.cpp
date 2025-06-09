@@ -277,7 +277,7 @@ SimB* SimB::GetDepPtr(size_t i) const{
 		return noticelist_Array[i]; 
 	return nullptr;}
 
-string SimB::GetGroup()  {
+string_view SimB::GetGroup()  {
 	return p_ModelInfo->GetGroupNames(_ModuleNo);
 }
 string_view SimB::GetProcessName() {

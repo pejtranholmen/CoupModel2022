@@ -6913,7 +6913,7 @@ void MyCug::UpdateSelected_MR(int idim, int irow_in)
 void MyCug::OnGetHelp(SimB *pBase)
 {
 	
-	OnGetHelp(pBase->GetName().c_str(), pBase->GetGroup().c_str(), static_cast<size_t>(pBase->GetType()));
+	OnGetHelp(pBase->GetName().c_str(), string(pBase->GetGroup()), static_cast<size_t>(pBase->GetType()));
 	
 }
 void MyCug::UpdateChartInfo()
@@ -7188,7 +7188,7 @@ void MyCug::MakeMultiRuns(int col)
 		}
 		else if(col==2) {
 			if(m_pSimDoc->MR_Get_ActualRunNumber()==m_pSimDoc->MR_Get_TotalNumberofRuns()) {
-				for(int i=0;i<m_pSimDoc->MR_GetNumberOfDimensions();i++){
+				for(size_t i=0;i<m_pSimDoc->MR_GetNumberOfDimensions();i++){
 					int n=m_pSimDoc->m_MultiRun_Array[i].NumberOfRepeatitionsWithinDimension;
 					m_pSimDoc->MR_SetRepeatitionsOfDimension(i,n*2);
 				}					

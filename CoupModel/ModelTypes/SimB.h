@@ -271,7 +271,7 @@ class SimB
 		virtual std::string GetUnit() const {return _unit;};		
 		UNIT_TYPES GetUnitType() const  noexcept { return _def.unittype; };
 		std::string GetDepUnit(size_t) const;	   			// Get name of dependent variables 
-		std::string GetGroup();
+		std::string_view GetGroup();
 		std::string_view GetProcessName();
 		std::string_view GetElementName();
 

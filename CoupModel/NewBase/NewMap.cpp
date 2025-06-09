@@ -247,7 +247,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 	bool hit_made = false;
 
 	auto set_switch = [&](size_t group_cat_no, size_t groupno, size_t catno) {
-		string group_cat_str = m_pCommonModelInfo->GetGroupCategoryNames(group_cat_no);
+		string group_cat_str = string(m_pCommonModelInfo->GetGroupCategoryNames(group_cat_no));
 		m_pCommonModelInfo->trim_xml(group_cat_str);
 		v_all.clear();
 		if (m_pCommonModelInfo->GetGroupCategoryNo(groupno) == group_cat_no) {
@@ -286,7 +286,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 			modelcat[catno] = node.append_child(group_cat_str.c_str());
 			hit_made = true;
 		}
-		string groupname = m_pCommonModelInfo->GetGroupNames(groupno);
+		string groupname = string(m_pCommonModelInfo->GetGroupNames(groupno));
 		m_pCommonModelInfo->trim_xml(groupname);
 		if (v_all.size() > 0) {
 			auto group_node = modelcat[catno].append_child(groupname.c_str());
@@ -1004,7 +1004,7 @@ bool NewMap::WriteMultiRunSettingsToXmlFile(pugi::xml_node node)
 					ind_dep = ((P*)pCP)->Get_MR_ParDependenceIndex(indpar);
 				}
 				if (pParDep != nullptr) {
-					string group_psw = pParDep->GetGroup();
+					string group_psw = string(pParDep->GetGroup());
 					string name_psw = pParDep->GetName();
 
 					par.append_attribute("GroupDepPar") = group_psw.c_str();
@@ -1346,7 +1346,7 @@ bool NewMap::WriteDynamicParToXmlFile(pugi::xml_node node)
 		if (ch.Type == 0) {		
 			auto pPar = (Ps*)ch.pBase;
 			auto TabIndex = ch.TabIndex;
-			row.append_attribute("Group") = pPar->GetGroup().c_str();
+			row.append_attribute("Group") = pPar->GetGroup();
 			row.append_attribute("Name") = ((Ps*)ch.pBase)->GetName().c_str();
 			row.append_attribute("Index") = ch.TabIndex;
 			row.append_attribute("NumChanges") = ch.NumDates;
@@ -1359,7 +1359,7 @@ bool NewMap::WriteDynamicParToXmlFile(pugi::xml_node node)
  		}
 		else if(ch.Type == 1) {
 			P* pPar = (P*)ch.pBase;
-			row.append_attribute("Group") = pPar->GetGroup().c_str();
+			row.append_attribute("Group") = pPar->GetGroup();
 			row.append_attribute("Name") = pPar->GetName().c_str();
 			row.append_attribute("Index") = ch.TabIndex;
 			row.append_attribute("NumChanges") = ch.NumDates;
@@ -1374,7 +1374,7 @@ bool NewMap::WriteDynamicParToXmlFile(pugi::xml_node node)
 		else if (ch.Type == 2) {
 			CDB* pDB;
 			pDB = (CDB*)ch.pBase;
-			row.append_attribute("Group") = pDB->GetGroup().c_str();
+			row.append_attribute("Group") = pDB->GetGroup();
 			row.append_attribute("Name") = pDB->GetName().c_str();
 			row.append_attribute("Index") = ch.TabIndex;
 			row.append_attribute("NumChanges") = ch.NumDates;
@@ -1593,7 +1593,7 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 		auto xnode = node.append_child(row.c_str());
 		auto group = pXT->GetGroup();
 		auto name = pXT->GetName();
-		xnode.append_attribute("Group") = group.c_str();
+		xnode.append_attribute("Group") = group;
 		xnode.append_attribute("Name") = name.c_str();
 		size_t nn;
 		
@@ -3692,7 +3692,7 @@ bool NewMap::Info_SumValidation(bool reading)
 			size_t index = vst.simb.TabIndex;
 
 			string type = pBase->GetTypeName();
-			string group = pBase->GetGroup();
+			string group = string(pBase->GetGroup());
 			string name = pBase->GetName();
 			wString(&type); wString(&group); wString(&name);
 			wSize_t(&vst.simb.TabIndex);
@@ -4158,7 +4158,7 @@ bool NewMap::Info_MultiRun(bool reading)
 							ind_dep=((P*)pCP)->Get_MR_ParDependenceIndex(indpar);
 						}
 						if (pParDep != nullptr) {
-                            std::string group_psw = pParDep->GetGroup();
+                            std::string group_psw = string(pParDep->GetGroup());
                             std::string name_psw = pParDep->GetName();
 							wString(&group_psw);
 							wString(&name_psw);
@@ -4288,7 +4288,7 @@ bool NewMap::Info_WithinRunOptions(bool reading)
 			auto TabIndex=ch.TabIndex;
 			if(ch.Type==0) {
 				pPar=(Ps*)ch.pBase;
-                std::string group_psw = pPar->GetGroup();
+                std::string group_psw = string(pPar->GetGroup());
                 std::string name_psw = pPar->GetName();
 				wString(&group_psw);
 				wString(&name_psw);
@@ -4303,7 +4303,7 @@ bool NewMap::Info_WithinRunOptions(bool reading)
 			}
 			else if(ch.Type==1) {
 				P* pPar=(P*)ch.pBase;
-                std::string group_psw = pPar->GetGroup();
+                std::string group_psw = string(pPar->GetGroup());
                 std::string name_psw = pPar->GetName();
 				wString(&group_psw);
 				wString(&name_psw);
@@ -7078,7 +7078,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				auto colcat = p_ModelInfo->GetGroupCategoryNo(pSw->GetGroupNo());
 				auto newcol = getexcel_col(colcat);
 				auto yellow = xlnt::fill::solid(xlnt::color::yellow());
-				ws.cell(1, i + 2).value(group);
+				ws.cell(1, i + 2).value(string(group));
 				ws.cell(1, i + 2).fill(newcol);
 				ws.cell(2, i + 2).value(name_psw);
 				ws.cell(3, i + 2).value(iopt);
@@ -7201,7 +7201,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				auto def= pP->GetOriginalValue();
 				auto colcat = p_ModelInfo->GetGroupCategoryNo(pP->GetGroupNo());
 				auto newcol = getexcel_col(colcat);
-				ws.cell(1, i + 2).value(group);
+				ws.cell(1, i + 2).value(string(group));
 				ws.cell(1, i + 2).fill(newcol);
 				ws.cell(2, i + 2).value(name);
 				ws.cell(3, i + 2).value(value);
@@ -7403,7 +7403,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 
 				auto colcat = p_ModelInfo->GetGroupCategoryNo(pP->GetGroupNo());
 				auto newcol = getexcel_col(colcat);
-				ws.cell(1, line_count + 2).value(group);
+				ws.cell(1, line_count + 2).value(string(group));
 				ws.cell(1, line_count + 2).fill(newcol);
 				ws.cell(2, line_count + 2).value(name);
 				xlnt::alignment center;
@@ -7501,7 +7501,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 
 				auto colcat = p_ModelInfo->GetGroupCategoryNo(pFunc->GetGroupNo());
 				auto newcol = getexcel_col(colcat);
-				ws.cell(1, line_count + 2).value(group);
+				ws.cell(1, line_count + 2).value(string(group));
 				ws.cell(1, line_count + 2).fill(newcol);
 				ws.cell(2, line_count + 2).value(name);
 				xlnt::alignment center;
@@ -7629,7 +7629,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 
 			for (size_t i = 0; i < iv; i++) {
 				auto pTab = m_Tab_Array[i];
-				auto group = pTab->GetGroup();
+				auto group = string(pTab->GetGroup());				
 				auto colcat =p_ModelInfo->GetGroupCategoryNo(pTab->GetGroupNo());
 				auto newcol = getexcel_col(colcat);
 				auto name = pTab->GetName();
@@ -7722,7 +7722,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 				string filename = pF->GetStrValue();
 				auto colcat = p_ModelInfo->GetGroupCategoryNo(pF->GetGroupNo());
 				auto newcol = getexcel_col(colcat);
-				ws.cell(1, i + 2).value(group);
+				ws.cell(1, i + 2).value(string(group));
 				ws.cell(1, i + 2).fill(newcol);
 				ws.cell(2, i + 2).value(name);
 				ws.cell(3, i + 2).value(filename);

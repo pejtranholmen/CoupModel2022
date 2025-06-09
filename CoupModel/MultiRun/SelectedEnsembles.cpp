@@ -674,14 +674,16 @@ unsigned long SelectedEnsembles::GetNumBayesAccepted(unsigned long num_burn_in)
 
 SimpleStatistics SelectedEnsembles::GetValidStat(unsigned long ip, bool post, size_t actualensemble, unsigned long split) const
 {
+	if (actualensemble == std::string::npos) actualensemble = m_ActualEnsemble;
 	if (ip < m_Valid_TSV[actualensemble].v[E_PRIOR_MEAN].size()) {
-		if (actualensemble == std::string::npos) actualensemble = m_ActualEnsemble;
+		
 		if (post) return { m_Valid_TSV[actualensemble].v[E_POST_MEAN][ip], m_Valid_TSV[actualensemble].v[E_POST_CV][ip], m_Valid_TSV[actualensemble].v[E_POST_MIN][ip], m_Valid_TSV[actualensemble].v[E_POST_MAX][ip] };
 		else return { m_Valid_TSV[actualensemble].v[E_PRIOR_MEAN][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_CV][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_MIN][ip], m_Valid_TSV[actualensemble].v[E_PRIOR_MAX][ip] };
 	}
 	else {
 
 		int outofrange = 1;
+		return  { 0., 0., 0.,0. };
 	}
 
 }

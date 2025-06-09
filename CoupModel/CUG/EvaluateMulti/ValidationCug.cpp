@@ -440,7 +440,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 	int criteria;
 	int line;
 	if (m_NumValidVar > 0) {
-		stat_all= m_pSimDoc->m_MStorage.GetValidStat(0, false);
+		stat_all= m_pSimDoc->m_MStorage.GetValidStat(0, false, checkens);
 		if (stat_all.Max == stat_all.Min) {
 			m_pSimDoc->m_MStorage.SetPriorDistributions(); //Dumm
 		}
@@ -1375,14 +1375,11 @@ void ValidationCug::Make_OptionSheet()
 	CString txt;
 	CString optionlist;
 
-	Type="Switches";
-	Group="Technical";
-	Name="Likelihood Function";
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pSw1=(Sw*)pSw;
-	Name="Box-Cox Tranformation";	
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pSw2=(Sw*)pSw;
+	m_pSw1 = m_pSimDoc->GetSw("Likelihood Function");
+	m_pSw2 = m_pSimDoc->GetSw("Box-Cox Tranformation");
+
+
+
 
 	nval=m_pSw2->GetIntValue();
 	if(nval==0) 
@@ -1570,11 +1567,8 @@ void ValidationCug::Make_OptionSheet()
 	QuickSetBackColor(1, NumLines, m_ColorHeading);
 	QuickSetBackColor(m_newcolst, NumLines, m_ColorHeading);
 
-	Type="Switches";
-	Group="Technical";
-	Name="Likelihood Function";
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pSw1=(Sw*)pSw;
+
+	m_pSw1=m_pSimDoc->GetSw("Likelihood Function");
 	
 	nval=m_pSw1->GetIntValue();
 
@@ -1603,10 +1597,7 @@ void ValidationCug::Make_OptionSheet()
 	cell.SetReadOnly(FALSE);
 	SetCell(m_newcolst,NumLines+1,&cell);
 
-	Name="Box-Cox Tranformation";	
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pSw2=(Sw*)pSw;
-
+	m_pSw2 = m_pSimDoc->GetSw("Box-Cox Tranformation");
 	nval=m_pSw2->GetIntValue();
 	
 	txt=m_pSw2->GetOption(nval).c_str();
@@ -1636,23 +1627,12 @@ void ValidationCug::Make_OptionSheet()
 
 
 
-	Type="Table Parameters";
-	Name="Box Cox power";
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pCPt1=(P*)pSw;
 
-	Name="Box Cox offset";
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pCPt2=(P*)pSw;
+	m_pCPt1=m_pSimDoc->GetP("Box Cox power");
+	m_pCPt2 = m_pSimDoc->GetP("Box Cox offset");
 
-	Name="Abs Error";
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pCPtError2=(P*)pSw;
-
-
-	Name="Rel Error";
-	pSw=m_pSimDoc->GetPtr(Type, Group, Name);
-	m_pCPtError1=(P*)pSw;
+	m_pCPtError2= m_pSimDoc->GetP("Abs Error");
+	m_pCPtError1 = m_pSimDoc->GetP("Rel Error");
 
 	for(int i=0;i<TotLines;i++) 
 		QuickSetNumber(-1,i,i+1);
@@ -2414,8 +2394,8 @@ void ValidationCug::Make_SumVarCriteriaSheet()
 				name+=")";
 			}
 			auto index=valsum.SumIndex;
-			QuickSetText(0,i,group.c_str());
-			QuickSetText(1,i,name.c_str());
+			QuickSetText(0,i,group);
+			QuickSetText(1,i,name);
 			switch(index%6) {
 			case 0: txt="Initial"; break;
 			case 1: txt="Final"; break;

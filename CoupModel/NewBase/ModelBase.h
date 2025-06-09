@@ -237,9 +237,11 @@ class ModelBase : public ModelMap{
 	SimB* GetPtr(enum simtype, std::string name, std::string group="");
 	SimB* GetPtr(enum simtype, std::string_view name, std::string group = "");
 	SimB* GetPtrByName(std::string name, std::string group="");
-	P* GetP(std::string name)  {return (P*)GetPtr(simtype::PAR_TABLE, name);};
-	Ps* GetPs(std::string name) {return (Ps*)GetPtr(simtype::PAR_SINGLE, name);};
-	Sw* GetSw(std::string name) {return (Sw*)GetPtr(simtype::SWITCH,name);};
+	F* GetF(std::string name) { return static_cast<F*>(GetPtr(simtype::PGFILE, name));};
+	Tab* GetTab(std::string name) { return static_cast<Tab*>(GetPtr(simtype::TABLE, name));};
+	P* GetP(std::string name)  {return static_cast<P*>(GetPtr(simtype::PAR_TABLE, name));};
+	Ps* GetPs(std::string name) {return static_cast<Ps*>(GetPtr(simtype::PAR_SINGLE, name));};
+	Sw* GetSw(std::string_view name) {return static_cast<Sw*>(GetPtr(simtype::SWITCH,name));};
 	size_t GetSwValue(std::string name) {return ((Sw*)GetPtr(simtype::SWITCH,name))->GetIntValue();};
 	size_t SetSwValue(std::string name, size_t value) {return ((Sw*)GetPtr(simtype::SWITCH,name))->SetIntValue(value);};
 

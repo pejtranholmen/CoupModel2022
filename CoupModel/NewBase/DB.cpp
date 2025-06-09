@@ -83,7 +83,7 @@ bool DB::Read_DB_DocFile(string file, std::string key, bool ApplyToCurrentSimFil
 			for (size_t i = 0; i < Applied_Sw.size(); i++) {
 				Sw* pSW = Applied_Sw[i];
 				line = "Switches,";
-				line += pSW->GetGroup() + ",";
+				line += string(pSW->GetGroup()) + ",";
 				line += pSW->GetName() + ",";
 				line += pSW->GetOption(pSW->GetDBIntValue()) + '\n';
 				ExportFile.write((char*)&line[0], line.size());
@@ -93,7 +93,7 @@ bool DB::Read_DB_DocFile(string file, std::string key, bool ApplyToCurrentSimFil
 			for (size_t i = 0; i < Applied_Ps.size(); i++) {
 				Ps* pPs = Applied_Ps[i];
 				line = "Parameters,";
-				line += pPs->GetGroup() + ",";
+				line += string(pPs->GetGroup()) + ",";
 				line += pPs->GetName() + ",";
 				line += FUtil::STD_DtoAscii(pPs->GetValue()) + '\n';
 				ExportFile.write((char*)&line[0], line.size());
@@ -105,7 +105,7 @@ bool DB::Read_DB_DocFile(string file, std::string key, bool ApplyToCurrentSimFil
 			for (size_t i = 0; i < Applied_Tab.size(); i++) {
 				Tab* pTab = Applied_Tab[i];
 				line = "Tables,";
-				line += pTab->GetGroup() + ",";
+				line += string(pTab->GetGroup()) + ",";
 				line += pTab->GetName() + ",";
 				line += FUtil::STD_ItoAscii(pTab->GetDB_Row()) + '\n';
 				ExportFile.write((char*)&line[0], line.size());
@@ -124,7 +124,7 @@ bool DB::Read_DB_DocFile(string file, std::string key, bool ApplyToCurrentSimFil
 					for (size_t nCol = 0; nCol<pTab->GetNumOfCol(); nCol++) {
 						P *pP = pTab->GetP_Pointer(nCol);
 						line = "Table Parameters,";
-						line += pP->GetGroup()+',';
+						line += string(pP->GetGroup())+',';
 						line += pP->GetName() + "("+FUtil::STD_ItoAscii(nRow+1)+"),";
 						line += FUtil::STD_DtoAscii(pP->GetDBValue(nRow))+"\n";
 						ExportFile.write((char*)&line[0], line.size());
@@ -140,7 +140,7 @@ bool DB::Read_DB_DocFile(string file, std::string key, bool ApplyToCurrentSimFil
 			for (size_t i = 0; i < Applied_Files.size(); i++) {
 				F* pF = Applied_Files[i];
 				line = "Files,";
-				line += pF->GetGroup() + ",";
+				line += string(pF->GetGroup()) + ",";
 				line += pF->GetName() + ",";
 				line += pF->GetDBStrValue() + '\n';
 				ExportFile.write((char*)&line[0], line.size());
@@ -617,7 +617,7 @@ bool DB::Info_DB_Switches(bool reading, int iv)
 
 		wInt(&iv);
 
-        std::string group_psw = pSw->GetGroup();
+        std::string group_psw = string(pSw->GetGroup());
         std::string name_psw = pSw->GetName();
         
 		wString(&group_psw);
@@ -732,7 +732,7 @@ vector<Sw*> DB::ReadWrite_DB_Switches(bool reading, int iv) {
 
 		wInt(&iv);
         
-        std::string group_psw = pSw->GetGroup();
+        std::string group_psw = string(pSw->GetGroup());
         std::string name_psw = pSw->GetName();
         
 		wString(&group_psw);

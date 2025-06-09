@@ -3035,7 +3035,7 @@ int	CUGCtrl::QuickGetText(int col,long row,CString *string){
 }
 /***************************************************
 ****************************************************/
-LPCTSTR	CUGCtrl::QuickGetText(int col,long row)
+LPCTSTR CUGCtrl::QuickGetText(int col,long row)
 {
 	m_cell.ClearAll();
 	GetCellIndirect(col,row,&m_cell);
@@ -3065,6 +3065,17 @@ int	CUGCtrl::QuickSetText(int col, long row, std::string str, bool ReadOnly, int
 	else
 		m_cell.SetReadOnly(FALSE);
 	m_cell.SetParam(Par);
+	SetCell(col, row, &m_cell);
+	return UG_SUCCESS;
+}
+int	CUGCtrl::QuickSetText(int col, long row, std::string_view str)
+{
+	m_cell.ClearAll();
+	GetCell(col, row, &m_cell);
+	m_cell.SetParam(0);
+	auto cstr=CString(str.data(), static_cast<int>(str.size()));
+	m_cell.SetText(cstr);
+	m_cell.SetReadOnly(TRUE);
 	SetCell(col, row, &m_cell);
 	return UG_SUCCESS;
 }

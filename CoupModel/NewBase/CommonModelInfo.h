@@ -18,8 +18,8 @@ class CommonModelInfo : public Units
 public:
 	CommonModelInfo();
 	~CommonModelInfo();
-	size_t GetTypeIndex(std::string str);
-	size_t GetGroupIndex(std::string str);
+	size_t GetTypeIndex(std::string_view str);
+	size_t GetGroupIndex(std::string_view str);
 	size_t GetGroupCategoryNo(size_t index) {
 		auto it = m_GroupCategoryNo.find(index);
 		if (it != m_GroupCategoryNo.end())
@@ -28,8 +28,8 @@ public:
 			return std::string::npos;
 ;};
 
-	std::string GetGroupCategoryNames(size_t index) { if (index<m_GroupCategoryNames.size()) return m_GroupCategoryNames[index]; return "All Modules"; };
-	std::string GetGroupNames(size_t index) {if(index<m_GroupNames.size()) return m_GroupNames[index];return "";};
+	std::string_view GetGroupCategoryNames(size_t index) { if (index<size(m_GroupCategoryNames)) return m_GroupCategoryNames[index]; return "All Modules"; };
+	std::string_view GetGroupNames(size_t index) {if(index<size(m_GroupNames)) return m_GroupNames[index];return "";};
     std::string_view GetVarType(size_t ityp) const{ 
         if (ityp < size(m_TypeNames)) 
             return m_TypeNames[ityp]; 
@@ -39,7 +39,7 @@ public:
 	std::string_view GetBioProcName(bioprocess bioproc) { auto index = static_cast<size_t>(bioproc); if (index < m_BioProcessNames.size()) return m_BioProcessNames[index]; else return "";	};
 	std::string_view ElementName(elements elem) { auto index = static_cast<size_t>(elem); if (index < m_ElementNames.size()) return m_ElementNames[index]; else return ""; };
 
-	int GetGroupCategory(std::string str);
+	int GetGroupCategory(std::string_view str);
 	void trim_xml(std::string& str);
 	void SetCommandLineMode(bool value)  noexcept {m_CommandInfo=value;};
 	bool GetCommandLineMode()  noexcept {return m_CommandInfo;};
@@ -101,11 +101,23 @@ public:
 private:
 	static constexpr std::string_view m_TypeNames[] = { "Switches","Parameters","Tables","Table Parameters", "State Variables",
 	"Flow Variables","Auxiliary Variables", "Driving Variables", "Files", "NE", "DataBase", "RunInfo", "Validation" };
-	std::map <std::string, size_t> m_TypeMap, m_GroupMap;
+	
+	static constexpr std::string_view m_GroupCategoryNames[] = { "All Modules", "Atmospheric Related Processes",
+	"Plant Water Processes", "Soil Heat Processes", "Soil Water Processes", "Nitrogen and Carbon",
+	"Nitrogen and Carbon - Below Ground", "Model Structure", "Model Facilities" };
+
+	static constexpr std::string_view m_GroupNames[] = { "Hidden", "Technical", "Model Structure", "Numerical", "Soil Profile",
+	"Soil Hydraulic", "Soil Thermal", "Meteorological Data", "Irrigation", "Plant", "Interception",
+	"Potential Transpiration", "Radiation properties", "Soil evaporation", "SnowPack", "Soil frost",
+	"Soil heat flows", "Soil heat pump", "Soil water flows", "Surface water", "Water uptake",
+	"Drainage and deep percolation", "Salt Tracer", "Additional Variables", "Plant Growth",
+	"Soil organic processes", "Soil mineral N processes", "Abiotic driving variables",
+	"Common abiotic responses","External N inputs","Soil Management","Additional Biotic Variables",
+	"Gas processes","Minteq","HBV","Validation","Soil mineral P Processes","External P Inputs" };
+	
+	std::map <std::string_view, size_t> m_TypeMap, m_GroupMap;
 	std::map <std::string_view, size_t> m_GroupCategory;
 	std::map <size_t, size_t> m_GroupCategoryNo;
-	std::vector<std::string>  m_GroupNames, m_GroupCategoryNames;
-
 
 	std::map<std::string_view, size_t> m_TypeNameToIndex;
 

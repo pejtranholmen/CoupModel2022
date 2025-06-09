@@ -374,7 +374,8 @@ public:
 	int		EnableJoins(BOOL state);
 
 	//cell functions
-	int		QuickSetText(int col, long row, std::string st, bool ReadOnly=true, int Par=0);
+	int		QuickSetText(int col, long row, std::string st, bool ReadOnly, int Par=0);
+	int		QuickSetText(int col, long row, std::string_view st);
 	int		QuickSetHeadingText(int col, long row, std::string st, bool ReadOnly = true, int Par=0);
 
 	int		QuickSetText(int col,long row,LPCTSTR string);

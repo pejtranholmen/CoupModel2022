@@ -5,7 +5,7 @@
 #include "NE.h"
 
 
-
+using namespace std;
 
 OutVector::OutVector(enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev)
 	:OutBase(data,elem, fproc, bproc, ulev) 
@@ -95,14 +95,14 @@ float OutVector::GetFinal(size_t index) const
 void OutVector::SetInitial(size_t index, double value) 
 {
 	if (SumList.size() > index)
-		SumList[index].Initial=value;
+		SumList[index].Initial=float(value);
 
 	
 }
 void OutVector::SetFinal(size_t index, double value) 
 {
 	if (SumList.size() > index)
-		SumList[index].Final = value;
+		SumList[index].Final = float(value);
 }
 float OutVector::GetMin(size_t index) const
 {

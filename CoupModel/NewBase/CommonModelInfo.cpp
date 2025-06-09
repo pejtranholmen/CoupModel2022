@@ -39,18 +39,11 @@ CommonModelInfo::CommonModelInfo() {
 		"Methane Transport","Gas Equilibrium" };
 
 
-	static constexpr std::string_view m_GroupNames[] = { "Hidden", "Technical", "Model Structure", "Numerical", "Soil Profile",
-		"Soil Hydraulic", "Soil Thermal", "Meteorological Data", "Irrigation", "Plant", "Interception",
-		"Potential Transpiration", "Radiation properties", "Soil evaporation", "SnowPack", "Soil frost",
-		"Soil heat flows", "Soil heat pump", "Soil water flows", "Surface water", "Water uptake",
-		"Drainage and deep percolation", "Salt Tracer", "Additional Variables", "Plant Growth",
-		"Soil organic processes", "Soil mineral N processes", "Abiotic driving variables",
-		"Common abiotic responses","External N inputs","Soil Management","Additional Biotic Variables",
-		"Gas processes","Minteq","HBV","Validation","Soil mineral P Processes","External P Inputs" };
 
-	static constexpr std::string_view m_GroupCategoryNames[] = { "All Modules", "Atmospheric Related Processes",
-		"Plant Water Processes", "Soil Heat Processes", "Soil Water Processes", "Nitrogen and Carbon",
-		"Nitrogen and Carbon - Below Ground", "Model Structure", "Model Facilities" };
+
+
+
+
 
 
 	m_GroupCategoryNo.insert(std:: pair<size_t, size_t>(0, 0));
@@ -93,46 +86,46 @@ CommonModelInfo::CommonModelInfo() {
 	m_GroupCategoryNo.insert(pair<size_t, size_t>(37, 5));
 
 
-		m_GroupCategory.insert(pair<string,int>("Technical",8));
-		m_GroupCategory.insert(pair<string,int>("Model Structure",7));
-		m_GroupCategory.insert(pair<string,int>("Numerical",8));
-		m_GroupCategory.insert(pair<string,int>("Soil Profile",7));
-		m_GroupCategory.insert(pair<string,int>("Soil Hydraulic",4));
-		m_GroupCategory.insert(pair<string,int>("Soil Thermal",3));
-		m_GroupCategory.insert(pair<string,int>("Meteorological Data",1));
+		m_GroupCategory.insert(pair<string_view,int>("Technical",8));
+		m_GroupCategory.insert(pair<string_view,int>("Model Structure",7));
+		m_GroupCategory.insert(pair<string_view,int>("Numerical",8));
+		m_GroupCategory.insert(pair<string_view,int>("Soil Profile",7));
+		m_GroupCategory.insert(pair<string_view,int>("Soil Hydraulic",4));
+		m_GroupCategory.insert(pair<string_view,int>("Soil Thermal",3));
+		m_GroupCategory.insert(pair<string_view,int>("Meteorological Data",1));
 
-		m_GroupCategory.insert(pair<string,int>("Irrigation" ,4));
-		m_GroupCategory.insert(pair<string,int>( "Plant",2));
-		m_GroupCategory.insert(pair<string,int>( "Interception",2));
-		m_GroupCategory.insert(pair<string,int>("Potential Transpiration" ,2));
-		m_GroupCategory.insert(pair<string,int>("Radiation properties" ,1));
-		m_GroupCategory.insert(pair<string,int>("Soil evaporation" ,1));
-		m_GroupCategory.insert(pair<string,int>( "SnowPack",1));
+		m_GroupCategory.insert(pair<string_view,int>("Irrigation" ,4));
+		m_GroupCategory.insert(pair<string_view,int>( "Plant",2));
+		m_GroupCategory.insert(pair<string_view,int>( "Interception",2));
+		m_GroupCategory.insert(pair<string_view,int>("Potential Transpiration" ,2));
+		m_GroupCategory.insert(pair<string_view,int>("Radiation properties" ,1));
+		m_GroupCategory.insert(pair<string_view,int>("Soil evaporation" ,1));
+		m_GroupCategory.insert(pair<string_view,int>( "SnowPack",1));
 
-		m_GroupCategory.insert(pair<string,int>( "Soil frost",3));
-		m_GroupCategory.insert(pair<string,int>("Soil heat flows" ,3));
-		m_GroupCategory.insert(pair<string,int>("Soil heat pump" ,3));
-		m_GroupCategory.insert(pair<string,int>("Soil water flows" ,4));
-		m_GroupCategory.insert(pair<string,int>( "Surface water",4));
-		m_GroupCategory.insert(pair<string,int>("Water uptake" ,2));
+		m_GroupCategory.insert(pair<string_view,int>( "Soil frost",3));
+		m_GroupCategory.insert(pair<string_view,int>("Soil heat flows" ,3));
+		m_GroupCategory.insert(pair<string_view,int>("Soil heat pump" ,3));
+		m_GroupCategory.insert(pair<string_view,int>("Soil water flows" ,4));
+		m_GroupCategory.insert(pair<string_view,int>( "Surface water",4));
+		m_GroupCategory.insert(pair<string_view,int>("Water uptake" ,2));
 
-		m_GroupCategory.insert(pair<string,int>("Drainage and deep percolation" ,4));
-		m_GroupCategory.insert(pair<string,int>("Salt Tracer" ,4));
-		m_GroupCategory.insert(pair<string,int>("Additional Variables" ,7));
-		m_GroupCategory.insert(pair<string,int>( "Plant Growth",5));
-		m_GroupCategory.insert(pair<string,int>("Soil organic processes",6));
-		m_GroupCategory.insert(pair<string, int>("Soil mineral P processes",6));
-		m_GroupCategory.insert(pair<string,int>("Soil mineral N processes",6));
-		m_GroupCategory.insert(pair<string,int>( "Abiotic driving variables",7));
-		m_GroupCategory.insert(pair<string,int>("Common abiotic responses" ,7));
-		m_GroupCategory.insert(pair<string,int>( "External N inputs" ,5));
-		m_GroupCategory.insert(pair<string, int>("External P inputs", 5));
-		m_GroupCategory.insert(pair<string,int>( "Soil Management" ,6));
-		m_GroupCategory.insert(pair<string,int>( "Additional Biotic Variables" ,7));
-		m_GroupCategory.insert(pair<string,int>( "Gas processes" ,6));
-		m_GroupCategory.insert(pair<string,int>( "Minteq" ,6));
-		m_GroupCategory.insert(pair<string,int>( "HBV" ,4));
-		m_GroupCategory.insert(pair<string,int>( "Validation" ,0));
+		m_GroupCategory.insert(pair<string_view,int>("Drainage and deep percolation" ,4));
+		m_GroupCategory.insert(pair<string_view,int>("Salt Tracer" ,4));
+		m_GroupCategory.insert(pair<string_view,int>("Additional Variables" ,7));
+		m_GroupCategory.insert(pair<string_view,int>( "Plant Growth",5));
+		m_GroupCategory.insert(pair<string_view,int>("Soil organic processes",6));
+		m_GroupCategory.insert(pair<string_view, int>("Soil mineral P processes",6));
+		m_GroupCategory.insert(pair<string_view,int>("Soil mineral N processes",6));
+		m_GroupCategory.insert(pair<string_view,int>( "Abiotic driving variables",7));
+		m_GroupCategory.insert(pair<string_view,int>("Common abiotic responses" ,7));
+		m_GroupCategory.insert(pair<string_view,int>( "External N inputs" ,5));
+		m_GroupCategory.insert(pair<string_view, int>("External P inputs", 5));
+		m_GroupCategory.insert(pair<string_view,int>( "Soil Management" ,6));
+		m_GroupCategory.insert(pair<string_view,int>( "Additional Biotic Variables" ,7));
+		m_GroupCategory.insert(pair<string_view,int>( "Gas processes" ,6));
+		m_GroupCategory.insert(pair<string_view,int>( "Minteq" ,6));
+		m_GroupCategory.insert(pair<string_view,int>( "HBV" ,4));
+		m_GroupCategory.insert(pair<string_view,int>( "Validation" ,0));
 		m_RunInfo.StartMode=true;
 		m_RunInfo.ReadyToSimulate=true;
 		m_RunInfo.Running=false;
@@ -170,26 +163,40 @@ CommonModelInfo::CommonModelInfo() {
 			m_BioProcessNamesSorted.push_back((*it).first);
 		}
 
+		for (size_t i = 0; i < size(m_GroupNames); i++)
+			m_GroupMap[m_GroupNames[i]] = i;
+
+		for (size_t i = 0; i < size(m_TypeNames); ++i)
+			m_TypeMap[m_TypeNames[i]] = i;
+
+		for (size_t i = 0; i < size(m_GroupCategoryNames); ++i)
+			m_GroupCategory[m_GroupCategoryNames[i]] = i;
+
+		auto koll = GetAllStringBasedUnits();
+
+
+
+
 }
 CommonModelInfo::~CommonModelInfo() {
 
 }
 
-size_t CommonModelInfo::GetTypeIndex(string str) {
+size_t CommonModelInfo::GetTypeIndex(string_view str) {
 	auto it=m_TypeMap.find(str);
 	if(it!=m_TypeMap.end())
 		return it->second;
 	else
 		return std::string::npos;
 }
-size_t CommonModelInfo::GetGroupIndex(string str) {
+size_t CommonModelInfo::GetGroupIndex(string_view str) {
 	auto it=m_GroupMap.find(str);
 	if(it!=m_GroupMap.end())
 		return it->second;
 	else
 		return std::string::npos;
 }
-int CommonModelInfo::GetGroupCategory(string str) {
+int CommonModelInfo::GetGroupCategory(string_view str) {
 	auto it=m_GroupCategory.find(str);
 	if(it!=m_GroupCategory.end())
 		return it->second;

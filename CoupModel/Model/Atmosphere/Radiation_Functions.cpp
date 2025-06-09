@@ -156,7 +156,7 @@ bool Radiation_Functions::Def()
 	plotpar.Num_Of_X = 1;
 	plotpar.X_Min = 0;
 	plotpar.X_Max = 1;
-	plotpar.Y_ScalingCoef = 0.;
+	plotpar.Y_ScalingCoef = 0;
 	plotpar.Y_Label = "Degree of Radiation ";  plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 	plotpar.X_Label = "Degree of Clear sky";   plotpar.X_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 

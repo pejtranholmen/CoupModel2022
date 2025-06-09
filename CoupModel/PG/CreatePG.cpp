@@ -264,7 +264,7 @@ BOOL CCreatePG::OnInitDialog() {
 	GetWindowText(Str);
 	if(m_pCF!=nullptr) {
 		Str+="; ";
-		Str+=m_pCF->GetGroup().c_str();
+		Str+=string(m_pCF->GetGroup()).c_str();
 		Str+=" : ";
 		Str+=m_pCF->GetName().c_str();
 		SetWindowText(Str);

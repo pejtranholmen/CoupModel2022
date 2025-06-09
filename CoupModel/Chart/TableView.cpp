@@ -36,9 +36,8 @@ bool TableView::MakeTablePlot(Tab *pTab, P *pCPt) {
 	//m_TextPlot=txt;
 	P *pCPtUpper, *pCPtLower;
 	m_DepthProfile=false;
-	string group;
 	m_Data.NumOfPoints=pTab->GetNumOfRow();
-	group=pCPt->GetGroup().c_str();
+	auto group=pCPt->GetGroup();
 
 	if(pCPt->GetName()=="Thickness Layers") {
 		m_Label.ytitle1="Soil Depth (m)";
@@ -60,15 +59,15 @@ bool TableView::MakeTablePlot(Tab *pTab, P *pCPt) {
 		if(m_pProp->m_Title.find("measured horizons")>0) {
 			string udep = "Upper Depth";
 			string ldep = "Lower Depth";
-			pCPtUpper=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,udep);
-			pCPtLower=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,ldep);
+			pCPtUpper=m_pSimDoc->GetP(udep);
+			pCPtLower=m_pSimDoc->GetP(ldep);
 		}
 		else {
-			pCPtUpper=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,umdep);
-			pCPtLower=(P*)m_pSimDoc->GetPtr(simtype::PAR_TABLE,lmdep);
+			pCPtUpper=m_pSimDoc->GetP(umdep);
+			pCPtLower=m_pSimDoc->GetP(lmdep);
 		}
 		m_pProp->m_Title=pCPt->GetName().c_str();
-		group=pCPt->GetGroup().c_str();
+		group=pCPt->GetGroup();
 		string unit;
 		unit=pCPt->GetUnit();
 		if(unit.size()>0) {

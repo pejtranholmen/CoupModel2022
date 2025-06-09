@@ -22,19 +22,19 @@ CHistoryList::CHistoryList(SimB *pBase, int itype, Doc *pDoc, int index, CWnd* p
 	string par, grp;
 	if(pBase->GetType()==simtype::DB){
 		par=pBase->GetName();	
-		grp=((CDB*)pBase)->GetGroup().c_str();
+		grp=((CDB*)pBase)->GetGroup();
 		m_WindowText="History List for : ";
 		m_WindowText+=par.c_str();
 	}
 	else if(itype==p_ModelInfo->GetTypeIndex("RunInfo")){
 		par=((CRunInfo*)pBase)->GetName().c_str();
-		grp=((CRunInfo*)pBase)->GetGroup().c_str();
+		grp=((CRunInfo*)pBase)->GetGroup();
 		m_WindowText="History List for : ";
 		m_WindowText+=par.c_str();
 	}
 	else {
 		par=((SimB*)pBase)->GetName().c_str();
-		grp=((SimB*)pBase)->GetGroup().c_str();
+		grp=((SimB*)pBase)->GetGroup();
 		if(index>=0) 
 			par+="("+FUtil::STD_ItoAscii(index)+")";
 		m_WindowText="History List for : ";

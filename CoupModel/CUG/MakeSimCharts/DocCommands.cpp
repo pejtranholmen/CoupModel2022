@@ -2900,7 +2900,7 @@ int DocCommands::OnAddTsvVal(bool Aggregated)
 
 		CValidationVariables dlg(m_pDoc, NumSelected, Aggregated, this);
 		if (dlg.DoModal() == IDOK) {
-			Tab* pTab = (Tab*)m_pSimDoc->GetPtr(simtype::TABLE, string("Scaling of Observed Variables"));
+			Tab* pTab = (Tab*)m_pSimDoc->GetPtr(simtype::TABLE, string_view("Scaling of Observed Variables"));
 			if (pTab != nullptr) {
 				F* pFile;
 				int NumSelected = 0;
@@ -3148,7 +3148,7 @@ void DocCommands::CopySwitchValues(Doc *pDestinationDoc) {
 		for(size_t i=0;i<iv;i++) {
 			auto pSw=m_pSimDoc->m_Sw_Array[i];
 			auto ivalue=pSw->GetIntValue();
-			auto pSwDest=(Sw*)pDestinationDoc->GetPtr("Switches",pSw->GetGroup(),pSw->GetName());			
+			auto pSwDest=pDestinationDoc->GetSw(pSw->GetName());			
 			pSwDest->SetIntValue(ivalue);
 			pDestinationDoc->m_Sw_Array.push_back(pSwDest);
 		}
@@ -3178,8 +3178,7 @@ void DocCommands::CopyTableParValues(Doc *pDestinationDoc) {
 		for(int i=0;i<iv;i++) {
 			auto pTab=(Tab*)m_pSimDoc->m_Tab_Array[i];
 
-			Tab* pDestTab;
-			pDestTab=(Tab*)pDestinationDoc->GetPtr("Tables",pTab->GetGroup(),pTab->GetName());
+			auto pDestTab=pDestinationDoc->GetTab(pTab->GetName());
 
 			
 			auto rows=pTab->GetNumOfRow();
@@ -3206,7 +3205,7 @@ void DocCommands::CopyModelFileValues(Doc *pDestinationDoc) {
 		for(size_t i=0;i<iv;i++) {
 			auto pF=m_pSimDoc->m_F_Array[i];
 			string value=pF->GetStrValue();
-			auto pFDest=(F*)pDestinationDoc->GetPtr("Files",pF->GetGroup(), pF->GetName());			
+			auto pFDest=pDestinationDoc->GetF(pF->GetName());			
 			pFDest->SetValue(value);
 			pDestinationDoc->m_F_Array.push_back(pFDest);
 		}

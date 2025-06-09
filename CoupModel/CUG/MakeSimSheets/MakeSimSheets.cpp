@@ -779,12 +779,12 @@ bool MakeSimSheets::Make_SwitchesSheet()
 {
 
 	CUGCell cell; 
-	CString heading, number, test;
-	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString, Process;
+	string heading, number, test;
+	string Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString, Process;
 
 	Sw *pSw;
-	CString str, Defstring;
-	CString optionlist;
+	string str, Defstring;
+	string optionlist;
 	size_t NumLines, nval;
 	int LastRow, StartRow;
 	int MaxCol=9;
@@ -868,21 +868,21 @@ bool MakeSimSheets::Make_SwitchesSheet()
 					pSw=Sw_Array[i];
 					nval=pSw->GetIntValue();
 					size_t defnval=pSw->GetOriginalIntValue();
-					Name=CString(pSw->GetName().c_str());
+					Name=pSw->GetName();
 					string strview;
 					if(m_ShowProcesses)
 						strview=pSw->GetProcessName();
 					else 
 						strview=pSw->GetElementName();
 
-					Group=pSw->GetGroup().c_str();
-					if(Name==CString(m_SelName.c_str())) {
+					Group=pSw->GetGroup();
+					if(Name==m_SelName) {
 						QuickSetBackColor(1,i,m_ColorClick);
 
 					}
 					
-					test=pSw->GetOption(nval).c_str();
-					Defstring=pSw->GetOption(defnval).c_str();
+					test=pSw->GetOption(nval);
+					Defstring=pSw->GetOption(defnval);
 
 					CString optionlist;
 					size_t n=pSw->GetNumOptions();
@@ -959,14 +959,14 @@ bool MakeSimSheets::Make_SwitchesSheet()
 bool MakeSimSheets::Make_ParameterSheet()
 {
 	CUGCell cell; 
-	CString heading, number, test;
+	string heading, number, test;
 
-	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
+	string Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
 	Ps* pCP;
 	Doc *pDoc;
 	float fvalue, DefValue,fmin,fmax;
-	CString str, Defstring;
-	CString optionlist, GTitle, Process;
+	string str, Defstring;
+	string optionlist, GTitle, Process;
 	int NumLines;
 	int LastRow, StartRow;
 	int MaxCol=8;
@@ -1055,7 +1055,7 @@ bool MakeSimSheets::Make_ParameterSheet()
 		else
 			continue;
 		Name=pCP->GetName().c_str();
-		Group=pCP->GetGroup().c_str();
+		Group=pCP->GetGroup();
 		Unit=pCP->GetUnit().c_str();
 		fmin=pCP->GetMinValue();
 		fmax=pCP->GetMaxValue();
@@ -1163,13 +1163,13 @@ bool MakeSimSheets::Make_ParameterSheet()
 bool MakeSimSheets::Make_HistorySheet()
 {
 	CUGCell cell; 
-	CString heading, number, test;
+	string heading, number, test;
 
-	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
+	string Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
 
 
-	CString strvalue, Signature, ComputerName;
-	CString optionlist, GTitle, Process;
+	string strvalue, Signature, ComputerName;
+	string optionlist, GTitle, Process;
 	int NumLines;
 	int LastRow, StartRow;
 	int MaxCol=8 ;
@@ -1236,13 +1236,13 @@ bool MakeSimSheets::Make_HistorySheet()
 					//Type=p_ModelInfo->GetVarType(RunInfoType-1).c_str();
 					size_t RunInfoIndex = m_pSimDoc->History_GetLocalIndex(index);
 					if(pCP==nullptr) {
-						Name=_T("");
+						Name="";
 					}
 					else if(hinfo==HIST_INFO::RUN_INFO ){
 						CRunInfo* pRuninfo;
 						pRuninfo = static_cast<CRunInfo*>(pCP);
 						if (pRuninfo != nullptr) {
-							Group = ((CRunInfo*)pCP)->GetGroup().c_str();
+							Group = ((CRunInfo*)pCP)->GetGroup();
 							Name = ((CRunInfo*)pCP)->GetName().c_str();
 						}
 						if (Group == "General") {
@@ -1254,7 +1254,7 @@ bool MakeSimSheets::Make_HistorySheet()
 					}
 					else if (hinfo == HIST_INFO::SWITCH_INFO) {
 
-						Group = pCP->GetGroup().c_str();
+						Group = pCP->GetGroup();
 						Name = pCP->GetName().c_str();
 						strvalue = m_pSimDoc->History_GetString(index).c_str();
 						Type = "Switches";
@@ -1262,36 +1262,36 @@ bool MakeSimSheets::Make_HistorySheet()
 					else if(RunInfoType==10){
 						int n=m_pSimDoc->History_GetLocalIndex(index);
 						Group=m_pSimDoc->DB_GetNames(n).c_str();
-						Name=_T("");
+						Name="";
 						strvalue=m_pSimDoc->History_GetString(index).c_str();
 						m_pSimDoc->History_GetLocalIndex(index);
 
 					}
 					else if (hinfo == HIST_INFO::PARSINGLE_INFO) {
 						fvalue = m_pSimDoc->History_GetFloat(index);
-						Group = pCP->GetGroup().c_str();
+						Group = pCP->GetGroup();
 						Name = pCP->GetName().c_str();
-						strvalue = MFC_Util::FtoAscii(fvalue);
+						strvalue = FUtil::STD_FtoAscii(fvalue);
 						Type = "Parameters";
 					}
 					else if (hinfo == HIST_INFO::NUMBER_ELEMENTS) {
-						Group = pCP->GetGroup().c_str();
+						Group = pCP->GetGroup();
 						Name = pCP->GetName().c_str();
 						strvalue = m_pSimDoc->History_GetString(index).c_str();
 						Type = "Number of Elements";
 					}
 					else if (hinfo == HIST_INFO::MODELFILE_INFO) {
-						Group = pCP->GetGroup().c_str();
+						Group = pCP->GetGroup();
 						Name = pCP->GetName().c_str();
 						strvalue = m_pSimDoc->History_GetString(index).c_str();
 						Type = "ModelFiles";
 					}
 					else if(hinfo==HIST_INFO::PARTABLE_INFO){
 						fvalue=m_pSimDoc->History_GetFloat(index);
-						Group=pCP->GetGroup().c_str();
+						Group=pCP->GetGroup();
 						Name=pCP->GetName().c_str();
-						Name+=_T("(")+MFC_Util::ItoAscii(m_pSimDoc->History_GetLocalIndex(i)+1)+_T(")");
-						strvalue=MFC_Util::FtoAscii(fvalue);
+						Name+="("+FUtil::STD_ItoAscii(m_pSimDoc->History_GetLocalIndex(i))+")";
+						strvalue = FUtil::STD_FtoAscii(fvalue);
 						Type = "Parameter Table";
 
 
@@ -1305,9 +1305,9 @@ bool MakeSimSheets::Make_HistorySheet()
 					else if(RunInfoType==1) {
 						if (!pCP->Is_DB()) {
 							fvalue = m_pSimDoc->History_GetFloat(index);
-							Group = pCP->GetGroup().c_str();
+							Group = pCP->GetGroup();
 							Name = pCP->GetName().c_str();
-							strvalue = MFC_Util::FtoAscii(fvalue);
+							strvalue = FUtil::STD_FtoAscii(fvalue);
 							Type = "Parameters";
 
 						}
@@ -1320,10 +1320,10 @@ bool MakeSimSheets::Make_HistorySheet()
 					}
 					else if(RunInfoType==3) {
 						fvalue=m_pSimDoc->History_GetFloat(index);
-						Group=pCP->GetGroup().c_str();
+						Group=pCP->GetGroup();
 						Name=pCP->GetName().c_str();
-						Name+=_T("(")+MFC_Util::ItoAscii(m_pSimDoc->History_GetLocalIndex(i)+1)+_T(")");
-						strvalue=MFC_Util::FtoAscii(fvalue);
+						Name+="("+ FUtil::STD_ItoAscii(m_pSimDoc->History_GetLocalIndex(i) + 1) + ")";
+						strvalue=FUtil::STD_FtoAscii(fvalue);
 					}
 
 				
@@ -1372,13 +1372,13 @@ bool MakeSimSheets::Make_HistorySheet()
 bool MakeSimSheets::Make_ParameterTableSheet()
 {
 	CUGCell cell; 
-	CString heading, number, test;
+	string heading, number, test;
 
-	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
+	string Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
 	Tab *pTab;
 	float fvalue, DefValue;
-	CString str, Defstring;
-	CString optionlist;
+	string str, Defstring;
+	string optionlist;
 	int NumLines, NumTabRows;
 	int LastRow, StartRow;
 	int newtablines,newline ;
@@ -1484,7 +1484,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 					pTab=pTables[i];
 					NumTabRows=pTab->GetNumOfRow();
 					Name=pTab->GetName().c_str();
-					Group=pTab->GetGroup().c_str();
+					Group=pTab->GetGroup();
 					string strprocess;
 					if(m_ShowProcesses)
 						strprocess=pTab->GetProcessName();
@@ -1532,7 +1532,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 					//RedrawCell(7,newline);
 					
 					newline++;
-					if(CT2A(Name).m_psz==m_ClickedTable){
+					if(Name==m_ClickedTable){
 						m_ClickedRow=newline;
 
 					}
@@ -1764,8 +1764,8 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 											cell.SetBackColor(m_ColorEdit);
 										SetCell(nColValid+1,newline,&cell);
 
-										QuickSetText(0,newline,pCPt->GetGroup().c_str());
-										QuickSetText(1,newline,pCPt->GetName().c_str());
+										QuickSetText(0,newline,pCPt->GetGroup());
+										QuickSetText(1,newline,pCPt->GetName());
 
 
 										P *pCPt1;
@@ -1826,10 +1826,10 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 					unsigned int ist, iend;
 					ist = 0;
 					test = "AA";
-					test = QuickGetText(0, 0);
+					test = QuickGetStdText(0, 0);
 					iend = ist;
 					for (int i = 0; i < GetNumberRows(); i++) {
-						str = QuickGetText(col, i);
+						str = QuickGetStdText(col, i);
 						if (str != test && str != "") {
 							JoinCells(col, ist, col, iend);
 							ist = i;
@@ -1856,12 +1856,12 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 bool MakeSimSheets::Make_ModelFileSheet()
 {
 	CUGCell cell; 
-	CString heading, number, test;
+	string heading, number, test;
 
-	CString Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
+	string Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
 	F *nodef;
-	CString str, Defstring;
-	CString optionlist;
+	string str, Defstring;
+	string optionlist;
 	SimB *pSw;
 	int NumLines;
 	int MaxCol=8;
@@ -1967,7 +1967,7 @@ bool MakeSimSheets::Make_ModelFileSheet()
 					nodef=(F*)pSw;
 					string str=nodef->GetStrValue();
 					Name=pSw->GetName().c_str();
-					Group=pSw->GetGroup().c_str();
+					Group=pSw->GetGroup();
 
 					if(m_pSimDoc->IsFinishedSimulation()) {
 					}
@@ -4719,7 +4719,7 @@ bool MakeSimSheets::Make_ChartListSheet()
 bool MakeSimSheets::Make_ChaParListSheet()
 {
 	CUGCell cell; 
-	CString test, Group, Name, Dat, str;
+	string test, Group, Name, Dat, str;
 	float fvalue;
 	SimB* pSw;
 	size_t TabIndex;
@@ -4799,12 +4799,12 @@ bool MakeSimSheets::Make_ChaParListSheet()
 						JoinCells(1,StartRow,1,icount);
 					}
 					else {
-						Group=pSw->GetGroup().c_str();
+						Group=pSw->GetGroup();
 						Name=pSw->GetName().c_str();
 
 						size_t inum;
 						if(itype==1){
-							Name+=_T("(")+MFC_Util::ItoAscii(TabIndex+1)+_T(")");
+							Name+="("+FUtil::STD_ItoAscii(TabIndex+1)+")";
 							fvalue=((P*)pSw)->GetValue(TabIndex);
 							inum=((P*)pSw)->GetNumChaDates(TabIndex);
 						}
@@ -4816,7 +4816,7 @@ bool MakeSimSheets::Make_ChaParListSheet()
 							fvalue = 0.f;
 							inum = 0;
 						}
-						test=MFC_Util::FtoAscii(fvalue);
+						test=FUtil::STD_FtoAscii(fvalue);
 						icount++;
 						StartRow=icount;
 						Dat=PGUtil::StringDatum(m_pSimDoc->RunOpt.longMinStart).c_str();
@@ -4842,7 +4842,7 @@ bool MakeSimSheets::Make_ChaParListSheet()
 								fvalue=((Ps*)pSw)->GetChaParValue(ii);
 
 							}
-							test=MFC_Util::FtoAscii(fvalue);
+							test=FUtil::STD_FtoAscii(fvalue);
 							icount++;
 							if(m_pSimDoc->IsFinishedSimulation())
 								QuickSetBackColor(-1,icount,m_ColorCompleted);

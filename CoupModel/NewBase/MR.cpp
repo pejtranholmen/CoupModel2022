@@ -155,7 +155,7 @@ string MR::MR_GetParGroup(size_t index1, size_t index2)
 				if(m_P_MR_Array[i].pBase->Is_DB())
 					return "DataBase";
 				else
-					return pPar->GetGroup();
+					return string(pPar->GetGroup());
 			}
 		}
 	}	  
@@ -2941,21 +2941,21 @@ void MR::MR_Storage_Add()
 				min=MR_GetMin(i+1,ii+1); // This variable does not always have realistic values.
 				max=MR_GetMax(i+1,ii+1); // " "
 				switch (MR_GetMethod(i+1,ii+1)) {
-				case 0: Ratio=(float)(icount-1)/(float)(irep-1);// linear
+				case MR_METHOD(0): Ratio=(float)(icount-1)/(float)(irep-1);// linear
 						Float=Ratio*max+(1-Ratio)*min;
 						break;
-				case 1: //Logarithmic
+				case MR_METHOD(1): //Logarithmic
 					Ratio=(float)(icount-1)/(float)(irep-1);	
 						Float=exp(Ratio*log(max)+(1-Ratio)*log(min));
 						break;
-				case 2:
-				case 3:
-				case 6:
-				case 7:
-				case 8:
-				case 9:
-				case 11:
-				case 12:
+				case MR_METHOD(2):
+				case MR_METHOD(3):
+				case MR_METHOD(6):
+				case MR_METHOD(7):
+				case MR_METHOD(8):
+				case MR_METHOD(9):
+				case MR_METHOD(11):
+				case MR_METHOD(12):
 
 						if(ParType==0) {
 							Float=pPar->GetValue();
@@ -2965,14 +2965,14 @@ void MR::MR_Storage_Add()
 								Float=pCPt->GetValue(nTabIndex);
 						}
 						break; 
-                case 4: // Table  
+                case MR_METHOD(4): // Table  
 					    if (nTabIndex == -1) // Table, Note that ii is not incremented during MRs!!
 					      Float = ((Ps*)pPar)->MR_Get_TabValue(icount - 1);  // Ps case
 						else 
 						  Float = ((P*)pPar)->MR_Get_TabValue(nTabIndex, icount - 1);  // Ps case
 				       	break;
 						// 	Float=MR_GetTableValue(i+1,ii+1,icount-1);				 	    break;
-				case 5: // Database Records
+				case MR_METHOD(5): // Database Records
 					if (pPar != nullptr) {
 						string strname = ((CDB*)pPar)->GetName();
 						string str = ((CDB*)pPar)->MR_GetKeySelection(icount-1);
@@ -2988,7 +2988,7 @@ void MR::MR_Storage_Add()
 					else
 						Float = -100.;
 					break;
-				case 10:
+				case MR_METHOD(10):
 
 						if(ParType==0) {
 							Float=pPar->GetValue();
