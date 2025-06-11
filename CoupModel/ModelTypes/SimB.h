@@ -204,7 +204,7 @@ class SimB
 		void SetModuleNo(size_t value) noexcept {_ModuleNo=value;};
 		void SetName(std::string str) {_name=str;};
 		void SetConditions(std::string str)  {cond=str;};
-		void SetUnit(std::string str)  {_unit=str;};
+		void SetUnit(std::string_view str)  {_unit=str;};
 		//void SetDefValue(double value) { _orgFValue=value;};
 		virtual bool IsEnabled() noexcept {if(_enabled) return false; return true;};
 		bool IsDBEnabled() noexcept {return _DBenabled;};
@@ -268,9 +268,9 @@ class SimB
 		enum datatype GetDataType() noexcept {return _def.data;};
 
 		std::string GetDepName(size_t) const;
-		virtual std::string GetUnit() const {return _unit;};		
+		virtual std::string_view GetUnit() const {return _unit;};		
 		UNIT_TYPES GetUnitType() const  noexcept { return _def.unittype; };
-		std::string GetDepUnit(size_t) const;	   			// Get name of dependent variables 
+		std::string_view GetDepUnit(size_t) const;	   			// Get name of dependent variables 
 		std::string_view GetGroup();
 		std::string_view GetProcessName();
 		std::string_view GetElementName();
@@ -311,7 +311,7 @@ class SimB
 		SimB*	GetDepPtr(size_t) const;
 		void	SendNotice() const;	
 		NewMap* pfMap = nullptr;
-		std::string _unit;
+		std::string_view _unit;
 		size_t _DBIntValue = 0;
 		int _orgIntValue = 0;
 		bool m_ChildChange = false;

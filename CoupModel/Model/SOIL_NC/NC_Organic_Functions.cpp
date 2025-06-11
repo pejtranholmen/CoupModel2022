@@ -386,14 +386,14 @@ pGs= new Gs(&O_State_TotOrg[_C_], datatype::TOTPROFILE, elements::CARBON, fyspro
 
 
 pGs= new Gs(&CN_Ratio_TotHumus, datatype::TOTPROFILE, elements::NITROGEN, fysprocess::STORAGE, bioprocess::RATIO, userlevel::NORMAL);
-		Define(pGs , 	"CN Ratio TotHumus",	0.0,"-", "Nitrogen and Carbon >= 1");
+		Define(pGs , 	"CN Ratio TotHumus",	0.0,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1");
 pGs= new Gs(&CN_Ratio_TotSoil, datatype::TOTPROFILE, elements::NITROGEN, fysprocess::STORAGE, bioprocess::RATIO, userlevel::NORMAL);
-		Define(pGs , 	"CN Ratio TotSoil",	0.0,"-", "Nitrogen and Carbon >= 1");
+		Define(pGs , 	"CN Ratio TotSoil",	0.0,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1");
 
 	pGs = new Gs(&CP_Ratio_TotHumus, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::RATIO, userlevel::NORMAL); //HH
-		Define(pGs, "CP Ratio TotHumus", 0.0, "-", "Nitrogen and Carbon >= 1|Phosphorus>0");
+		Define(pGs, "CP Ratio TotHumus", 0.0, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0");
 	pGs = new Gs(&CP_Ratio_TotSoil, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::STORAGE, bioprocess::RATIO, userlevel::NORMAL);
-		Define(pGs, "CP Ratio TotSoil", 0.0, "-", "Nitrogen and Carbon >= 1|Phosphorus>0");//HH
+		Define(pGs, "CP Ratio TotSoil", 0.0, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0");//HH
 
 ;
 //   Humus formation;
@@ -478,48 +478,48 @@ Define(pPs, "Init H PTot", 50.,UNIT_TYPES::MASS_UNIT, "Initial Soil Organic >0|N
 		Define(pPs,  		"Init H CTot", 5000.,UNIT_TYPES::MASS_UNIT,"Initial Soil Organic >0|Initial Carbon Conditions>0",0.,1.E6);
 ;
 	pPs= new Ps(&Org_State_IniCarbonRatio[_L1][_N_-1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-	Define(pPs,  	"Init L1 CN Tot", 25.,	"-","Initial Soil Organic >0|Initial Carbon Conditions=0|Nitrogen and Carbon >0",5.,100.);
+	Define(pPs,  	"Init L1 CN Tot", 25.,	UNIT_TYPES::NO_UNIT,"Initial Soil Organic >0|Initial Carbon Conditions=0|Nitrogen and Carbon >0",5.,100.);
 	pPs= new Ps(&Org_State_IniCarbonRatio[_L2][_N_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init L2 CN Tot", 15.,	"-","Initial Soil Organic >0|LitterPools >0|Initial Carbon Conditions=0",5.,500.);
+		Define(pPs,  	"Init L2 CN Tot", 15.,	UNIT_TYPES::NO_UNIT,"Initial Soil Organic >0|LitterPools >0|Initial Carbon Conditions=0",5.,500.);
 	pPs= new Ps(&Org_State_IniCarbonRatio[_F][_N_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init F CN Tot", 15.,	"-","Initial Soil Organic >0|FaecesPool >0|Initial Carbon Conditions=0",5.,40.);
+		Define(pPs,  	"Init F CN Tot", 15.,	UNIT_TYPES::NO_UNIT,"Initial Soil Organic >0|FaecesPool >0|Initial Carbon Conditions=0",5.,40.);
 	pPs= new Ps(&Org_State_IniCarbonRatio[_MIC][_N_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init M CN Tot", 8.,	"-","Initial Soil Organic >0|Microbes >0|Initial Carbon Conditions=0",5.,40.);
+		Define(pPs,  	"Init M CN Tot", 8.,	UNIT_TYPES::NO_UNIT,"Initial Soil Organic >0|Microbes >0|Initial Carbon Conditions=0",5.,40.);
 	pPs= new Ps(&Org_State_IniCarbonRatio[_H][_N_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init H CN Tot", 10.,	"-","Initial Soil Organic >0|Initial Carbon Conditions=0|Nitrogen and Carbon >0",5.,40.);
+		Define(pPs,  	"Init H CN Tot", 10.,	UNIT_TYPES::NO_UNIT,"Initial Soil Organic >0|Initial Carbon Conditions=0|Nitrogen and Carbon >0",5.,40.);
 		//as CP and carbon =1 in IniP_sw
 		pPs = new Ps(&Org_State_IniCarbonRatio[_L1][_P_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs, "Init L1 CP Tot", 75., "-", "Initial Soil Organic >0|Initial Phosphorus Conditions>0|Nitrogen and Carbon >0|Phosphorus>0", 5., 500.);
+		Define(pPs, "Init L1 CP Tot", 75., UNIT_TYPES::NO_UNIT, "Initial Soil Organic >0|Initial Phosphorus Conditions>0|Nitrogen and Carbon >0|Phosphorus>0", 5., 500.);
 		pPs = new Ps(&Org_State_IniCarbonRatio[_L2][_P_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs, "Init L2 CP Tot", 100., "-", "Initial Soil Organic >0|LitterPools >0|Initial Phosphorus Conditions>0|Phosphorus>0", 5., 500.);
+		Define(pPs, "Init L2 CP Tot", 100., UNIT_TYPES::NO_UNIT, "Initial Soil Organic >0|LitterPools >0|Initial Phosphorus Conditions>0|Phosphorus>0", 5., 500.);
 		pPs = new Ps(&Org_State_IniCarbonRatio[_F][_P_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs, "Init F CP Tot", 150., "-", "Initial Soil Organic >0|FaecesPool >0|Initial Phosphorus Conditions>0|Phosphorus>0", 5., 400.);
+		Define(pPs, "Init F CP Tot", 150., UNIT_TYPES::NO_UNIT, "Initial Soil Organic >0|FaecesPool >0|Initial Phosphorus Conditions>0|Phosphorus>0", 5., 400.);
 		pPs = new Ps(&Org_State_IniCarbonRatio[_MIC][_P_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs, "Init M CP Tot", 106., "-", "Initial Soil Organic >0|Microbes >0|Initial Phosphorus Conditions>0|Phosphorus>0", 5., 400.);
+		Define(pPs, "Init M CP Tot", 106., UNIT_TYPES::NO_UNIT, "Initial Soil Organic >0|Microbes >0|Initial Phosphorus Conditions>0|Phosphorus>0", 5., 400.);
 		pPs = new Ps(&Org_State_IniCarbonRatio[_H][_P_ - 1].Tot_Profile, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs, "Init H CP Tot", 100., "-", "Initial Soil Organic >0|Initial Phosphorus Conditions>0|Nitrogen and Carbon >0|Phosphorus>0", 5., 500.);
+		Define(pPs, "Init H CP Tot", 100., UNIT_TYPES::NO_UNIT, "Initial Soil Organic >0|Initial Phosphorus Conditions>0|Nitrogen and Carbon >0|Phosphorus>0", 5., 500.);
 ;
 	pPs= new Ps(&Org_State_IniValue[_L1][_C_].Depth, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init L1 Depth", -0.5,"m","Initial Soil Organic >0|Nitrogen and Carbon >0",-10.,0.);
+		Define(pPs,  	"Init L1 Depth", -0.5,UNIT_TYPES::LENGTH_UNIT,"Initial Soil Organic >0|Nitrogen and Carbon >0",-10.,0.);
 	pPs= new Ps(&Org_State_IniValue[_L2][_C_].Depth, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init L2 Depth", -0.5,"m","Initial Soil Organic >0|LitterPools >0",-10.,0.);
+		Define(pPs,  	"Init L2 Depth", -0.5,UNIT_TYPES::LENGTH_UNIT,"Initial Soil Organic >0|LitterPools >0",-10.,0.);
 	pPs= new Ps(&Org_State_IniValue[_F][_C_].Depth, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  		"Init F Depth", -0.2,"m","Initial Soil Organic >0|FaecesPool >0",-10.,0.);
+		Define(pPs,  		"Init F Depth", -0.2,UNIT_TYPES::LENGTH_UNIT,"Initial Soil Organic >0|FaecesPool >0",-10.,0.);
 	pPs= new Ps(&Org_State_IniValue[_MIC][_C_].Depth, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  		"Init M Depth", -0.5,"m","Initial Soil Organic >0|Microbes >0",-10.,0.);
+		Define(pPs,  		"Init M Depth", -0.5,UNIT_TYPES::LENGTH_UNIT,"Initial Soil Organic >0|Microbes >0",-10.,0.);
 	pPs= new Ps(&Org_State_IniValue[_H][_C_].Depth, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  		"Init H Depth", -2.,"m","Initial Soil Organic >0|Nitrogen and Carbon >0",-10.,0.);
+		Define(pPs,  		"Init H Depth", -2.,UNIT_TYPES::LENGTH_UNIT,"Initial Soil Organic >0|Nitrogen and Carbon >0",-10.,0.);
 ;
 	pPs= new Ps(&Org_State_IniValue[_L1][_C_].FracExpTail, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,   "Init L1 FracExpTail", 0.1,"-","Initial Soil Organic =3",0.,0.7);
+		Define(pPs,   "Init L1 FracExpTail", 0.1,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =3",0.,0.7);
 	pPs= new Ps(&Org_State_IniValue[_L2][_C_].FracExpTail, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,   "Init L2 FracExpTail", 0.1,"-","Initial Soil Organic =3|LitterPools >0",0.,0.7);
+		Define(pPs,   "Init L2 FracExpTail", 0.1,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =3|LitterPools >0",0.,0.7);
 	pPs= new Ps(&Org_State_IniValue[_F][_C_].FracExpTail, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init F FracExpTail", 0.1,"-","Initial Soil Organic =3|FaecesPool >0",0.,0.7);
+		Define(pPs,  	"Init F FracExpTail", 0.1,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =3|FaecesPool >0",0.,0.7);
 	pPs= new Ps(&Org_State_IniValue[_MIC][_C_].FracExpTail, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init M FracExpTail", 0.1,"-","Initial Soil Organic =3|Microbes >0",0.,0.7);
+		Define(pPs,  	"Init M FracExpTail", 0.1,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =3|Microbes >0",0.,0.7);
 	pPs= new Ps(&Org_State_IniValue[_H][_C_].FracExpTail, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  	"Init H FracExpTail", 0.1,"-","Initial Soil Organic =3",0.,0.7);
+		Define(pPs,  	"Init H FracExpTail", 0.1,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =3",0.,0.7);
 ;
 ;
 
@@ -601,43 +601,43 @@ pP= new P(&Org_State_IniValue[_H][_C_].Layer_Mass,pNL, datatype::SIMPROFILE, ele
 		mTab_OrgCN.push_back(pP); mTab_OrgCP.push_back(pP);
 
 pP= new P(&Org_State_IniCarbonRatio[_L1][_N_-1].Layer_Mass,pNL, datatype::SIMPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL); initv.assign(pSoil->NL,25.);
-		Define(pP, pNL  ,	"Init L1 CN", initv,"-","Initial Soil Organic =0|Initial Carbon Conditions=0",0.,100.);
+		Define(pP, pNL  ,	"Init L1 CN", initv,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =0|Initial Carbon Conditions=0",0.,100.);
 		mTab_OrgCN.push_back(pP);
 		
 pP= new P(&Org_State_IniCarbonRatio[_L2][_N_ - 1].Layer_Mass,pNL, datatype::SIMPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);initv.assign(pSoil->NL,15.);
-		Define(pP, pNL  ,	"Init L2 CN", initv,"-","Initial Soil Organic =0|LitterPools >0|Initial Carbon Conditions=0",0.,100.);
+		Define(pP, pNL  ,	"Init L2 CN", initv,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =0|LitterPools >0|Initial Carbon Conditions=0",0.,100.);
 		mTab_OrgCN.push_back(pP);
 		
 pP= new P(&Org_State_IniCarbonRatio[_F][_N_ - 1].Layer_Mass,pNL, datatype::SIMPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);initv.assign(pSoil->NL,15.);
-		Define(pP, pNL  ,	"Init F CN", initv,"-","Initial Soil Organic =0|FaecesPool >0|Initial Carbon Conditions=0",0.,100.);
+		Define(pP, pNL  ,	"Init F CN", initv,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =0|FaecesPool >0|Initial Carbon Conditions=0",0.,100.);
 		mTab_OrgCN.push_back(pP);
 		
 pP= new P(&Org_State_IniCarbonRatio[_MIC][_N_ - 1].Layer_Mass,pNL, datatype::SIMPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);initv.assign(pSoil->NL,8.);
-		Define(pP, pNL  ,	"Init M CN", initv,"-","Initial Soil Organic =0|Microbes >0|Initial Carbon Conditions=0",0.,100.);
+		Define(pP, pNL  ,	"Init M CN", initv,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =0|Microbes >0|Initial Carbon Conditions=0",0.,100.);
 		mTab_OrgCN.push_back(pP);
 		
 pP= new P(&Org_State_IniCarbonRatio[_H][_N_ - 1].Layer_Mass,pNL, datatype::SIMPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);initv.assign(pSoil->NL,10.);
-		Define(pP, pNL  ,	"Init H CN", initv,"-","Initial Soil Organic =0|Initial Carbon Conditions=0",0.,1.E5);
+		Define(pP, pNL  ,	"Init H CN", initv,UNIT_TYPES::NO_UNIT,"Initial Soil Organic =0|Initial Carbon Conditions=0",0.,1.E5);
 		mTab_OrgCN.push_back(pP);
 
 		pP = new P(&Org_State_IniCarbonRatio[_L1][_P_ - 1].Layer_Mass, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL); initv.assign(pSoil->NL, 106.);
-		Define(pP, pNL, "Init L1 CP", initv, "-", "Initial Soil Organic =0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1000.);
+		Define(pP, pNL, "Init L1 CP", initv, UNIT_TYPES::NO_UNIT, "Initial Soil Organic =0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1000.);
 		mTab_OrgCP.push_back(pP);
 
 		pP = new P(&Org_State_IniCarbonRatio[_L2][_P_ - 1].Layer_Mass, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL); initv.assign(pSoil->NL, 106.);
-		Define(pP, pNL, "Init L2 CP", initv, "-", "Initial Soil Organic =0|LitterPools >0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1000.);
+		Define(pP, pNL, "Init L2 CP", initv, UNIT_TYPES::NO_UNIT, "Initial Soil Organic =0|LitterPools >0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1000.);
 		mTab_OrgCP.push_back(pP);
 
 		pP = new P(&Org_State_IniCarbonRatio[_F][_P_ - 1].Layer_Mass, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL); initv.assign(pSoil->NL, 150.);
-		Define(pP, pNL, "Init F CP", initv, "-", "Initial Soil Organic =0|FaecesPool >0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 100.);
+		Define(pP, pNL, "Init F CP", initv, UNIT_TYPES::NO_UNIT, "Initial Soil Organic =0|FaecesPool >0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 100.);
 		mTab_OrgCP.push_back(pP);
 
 		pP = new P(&Org_State_IniCarbonRatio[_MIC][_P_ - 1].Layer_Mass, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL); initv.assign(pSoil->NL, 106.);
-		Define(pP, pNL, "Init M CP", initv, "-", "Initial Soil Organic =0|Microbes >0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1000.);
+		Define(pP, pNL, "Init M CP", initv, UNIT_TYPES::NO_UNIT, "Initial Soil Organic =0|Microbes >0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1000.);
 		mTab_OrgCP.push_back(pP);
 
 		pP = new P(&Org_State_IniCarbonRatio[_H][_P_ - 1].Layer_Mass, pNL, datatype::SIMPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL); initv.assign(pSoil->NL, 100.);
-		Define(pP, pNL, "Init H CP", initv, "-", "Initial Soil Organic =0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1.E5);
+		Define(pP, pNL, "Init H CP", initv, UNIT_TYPES::NO_UNIT, "Initial Soil Organic =0|Initial Phosphorus Conditions>0|Phosphorus>0", 0., 1.E5);
 		mTab_OrgCP.push_back(pP);
 
 
@@ -657,13 +657,13 @@ pP= new P(&Init_Measured_BD,pNoLayerM, datatype::MPROFILE, elements::NITROGEN, f
 	Define(pP, pNoLayerM  ,	"Init BulkDensity", initv,"g/cm3","Measured Input Organic layers=1",0.05,2.0, .1,1.8,3);
 	mTab_MeasOrg.push_back(pP);
 pP= new P(&Init_Assumed_CN_Humus,pNoLayerM, datatype::MPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);initv.assign(pNoLayerM->GetNEValue(),10.);
-	Define(pP, pNoLayerM  ,	"Init CN Humus", initv,"-","Measured Input Organic layers=1",5.,15.,8.,12.,3);
+	Define(pP, pNoLayerM  ,	"Init CN Humus", initv,UNIT_TYPES::NO_UNIT,"Measured Input Organic layers=1",5.,15.,8.,12.,3);
 	mTab_MeasOrg.push_back(pP);
 pP= new P(&Init_Assumed_CN_Litter,pNoLayerM, datatype::MPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);initv.assign(pNoLayerM->GetNEValue(),25.);
-	Define(pP, pNoLayerM  ,	"Init CN Litter", initv,"-","Measured Input Organic layers=1",20.,100.,20.,50.,3);
+	Define(pP, pNoLayerM  ,	"Init CN Litter", initv,UNIT_TYPES::NO_UNIT,"Measured Input Organic layers=1",20.,100.,20.,50.,3);
 	mTab_MeasOrg.push_back(pP);
 pP= new P(&Init_Assumed_Frac_Litter2,pNoLayerM, datatype::MPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);initv.assign(pNoLayerM->GetNEValue(),.1);
-	Define(pP, pNoLayerM  ,	"Init Frac Litter2", initv,"-","Measured Input Organic layers=1|LitterPools=1",0.0,1.0,0.,0.9,3);
+	Define(pP, pNoLayerM  ,	"Init Frac Litter2", initv,UNIT_TYPES::NO_UNIT,"Measured Input Organic layers=1|LitterPools=1",0.0,1.0,0.,0.9,3);
 	mTab_MeasOrg.push_back(pP);
 
 	
@@ -702,7 +702,7 @@ Define (pTab,"Initial organic Carbon",3);
 	pPs= new Ps(&RateCoefHumusDis, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
 		Define(pPs,  "RateCoefHumusDis", 1.E-5  , "1/day","Nitrogen and Carbon >0|Dissolved Organics > 0",0.,0.001);
 	pPs= new Ps(&DocSolFraction, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-		Define(pPs,  "DocSolutionFrac", 1.0  , "-","Nitrogen and Carbon >0|Dissolved Organics > 0",0.0001,1.);
+		Define(pPs,  "DocSolutionFrac", 1.0  , UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0",0.0001,1.);
 
 		
 		
@@ -710,12 +710,12 @@ Define (pTab,"Initial organic Carbon",3);
 	pPs= new Ps(&Init_CDissConc, datatype::TOTPROFILE, elements::DOC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pPs,  "Init_CDissConc", 1.  , "mg/l","Nitrogen and Carbon >0|Dissolved Organics > 0",0.,300.);
 	pPs= new Ps(&CN_Threshold_Org, datatype::TOTPROFILE, elements::DOC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  "CN Threshold Org", 22.  , "-","Nitrogen and Carbon >0|Organic Uptake > 1",0.,300.);
+		Define(pPs,  "CN Threshold Org", 22.  , UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >0|Organic Uptake > 1",0.,300.);
 //	Response function;
 
-//	Define(pG, pNL  ResponseTemp,"Response Temp", initv,"-", "Nitrogen and Carbon >= 4");
-//	Define(pG, pNL  Response.Theta,"Response Theta", initv,"-", "Nitrogen and Carbon >= 4");
-//	Define(pG, pNL  ResponseTemp_Theta,"Response Temp Theta", initv,"-", "Nitrogen and Carbon >= 4");
+//	Define(pG, pNL  ResponseTemp,"Response Temp", initv,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 4");
+//	Define(pG, pNL  Response.Theta,"Response Theta", initv,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 4");
+//	Define(pG, pNL  ResponseTemp_Theta,"Response Temp Theta", initv,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 4");
 
 
 
@@ -774,21 +774,21 @@ bool NC_Organic_Functions::FunctionDef() {
 
 
 	pPs = new Ps(&Eff_Litter1, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Eff Litter1", .5, "-", "Nitrogen and Carbon >0|Microbes = 0", 0.1, 0.8);
+	Define(pPs, "Eff Litter1", .5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes = 0", 0.1, 0.8);
 	pPs = new Ps(&Eff_Litter2, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Eff Litter2", .5, "-", "Nitrogen and Carbon >0|Microbes = 0|LitterPools >0", 0.1, 0.8);
+	Define(pPs, "Eff Litter2", .5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes = 0|LitterPools >0", 0.1, 0.8);
 	pPs = new Ps(&Eff_Faeces, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Eff Faeces", .5, "-", "Nitrogen and Carbon >0|FaecesPool >0|Microbes = 0", 0.1, 0.8);
+	Define(pPs, "Eff Faeces", .5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|FaecesPool >0|Microbes = 0", 0.1, 0.8);
 	pPs = new Ps(&Eff_Microbes, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Eff Microbes", .5, "-", "Nitrogen and Carbon >0|Microbes > 0", 0.1, 0.8);
+	Define(pPs, "Eff Microbes", .5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes > 0", 0.1, 0.8);
 	pPs = new Ps(&Eff_Humus, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Eff humus", .5, "-", "Nitrogen and Carbon >0", 0.1, 0.8);
+	Define(pPs, "Eff humus", .5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0", 0.1, 0.8);
 
 	;
 	pPs = new Ps(&CN_Ratio_Microbe, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "CN Ratio Microbe", 10., "-", "Nitrogen and Carbon >0", 3., 220., 5., 15.);
+	Define(pPs, "CN Ratio Microbe", 10., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0", 3., 220., 5., 15.);
 	pPs = new Ps(&CP_Ratio_Microbe, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "CP Ratio Microbe", 106., "-", "Nitrogen and Carbon >0|Phosphorus > 0", 3., 1000., 20., 300.);
+	Define(pPs, "CP Ratio Microbe", 106., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Phosphorus > 0", 3., 1000., 20., 300.);
 	;
 	;
 	functorprop.FuncName = MyFunc::LITTER_TRANS_SURFACE_L1; functorprop.Arg = MyArgType::D1;
@@ -855,11 +855,11 @@ bool NC_Organic_Functions::FunctionDef() {
 	ps_vec.clear();
 	ps_vec.push_back(m_pModelMap->GetPsPointer("Eff Microbes"));
 	pPs = new Ps(&Mic_ConsFrac_L1, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Mic Cons Frac L1", .5, "-", "Nitrogen and Carbon >0|Microbes >0", 0., 1.);
+	Define(pPs, "Mic Cons Frac L1", .5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0", 0., 1.);
 	pPs = new Ps(&Mic_ConsFrac_L2, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Mic Cons Frac L2", .1, "-", "Nitrogen and Carbon >0|Microbes >0|LitterPools > 0", 0., 1.);
+	Define(pPs, "Mic Cons Frac L2", .1, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0|LitterPools > 0", 0., 1.);
 	pPs = new Ps(&Mic_ConsFrac_Fec, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Mic Cons Frac Fec", .1, "-", "Nitrogen and Carbon >0|Microbes >0|FaecesPool >0", 0., 1.);
+	Define(pPs, "Mic Cons Frac Fec", .1, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0|FaecesPool >0", 0., 1.);
 	pFunc = new Func( datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec);
 
@@ -873,11 +873,11 @@ bool NC_Organic_Functions::FunctionDef() {
 
 	;
 	pPs = new Ps(&Mic_HumFrac_L1, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Mic Hum Frac L1", .5, "-", "Nitrogen and Carbon >0|Microbes >0", 0., 1.);
+	Define(pPs, "Mic Hum Frac L1", .5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0", 0., 1.);
 	pPs = new Ps(&Mic_HumFrac_L2, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Mic Hum Frac L2", .1, "-", "Nitrogen and Carbon >0|Microbes >0|LitterPools > 0", 0., 1.);
+	Define(pPs, "Mic Hum Frac L2", .1, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0|LitterPools > 0", 0., 1.);
 	pPs = new Ps(&Mic_HumFrac_Fec, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Mic Hum Frac Fec", .1, "-", "Nitrogen and Carbon >0|Microbes >0|FaecesPool >0", 0., 1.);
+	Define(pPs, "Mic Hum Frac Fec", .1, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0|FaecesPool >0", 0., 1.);
 	;
 	functorprop.FuncName = MyFunc::HUMIFICATION_MICROBE; functorprop.Arg = MyArgType::T_D1;
 	funcname = "Humification Function"; ps_vec.clear();
@@ -897,11 +897,11 @@ bool NC_Organic_Functions::FunctionDef() {
 	
 	ps_vec.push_back(m_pModelMap->GetPsPointer("RateCoefMic Mort"));
 	pPs = new Ps(&Mic_MortFrac_L1, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Mic Mort Frac L1", .1, "-", "Nitrogen and Carbon >0|Microbes >0", 0., 1.);
+	Define(pPs, "Mic Mort Frac L1", .1, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0", 0., 1.);
 	pPs = new Ps(&Mic_MortFrac_L2, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Mic Mort Frac L2", .1, "-", "Nitrogen and Carbon >0|Microbes >0|LitterPools > 0", 0., 1.);
+	Define(pPs, "Mic Mort Frac L2", .1, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0|LitterPools > 0", 0., 1.);
 	pPs = new Ps(&Mic_MortFrac_Fec, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Mic Mort Frac Fec", .1, "-", "Nitrogen and Carbon >0|Microbes >0|FaecesPool >0", 0., 1.);
+	Define(pPs, "Mic Mort Frac Fec", .1, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|Microbes >0|FaecesPool >0", 0., 1.);
 	pFunc = new Func( datatype::PLANT, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec);
 	
@@ -933,9 +933,9 @@ bool NC_Organic_Functions::FunctionDef() {
 
 
 	pPs = new Ps(&N_ImmobMaxAvailFrac, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "N Immob MaxAvailFrac", 0.05, "-", "Nitrogen and Carbon >0|CN Ratio Influence > 0", 0.00001, 0.1);
+	Define(pPs, "N Immob MaxAvailFrac", 0.05, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|CN Ratio Influence > 0", 0.00001, 0.1);
 	pPs = new Ps(&P_ImmobMaxAvailFrac, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "P Immob MaxAvailFrac", 0.05, "-", "Nitrogen and Carbon >0|CP Ratio Influence > 0", 0.00001, 0.1);
+	Define(pPs, "P Immob MaxAvailFrac", 0.05, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >0|CP Ratio Influence > 0", 0.00001, 0.1);
 	//MF;
 
 	plotpar.Num_Of_Curves = 2;
@@ -1125,25 +1125,25 @@ bool NC_Organic_Functions::FunctionDef() {
 
 
 	pPs = new Ps(&UptOrgRateCoef_L, datatype::TOTPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::PLANTORGUPTAKE, userlevel::NORMAL);
-	Define(pPs, "Upt OrgRateCoef L", 0.0001, "-", "Organic Uptake >=1", 0., 0.7);
+	Define(pPs, "Upt OrgRateCoef L", 0.0001, UNIT_TYPES::NO_UNIT, "Organic Uptake >=1", 0., 0.7);
 	pPs = new Ps(&UptOrgRateCoef_H, datatype::TOTPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::PLANTORGUPTAKE, userlevel::NORMAL);
-	Define(pPs, "Upt OrgRateCoef H", 0.0001, "-", "Organic Uptake >=1", 0., 0.7);
+	Define(pPs, "Upt OrgRateCoef H", 0.0001, UNIT_TYPES::NO_UNIT, "Organic Uptake >=1", 0., 0.7);
 
 	pPs = new Ps(&P_UptOrgRateCoef_L, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::PLANTORGUPTAKE, userlevel::NORMAL);
-	Define(pPs, "Upt P OrgRateCoef L", 0.0001, "-", "Organic Uptake >=1|Phosphorus>0", 0., 0.7);
+	Define(pPs, "Upt P OrgRateCoef L", 0.0001, UNIT_TYPES::NO_UNIT, "Organic Uptake >=1|Phosphorus>0", 0., 0.7);
 	pPs = new Ps(&P_UptOrgRateCoef_H, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::PLANTORGUPTAKE, userlevel::NORMAL); //Add P_ By HH
-	Define(pPs, "Upt P OrgRateCoef H", 0.0001, "-", "Organic Uptake >=1|Phosphorus>0", 0., 0.7);
+	Define(pPs, "Upt P OrgRateCoef H", 0.0001, UNIT_TYPES::NO_UNIT, "Organic Uptake >=1|Phosphorus>0", 0., 0.7);
 
 	pPs = new Ps(&NUptRootCoefOrg, datatype::TOTPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::PLANTORGUPTAKE, userlevel::NORMAL);
-	Define(pPs, "NUptRootCoefOrg", 0.1, "-", "Organic Uptake >=1|Root_density_Influence>0", 0.000001, 1.0);
+	Define(pPs, "NUptRootCoefOrg", 0.1, UNIT_TYPES::NO_UNIT, "Organic Uptake >=1|Root_density_Influence>0", 0.000001, 1.0);
 
 
 	pPs = new Ps(&FungiOrgEnhanceCoef, datatype::TOTPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::PLANTORGUPTAKE, userlevel::NORMAL);
-	Define(pPs, "FungiOrgEnhanceCoef", 5., "-", "Organic Uptake >=1|Mycorrhiza Fungal Growth>0", 0., 10.);
+	Define(pPs, "FungiOrgEnhanceCoef", 5., UNIT_TYPES::NO_UNIT, "Organic Uptake >=1|Mycorrhiza Fungal Growth>0", 0., 10.);
 
 
 	pPs = new Ps(&FungiOrgPEnhanceCoef, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::NOFPROC, bioprocess::PLANTORGUPTAKE, userlevel::NORMAL);
-	Define(pPs, "FungiOrgPEnhanceCoef", 5., "-", "Organic Uptake >=1|Mycorrhiza Fungal Growth>0|Phosphorus>0", 0., 50.);
+	Define(pPs, "FungiOrgPEnhanceCoef", 5., UNIT_TYPES::NO_UNIT, "Organic Uptake >=1|Mycorrhiza Fungal Growth>0|Phosphorus>0", 0., 50.);
 
 
 

@@ -25,13 +25,13 @@ bool Profile_Functions::Def()
 	ModuleConditions="";
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.0;
 	pP= new		P(&UpperDepth,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
-	Define	(pP,pNE,"Upper Depth",initv,"m","",0.,1000.,0.,100.,1,2);
+	Define	(pP,pNE,"Upper Depth",initv,UNIT_TYPES::LENGTH_UNIT,"",0.,1000.,0.,100.,1,2);
 	mTab_MeasTexture.push_back(pP);
 
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=0.1;
 	pP= new		P(&LowerDepth,pNE, datatype::MPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
-	Define	(pP,pNE,"Lower Depth",initv,"m","",0.,1000.,0.,100.,1,2);
+	Define	(pP,pNE,"Lower Depth",initv,UNIT_TYPES::LENGTH_UNIT,"" ,0.,1000.,0.,100.,1,2);
 	mTab_MeasTexture.push_back(pP);
 
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=5.0;
@@ -73,21 +73,21 @@ bool Profile_Functions::Def()
 
 
 	pP= new		P(&ThicknessLayers,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);	
-		Define(pP,pNL,"Thickness Layers",initv,"m","",0.001,100.,0.01,10.,1) ;
+		Define(pP,pNL,"Thickness Layers",initv,UNIT_TYPES::LENGTH_UNIT,"",0.001,100.,0.01,10.,1) ;
 		pP->SetReadOnly(false);
 		mTab_Compartment.push_back(pP);
 	
 	pP= new		P(&AThicknessLayers,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);	
-		Define(pP,pNL, "AThicknessLayers",initv,"m","",0.001,100.,.01,1.,20);
+		Define(pP,pNL, "AThicknessLayers",initv,UNIT_TYPES::LENGTH_UNIT,"",0.001,100.,.01,1.,20);
 	
 	pP= new		P(&ModelUpperDepth,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);	
-	Define(pP,pNL, "mUpper Depth",initu,"m","",0.001,100.,0.01,10.,2) ;
+	Define(pP,pNL, "mUpper Depth",initu,UNIT_TYPES::LENGTH_UNIT,"",0.001,100.,0.01,10.,2) ;
 	mTab_BC_Model.push_back(pP); pP->SetReadOnly(true); mTab_Gen_Model.push_back(pP);
 
 	initu.erase(initu.begin());
 	initu.push_back(*(initu.end()-1)+*(initv.end()-1));
 	pP= new		P(&ModelLowerDepth,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
-	Define(pP,pNL, "mLower Depth",initu,"m","",0.001,100.,0.01,10.,2) ;
+	Define(pP,pNL, "mLower Depth",initu,UNIT_TYPES::LENGTH_UNIT,"",0.001,100.,0.01,10.,2) ;
 	pP->SetReadOnly(true);
 	mTab_BC_Model.push_back(pP);mTab_HC_Model.push_back(pP); mTab_Gen_Model.push_back(pP);
 
@@ -97,9 +97,9 @@ bool Profile_Functions::Def()
 	   initm[i]=initu[i]-initv[i]/2;
 	}
 	pP= new		P(&DepthMidpLayer,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
-	Define(pP,pNL,"DepthMidpLayers",initu,"m","",0.001,100.)	;
+	Define(pP,pNL,"DepthMidpLayers",initu,UNIT_TYPES::LENGTH_UNIT,"",0.001,100.)	;
 	pP= new	P(&DepthLayers,pNL, datatype::SIMPROFILE, elements::GENERAL, fysprocess::FYS_SHAPE, bioprocess::NOBPROC, userlevel::SIMPLE);
-	Define(pP,pNL,"DepthLayers",initu,"m","",0.001,100.,0.01,100.);
+	Define(pP,pNL,"DepthLayers",initu,UNIT_TYPES::LENGTH_UNIT,"",0.001,100.,0.01,100.);
 	
 	vector<double> initd;
 	initd.resize(NL);

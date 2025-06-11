@@ -10,7 +10,7 @@ Ds::Ds(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	SetSimType(simtype::DRIVE_SINGLE);
 	;
 }
-void Ds::Def(int ModuleNo, std::string name, double init, std::string unit, std::string conditions)
+void Ds::Def(int ModuleNo, std::string name, double init, std::string_view unit, std::string conditions)
 {
 
 	SetValue(init);

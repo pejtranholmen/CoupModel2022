@@ -25,33 +25,33 @@ bool Irrigation_Functions::Def()
 	Xs *pXs;
 	pXs= new Xs(&DripContainer, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pXs,  "DripContainer"	, 0.	,"mm"		, "Dripper = 1");
+	Define(pXs,  "DripContainer"	, 0.	,UNIT_TYPES::WATERMASS_UNIT		, "Dripper = 1");
 	Ts *pTs;
 	pTs= new Ts(&DripFill, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pTs,   "DripFill"		, 0.	,"mm/day"	, "Dripper = 1");
+	Define(pTs,   "DripFill"		, 0.	,UNIT_TYPES::WATERFLOW_UNIT	, "Dripper = 1");
 	pTs= new Ts(&DripOutlet, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pTs,  "DripOutlet"		, 0.	,"mm/day"	, "Dripper = 1");
+	Define(pTs,  "DripOutlet"		, 0.	,UNIT_TYPES::WATERFLOW_UNIT	, "Dripper = 1");
 
 	Ps *pPs;
 	pPs= new Ps(&IStoreLayer, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,"IStoreLayer",4.,"#","IrrigationInput > 0",1.,100.,1.,10.);
 	pPs= new Ps(&IStoreMin, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "IStoreMin"  ,50.,"mm","IrrigationInput > 0",0., 400.,0.,100.);
+	Define(pPs, "IStoreMin"  ,50.,UNIT_TYPES::WATERMASS_UNIT,"IrrigationInput > 0",0., 400.,0.,100.);
 	pPs= new Ps(&IrrigRate  , datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,  "IrrigRate"  ,50.,"mm/day","IrrigationInput >0",0., 2000.,0., 500.);
+	Define(pPs,  "IrrigRate"  ,50.,UNIT_TYPES::WATERFLOW_UNIT,"IrrigationInput >0",0., 2000.,0., 500.);
 	pPs= new Ps(&IrrigAmount, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,  "IrrigAmount",20.,"mm","IrrigationInput > 0",0., 400., 0., 100.);
+	Define(pPs,  "IrrigAmount",20.,UNIT_TYPES::WATERMASS_UNIT,"IrrigationInput > 0",0., 400., 0., 100.);
 	
 	pPs= new Ps(&IrrigV_Index, datatype::SINGLE, elements::WATER, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,"Index in File",1.,"#","IrrigationInput =0|Irrigation > 0",1.,100.);
 	pPs= new Ps(&SoilIrrigF, datatype::SINGLE, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
- 	Define(pPs,"SoilIrrigF", 0.,"-","Irrigation > 0",0.,1.);
+ 	Define(pPs,"SoilIrrigF", 0.,UNIT_TYPES::NO_UNIT,"Irrigation > 0",0.,1.);
 	pPs= new Ps(&DripIrrigCover, datatype::SINGLE, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,  "DripIrrigCover", 0.2,"-","Irrigation >0|Dripper>0",0.,1.);
+	Define(pPs,  "DripIrrigCover", 0.2,UNIT_TYPES::NO_UNIT,"Irrigation >0|Dripper>0",0.,1.);
 	pPs= new Ps(&DripIrrigXCenter, datatype::SINGLE, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "DripIrrigXCentre", 0.5,"-","Irrigation >0|Dripper>0",0.,1.);
+	Define(pPs, "DripIrrigXCentre", 0.5,UNIT_TYPES::NO_UNIT,"Irrigation >0|Dripper>0",0.,1.);
 	pPs= new Ps(&DripIrrigRate, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,  "DripIrrigRate", 100.,"mm/day","Irrigation >0|Dripper>0",0.,10000.);
+	Define(pPs,  "DripIrrigRate", 100.,UNIT_TYPES::WATERFLOW_UNIT,"Irrigation >0|Dripper>0",0.,10000.);
 
 
 	P *pP;
@@ -67,7 +67,7 @@ bool Irrigation_Functions::Def()
 	mTab_Dripper.push_back(pP);
 	pP= new P(&DrippInfilDistF,pNL, datatype::IRRIGATIONCONTAINER, elements::WATER, fysprocess::TECH_REGULATOR, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pP, pNL, "InfilDistF"	,initv, "-","Dripper>0",0.,1.);
+	Define(pP, pNL, "InfilDistF"	,initv, UNIT_TYPES::NO_UNIT,"Dripper>0",0.,1.);
 
 	mTab_Dripper.push_back(pP);
 	Tab *pTab;

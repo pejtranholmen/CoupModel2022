@@ -300,13 +300,13 @@ void PFSheets::MakeSimpleTextureSheet()
 				//SetCell(j+2,i, &cell); 
 				if(j==0) {
 					if(min_frac<=0) 
-						cell.SetText("");
+						cell.SetStdText("");
 					else
 						cell.SetNumber(tex[j]/min_frac);
 				}
 				else if(j==1) {
 					if(min_frac<=0) 
-						cell.SetText("");
+						cell.SetStdText("");
 					else
 						cell.SetNumber((100.-tex[3]-tex[7])/min_frac);
 				}
@@ -993,7 +993,7 @@ void PFSheets::MakeSelectedProfileSheet() {
 				str+=FUtil::STD_ItoAscii(p_PFCurve->m_ActProfile.KeyProf%100);
 				GetCell(0,0,&cell);
 				//QuickSetText(0,Count,string);
-				cell.SetText(str.c_str());
+				cell.SetStdText(str);
 				cell.SetBackColor(m_ColorClick);
 				cell.SetReadOnly(TRUE);
 				SetCell(0,0,&cell);
@@ -1003,7 +1003,7 @@ void PFSheets::MakeSelectedProfileSheet() {
 				str=p_PFCurve->m_ActProfile.Name;
 				//GetCell(1,1,&cell);
 				cell.ClearAll();
-				cell.SetText(str.c_str());
+				cell.SetStdText(str);
 				cell.SetReadOnly(FALSE);
 				SetCell(0,1,&cell);
 				QuickSetText(-1,1,"Site",false);
@@ -1060,22 +1060,22 @@ void PFSheets::MakeSelectedProfileSheet() {
 
 				QuickSetText(-1, 9, "Created By");
 				GetCell(0, 9, &cell);
-				cell.SetText(p_PFCurve->m_ActProfile.CreatedBy);
+				cell.SetStdText(p_PFCurve->m_ActProfile.CreatedBy);
 				SetCell(0, 9, &cell);
 
 				QuickSetText(-1, 10, "Date Created");
 				GetCell(0, 10, &cell);
-				cell.SetText(p_PFCurve->m_ActProfile.CreateDate);
+				cell.SetStdText(p_PFCurve->m_ActProfile.CreateDate);
 				SetCell(0, 10, &cell);
 
 				QuickSetText(-1, 11, "Modified By");
 				GetCell(0, 11, &cell);
-				cell.SetText(p_PFCurve->m_ActProfile.ModifiedBy);
+				cell.SetStdText(p_PFCurve->m_ActProfile.ModifiedBy);
 				SetCell(0, 11, &cell);
 
 				QuickSetText(-1, 12, "Date Modified");
 				GetCell(0, 12, &cell);
-				cell.SetText(p_PFCurve->m_ActProfile.ModifiedDate);
+				cell.SetStdText(p_PFCurve->m_ActProfile.ModifiedDate);
 				SetCell(0, 12, &cell);
 
 

@@ -239,7 +239,7 @@ bool GridPGDoc::Make_PGFileSheet()
 			GetCell(0,ind, &cell);			
 			cell.SetParam(m_FileSelectOptions.param);
 			cell.SetBackColor(RGB(240,240,50));
-			cell.SetText(Name);
+			cell.SetStdText(Name);
 			SetCell(0,ind, &cell);
 			//JoinCells(3,ind,4,ind);
 
@@ -319,18 +319,18 @@ bool GridPGDoc::Make_PGFileSheet()
 			QuickSetNumber(-1, ind, j + 1);
 			QuickSetNumber(-2, ind, idoc + 1);
 			GetCell(0, ind, &cell);
-			cell.SetText(pCPG->GetVarName(j + 1).c_str());
+			cell.SetStdText(pCPG->GetVarName(j + 1));
 			cell.SetParam(m_VarSelectOptions.param);
 			SetCell(0, ind, &cell);
 
 			GetCell(1, ind, &cell);
-			cell.SetText(std::string(pCPG->GetVarUnit(j + 1)).c_str());
+			cell.SetStdText(std::string(pCPG->GetVarUnit(j + 1)));
 			cell.SetParam(m_VarSelectOptions.param);
 			cell.SetBackColor(pCPG->GetColor(j + 1));
 			SetCell(1, ind, &cell);
 			
 			GetCell(2, ind, &cell);
-			cell.SetText(pCPG->GetVarId(j + 1, actrep).c_str());
+			cell.SetStdText(pCPG->GetVarId(j + 1, actrep));
 			cell.SetParam(m_VarSelectOptions.param);
 			cell.SetBackColor(pCPG->GetColor(j + 1));
 			SetCell(2, ind, &cell);
@@ -388,7 +388,7 @@ bool GridPGDoc::Make_PGFileSheet()
 
 			int index=m_pProp->GetFirstIndepIndex();
 			GetCell(7,index+3,&cell);
-			cell.SetText("X - Indep");
+			cell.SetStdText("X - Indep");
 			cell.SetParam(m_XAxisCombo.Param);
 			cell.SetBackColor(m_ColorEdit);
 			SetCell(7,index+3,&cell);
@@ -396,7 +396,7 @@ bool GridPGDoc::Make_PGFileSheet()
 		if(m_pProp->GetIndepSecond()== vartype::PGVAR) {
 			int index=m_pProp->GetSecondIndepIndex();
 			GetCell(8,index+3,&cell);
-			cell.SetText("Y - Indep");
+			cell.SetStdText("Y - Indep");
 			cell.SetParam(m_YAxisCombo.Param);
 			cell.SetBackColor(m_ColorEdit);
 			SetCell(8,index+3,&cell);
@@ -675,7 +675,7 @@ bool GridPGDoc::Make_Description(int ifile)
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarStation(j+1,i).c_str());
+						cell.SetStdText(pCPG->GetVarStation(j+1,i));
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
@@ -690,12 +690,12 @@ bool GridPGDoc::Make_Description(int ifile)
 					}
 					else {
 						GetCell(1,ind,&cell);
-						cell.SetText(std::string(pCPG->GetVarUnit(j+1,i)).c_str());
+						cell.SetStdText(std::string(pCPG->GetVarUnit(j+1,i)));
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarId(j+1,i).c_str());
+						cell.SetStdText(pCPG->GetVarId(j+1,i));
 						cell.SetParam(2000);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
@@ -765,12 +765,12 @@ bool GridPGDoc::Make_Description(int ifile)
 
 					if(m_ShowDetails) {
 						GetCell(1,ind,&cell);
-						cell.SetText(pCPG->GetVarCountry(j+1,i).c_str());
+						cell.SetStdText(pCPG->GetVarCountry(j+1,i));
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarStation(j+1,i).c_str());
+						cell.SetStdText(pCPG->GetVarStation(j+1,i));
 						cell.SetParam(2000);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
@@ -785,12 +785,12 @@ bool GridPGDoc::Make_Description(int ifile)
 					}
 					else {
 						GetCell(1,ind,&cell);
-						cell.SetText(std::string(pCPG->GetVarUnit(j+1,i)).c_str());
+						cell.SetStdText(std::string(pCPG->GetVarUnit(j+1,i)));
 						cell.SetParam(0);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(1,ind,&cell);
 						GetCell(2,ind,&cell);
-						cell.SetText(pCPG->GetVarId(j+1,i).c_str());
+						cell.SetStdText(pCPG->GetVarId(j+1,i));
 						cell.SetParam(2000);
 						cell.SetBackColor(pCPG->GetColor(j+1));
 						SetCell(2,ind,&cell);
@@ -1394,7 +1394,7 @@ bool GridPGDoc::Make_DataSubstitution()
 			cell.SetLabelText(optionlist);
 			cell.SetParam(100);
 			cell.SetBackColor(RGB(240,240,50));
-			cell.SetText(Name);
+			cell.SetStdText(Name);
 			SetCell(0,ind, &cell);
 			JoinCells(3,ind,4,ind);
 			int  nvar, nrep;	
@@ -1477,7 +1477,7 @@ bool GridPGDoc::Make_DataSubstitution()
 			}
 			else if(m_SubstituteOption==2)
 				str="Artifical random selection of data from other years";
-			cell.SetText(str.c_str());
+			cell.SetStdText(str);
 			SetCell(1,ind, &cell);
 			JoinCells(1,ind,4,ind);
 			QuickSetText(5,ind, "Click to Create New File");
@@ -1690,7 +1690,7 @@ bool GridPGDoc::Make_ChangePeriodSheet()
 			if(m_ChangePeriodOption!=0)	str="";
 			if(m_ChangePeriodOption==1)	str="New Specific dates";
 
-			cell.SetText(str.c_str());
+			cell.SetStdText(str);
 			SetCell(1,ind, &cell);
 			JoinCells(1,ind,4,ind);
 			QuickSetText(5,ind, "Click to Create New File");
@@ -1903,7 +1903,7 @@ bool GridPGDoc::Make_DataAggregation()
 			else if(m_AggregateOption==2) str="Daily Mean Value";
 			else if(m_AggregateOption==3) str="Hourly Mean Value";
 			else if(m_AggregateOption==4) str="10 minutes Mean Value";
-			cell.SetText(str.c_str());
+			cell.SetStdText(str);
 			SetCell(1,ind, &cell);
 			JoinCells(1,ind,2,ind);
 			GetCell(3, ind, &cell);
@@ -2161,7 +2161,7 @@ bool GridPGDoc::Make_NewDataResolution()
 			if(m_NewResolutionOption==0)	str="All Values Rescaled";
 			else if(m_NewResolutionOption==1) str="Only Values Outside Original Period";
 
-			cell.SetText(str.c_str());
+			cell.SetStdText(str);
 			SetCell(1,ind, &cell);
 			JoinCells(1,ind,2,ind);
 
@@ -2176,7 +2176,7 @@ bool GridPGDoc::Make_NewDataResolution()
 			if(m_NewResolutionOption_Extra==1)	str="Add Extra Variables";
 			else if(m_NewResolutionOption_Extra==0) str="Only Original Variables";
 
-			cell.SetText(str.c_str());
+			cell.SetStdText(str);
 			SetCell(3,ind, &cell);
 			JoinCells(3,ind,4,ind);
 
@@ -2206,7 +2206,7 @@ bool GridPGDoc::Make_NewDataResolution()
 				for(size_t i=0; i<m_pGSource->GetNumVariables();i++) {
 					auto txt=m_pGSource->GetVarName(i+1);
 					GetCell(0,ind+3+i,&cell);
-					cell.SetText(txt.c_str());
+					cell.SetStdText(txt);
 					cell.SetBackColor(m_NoColor);
 					SetCell(0,ind+3+i,&cell);
 
@@ -2222,7 +2222,7 @@ bool GridPGDoc::Make_NewDataResolution()
 				for(size_t i=0; i<m_pPG_ScalingSource->GetNumVariables();i++) {
 					auto txt=m_pPG_ScalingSource->GetVarName(i+1);
 					GetCell(1,ind+3+i,&cell);
-					cell.SetText(txt.c_str());
+					cell.SetStdText(txt);
 					SetCell(1,ind+3+i,&cell);
 					JoinCells(1,ind+3+i,3,ind+3+i);
 				}
@@ -2967,8 +2967,8 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 				vector<string_view> previous = m_UnitTypeNewVariables.VectorNames;
 				vector<UNIT_TYPES> types=GetUnitOptions(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[i].Element);
 
-				if (types.size() > 0) m_UnitTypeNewVariables.VectorNames =p_ModelInfo->GetSelectedStringBasedUnits(types);
-				else m_UnitTypeNewVariables.VectorNames = p_ModelInfo->GetAllStringBasedUnits();
+				m_UnitTypeNewVariables.VectorNames =p_ModelInfo->GetSelectedStringBasedUnits(types);
+
 				m_UnitTypeNewVariables.Text = p_ModelInfo->GetUnitString(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[i].Unit);
 				SetCellClickButton(m_UnitTypeNewVariables, countvalid);
 				m_UnitTypeNewVariables.VectorNames = previous;
@@ -4198,7 +4198,6 @@ bool GridPGDoc::OnGetFileDescriptionFillGrid(CPG *pCPG)
 				vector<string_view> previous = m_UnitTypeVariables.VectorNames;
 				vector<UNIT_TYPES> types = GetUnitOptions(elem);
 				if (types.size() > 0) m_UnitTypeVariables.VectorNames = p_ModelInfo->GetSelectedStringBasedUnits(types);
-				else m_UnitTypeNewVariables.VectorNames = p_ModelInfo->GetAllStringBasedUnits();
 				m_UnitTypeVariables.Text = p_ModelInfo->GetUnitString(unit);
 				SetCellClickButton(m_UnitTypeVariables);
 				m_UnitTypeVariables.VectorNames = previous;

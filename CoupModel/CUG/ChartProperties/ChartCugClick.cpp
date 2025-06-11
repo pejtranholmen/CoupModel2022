@@ -207,7 +207,7 @@ void ChartCugClick::ActionDuringTimeSerieMode(size_t col, size_t row) {
 				else if(row==0) {
 				
 					GetCell(0,0,&cell);
-					cell.SetText("Zoom In");
+					cell.SetStdText("Zoom In");
 					if(m_pUtil->m_FileSave.m_ZoomX) {
 						cell.SetBackColor(m_ColorClick);
 

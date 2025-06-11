@@ -679,10 +679,10 @@ void PGFileCug::OnSetup()
 					QuickSetNumber(2,i, nrec);
 					GetCell(3,i,&cell);
 					cell.SetTime(0,0,0,1,5,1980);
-					cell.SetText(PGUtil::StringDatum(pgst).c_str());
+					cell.SetStdText(PGUtil::StringDatum(pgst));
 					cell.SetMask("0000-00-00 00:00");
 					SetCell(3,i,&cell);
-					cell.SetText(PGUtil::StringDatum(pgend).c_str());
+					cell.SetStdText(PGUtil::StringDatum(pgend));
 					SetCell(4,i,&cell);
 			}
 			pCPG->CloseFile();

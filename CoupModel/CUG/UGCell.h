@@ -170,7 +170,8 @@ public:
 
 	//***** text data type functions *****
 	int		SetText(LPCTSTR text);
-	int		SetText(std::string text);
+	int		SetStdText(std::string text);
+	int		SetViewText(std::string_view text);
 	int		GetText(CString *text);
 	int		GetStdText(std::string *text);
 	LPCTSTR	GetText();

@@ -53,19 +53,19 @@ bool Soil_WaterF_Functions::Def()
 
 
 	
-//	CALL Ts(Group_18, SoilInfil,"SoilInfil",  DBLE(0.), "mm/day","")
+//	CALL Ts(Group_18, SoilInfil,"SoilInfil",  DBLE(0.),UNIT_TYPES::WATERFLOW_UNIT,"")
 	pG= new G(&Theta,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNL,"WaterContent", initv,"vol %","");
+	Define(pG, pNL,"WaterContent", initv,UNIT_TYPES::VOLPERCENTAGE_UNIT,"");
 	pG= new G(&ThetaB,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);	
-	Define(pG, pNL, "ThetaB",initv,"vol %","WaterEq = 1|Kalle = 1");
+	Define(pG, pNL, "ThetaB",initv,UNIT_TYPES::VOLPERCENTAGE_UNIT,"WaterEq = 1|Kalle = 1");
  	pG= new G(&Psi,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNL,"PressureHead",initv,"cm water","");
+	Define(pG, pNL,"PressureHead",initv,UNIT_TYPES::PRESSUREHEAD_UNIT,"");
  	pG= new G(&ThetaTotal,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pG, pNL,"TotalWaterContent", initv, "vol %","");
+	Define(pG, pNL,"TotalWaterContent", initv,UNIT_TYPES::VOLPERCENTAGE_UNIT,"");
  	pG= new G(&HysEffect, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pG, pNL, "HysEffect", initv, "-","Hysteresis = 1");
+	Define(pG, pNL, "HysEffect", initv, UNIT_TYPES::NO_UNIT,"Hysteresis = 1");
  	pG= new G(&MeanTransitTime,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	Define(pG, pNL, "MeanTransitTime",initv,"Days", "TransitTime>0");
@@ -73,25 +73,25 @@ bool Soil_WaterF_Functions::Def()
 	Define(pGs,"TotMeanTransitTime", 0.,"Days", "TransitTime>0");
 
 	Ps *pPs=new Ps(&DVapTortuosity, datatype::SINGLE, elements::VAPOUR, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
-	Define(pPs, "DVapTortuosity", 0.66, "-","SoilVapour >= 1", 0.01,4.);
+	Define(pPs, "DVapTortuosity", 0.66, UNIT_TYPES::NO_UNIT,"SoilVapour >= 1", 0.01,4.);
 	pPs=new Ps(&IniFlowRate, datatype::SINGLE, elements::VAPOUR, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs ,"InitialFlowRate", 0.1,"mm/day","Initial water conditions = 2", 1.E-10,10.);
+	Define(pPs ,"InitialFlowRate", 0.1,UNIT_TYPES::WATERFLOW_UNIT,"Initial water conditions = 2", 1.E-10,10.);
 	pPs=new Ps(&IniPsiValue, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs, "InitialPressuredHead", 60.,"cm water","Initial water conditions = 0|Nitrogen and Carbon < 2", 1.,1.E5);
+	Define(pPs, "InitialPressuredHead", 60.,UNIT_TYPES::PRESSUREHEAD_UNIT,"Initial water conditions = 0|Nitrogen and Carbon < 2", 1.,1.E5);
 	pPs=new Ps(&IniThetaValue, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs,"InitialWaterContent", 20.,"vol %","Initial water conditions = 1",1.,100.);
+	Define(pPs,"InitialWaterContent", 20.,UNIT_TYPES::VOLPERCENTAGE_UNIT,"Initial water conditions = 1",1.,100.);
 	pPs=new Ps(&IniGWLev, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs, "InitialGroundWater", -1.,"m","Instate = 0|GroundWaterFlow > 0",-100.,0.);
+	Define(pPs, "InitialGroundWater", -1.,UNIT_TYPES::LENGTH_UNIT,"Instate = 0|GroundWaterFlow > 0",-100.,0.);
 	pPs=new Ps(&AScaleSorp, datatype::SINGLE, elements::VAPOUR, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs, "AScaleSorption", 0.5, "-","Crack = 1",0.001,1000.);
+	Define(pPs, "AScaleSorption", 0.5, UNIT_TYPES::NO_UNIT,"Crack = 1",0.001,1000.);
 	pPs=new Ps(&HysThetaD, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs,"HysThetaD", 0.2,"-","Hysteresis = 1",0.01,10.);
+	Define(pPs,"HysThetaD", 0.2,UNIT_TYPES::NO_UNIT,"Hysteresis = 1",0.01,10.);
 	pPs=new Ps(&HysThetaMax, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
 
 	Define(pPs,"HysThetamax", 10.,"Vol %","Hysteresis = 1",1.,50.);
@@ -103,14 +103,14 @@ bool Soil_WaterF_Functions::Def()
 	Define(pPs	,"HysPF2", 4.0,"pF-value","Hysteresis = 1",0.5,5.);
 	pPs=new Ps(&HysKExp, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs,"HysKExp", 0.5,"-","Hysteresis = 1",0.01, 2.0);
+	Define(pPs,"HysKExp", 0.5,UNIT_TYPES::NO_UNIT,"Hysteresis = 1",0.01, 2.0);
 					
 	pPs=new Ps(&BarrierLevel, datatype::SINGLE, elements::WATER, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs,"BarrierLevel", -0.4,"m","Soil Water Barrier = 1",-100.,-0.01);
+	Define(pPs,"BarrierLevel", -0.4,UNIT_TYPES::LENGTH_UNIT,"Soil Water Barrier = 1",-100.,-0.01);
 	pPs=new Ps(&BarrierEfficiency, datatype::SINGLE, elements::VAPOUR, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
 
-	Define(pPs ,"BarrierEfficiency", 0.9,"-","Soil Water Barrier = 1",0.001,1.0);
+	Define(pPs ,"BarrierEfficiency", 0.9,UNIT_TYPES::NO_UNIT,"Soil Water Barrier = 1",0.001,1.0);
 // std::vector Parameters	
 	P *pP=new P(&IniPsiValues, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=60.;
@@ -119,7 +119,7 @@ bool Soil_WaterF_Functions::Def()
 	mTab_InitP.push_back(pP);
 	pP=new P(&IniThetaValues, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=10.;
-	Define(pP, pNL,"IniWaterContents",initv,"vol %","Initial water conditions =4", 0., 100.);
+	Define(pP, pNL,"IniWaterContents",initv,UNIT_TYPES::VOLPERCENTAGE_UNIT,"Initial water conditions =4", 0., 100.);
 	mTab_InitTheta.push_back(pP);
 	Tab *pTab;
 	pTab=new Tab(&mTab_InitP, datatype::SIMPROFILE, elements::WATER, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -129,10 +129,10 @@ bool Soil_WaterF_Functions::Def()
 
 	pP=new P(&HysMaxEffRet, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::HYSTERESIS, bioprocess::NOBPROC, userlevel::NORMAL);
  		for(auto i=initv.begin(); i!=initv.end();++i) *i=0.;
-		Define(pP, pNL,"HysMaxEffRet"	,initv,"-","Hysteresis =1",0,5);
+		Define(pP, pNL,"HysMaxEffRet"	,initv,UNIT_TYPES::NO_UNIT,"Hysteresis =1",0,5);
 		mTab_Hyster.push_back(pP);
 	pP=new P(&HysMaxEffCond, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::HYSTERESIS, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP, pNL,"HysMaxEffCond"	,initv,"-","Hysteresis =1",0,5);
+		Define(pP, pNL,"HysMaxEffCond"	,initv,UNIT_TYPES::NO_UNIT,"Hysteresis =1",0,5);
 		mTab_Hyster.push_back(pP);
 	pTab=new Tab(&mTab_Hyster, datatype::SIMPROFILE, elements::WATER, fysprocess::HYSTERESIS, bioprocess::NOBPROC, userlevel::NORMAL);
 

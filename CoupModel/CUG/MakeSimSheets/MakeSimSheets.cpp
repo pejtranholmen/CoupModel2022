@@ -99,7 +99,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				GetCell(0,0,&cell);
 				cell.SetFont(&m_largeFont);
 				SetRowHeight(0,30);
-				cell.SetText("General Simulation Information");
+				cell.SetViewText("General Simulation Information");
 				cell.SetBackColor(m_ColorHeading);
 				cell.SetReadOnly(TRUE);
 				SetCell(0,0,&cell);
@@ -112,7 +112,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 							str="Run no: "+FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_ActualRunNumber());
 						
 						str+=" of "+FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns())+" Runs";
-						cell.SetText(str);
+						cell.SetStdText(str);
 						SetCell(2,0,&cell);
 				}
 
@@ -126,18 +126,18 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						cell.SetBackColor(m_ColorClick);
 						cell.SetFont(&m_largeFont);
 						if (!m_pSimDoc->m_ChildDocument)
-							cell.SetText("Create Copy of Document");
+							cell.SetStdText("Create Copy of Document");
 						else
-							cell.SetText("Copy of Child Document");
+							cell.SetStdText("Copy of Child Document");
 						SetCell(2, -1, &cell);
 
 						GetCell(3, -1, &cell);
 						cell.SetBackColor(m_ColorClick);
 						cell.SetFont(&m_largeFont);
 						if (!m_pSimDoc->m_ChildDocument)
-							cell.SetText("Create Child Document");
+							cell.SetStdText("Create Child Document");
 						else
-							cell.SetText("Create Parent Document");
+							cell.SetStdText("Create Parent Document");
 						SetCell(3, -1, &cell);
 					}
 
@@ -146,11 +146,11 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						GetCell(1, -1, &cell);
 						cell.SetFont(&m_largeFont);
 						if (m_pSimDoc->IsRunning()) {
-							cell.SetText("Multi Run Ongoing");
+							cell.SetStdText("Multi Run Ongoing");
 							cell.SetBackColor(m_ColorChanged);
 						}
 						else {
-							cell.SetText("Completed Multi Run");
+							cell.SetStdText("Completed Multi Run");
 							cell.SetBackColor(m_ColorCompleted);
 						}
 						SetCell(1, -1, &cell);
@@ -161,11 +161,11 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						GetCell(0, -1, &cell);
 						cell.SetFont(&m_largeFont);
 						if (m_pSimDoc->IsRunning()) {
-							cell.SetText("Single Run Ongoing");
+							cell.SetStdText("Single Run Ongoing");
 							cell.SetBackColor(m_ColorChanged);
 						}
 						else {
-							cell.SetText("Completed Single Run");
+							cell.SetStdText("Completed Single Run");
 							cell.SetBackColor(m_ColorCompleted);
 						}
 						SetCell(0, -1, &cell);
@@ -175,11 +175,11 @@ bool MakeSimSheets::Make_RunInfoSheet()
 							GetCell(1, -1, &cell);
 							cell.SetFont(&m_largeFont);
 							if (m_pSimDoc->IsRunning()) {
-								cell.SetText("Single Run Ongoing");
+								cell.SetStdText("Single Run Ongoing");
 								cell.SetBackColor(m_ColorChanged);
 							}
 							else {
-								cell.SetText("Child Document");
+								cell.SetStdText("Child Document");
 								cell.SetBackColor(m_ColorCompleted);
 							}
 							SetCell(1, -1, &cell);
@@ -189,11 +189,11 @@ bool MakeSimSheets::Make_RunInfoSheet()
 							GetCell(1, -1, &cell);
 							cell.SetFont(&m_largeFont);
 							if (m_pSimDoc->IsRunning()) {
-								cell.SetText("Single Run Ongoing");
+								cell.SetStdText("Single Run Ongoing");
 								cell.SetBackColor(m_ColorChanged);
 							}
 							else {
-								cell.SetText("Normal Document");
+								cell.SetStdText("Normal Document");
 								cell.SetBackColor(m_ColorCompleted);
 							}
 							SetCell(1, -1, &cell);
@@ -242,14 +242,14 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						cell.SetBackColor(m_ColorCompleted);
 						cell.SetFont(&m_largeFont);
 						if (m_pSimDoc->m_ChildDocument)
-							cell.SetText("Child Document");
+							cell.SetStdText("Child Document");
 						else
-							cell.SetText("Normal Document");
+							cell.SetStdText("Normal Document");
 					
 						SetCell(2, -1, &cell);
 
 						GetCell(3, -1, &cell);
-						cell.SetText("");
+						cell.SetStdText("");
 						cell.SetBackColor(m_ColorHeading);
 						cell.SetFont(&m_largeFont);
 						
@@ -304,7 +304,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				GetCell(0,4,&cell);
 				cell.SetFont(&m_largeFont);
 				SetRowHeight(4,30);
-				cell.SetText("Simulation Period");
+				cell.SetStdText("Simulation Period");
 				cell.SetBackColor(m_ColorHeading);
 				SetCell(0,4,&cell);
 				//5th row
@@ -319,7 +319,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				cell.SetParam(102);
 				cell.SetTime(0,0,0,1,5,1980);
 				DatumString=PGUtil::StringDatum(m_pSimDoc->RunOpt.longMinStart).c_str();
-				cell.SetText(DatumString);
+				cell.SetStdText(DatumString);
    				pBase=(SimB*)m_pSimDoc->m_RunInfo[2].pBase;
 				if(pBase->GetNumOfHistoryIndex()>0) 
 					cell.SetBackColor(m_ColorHistory);
@@ -332,7 +332,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				//cell.SetFont(&m_largeFont);
 				cell.SetTime(0,0,1,11,5,1980);
 				DatumString=PGUtil::StringDatum(m_pSimDoc->RunOpt.longMinEnd).c_str();
-				cell.SetText(DatumString);
+				cell.SetStdText(DatumString);
 				cell.SetParam(103);
     			pBase=(SimB*)m_pSimDoc->m_RunInfo[3].pBase;
 				if(pBase->GetNumOfHistoryIndex()>0) 
@@ -352,7 +352,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				//cell.SetFont(&m_largeFont);
 				cell.SetTime(0,0,0,1,5,1980);
 				MinPreStart=m_pSimDoc->RunOpt.longMinPreStart;//-PARAMETERS_mp_PRESIMULATIONDAYS*1440;
-				cell.SetText(PGUtil::StringDatum(MinPreStart).c_str());
+				cell.SetStdText(PGUtil::StringDatum(MinPreStart));
 				cell.SetParam(104);
 		       	pBase=(SimB*)m_pSimDoc->m_RunInfo[4].pBase;
 				if(pBase->GetNumOfHistoryIndex()>0) 
@@ -366,7 +366,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				//cell.SetFont(&m_largeFont);
 				cell.SetTime(0, 0, 0, 1, 5, 1980);
 				auto MinPostEnd = m_pSimDoc->RunOpt.longMinPostEnd;//-PARAMETERS_mp_PRESIMULATIONDAYS*1440;
-				cell.SetText(PGUtil::StringDatum(MinPostEnd).c_str());
+				cell.SetStdText(PGUtil::StringDatum(MinPostEnd));
 				cell.SetParam(113);
 				pBase = (SimB*)m_pSimDoc->m_RunInfo[4].pBase;
 				if (pBase->GetNumOfHistoryIndex() > 0)
@@ -396,7 +396,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				SetCell(3,7,&cell);
 
 				GetCell(0,7,&cell);
-				cell.SetText("Additional Settings");
+				cell.SetStdText("Additional Settings");
 				cell.SetBackColor(m_ColorHeading);
 				SetRowHeight(7,30);	
 				cell.SetFont(&m_largeFont);
@@ -414,7 +414,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 					if(pSw!=nullptr) {
 						ivalue=pSw->GetIntValue();
 						GetCell(1,8, &cell); 
-						cell.SetText(pSw->GetOption(ivalue));
+						cell.SetStdText(pSw->GetOption(ivalue));
 						cell.SetCellType(UGCT_DROPLIST);
 						auto n=pSw->GetNumOptions();
 						for(size_t j=0;j<n;j++) {
@@ -449,7 +449,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						QuickSetText(2,8,"Nitrogen Carbon TimeStep");
 						ivalue=pSwNitRes->GetIntValue();
 						GetCell(3,8, &cell); 
-						cell.SetText(pSwNitRes->GetOption(ivalue).c_str());
+						cell.SetStdText(pSwNitRes->GetOption(ivalue));
 						cell.SetCellType(UGCT_DROPLIST);
 						size_t n=pSwNitRes->GetNumOptions();
 						optionlist="";
@@ -544,13 +544,13 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						if(pValFile->GetNumberOfSelectedVal()>0) iCountFiles++;
 					}
 					str=FUtil::STD_ItoAscii(icountTot);
-					cell.SetText(str+ " Selected TSV Validation Variables from "+FUtil::STD_ItoAscii(iCountFiles)+" Files");
+					cell.SetStdText(str+ " Selected TSV Validation Variables from "+FUtil::STD_ItoAscii(iCountFiles)+" Files");
 					//cell.SetBackColor(m_ColorClick);
 					//cell.SetParam(300);
 					SetCell(2,12,&cell);
 					GetCell(3,12,&cell);
 					str=FUtil::STD_ItoAscii(m_pSimDoc->m_ValidationData.GetNumSumVarVariables());
-					cell.SetText(str+ " Selected SV Validation Variables");
+					cell.SetStdText(str+ " Selected SV Validation Variables");
 				//	cell.SetBackColor(m_ColorClick);
 				//	cell.SetParam(301);
 					SetCell(3,12,&cell);
@@ -564,14 +564,14 @@ bool MakeSimSheets::Make_RunInfoSheet()
 				// m_pSimDoc->
 
 					str=FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_NumBayesPar())+"/"+FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_NumTotalPar())+ " Selected Bayesian/Total Number of Multi Run Parameters";
-					cell.SetText(str);
+					cell.SetStdText(str);
 					//cell.SetBackColor(m_ColorClick);
 					cell.SetParam(400);
 					SetCell(0,13,&cell);
 
 					GetCell(2,13,&cell);
 					str=FUtil::STD_ItoAscii(m_pSimDoc->m_F_Array.size())+ " Selected Input Files";
-					cell.SetText(str);
+					cell.SetStdText(str);
 					SetCell(2,13,&cell);
 					JoinCells(2,13,3,13);
 
@@ -579,7 +579,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 					QuickSetText(0,14,"Short Id Code");
 					GetCell(1,14, &cell); 
 					cell.SetMask("aaa");
-					cell.SetText(m_pSimDoc->m_DocFile2.m_RunId.c_str());
+					cell.SetStdText(m_pSimDoc->m_DocFile2.m_RunId);
 
 					cell.SetParam(110);
     				pBase=(SimB*)m_pSimDoc->m_RunInfo[9].pBase;
@@ -591,7 +591,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 					JoinCells(2,14,3,14);
 					QuickSetText(0,15,"Comment");
 					GetCell(1,15, &cell); 
-					cell.SetText(m_pSimDoc->m_DocFile2.m_Comments.c_str());
+					cell.SetStdText(m_pSimDoc->m_DocFile2.m_Comments);
 					cell.SetParam(111);
     				pBase=(SimB*)m_pSimDoc->m_RunInfo[10].pBase;
 					if(pBase->GetNumOfHistoryIndex()>0) 
@@ -602,12 +602,12 @@ bool MakeSimSheets::Make_RunInfoSheet()
 					JoinCells(1,15,3,15);
 					QuickSetText(0,16,"Origin of Document");
 					GetCell(1,16, &cell); 
-					cell.SetText(m_pSimDoc->m_DocFile2.m_OriginFileName.c_str());
+					cell.SetStdText(m_pSimDoc->m_DocFile2.m_OriginFileName);
 					SetCell(1,16,&cell);
 					JoinCells(1,16,3,16);
 
 					GetCell(0,17,&cell);
-					cell.SetText("Data Base Selections");
+					cell.SetStdText("Data Base Selections");
 					cell.SetBackColor(m_ColorHeading);
 					cell.SetFont(&m_largeFont);
 					SetCell(0,17,&cell);
@@ -621,7 +621,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 						str="";
 						GetCell(0,19+i,&cell);
 						str=m_pSimDoc->DB_GetNames(i);
-						cell.SetText(str);
+						cell.SetStdText(str);
 						cell.SetParam(500+i);
 						if(m_pSimDoc->IsFinishedSimulation())
 							cell.SetBackColor(m_NoColor);
@@ -648,7 +648,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 					// File info for Finished Simulations
 					if(m_pSimDoc->IsFinishedSimulation()) {
 						GetCell(0,29,&cell);
-						cell.SetText("Output Files from simulation");
+						cell.SetStdText("Output Files from simulation");
 						cell.SetBackColor(m_ColorHeading);
 						cell.SetFont(&m_largeFont);
 						SetCell(0,29,&cell);
@@ -762,7 +762,7 @@ bool MakeSimSheets::Make_RunInfoSheet()
 								}
 								cell.SetCellType(UGCT_DROPLIST);
 								cell.SetLabelText(str);
-								cell.SetText(str);
+								cell.SetStdText(str);
 								SetCell(1,35,&cell);
 								
 								QuickSetText(0,35,FUtil::STD_ItoAscii(ifiles)+" Attatched Simulations:");
@@ -923,7 +923,7 @@ bool MakeSimSheets::Make_SwitchesSheet()
 					else {
 						cell.SetReadOnly(FALSE);
 					}
-					cell.SetText(test);
+					cell.SetStdText(test);
 					if(pSw->GetNumOfHistoryIndex()>0) {
 						 cell.SetBackColor(m_ColorHistory);
 					}
@@ -961,7 +961,8 @@ bool MakeSimSheets::Make_ParameterSheet()
 	CUGCell cell; 
 	string heading, number, test;
 
-	string Name, Group, Type, Unit, PrevGroup,PrevGroup2, DatumString;
+	string Name, Group, Type,  PrevGroup,PrevGroup2, DatumString;
+	string_view unit;
 	Ps* pCP;
 	Doc *pDoc;
 	float fvalue, DefValue,fmin,fmax;
@@ -1056,7 +1057,7 @@ bool MakeSimSheets::Make_ParameterSheet()
 			continue;
 		Name=pCP->GetName().c_str();
 		Group=pCP->GetGroup();
-		Unit=pCP->GetUnit().c_str();
+		unit=pCP->GetUnit();
 		fmin=pCP->GetMinValue();
 		fmax=pCP->GetMaxValue();
 		Ps* pCP1=(Ps*)pCP;
@@ -1115,7 +1116,7 @@ bool MakeSimSheets::Make_ParameterSheet()
 		QuickSetNumber(col,i, DefValue); col++;
 		QuickSetNumber(col,i, fmin); col++;
 		QuickSetNumber(col,i, fmax); col++;
-		QuickSetText(col,i, Unit); col++;
+		QuickSetText(col,i, unit); col++;
 		if(GTitle!="") {
 
 				size_t no_func;
@@ -1138,7 +1139,7 @@ bool MakeSimSheets::Make_ParameterSheet()
 					}
 					txt=pCP1->GetViewTitle(pCP1->GetSelectedFunc());
 					cell.SetLabelText(optionlist);
-					cell.SetText(txt.c_str());
+					cell.SetStdText(txt);
 					SetCell(col,i, &cell);
 				}
 				else {
@@ -1346,7 +1347,7 @@ bool MakeSimSheets::Make_HistorySheet()
 						QuickSetText(3,irow, Name);
 						GetCell(4,irow,&cell);
 						cell.SetCellType(UGCT_NORMAL);
-						cell.SetText( strvalue);
+						cell.SetStdText( strvalue);
 						SetCell(4,irow,&cell);
 
 						//QuickSetText(4,irow, strvalue);
@@ -1645,7 +1646,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 											if(fvalue>MISSING) 
 												cell.SetNumber(fvalue);
 											else 
-												cell.SetText("");
+												cell.SetStdText("");
 											cell.SetReadOnly(TRUE);
 											SetCell(nColValid+1,newline+1,&cell);
 											GetCell(nColValid+1,newline+2,&cell);
@@ -1653,13 +1654,13 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 											if(fvalue>MISSING) 
 												cell.SetNumber(fvalue);
 											else 
-												cell.SetText("");
+												cell.SetStdText("");
 											cell.SetReadOnly(TRUE);
 											SetCell(nColValid+1,newline+2,&cell);
 
 											GetCell(nColValid+1,newline+3,&cell);
 											cell.SetBackColor(m_ColorHeading);
-											cell.SetText(pCPt->GetUnit().c_str());
+											cell.SetStdText(string(pCPt->GetUnit()));
 											cell.SetReadOnly(TRUE);
 											SetCell(nColValid+1,newline+3,&cell);
 											nColValid++;
@@ -1697,7 +1698,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 
 							Doc *pDoc;
 							GetCell(nColValid,newline,&cell);
-							cell.SetText("Parameter");
+							cell.SetStdText("Parameter");
 							cell.SetReadOnly(TRUE);
 							cell.SetBackColor(m_ColorHeading);
 							SetCell(nColValid,newline,&cell);
@@ -1716,16 +1717,16 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 								GetCell(nColValid+j+1+numdoc,newline,&cell);
 								switch (j) {
 									case 0:
-										cell.SetText("Default");
+										cell.SetStdText("Default");
 										break;
 									case 1:
-										cell.SetText("Min");
+										cell.SetStdText("Min");
 										break;
 									case 2:
-										cell.SetText("Max");
+										cell.SetStdText("Max");
 										break;
 									case 3:
-										cell.SetText("Unit");
+										cell.SetStdText("Unit");
 										break;
 								}
 								cell.SetReadOnly(TRUE);
@@ -1805,7 +1806,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 												QuickSetNumber(nColValid+1+numdoc+j, newline, fval1);
 											}
 										}
-										QuickSetText(nColValid+4+numdoc, newline, pCPt->GetUnit().c_str());
+										QuickSetText(nColValid+4+numdoc, newline, pCPt->GetUnit());
 										newline++;
 									}
 									
@@ -2030,10 +2031,10 @@ bool MakeSimSheets::Make_ModelFileSheet()
 							QuickSetNumber(5,ind, pCPG->GetNumRepititions());
 							GetCell(6,i,&cell);
 							cell.SetTime(0,0,0,1,5,1980);
-							cell.SetText(PGUtil::StringDatum(pgst).c_str());
+							cell.SetStdText(PGUtil::StringDatum(pgst));
 							cell.SetMask("0000-00-00 00:00");
 							SetCell(6,ind,&cell);
-							cell.SetText(PGUtil::StringDatum(pgend).c_str());
+							cell.SetStdText(PGUtil::StringDatum(pgend));
 							SetCell(7,ind,&cell);
 							if(nodef->GetHide()!=TRUE) {
 								//pCPG->GetFileDescription(str);
@@ -2053,17 +2054,17 @@ bool MakeSimSheets::Make_ModelFileSheet()
 										ind++;
 										QuickSetNumber(-1,ind,j+1);
 										GetCell(0,ind,&cell);
-										cell.SetText(pCPG->GetVarName(j+1).c_str());
+										cell.SetStdText(pCPG->GetVarName(j+1));
 										cell.SetParam(2000);
 										cell.SetBackColor(pCPG->GetColor(j+1));
 										SetCell(0,ind,&cell);
 										GetCell(1,ind,&cell);
-										cell.SetText(string(pCPG->GetVarUnit(j+1)));
+										cell.SetStdText(string(pCPG->GetVarUnit(j+1)));
 										cell.SetParam(2000);
 										cell.SetBackColor(pCPG->GetColor(j+1));
 										SetCell(1,ind,&cell);
 										GetCell(2,ind,&cell);
-										cell.SetText(pCPG->GetVarId(j+1).c_str());
+										cell.SetStdText(pCPG->GetVarId(j+1));
 										cell.SetParam(2000);
 										cell.SetBackColor(pCPG->GetColor(j+1));
 										SetCell(2,ind,&cell);
@@ -2098,7 +2099,7 @@ bool MakeSimSheets::Make_ModelFileSheet()
 					for (size_t i = 0; i < m_pSimDoc->m_ValsumFlexFiles.size(); i++) {
 						ind++;
 						GetCell(0, ind, &cell);
-						cell.SetText(m_pSimDoc->m_ValsumFlexFiles[i].FileName);
+						cell.SetStdText(m_pSimDoc->m_ValsumFlexFiles[i].FileName);
 						cell.SetParam(2200+i);
 						cell.SetBackColor(m_ColorClick);
 						SetCell(0, ind, &cell);
@@ -2117,7 +2118,7 @@ bool MakeSimSheets::Make_ModelFileSheet()
 						}
 						cell.SetParam(2200 + i);
 						cell.SetLabelText(optionlist);
-						cell.SetText(m_pSimDoc->m_ValsumFlexFiles[i].IDVarKey);
+						cell.SetStdText(m_pSimDoc->m_ValsumFlexFiles[i].IDVarKey);
 						cell.SetReadOnly(FALSE);
 						SetCell(2, ind, &cell);
 
@@ -2144,7 +2145,7 @@ bool MakeSimSheets::Make_ModelFileSheet()
 						ind++;
 						for (size_t icol = 0; icol < 7; icol++) UnJoinCells(icol, ind);
 						GetCell(0, ind, &cell);
-						cell.SetText(koll);
+						cell.SetStdText(koll);
 						cell.SetBackColor(m_NoColor);
 						SetCell(0, ind, &cell);
 	
@@ -2176,7 +2177,7 @@ bool MakeSimSheets::Make_ModelFileSheet()
 
 						koll = m_pSimDoc->m_FCSV_Array[i]->GetStrValue();
 						GetCell(1, ind, &cell);
-						cell.SetText(koll);
+						cell.SetStdText(koll);
 						cell.SetParam(1100 + i);
 						cell.SetBackColor(m_ColorClick);
 						SetCell(1, ind, &cell);
@@ -2461,7 +2462,7 @@ bool MakeSimSheets::Make_OutputSheet()
 						OutSingle *pSingle=nullptr;
 						OutVector *pVector=nullptr;
 						size_t num_flags=1;
-						CString unit;
+						string_view unit;
 
 						pVector=dynamic_cast<OutVector*>(pSw);
 						size_t ig=pSw->GetGroupNo();
@@ -2471,13 +2472,13 @@ bool MakeSimSheets::Make_OutputSheet()
 							else
 								num_flags=pVector->GetNumberOfSelectedFlags();			
 							pSingle=nullptr;
-							unit=pVector->GetUnit().c_str();
+							unit=pVector->GetUnit();
 						}
 						else {
 							num_flags=1;
 							pSingle=dynamic_cast<OutSingle*>(pSw);
-							if(pSingle!=nullptr)
-							unit=pSingle->GetUnit().c_str();
+							if (pSingle != nullptr)
+							unit=pSingle->GetUnit();
 						}
 						if(pSw->Is_Vector()) {
 								selected_Single=pVector->GetStoreFlag(ii);
@@ -2533,7 +2534,7 @@ bool MakeSimSheets::Make_OutputSheet()
 									process = string(pSw->GetProcessName());
 								else
 									process = string(pSw->GetElementName());
-								cell.SetText(process);
+								cell.SetStdText(process);
 								SetCell(2, newline, &cell);
 
 
@@ -4101,7 +4102,7 @@ bool MakeSimSheets::Make_ChartListSheet()
 							for(size_t ij=0; ij<vvp.size();ij++) {
 								pPar=vvp[ij].pBase;
 								test=pPar->GetName();
-								unit=pPar->GetUnit().c_str();
+								unit=pPar->GetUnit();
 								test=pPar->GetName().c_str();
 
 								for(int ii=0;ii<((OutVector*)pPar)->GetNumberOfSelectedFlags();ii++) {
@@ -4547,7 +4548,7 @@ bool MakeSimSheets::Make_ChartListSheet()
 							for(size_t ij=0; ij<vvp.size();ij++) {
 								pPar=vvp[ij].pBase;
 								test=pPar->GetName().c_str();
-								unit=pPar->GetUnit().c_str();
+								unit=pPar->GetUnit();
 								test=pPar->GetName().c_str();
 
 								for(int ii=0;ii<((OutVector*)pPar)->GetNumberOfSelectedFlags();ii++) {
@@ -4892,7 +4893,7 @@ bool MakeSimSheets::Make_MultiRunListSheet()
 	else if(m_pSimDoc->MR_Get_NumTotalPar()>1&&m_pSimDoc->IsFinishedSimulation()&&m_ShowCoVarRes) {
 		// CoVariance of parameters List from Ready MultiRuns
 		//QuickSetBackColor(-1,-1,m_ColorClick);
-		//QuickSetText(-1,-1,"-");
+		//QuickSetText(-1,-1,UNIT_TYPES::NO_UNIT);
 		Multi_Post_CoVarList();
 		RedrawAll();
 	}
@@ -4957,11 +4958,11 @@ size_t MakeSimSheets::Val_Post_Header() {
 				GetCell(3, -1, &cell);
 				cell.SetBackColor(m_ColorClick);
 				if (m_pUtil->GetResidualRepresentation() == 0)
-					cell.SetText("Simulated Value");
+					cell.SetStdText("Simulated Value");
 				else if (m_pUtil->GetResidualRepresentation() == 1)
-					cell.SetText("Residual (Sim-Meas)");
+					cell.SetStdText("Residual (Sim-Meas)");
 				else if (m_pUtil->GetResidualRepresentation() == 2)
-					cell.SetText("Log Likelihood Value");
+					cell.SetStdText("Log Likelihood Value");
 				SetCell(3, -1, &cell);
 
 				GetCell(4, -1, &cell);
@@ -4970,11 +4971,11 @@ size_t MakeSimSheets::Val_Post_Header() {
 					string text = FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_ActualEnsemble + 1) + " (";
 					text += FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_AcceptedIdString.size()) + ")";
 					text += " Ensembles";
-					cell.SetText(text);
+					cell.SetStdText(text);
 				}
 				else {
 					cell.SetBackColor(m_NoColor);
-					cell.SetText("Ensemble");
+					cell.SetStdText("Ensemble");
 				}
 				SetCell(4, -1, &cell);
 				QuickSetText(5,-1, "Chart");
@@ -5189,7 +5190,7 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 					if(testV)
 						QuickSetText(5,i,"x");
 					else
-						QuickSetText(5,i,"-");*/
+						QuickSetText(5,i,UNIT_TYPES::NO_UNIT);*/
 
 					GetCell(6,i,&cell);	
 
@@ -5201,32 +5202,32 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 							str = FUtil::STD_ItoAscii(n);
 							if (m_pSimDoc->m_ValSum_Array[i].FlexSumVar&&m_pSimDoc->m_ValSum_Array[i].ObsScaling) {
 								str += " Values are Scaled to match";
-								cell.SetText(str);
+								cell.SetStdText(str);
 
 
 								if (m_pSimDoc->m_ValSum_Array[i].FlexSumVar&&m_pSimDoc->m_ValSum_Array[i].ObsScaling) {
-									cell.SetText("Values are Scaled to macth");
+									cell.SetStdText("Values are Scaled to macth");
 
 								}
 								else if (m_pSimDoc->m_ValSum_Array[i].FlexSumVar) {
-									cell.SetText("Original Measured Values");
+									cell.SetStdText("Original Measured Values");
 
 								}
 								else if (m_pSimDoc->m_ValSum_Array[i].FlexSumVar) {
-									cell.SetText("Original Measured Values");
+									cell.SetStdText("Original Measured Values");
 
 								}
 
 							}
 						}
 						else
-							cell.SetText("1");
+							cell.SetStdText("1");
 					}
 					else {
 						if (m_pSimDoc->IsMultiSimulation()) {
 							stat_post = m_pSimDoc->m_MStorage.GetValidStat(i, true, m_pSimDoc->m_MStorage.m_ActualEnsemble, 0);
 							if(stat_post.Mean==MISSING)
-								cell.SetText("0");
+								cell.SetStdText("0");
 							else
 								cell.SetNumber(m_pSimDoc->m_ValidationData.GetValn(i));
 
@@ -6295,7 +6296,7 @@ CUGCell cell;
 
 				}
 				else {
-						cell.SetText("");
+						cell.SetStdText("");
 						cell.SetBackColor(m_NoColor);
 				}
 				SetCell(ii,i-numpar,&cell);
@@ -6416,7 +6417,7 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 					if(i3< m_pSimDoc->m_Val_Array[i].Sum_of_Others.size()-1) test += ",";
 				}
 				GetCell(6, i, &cell);
-				cell.SetText(test);
+				cell.SetStdText(test);
 				cell.SetCellType(UGCELL_STRING_SET);
 				SetCell(6, i, &cell);
 
@@ -6431,7 +6432,7 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 				//QuickSetText(4,i,"x");
 				else
 					cell.SetBool(FALSE);
-				//QuickSetText(4,i,"-");
+				//QuickSetText(4,i,UNIT_TYPES::NO_UNIT);
 				SetCell(6, i, &cell);
 
 				GetCell(7, i, &cell);
@@ -6443,7 +6444,7 @@ void MakeSimSheets::Val_Prior_Data(size_t NumLines, size_t NumLinesSV) {
 				//QuickSetText(4,i,"x");
 				else
 					cell.SetBool(FALSE);
-				//QuickSetText(4,i,"-");
+				//QuickSetText(4,i,UNIT_TYPES::NO_UNIT);
 				SetCell(7, i, &cell);
 
 
@@ -6668,7 +6669,7 @@ CString str;
 					
 					// Number of parameters
 					GetCell(1, ii_count, &cell);
-					cell.SetText(pnames[i]);
+					cell.SetStdText(pnames[i]);
 					cell.SetParam(1000 + iens);
 					cell.SetReadOnly(TRUE);
 					SetCell(1, ii_count, &cell);
@@ -6858,7 +6859,7 @@ void MakeSimSheets::Multi_Post_CoVarList() {
 						cell.SetBool(FALSE);
 						float v=m_pSimDoc->MR_Get_BayesCoCor(ii,i);
 						string txt=FUtil::STD_FtoAscii(v);
-						cell.SetText(txt.c_str());
+						cell.SetStdText(txt);
 						//QuickSetNumber(i,ii,v);
 						if(v<-0.8) cell.SetBackColor(RGB(100,100,240));
 						if(v<-0.4&&v>=-0.8) cell.SetBackColor(RGB(30,240,240));
@@ -6868,7 +6869,7 @@ void MakeSimSheets::Multi_Post_CoVarList() {
 					}
 					else {
 						cell.SetCellType(UGCT_NORMAL);
-						cell.SetText("");
+						cell.SetStdText("");
 
 
 					}
@@ -7051,7 +7052,7 @@ void MakeSimSheets::Multi_Post_NormalList() {
 				}
 				else if (ifn == 3) {
 					GetCell(ifn, icount, &cell);
-					cell.SetText(m_pSimDoc->MR_GetMethodName(i + 1, ii + 1).c_str());
+					cell.SetStdText(m_pSimDoc->MR_GetMethodName(i + 1, ii + 1));
 					cell.SetCellType(UGCT_DROPLIST);
 					CString optionlist;
 					optionlist = "Linear\nLogarithmic\nStochastic Linear\nStochastic Log\n";
@@ -7498,7 +7499,7 @@ void MakeSimSheets::Multi_Post_SensitivityTest() {
 					}
 					else if (ifn == 3) {
 						GetCell(ifn, icount, &cell);
-						cell.SetText(m_pSimDoc->MR_GetMethodName(i + 1, ii + 1).c_str());
+						cell.SetStdText(m_pSimDoc->MR_GetMethodName(i + 1, ii + 1));
 						cell.SetCellType(UGCT_DROPLIST);
 						CString optionlist;
 						optionlist = "Linear\nLogarithmic\nStochastic Linear\nStochastic Log\n";
@@ -7668,17 +7669,17 @@ void MakeSimSheets::Multi_Post_SensitivityTest() {
 				auto row=m_pProp->m_ConstrainProp[i].IndepMultiPar;
 
 				GetCell(7, row, &cell);
-				cell.SetText(FUtil::STD_FtoAscii(m_pProp->m_ConstrainProp[i].MinRangeValue));
+				cell.SetStdText(FUtil::STD_FtoAscii(m_pProp->m_ConstrainProp[i].MinRangeValue));
 				SetCell(7, row, &cell);
 				RedrawCell(7,row);
 				GetCell(8, row, &cell);
-				cell.SetText(FUtil::STD_FtoAscii(m_pProp->m_ConstrainProp[i].MaxRangeValue));
+				cell.SetStdText(FUtil::STD_FtoAscii(m_pProp->m_ConstrainProp[i].MaxRangeValue));
 				SetCell(8, row, &cell);
 				RedrawCell(8, row);
 
 				auto nrejected = reject(i);
 				GetCell(9, row, &cell);
-				cell.SetText(FUtil::STD_ItoAscii(orignum-nrejected));
+				cell.SetStdText(FUtil::STD_ItoAscii(orignum-nrejected));
 				SetCell(9, row, &cell);
 				RedrawCell(9, row);
 				
@@ -7814,7 +7815,7 @@ void MakeSimSheets::Multi_Post_AllEnsembleList() {
 						}
 						else if (ifn == 3) {
 							GetCell(ifn, icount, &cell);
-							cell.SetText(m_pSimDoc->MR_GetMethodName(i + 1, ii + 1).c_str());
+							cell.SetStdText(m_pSimDoc->MR_GetMethodName(i + 1, ii + 1));
 							cell.SetCellType(UGCT_DROPLIST);
 							CString optionlist;
 							optionlist = "Linear\nLogarithmic\nStochastic Linear\nStochastic Log\n";
@@ -8211,7 +8212,7 @@ CString test;
 					if(ifn==0) {
 						GetCell(ifn,icount, &cell); 
 
-						cell.SetText(FUtil::STD_ItoAscii(i+1));
+						cell.SetStdText(FUtil::STD_ItoAscii(i+1));
 						cell.SetCellType(UGCT_DROPLIST);
 						cell.SetLabelText(dimoptionlist);
 						if(m_pSimDoc->IsFinishedSimulation())
@@ -8232,7 +8233,7 @@ CString test;
 						SimB *pPar=m_pSimDoc->MR_Get_pPar(i+1,ii+1);
 						if(m_pSimDoc->MR_GetParGroup(i+1,ii+1)=="DataBase"){
 							auto tst=((CDB*)pPar)->GetName();
-							cell.SetText(tst);
+							cell.SetStdText(tst);
 							CString optionlistBase;
 							for(int ix=0;ix<10;ix++) 
 								optionlistBase+=m_pSimDoc->DB_GetNames(ix).c_str();
@@ -8250,7 +8251,7 @@ CString test;
 						//test=m_pSimDoc->MR_GetParName(i+1,ii+1);
 							if(m_pSimDoc->MR_GetTabIndex(i+1,ii+1)!= std::string::npos) 
 								tst+="("+FUtil::STD_ItoAscii(m_pSimDoc->MR_GetTabIndex(i+1,ii+1)+1)+")";
-							cell.SetText(tst);
+							cell.SetStdText(tst);
 							if(m_pSimDoc->IsFinishedSimulation())
 								cell.SetReadOnly(TRUE);
 							else
@@ -8269,7 +8270,7 @@ CString test;
 									optionlistBase += "\n";
 								}
 								auto tst= ((CDB*)pPar)->MR_GetKeySelection(((CDB*)pPar)->GetLastSelectedRepetition());
-								cell.SetText(tst);
+								cell.SetStdText(tst);
 								cell.SetCellType(UGCT_DROPLIST);
 								cell.SetLabelText(optionlistBase);
 							}
@@ -8293,7 +8294,7 @@ CString test;
 						}
 						else {
 							GetCell(ifn,icount, &cell); 
-							cell.SetText(m_pSimDoc->MR_GetMethodName(i+1,ii+1).c_str());
+							cell.SetStdText(m_pSimDoc->MR_GetMethodName(i+1,ii+1));
 							cell.SetCellType(UGCT_DROPLIST);
 							CString optionlist;
 							optionlist="Linear\nLogarithmic\nStochastic Linear\nStochastic Log\n";

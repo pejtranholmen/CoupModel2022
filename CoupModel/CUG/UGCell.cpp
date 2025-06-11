@@ -364,8 +364,13 @@ SetText
 		UG_ERROR	fail
 
 *********************************************/
-int CUGCell::SetText(std::string txt) {
-	CString stxt(txt.c_str());
+int CUGCell::SetStdText(std::string txt) {
+	CString stxt(txt.data(),static_cast<int>(txt.size()));
+	return SetText(stxt);
+
+}
+int CUGCell::SetViewText(std::string_view txt) {
+	CString stxt(txt.data(), static_cast<int>(txt.size()));
 	return SetText(stxt);
 
 }

@@ -332,7 +332,7 @@ bool PGCug::OnReadFileDataToGrid(CPG *pCPG)
 						QuickSetNumber(i+1,ii,v);
 					else {
 						//GetCell(i+1,ii,&cell);
-						//cell.SetText("xxx");
+						//cell.SetStdText("xxx");
 						//cell.SetParam(2000);
 						//SetCell(i+1,ii,&cell);
 					}
@@ -759,7 +759,7 @@ void PGCug::Make_DataHeader()
 					string s;
 					s=pCPG->GetVarId(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i));
 					FUtil::trim(s);
-					str+="-";str+=s.c_str();
+					str+="-"; str += s.c_str();
 					QuickSetText(i+1,-1,str);
 				}
 				str="V:"+FUtil::STD_ItoAscii(pCPG->GetViewVariable(i));
@@ -768,7 +768,7 @@ void PGCug::Make_DataHeader()
 					joinv.push_back(i+1);
 					lastrep=pCPG->GetViewVariable(i);
 				}
-				s=pCPG->GetVarName(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i));	FUtil::trim(s); str+="-";str+=s.c_str();
+				s=pCPG->GetVarName(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i));	FUtil::trim(s); str+="-";
 				QuickSetText(i+1,-2,str);
 				if(m_pPG->GetToBeCalc(i))
 					QuickSetBackColor(i+1,-1,m_ColorClick);
@@ -790,7 +790,7 @@ void PGCug::Make_DataHeader()
 					QuickSetText(i+1,-2,str);
 				}
 				str="V:"+FUtil::STD_ItoAscii(pCPG->GetViewVariable(i));
-				string s; s=pCPG->GetVarName(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i));	FUtil::trim(s); str+="-"; str+=s.c_str();
+				string s; s=pCPG->GetVarName(pCPG->GetViewVariable(i), pCPG->GetViewRepetition(i));	FUtil::trim(s); str+="-"; 
 				QuickSetText(i+1,-1,str);
 
 				if(m_pPG->GetToBeCalc(i))

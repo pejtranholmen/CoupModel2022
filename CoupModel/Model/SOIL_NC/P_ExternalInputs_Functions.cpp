@@ -58,7 +58,7 @@ bool P_ExternalInputs_Functions::Def()
 	pPs = new Ps(&Dep_P_DryRate, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pPs, "Dep P DryRate", 0.000074,UNIT_TYPES::MASSFLOW_UNIT, "Phosphorus >= 1|N Deposition >0", 0., 0.1);
 	pPs = new Ps(&P_FertDiss_k, datatype::SOILSURFACE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-	Define(pPs, "P Fert Dis k", 0.015, "-", " Phosphorus >= 1|N Fertilization >=1", 0.001, 1.0);
+	Define(pPs, "P Fert Dis k", 0.015, UNIT_TYPES::NO_UNIT, " Phosphorus >= 1|N Fertilization >=1", 0.001, 1.0);
 
 
 

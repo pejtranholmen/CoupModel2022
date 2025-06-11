@@ -12,7 +12,7 @@ D::D(vector<double> *target,NE *ne,enum datatype data, enum elements elem, enum 
 	pNE=ne;
 	;
 }
-void D::Def(int ModuleNo, std::string name, std::vector<double> init, std::string unit, std::string conditions)
+void D::Def(int ModuleNo, std::string name, std::vector<double> init, std::string_view unit, std::string conditions)
 {
 
 	SetValue(init);

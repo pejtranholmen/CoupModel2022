@@ -208,7 +208,7 @@ void CValidTimeCug::OnUpdate()
 
 		startlegend=4;
 		cols=7;
-		if(m_YLabel1!="-"){
+		if(m_YLabel1!="-") {
 			rows++;
 		}
 		if(m_YLabel2!="-") {
@@ -384,7 +384,7 @@ void CValidTimeCug::OnSetup()
 					}
 						QuickSetText(1,newline, pSw->GetGroup());
 						GetCell(2,newline,&cell);
-						cell.SetText(test);
+						cell.SetStdText(test);
 						cell.SetParam(600+isuper);
 						SetCell(2,newline, &cell);
 

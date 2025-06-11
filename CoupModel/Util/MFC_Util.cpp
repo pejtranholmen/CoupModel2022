@@ -273,7 +273,7 @@ MFC_Util::~MFC_Util(void)
 
 	ret=float(tal);
 	ret=ret*Exp(exp);
-	if (v.Left(1)=="-") {
+	if (v.Left(1)== "-") {
 		ret=ret-(float) dec*Exp(-decnumbers)*Exp(exp);
 	}
 	else ret=ret+(float) dec*Exp(-decnumbers)*Exp(exp);
@@ -362,7 +362,7 @@ CString str;
 	if (x<0) ax=-x;	else ax=x;
 	tmp=(char)(ax%10+48);
 	if (ax<10) {
-		if (x<0) tmp=_T("-")+tmp;
+		if (x<0) tmp=_T("-") + tmp;
 		return tmp;}
 	return 	ItoAscii(x/10)+tmp;
 }
@@ -381,7 +381,7 @@ CString str;
 	for (int i=0;i<v.GetLength();i++) {
 		tmpch=v.GetAt(i);
 		if ((tmpch>=noll &&  tmpch<=nio) 
-			|| tmpch=="-" || tmpch=="E"
+			|| tmpch== "-" || tmpch=="E"
 			|| tmpch==".")
 			tmp+=tmpch;
 	}

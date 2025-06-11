@@ -30,7 +30,7 @@ public:
 	std::string GetStrValue() const {return m_FileName;};
 	std::string GetDBStrValue() {return dbstrvalue;};
 	void SetDBStrValue(std::string str) {dbstrvalue=str;};
-	std::string GetDataDescription(size_t index) {if(index<m_DataDescription.size())  return m_DataDescription[index]; return "-";};
+	std::string GetDataDescription(size_t index) { if (index < m_DataDescription.size())  return m_DataDescription[index]; return "-"; };
 	bool    RemoveDataDescription(size_t);
 	
 	int		GetValNumber(size_t index) {if(index<m_ValidationNumbers.size())  return m_ValidationNumbers[index]; else return -1;};

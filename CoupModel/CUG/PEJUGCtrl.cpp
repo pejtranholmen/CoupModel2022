@@ -39,7 +39,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 			JoinCells(button.Col_start, i + button.Row, button.Col_end, i + button.Row);
 			GetCell(button.Col_start, i + button.Row, &cell);
 			cell.SetBackColor(m_ColorClick);
-			cell.SetText(string(button.VectorNames[i]));
+			cell.SetStdText(string(button.VectorNames[i]));
 			cell.SetParam(button.Param);
 			SetCell(button.Col_start, i + button.Row, &cell);
 			QuickSetText(-1, i + button.Row, FUtil::STD_ItoAscii(i + 1));
@@ -48,7 +48,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 			JoinCells(button.Col_start+i,  button.Row, button.Col_end+i, button.Row);
 			GetCell(button.Col_start+i, button.Row, &cell);
 			cell.SetBackColor(m_ColorInfo);
-			cell.SetText(string(button.VectorNames[i]));
+			cell.SetStdText(string(button.VectorNames[i]));
 			cell.SetParam(button.Param);
 			SetCell(button.Col_start+i, button.Row, &cell);
 		};
@@ -70,7 +70,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 		else
 			cell.SetReadOnly(false);
 
-		cell.SetText(string(button.Text));
+		cell.SetStdText(string(button.Text));
 		cell.SetParam(button.Param);
 		SetCell(button.Col_start + ShiftPos, button.Row, &cell);
 
@@ -86,7 +86,7 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 				GetCell(button.Col_start+i, button.Row, &cell);
 			}
 			cell.SetCellType(UGCT_CHECKBOX);
-			cell.SetText(string(button.VectorNames[i]));
+			cell.SetStdText(string(button.VectorNames[i]));
 			cell.SetLabelText(string(button.VectorNames[i]));
 			cell.SetParam(button.Param);
 			if (button.VectorState.size() > i) {
@@ -109,9 +109,9 @@ void PEJUGCtrl::SetCellClickButton(CLICK_BUTTON button, size_t ShiftPos, size_t 
 			JoinCells(button.Col_start + ShiftPos, button.Row, button.Col_end + ShiftPos, button.Row);
 		GetCell(button.Col_start + ShiftPos, button.Row , &cell);
 		if (!button.NormalState)
-				cell.SetText(string(button.TextOptional));
+				cell.SetStdText(string(button.TextOptional));
 		else
-			cell.SetText(string(button.Text));
+			cell.SetStdText(string(button.Text));
 		
 		if (button.Type == INFOONLYBUTTON) {
 			cell.SetBackColor(m_ColorInfo);
@@ -186,7 +186,7 @@ void PEJUGCtrl::SetPGFileColumnsInfo(CPG *pPG, int col_start,int NumCol, long ro
 			cell.SetParam(Param);
 		else
 			cell.SetParam(Param);
-		cell.SetText(pPG->GetFileName());
+		cell.SetStdText(pPG->GetFileName());
 		cell.SetBackColor(m_ColorClick);
 		SetCell(col_start, row, &cell);
 		col_start++;
@@ -203,7 +203,7 @@ void PEJUGCtrl::SetPGFileColumnsInfo(CPG *pPG, int col_start,int NumCol, long ro
 	GetCellIndirect(col_start+1, row, &cell); cell.SetNumber(pPG->GetNumVariables()); cell.SetParam(ParEdit); SetCell(col_start+1, row, &cell);
 	GetCellIndirect(col_start+2, row, &cell); cell.SetNumber(pPG->GetNumRepititions()); cell.SetParam(ParEdit); SetCell(col_start+2, row, &cell);
 	if (!OnlyStruc) {
-		GetCellIndirect(col_start + 3, row, &cell); cell.SetText(pPG->GetStartDate()); cell.SetParam(ParEdit); SetCell(col_start + 3, row, &cell);
+		GetCellIndirect(col_start + 3, row, &cell); cell.SetStdText(pPG->GetStartDate()); cell.SetParam(ParEdit); SetCell(col_start + 3, row, &cell);
 		QuickSetText(col_start + 4, row, pPG->GetEndDate());
 	}
 	if (NumCol == 7) {
@@ -219,7 +219,7 @@ void PEJUGCtrl::SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos,
 	GetCellIndirect(button.Col_start, button.Row, &cell);
 	cell.SetParam(button.Param);
 	cell.SetBackColor(m_ColorClick);
-	cell.SetText(string(button.Text));
+	cell.SetStdText(string(button.Text));
 	SetCell(button.Col_start, button.Row, &cell);
 	auto ParEdit = m_DoubleClickEdit.param;
 	bool ReadOnly = false;
@@ -237,7 +237,7 @@ void PEJUGCtrl::SetPGFileColumnsInfoButton(CLICK_BUTTON button, size_t shiftPos,
 
 
 	if (NumCol>4) {
-		GetCellIndirect(button.Col_start + 4, button.Row, &cell); cell.SetText(button.pPG->GetStartDate()); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row, &cell);
+		GetCellIndirect(button.Col_start + 4, button.Row, &cell); cell.SetStdText(button.pPG->GetStartDate()); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row, &cell);
 		QuickSetText(button.Col_start + 5, button.Row, button.pPG->GetEndDate());
 	}
 
@@ -255,7 +255,7 @@ void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, std::vector<pair<strin
 	button.Row++;
 	GetCellIndirect(button.Col_start+1, button.Row, &cell);
 	cell.SetParam(button.Param);
-	cell.SetText("Translation codes");
+	cell.SetStdText("Translation codes");
 	SetCell(button.Col_start, button.Row, &cell);
 	
 	
@@ -266,7 +266,7 @@ void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, std::vector<pair<strin
 	
 	GetCellIndirect(button.Col_start + 0, button.Row, &cell);
 	cell.SetBackColor(m_ColorHeading);
-	cell.SetText("Translation codes"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start, button.Row, &cell);
+	cell.SetStdText("Translation codes"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start, button.Row, &cell);
 	JoinCells(4, button.Row, 6, button.Row);
 	GetCellIndirect(button.Col_start + 4, button.Row, &cell);
 	cell.SetBackColor(m_ColorHeading); SetCell(button.Col_start+4, button.Row, &cell);
@@ -278,15 +278,15 @@ void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, std::vector<pair<strin
 
 	GetCellIndirect(button.Col_start + 3, button.Row, &cell); cell.SetNumber(translate_code.size()); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 3, button.Row, &cell);
 	ReadOnly = true;
-	GetCellIndirect(button.Col_start +1, button.Row+1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Treatment id"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start+1, button.Row + 1, &cell);
-	GetCellIndirect(button.Col_start + 1, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Treatment No"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 2, button.Row + 1, &cell);
-	GetCellIndirect(button.Col_start + 1, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Hits"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 3, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start +1, button.Row+1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetStdText("Treatment id"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start+1, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start + 1, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetStdText("Treatment No"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 2, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start + 1, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetStdText("Hits"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 3, button.Row + 1, &cell);
 
-	GetCellIndirect(button.Col_start + 4, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No stop"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row + 1, &cell);
-	GetCellIndirect(button.Col_start + 5, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No Increment"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start + 4, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetStdText("Parcell No stop"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row + 1, &cell);
+	GetCellIndirect(button.Col_start + 5, button.Row + 1, &cell); cell.SetBackColor(m_ColorHeading); cell.SetStdText("Parcell No Increment"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, button.Row + 1, &cell);
 
-	GetCellIndirect(button.Col_start + 4, button.Row + 4, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No identified"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row + 4, &cell);
-	GetCellIndirect(button.Col_start + 5, button.Row + 4, &cell); cell.SetBackColor(m_ColorHeading); cell.SetText("Parcell No Hits"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, button.Row + 4, &cell);
+	GetCellIndirect(button.Col_start + 4, button.Row + 4, &cell); cell.SetBackColor(m_ColorHeading); cell.SetStdText("Parcell No identified"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, button.Row + 4, &cell);
+	GetCellIndirect(button.Col_start + 5, button.Row + 4, &cell); cell.SetBackColor(m_ColorHeading); cell.SetStdText("Parcell No Hits"); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, button.Row + 4, &cell);
 
 
 
@@ -296,7 +296,7 @@ void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, std::vector<pair<strin
 	for (size_t i = 0; i < translate_code.size(); ++i) {
 		auto row = button.Row + 2 + i;
 		GetCellIndirect(button.Col_start + 1, row, &cell); cell.SetBackColor(m_ColorClick);
-		cell.SetText(translate_code[i].first); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 1, row, &cell);
+		cell.SetStdText(translate_code[i].first); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 1, row, &cell);
 		GetCellIndirect(button.Col_start + 1, row, &cell); cell.SetNumber(translate_code[i].second); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 2, row, &cell);
 		auto inum = hits_map[translate_code[i].second];
 		
@@ -309,7 +309,7 @@ void PEJUGCtrl::SetCodeTranslateInfo(CLICK_BUTTON button, std::vector<pair<strin
 	for (size_t i = 0; i < Parcell_stop.size(); i++) {
 		auto row = button.Row + 2 + i;
 		GetCellIndirect(button.Col_start + 4, row, &cell); cell.SetBackColor(m_ColorClick);
-		cell.SetText(Parcell_stop[i]); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, row, &cell);
+		cell.SetStdText(Parcell_stop[i]); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 4, row, &cell);
 		if (i == 1) {
 			GetCellIndirect(button.Col_start + 5, row, &cell); cell.SetNumber(Parcell_Add[0]); cell.SetParam(ParEdit); cell.SetReadOnly(ReadOnly); SetCell(button.Col_start + 5, row, &cell);
 		}

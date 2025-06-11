@@ -78,7 +78,7 @@ bool WaterUptake::Def()
 	Define(pPs, "NonDemandRelCoef", 0.1,UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 20.);
 	
 	pPs = new Ps(&DripScaleWUpt, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "DripScaleWupt", 2., "-", "Irrigation >0|Dripper>0", 0., 10000.);
+	Define(pPs, "DripScaleWupt", 2., UNIT_TYPES::NO_UNIT, "Irrigation >0|Dripper>0", 0., 10000.);
 
 
 	functorprop.FunctorInitOption = std::string::npos; functorprop.pHyd = p_Soil_WaterF;
@@ -108,9 +108,9 @@ bool WaterUptake::Def()
 
 	
 	pPs = new Ps(&WupATe, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "TempCoefA", 0.8, "-", "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction = 0", 0., 20.);
+	Define(pPs, "TempCoefA", 0.8, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction = 0", 0., 20.);
 	pPs = new Ps(&WupBTe, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "TempCoefB", 0.4, "-", "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction = 0", 0., 20.);
+	Define(pPs, "TempCoefB", 0.4, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction = 0", 0., 20.);
 	pPs = new Ps(&WupDayOff, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "TempWupDayNoCut", 365., "#", "PlantType > 0|WaterEq = 1|Temperature response>=1", 0., 366.);
 
@@ -132,7 +132,7 @@ bool WaterUptake::Def()
 	pPs = new Ps(&WupDTe, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "TempCoefD", 15.,UNIT_TYPES::TEMP_UNIT, "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction = 0", 10., 50.);
 	pPs = new Ps(&WupETe, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "TempCoefE", 1., "-", "PlantType > 0|WaterEq = 1|Temperature response=3|WaterUptakeFunction = 0", 0., 20.);
+	Define(pPs, "TempCoefE", 1., UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response=3|WaterUptakeFunction = 0", 0., 20.);
 
 
 	ps_vec.push_back(m_pModelMap->GetPsPointer("TempWupDayNoCut"));
@@ -159,7 +159,7 @@ bool WaterUptake::Def()
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();
  
  	pPs = new Ps(&UpMov, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "FlexibilityDegree", 0.6, "-", "PlantType > 0|DemandRedistribution > 0|WaterEq = 1|PlantWaterStorage=0", 0., 1.);
+	Define(pPs, "FlexibilityDegree", 0.6, UNIT_TYPES::NO_UNIT, "PlantType > 0|DemandRedistribution > 0|WaterEq = 1|PlantWaterStorage=0", 0., 1.);
 	
 	pPs = new Ps(&RootDistMin, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "RootDistMin", .001, "m", "Basic equation =1", 1.E-9, .05);
@@ -231,7 +231,7 @@ bool WaterUptake::Def()
 	
 	
 	pPs = new Ps(&Upt_Excess, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "Upt_Excess", 2.0, "mm/day", "PlantWaterStorage>0", 0.00, 100.);
+	Define(pPs, "Upt_Excess", 2.0,UNIT_TYPES::WATERFLOW_UNIT, "PlantWaterStorage>0", 0.00, 100.);
 
 	NE* pNumPlants;
 	pNumPlants = m_pModelMap->GetNEPointer("Number of Plants");
@@ -250,7 +250,7 @@ bool WaterUptake::Def()
 
 	initv.assign(NumPlants, 3.);
 	P* pP = new P(&SaltPowerCoef, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP);
-	Define(pP, pNumPlants, "Salt p", initv, "-", "PlantType >= 3|SaltCoefValid > 0", .5, 10.);
+	Define(pP, pNumPlants, "Salt p", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3|SaltCoefValid > 0", .5, 10.);
 	mTab_Response.push_back(pP);
 	pP = new P(&SaltHalfReduction, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP);
 	initv.assign(NumPlants, 5000.);
@@ -308,9 +308,9 @@ bool WaterUptake::Def()
 
 
 	pP = new P(&v_WupATe, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP);	mTab_WaterResponse.push_back(pP);  initv.assign(NumPlants, .8);
-		Define(pP, pNumPlants, "TempCoefA", initv,  "-", "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction > 0", 0., 20.);
+		Define(pP, pNumPlants, "TempCoefA", initv,  UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction > 0", 0., 20.);
 	pP = new P(&v_WupBTe, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP);	mTab_WaterResponse.push_back(pP);	  initv.assign(NumPlants, .4);
-		Define(pP, pNumPlants, "TempCoefB", initv, "-", "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction > 0", 0., 20.);
+		Define(pP, pNumPlants, "TempCoefB", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response=1|WaterUptakeFunction > 0", 0., 20.);
 	pP = new P(&v_WupDayOff, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP); mTab_WaterResponse.push_back(pP);  initv.assign(NumPlants, 365);
 		Define(pP, pNumPlants, "TempWupDayNoCut", initv, "#", "PlantType > 0|WaterEq = 1|Temperature response>=1|WaterUptakeFunction > 0", 0., 366.);
 
@@ -322,9 +322,9 @@ bool WaterUptake::Def()
 	functorprop.FuncName = MyFunc::WATERUPTAKETEMP_TRIGTEMP; functorprop.Arg = MyArgType::T_D2;
 	funcname = "Water Uptake Trig TempFunction";
 	pP = new P(&v_WupCTe, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP);	 mTab_WaterResponse.push_back(pP);	 initv.assign(NumPlants, 0.);
-		Define(pP, pNumPlants, "TempCoefC", initv, "-", "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction > 0", 0., 9.);
+		Define(pP, pNumPlants, "TempCoefC", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction > 0", 0., 9.);
 	pP = new P(&v_WupDTe, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); p_vec.push_back(pP);	 mTab_WaterResponse.push_back(pP);	initv.assign(NumPlants, 15.);
-		Define(pP, pNumPlants, "TempCoefD", initv, "-", "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction > 0", 10., 50.);
+		Define(pP, pNumPlants, "TempCoefD", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response>=2|WaterUptakeFunction > 0", 10., 50.);
 	p_vec.push_back(m_pModelMap->GetPPointer("TempWupDayNoCut"));
 	
 	pFunc = new Func( datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -337,7 +337,7 @@ bool WaterUptake::Def()
 		p_vec.push_back(m_pModelMap->GetPPointer("TempCoefD"));
 		
 	pP = new P(&v_WupETe, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);	p_vec.push_back(pP); mTab_WaterResponse.push_back(pP);	initv.assign(NumPlants, 1.);
-		Define(pP, pNumPlants, "TempCoefE", initv, "-", "PlantType > 0|WaterEq = 1|Temperature response=3|WaterUptakeFunction > 0", 0., 20.);
+		Define(pP, pNumPlants, "TempCoefE", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Temperature response=3|WaterUptakeFunction > 0", 0., 20.);
 	p_vec.push_back(m_pModelMap->GetPPointer("TempWupDayNoCut"));
 
 	pFunc = new Func( datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -379,12 +379,12 @@ bool WaterUptake::Def()
 
 	initv.assign(NumPlants, 0.);
 	G *pG = new G(&RedWupPsi, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNumPlants, "RedCMoisture", initv, "-", "PlantType > 0|WaterEq = 1|PlantWaterStorage <1");
+	Define(pG, pNumPlants, "RedCMoisture", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|PlantWaterStorage <1");
 	pG = new G(&RedWupTemp, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNumPlants, "RedCTemperature", initv, "-", "PlantType > 0|WaterEq = 1|PlantWaterStorage <1");
+	Define(pG, pNumPlants, "RedCTemperature", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|PlantWaterStorage <1");
 	pG = new G(&RedWupTotal, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 1.);
-	Define(pG, pNumPlants, "RedCTotal", initv, "-", "PlantType > 0|WaterEq = 1");
+	Define(pG, pNumPlants, "RedCTotal", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1");
 	pG = new G(&PlantWaterPotential, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
 	Define(pG, pNumPlants, "PlantWaterPotential", initv, "cm water", "PlantWaterStorage>0");

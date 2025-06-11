@@ -30,11 +30,11 @@ bool NC_SoilManagement_Functions::Def()
 	pPs= new Ps(&SurfaceCultDay , datatype::SIMPROFILE, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::SOILMIXING, userlevel::NORMAL);
    
 	Define(pPs,	"SurfaceCultDay", 0.,"#","Surface cultivation=1",0.,365.);
-//!	Call P(Group_30, SurfaceCultDepth,	"SurfaceCultDepth", -0.1,"m","Surface cultivation >0",-.2,0.);
+//!	Call P(Group_30, SurfaceCultDepth,	"SurfaceCultDepth", -0.1UNIT_TYPES::LENGTH_UNIT"Surface cultivation >0",-.2,0.);
 	pPs= new Ps(&PloughingDay , datatype::SIMPROFILE, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::SOILMIXING, userlevel::NORMAL);
 	Define(pPs,	"PloughingDay", 0.,"#","Deep ploughing =1",0.,365.);
 	pPs= new Ps(&PloughingDepth , datatype::SIMPROFILE, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::SOILMIXING, userlevel::NORMAL);
-	Define(pPs,	"PloughingDepth", -0.3,"m","Deep ploughing >0",-.7,0.);
+	Define(pPs,	"PloughingDepth", -0.3,UNIT_TYPES::LENGTH_UNIT,"Deep ploughing >0",-.7,0.);
 
 	F* pF = new F(&m_PG_SurfaceCult, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::SOILMIXING, userlevel::NORMAL);
 	Define(pF, "Surface Cultivation date data", "SurfaceCultivationDates.bin", "Surface cultivation =2");

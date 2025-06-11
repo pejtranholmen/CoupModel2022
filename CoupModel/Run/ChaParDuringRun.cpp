@@ -110,7 +110,7 @@ END_MESSAGE_MAP()
 void CChaParDuringRun::OnButtonAdd() 
 {
 	UpdateData(TRUE);
-	m_Datum=m_year+"-"+m_month+"-"+m_day+	
+	m_Datum=m_year+"-" + m_month + "-" + m_day +
 		  " "+m_hour+":"+m_min;
 	string sd;
 	sd=CT2A(m_Datum).m_psz;
@@ -165,7 +165,7 @@ void CChaParDuringRun::OnButtonReset()
 BOOL CChaParDuringRun::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-	CString Text;
+	string Text;
 	CListBox* pList;
 	int NumSelected;
 
@@ -176,7 +176,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 	 		Text="ChangeParameterValues : ";
 			Text+=m_Par.pBase->GetName().c_str();
 			Text+=+" (";
-			Text+=m_Par.pBase->GetUnit().c_str();
+			Text+=string(m_Par.pBase->GetUnit());
 			Text+=")";
 			NumSelected=m_pPs->GetNumChaDates();
 			break;
@@ -184,9 +184,9 @@ BOOL CChaParDuringRun::OnInitDialog()
 	 		Text="ChangeParameterValues : ";
 			Text+=m_Par.pBase->GetName().c_str();
 			Text+=+" (";
-			Text+=m_Par.pBase->GetUnit().c_str();
+			Text+=string(m_Par.pBase->GetUnit());
 			Text+=")";
-			Text+=_T(", index=")+MFC_Util::ItoAscii(m_Par.TabIndex+1);
+			Text+=", index="+FUtil::STD_ItoAscii(m_Par.TabIndex+1);
 			NumSelected=m_pP->GetNumChaDates(m_Par.TabIndex);
 			break;
 		case simtype::DB:
@@ -194,7 +194,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 			Text+=m_pDB->GetName().c_str();
 			NumSelected=m_pDB->GetNumChaDates();
 	}
-	SetWindowText(Text);
+	SetWindowText(CString(Text.data(), static_cast<int>(Text.size())));
 
 	pList=(CListBox*)GetDlgItem(IDC_LIST1);
 	if(pList->GetCount()>0) pList->ResetContent();
@@ -213,7 +213,7 @@ BOOL CChaParDuringRun::OnInitDialog()
 			count++;
 			if(m_Par.pBase->Is_PTable()) {
 				int indvalue=m_Par.TabIndex;
-				Text += MFC_Util::AddIndexString(indvalue + 1);
+				Text += MFC_Util::AddIndexStdString(indvalue + 1);
 			}
 		}
 		else Text="    ";
@@ -222,11 +222,11 @@ BOOL CChaParDuringRun::OnInitDialog()
 			Text+=m_pDB->GetChaParValue(i).c_str();
 		}
 		else if(m_Type==simtype::PAR_SINGLE)
-			Text+=MFC_Util::DtoAscii(m_pPs->GetChaParValue(i));
+			Text+=FUtil::STD_DtoAscii(m_pPs->GetChaParValue(i));
 		else {
-			Text+=MFC_Util::DtoAscii(m_pP->GetChaParValue(m_Par.TabIndex, i));
+			Text+=FUtil::STD_DtoAscii(m_pP->GetChaParValue(m_Par.TabIndex, i));
 		}
-		pList->AddString(Text);
+		pList->AddString(CString(Text.data(),static_cast<int>(Text.size())));
 	}
 	if(m_Type== simtype::DB) {
 		GetDlgItem(IDC_BUTTON_SELECT)->ModifyStyle(WS_DISABLED,0);

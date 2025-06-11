@@ -132,7 +132,7 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 				header.SiteName = p_PFCurve->m_ActProfile.Name;
 				header.Country = pfheader.Country;
 				m_pDoc->m_DB_header[1] = header;
-				str=p_PFCurve->m_ActProfile.OldKey+"-"+p_PFCurve->m_ActProfile.Name;
+				str=p_PFCurve->m_ActProfile.OldKey+"-" + p_PFCurve->m_ActProfile.Name;
 				m_pDoc->DB_SetChoice(DB_types::Soil_Properties, str);
 				SIMB P_DB;
 				P_DB.pBase=m_pDoc->DB_GetPointer(DB_types(1));

@@ -53,7 +53,7 @@ bool Interception::Def()
 
 
 	pPs = new Ps(&EPRatio, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "Ratio_Eva-Transp", 3., "-", "PlantType >= 1|PrecInterception > 0|WaterEq > 0", 0., 10., 1., 5.);
+	Define(pPs, "Ratio_Eva-Transp", 3., UNIT_TYPES::NO_UNIT, "PlantType >= 1|PrecInterception > 0|WaterEq > 0", 0., 10., 1., 5.);
 	ps_vec.push_back(pPs);
 
 	functorprop.FunctorInitOption = std::string::npos;
@@ -100,7 +100,7 @@ bool Interception::Def()
 
 
 	pPs = new Ps(&IntEvapFracMin, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "IntEvapFracMin", 1., "-", "PlantType > 2|PrecInterception > 0|WaterEq > 0", 0.0, 1., 0., 1.);
+	Define(pPs, "IntEvapFracMin", 1., UNIT_TYPES::NO_UNIT, "PlantType > 2|PrecInterception > 0|WaterEq > 0", 0.0, 1., 0., 1.);
 	ps_vec.push_back(pPs);
 	ps_vec.push_back(m_pModelMap->GetPsPointer("Ratio_Eva-Transp"));
 	pPs = new Ps(&TiStep, datatype::ATMBOUNDARY, elements::TIME, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::DETAILED);
@@ -132,14 +132,14 @@ bool Interception::Def()
 
 
 	pPs = new Ps(&IntSnowMeltScale, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "IntSnowMeltScale", 1., "-", "PlantType > 1|SnowInterception > 0|WaterEq > 0|SnowIntUnload<=0", 0., 5., 0., 5.);
+	Define(pPs, "IntSnowMeltScale", 1., UNIT_TYPES::NO_UNIT, "PlantType > 1|SnowInterception > 0|WaterEq > 0|SnowIntUnload<=0", 0., 5., 0., 5.);
 
 	pPs = new Ps(&IntRS, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "WithinCanopyRes", 5.0, "s/m", "PlantType >= 2|PrecInterception > 0|WaterEq > 0", 0., 100., 1., 50.);
 	pPs = new Ps(&IntMaxCondensation, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "Max Int Condens Rate", 1.0, "mm/day", "PlantType >= 2|PrecInterception > 0|WaterEq > 0", 0., 10., 0., 2.);
+	Define(pPs, "Max Int Condens Rate", 1.0,UNIT_TYPES::WATERFLOW_UNIT, "PlantType >= 2|PrecInterception > 0|WaterEq > 0", 0., 10., 0., 2.);
 	pPs = new Ps(&DirectThroughfall, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "DirectThroughfall", 0., "-", "PrecInterception > 0|WaterEq > 0|PlantType=1", 0., 1., 0., .5);
+	Define(pPs, "DirectThroughfall", 0., UNIT_TYPES::NO_UNIT, "PrecInterception > 0|WaterEq > 0|PlantType=1", 0., 1., 0., .5);
 	P* pP;
 	vector<double> initv;
 	NE *pNumPlants;
@@ -147,11 +147,11 @@ bool Interception::Def()
 	pP = new P(&MaxCover, pNumPlants, datatype::PLANT, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	SurfaceCoverTab.push_back(pP);
 	initv.assign(NumPlants, 0.6);
-	Define(pP, pNumPlants, "Maximal Cover", initv, "-", "PlantType = 3|PrecInterception >0|WaterEq > 0", 0., 10.);
+	Define(pP, pNumPlants, "Maximal Cover", initv, UNIT_TYPES::NO_UNIT, "PlantType = 3|PrecInterception >0|WaterEq > 0", 0., 10.);
 
 	pP = new P(&LAICoverSens, pNumPlants, datatype::PLANT, elements::PLANT_SHAPE, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	SurfaceCoverTab.push_back(pP);
-	Define(pP, pNumPlants, "LAI Cover Sensitivity", initv, "-", "PlantType = 3|PrecInterception >0|WaterEq > 0", 0., 1.);
+	Define(pP, pNumPlants, "LAI Cover Sensitivity", initv, UNIT_TYPES::NO_UNIT, "PlantType = 3|PrecInterception >0|WaterEq > 0", 0., 1.);
 
 
 
@@ -174,7 +174,7 @@ bool Interception::Def()
 	pGs = new Gs(&EvaActInt, datatype::SINGLEPLANT, elements::WATER, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "InterceptionActEva", 0.,UNIT_TYPES::WATERFLOW_UNIT);
 	pGs = new Gs(&IntThQual, datatype::SINGLEPLANT, elements::WATER, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pGs, "InterceptedWaterThQ", 0., "-");
+	Define(pGs, "InterceptedWaterThQ", 0., UNIT_TYPES::NO_UNIT);
 
 	X *pX; G *pG;
 	initv.assign(NumPlants, 0.);

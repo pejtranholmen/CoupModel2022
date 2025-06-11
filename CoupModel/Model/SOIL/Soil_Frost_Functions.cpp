@@ -52,9 +52,9 @@ bool Soil_Frost_Functions::Def()
 		
 		Ps *pPs;
 	pPs= new Ps(&HighFlowDampC, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs  , "HighFlowDampC", 5.,"vol %","HeatEq > 0|FrostInteract > 0|WaterEq > 0",0.1,80.);
+		Define(pPs  , "HighFlowDampC", 5.,UNIT_TYPES::VOLPERCENTAGE_UNIT,"HeatEq > 0|FrostInteract > 0|WaterEq > 0",0.1,80.);
 	pPs= new Ps(&FrCondImped  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs       ,"LowFlowCondImped", 4.,"-","HeatEq > 0|FrostInteract > 0|WaterEq > 0",0., 10.);
+		Define(pPs       ,"LowFlowCondImped", 4.,UNIT_TYPES::NO_UNIT,"HeatEq > 0|FrostInteract > 0|WaterEq > 0",0., 10.);
 
 	functorprop.FuncName = MyFunc::HEAT_TEMP_THQUAL; functorprop.Arg = MyArgType::Pair_T_D2;
 		funcname = "Temperature Heat Functions"; functorprop.FunctorInitOption = 0;
@@ -71,15 +71,15 @@ bool Soil_Frost_Functions::Def()
 
 	
 	pPs = new Ps(&FreezingStartTemp, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs, "FreezingStartTemp", 0., "-", "HeatEq > 0|WaterEq > 0|Freezing Point Options=1", -3., 0.); ps_vec.push_back(pPs);
+		Define(pPs, "FreezingStartTemp", 0., UNIT_TYPES::NO_UNIT, "HeatEq > 0|WaterEq > 0|Freezing Point Options=1", -3., 0.); ps_vec.push_back(pPs);
 	pPs = new Ps(&OsmoticScaleSens, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::SOIL_FREEZING, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs, "OsmoticScaleSens", 0., "-", "HeatEq > 0|WaterEq > 0|Freezing Point Options=2", -2., 2.); ps_vec.push_back(pPs);
+		Define(pPs, "OsmoticScaleSens", 0., UNIT_TYPES::NO_UNIT, "HeatEq > 0|WaterEq > 0|Freezing Point Options=2", -2., 2.); ps_vec.push_back(pPs);
 	pPs = new Ps(&FpointFWi, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs, "FreezepointFWi", .5, "-", "HeatEq > 0|WaterEq > 0", 0.01, 2., 0.1, 1.);	ps_vec.push_back(pPs);
+		Define(pPs, "FreezepointFWi", .5, UNIT_TYPES::NO_UNIT, "HeatEq > 0|WaterEq > 0", 0.01, 2., 0.1, 1.);	ps_vec.push_back(pPs);
 	pPs= new Ps(&FpointF0  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs  		 ,"FreezepointF0"  , 10.,"-","HeatEq > 0|WaterEq > 0",0., 100.); ps_vec.push_back(pPs);
+		Define(pPs  		 ,"FreezepointF0"  , 10.,UNIT_TYPES::NO_UNIT,"HeatEq > 0|WaterEq > 0",0., 100.); ps_vec.push_back(pPs);
 	pPs= new Ps(&FpointF1  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs  		 ,"FreezepointF1"  , 0.,"-","HeatEq > 0|WaterEq > 0",0., 200.); ps_vec.push_back(pPs);
+		Define(pPs  		 ,"FreezepointF1"  , 0.,UNIT_TYPES::NO_UNIT,"HeatEq > 0|WaterEq > 0",0., 200.); ps_vec.push_back(pPs);
 	
 	pFunc = new Func( datatype::MPROFILE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);
@@ -102,7 +102,7 @@ bool Soil_Frost_Functions::Def()
 		Define(pPs  		 ,"AlphaHeatCoef" , 1000.,"W/mC","HeatEq > 0|FrFlowDomain > 0|WaterEq > 0",0.01, 20000.,0.1, 100000.);
 
 	pPs= new Ps(&MaxSwell  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs 	,"MaxSwell", 0.05,"-","HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0.,1.);
+		Define(pPs 	,"MaxSwell", 0.05,UNIT_TYPES::NO_UNIT,"HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0.,1.);
 	pPs= new Ps(&ShrinkRateFraction, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs  ,"ShrinkRateFraction", 0.05,"1/day","HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0., 0.1);
 
@@ -113,7 +113,7 @@ bool Soil_Frost_Functions::Def()
 	pX= new X(&WaterHFD,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	vector<double> initv;
 	initv.assign(NL,0.);
-	Define(pX,pNL,"WaterHFD", initv,"mm","HeatEq > 0|FrFlowDomain = 1|FrostInteract = 1|WaterEq > 0");
+	Define(pX,pNL,"WaterHFD", initv,UNIT_TYPES::WATERMASS_UNIT,"HeatEq > 0|FrFlowDomain = 1|FrostInteract = 1|WaterEq > 0");
 
 	T* pT;
 	Infreeze.resize(NL);

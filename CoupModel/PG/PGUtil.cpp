@@ -625,7 +625,7 @@ int range=value-start;
 		return StringDatum(value);
 	}
 	else if(range<=345600) {
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 		while(value>longSt){
 			imonth++;
@@ -634,7 +634,7 @@ int range=value-start;
 				imonth=1;
 			}
 
-			str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+			str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 			longSt=MinutConv(str);
 		}
 		str=StringDatum(longSt);
@@ -647,12 +647,12 @@ int range=value-start;
 			iyear=iyear-1;
 			imonth=imonth+12;
 		}
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 		return StringDatum(longSt);
 	}
  	else if(range<=576000) {
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 		while(value>longSt){
 			imonth=imonth+2;
@@ -660,7 +660,7 @@ int range=value-start;
 				iyear=iyear+1;
 				imonth=imonth-12;
 			}
-			str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+			str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 			longSt=MinutConv(str);
 		}
 		str=StringDatum(longSt);
@@ -673,12 +673,12 @@ int range=value-start;
 			iyear=iyear-1;
 			imonth=imonth+12;
 		}
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 		return StringDatum(longSt);
 	}
 	else if(range<=1152000) {
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 		while(value>longSt){
 			imonth=imonth+3;
@@ -686,7 +686,7 @@ int range=value-start;
 				iyear=iyear+1;
 				imonth=imonth-12;
 			}
-			str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+			str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 			longSt=MinutConv(str);
 
 
@@ -702,7 +702,7 @@ int range=value-start;
 			imonth=imonth+12;
 		}
 
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 
 		return StringDatum(longSt);
@@ -791,7 +791,7 @@ string PGUtil::StringDatumStartEstimate(unsigned int value, unsigned int start)
 		return StringDatum(value);
 	}
 	else if(range<=345600) {
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 
 		longSt=MinutConv(str);
 		while(value<longSt){
@@ -802,14 +802,14 @@ string PGUtil::StringDatumStartEstimate(unsigned int value, unsigned int start)
 			}
 			snprintf(strmonth,2,"%02u",imonth);
 			snprintf(stryear,4, "%04u",iyear);
-			str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+			str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 			//strmonth.Format(_T("%02u"), imonth); stryear.Format(_T("%04u"),iyear);
 			longSt=MinutConv(str);
 		}
 		return StringDatum(longSt);
 	}
  	else if(range<=576000) {
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 		while(value<longSt){
 			imonth=imonth-2;
@@ -819,14 +819,14 @@ string PGUtil::StringDatumStartEstimate(unsigned int value, unsigned int start)
 			}
 			snprintf(strmonth,2,"%02u",imonth);
 			snprintf(stryear,4, "%04u",iyear);
-			str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+			str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 			longSt=MinutConv(str);
 
 		}
 		return StringDatum(longSt);
 	}
 	else if(range<=1152000) {
-		str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+		str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 		longSt=MinutConv(str);
 		while(value<longSt){
 			imonth=imonth-3;
@@ -836,7 +836,7 @@ string PGUtil::StringDatumStartEstimate(unsigned int value, unsigned int start)
 			}
 			snprintf(strmonth,2,"%02u",imonth);
 			snprintf(stryear,4, "%04u",iyear);
-			str=stryear;str+="-";str+=strmonth;str+="-01 00:00";
+			str=stryear;str+= "-";str+=strmonth;str+="-01 00:00";
 			longSt=MinutConv(str);
 
 		}

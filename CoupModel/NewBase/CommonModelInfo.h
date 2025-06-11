@@ -1,6 +1,10 @@
-#pragma once
+﻿#pragma once
+#include "../ModelTypes/SimB.h"
+#include <string>
+#include <string_view>
+#include <vector>		
 
-#include "../Model/Units.h"
+
 struct RunStatusOfDocumentInfo
 {
 	bool StartMode;
@@ -13,7 +17,7 @@ struct RunStatusOfDocumentInfo
 };
 class Sim;
 class SimB;
-class CommonModelInfo : public Units
+class CommonModelInfo 
 { 
 public:
 	CommonModelInfo();
@@ -90,7 +94,37 @@ public:
 	fysprocess GetPhysProcFromString(std::string str);
 	bioprocess GetBioProcFromString(std::string str);
 
+	size_t GetNumUnits()  noexcept { return m_TypeBasedUnits.size(); };
+	std::string_view GetUnitString(UNIT_TYPES key, bool withparanthesis = false) {
+		auto it = m_TypeBasedUnits.find(key);
+		if (it != m_TypeBasedUnits.end()) {
+			if (withparanthesis) {
+				return it->second;//" + it->second + ")";
+			}
+			else {
+				return it->second;
+			}
+		}
+		else {
+			return "";
+		}
+	}
+	UNIT_TYPES GetUnitType(std::string key) {
+		auto it = m_StringBasedUnits.find(key);
+		if (it != m_StringBasedUnits.end())
+			return (*it).second;
+		else
+			return UNIT_TYPES::NO_UNIT;
+	};
 
+	std::vector<std::string_view> GetSelectedStringBasedUnits(std::vector<UNIT_TYPES> key) {
+		std::vector<std::string_view> out;
+		for_each(key.begin(), key.end(), [&](UNIT_TYPES& key) {
+			auto it = m_TypeBasedUnits.find(key);
+			out.push_back((*it).second);
+			});
+		return out;
+	};
 
 	Sim *GetRunDoc()  noexcept {return m_pRunDoc;};
 	std::vector<SimB*> SortSimB_ByGroup(std::vector<SimB*> v);
@@ -114,7 +148,23 @@ private:
 	"Soil organic processes", "Soil mineral N processes", "Abiotic driving variables",
 	"Common abiotic responses","External N inputs","Soil Management","Additional Biotic Variables",
 	"Gas processes","Minteq","HBV","Validation","Soil mineral P Processes","External P Inputs" };
-	
+
+	static constexpr std::string_view degreeCelcius = "\xB0""C";
+	std::string degree1 = "25\xB""C";
+
+
+	static constexpr std::string_view micro = "\xB5";
+	//static constexpr std::string_view super2 = "\xB2"; //is 178 in hex
+
+	static constexpr std::string_view m_UnitTypeNames[] = { "MJ/m\xB2/d","J/m\xB2/d","J/m\xB2","J/m\xB3","MJ/m\xB3",
+		"\xB0""C","\xB0""Cd", "W/m/\xB0""C","g/m\xB2","gC/m\xB2","gC/m\xB2/d","gN/m\xB2","gN/m\xB2/d","g/m\xB2/d","m/s",
+		"mm/d","Vol %","cm water","m\xB2","g/m\xB3", "Kg/m\xB3", "m\xB2/g",
+		"mg/m\xB2","mg/m\xB2/d","mm","Pa","m","m/s","s/m",
+		"\xB5mol/m\xB2/d","m\xB2/d","m\xB2/s","cm\xB2/s","gm\xB2","PPM", "yr", "%", "d", "J/mol",
+		"mg/l","\xB5g/l","-","1/d","d/mm","dm\xB2/g","g/g","m\xB3/m\xB3",
+		"\xB5g/\xB5g","xB5g/m\xB2/d","\xB5g/d","min","rad","W/m/\xB0""C","1/m\xB2","DOY",
+		"1/\xB0""C","Vol %"};
+
 	std::map <std::string_view, size_t> m_TypeMap, m_GroupMap;
 	std::map <std::string_view, size_t> m_GroupCategory;
 	std::map <size_t, size_t> m_GroupCategoryNo;
@@ -137,6 +187,9 @@ private:
 
 	std::map <bioprocess, std::string> m_BioProcNamesMap;
 	std::map <std::string_view, bioprocess> m_NamesBioProcMap;
+
+	std::map<UNIT_TYPES, std::string_view> m_TypeBasedUnits;    // Correct the declaration of m_TypeBasedUnits
+	std::map<std::string_view, UNIT_TYPES> m_StringBasedUnits;
 
 
 	bool m_CommandInfo;

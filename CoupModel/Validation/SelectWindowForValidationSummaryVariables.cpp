@@ -442,21 +442,21 @@ void SelectWindowForValidationSummaryVariables::OnCreateSelList()
 						if(fv>=-1.1e37)
 							test=MFC_Util::FtoAscii(fv);
 						else
-							test="-";
+							test= "-";
 					}
 					else if(ifn==5){
 						float fv=m_pDoc->m_Doc.m_ValidationData.GetValSumVarP_Error(i);
 						if(fv>=0)
 							test=MFC_Util::FtoAscii(fv);
 						else
-							test="-";
+							test= "-";
 					}
 					else if(ifn==6){
 						float fv=m_pDoc->m_Doc.m_ValidationData.GetValSumVarA_Error(i);
 						if(fv>=0) 
 							test=MFC_Util::FtoAscii(fv);
 						else
-							test="-";
+							test= "-";
 					}
 
 

@@ -6328,7 +6328,7 @@ void MyCug::UpdateStatusBar(SimB *nod, int itype) {
       value=p_par->GetMaxValue();
 	  text = MFC_Util::StdFtoAsciiPane(value);
 	  m_pFrame->UpdatePaneText(4, text); 
-	  text = nod->GetUnit().c_str();
+	  text = string(nod->GetUnit());
 	  m_pFrame->UpdatePaneText(5, text);
 
 	  kalle=nod->GetName().c_str();
@@ -6384,7 +6384,7 @@ void MyCug::UpdateStatusBar(SimB *nod, int itype) {
       else if ((ivalue > 1.E5) || (ivalue < -1.E5)) text = "large";
 	  else text = "---"; // update fourth CString variable
       m_pFrame->UpdatePaneText(4, text);
-	  text = nod->GetUnit().c_str();
+	  text = string(nod->GetUnit());
 	  m_pFrame->UpdatePaneText(5, text);
 	  kalle=nod->GetName().c_str();
 	  j=kalle.find(" ");

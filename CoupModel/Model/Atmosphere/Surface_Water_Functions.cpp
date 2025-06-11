@@ -50,9 +50,9 @@ bool Surface_Water_Functions::Def()
 	funcname = "Surface Pool Runoff Function";
 
 	pPs = new Ps(&SurfCoef, datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
-	Define(pPs,"SurfCoef", 0.8,"-","WaterEq = 1",0., 1000.,0.,10.);
+	Define(pPs,"SurfCoef", 0.8,UNIT_TYPES::NO_UNIT,"WaterEq = 1",0., 1000.,0.,10.);
 	pPs= new Ps(&SurfPoolMax , datatype::SURFACEPOOL, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,  "SurfPoolMax", 0.,"mm","WaterEq = 1",0., 200.); ps_vec.push_back(pPs); 
+	Define(pPs,  "SurfPoolMax", 0.,UNIT_TYPES::WATERMASS_UNIT,"WaterEq = 1",0., 200.); ps_vec.push_back(pPs); 
 
 	pFunc = new Func( datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar); ps_vec.clear();
@@ -61,7 +61,7 @@ bool Surface_Water_Functions::Def()
 
 
 	pPs= new Ps(&SurfPoolInit , datatype::SURFACEPOOL, elements::WATER, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "SurfPoolInit", 0.,"mm","WaterEq = 1",0., 100000.);
+	Define(pPs, "SurfPoolInit", 0.,UNIT_TYPES::WATERMASS_UNIT,"WaterEq = 1",0., 100000.);
 
 	functorprop.FuncName = MyFunc::SURFACE_WATER_COVER; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
@@ -71,11 +71,11 @@ bool Surface_Water_Functions::Def()
 
 
 	pPs= new Ps(&SPCovMax , datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
-	Define(pPs, "SP Max cover", 1.,"-","WaterEq = 1",0.001, 1.);
+	Define(pPs, "SP Max cover", 1.,UNIT_TYPES::NO_UNIT,"WaterEq = 1",0.001, 1.);
 	pPs = new Ps(&SPCovTot, datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "SPCoverTotal", 50., "mm", "WaterEq = 1", 0.001, 1000.);
 	pPs= new Ps(&SPCovPot, datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
-	Define(pPs,  "SPCovPot", 1.,"-","WaterEq = 1",0.001, 10.);
+	Define(pPs,  "SPCovPot", 1.,UNIT_TYPES::NO_UNIT,"WaterEq = 1",0.001, 10.);
 	
 
 	pFunc = new Func( datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -83,13 +83,13 @@ bool Surface_Water_Functions::Def()
 
 
 	pPs= new Ps(&InfFurrow, datatype::SURFACEPOOL, elements::WATER, fysprocess::INFILTRATION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "InfFurrow", 0.,"-","Furrow > 0", 0., 1.);
+	Define(pPs, "InfFurrow", 0.,UNIT_TYPES::NO_UNIT,"Furrow > 0", 0., 1.);
 	pPs= new Ps(&SoilCover , datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "SoilCover", 0., "-","WaterEq = 1", 0., 1.);
+	Define(pPs, "SoilCover", 0., UNIT_TYPES::NO_UNIT,"WaterEq = 1", 0., 1.);
 
 
 	pPs= new Ps(&PumpRate , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,  "PumpRate", 40., "mm/day","WaterEq = 1|PumpStation >0", 0., 1000.);
+	Define(pPs,  "PumpRate", 40.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|PumpStation >0", 0., 1000.);
 	pPs= new Ps(&PumpLevelStart , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs, "PumpLevelStart", 20., "mm","WaterEq = 1|PumpStation >0", 0., 1000.);
 	pPs= new Ps(&PumpLevelStop , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -101,9 +101,9 @@ bool Surface_Water_Functions::Def()
 	pXs= new Xs(&SurfacePool , datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
 
 
-	Define(pXs, "SurfacePool", 0.,"mm","WaterEq = 1");
+	Define(pXs, "SurfacePool", 0.,UNIT_TYPES::WATERMASS_UNIT,"WaterEq = 1");
 	pXs= new Xs(&PumpPool , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pXs, "PumpPool", 0.,"mm","WaterEq = 1|PumpStation>0");
+	Define(pXs, "PumpPool", 0.,UNIT_TYPES::WATERMASS_UNIT,"WaterEq = 1|PumpStation>0");
 
 	Ts *pTs;
 	pTs= new Ts(&Spoolinflow, datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -130,7 +130,7 @@ bool Surface_Water_Functions::Def()
 
 	Gs *pGs;
 	pGs= new Gs(&SpoolCover, datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pGs,  "SpoolCover", 0., "-","WaterEq = 1");
+	Define(pGs,  "SpoolCover", 0., UNIT_TYPES::NO_UNIT,"WaterEq = 1");
 
 
 	return true;

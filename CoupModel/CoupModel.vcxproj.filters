@@ -1253,9 +1253,6 @@
     <ClInclude Include="Model\Atmosphere\Functors\SurfaceWater_Functors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Units.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model\PLANT\Functors\Salt_Functors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2207,9 +2204,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\PLANT\Salt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Units.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MultiRun\ConStrainByInput.cpp">

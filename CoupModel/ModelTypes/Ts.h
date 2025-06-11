@@ -7,7 +7,7 @@ public:
 
 	~Ts();
 
-	void Def(size_t module_no, std::string varname, double initv, std::string unit, std::string conditions);  
+	void Def(size_t module_no, std::string varname, double initv, std::string_view unit, std::string conditions);  
 
 protected:
 

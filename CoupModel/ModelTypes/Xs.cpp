@@ -10,7 +10,7 @@ Xs::Xs(double *target,enum datatype data, enum elements elem, enum fysprocess fp
 	SetSimType(simtype::STATE_SINGLE);
 	;
 }
-void Xs::Def(size_t ModuleNo, std::string name, double init, std::string unit, std::string conditions)
+void Xs::Def(size_t ModuleNo, std::string name, double init, std::string_view unit, std::string conditions)
 {
 
 	SetValue(init);

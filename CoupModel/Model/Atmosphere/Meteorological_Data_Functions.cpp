@@ -113,9 +113,9 @@ bool Meteorological_Data_Functions::Def()
 	Define(pPs,"TempDay Difference",10.,UNIT_TYPES::TEMP_UNIT,"WaterEq > 0|TempDayDiffInput=0|CloudInput=4", 0., 100.,10.,30.);
 
 	pPs= new Ps(&PrecA0Corr, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"PrecA0Corr",1.07,"-","WaterEq > 0|PrecInput = 1", 0., 10.,0.8,1.2);
+	Define(pPs,"PrecA0Corr",1.07,UNIT_TYPES::NO_UNIT,"WaterEq > 0|PrecInput = 1", 0., 10.,0.8,1.2);
 	pPs= new Ps(&PrecA1Corr, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);	
-	Define(pPs,"PrecA1Corr",0.08,"-","WaterEq > 0|PrecInput = 1", 0., 5.,0., 0.2);
+	Define(pPs,"PrecA1Corr",0.08,UNIT_TYPES::NO_UNIT,"WaterEq > 0|PrecInput = 1", 0., 5.,0., 0.2);
 
 
 
@@ -171,18 +171,18 @@ bool Meteorological_Data_Functions::Def()
 
 
 	pPs= new Ps(&WSpeedMean, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"WindspeedMean", 2.,"m/s","WSpeedInput = 0", 0.1,30., 0.1, 20. );
+	Define(pPs,"WindspeedMean", 2.,UNIT_TYPES::LENGTH_PER_TIME_UNIT,"WSpeedInput = 0", 0.1,30., 0.1, 20. );
 	pPs= new Ps(&HumRelMean, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"HumRelMean", 70.,"%","WaterEq > 0|HumRelInput = 0",10., 100., 20., 100.);
+	Define(pPs,"HumRelMean", 70.,UNIT_TYPES::PERCENTAGE,"WaterEq > 0|HumRelInput = 0",10., 100., 20., 100.);
 	pPs= new Ps(&CloudFMean, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"CloudFMean", .7,"-","CloudInput = 0", 0., 1.);
+	Define(pPs,"CloudFMean", .7,UNIT_TYPES::NO_UNIT,"CloudInput = 0", 0., 1.);
 	
 	pPs= new Ps(&RefHeight, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"ReferenceHeight",2.0,"m","CommonRefHeight>0",1., 100., 2., 30.);
+	Define(pPs,"ReferenceHeight",2.0,UNIT_TYPES::LENGTH_UNIT,"CommonRefHeight>0",1., 100., 2., 30.);
 	pPs= new Ps(&RefHeightWind, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"ReferenceHeightWind",2.0,"m","CommonRefHeight = 0",1., 100., 2., 30.);
+	Define(pPs,"ReferenceHeightWind",2.0,UNIT_TYPES::LENGTH_UNIT,"CommonRefHeight = 0",1., 100., 2., 30.);
 	pPs= new Ps(&RefHeightTemp, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"ReferenceHeightTemp",2.0,"m","CommonRefHeight = 0",1., 100., 2., 30.);
+	Define(pPs,"ReferenceHeightTemp",2.0,UNIT_TYPES::LENGTH_UNIT,"CommonRefHeight = 0",1., 100., 2., 30.);
 
 	 ps_vec.clear();
 /*	functorprop.FunctorInitOption = CommonRefHeight;
@@ -203,9 +203,9 @@ bool Meteorological_Data_Functions::Def()
 	plotpar.Y_Label = "Corrected Air Temperature "; plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT, true);
 
 	pPs= new Ps(&AltMetStation, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs,"AltMetStation",0.,"m","HeatEq > 0",0., 10000.);
+	Define(pPs,"AltMetStation",0.,UNIT_TYPES::LENGTH_UNIT,"HeatEq > 0",0., 10000.);
 	pPs= new Ps(&AltSimPosition, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs,"AltSimPosition",0.,"m","HeatEq > 0",0., 10000.);
+	Define(pPs,"AltSimPosition",0.,UNIT_TYPES::LENGTH_UNIT,"HeatEq > 0",0., 10000.);
 	pPs= new Ps(&TairLapseRate, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs,"TairLapseRate",0.0056,"Km-1","HeatEq > 0",0., 0.01);
 	
@@ -223,36 +223,36 @@ bool Meteorological_Data_Functions::Def()
 	Define(pPs, "Slope E-W", 0., "m/m","HeatEq  > 0|Timeresolution!=1",-1.,1.);
 	
 	pPs= new Ps(&RadInLong_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"RadinLong_Index", 1.,"-","RadInLongInput=1", 1., 5000.);
+	Define(pPs,"RadinLong_Index", 1.,UNIT_TYPES::NO_UNIT,"RadInLongInput=1", 1., 5000.);
 	pPs= new Ps(&RadGlob_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"RadGlob_Index", 1.,"-","RadGlobInput=2", 1., 5000.);	
+	Define(pPs,"RadGlob_Index", 1.,UNIT_TYPES::NO_UNIT,"RadGlobInput=2", 1., 5000.);	
 	pPs= new Ps(&Prec_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"Prec_Index", 1.,"-","WaterEq > 0|PrecInput =2", 1., 5000.);	
+	Define(pPs,"Prec_Index", 1.,UNIT_TYPES::NO_UNIT,"WaterEq > 0|PrecInput =2", 1., 5000.);	
 	pPs= new Ps(&TAir_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"Tair_Index", 1.,"-","HeatEq > 0|TempAirInput=2", 1., 5000.);	
+	Define(pPs,"Tair_Index", 1.,UNIT_TYPES::NO_UNIT,"HeatEq > 0|TempAirInput=2", 1., 5000.);	
 	pPs= new Ps(&HumRel_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"HumidityRH_Index", 1.,"-","WaterEq > 0|HumRelInput = 2", 1., 5000.)	;
+	Define(pPs,"HumidityRH_Index", 1.,UNIT_TYPES::NO_UNIT,"WaterEq > 0|HumRelInput = 2", 1., 5000.)	;
 	pPs= new Ps(&VapourAir_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"Vapour_Index", 1.,"-","VapourAirInput>2", 1., 5000.);	
+	Define(pPs,"Vapour_Index", 1.,UNIT_TYPES::NO_UNIT,"VapourAirInput>2", 1., 5000.);	
 	pPs= new Ps(&WSpeed_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"WindSpeed_Index", 1.,"-","WSpeedInput = 2", 1., 5000.);	
+	Define(pPs,"WindSpeed_Index", 1.,UNIT_TYPES::NO_UNIT,"WSpeedInput = 2", 1., 5000.);	
 	pPs= new Ps(&RNT_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"RadNet_Index", 1.,"-","RadNetInput=2", 1., 5000.);	
+	Define(pPs,"RadNet_Index", 1.,UNIT_TYPES::NO_UNIT,"RadNetInput=2", 1., 5000.);	
 	pPs= new Ps(&Cloud_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"Cloud_Index", 1.,"-","CloudInput = 3", 1., 5000.);	
+	Define(pPs,"Cloud_Index", 1.,UNIT_TYPES::NO_UNIT,"CloudInput = 3", 1., 5000.);	
 	pPs= new Ps(&DBSun_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"DBSunshine_Index", 1.,"-","DBSunInput = 2.", 1., 5000.);	
+	Define(pPs,"DBSunshine_Index", 1.,UNIT_TYPES::NO_UNIT,"DBSunInput = 2.", 1., 5000.);	
 	pPs= new Ps(&TempDiff_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,"TempDiff_Index", 1.,"-","TempDiffInput = 2.", 1., 5000.);//	! Urban Iland Parameters
-//!	Define(pPsUrbanSmoothFrac, "UrbanSmoothFrac", 0., "-","HeatEq >0",0.,1.)
+	Define(pPs,"TempDiff_Index", 1.,UNIT_TYPES::NO_UNIT,"TempDiffInput = 2.", 1., 5000.);//	! Urban Iland Parameters
+//!	Define(pPsUrbanSmoothFrac, "UrbanSmoothFrac", 0., UNIT_TYPES::NO_UNIT,"HeatEq >0",0.,1.)
 
 	pPs= new Ps(&PrecScaleF, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "PrecScale", 1., "-","SweClimScenarious>0",0.,1.);
+	Define(pPs, "PrecScale", 1., UNIT_TYPES::NO_UNIT,"SweClimScenarious>0",0.,1.);
 	pPs= new Ps(&TempAddCoef, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "TempAddCoef", 0., "-","SweClimScenarious>0",0.,1.);
+	Define(pPs, "TempAddCoef", 0., UNIT_TYPES::NO_UNIT,"SweClimScenarious>0",0.,1.);
 
 	pPs= new Ps(&PGFileName_Index, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-    Define(pPs,"InputFileNameIndex", 1.,"-","Dynamic indexed input file>0|TypeOfDrivingFile >= 1", 1., 990000.);
+    Define(pPs,"InputFileNameIndex", 1.,UNIT_TYPES::NO_UNIT,"Dynamic indexed input file>0|TypeOfDrivingFile >= 1", 1., 990000.);
 
 	F* pF;
 	pF = new F(&m_PG_Meteor, datatype::ATMBOUNDARY, elements::CLIMATE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -289,19 +289,19 @@ bool Meteorological_Data_Functions::Def()
 	pDs = new Ds(&PrecCorr, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs	,"PrecCorrected",0.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq > 0") ;
 	pDs = new Ds(&HumRel, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs	,"HumidityRelative",0.,"%","RadiationInput > 0|WaterEq > 0");
+	Define(pDs	,"HumidityRelative",0.,UNIT_TYPES::PERCENTAGE, "RadiationInput > 0|WaterEq > 0");
 	pDs = new Ds(&VapourPAir, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs,"VapourPressureAir",0.,"Pa","RadiationInput > 0|WaterEq > 0");
+	Define(pDs,"VapourPressureAir",0.,UNIT_TYPES::PRESSURE_UNIT,"RadiationInput > 0|WaterEq > 0");
 	pDs = new Ds(&VapourPDef, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs,"VapourPressureDef",0.,"Pa","RadiationInput > 0|WaterEq > 0") ;
+	Define(pDs,"VapourPressureDef",0.,UNIT_TYPES::PRESSURE_UNIT,"RadiationInput > 0|WaterEq > 0") ;
 	pDs = new Ds(&WindSpeed, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs ,"WindSpeed",0., "m/s","RadiationInput > 0|WaterEq > 0");
+	Define(pDs ,"WindSpeed",0., UNIT_TYPES::LENGTH_PER_TIME_UNIT,"RadiationInput > 0|WaterEq > 0");
 	pDs = new Ds(&RadNetTot, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs	,"RadiationNetTot",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0|WaterEq > 0");
 	pDs = new Ds(&CloudFrac, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs ,"CloudFrac",0.,"-","RadiationInput > 0");
+	Define(pDs ,"CloudFrac",0.,UNIT_TYPES::NO_UNIT,"RadiationInput > 0");
 	pDs = new Ds(&DurBriSun, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs	,"DurBriSunshine",0.,"minutes","RadiationInput > 0|DBSunInput >0") ;
+	Define(pDs	,"DurBriSunshine",0.,UNIT_TYPES::TIME_MINUTE_UNIT,"RadiationInput > 0|DBSunInput >0") ;
 	pDs = new Ds(&RadInShort, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs,"GlobalRadiation",0.,UNIT_TYPES::HEATFLOW_UNIT,"RadiationInput > 0");
 	pDs = new Ds(&TempDayDifference, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);

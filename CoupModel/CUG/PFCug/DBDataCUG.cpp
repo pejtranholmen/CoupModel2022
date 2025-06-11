@@ -346,7 +346,7 @@ void DBDataCug::Make_GeneralInfoSheet() {
 			str= m_pDB->m_PlantType[typeindex][m_pDB->m_PlantType[typeindex].size()-1];
 	}
 
-	cell.SetText(str.c_str());
+	cell.SetStdText(str);
 	SetCell(0,0,&cell);
 	QuickSetText(0,1,header.Name);
 	QuickSetText(0,2,header.SiteName);
@@ -376,7 +376,7 @@ void DBDataCug::Make_GeneralInfoSheet() {
 	cell.SetCellTypeEx(UGCT_NORMALMULTILINE);
 	cell.SetAlignment(UG_ALIGNLEFT);
 	string cstr=header.Details;
-	cell.SetText(cstr);
+	cell.SetStdText(cstr);
 	SetCell(1,0,&cell);
 
 	RedrawAll();
@@ -537,14 +537,14 @@ void DBDataCug::Make_SwitchesSheet()
 					i1=((Sw*)pSw)->GetDBIntValue();
 					if(i1!=pSw->GetOriginalIntValue()) {
 						str=((Sw*)pSw)->GetOption(i1).c_str();
-						cell.SetText(str);
+						cell.SetStdText(str);
 						cell.SetBackColor(m_ColorClick);
 						if(readonly)
 							cell.SetBackColor(m_ColorReadOnlyClick);
 					}
 					else {
 						str=((Sw*)pSw)->GetOption(i1).c_str();
-						cell.SetText( str);
+						cell.SetStdText( str);
 						cell.SetBackColor(m_ColorHeading);
 						if(readonly)
 							cell.SetBackColor(m_ColorReadOnly);
@@ -581,19 +581,19 @@ void DBDataCug::Make_SwitchesSheet()
 
 							i1=pSw->GetDBIntValue();
 							if (i1 == std::string::npos) {
-								cell.SetText("-");
+								cell.SetStdText("-");
 								cell.SetBackColor(m_ColorHeading);
 							}						
 							else if(i1!=pSw->GetOriginalIntValue()) {
 								str=((Sw*)pSw)->GetOption(i1).c_str();
-								cell.SetText(str);
+								cell.SetStdText(str);
 								cell.SetBackColor(m_ColorClick);
 								if(readonly)
 									cell.SetBackColor(m_ColorReadOnlyClick);
 							}
 							else {
 								str=((Sw*)pSw)->GetOption(i1).c_str();
-								cell.SetText( str);
+								cell.SetStdText( str);
 								cell.SetBackColor(m_ColorHeading);
 								if(readonly)
 									cell.SetBackColor(m_ColorReadOnly);
@@ -779,7 +779,7 @@ void DBDataCug::Make_ParameterSheet()
 										cell.SetBackColor(m_ColorReadOnlyClick);
 								}
 								else if (val < 0.9*MISSING) {
-									cell.SetText("-");
+									cell.SetStdText("-");
 									cell.SetBackColor(m_ColorHeading);
 
 

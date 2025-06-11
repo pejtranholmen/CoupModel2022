@@ -83,7 +83,7 @@ bool HBV::Def()
 
 
 	pPs = new Ps(&BetaCoef, datatype::SINGLE, elements::WATER, fysprocess::INFILTRATION, bioprocess::NOBPROC, userlevel::NORMAL);	ps_vec.push_back(pPs);
-	Define(pPs, "BetaCoef", 1., "-", "", 1., 6.);
+	Define(pPs, "BetaCoef", 1., UNIT_TYPES::NO_UNIT, "", 1., 6.);
 
 	functorprop.FuncName = MyFunc::HBV_INFILTRATION; functorprop.Arg = MyArgType::D3;
 	funcname = "Soil Infiltration Function";
@@ -169,9 +169,9 @@ bool HBV::Def()
 	Define(pPs, "Max_GwLev", 0., "m", "", 0., 0.1);
 
 	pPs = new Ps(&Sens_GWLev, datatype::SINGLE, elements::WATER, fysprocess::DRAINAGE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Sens_GwLev", 2, "-", "", 1., 100.);
+	Define(pPs, "Sens_GwLev", 2, UNIT_TYPES::NO_UNIT, "", 1., 100.);
 	pPs = new Ps(&PowerCoef_GWLev, datatype::SINGLE, elements::WATER, fysprocess::DRAINAGE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "PowerCoef_GwLev", 1., "-", "", 1., 100.);
+	Define(pPs, "PowerCoef_GwLev", 1., UNIT_TYPES::NO_UNIT, "", 1., 100.);
 
 	functorprop.FuncName = MyFunc::HBV_GROUNDWATERLEVEL; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;

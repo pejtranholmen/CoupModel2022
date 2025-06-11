@@ -187,9 +187,9 @@ void SimModule::Define(Sw* ptr, std::string name, int value,string options, std:
 }
 void SimModule::Define(Xs* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, name, value, string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Xs* ptr,  std::string name, double value, std::string unit, std::string conditions)
+void SimModule::Define(Xs* ptr,  std::string name, double value, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -203,9 +203,9 @@ void SimModule::Define(Xs* ptr,  std::string name, double value, std::string uni
 }
 void SimModule::Define(Ts* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, name, value, string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Ts* ptr,  std::string name, double value, std::string unit, std::string conditions)
+void SimModule::Define(Ts* ptr,  std::string name, double value, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -219,9 +219,9 @@ void SimModule::Define(Ts* ptr,  std::string name, double value, std::string uni
 }
 void SimModule::Define(Gs* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, name, value, string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Gs* ptr,  std::string name, double value, std::string unit, std::string conditions)
+void SimModule::Define(Gs* ptr,  std::string name, double value, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -235,9 +235,9 @@ void SimModule::Define(Gs* ptr,  std::string name, double value, std::string uni
 }
 void SimModule::Define(Ds* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, name, value, string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(Ds* ptr,  std::string name, double value, std::string unit, std::string conditions)
+void SimModule::Define(Ds* ptr,  std::string name, double value, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -252,10 +252,10 @@ void SimModule::Define(Ds* ptr,  std::string name, double value, std::string uni
 void SimModule::Define(Ps* ptr, std::string name, double value, UNIT_TYPES UNIT, std::string conditions, double emin, double emax, double wmin, double wmax, int recalc, int UserLevel, int view)
 {
 
-	Define(ptr, name, value, string(p_ModelInfo->GetUnitString(UNIT)), conditions, emin, emax, wmin, wmax, recalc, UserLevel, view);
+	Define(ptr, name, value, p_ModelInfo->GetUnitString(UNIT), conditions, emin, emax, wmin, wmax, recalc, UserLevel, view);
 	
 }
-void SimModule::Define(Ps* ptr, std::string name, double value, std::string unit, std::string conditions, double emin, double emax, double wmin, double wmax,int recalc, int UserLevel, int view)
+void SimModule::Define(Ps* ptr, std::string name, double value, std::string_view unit, std::string conditions, double emin, double emax, double wmin, double wmax,int recalc, int UserLevel, int view)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -284,10 +284,10 @@ void SimModule::Define(NE* ne, std::string name)
 
 void SimModule::Define(P* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions, double emin, double emax, double wmin, double wmax, int recalc, int views, int view)
 {
-	Define(ptr,  ptrNE, name,  vvalue,string(p_ModelInfo->GetUnitString(UNIT)) , conditions,  emin,  emax,  wmin, wmax,  recalc, views,  view);
+	Define(ptr,  ptrNE, name,  vvalue,p_ModelInfo->GetUnitString(UNIT) , conditions,  emin,  emax,  wmin, wmax,  recalc, views,  view);
 }
 
-void SimModule::Define(P* ptr,NE* ptrNE,string name, std::vector<double> vvalue, std::string unit, std::string conditions, double emin, double emax, double wmin, double wmax, int recalc, int views, int view)
+void SimModule::Define(P* ptr,NE* ptrNE,string name, std::vector<double> vvalue, std::string_view unit, std::string conditions, double emin, double emax, double wmin, double wmax, int recalc, int views, int view)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -435,10 +435,10 @@ void SimModule::Define(Func* ptr, FunctorProp myf, std::string name, std::vector
 }*/
 void SimModule::Define(X* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, ptrNE, name, vvalue, string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, ptrNE, name, vvalue, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
 
-void SimModule::Define(X* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string unit, std::string conditions)
+void SimModule::Define(X* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -453,9 +453,9 @@ void SimModule::Define(X* ptr, NE* ptrNE, std::string name, std::vector<double> 
 }
 void SimModule::Define(T* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, ptrNE, name, vvalue, string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, ptrNE, name, vvalue, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(T* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string unit, std::string conditions)
+void SimModule::Define(T* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -471,9 +471,9 @@ void SimModule::Define(T* ptr, NE* ptrNE, std::string name, std::vector<double> 
 }
 void SimModule::Define(G* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, ptrNE, name, vvalue,string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, ptrNE, name, vvalue,p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(G* ptr, NE* ptrNE,string name, std::vector<double> vvalue, std::string unit, std::string conditions)
+void SimModule::Define(G* ptr, NE* ptrNE,string name, std::vector<double> vvalue, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;
@@ -488,9 +488,9 @@ void SimModule::Define(G* ptr, NE* ptrNE,string name, std::vector<double> vvalue
 }
 void SimModule::Define(D* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, UNIT_TYPES UNIT, std::string conditions)
 {
-	Define(ptr, ptrNE, name, vvalue, string(p_ModelInfo->GetUnitString(UNIT)), conditions);
+	Define(ptr, ptrNE, name, vvalue, p_ModelInfo->GetUnitString(UNIT), conditions);
 }
-void SimModule::Define(D* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string unit, std::string conditions)
+void SimModule::Define(D* ptr, NE* ptrNE, std::string name, std::vector<double> vvalue, std::string_view unit, std::string conditions)
 {
    std::string AllConditions;
    AllConditions=ModuleConditions;

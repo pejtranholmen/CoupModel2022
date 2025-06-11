@@ -146,13 +146,13 @@ bool Technical_Functions::Def()
 	  pPs= new Ps(&FRandomSeed, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,  	"Random Seed",1.,"#","Develop<100",1.,100000.);
 	  pPs= new Ps(&BayesianStepChangeSens, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,   "BayesianChangeCoef", 0.003,"-","Marcov Chain Step=1",0., 0.1);
+	Define(pPs,   "BayesianChangeCoef", 0.003,UNIT_TYPES::NO_UNIT,"Marcov Chain Step=1",0., 0.1);
 	  pPs= new Ps(&BayesianStepMinimumScaling, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,   "BayesianMinScaling", 0.001,"-","Marcov Chain Step>0",0.1E-10, 1.);
+	Define(pPs,   "BayesianMinScaling", 0.001,UNIT_TYPES::NO_UNIT,"Marcov Chain Step>0",0.1E-10, 1.);
 	  pPs= new Ps(&MCStepChangePeriod, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,   "MC StepChangePeriod", 1000.,"-","Marcov Chain Step>1",100., 1.E6);
+	Define(pPs,   "MC StepChangePeriod", 1000.,UNIT_TYPES::NO_UNIT,"Marcov Chain Step>1",100., 1.E6);
 		pPs = new Ps(&AggregateCalibNumber, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "Aggregate Calib Number", 1., "-", "Develop<100", 1., 100.);
+	Define(pPs, "Aggregate Calib Number", 1., UNIT_TYPES::NO_UNIT, "Develop<100", 1., 100.);
     
 	Tab *pTab;
 	NE *pScaling;
@@ -167,19 +167,19 @@ bool Technical_Functions::Def()
 //	call PnE(,10,1,100,2,100)	
 	P* pP;
 	 pP= new P(&ObservedScaling ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP,  pScaling, "Scaling Observed", initv,"-","ValidationMode>1",-0.5, 0.5);
+		Define(pP,  pScaling, "Scaling Observed", initv,UNIT_TYPES::NO_UNIT,"ValidationMode>1",-0.5, 0.5);
 		ScalingObsTab.push_back(pP);
 	pP= new P(&ObservedScalingIndex ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP,  pScaling,  "Scaling Index", initv,"-","ValidationMode>1",0., 1000.);
+		Define(pP,  pScaling,  "Scaling Index", initv,UNIT_TYPES::NO_UNIT,"ValidationMode>1",0., 1000.);
 		ScalingObsTab.push_back(pP);
 
 	
 	pP= new P(&BoxCox_p1, pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumScaling,0.);
-		Define(pP,  pScaling,   "Box Cox power", initv,"-","Box-Cox Tranformation>1",0., 1.);
+		Define(pP,  pScaling,   "Box Cox power", initv,UNIT_TYPES::NO_UNIT,"Box-Cox Tranformation>1",0., 1.);
 		ScalingObsTab.push_back(pP);
 	pP= new P(&BoxCox_p2 ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP,  pScaling, "Box Cox offset", initv,"-","Box-Cox Tranformation>1",0., 1.E10);
+		Define(pP,  pScaling, "Box Cox offset", initv,UNIT_TYPES::NO_UNIT,"Box-Cox Tranformation>1",0., 1.E10);
 		initv.assign(NumScaling,.10);
 		ScalingObsTab.push_back(pP);
 
@@ -188,11 +188,11 @@ bool Technical_Functions::Def()
 
 		initv.assign(NumScaling, 0.);
 	pP = new P(&FilterVarIndex, pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP, pScaling, "Filter Var Index", initv, "-", "ValidationMode>0", -0.5, 0.5);
+		Define(pP, pScaling, "Filter Var Index", initv, UNIT_TYPES::NO_UNIT, "ValidationMode>0", -0.5, 0.5);
 		FilterIndexTab.push_back(pP);
 		initv.assign(NumScaling, 1.);
 		pP = new P(&FilterVarValue, pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP, pScaling, "Filter Var Value", initv, "-", "ValidationMode>0", -0.5, 0.5);
+		Define(pP, pScaling, "Filter Var Value", initv, UNIT_TYPES::NO_UNIT, "ValidationMode>0", -0.5, 0.5);
 		FilterIndexTab.push_back(pP);
 
 	pTab = new Tab(&FilterIndexTab, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -205,31 +205,31 @@ bool Technical_Functions::Def()
 
 	pP = new P(&Criterion.Ensemble, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 1.);
-		Define(pP, pCriteria, "Ensemble", initv, "-", "PreDefinedEnsembles>0", 0., 16., 0., 16.,0,2024,2024); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Ensemble", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 16., 0., 16.,0,2024,2024); CriteriaTab.push_back(pP);
 		initv.assign(NumCriteria, 0.);
 
 	pP = new P(&Criterion.Criterion, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP, pCriteria, "Transformation", initv, "-", "PreDefinedEnsembles>0", 0., 4., 0., 4., 0, 2024, 2024); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Transformation", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 4., 0., 4., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.Transformation, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "ZeroAdjustment", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6.,0, 2024, 2024); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "ZeroAdjustment", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 6., 0., 6.,0, 2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.ZeroAdjustment, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "Performance Indicator", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0.,6., 0,2024, 2024); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Performance Indicator", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 6.,0.,6., 0,2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.ValVarIndex, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "Var Index", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0.,6.,0,2024, 2024); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "Var Index", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 6., 0.,6.,0,2024, 2024); CriteriaTab.push_back(pP);
 	pP = new P(&Criterion.ThresholdType, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		initv.assign(NumCriteria, 0.);
-		Define(pP, pCriteria, "ThresholdType", initv, "-", "PreDefinedEnsembles>0", 0., 6.,0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
+		Define(pP, pCriteria, "ThresholdType", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 6.,0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
 
 	pP = new P(&Criterion.Threshold, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pP, pCriteria, "ThresholdValue", initv, "#", "PreDefinedEnsembles>0", 10., 100.,10.,100.,0,2024); CriteriaTab.push_back(pP);
 
 		pP = new P(&Criterion.MultiParIndex, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);	
-	Define(pP, pCriteria, "MR Dim1 Index", initv, "-", "PreDefinedEnsembles>0", 0., 100., 0., 10., 0, 2024, 2024); CriteriaTab.push_back(pP);
+	Define(pP, pCriteria, "MR Dim1 Index", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 100., 0., 10., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	
-	//Define(pP, pCriteria, "MultiRun Par Value", initv, "-", "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
+	//Define(pP, pCriteria, "MultiRun Par Value", initv, UNIT_TYPES::NO_UNIT, "PreDefinedEnsembles>0", 0., 6., 0., 6., 0, 2024, 2024); CriteriaTab.push_back(pP);
 	//	pP = new P(&Criterion.MultiParValue, pCriteria, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 
 	pTab = new Tab(&CriteriaTab, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -238,11 +238,11 @@ bool Technical_Functions::Def()
 
 	size_t nss=pTab->GetNumOfRow();
 	pP= new P(&Abs_Error ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-      Define(pP,  pScaling,  "Abs Error", initv,"-","Develop<100",0., 100.);
+      Define(pP,  pScaling,  "Abs Error", initv,UNIT_TYPES::NO_UNIT,"Develop<100",0., 100.);
 		initv.assign(NumScaling,.15);
 		ErrorTab.push_back(pP);
 	pP= new P(&Rel_Error ,pScaling, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pP,  pScaling,   "Rel Error", initv,"-","Develop<100",0., 1.);
+		Define(pP,  pScaling,   "Rel Error", initv,UNIT_TYPES::NO_UNIT,"Develop<100",0., 1.);
 		ErrorTab.push_back(pP);
 
 	pTab= new Tab(&ErrorTab, datatype::OBSERVED, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);

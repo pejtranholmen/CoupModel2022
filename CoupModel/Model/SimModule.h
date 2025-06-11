@@ -12,7 +12,7 @@
 #include "../Simulator/ModelInfo.h"
 #include "../NewBase/ModelMap.h"
 #include "../Util/StatUtil.h"
-#include "./Units.h"
+
 using namespace StatUtil;
 using namespace ModelFunctions;
 
@@ -74,16 +74,16 @@ public:
 	~SimModule();
 	SimModule();
 
-	void Define(Ps*,  std::string Name, double value, std::string unit, std::string conditions, double error_min, double error_max, double warn_min=float(MISSING), double warn_max=float(MISSING), int recalc=0, int UserLevel=0, int view=0);
+	void Define(Ps*,  std::string Name, double value, std::string_view unit, std::string conditions, double error_min, double error_max, double warn_min=float(MISSING), double warn_max=float(MISSING), int recalc=0, int UserLevel=0, int view=0);
 	void Define(Ps*, std::string Name, double value, UNIT_TYPES, std::string conditions, double error_min, double error_max, double warn_min = float(MISSING), double warn_max = float(MISSING), int recalc = 0, int UserLevel = 0, int view = 0);
 
-	void Define(Xs*,std::string Name, double value, std::string unit, std::string conditions="");
+	void Define(Xs*,std::string Name, double value, std::string_view unit, std::string conditions="");
 	void Define(Xs*, std::string Name, double value, UNIT_TYPES, std::string conditions = "");
-	void Define(Ts*,std::string Name, double value, std::string unit, std::string conditions="");
+	void Define(Ts*,std::string Name, double value, std::string_view unit, std::string conditions="");
 	void Define(Ts*, std::string Name, double value, UNIT_TYPES, std::string conditions = "");
-	void Define(Gs*,std::string Name, double value, std::string unit, std::string conditions="");
+	void Define(Gs*,std::string Name, double value, std::string_view unit, std::string conditions="");
 	void Define(Gs*, std::string Name, double value, UNIT_TYPES, std::string conditions = "");
-	void Define(Ds*,std::string Name, double value, std::string unit, std::string conditions="");
+	void Define(Ds*,std::string Name, double value, std::string_view unit, std::string conditions="");
 	void Define(Ds*, std::string Name, double value, UNIT_TYPES, std::string conditions = "");
 
 //	void SetPtr2Module(GlobalInfo *pGlob, ModelInfo *pModel, ModelMap *pMap) {pSub=pGlob; m_pModelInfo=pModel;m_pModelMap=pMap; pT_Step=&pModel->T_Step;T_Step=*pT_Step;}; 
@@ -91,7 +91,7 @@ public:
 	void Define(Sw*,std::string Name, int ,std::string options, std::string condition="", int recalc=0);
 	void Define(NE*, std::string Name);
 
-	void Define(P*, NE*, std::string Name, std::vector<double>, std::string unit, std::string conditions = "", double error_min = float(MISSING), double error_max = float(MISSING), double warn_min = float(MISSING), double warn_max = float(MISSING), int recalc = 0, int views = 0, int view = 0);
+	void Define(P*, NE*, std::string Name, std::vector<double>, std::string_view unit, std::string conditions = "", double error_min = float(MISSING), double error_max = float(MISSING), double warn_min = float(MISSING), double warn_max = float(MISSING), int recalc = 0, int views = 0, int view = 0);
 	void Define(P*, NE*, std::string Name, std::vector<double>, UNIT_TYPES, std::string conditions = "", double error_min = float(MISSING), double error_max = float(MISSING), double warn_min = float(MISSING), double warn_max = float(MISSING), int recalc = 0, int views = 0, int view = 0);
 	
 
@@ -108,16 +108,16 @@ public:
 	void Define(Func* ptr, FunctorProp myf, std::string name,  std::vector<P*> PsV);
 	void Define(Func* ptr, FunctorProp myf, std::string name, std::vector<P*> PsV, PLOT_PARAM plotpar);
 
-	void Define(X*, NE* pne, std::string Name, std::vector<double> value, std::string unit, std::string conditions="");
+	void Define(X*, NE* pne, std::string Name, std::vector<double> value, std::string_view unit, std::string conditions="");
 	void Define(X*, NE* pne, std::string Name, std::vector<double> value, UNIT_TYPES, std::string conditions = "");
 
-	void Define(T*, NE* pne, std::string Name, std::vector<double> value, std::string unit, std::string conditions="");
+	void Define(T*, NE* pne, std::string Name, std::vector<double> value, std::string_view unit, std::string conditions="");
 	void Define(T*, NE* pne, std::string Name, std::vector<double> value, UNIT_TYPES, std::string conditions = "");
 
-	void Define(G*,NE* pNE, std::string Name, std::vector<double> value, std::string unit, std::string conditions="");
+	void Define(G*,NE* pNE, std::string Name, std::vector<double> value, std::string_view unit, std::string conditions="");
 	void Define(G*, NE* pNE, std::string Name, std::vector<double> value, UNIT_TYPES, std::string conditions = "");
 
-	void Define(D*,NE* pNE, std::string Name, std::vector<double> value, std::string unit, std::string conditions="");
+	void Define(D*,NE* pNE, std::string Name, std::vector<double> value, std::string_view unit, std::string conditions="");
 	void Define(D*, NE* pNE, std::string Name, std::vector<double> value, UNIT_TYPES, std::string conditions = "");
 	
 	

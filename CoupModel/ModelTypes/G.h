@@ -7,7 +7,7 @@ public:
 
 	~G();
 
-	void Def(int module_no, std::string varname, std::vector<double> initv, std::string unit, std::string conditions);  
+	void Def(int module_no, std::string varname, std::vector<double> initv, std::string_view unit, std::string conditions);  
 
 protected:
 

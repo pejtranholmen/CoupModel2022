@@ -74,7 +74,7 @@ bool SoilEvaporation_Functions::Def()
 	plotpar.Y_Label = "Relative Humidity ";	 plotpar.Y_Label += p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT, true);
 
 	pPs = new Ps(&EGPsi, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "EquilAdjustPsi", 1., "-", "Evaporation > 0|Evaporation Method = 3|WaterEq = 1", 0., 5., 0., 2.5);
+	Define(pPs, "EquilAdjustPsi", 1., UNIT_TYPES::NO_UNIT, "Evaporation > 0|Evaporation Method = 3|WaterEq = 1", 0., 5., 0., 2.5);
 
 
 	pFunc = new Func( datatype::SOILSURFACE, elements::ATMOSPHERE, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -140,7 +140,7 @@ bool SoilEvaporation_Functions::Def()
 	Define(pFunc, functorprop, funcname,  ps_vec, plotpar);
 
 	pPs = new Ps(&WindLessExchangeSoil, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "WindLessExchangeSoil", 0.001, "-", "WaterEq = 1|Surface Temperature >=2|Evaporation Method > 0", 0.0, 1.0);
+	Define(pPs, "WindLessExchangeSoil", 0.001, UNIT_TYPES::NO_UNIT, "WaterEq = 1|Surface Temperature >=2|Evaporation Method > 0", 0.0, 1.0);
 	pPs = new Ps(&RoughLBareSoilMom, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "RoughLBareSoilMom", 0.001, "m", "Evaporation Method > 0|WaterEq = 1", 0.00000001, 5., 0.00001, .05);
 
@@ -246,9 +246,9 @@ bool SoilEvaporation_Functions::Def()
 
 
  	pPs= new Ps(&SoilCoverEvap, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
-    Define(pPs,   "SoilCoverEvap",0.,"-","Evaporation > 0|Evaporation Method > 2|WaterEq = 1|SurfaceCover >0",0., 1.);
+    Define(pPs,   "SoilCoverEvap",0.,UNIT_TYPES::NO_UNIT,"Evaporation > 0|Evaporation Method > 2|WaterEq = 1|SurfaceCover >0",0., 1.);
  	pPs= new Ps(&SoilCoverRunOff, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
-    Define(pPs,   "SoilCoverRunOff",0.,"-","Evaporation > 0|Evaporation Method > 2|WaterEq = 1|SurfaceCover >0",0., 1.);
+    Define(pPs,   "SoilCoverRunOff",0.,UNIT_TYPES::NO_UNIT,"Evaporation > 0|Evaporation Method > 2|WaterEq = 1|SurfaceCover >0",0., 1.);
 
     //!======================	
     //! FLUX VARIABLES    
@@ -260,7 +260,7 @@ bool SoilEvaporation_Functions::Def()
     //! AUXILIARY VARIABLES     
     //!======================
 	Gs *pGs= new Gs(&Surfmos, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
-	    Define(pGs,   "SurfmoistureBalance", 0.,"mm","Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
+	    Define(pGs,   "SurfmoistureBalance", 0.,UNIT_TYPES::WATERMASS_UNIT,"Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
 	pGs= new Gs(&RaSoilSurf, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pGs,  "ResAirAboveSoil", 0.,"s/m", "Evaporation > 1|Evaporation Method > 0|WaterEq = 1");
 	pGs= new Gs(&RsSoilSurf, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
@@ -299,7 +299,7 @@ bool SoilEvaporation_Functions::Def()
 	pTs= new Ts(&SurfHeatFlow1, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pTs,  "SurfHeatFlow1",0.,UNIT_TYPES::HEATFLOW_UNIT,"SoilPartitioningArea>0|Evaporation Method > 0|Evaporation > 1");
  	pGs= new Gs(&Fraction1, datatype::ATMBOUNDARY, elements::ATMOSPHERE, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL); 
-		Define(pGs,   "Fraction of soil Area1", 0.,"-",			"SoilPartitioningArea>0|Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
+		Define(pGs,   "Fraction of soil Area1", 0.,UNIT_TYPES::NO_UNIT,			"SoilPartitioningArea>0|Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
 	pGs= new Gs(&SoilLatentF1, datatype::ATMBOUNDARY, elements::HEAT, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
 	    Define(pGs,  "SoilLatentFlow1", 0.,UNIT_TYPES::HEATFLOW_UNIT		,"SoilPartitioningArea>0|Evaporation > 0|Surface Temperature > 0|WaterEq = 1");
 	pGs= new Gs(&SoilSensF1, datatype::ATMBOUNDARY, elements::HEAT, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
@@ -312,7 +312,7 @@ bool SoilEvaporation_Functions::Def()
 	pGs= new Gs(&SoilEBal1, datatype::ATMBOUNDARY, elements::HEAT, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
     Define(pGs,  "EBalanceClosure1", 0.,UNIT_TYPES::HEATFLOW_UNIT		, "SoilPartitioningArea>0|Evaporation > 0|Surface Temperature > 0|WaterEq = 1");
 	pGs= new Gs(&SurfMos1, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
-    Define(pGs,   "SurfmoistureBalance1", 0.,"mm"			,"SoilPartitioningArea>0|Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
+    Define(pGs,   "SurfmoistureBalance1", 0.,UNIT_TYPES::WATERMASS_UNIT			,"SoilPartitioningArea>0|Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
 	pGs= new Gs(&RaSoilSurf1, datatype::ATMBOUNDARY, elements::ATMOSPHERE, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL); 
     Define(pGs,  "ResAirAboveSoil1", 0.,"s/m"				,"SoilPartitioningArea>0|Evaporation > 1|Evaporation Method > 0|WaterEq = 1");
 
@@ -334,7 +334,7 @@ bool SoilEvaporation_Functions::Def()
 	pGs= new Gs(&SoilEBal2, datatype::ATMBOUNDARY, elements::HEAT, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL);    
 		Define(pGs,  "EBalanceClosure2", 0.,UNIT_TYPES::HEATFLOW_UNIT		, "SoilPartitioningArea>0|Evaporation > 0|Surface Temperature > 0|WaterEq = 1");
 	pGs= new Gs(&SurfMos2, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL); 
-		Define(pGs,   "SurfmoistureBalance2", 0.,"mm"			,"SoilPartitioningArea>0|Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
+		Define(pGs,   "SurfmoistureBalance2", 0.,UNIT_TYPES::WATERMASS_UNIT			,"SoilPartitioningArea>0|Evaporation > 0|Evaporation Method > 0|WaterEq = 1") ;
 	pGs= new Gs(&RaSoilSurf2, datatype::ATMBOUNDARY, elements::ATMOSPHERE, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL); 
 		Define(pGs,  "ResAirAboveSoil2", 0.,"s/m"				,"SoilPartitioningArea>0|Evaporation > 1|Evaporation Method > 0|WaterEq = 1");
 

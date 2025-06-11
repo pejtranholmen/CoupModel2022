@@ -18,7 +18,7 @@ class P : public Par
 		std::vector<double> GetVector() { return *_ptarget;}
 		void SetSize(size_t NRow) {if(pNE!=nullptr) ((NE*)pNE)->ReSizeValue(NRow);};
 		size_t  GetSize() noexcept {return _ptarget->size();};
-		void Def(size_t ModuleNo, std::string name, std::vector<double> init, std::string unit, std::string conditions, 
+		void Def(size_t ModuleNo, std::string name, std::vector<double> init, std::string_view unit, std::string conditions, 
 			double errormin, double errormax, double warningmin, double warningmax,
 			int recalc=0,  int view=0);
 		size_t SetValue(size_t index, double v) {if(index<_ptarget->size())

@@ -500,7 +500,7 @@ bool PGFileImportBase::ConvLine(vector<float> *vv,string line, size_t option) {
 			if(npos==1)
 				varstr+="-0"+newstr.substr(0,npos);
 			else
-				varstr+="-"+newstr.substr(0,npos);		
+				varstr+= "-"+newstr.substr(0,npos);		
 		}
 		varstr+=" 12:00";
 		size_t minut=PGUtil::MinutConv(varstr,false,false);
@@ -1221,11 +1221,11 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 							break;
 						case (9):
 							varstr="Ratio AT/PT";
-							unitstr="-";
+							unitstr= "-";
 							break;
 						case (10):
 							varstr="Ratio AT/PTC";
-							unitstr="-";
+							unitstr= "-";
 							break;*/
 				}
 				SetVarName(jj, varstr, m_countf + 1);
@@ -1282,11 +1282,11 @@ bool PGFileImportBase::ReadHeading(FILEINFO input, size_t ActualIndexId) {
 							break;
 						case (9):
 							varstr="Ratio AT/PT";
-							unitstr="-";
+							unitstr= "-";
 							break;
 						case (10):
 							varstr="Ratio AT/PTC";
-							unitstr="-";
+							unitstr= "-";
 							break;*/
 				}
 				SetVarName(jj, varstr, m_countf + 1);
@@ -2013,9 +2013,9 @@ if(nvar==0) {
 	if(first==2&&second==5) {
 		m_datestring="";
 		m_datestring=varstr.substr(6,4);
-		m_datestring+="-";
+		m_datestring+= "-";
 		m_datestring+=varstr.substr(3,2);
-		m_datestring+="-";
+		m_datestring+= "-";
 		m_datestring+=varstr.substr(0,2);
 
 	}
@@ -2033,7 +2033,7 @@ if(nvar==0) {
 			else { 
 				m_datestring.clear();
 				m_datestring=varstr;
-				m_datestring+="-";
+				m_datestring+= "-";
 			}
 			
 	}
@@ -2041,9 +2041,9 @@ if(nvar==0) {
 			float vnew=FUtil::AtoFloat(varstr);
 
 				m_datestring=varstr.substr(0,4);
-				m_datestring+="-";
+				m_datestring+= "-";
 				m_datestring+=varstr.substr(4,2);
-				m_datestring+="-";
+				m_datestring+= "-";
 				m_datestring+=varstr.substr(6,2);
 				m_datestring+=" ";
 
@@ -2099,9 +2099,9 @@ else if(nvar==1) {
 	}
 	else if(Shift) {
 		if(varstr.size()==2)
-			m_datestring+=varstr+"-";
+			m_datestring+=varstr+UNIT_TYPES::NO_UNIT;
 		else if(varstr.size()==1)
-			m_datestring+="0"+varstr+"-";
+			m_datestring+="0"+varstr+UNIT_TYPES::NO_UNIT;
 
 	}
 	else if(second==2)
@@ -2158,9 +2158,9 @@ size_t PGFileImportBase::GetMinutFromLine(string line) {
 
 	if(m_format==NOAA) {
 		datestring=line.substr(14,4);
-		datestring+="-";
+		datestring+= "-";
 		datestring+=line.substr(18,2);
-		datestring+="-";
+		datestring+= "-";
 		datestring+=line.substr(20,2);
 		datestring+=" 12:00";
 		return PGUtil::MinutConv(datestring);

@@ -229,18 +229,18 @@ void SimpleCug::OnSetup()
 		if(i==mainindex) {
 			cell.SetBackColor(RGB(255,100,100));
 			str="("+FUtil::STD_ItoAscii(i+1)+") Main Index";
-			cell.SetText(str);
+			cell.SetStdText(str);
 		}
 		else {
 			cell.SetBackColor(m_ColorClick);
 			str="("+FUtil::STD_ItoAscii(i+1)+") Not Selected";
-			cell.SetText(str);
+			cell.SetStdText(str);
 			for (size_t j=0; j<m_pCTab->GetNumbersToPlot();j++) {
 				int selected=m_pCTab->GetPlotIndex(j);
 				if(selected==i) {
 					cell.SetBackColor(m_ColorChanged);
 					str="("+FUtil::STD_ItoAscii(i+1)+") Selected";
-					cell.SetText(str);
+					cell.SetStdText(str);
 				}
 			}
 		}
@@ -483,13 +483,13 @@ void SimpleCug::OnLClicked(int col,long row,int updn,RECT *rect,POINT *point,int
 		if(cell.GetBackColor()==m_ColorClick) {
 			cell.SetBackColor(m_ColorChanged);
 			str="("+FUtil::STD_ItoAscii(row+1)+") Selected";
-			cell.SetText(str);
+			cell.SetStdText(str);
 		
 		}
 		else if(cell.GetBackColor()==m_ColorChanged) {
 			cell.SetBackColor(m_ColorClick);
 			str="("+FUtil::STD_ItoAscii(row+1)+") Not Selected";
-			cell.SetText(str);			
+			cell.SetStdText(str);			
 		}
 		SetCell(0,row,&cell);
 		RedrawCell(0,row); 

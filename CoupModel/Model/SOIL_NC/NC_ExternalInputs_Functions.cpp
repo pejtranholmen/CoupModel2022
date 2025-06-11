@@ -74,9 +74,9 @@ bool NC_ExternalInputs_Functions::Def()
 	pGs= new Gs(&N_Irrig_App, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); 
 	    Define(pGs,   "N Irrig Appl Rate", 0.,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|N Irrigation >0");
 	pPs= new Ps(&N_FertDiss_k, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); 
-		Define(pPs,  "N Fert Dis k",0.15,"-", "Nitrogen and Carbon >= 1|N Fertilization >=1",0.001,1.0);
+		Define(pPs,  "N Fert Dis k",0.15,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|N Fertilization >=1",0.001,1.0);
 	pPs= new Ps(&N_Fert_NH4_Frac, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); 
-		Define(pPs,  "N Fert NH4 Frac",0.15,"-", "Nitrogen and Carbon >= 1|N Fertilization >=1",0.,1.0);
+		Define(pPs,  "N Fert NH4 Frac",0.15,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|N Fertilization >=1",0.,1.0);
 	pPs= new Ps(&N_Irrig_NH4_Conc, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); 
 		Define(pPs,  "N Irrig NH4 Conc",0.15,"mgN/l", "Nitrogen and Carbon >= 1|Irrigation>0",0.,500.);
 	pPs= new Ps(&N_Irrig_NO3_Conc, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); 
@@ -224,7 +224,7 @@ bool NC_ExternalInputs_Functions::FunctionDef()
 	Define(pP, pNFertStageNo, "Yearly N Rate", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1", 0., 100.);
 	mTab_FertStage.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&N_Fert_YearFreq, pNFertStageNo, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); initv.assign(NFertStageNo, 1.);
-	Define(pP, pNFertStageNo, "Yearly N Frequency", initv, "-", "Nitrogen and Carbon >= 1", 0., 100.);
+	Define(pP, pNFertStageNo, "Yearly N Frequency", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1", 0., 100.);
 	mTab_FertStage.push_back(pP); p_vec.push_back(pP);
 	pTab = new Tab(&mTab_FertStage, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	
@@ -248,9 +248,9 @@ bool NC_ExternalInputs_Functions::FunctionDef()
 	pPs = new Ps(&Dep_N_WetConc, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pPs, "Dep N WetConc", 0.1, "mgN/l", "Nitrogen and Carbon >= 1|N Deposition >0", 0., 50.);
 	pPs = new Ps(&Dep_NH4_FracW, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-	Define(pPs, "Dep NH4 FracWet", 0.5, "-", "Nitrogen and Carbon >= 1|N Deposition >0", 0., 1.);
+	Define(pPs, "Dep NH4 FracWet", 0.5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|N Deposition >0", 0., 1.);
 	pPs = new Ps(&Dep_NH4_FracD, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-	Define(pPs, "Dep NH4 FracDry", 0.5, "-", "Nitrogen and Carbon >= 1|N Deposition >0", 0., 1.);
+	Define(pPs, "Dep NH4 FracDry", 0.5, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|N Deposition >0", 0., 1.);
 	pPs = new Ps(&CsvFileManagementIndex, datatype::ATMBOUNDARY, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Index Fert Table CsvFile", 1., "", "Nitrogen and Carbon >= 1|N Fertilization >3", 1., 10000.);
 
@@ -270,21 +270,21 @@ bool NC_ExternalInputs_Functions::FunctionDef()
 	Define(pP, pNManureDayNo, "N NH4", initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|FaecesPool >0", 0., 50.);
 	mTab_Manure.push_back(pP);
 	pP = new P(&Manure_CN_Litter, pNManureDayNo, datatype::ATMBOUNDARY, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); initv.assign(NManureDayNo, 30.);
-	Define(pP, pNManureDayNo, "CN Litter", initv, "-", "Nitrogen and Carbon >= 1|FaecesPool >0", 10., 100.);
+	Define(pP, pNManureDayNo, "CN Litter", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|FaecesPool >0", 10., 100.);
 	mTab_Manure.push_back(pP);
 	pP = new P(&Manure_CN_Faeces, pNManureDayNo, datatype::ATMBOUNDARY, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); initv.assign(NManureDayNo, 20.);
-	Define(pP, pNManureDayNo, "CN Faeces", initv, "-", "Nitrogen and Carbon >= 1|FaecesPool >0", 10., 40.);
+	Define(pP, pNManureDayNo, "CN Faeces", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|FaecesPool >0", 10., 40.);
 	mTab_Manure.push_back(pP);
 	pP = new P(&Manure_Depth, pNManureDayNo, datatype::ATMBOUNDARY, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); initv.assign(NManureDayNo, -0.3);
 	Define(pP, pNManureDayNo, "ManDepth", initv, "m", "Nitrogen and Carbon >= 1|FaecesPool >0", -.5, 0.);
 	mTab_Manure.push_back(pP);
 	pP = new P(&Manure_YearFreq, pNFertDayNo, datatype::ATMBOUNDARY, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL); initv.assign(NFertDayNo, 1.);
-	Define(pP, pNFertDayNo, "M YearFrequency", initv, "-", "Nitrogen and Carbon >= 1|FaecesPool >0", 1., 10.);
+	Define(pP, pNFertDayNo, "M YearFrequency", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|FaecesPool >0", 1., 10.);
 	mTab_Manure.push_back(pP);
 	pTab = new Tab(&mTab_Manure, datatype::ATMBOUNDARY, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pTab, "N Manure Application", "ManDayNo|N Faeces|N Litter|N NH4|CN Litter|CN Faeces|ManDepth|M YearFrequency", "Nitrogen and Carbon > 0|FaecesPool >0");
 	pPs = new Ps(&ManureYearStart, datatype::SOILSURFACE, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-	Define(pPs, "Manure YearStart", 0., "-", "Nitrogen and Carbon >= 1|FaecesPool >0", 0., 1.);
+	Define(pPs, "Manure YearStart", 0., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|FaecesPool >0", 0., 1.);
 	F* pF = new F(&m_PG_Manure, datatype::SOILSURFACE, elements::MANURE, fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 	Define(pF, "Manure", "Manure.bin", "EnableInputN > 0");
 	pF = new F(&m_PG_Deposition, datatype::SOILSURFACE, elements::MANURE, fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);

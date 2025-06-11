@@ -11,8 +11,8 @@ class Par :
 		Par(enum datatype data, enum elements elem, enum fysprocess fproc, enum bioprocess bproc, enum userlevel ulev);
 		Par(definitions def);
 		~Par(void);
-		std::string GetUnit() {return _unit;};
-		void SetUnit(std::string str) {_unit=str;};
+		std::string_view GetUnit() {return _unit;};
+		void SetUnit(std::string_view str) {_unit=str;};
 		void SetViewFunction(size_t value) {_view_func=value;};
 		size_t GetViewFunction() {return _view_func;};
 		void SetReCalcOption(size_t value) {_recalc_option=value;};

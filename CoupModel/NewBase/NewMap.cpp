@@ -363,7 +363,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 					n.append_attribute("PG_File") = str.c_str();
 				}
 				if (type == simtype::PAR_SINGLE) {
-					auto test = pSimB->GetUnit();
+					auto test = string(pSimB->GetUnit());
 					m_pCommonModelInfo->trim_xml(test);
 				}
 

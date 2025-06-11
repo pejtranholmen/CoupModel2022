@@ -72,7 +72,7 @@ bool Soil_Drainage_Functions::Def()
 	pPs= new Ps(&GFLevBase, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "EmpGFLevBase", -3., "m", "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1", -100., 0.); ps_vec.push_back(pPs);
 	pPs= new Ps(&GFLevPeak, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs, "EmpGFLevPeak",-1.,"m", "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",-100., 0.);  ps_vec.push_back(pPs);
+		Define(pPs, "EmpGFLevPeak",-1.,UNIT_TYPES::LENGTH_UNIT, "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",-100., 0.);  ps_vec.push_back(pPs);
 	pPs= new Ps(&GFlowBase, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs, "EmpGFLowbase",2.,UNIT_TYPES::WATERFLOW_UNIT, "GroundWaterFlow =1|WaterEq = 1|EmpiricalDrainEq = 1",0., 100.); ps_vec.push_back(pPs);
 	pPs= new Ps(&GFlowPeak, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -86,44 +86,44 @@ bool Soil_Drainage_Functions::Def()
 	funcname = "Physical Based Drainage Equation";
 
 	pPs= new Ps(&DLevel  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "DrainLevel"  ,-1.,"m","GroundWaterFlow =1|PhysicalDrainEq >= 1|WaterEq = 1",-100., 0.);  ps_vec.push_back(pPs);
+   	Define(pPs,  "DrainLevel"  ,-1.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow =1|PhysicalDrainEq >= 1|WaterEq = 1",-100., 0.);  ps_vec.push_back(pPs);
 	pPs= new Ps(&DDist, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "DrainSpacing"  ,10.,"m","GroundWaterFlow =1|PhysicalDrainEq >= 1|WaterEq = 1",0.,10000.);	   ps_vec.push_back(pPs);
+   	Define(pPs,  "DrainSpacing"  ,10.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow =1|PhysicalDrainEq >= 1|WaterEq = 1",0.,10000.);	   ps_vec.push_back(pPs);
 	pPs = new Ps(&Dlayer, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "DLayer", 4., "m", "PhysicalDrainEq > 1|WaterEq = 1", 0., 100.);	ps_vec.push_back(pPs);
 
 
 	pPs= new Ps(&DLevelLB  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "DrainLevelLowerB"  ,-10.,"m","GroundWaterFlow = 1|LBoundSaturated = 2|WaterEq = 1",-100., 0.);
+   	Define(pPs,  "DrainLevelLowerB"  ,-10.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow = 1|LBoundSaturated = 2|WaterEq = 1",-100., 0.);
 	pPs= new Ps(&DDistLB, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "DrainSpacingLowerB"  ,200.,"m","GroundWaterFlow =1|LBoundSaturated = 2|WaterEq = 1",0.,10000.);
+   	Define(pPs,  "DrainSpacingLowerB"  ,200.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow =1|LBoundSaturated = 2|WaterEq = 1",0.,10000.);
 	pPs= new Ps(&PsiBottom, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "PressureHeadBottom",100.,"cm","GroundWaterFlow = 0|LBoundUnSaturated <= 1|WaterEq = 1",0.,1.E5);
 	pPs= new Ps(&RPipe, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs,     "RadiusPipe"   , 0.10,"m","PhysicalDrainEq > 1|WaterEq = 1",0.01,10., 0.05,0.5);
+	Define(pPs,     "RadiusPipe"   , 0.10,UNIT_TYPES::LENGTH_UNIT,"PhysicalDrainEq > 1|WaterEq = 1",0.01,10., 0.05,0.5);
 
 	pFunc = new Func( datatype::SIMPROFILE, elements::GENERAL, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar); ps_vec.clear();
 
 //! Klas new
 	pPs= new Ps(&DrainLevelMin  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "DrainLevelMin"  ,-1.,"m","GroundWaterFlow =1|PhysicalDrainEq >= 1|DriveDrainLevel = 0|WaterEq = 1",-100., 0.);
+   	Define(pPs,  "DrainLevelMin"  ,-1.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow =1|PhysicalDrainEq >= 1|DriveDrainLevel = 0|WaterEq = 1",-100., 0.);
 //! New pumping regulation 20020302
 	pPs= new Ps(&PumpHighLevel  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "PumpHighLevel"  ,-4.,"m","GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 0.);
+   	Define(pPs,  "PumpHighLevel"  ,-4.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 0.);
 	pPs= new Ps(&PumpLowLevel  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "PumpLowLevel"  ,-5.,"m","GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 0.);
+   	Define(pPs,  "PumpLowLevel"  ,-5.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 0.);
 	pPs= new Ps(&PumpFlowRate  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
    	Define(pPs,  "PumpFlowRate"  ,5.,UNIT_TYPES::WATERFLOW_UNIT,"GroundWaterFlow =1|WaterEq = 1|Pump =1",-100., 1000.);
 
 	pPs= new Ps(&HFlow_Input_Index  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "HFlow Input Index"  ,0.,"-","GroundWaterFlow =1|WaterEq = 1|LateralInput=2",0.,99999.);
+   	Define(pPs,  "HFlow Input Index"  ,0.,UNIT_TYPES::NO_UNIT,"GroundWaterFlow =1|WaterEq = 1|LateralInput=2",0.,99999.);
 	pPs= new Ps(&HFlow_Output_Index  , datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-   	Define(pPs,  "HFlow Output Index"  ,1.,"-","GroundWaterFlow =1|WaterEq = 1|LateralInput=2",0.,99999.);
+   	Define(pPs,  "HFlow Output Index"  ,1.,UNIT_TYPES::NO_UNIT,"GroundWaterFlow =1|WaterEq = 1|LateralInput=2",0.,99999.);
 	pPs= new Ps(&GWFileName_Index, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-    Define(pPs,  "GWFileNameIndex", 1.,"-","Dynamic indexed GW file>0|DriveDrainLevel >= 1", 1., 99000.);
+    Define(pPs,  "GWFileNameIndex", 1.,UNIT_TYPES::NO_UNIT,"Dynamic indexed GW file>0|DriveDrainLevel >= 1", 1., 99000.);
 	pPs= new Ps(&LowerB_GwGrad, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
-    Define(pPs,  "LowerB_GwGrad", 0.,"-","LBoundSaturated=3", -1.0, 1.);
+    Define(pPs,  "LowerB_GwGrad", 0.,UNIT_TYPES::NO_UNIT,"LBoundSaturated=3", -1.0, 1.);
    	//! Local definied variables
 	T* pT;
  	
@@ -140,11 +140,11 @@ bool Soil_Drainage_Functions::Def()
 	G* pG;
  	pG= new G(&CorrHH,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::DRAINAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pG, pNL, "CorrHeightFactor", initv,"-", "GroundWaterFlow = 2|WaterEq = 1");
+	Define(pG, pNL, "CorrHeightFactor", initv,UNIT_TYPES::NO_UNIT, "GroundWaterFlow = 2|WaterEq = 1");
  	Gs *pGs;
 	pGs= new Gs(&SatLev, datatype::SINGLE, elements::WATER, fysprocess::DRAINAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pGs, "SaturationLevel",0.,"m","GroundWaterFlow >= 1|WaterEq = 1");
+	Define(pGs, "SaturationLevel",0.,UNIT_TYPES::LENGTH_UNIT,"GroundWaterFlow >= 1|WaterEq = 1");
  	pTs= new Ts(&NetEmpDrainage, datatype::SINGLE, elements::WATER, fysprocess::DRAINAGE, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pTs,  "NetEmpDrainage", 0.,UNIT_TYPES::WATERFLOW_UNIT,"GroundWaterFlow = 1|EmpiricalDrainEq > 0");
  	pTs= new Ts(&NetPhysDrainage, datatype::SINGLE, elements::WATER, fysprocess::DRAINAGE, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -154,7 +154,7 @@ bool Soil_Drainage_Functions::Def()
  	pTs= new Ts(&TotalRunoff, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
  	Define(pTs, "TotalRunoff",0.,UNIT_TYPES::WATERFLOW_UNIT, "WaterEq = 1");
  	pTs= new Ts(&vDriveDrainLevel, datatype::SINGLE, elements::WATER, fysprocess::LOWERBOUNDARY, bioprocess::NOBPROC, userlevel::NORMAL);
- 	Define(pTs, "vDriveDrainLevel",0.,"m","DrainFileUse=1") ;
+ 	Define(pTs, "vDriveDrainLevel",0.,UNIT_TYPES::LENGTH_UNIT,"DrainFileUse=1") ;
 
 	F *pF;
 	pF = new F(&m_PG_Gw, datatype::ATMBOUNDARY, elements::CLIMATE, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);

@@ -1134,9 +1134,9 @@ void ChartCug::OnMenuCommand(int col,long row,int section,int item)
 				m_Legend1.RemoveAt(index);
 				m_Legend1Change.RemoveAt(index);
 				if(m_pSimDoc->m_PlotStorage.GetNumVar(m_ChartNumIndex)<2)
-					m_pProp->m_YLabel2.SetAt(0,"-");
+					m_pProp->m_YLabel2.SetAt(0,UNIT_TYPES::NO_UNIT);
 				if(m_pSimDoc->m_PlotStorage.GetNumVar(m_ChartNumIndex)<1)
-					m_YLabel1.SetAt(0,"-");
+					m_YLabel1.SetAt(0,UNIT_TYPES::NO_UNIT);
 				changemade=true;
 			}*/
 		}

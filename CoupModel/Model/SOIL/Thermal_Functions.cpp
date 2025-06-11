@@ -56,11 +56,11 @@ bool Thermal_Functions::Def()
 
 	Ps* pPs;
 	pPs = new Ps(&Th_a, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "Balland_Arp a", 0.53, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0.4, 0.7);
+	Define(pPs, "Balland_Arp a", 0.53, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=1", 0.4, 0.7);
 	pPs=new Ps(&Th_Alfa, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"Balland_Arp Alpha",.24,"-","HeatEq >= 1|Thermal Conductivity Function=1", .1,.4);	
+	Define(pPs,"Balland_Arp Alpha",.24,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=1", .1,.4);	
 	pPs=new Ps(&Th_Beta, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"Balland_Arp Beta",18.3,"-","HeatEq >= 1|Thermal Conductivity Function=1", 10.,30.);	
+	Define(pPs,"Balland_Arp Beta",18.3,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=1", 10.,30.);	
 
 	functorprop.FuncName = MyFunc::THERMALCOND_MEAS_BALLAND_ARP; functorprop.Arg = MyArgType::T_D2;
 	funcname = "ThermalConduction Balland_Arp"; functorprop.FunctorInitOption = std::string::npos;
@@ -113,25 +113,25 @@ bool Thermal_Functions::Def()
 	pP = new P(&m_Quarts, pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED);
 	mTab_ThScale.push_back(pP);
 
-	Define(pP, pNL, "mQuarts", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+	Define(pP, pNL, "mQuarts", initv, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
 
 	pP = new P(&m_SandFrac, pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED);
 	mTab_ThScale.push_back(pP);
 	f_ModelLayers(m_pModelMap->GetPPointer("Sand Content")->GetVector(), DummyFracMidPoint, initv, true);
 
-	Define(pP, pNL, "mSandFrac", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+	Define(pP, pNL, "mSandFrac", initv, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
 
 	pP = new P(&m_GravelFrac, pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED);
 	mTab_ThScale.push_back(pP);
 	f_ModelLayers(m_pModelMap->GetPPointer("Gravel Content")->GetVector(), DummyFracMidPoint, initv, true);
-	Define(pP, pNL, "mGravelFrac", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+	Define(pP, pNL, "mGravelFrac", initv, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
 
 	pP = new P(&m_OrgFrac, pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED);
 	mTab_ThScale.push_back(pP);
 
 
 	f_ModelLayers(m_pModelMap->GetPPointer("Organic Content")->GetVector(), DummyFracMidPoint, initv, true);
-	Define(pP, pNL, "mOrgFrac", initv, "-", "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
+	Define(pP, pNL, "mOrgFrac", initv, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=1", 0., 100.);
 	Tab* pTab;
 	pTab = new  Tab(&mTab_ThScale, datatype::SIMPROFILE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::DETAILED);
 
@@ -184,7 +184,7 @@ bool Thermal_Functions::Def()
 
 	
 	pP = new P(&BulkDenS, pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED);
-	Define(pP, pNL, "Bulk_DenS", bd, "-", "HeatEq >= 1", -3., 3., -1., 1.);
+	Define(pP, pNL, "Bulk_DenS", bd, UNIT_TYPES::NO_UNIT, "HeatEq >= 1", -3., 3., -1., 1.);
 
 	p_vec.clear();
 	p_vec.push_back(m_pModelMap->GetPPointer("mSaturation"));
@@ -203,45 +203,45 @@ bool Thermal_Functions::Def()
 	
 
 	pPs = new Ps(&CHumuS1, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-		Define(pPs, "OrganicC1", .06, "-", "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
+		Define(pPs, "OrganicC1", .06, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
 	pPs = new Ps(&CHumuS2, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "OrganicC2", .005, "-", "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3, 1.E2, 0.001, 100.);
+	Define(pPs, "OrganicC2", .005, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3, 1.E2, 0.001, 100.);
 	pPs = new Ps(&CFrozenHumus, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "OrganicFrozenC", 2., "-", "HeatEq >= 1|Thermal Conductivity Function=0", 0., 4., 1.5, 3.);
+	Define(pPs, "OrganicFrozenC", 2., UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 0., 4., 1.5, 3.);
 
 	pPs = new Ps(&Clay.UC1, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "ClayUnFrozenC1", .13, "-", "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
+	Define(pPs, "ClayUnFrozenC1", .13, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
 	pPs = new Ps(&Clay.UC2, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "ClayUnFrozenC2", -0.029, "-", "HeatEq >= 1|Thermal Conductivity Function=0", -1., 1.E2, -1., 100.);
+	Define(pPs, "ClayUnFrozenC2", -0.029, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", -1., 1.E2, -1., 100.);
 	pPs = new Ps(&Clay.UC3, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "ClayUnFrozenC3", .6245, "-", "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
+	Define(pPs, "ClayUnFrozenC3", .6245, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
 
 
 
 	pPs=new Ps(&Clay.FC1, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"ClayFrozenC1",.00144,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3,1.E2,0.001,100.);	
+	Define(pPs,"ClayFrozenC1",.00144,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3,1.E2,0.001,100.);	
 	pPs=new Ps(&Clay.FC2, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"ClayFrozenC2",1.32,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);
+	Define(pPs,"ClayFrozenC2",1.32,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);
 	pPs=new Ps(&Clay.FC3, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"ClayFrozenC3",0.0036,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3,1.E2,0.01,100.);	
+	Define(pPs,"ClayFrozenC3",0.0036,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3,1.E2,0.01,100.);	
 	pPs=new Ps(&Clay.FC4, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"ClayFrozenC4",0.8743,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);	
+	Define(pPs,"ClayFrozenC4",0.8743,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);	
 
 	pPs = new Ps(&Sand.UC1, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "SandUnFrozenC1", .10, "-", "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
+	Define(pPs, "SandUnFrozenC1", .10, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
 	pPs = new Ps(&Sand.UC2, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "SandUnFrozenC2", .058, "-", "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
+	Define(pPs, "SandUnFrozenC2", .058, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
 	pPs = new Ps(&Sand.UC3, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs, "SandUnFrozenC3", .6245, "-", "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
+	Define(pPs, "SandUnFrozenC3", .6245, UNIT_TYPES::NO_UNIT, "HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2, 1.E2, 0.01, 100.);
 
 	pPs=new Ps(&Sand.FC1, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"SandFrozenC1",.00158,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-4,1.E2,0.01,100.);	
+	Define(pPs,"SandFrozenC1",.00158,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-4,1.E2,0.01,100.);	
 	pPs=new Ps(&Sand.FC2, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"SandFrozenC2",1.336,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);	
+	Define(pPs,"SandFrozenC2",1.336,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);	
 	pPs=new Ps(&Sand.FC3, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"SandFrozenC3",.00375,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3,1.E2,0.01,100.);	
+	Define(pPs,"SandFrozenC3",.00375,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-3,1.E2,0.01,100.);	
 	pPs=new Ps(&Sand.FC4, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-	Define(pPs,"SandFrozenC4",.9118,"-","HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);	
+	Define(pPs,"SandFrozenC4",.9118,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", 1.E-2,1.E2,0.01,100.);	
 
 
 
@@ -254,7 +254,7 @@ bool Thermal_Functions::Def()
 
 	pP=new P(&ThScaleLog,pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); p_vec.push_back(pP);
 	for (auto i = initv.begin(); i != initv.end(); ++i) *i = 0.;
-	Define(pP, pNL,"ThScaleLog",initv,"-","HeatEq >= 1|Thermal Conductivity Function=0;", -3.,3.,-1.,1., 5);  // 5 is recalc to thermal properties functions
+	Define(pP, pNL,"ThScaleLog",initv,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0;", -3.,3.,-1.,1., 5);  // 5 is recalc to thermal properties functions
 
 	p_vec.push_back(m_pModelMap->GetPPointer("DepthMidpLayers"));
 	p_vec.push_back(m_pModelMap->GetPPointer("DistanceMidpLayers"));
@@ -373,13 +373,13 @@ bool Thermal_Functions::Def()
 
 	pP=new P(&K_IndType,pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=0;
-		Define(pP, pNL,"K_IndType",initv,"-","HeatEq >= 1|Thermal Conductivity Function=0", -3.,3.,-1.,1.);
+		Define(pP, pNL,"K_IndType",initv,UNIT_TYPES::NO_UNIT,"HeatEq >= 1|Thermal Conductivity Function=0", -3.,3.,-1.,1.);
 
 
 	pPs = new Ps(&CFrozenSurfCorr, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
 		Define(pPs, "CFrozenSurfCorr", 0.2, "1/C", "HeatEq >= 1", 0.01, 1., 0.1, 0.5);
 	pPs = new Ps(&CFrozenMaxDamp, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-		Define(pPs, "CFrozenMaxDamp", 0.9, "-", "HeatEq >= 1", 0., 1., 0., 0.9);
+		Define(pPs, "CFrozenMaxDamp", 0.9, UNIT_TYPES::NO_UNIT, "HeatEq >= 1", 0., 1., 0., 0.9);
 
 	pFunc = new Func( datatype::MPROFILE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	functorprop.FuncName = MyFunc::EMPIRICALSOILSURFACEDAMPING; functorprop.Arg = MyArgType::D1;
@@ -403,7 +403,7 @@ bool Thermal_Functions::Def()
 
 
 	pP=new P(&HeatCapSolid,pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::DETAILED);
-		Define(pP, pNL,"HeatCapSolid",initv,"-","HeatEq >= 1", -3.,3.,-1.,1.);
+		Define(pP, pNL,"HeatCapSolid",initv,UNIT_TYPES::NO_UNIT,"HeatEq >= 1", -3.,3.,-1.,1.);
 
 	pP=new P(&HeatCapSolidDist,pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::DETAILED);
 		for(auto i=initv.begin(); i!=initv.end();++i) *i=2.E6;

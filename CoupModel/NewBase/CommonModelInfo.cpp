@@ -1,4 +1,4 @@
-#include "../std.h"
+﻿#include "../std.h"
 #include "./CommonModelInfo.h"
 #include "../ModelTypes/SimB.h"
 using namespace std;
@@ -172,10 +172,14 @@ CommonModelInfo::CommonModelInfo() {
 		for (size_t i = 0; i < size(m_GroupCategoryNames); ++i)
 			m_GroupCategory[m_GroupCategoryNames[i]] = i;
 
-		auto koll = GetAllStringBasedUnits();
+		m_TypeBasedUnits.clear();
+		m_StringBasedUnits.clear();
 
-
-
+		for(size_t count=0; count<size(m_UnitTypeNames); count++) {
+			m_TypeBasedUnits.insert(std::make_pair(UNIT_TYPES(count), m_UnitTypeNames[count]));
+        // Fix for the reported error by ensuring the correct type is used for the map value
+	        m_StringBasedUnits.insert(std::make_pair(m_UnitTypeNames[count], static_cast<UNIT_TYPES>(count)));
+		}
 
 }
 CommonModelInfo::~CommonModelInfo() {

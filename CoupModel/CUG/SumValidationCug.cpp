@@ -145,11 +145,11 @@ void SumValidationCug::OnSetup()
 				}
 				else if (valsum.SimValueSource == SIMSUMSOURCE::CSVFLEXFILE) {
 					cell.SetCellType(UGCT_NORMAL);
-					cell.SetText("Residuals");
+					cell.SetStdText("Residuals");
 				}
 				else if (valsum.SimValueSource == SIMSUMSOURCE::MULTI_OUTPGFILE) {
 					cell.SetCellType(UGCT_NORMAL);
-					cell.SetText("Multi Output Variable");
+					cell.SetStdText("Multi Output Variable");
 				}
 				SetCell(1, i, &cell);
 				//	QuickSetText(4, ind + i, m_pSimDoc->m_ValidationData.GetValSumVarGroup(i));

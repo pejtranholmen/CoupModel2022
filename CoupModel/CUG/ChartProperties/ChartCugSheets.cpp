@@ -534,7 +534,7 @@ void ChartCugSheets::MakeDataSheet(int entire)
 	SetNumberCols(cols);
 	GetCell(-1,-1,&cell);
 	cell.SetBackColor(m_ColorHeading);
-	cell.SetText("Record No");
+	cell.SetStdText("Record No");
 	SetCell(-1,-1,&cell);
 
 
@@ -646,7 +646,7 @@ void ChartCugSheets::Make_Sheet0_RealTime()
 				SetCell(0,0,&cell);
 
 				GetCell(1,0,&cell);
-				cell.SetText("Performance indicators chart3");
+				cell.SetStdText("Performance indicators chart3");
 				cell.SetBackColor(m_ColorHeading);
 				SetCell(1,0,&cell);
 
@@ -674,7 +674,7 @@ void ChartCugSheets::Make_Sheet0_RealTime()
 				SetCell(1,1,&cell);
 
 				GetCell(1,2,&cell);
-				cell.SetText("Performance indicators chart4");
+				cell.SetStdText("Performance indicators chart4");
 				cell.SetBackColor(m_ColorHeading);
 				SetCell(1,2,&cell);
 
@@ -707,16 +707,16 @@ void ChartCugSheets::Make_Sheet0_RealTime()
 				GetCell(0,0,&cell);
 				if(m_pSimDoc->m_Simulator.m_pModelInfo->IsPause()) {
 					cell.SetBackColor(m_ColorClick);			
-					cell.SetText("Single step");
+					cell.SetStdText("Single step");
 				}
 				else {
 					cell.SetBackColor(m_ColorHeading);
-					cell.SetText("");
+					cell.SetStdText("");
 				}
 				SetCell(0,0,&cell);
 
 				GetCell(1,0,&cell);
-				cell.SetText("Simulation speed");
+				cell.SetStdText("Simulation speed");
 				cell.SetBackColor(m_ColorHeading);
 				SetCell(1,0,&cell);
 
@@ -1043,7 +1043,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 
 			GetCell(0,2,&cell);
 			cell.SetCellType(UGCT_NORMAL);
-			cell.SetText("Chart Type");
+			cell.SetStdText("Chart Type");
 			cell.SetBackColor(m_ColorHeading);
 			SetCell(0,2,&cell);
 			JoinCells(0,2,1,2);
@@ -1065,7 +1065,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 					txt="Cumulative Frequency Distribution";
 				else if(m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART)
 					txt="Contour Chart";
-				cell.SetText(txt.c_str());
+				cell.SetStdText(txt);
 				cell.SetBackColor(m_ColorClick);
 				cell.SetLabelText(optionlist.c_str());
 				SetCell(0,3,&cell);
@@ -1091,14 +1091,14 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 
 			GetCell(0,0,&cell);
 			cell.SetCellType(UGCT_NORMAL);
-			cell.SetText("Zoom In 1/"+FUtil::STD_ItoAscii(m_ZoomLevel));
+			cell.SetStdText("Zoom In 1/"+FUtil::STD_ItoAscii(m_ZoomLevel));
 			if(m_pUtil->m_FileSave.m_ZoomX)
 				cell.SetBackColor(m_ColorClick);
 			else
 				cell.SetBackColor(m_ColorChanged);
 			SetCell(0,0,&cell);
 
-			cell.SetText("Zoom Out");
+			cell.SetStdText("Zoom Out");
 			if(m_pUtil->m_FileSave.m_ZoomX) {
 				cell.SetBackColor(m_ColorHeading);
 			}
@@ -1150,7 +1150,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 					cell.SetBackColor(m_NoColor);
 				break;
 			}
-			cell.SetText(txt.c_str());
+			cell.SetStdText(txt);
 			cell.SetLabelText(optionlist.c_str());
 			SetCell(1,1,&cell);
 
@@ -1168,7 +1168,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 		
 			GetCell(0, 4, &cell);
 			cell.SetCellType(UGCT_NORMAL);
-			cell.SetText("X Independent");
+			cell.SetStdText("X Independent");
 			cell.SetBackColor(m_ColorHeading);
 			SetCell(0, 4, &cell);
 			
@@ -1185,13 +1185,13 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 				if (m_pProp->GetIndepFirst() == vartype::PGHOUR) Name = "Hour";
 				if (m_pProp->GetIndepFirst() == vartype::PGDAY) Name = "Day";
 				if (m_pProp->GetIndepFirst() == vartype::PGYEAR) Name = "Year";
-				cell.SetText(Name);
+				cell.SetStdText(Name);
 				SetCell(0, 5, &cell);
 
 				if (m_pProp->IsFirstIndepSet()) {
 					GetCell(0, 6, &cell);
 					cell.SetCellType(UGCT_NORMAL);
-					cell.SetText("Y Independent");
+					cell.SetStdText("Y Independent");
 					cell.SetBackColor(m_ColorHeading);
 					SetCell(0, 6, &cell);
 
@@ -1208,7 +1208,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 					if (m_pProp->GetIndepSecond()== vartype::PGYEAR) Name = "Year";
 
 
-					cell.SetText(Name);
+					cell.SetStdText(Name);
 					SetCell(0, 7, &cell);
 				}
 				if (m_pProp->IsSecondIndepSet()) {
@@ -1233,10 +1233,10 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 			optionlist="Actual Values\nAll Cumulated\nYear Cumulated\nDay Cumulated\n";
 			cell.SetLabelText(optionlist.c_str());
 		
-			if(m_pProp->m_ReShape.m_Cumulated==0) cell.SetText("Actual Values");
-			else if(m_pProp->m_ReShape.m_Cumulated==1) cell.SetText("All Cumulated"); 
-			else if(m_pProp->m_ReShape.m_Cumulated==2) cell.SetText("Year Cumulated"); 
-			else if(m_pProp->m_ReShape.m_Cumulated==3) cell.SetText("Day Cumulated"); 
+			if(m_pProp->m_ReShape.m_Cumulated==0) cell.SetStdText("Actual Values");
+			else if(m_pProp->m_ReShape.m_Cumulated==1) cell.SetStdText("All Cumulated"); 
+			else if(m_pProp->m_ReShape.m_Cumulated==2) cell.SetStdText("Year Cumulated"); 
+			else if(m_pProp->m_ReShape.m_Cumulated==3) cell.SetStdText("Day Cumulated"); 
 
 			SetCell(2,0,&cell);
 
@@ -1258,9 +1258,9 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 			optionlist = "No Stacking\nStacked forward\nStacked backward\n";
 			cell.SetLabelText(optionlist.c_str());
 
-			if (m_pProp->m_ReShape.m_StackingVariables == 0) cell.SetText("No Stacking");
-			else if (m_pProp->m_ReShape.m_StackingVariables == 1) cell.SetText("Stacked forward");
-			else if (m_pProp->m_ReShape.m_StackingVariables == 2) cell.SetText("Stacked backward");
+			if (m_pProp->m_ReShape.m_StackingVariables == 0) cell.SetStdText("No Stacking");
+			else if (m_pProp->m_ReShape.m_StackingVariables == 1) cell.SetStdText("Stacked forward");
+			else if (m_pProp->m_ReShape.m_StackingVariables == 2) cell.SetStdText("Stacked backward");
 	
 
 			SetCell(2, 2, &cell);
@@ -1341,7 +1341,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 			}
 		
 			cell.SetBackColor(m_NoColor);
-			cell.SetText(txt.c_str());
+			cell.SetStdText(txt);
 			cell.SetLabelText(optionlist.c_str());
 			SetCell(4,2,&cell);
 
@@ -1369,7 +1369,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 			}
 		
 			cell.SetBackColor(m_NoColor);
-			cell.SetText(txt.c_str());
+			cell.SetStdText(txt);
 			cell.SetLabelText(optionlist.c_str());
 			SetCell(4,3,&cell);
 
@@ -1545,7 +1545,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 					m_pProp->SetFirstIndepVarType(vartype::PARVAR);
 					m_pProp->SetSecondIndepVarType(vartype::PARVAR);
 					string selected_str=FUtil::GetOptionString(optionlist,m_pProp->GetFirstIndepIndex()+1);
-					cell.SetText(selected_str.c_str());
+					cell.SetStdText(selected_str);
 					cell.SetLabelText(optionlist.c_str());
 					SetCell(6,4,&cell);
 					if(m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART||m_pProp->IsSecondIndepSet()) {
@@ -1553,7 +1553,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 							if(m_pProp->m_ChartType ==CHART_TYPES::CONTOUR_CHART) {
 								QuickSetText(9,0,"Y axis");
 								string sel2=FUtil::GetOptionString(optionlist,m_pProp->GetSecondIndepIndex()+1);
-								cell.SetText(sel2.c_str());
+								cell.SetStdText(sel2);
 								SetCell(9,1,&cell);
 							}
 					}
@@ -1577,7 +1577,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 			m_pUtil->m_EnsembleViewOption=m_pUtil->GetEnsembleViewOption();
 			string selected_str = FUtil::GetOptionString(optionlist, m_pUtil->m_EnsembleViewOption);
 			
-			cell.SetText(selected_str.c_str());
+			cell.SetStdText(selected_str);
 			cell.SetLabelText(optionlist.c_str());
 
 			SetCell(6, 6, &cell);
@@ -1618,7 +1618,7 @@ void ChartCugSheets::Make_Sheet0_TimeSeriePlot()
 
 			selected_str = FUtil::GetOptionString(optionlist, m_pUtil->m_X_AxisAutoScaleSensitivy);
 
-			cell.SetText(selected_str.c_str());
+			cell.SetStdText(selected_str);
 			cell.SetLabelText(optionlist.c_str());
 			SetCell(8, 3, &cell);
 
@@ -1801,7 +1801,7 @@ void ChartCugSheets::Make_Sheet1_General()
 			txt="Vertical";
 		else
 			txt="Horizontal";
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(2,4,&cell);
 		
@@ -1832,13 +1832,13 @@ void ChartCugSheets::Make_Sheet1_General()
 				cell.SetBackColor(m_NoColor);
 			break;
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(3,4,&cell);
 
 		GetCell(4,4,&cell);
 		cell.SetCellType(UGCT_DROPLIST);
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(4,4,&cell);		
 
@@ -1858,7 +1858,7 @@ void ChartCugSheets::Make_Sheet1_General()
 		}
 		GetCell(5,4,&cell);
 		cell.SetCellType(UGCT_DROPLIST);
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(5,4,&cell);	
 
@@ -1882,7 +1882,7 @@ void ChartCugSheets::Make_Sheet1_General()
 
 		GetCell(6,4,&cell);
 		cell.SetCellType(UGCT_DROPLIST);
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(6,4,&cell);	
 		
@@ -1897,7 +1897,7 @@ void ChartCugSheets::Make_Sheet1_General()
 		else { 
 			txt="Sharp";
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(8,4,&cell);
 
@@ -1911,7 +1911,7 @@ void ChartCugSheets::Make_Sheet1_General()
 		else { 
 			txt="Independent";
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(9,4,&cell);
 		
@@ -1941,7 +1941,7 @@ void ChartCugSheets::Make_Sheet1_General()
 				txt="Bands around 90 % interval";
 				break;
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(3,6,&cell);
 
@@ -1956,7 +1956,7 @@ void ChartCugSheets::Make_Sheet1_General()
 				txt="Yes";
 				break;
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(4,6,&cell);
 		
@@ -1977,7 +1977,7 @@ void ChartCugSheets::Make_Sheet1_General()
 				txt="New LogLikelihood";
 				break;
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(5,6,&cell);
 
@@ -1996,7 +1996,7 @@ void ChartCugSheets::Make_Sheet1_General()
 				txt="Never";
 				break;
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(7,6,&cell);
 		
@@ -2015,7 +2015,7 @@ void ChartCugSheets::Make_Sheet1_General()
 				txt="Never";
 				break;
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(8,6,&cell);
 		
@@ -2034,7 +2034,7 @@ void ChartCugSheets::Make_Sheet1_General()
 				txt="Never";
 				break;
 		}
-		cell.SetText(txt.c_str());
+		cell.SetStdText(txt);
 		cell.SetLabelText(optionlist.c_str());
 		SetCell(9,6,&cell);
 
@@ -2062,11 +2062,11 @@ void ChartCugSheets::Make_Sheet2_RealTime()
 						for(size_t ii=0; ii<m_pSimDoc->MR_Get_NumberOfParametersWithinDim(i+1);ii++){
 								if(m_pSimDoc->MR_GetMethod(i+1,ii+1)==MR_METHOD(9)||m_pSimDoc->MR_GetMethod(i+1,ii+1)== MR_METHOD(11)||m_pSimDoc->MR_GetMethod(i+1,ii+1)<= MR_METHOD(3)) {
 									GetCell(0,ind,&cell);
-									cell.SetText(m_pSimDoc->MR_GetParGroup(i+1,ii+1).c_str());
+									cell.SetStdText(m_pSimDoc->MR_GetParGroup(i+1,ii+1));
 									cell.SetParam(i);
 									SetCell(0,ind,&cell);
 									GetCell(1,ind,&cell);
-									cell.SetText(m_pSimDoc->MR_Get_CalibParName(ind).c_str());
+									cell.SetStdText(m_pSimDoc->MR_Get_CalibParName(ind));
 									cell.SetParam(ii);
 									SetCell(1,ind,&cell);
 									GetCell(2,ind,&cell);
@@ -2176,7 +2176,7 @@ void ChartCugSheets::Make_Sheet2_TimeSeriePlot(bool RightLabels, bool XLabels, b
 				string legend = string(m_pProp->GetChartTypeString());
 				legend += "Label on axis";
 				GetCell(0, -1, &cell);
-				cell.SetText(legend);
+				cell.SetStdText(legend);
 				cell.SetBackColor(m_ColorClick);
 				SetCell(0, -1, &cell);
 
@@ -2474,7 +2474,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 			string legend = string(m_pProp->GetChartTypeString());
 			legend += "Legend";
 			GetCell(0, -1, &cell);
-			cell.SetText(legend);
+			cell.SetStdText(legend);
 			cell.SetBackColor(m_ColorClick);
 			SetCell(0, -1, &cell);
 
@@ -2574,9 +2574,9 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 							if(p_info.RepitDataType)
 								cell.SetNumber(MultiRunNo);
 							else if(Ens_type==ENSEMBLE_TYPE::ACCEPTED)
-								cell.SetText("Accepted");
+								cell.SetStdText("Accepted");
 							else 
-								cell.SetText("All");
+								cell.SetStdText("All");
 							SetCell(9,lrow,&cell);
 						}
 						else if(datatype==DATA_TYPES::SIM_VAL&&m_pSimDoc->IsMultiSimulation()) {
@@ -2631,7 +2631,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 							optionlist="All\nAccepted\nSingle Run\n";
 							if(p_info.EnsembleType==ENSEMBLE_TYPE::ALL) txt="All";
 							else if(p_info.EnsembleType == ENSEMBLE_TYPE::ACCEPTED) txt="Accepted";
-							cell.SetText(txt.c_str());
+							cell.SetStdText(txt);
 							cell.SetLabelText(optionlist);
 							SetCell(9,lrow,&cell);
 
@@ -2668,7 +2668,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 								else 
 									txt="Residual";
 							}
-							cell.SetText(txt.c_str());
+							cell.SetStdText(txt);
 							cell.SetLabelText(optionlist);
 							SetCell(10,lrow,&cell);
 						}
@@ -2693,16 +2693,16 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 
 							/*if(m_TimeSeriePlot.m_ChartInfo.NumVariables==2*m_TimeSeriePlot.m_ChartInfo.NumPriorVariables) {
 								if(curve_no%2==1)
-									cell.SetText("All");
+									cell.SetStdText("All");
 								else 
 									cell.SetText(m_pProp->m_Legend1.at(lrow).c_str());
 							
 							}
 							else */
 							if(m_pProp->m_Legend1.size()>lrow)
-								cell.SetText(m_pProp->m_Legend1.at(lrow).c_str());
+								cell.SetStdText(m_pProp->m_Legend1.at(lrow));
 							//else
-							//	cell.SetText("All");
+							//	cell.SetStdText("All");
 						}
 
 
@@ -2739,7 +2739,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 							txt="Very large";
 							break;
 						}
-						cell.SetText(txt.c_str());
+						cell.SetStdText(txt);
 						cell.SetLabelText(optionlist);
 						SetCell(2,lrow,&cell);
 
@@ -2766,7 +2766,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 							txt="Alternative Dashed Line";
 							break;
 						}
-						cell.SetText(txt.c_str());
+						cell.SetStdText(txt);
 						cell.SetLabelText(optionlist);
 						SetCell(3,lrow,&cell);
 						GetCell(4,lrow,&cell);
@@ -2806,7 +2806,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 							break;
 						}
 					
-						cell.SetText(txt.c_str());
+						cell.SetStdText(txt);
 						cell.SetLabelText(optionlist);
 						SetCell(4,lrow,&cell);					
 					
@@ -2847,7 +2847,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 						}
 						else 
 							QuickSetText(5,lrow,"");
-						cell.SetText(txt.c_str());
+						cell.SetStdText(txt);
 						cell.SetLabelText(optionlist);
 						SetCell(5,lrow,&cell);	
 						if(m_pSimDoc!=nullptr) {
@@ -2871,7 +2871,7 @@ void ChartCugSheets::Make_Sheet3_TimeSeriePlot()
 						else 
 							txt="X axis";
 
-						cell.SetText(txt.c_str());
+						cell.SetStdText(txt);
 						cell.SetLabelText(optionlist);
 						SetCell(7,lrow,&cell);	
 						QuickSetNumber(8,lrow,curve_no);
@@ -2935,7 +2935,7 @@ void ChartCugSheets::Make_Sheet4_TimeSeriePlot(int rows)
 			string legend = string(m_pProp->GetChartTypeString());
 			legend += "Legends";
 			GetCell(0, -1, &cell);
-			cell.SetText(legend);
+			cell.SetStdText(legend);
 			cell.SetBackColor(m_ColorClick);
 			SetCell(0, -1, &cell);
 
@@ -2988,7 +2988,7 @@ void ChartCugSheets::Make_Sheet5_TimeSeriePlot(int rows) {
 			legend += "Legends";
 			CUGCell cell;
 			GetCell(0, -1, &cell);
-			cell.SetText(legend);
+			cell.SetStdText(legend);
 			cell.SetBackColor(m_ColorClick);
 			SetCell(0, -1, &cell);
 
@@ -3102,7 +3102,7 @@ void ChartCugSheets::AddTimeData(DoubleArray data, DoubleArray data_y, size_t x_
 					v = vnew;
 				}
 				if (v == Chart::NoValue)
-					cell.SetText("");
+					cell.SetStdText("");
 				else
 					cell.SetNumber(v);
 			}
@@ -3111,7 +3111,7 @@ void ChartCugSheets::AddTimeData(DoubleArray data, DoubleArray data_y, size_t x_
 				v=v/60+2880;
 				auto min=size_t(v);
 				string txt=PGUtil::StringDatum(min);
-				cell.SetText(txt.c_str());
+				cell.SetStdText(txt);
 			}
 		
 			if (x_var != std::string::npos) {

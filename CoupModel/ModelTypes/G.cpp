@@ -13,7 +13,7 @@ G::G(vector<double> *target,NE *ne, enum datatype data, enum elements elem, enum
 	pNE=ne;
 	;
 }
-void G::Def(int ModuleNo, std::string name, std::vector<double> init, std::string unit, std::string conditions)
+void G::Def(int ModuleNo, std::string name, std::vector<double> init, std::string_view unit, std::string conditions)
 {
 
 	SetValue(init);

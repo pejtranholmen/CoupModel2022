@@ -62,9 +62,9 @@ bool NC_Drivings_Functions::Def()
 	pPs= new Ps(&SoilInfiltration, datatype::SOILSURFACE, elements::WATER  , fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
 		Define(pPs  , "SoilInfiltration", 2.,UNIT_TYPES::WATERFLOW_UNIT,"SoilInfilInput = 0|Nitrogen and Carbon > 0", 0., 100., 0. , 50.);
 	pPs= new Ps(&PlantWaterStress, datatype::PLANT, elements::WATER, fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-		Define(pPs  , "PlantWaterStress", 0.7,"-","WaterStressInput = 0|Nitrogen and Carbon > 0", 0., 1., 0. , 1.);
+		Define(pPs  , "PlantWaterStress", 0.7,UNIT_TYPES::NO_UNIT,"WaterStressInput = 0|Nitrogen and Carbon > 0", 0., 1., 0. , 1.);
 	pPs= new Ps(&DeepPercolation, datatype::SOILBOTTOM, elements::WATER  , fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-		Define(pPs  , "DeepPercolation", 2.0,"-","DeepPercolationInput = 1|Nitrogen and Carbon > 0", -50., 50., 0. , 10.);
+		Define(pPs  , "DeepPercolation", 2.0,UNIT_TYPES::NO_UNIT,"DeepPercolationInput = 1|Nitrogen and Carbon > 0", -50., 50., 0. , 10.);
 
 	F* pF;
 	pF= new F(&m_PG_Abiotic, datatype::OTHER, elements::GENERAL  , fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
@@ -94,9 +94,9 @@ bool NC_Drivings_Functions::Def()
 	initv.assign(pPlant->NumPlants,1.);
 
 	pD= new D(&NDrivWaterStress, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-		Define(pD,pNumPlants,"NDrivWaterStress",initv,"-","Nitrogen and Carbon >= 1");
+		Define(pD,pNumPlants,"NDrivWaterStress",initv,UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >= 1");
 	pD= new D(&NDrivSaltStress, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-		Define(pD,pNumPlants   ,"NDrivSaltStress",initv,"-","Nitrogen and Carbon >= 1|Salinity stress>0");
+		Define(pD,pNumPlants   ,"NDrivSaltStress",initv,UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >= 1|Salinity stress>0");
 
 	Ds *pDs;
 	pDs= new Ds(&NDrivInfiltration, datatype::SOILSURFACE, elements::WATER, fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
@@ -105,7 +105,7 @@ bool NC_Drivings_Functions::Def()
 		Define(pDs,  "NDrivDeepPercolation", 0.,UNIT_TYPES::WATERFLOW_UNIT,"Nitrogen and Carbon >= 1|DeepPercolationInput >0");
 
 	pDs = new Ds(&GreenIndexDriver, datatype::ALLPLANTS, elements::PLANT_STRESS, fysprocess::NOFPROC, bioprocess::FORCING_BIOLOGY, userlevel::NORMAL);
-		Define(pDs, "GreenIndexChange", 0., "-", "Nitrogen and Carbon >= 1|Green Index Forcing >0");
+		Define(pDs, "GreenIndexChange", 0., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Green Index Forcing >0");
 
 
 	

@@ -467,7 +467,6 @@
     <ClInclude Include="Model\Structure\Functors\Numerical_Functors.h" />
     <ClInclude Include="Model\Structure\Functors\Structure_Functors.h" />
     <ClInclude Include="Model\Structure\Functors\Technical_Functors.h" />
-    <ClInclude Include="Model\Units.h" />
     <ClInclude Include="MultiRun\ConStrainByInput.h" />
     <ClInclude Include="NewBase\Nelder_Mead\optimizer.h" />
     <ClInclude Include="NewBase\PhysFunc.h" />
@@ -825,7 +824,6 @@
     <ClCompile Include="Model\SOIL_NC\P_ExternalInputs_Functions.cpp" />
     <ClCompile Include="Model\SOIL_NC\P_Mineral.cpp" />
     <ClCompile Include="Model\SOIL_NC\P_Mineral_Functions.cpp" />
-    <ClCompile Include="Model\Units.cpp" />
     <ClCompile Include="MultiRun\ConStrainByInput.cpp" />
     <ClCompile Include="PG\NewReShaped.cpp" />
     <ClCompile Include="PG\FileImport\ExtraLinkedInformation.cpp" />

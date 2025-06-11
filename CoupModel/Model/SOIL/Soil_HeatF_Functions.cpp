@@ -178,9 +178,9 @@ bool Soil_HeatF_Functions::Def()
 	pXs=new  Xs(&SewageHeatStore, datatype::SINGLE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pXs,"SewageHeatStore", 1000., UNIT_TYPES::HEATSTORE_UNIT, "Insulated Water Pipe>0");
 	pXs=new  Xs(&SewageWaterStore, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL); 
-	Define(pXs, "SewageWaterStore", 10.,"mm", "Insulated Water Pipe>0");
+	Define(pXs, "SewageWaterStore", 10.,UNIT_TYPES::WATERMASS_UNIT, "Insulated Water Pipe>0");
 	pXs=new  Xs(&TravelDistance, datatype::SINGLE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL); 
-	Define(pXs, "TravelDistance", 0.0,"-", "Insulated Water Pipe>0");
+	Define(pXs, "TravelDistance", 0.0,UNIT_TYPES::NO_UNIT, "Insulated Water Pipe>0");
 	T* pT;
 	pT=new T(&ColdPipeFlux,pNPS, datatype::WATERPIPE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL); 
 	
@@ -242,7 +242,7 @@ bool Soil_HeatF_Functions::Def()
   	Define(pG,pNL, "ExactTemperature",initv,UNIT_TYPES::TEMP_UNIT,"Analytical Solution >0");
 
 	pG=new G(&ThQual, pNL, datatype::SIMPROFILE, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);  	
-	Define(pG,pNL,"ThermalQualilty"    ,initv,"-","");
+	Define(pG,pNL,"ThermalQualilty"    ,initv,UNIT_TYPES::NO_UNIT,"");
 
 	initv.assign(NHB,1000.);
 	pX=new X(&HeatBoxStorage, pNHB, datatype::HEATBOX, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);  	
@@ -258,19 +258,19 @@ bool Soil_HeatF_Functions::Def()
 	pX=new X(&HeatBoxTemp, pNHB, datatype::HEATBOX, elements::TEMPERATURE, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL); 
     Define(pX,pNHB,"HeatBoxTemp"  ,initv,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0") ;
 	pGs=new Gs(&HeatBoxEnhancer, datatype::SINGLE, elements::HEAT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);  	
-   	Define(pGs,"HeatBoxEnhancer"  , 1.,"-","Insulated Water Pipe>0") ;
+   	Define(pGs,"HeatBoxEnhancer"  , 1.,UNIT_TYPES::NO_UNIT,"Insulated Water Pipe>0") ;
   
 
 	pPs=new Ps(&WaterPipeFlux, datatype::SINGLE, elements::WATER, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL);  	
-	Define(pPs, "Water Pipe Flux", 100. ,"mm/day","Insulated Water Pipe>0",0., 50000. );
+	Define(pPs, "Water Pipe Flux", 100. ,UNIT_TYPES::WATERFLOW_UNIT,"Insulated Water Pipe>0",0., 50000. );
  	pPs=new Ps(&WaterPipeFluxFluc, datatype::SINGLE, elements::WATER, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL);  	
-	Define(pPs, "Pipe Fluctuation", 0. ,"-","Insulated Water Pipe>0",0., 1. );
+	Define(pPs, "Pipe Fluctuation", 0. ,UNIT_TYPES::NO_UNIT,"Insulated Water Pipe>0",0., 1. );
  	pPs=new Ps(&WaterPipeInTemp, datatype::SINGLE, elements::WATER, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL); 
 	Define(pPs, "WPipe Input Temp", 5. ,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0",0., 10. );
  	pPs=new Ps(&WaterSewageInputAdd, datatype::SINGLE, elements::WATER, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL);  	
 	Define(pPs, "Water Sewage Add Temp", 4. ,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe>0",0., 30. );
  	pPs=new Ps(&WaterSewageBuffer, datatype::SINGLE, elements::WATER, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL);  	
-	Define(pPs, "Water Sewage Buffer", 20. ,"mm","Insulated Water Pipe>0",0., 30. ) ;
+	Define(pPs, "Water Sewage Buffer", 20. ,UNIT_TYPES::WATERMASS_UNIT,"Insulated Water Pipe>0",0., 30. ) ;
  	pPs=new Ps(&HeatPipeResistance, datatype::SINGLE, elements::HEAT, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL); 	
 	Define(pPs, "Heat Pipe Resistance", 1.E-4 ,"CDay/J","Insulated Water Pipe>0",0., 1.E-3 )	;
  	pPs=new Ps(&HeatSewageResistance, datatype::SINGLE, elements::HEAT, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL); 	
@@ -284,7 +284,7 @@ bool Soil_HeatF_Functions::Def()
   	pPs=new Ps(&HeaterTempThreshold, datatype::SINGLE, elements::HEAT, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL); 	 	
 	Define(pPs, "HeatTempThreshold",-3. ,UNIT_TYPES::TEMP_UNIT,"Insulated Water Pipe=4",-10.,0.); 
    	pPs=new Ps(&HeaterDuration, datatype::SINGLE, elements::HEAT, fysprocess::HEATPIPE, bioprocess::NOBPROC, userlevel::NORMAL); 	
-	Define(pPs, "HeaterDuration",1. ,"-","Insulated Water Pipe=2",0.,1.) ;
+	Define(pPs, "HeaterDuration",1. ,UNIT_TYPES::NO_UNIT,"Insulated Water Pipe=2",0.,1.) ;
 	pP=new P(&WaterPipeLayer, pNHB, datatype::HEATBOX, elements::HEAT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NHB,5.0);
    	Define(pP, pNHB, "Water Pipe BoxLayer",initv, "#","Insulated Water Pipe>0",1., 10.)  ;

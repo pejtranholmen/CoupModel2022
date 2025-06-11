@@ -107,7 +107,7 @@ bool AbioticResponses::Def()
 	ps_vec.clear();
 
 	pPs = new Ps(&CommonTemQ10, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "TemQ10", 2., "-", "Nitrogen and Carbon > 0|Temp Response < 2", 0.0, 5., 0.5, 4.); ps_vec.push_back(pPs);
+	Define(pPs, "TemQ10", 2., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon > 0|Temp Response < 2", 0.0, 5., 0.5, 4.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonTemQ10Bas, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
 	Define(pPs, "TemQ10Bas", 20.,UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|Temp Response < 2", 0.0001, 100., 10., 30.); ps_vec.push_back(pPs);
 
@@ -141,7 +141,7 @@ bool AbioticResponses::Def()
 	plotpar.X_Max = 45.;
 	//! O"Neill function
 	pPs = new Ps(&CommonNeillForm, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "Neill Form", 4.28, "-", "Temp Response = 3", 0.1, 100.); ps_vec.push_back(pPs);
+	Define(pPs, "Neill Form", 4.28, UNIT_TYPES::NO_UNIT, "Temp Response = 3", 0.1, 100.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonNeillMax, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
 	Define(pPs, "Neill Max Temp", 42.,UNIT_TYPES::TEMP_UNIT, "Temp Response = 3", 20., 100.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CommonNeillOpt, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
@@ -173,13 +173,13 @@ bool AbioticResponses::Def()
 	p_vec.clear();
 
 	pPs = new Ps(&SaturationActivity, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "SaturationActivity", 0.6, "-", "Nitrogen and Carbon > 0|Moisture Response=0", 0., 1.); ps_vec.push_back(pPs);
+	Define(pPs, "SaturationActivity", 0.6, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon > 0|Moisture Response=0", 0., 1.); ps_vec.push_back(pPs);
 	pPs = new Ps(&ThetaLowerRange, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "ThetaLowerRange", 13., "vol %", "Nitrogen and Carbon > 0", 0., 100., 3., 20.); ps_vec.push_back(pPs);
+	Define(pPs, "ThetaLowerRange", 13.,UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon > 0", 0., 100., 3., 20.); ps_vec.push_back(pPs);
 	pPs = new Ps(&ThetaUpperRange, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "ThetaUpperRange", 8., "vol %", "Nitrogen and Carbon > 0", 0., 100., 3., 20.); ps_vec.push_back(pPs);
+	Define(pPs, "ThetaUpperRange", 8.,UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon > 0", 0., 100., 3., 20.); ps_vec.push_back(pPs);
 	pPs = new Ps(&ThetaPowerCoef, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "ThetaPowerCoef", 1., "-", "Nitrogen and Carbon > 0", 0.01, 10., 0.1, 3.); ps_vec.push_back(pPs);
+	Define(pPs, "ThetaPowerCoef", 1., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon > 0", 0.01, 10., 0.1, 3.); ps_vec.push_back(pPs);
 
 	p_vec.push_back(m_pModelMap->GetPPointer("mSaturation"));
 	p_vec.push_back(m_pModelMap->GetPPointer("mWilting Point"));
@@ -235,17 +235,17 @@ bool AbioticResponses::Def()
 	NE *pNL; pNL = m_pModelMap->GetNEPointer("Number of Layers");
 
 	pG = new G(&Response.Temp, pNL, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pG, pNL, "Response(c) Temp", initv, "-", "Nitrogen and Carbon >= 1");
+	Define(pG, pNL, "Response(c) Temp", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1");
 	pG = new G(&Response.Theta, pNL, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pG, pNL, "Response(c) Theta", initv, "-", "Nitrogen and Carbon >= 1");
+	Define(pG, pNL, "Response(c) Theta", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1");
 	pG = new G(&Response.Temp_Theta, pNL, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pG, pNL, "Response(c) TempTheta", initv, "-", "Nitrogen and Carbon >= 1");
+	Define(pG, pNL, "Response(c) TempTheta", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1");
 
 	Gs *pGs;
 	pGs = new Gs(&Response.Litter, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pGs, "Response(c) Litter", 0.0, "-", "Nitrogen and Carbon >= 1");
+	Define(pGs, "Response(c) Litter", 0.0, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1");
 	pGs = new Gs(&Response.Humus, datatype::TOTPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pGs, "Response(c) Humus", 0.0, "-", "Nitrogen and Carbon >= 1");
+	Define(pGs, "Response(c) Humus", 0.0, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1");
 
 	return FunctionDef();
 

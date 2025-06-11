@@ -146,7 +146,7 @@ string ChartProp::DefineYearWithinDayCell(CUGCell* pCell) {
 		if (m_HourValueRepresentation == 0) hourrepstring = "All";
 		else if (m_HourValueRepresentation <= numvalues) hourrepstring = FUtil::STD_ItoAscii(m_HourValueRepresentation);
 		else if (m_HourValueRepresentation == numvalues + 1) hourrepstring = "Mean";
-		pCell->SetText(hourrepstring);
+		pCell->SetStdText(hourrepstring);
 	}
 	else if (m_MultiPG_dep.FirstType == vartype::PGDAY&&m_MultiPG_dep.SecondType == vartype::PGHOUR) {
 		label = "Year Value";
@@ -160,7 +160,7 @@ string ChartProp::DefineYearWithinDayCell(CUGCell* pCell) {
 		string yearrepstring;
 		if (m_YearValueRepresentation == 0) yearrepstring = "Mean";
 		else if (m_YearValueRepresentation <= numvalues) yearrepstring = FUtil::STD_ItoAscii(m_pPGSource->GetYear(m_pPGSource->GetYearIndex(m_YearValueRepresentation)));
-		pCell->SetText(yearrepstring);
+		pCell->SetStdText(yearrepstring);
 	}
 	pCell->SetLabelText(optionlist);
 

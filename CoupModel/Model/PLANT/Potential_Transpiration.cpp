@@ -77,9 +77,9 @@ bool Potential_Transpiration::Def()
 
 
 	pPs = new Ps(&CanDensMax, datatype::SINGLEPLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "CanDensMax", 0.7, "-", "Roughness = 2|PlantType = 2", 0.1, 0.9);
+	Define(pPs, "CanDensMax", 0.7, UNIT_TYPES::NO_UNIT, "Roughness = 2|PlantType = 2", 0.1, 0.9);
 	pPs = new Ps(&PAddIndex, datatype::SINGLEPLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "PAddIndex", 1., "-", "Roughness = 2|PlantType = 2", 0., 5.);
+	Define(pPs, "PAddIndex", 1., UNIT_TYPES::NO_UNIT, "Roughness = 2|PlantType = 2", 0., 5.);
 
 	functorprop.FuncName = MyFunc::SHAWPERRERIA_DISPLACEMENT; functorprop.Arg = MyArgType::D3;
 	funcname = "Displacement Length - Shaw & Perreria - Single Plant";
@@ -137,16 +137,16 @@ bool Potential_Transpiration::Def()
 	ModuleConditions = "Evaporation>0";
 
 	pPs = new Ps(&KBMinusOne, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "KBMinusOne", 0., "-", "WaterEq = 1|Surface Temperature >=2|Evaporation Method > 0", 0.0, 5.0, 0.0, 2.5);
+	Define(pPs, "KBMinusOne", 0., UNIT_TYPES::NO_UNIT, "WaterEq = 1|Surface Temperature >=2|Evaporation Method > 0", 0.0, 5.0, 0.0, 2.5);
 
 	pPs = new Ps(&StabCoefStableRich, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "StabCoefStableRich", 16., "-", "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 30., 12., 20.);
+	Define(pPs, "StabCoefStableRich", 16., UNIT_TYPES::NO_UNIT, "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 30., 12., 20.);
 	pPs = new Ps(&StabCoefStableExp, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "StabCoefStableExp", 0.33333, "-", "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 5., 0., 5.);
+	Define(pPs, "StabCoefStableExp", 0.33333, UNIT_TYPES::NO_UNIT, "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 5., 0., 5.);
 	pPs = new Ps(&StabCoefUnStableRich, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "StabCoefUnstableRich", 16., "-", "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 30., 12., 20.);
+	Define(pPs, "StabCoefUnstableRich", 16., UNIT_TYPES::NO_UNIT, "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 30., 12., 20.);
 	pPs = new Ps(&StabCoefUnStableExp, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::TURBULENCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "StabCoefUnstableExp", 0.33333, "-", "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 5., 0., 5.);
+	Define(pPs, "StabCoefUnstableExp", 0.33333, UNIT_TYPES::NO_UNIT, "Evaporation > 0|Evaporation Method > 0|Surface Temperature > 1|WaterEq = 1|Stability Correction<1", 0., 5., 0., 5.);
 
 	ModuleNo = 11;
 	ModuleConditions = "";
@@ -206,7 +206,7 @@ bool Potential_Transpiration::Def()
 	ps_vec.clear(); pPs = new Ps(&CO2_BaseLevel, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pPs, "CO2 Base Level", 354., "ppm", "PlantType>=3|CAtmDependence>0", 300., 600.); ps_vec.push_back(pPs);
 	pPs = new Ps(&CO2_PowerCoef, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
-	Define(pPs, "CO2 Power Coef", 1., "-", "CAtmDependence>0|PlantType>=3", 0.5, 1.5); ps_vec.push_back(pPs);
+	Define(pPs, "CO2 Power Coef", 1., UNIT_TYPES::NO_UNIT, "CAtmDependence>0|PlantType>=3", 0.5, 1.5); ps_vec.push_back(pPs);
 
 	functorprop.FuncName = MyFunc::CONDUCTANCE_CO2; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
@@ -240,12 +240,12 @@ bool Potential_Transpiration::Def()
 
 	pP = new P(&MC_CanDensMax, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.7);
-	Define(pP, pNumPlants, "Canopy DensMax", initv, "-", "PlantType = 3|Roughnessfunc=0", 0.1, 0.9, 0.2, 0.8);
+	Define(pP, pNumPlants, "Canopy DensMax", initv, UNIT_TYPES::NO_UNIT, "PlantType = 3|Roughnessfunc=0", 0.1, 0.9, 0.2, 0.8);
 	mTab_EvapMulti.push_back(pP);
 
 	pP = new P(&MC_PAddIndex, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 1.);
-	Define(pP, pNumPlants, "Plant AddIndex", initv, "-", "PlantType >= 3|Roughnessfunc=0", 0., 5.);
+	Define(pP, pNumPlants, "Plant AddIndex", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3|Roughnessfunc=0", 0., 5.);
 	mTab_EvapMulti.push_back(pP);
 
 	pP = new P(&MC_RoughLMin, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -370,15 +370,15 @@ bool Potential_Transpiration::Def()
 
 	pP = new P(&Z_StartValue, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.1); p_vec.push_back(pP);
-	Define(pP, pNumPlants, "Z Start Value", initv, "-", "PlantType >= 3", 0.0001, 1., 0.01, 0.5);
+	Define(pP, pNumPlants, "Z Start Value", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3", 0.0001, 1., 0.01, 0.5);
 	mTab_RoughMulti.push_back(pP);
 	pP = new P(&Z_OptValue, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.1); p_vec.push_back(pP);
-	Define(pP, pNumPlants, "Z Optimum Value", initv, "-", "PlantType >= 3", 0.0001, 1., 0.01, 0.5);
+	Define(pP, pNumPlants, "Z Optimum Value", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3", 0.0001, 1., 0.01, 0.5);
 	mTab_RoughMulti.push_back(pP);
 	pP = new P(&Z_EndValue, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.1); p_vec.push_back(pP);
-	Define(pP, pNumPlants, "Z End Value", initv, "-", "PlantType >= 3", 0.0001, 1., 0.01, 0.5);
+	Define(pP, pNumPlants, "Z End Value", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3", 0.0001, 1., 0.01, 0.5);
 	mTab_RoughMulti.push_back(pP);
 
 	p_vec.push_back((P*)m_pModelMap->GetP_Pointer("Roughness Min"));
@@ -410,15 +410,15 @@ bool Potential_Transpiration::Def()
 
 
 
-	Define(pP, pNumPlants, "D Start Value", initv, "-", "PlantType >= 3", 0., 1.);
+	Define(pP, pNumPlants, "D Start Value", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3", 0., 1.);
 	mTab_DisplMulti.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&D_OptValue, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.66);
-	Define(pP, pNumPlants, "D Optimum Value", initv, "-", "PlantType >= 3", 0., 1.);
+	Define(pP, pNumPlants, "D Optimum Value", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3", 0., 1.);
 	mTab_DisplMulti.push_back(pP); p_vec.push_back(pP);
 	pP = new P(&D_EndValue, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.66); p_vec.push_back(pP);
-	Define(pP, pNumPlants, "D End Value", initv, "-", "PlantType >= 3", 0., 1.);
+	Define(pP, pNumPlants, "D End Value", initv, UNIT_TYPES::NO_UNIT, "PlantType >= 3", 0., 1.);
 	mTab_DisplMulti.push_back(pP);
 
 
@@ -471,13 +471,13 @@ bool Potential_Transpiration::Def()
 	pG = new G(&MC_ResSurfVar, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "Resistance Canopy", initv, "s/m", "PlantType = 3");
 	pG = new G(&MC_PotTransp, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNumPlants, "Pot Transpiration", initv, "-", "PlantType = 3");
+	Define(pG, pNumPlants, "Pot Transpiration", initv, UNIT_TYPES::NO_UNIT, "PlantType = 3");
 	pG = new G(&MC_ResSurfVarMin, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "Resistance Min Canopy", initv, "s/m", "PlantType = 3");
 	pG = new G(&MC_PotTranspMax, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNumPlants, "Pot MaxTranspiration", initv, "-", "PlantType = 3");
+	Define(pG, pNumPlants, "Pot MaxTranspiration", initv, UNIT_TYPES::NO_UNIT, "PlantType = 3");
 	pG = new G(&MC_ResponseAtm, pNumPlants, datatype::PLANT, elements::ATMOSPHERE, fysprocess::POTTRANSPIRATION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNumPlants, "Response Transp Atm", initv, "-", "PlantType = 3");
+	Define(pG, pNumPlants, "Response Transp Atm", initv, UNIT_TYPES::NO_UNIT, "PlantType = 3");
 
 	return true;
 

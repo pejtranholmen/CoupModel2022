@@ -286,11 +286,11 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 
 	string str;
 	if (m_pSimDoc->m_MStorage.m_AcceptedIdString.size() > 0)
-		str = m_pSimDoc->m_MStorage.m_AcceptedIdString[checkens]+ "-"+FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
+		str = m_pSimDoc->m_MStorage.m_AcceptedIdString[checkens]+ "-" + FUtil::STD_ItoAscii(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
 	else
 		str = "";
 
-	cell.SetText(str);
+	cell.SetStdText(str);
 	if(!m_Distribution_As_Independent) 	m_pProp->SetTitle(str);
 	else m_pProp->SetTitle("");
 	SetCell(-1, -1, &cell);
@@ -348,7 +348,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 		//else if (m_pProp->m_ChartType == CHART_TYPES::FREQUENCE) txt = "frequence";
 		//else if (m_pProp->m_ChartType == CHART_TYPES::CUM_FREQUENCE) ;
 		txt = "cumulated";
-		cell.SetText(txt);
+		cell.SetStdText(txt);
 		SetCell(1, -2, &cell);
 	}
 	else {
@@ -359,7 +359,7 @@ void ValidationCug::Make_MainSheets(int SheetNumber)
 			txt = "1 Independent Par";
 			m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 		}
-		cell.SetText(txt);
+		cell.SetStdText(txt);
 		SetCell(1, -2, &cell);
 	}
 	
@@ -514,7 +514,7 @@ for(int i=0;i<m_NumValidVar;i++) {
 					QuickSetNumber(2, line, 0);
 				GetCell(1,line,&cell);
 				cell.SetCellType(UGCT_CHECKBOX);
-				cell.SetText("");
+				cell.SetStdText("");
 				cell.SetReadOnly(TRUE);
 				if (abs(stat_all.Mean) < 1.E38)
 					cell.SetReadOnly(FALSE);
@@ -579,7 +579,7 @@ for(int i=0;i<m_NumValidVar;i++) {
 				if(abs(value)<0.5E38)
 					cell.SetNumber(value);
 				else
-					cell.SetText("");
+					cell.SetStdText("");
 				cell.SetBackColor(m_NoColor);
 				if (m_pSimDoc->IsMultiStorageFileLocked()) {
 					cell.SetReadOnly(TRUE);
@@ -599,11 +599,11 @@ for(int i=0;i<m_NumValidVar;i++) {
 				if (abs(value) < 0.5E38)
 					cell.SetNumber(value);
 				else
-					cell.SetText("");
+					cell.SetStdText("");
 
 
 				//else
-					//cell.SetText("");
+					//cell.SetStdText("");
 				cell.SetBackColor(m_NoColor);
 				if (m_pSimDoc->IsMultiStorageFileLocked()) {
 					cell.SetReadOnly(TRUE);
@@ -730,7 +730,7 @@ if(m_NumValidVar>1) {
 			index_sel -= num_in_firstdim;
 
 		string selected_str = FUtil::GetOptionString(optionlist, index_sel);
-		cell.SetText(selected_str.c_str());
+		cell.SetStdText(selected_str);
 		cell.SetLabelText(optionlist.c_str());
 		cell.SetParam(100);
 		cell.SetBackColor(m_ColorClick);
@@ -745,7 +745,7 @@ if(m_NumValidVar>1) {
 				if (m_pProp->GetFirstIndepIndex() >= num_in_firstdim)
 					index_sel -= num_in_firstdim;
 				string selected_str = FUtil::GetOptionString(optionlist, index_sel);
-				cell.SetText(selected_str.c_str());
+				cell.SetStdText(selected_str);
 				cell.SetLabelText(optionlist.c_str());
 				cell.SetParam(300);
 				cell.SetBackColor(m_ColorClick);
@@ -1284,14 +1284,14 @@ void ValidationCug::Make_SplitPeriodSheet()
 	m_pUtil->m_EnsembleViewOption = m_pUtil->GetEnsembleViewOption();
 	string selected_str = FUtil::GetOptionString(optionlist, m_pUtil->m_EnsembleViewOption);
 
-	cell.SetText(selected_str.c_str());
+	cell.SetStdText(selected_str);
 	cell.SetLabelText(optionlist.c_str());
 
 	SetCell(2, 1, &cell);
 
 	GetCell(2, 2, &cell);
 	string txt="Update Chart";
-	cell.SetText(txt.c_str());
+	cell.SetStdText(txt);
 	cell.SetBackColor(m_ColorClick);
 	SetCell(2, 2, &cell);
 
@@ -1307,7 +1307,7 @@ void ValidationCug::Make_SplitPeriodSheet()
 		optionlist += m_pSimDoc->m_MStorage.m_AcceptedIdString[i] + '\n';
 	cell.SetLabelText(optionlist.c_str());
 	if(m_pSimDoc->m_MStorage.m_AcceptedIdString.size()>m_pSimDoc->m_MStorage.m_ActualEnsemble)
-		cell.SetText(m_pSimDoc->m_MStorage.m_AcceptedIdString[m_pSimDoc->m_MStorage.m_ActualEnsemble]);
+		cell.SetStdText(m_pSimDoc->m_MStorage.m_AcceptedIdString[m_pSimDoc->m_MStorage.m_ActualEnsemble]);
 	SetCell(1, rows, &cell);
 	QuickSetText(0, rows + 1, "Name");
 	QuickSetText(1, rows + 1, "No");
@@ -1657,7 +1657,7 @@ void ValidationCug::Make_OptionSheet()
 			}
 			test=pValFile->GetDataDescription(ind+1).c_str();
 			GetCell(0,i,&cell);	
-			cell.SetText(test);
+			cell.SetStdText(test);
 			cell.SetReadOnly(TRUE);
 			SetCell(0,i,&cell);
 
@@ -1900,7 +1900,7 @@ void ValidationCug::Make_DistributionSheet(BOOL Residuals)
 		str="Accepted\n("+FUtil::STD_ItoAscii(iaccept)+")";
 	else if(m_SelectedTimeShow<7)
 		str="All Runs\n("+FUtil::STD_ItoAscii(iacceptall)+")";
-	cell.SetText(str);
+	cell.SetStdText(str);
 	
 	SetCell(-1,-1,&cell);
 
@@ -1951,7 +1951,7 @@ void ValidationCug::Make_DistributionSheet(BOOL Residuals)
 		}
 		test=pValFile->GetDataDescription(ind).c_str();
 		GetCell(0,irow+1,&cell);	
-		cell.SetText(test);
+		cell.SetStdText(test);
 		cell.SetReadOnly(TRUE);
 		SetCell(0,irow+1,&cell);
 
@@ -2014,7 +2014,7 @@ void ValidationCug::Make_DistributionSheet(BOOL Residuals)
 				}
 				domain+=Add;
 			}
-			cell.SetText(domain);
+			cell.SetStdText(domain);
 			cell.SetCellTypeEx(UGCT_NORMALMULTILINE);
 			cell.SetParam(Id_var);
 			SetCell(-1,irow+1  ,&cell);

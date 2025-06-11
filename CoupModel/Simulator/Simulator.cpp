@@ -635,7 +635,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 					str+="("+FUtil::STD_ItoAscii(m_MultiOutputs[count].TabIndex+1)+")";
 				}
 				m_pSim->m_PG_MultiOutputFile.SetVarName(count+1,str,m_pModelInfo->ActualNoMulRun-1);
-				m_pSim->m_PG_MultiOutputFile.SetVarUnit(count+1,m_MultiOutputs[count].pBase->GetUnit(),m_pModelInfo->ActualNoMulRun-1);
+				m_pSim->m_PG_MultiOutputFile.SetVarUnit(count+1,string(m_MultiOutputs[count].pBase->GetUnit()),m_pModelInfo->ActualNoMulRun-1);
 				if(m_StructureModel.m_Additional.Multi_PGFile_ID_Selector==0)
 					m_pSim->m_PG_MultiOutputFile.SetVarId(count+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo),m_pModelInfo->ActualNoMulRun-1 );
 				else if(m_StructureModel.m_Additional.Multi_PGFile_ID_Selector==1)
@@ -677,7 +677,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 	else {
 		for(size_t i=0;i<m_Outputs.size(); i++) {
 			m_pSim->m_PG_OutPutFile.SetVarName(i+1,m_Outputs[i].pBase->GetName());
-			m_pSim->m_PG_OutPutFile.SetVarUnit(i+1,m_Outputs[i].pBase->GetUnit());
+			m_pSim->m_PG_OutPutFile.SetVarUnit(i+1,string(m_Outputs[i].pBase->GetUnit()));
 			m_pSim->m_PG_OutPutFile.SetVarId(i+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo) );
 			if(m_Outputs[i].pBase->GetDataType()==datatype::SIMPROFILE&&m_Outputs[i].pBase->Is_Vector()) {
 				size_t index=m_Outputs[i].TabIndex;
@@ -693,7 +693,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 					string str2=FUtil::STD_ItoAscii(int(100*m_SoilModel.m_SoilFrost.ModelLowerDepth[index] + 1.E-4));
 					if(str2.size()==1) str2="  "+str2;
 					if(str2.size()==2) str2=" "+str2;
-					string id=str1+"-"+str2+ " cm "+FUtil::STD_ItoAscii(int(m_pSim->m_DocFile.m_SimulationRunNo));
+					string id=str1+"-" + str2 + " cm " + FUtil::STD_ItoAscii(int(m_pSim->m_DocFile.m_SimulationRunNo));
 					m_pSim->m_PG_OutPutFile.SetVarId(i+1,id);
 				}
 
@@ -728,7 +728,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 	if (m_WshedOutputs.size() == 0) return true;
 	for(size_t i=0;i<m_WshedOutputs.size(); i++) {
 			m_pSim->m_PG_WShed_Out.SetVarName(i+1,m_WshedOutputs[i].pBase->GetName());
-			m_pSim->m_PG_WShed_Out.SetVarUnit(i+1,m_WshedOutputs[i].pBase->GetUnit());
+			m_pSim->m_PG_WShed_Out.SetVarUnit(i+1,string(m_WshedOutputs[i].pBase->GetUnit()));
 			m_pSim->m_PG_WShed_Out.SetVarId(i+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo) );
 			if(m_WshedOutputs[i].pBase->GetDataType()==datatype::SIMPROFILE&&m_WshedOutputs[i].pBase->Is_Vector()) {
 				size_t index=m_Outputs[i].TabIndex;
@@ -744,7 +744,7 @@ bool Simulator::Store_Write(bool MultiFlag, bool Final)
 					string str2=FUtil::STD_ItoAscii(int(100*m_SoilModel.m_SoilFrost.ModelLowerDepth[index] + 1.E-4));
 					if(str2.size()==1) str2="  "+str2;
 					if(str2.size()==2) str2=" "+str2;
-					string id=str1+"-"+str2+ " cm "+FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo);
+					string id=str1+"-" + str2 + " cm " + FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo);
 					m_pSim->m_PG_WShed_Out.SetVarId(i+1,id);
 				}
 
@@ -1209,7 +1209,7 @@ bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
 				str=m_pSim->m_Val_Array[LL].Name;
 				if(m_pValVar[LL].TabIndex>=0) str+='('+FUtil::STD_ItoAscii(m_pValVar[LL].TabIndex+1)+')';
 				pPG->SetVarName(j+1,str);
-				pPG->SetVarUnit(j+1,m_pValVar[LL].pBase->GetUnit());
+				pPG->SetVarUnit(j+1,string(m_pValVar[LL].pBase->GetUnit()));
 				pPG->SetVarId(j+1,FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo) );
 			}
 			PGPOS pos=pPG->GetPos(m_pModelInfo->m_ActMin);
@@ -1248,7 +1248,7 @@ bool Simulator::Valid_End(bool Multi, bool Final, bool First) {
 					if (m_pValVar[LL].pBase->Is_Vector())
 						str += '(' + FUtil::STD_ItoAscii(m_pValVar[LL].TabIndex + 1) + ')';
 					pPG->SetVarName(j + 1, str);
-					pPG->SetVarUnit(j + 1, m_pValVar[LL].pBase->GetUnit());
+					pPG->SetVarUnit(j + 1, string(m_pValVar[LL].pBase->GetUnit()));
 					pPG->SetVarId(j + 1, FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo));
 				}
 			}

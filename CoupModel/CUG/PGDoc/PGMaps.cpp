@@ -60,7 +60,7 @@ vector<string> PGMaps::GetUnitOptionsNames(elements key)
 	auto itabove = m_StringMapUnits.upper_bound(key);
 	if (itstart != m_StringMapUnits.end()) {
 		for (auto it = itstart; it != itabove; ++it) {
-			outvector.push_back((*it).second);
+			outvector.push_back(string((*it).second));
 		}
 	}
 	return outvector;

@@ -262,8 +262,8 @@ string SimB::GetDepName(size_t i) const{
 	if (i<noticelist_Array.size()) 
 		return noticelist_Array[i]->GetName(); 
 	return VariableName;}
-string SimB::GetDepUnit(size_t i) const{ 
-	string VariableUnit=" ";
+string_view SimB::GetDepUnit(size_t i) const{ 
+	string_view VariableUnit=" ";
 	//Return the name of the variable that is dependant of this variable.
 	//If there is no such dependence then return the variablename
 	if (i<noticelist_Array.size()) 

@@ -272,13 +272,13 @@ void CalcCug::OnSetup()
 
 			switch (m_expression_type) {
 				case 1:
-					cell.SetText("New Values based on one Variable");
+					cell.SetStdText("New Values based on one Variable");
 					break;
 				case 2:
-					cell.SetText("New Values based on Different Variables");
+					cell.SetStdText("New Values based on Different Variables");
 					break;
 				case 3:
-					cell.SetText("New Values based on Date/Time");
+					cell.SetStdText("New Values based on Date/Time");
 					break;
 			}
 			m_pPG->SetVarFunctionType(m_expression_type);
@@ -288,7 +288,7 @@ void CalcCug::OnSetup()
 		}
 		else {
 			cell.SetCellType(UGCT_NORMAL);
-			cell.SetText("New Date/Time Variable");
+			cell.SetStdText("New Date/Time Variable");
 		}
 		
 		SetCell(0,0, &cell);
@@ -303,13 +303,13 @@ void CalcCug::OnSetup()
 			optionlist+="Convert Variable to Current Date/time\n";
 				switch (expression) {
 				case 1:
-					cell.SetText("Move Current Date/time backward");
+					cell.SetStdText("Move Current Date/time backward");
 					break;
 				case 2:
-					cell.SetText("Move Current Date/time forward");
+					cell.SetStdText("Move Current Date/time forward");
 					break;
 				case 3:
-					cell.SetText("Convert Variable to Current Date/time");
+					cell.SetStdText("Convert Variable to Current Date/time");
 					str=MFC_Util::ItoAscii(m_pPG->GetCalcVar());			
 					QuickSetText(1,0,_T("Input Var: ")+str);
 					break;
@@ -356,16 +356,16 @@ void CalcCug::OnSetup()
 				optionlist+="Time as Minutes\n";
 				switch (expressiont) {
 				case 1:
-					cell.SetText("Time as Years");
+					cell.SetStdText("Time as Years");
 					break;
 				case 2:
-					cell.SetText("Time as Days");
+					cell.SetStdText("Time as Days");
 					break;
 				case 3:
-					cell.SetText("Time as Hours");
+					cell.SetStdText("Time as Hours");
 					break;
 				case 4:
-					cell.SetText("Time as Minutes");
+					cell.SetStdText("Time as Minutes");
 					break;
 				}
 
@@ -407,7 +407,7 @@ void CalcCug::OnSetup()
 
 					if(m_pPG->GetToBeCalc(line)&&!jump) {
 						if(m_pPG->GetNumRepititions()>1) {
-							s1=MFC_Util::ItoAscii(ii+1)+"-"+MFC_Util::ItoAscii(irep+1);
+							s1=MFC_Util::ItoAscii(ii+1)+"-" + MFC_Util::ItoAscii(irep + 1);
 						}
 						else {
 							s1=MFC_Util::ItoAscii(line+1);
@@ -480,7 +480,7 @@ void CalcCug::OnSetup()
 
 			switch (expression) {
 				case 1:
-					cell.SetText("Scaling of existing values");	
+					cell.SetStdText("Scaling of existing values");	
 					QuickSetText(0,2,"Coefficient");
 					QuickSetBackColor(0,2,m_ColorHeading);
 					QuickSetText(1,2,"Value");
@@ -511,7 +511,7 @@ void CalcCug::OnSetup()
 				
 					break;
 				case 2:
-					cell.SetText("Introducing missing values by defining valid range");
+					cell.SetStdText("Introducing missing values by defining valid range");
 					QuickSetText(0,2,"Limits");
 					QuickSetBackColor(0,2,m_ColorHeading);
 					QuickSetText(1,2,"Value");
@@ -539,7 +539,7 @@ void CalcCug::OnSetup()
 					QuickSetNumber(1,0,m_pPG->GetCalcVar());
 					break;
 				case 3:
-					cell.SetText("Introducing missing values by defining non valid range");
+					cell.SetStdText("Introducing missing values by defining non valid range");
 					QuickSetText(0,2,"Limits");
 					QuickSetBackColor(0,2,m_ColorHeading);
 					QuickSetText(1,2,"Value");
@@ -567,7 +567,7 @@ void CalcCug::OnSetup()
 					QuickSetNumber(1,0,m_pPG->GetCalcVar());
 					break;
 				case 4:
-					cell.SetText("Substitution of missing values by fixed value");
+					cell.SetStdText("Substitution of missing values by fixed value");
 					QuickSetText(1,2,"Value");
 					QuickSetBackColor(1,2,m_ColorHeading);
 					QuickSetBackColor(0,2,m_ColorHeading);
@@ -584,12 +584,12 @@ void CalcCug::OnSetup()
 					DefineConditionLines(4);
 					break;
 				case 5:
-					cell.SetText("Substitution of missing values by linear interpolation");
+					cell.SetStdText("Substitution of missing values by linear interpolation");
 					QuickSetText(1,-1,"Input Var:");
 					QuickSetNumber(1,0,m_pPG->GetCalcVar());
 					break;
 				case 6:  //
-					cell.SetText("Introducing missing values by simple smoothing");
+					cell.SetStdText("Introducing missing values by simple smoothing");
 					QuickSetText(0,2,"Limits");
 					QuickSetBackColor(0,2,m_ColorHeading);
 					QuickSetText(1,2,"Value");
@@ -614,7 +614,7 @@ void CalcCug::OnSetup()
 					}
 					break;
 				case 7:
-					cell.SetText("Difference between previous and current value");
+					cell.SetStdText("Difference between previous and current value");
 					QuickSetText(1,-1,"Input Var:");
 					QuickSetNumber(1,0,m_pPG->GetCalcVar());
 					break;
@@ -700,19 +700,19 @@ void CalcCug::OnSetup()
 			optionlist+="Substitute missing Values by one Selected Variable\n";
 			switch (expression) {
 				case 1:
-					cell.SetText("Mean Value of Different Variables");
+					cell.SetStdText("Mean Value of Different Variables");
 					break;
 				case 2:
-					cell.SetText("Weighted sum of Different Variables");
+					cell.SetStdText("Weighted sum of Different Variables");
 					break;
 				case 3:
-					cell.SetText("Multiplication of Different Variables");
+					cell.SetStdText("Multiplication of Different Variables");
 					break;
 				case 4:
-					cell.SetText("Division of Different Variables");
+					cell.SetStdText("Division of Different Variables");
 					break;
 				case 5:
-					cell.SetText("Substitute missing Values by one Selected Variable");
+					cell.SetStdText("Substitute missing Values by one Selected Variable");
 					break;
 			}
 			m_pPG->SetVarFunction(expression);
@@ -756,16 +756,16 @@ void CalcCug::OnSetup()
 			optionlist+="Variable as days since start of serie\n";
 			switch (expression) {
 				case 1:
-					cell.SetText("Variable values as daynumber of year");
+					cell.SetStdText("Variable values as daynumber of year");
 					break;
 				case 2:
-					cell.SetText("Variable values as month of year");
+					cell.SetStdText("Variable values as month of year");
 					break;
 				case 3:
-					cell.SetText("Variable values as minute of day");
+					cell.SetStdText("Variable values as minute of day");
 					break;
 				case 4:
-					cell.SetText("Variable as days since start of serie");
+					cell.SetStdText("Variable as days since start of serie");
 					break;
 			}
 			m_pPG->SetVarFunction(expression);
@@ -940,13 +940,13 @@ void CalcCug::OnSetup()
 				optionlist+="as Value\n";
 				switch (m_VarValueChoice[i]) {
 					case 0:
-						cell.SetText("as Variable");
+						cell.SetStdText("as Variable");
 						QuickSetNumber(2,i+1, m_VarSelect[i], false);
 						if(m_VarSelectCurrent>0&&m_VarSelectCurrent==i+1)
 							QuickSetBackColor(-1,m_VarSelectCurrent, m_ColorSelected);
 						break;
 					case 1:
-						cell.SetText("as Value");
+						cell.SetStdText("as Value");
 						QuickSetNumber(2,i+1, m_ParValue[i],false);
 						break;
 				}

@@ -154,9 +154,9 @@ bool NC_GasFlux_Functions::Def()
 	pT = new T(&O2_Oxidation, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::TRANSPORT, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 		Define(pT, pNL, "Oxygen Oxidation", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0|Dissolved oxygen gas>0");
 	pT = new T(&OxygenStress, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::TRANSPORT, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-		Define(pT, pNL, "Oxygen Stress", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0|Dissolved oxygen gas>0");
+		Define(pT, pNL, "Oxygen Stress", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0|Dissolved oxygen gas>0");
 	pT = new T(&MethaneStress, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::TRANSPORT, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-		Define(pT, pNL, "Methane Stress", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0|Dissolved oxygen gas>0");
+		Define(pT, pNL, "Methane Stress", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0|Dissolved oxygen gas>0");
 	;
 ////Vectors added by Marco
 	pT= new T(&CH4_OxidationSoilBacteria ,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_OXIDATION, userlevel::NORMAL); 
@@ -287,7 +287,7 @@ plotpar.Y_ScalingCoef = 6;
 		plotpar.LegendsVec.push_back("0 " + lstr);  plotpar.LegendsVec.push_back("10 " + lstr); plotpar.LegendsVec.push_back("20 " + lstr);
 	
 	pPs = new Ps(&CH4_BubbleRateConstant, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-		Define(pPs, "CH4 BubbleRateConstant", 2.8, "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane Ebullition=1", 0., 4.);	ps_vec.push_back(pPs);
+		Define(pPs, "CH4 BubbleRateConstant", 2.8, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >=1|Methane Model>0|Methane Ebullition=1", 0., 4.);	ps_vec.push_back(pPs);
 	pPs= new Ps(&CH4_EbullMax, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL); 
 		Define(pPs, "CH4 EbullThreshold", 20. , UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >=1|Methane Model>0|Methane Ebullition=1", 0.1, 1E3);	ps_vec.push_back(pPs);
 	
@@ -467,14 +467,14 @@ plotpar.LegendsVec.clear();
 	pPs = new Ps(&CH4_CONC_Atm, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 		Define(pPs, "CH4 Air Conc", 1.8, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0", 0., 10.);	ps_vec.push_back(pPs);
 	pPs = new Ps(&CH4_ResistanceAir, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-		Define(pPs, "CH4 Resistance Air", 30., "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane SoilBoundary=0", 1., 500.); ps_vec.push_back(pPs);
+		Define(pPs, "CH4 Resistance Air", 30., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >=1|Methane Model>0|Methane SoilBoundary=0", 1., 500.); ps_vec.push_back(pPs);
 
 	
 	pFunc = new Func( datatype::TOTPROFILE, elements::METHANE, fysprocess::NOFPROC, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
 	pPs = new Ps(&CH4_ResistanceAirLogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-		Define(pPs, "CH4 AirResistance LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -2., 4.);  // Changed to allway make use of possible scaling of air resistance
+		Define(pPs, "CH4 AirResistance LogScale", 0., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >=1|Methane Model>0", -2., 4.);  // Changed to allway make use of possible scaling of air resistance
 
    pPs = new Ps(&O2_CONC_Atm, datatype::SIMPROFILE, elements::OXYGEN, fysprocess::STORAGE, bioprocess::INITB, userlevel::NORMAL);
 		Define(pPs, "O2 Air Conc", 20.95, UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 100.); 
@@ -488,13 +488,13 @@ plotpar.LegendsVec.clear();
     //pPs= new Ps(&NPPyr, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	//    Define(pPs,   "Annual NPP",600.,"gC/m2/yr", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,5.E3);
 	//pPs= new Ps(&Porosity_Tiller, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	//    Define(pPs,   "Porosity of tiller",0.3,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
+	//    Define(pPs,   "Porosity of tiller",0.3,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
 	//pPs= new Ps(&NPP_Ratio, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	//    Define(pPs,   "NPP Ratio",0.5,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
+	//    Define(pPs,   "NPP Ratio",0.5,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
 	pPs= new Ps(&AereScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	    Define(pPs,   "Aerenchyma LogScale",0.,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",-5.,5.);
+	    Define(pPs,   "Aerenchyma LogScale",0.,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",-5.,5.);
 	//pPs= new Ps(&Rob, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	//    Define(pPs,   "Ratio Root Len. to Depth",3.,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,20.);
+	//    Define(pPs,   "Ratio Root Len. to Depth",3.,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,20.);
 	pPs= new Ps(&D_CH4_Aere, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	    Define(pPs,   "Diffusivity CH4 through Aerenchyma",0.1875,"cm2/s", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",0.,1.);
 	pPs= new Ps(&D_O2_Aere, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
@@ -665,7 +665,7 @@ plotpar.LegendsVec.clear();
 		
 	initv.assign(pSoil->NL,0.);
 	pG= new G(&An_VolFraction ,pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::TRANSPORT, bioprocess::OXIDATION, userlevel::NORMAL); 
-		Define(pG, pNL  , "An_VolFraction",initv,"-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+		Define(pG, pNL  , "An_VolFraction",initv,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 
 	functorprop.FuncName = MyFunc::ANAEROBIC_BALLON; functorprop.Arg = MyArgType::D1;
 		functorprop.FunctorInitOption = std::string::npos;
@@ -686,7 +686,7 @@ plotpar.LegendsVec.clear();
 		plotpar.Y_ScalingCoef = 0;
 
 	pPs= new Ps(&AnBal_ShapeCoef , datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-		Define(pPs, "AnBal_ShapeCoef", 100., "-", "Trace Gas Emissions > 0", 0., 500.);  ps_vec.push_back(pPs);
+		Define(pPs, "AnBal_ShapeCoef", 100., UNIT_TYPES::NO_UNIT, "Trace Gas Emissions > 0", 0., 500.);  ps_vec.push_back(pPs);
 	pFunc = new Func( datatype::TOTPROFILE, elements::METHANE, fysprocess::NOFPROC, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
@@ -710,7 +710,7 @@ plotpar.LegendsVec.clear();
 
 
 		pPs = new Ps(&DO2_Tortuosity, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); ps_vec.push_back(pPs);
-		Define(pPs,   "D O2 Tortuosity", 0.66, "-","Trace Gas Emissions > 0",0.3,1.0);
+		Define(pPs,   "D O2 Tortuosity", 0.66, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.3,1.0);
 
 		pFunc = new Func( datatype::TOTPROFILE, elements::OXYGEN, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
@@ -732,11 +732,11 @@ plotpar.LegendsVec.clear();
 		plotpar.Y_ScalingCoef = 0;
 
 	pPs= new Ps(&DCO2_Tortuosity, datatype::SIMPROFILE, elements::SOILCO2, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); 
-		Define(pPs,   "D CO2 Tortuosity", 0.66, "-","Trace Gas Emissions > 0",0.3,1.0);	ps_vec.push_back(pPs);
+		Define(pPs,   "D CO2 Tortuosity", 0.66, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.3,1.0);	ps_vec.push_back(pPs);
 	pPs = new Ps(&DCO2_PowerCoefSoilDiff, datatype::SIMPROFILE, elements::SOILCO2, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL);
-		Define(pPs, "D CO2 PowerCoef", 1., "-", "Trace Gas Emissions > 0", 0.01, 100.0); ps_vec.push_back(pPs);
+		Define(pPs, "D CO2 PowerCoef", 1., UNIT_TYPES::NO_UNIT, "Trace Gas Emissions > 0", 0.01, 100.0); ps_vec.push_back(pPs);
 	pPs = new Ps(&DCO2_AirThreshold, datatype::SIMPROFILE, elements::SOILCO2, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL);
-		Define(pPs, "D CO2 AirThreshold", 1., "vol %", "Trace Gas Emissions > 0", 0.01, 100.0); ps_vec.push_back(pPs);
+		Define(pPs, "D CO2 AirThreshold", 1.,UNIT_TYPES::VOLPERCENTAGE_UNIT, "Trace Gas Emissions > 0", 0.01, 100.0); ps_vec.push_back(pPs);
 	pPs = new Ps(&DCO2Min_Soil, datatype::SIMPROFILE, elements::SOILCO2, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL);
 		Define(pPs, "D CO2 Min Value Soil", 1.E-9, UNIT_TYPES::AREA_PER_TIME_UNIT, "Trace Gas Emissions > 0", 1.E-10, 1.E-6); ps_vec.push_back(pPs);
 
@@ -767,7 +767,7 @@ plotpar.LegendsVec.clear();
 
 ;
 	pPs= new Ps(&MaxFracN2O, datatype::SIMPROFILE, elements::SOILGAS_N2O, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-	Define(pPs, "MaxFracN2O", 0.0006, "-", "Trace Gas Emissions > 0", 0., 0.1); ps_vec.push_back(pPs);
+	Define(pPs, "MaxFracN2O", 0.0006, UNIT_TYPES::NO_UNIT, "Trace Gas Emissions > 0", 0., 0.1); ps_vec.push_back(pPs);
 	pFunc = new Func( datatype::TOTPROFILE, elements::OXYGEN, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
@@ -778,7 +778,7 @@ plotpar.LegendsVec.clear();
 	plotpar.Y_Label += unit;
 	
 	pPs= new Ps(&MaxFracNO, datatype::SIMPROFILE, elements::SOILGAS_NO, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-		Define(pPs,   "MaxFracNO", 0.004, "-","Trace Gas Emissions > 0",0., 0.5); ps_vec.push_back(pPs);
+		Define(pPs,   "MaxFracNO", 0.004, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0., 0.5); ps_vec.push_back(pPs);
 	pFunc = new Func( datatype::TOTPROFILE, elements::OXYGEN, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 ;
@@ -804,7 +804,7 @@ plotpar.X_ScalingCoef = 0;
 	pPs= new Ps(&N2O_TempOpt, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
 		Define(pPs,   "N2O TempOpt", 23.5,UNIT_TYPES::TEMP_UNIT,"Trace Gas Emissions > 0",10., 50.); ps_vec.push_back(pPs);
 	pPs= new Ps(&N2O_TempShape, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-		Define(pPs,   "N2O TempShape", 1.5, "-","Trace Gas Emissions > 0",0.001, 5.); ps_vec.push_back(pPs);
+		Define(pPs,   "N2O TempShape", 1.5, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.001, 5.); ps_vec.push_back(pPs);
 
 	pFunc = new Func( datatype::TOTPROFILE, elements::OXYGEN, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
@@ -823,9 +823,9 @@ unit = p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT,true);
 plotpar.X_Label += unit;
 plotpar.Y_ScalingCoef = 0;
 	pPs= new Ps(&N2O_RelSatCrit, datatype::SIMPROFILE, elements::SOILGAS_N2O, fysprocess::STORAGE, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL); 
-		Define(pPs,  "N2O RelSatCrit", 0.55, "-","Trace Gas Emissions > 0",0.1, 1.); ps_vec.push_back(pPs);
+		Define(pPs,  "N2O RelSatCrit", 0.55, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.1, 1.); ps_vec.push_back(pPs);
 	pPs= new Ps(&N2O_RelSatForm, datatype::SIMPROFILE, elements::SOILGAS_N2O, fysprocess::STORAGE, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL); 
-		Define(pPs,   "N2O RelSatForm", 0.24, "-","Trace Gas Emissions > 0",0.001, 1.);	ps_vec.push_back(pPs);
+		Define(pPs,   "N2O RelSatForm", 0.24, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.001, 1.);	ps_vec.push_back(pPs);
 	
 	pFunc = new Func( datatype::TOTPROFILE, elements::OXYGEN, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
@@ -833,9 +833,9 @@ plotpar.Y_ScalingCoef = 0;
 functorprop.FuncName = MyFunc::NITRI_NO_PROD_MOIST_RESPONSE; functorprop.Arg = MyArgType::D1;
 funcname = "N0 Production From Nitrification Moisture Response";
 	pPs= new Ps(&NO_RelSatCrit, datatype::SIMPROFILE, elements::SOILGAS_NO, fysprocess::STORAGE, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
-		Define(pPs,  "NO RelSatCrit", 0.45, "-","Trace Gas Emissions > 0",0.1, 1.);	ps_vec.push_back(pPs);
+		Define(pPs,  "NO RelSatCrit", 0.45, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.1, 1.);	ps_vec.push_back(pPs);
 	pPs= new Ps(&NO_RelSatForm , datatype::SIMPROFILE, elements::SOILGAS_NO, fysprocess::STORAGE, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
-		Define(pPs,  "NO RelSatForm", 0.024, "-","Trace Gas Emissions > 0",0.001, 1.); ps_vec.push_back(pPs);
+		Define(pPs,  "NO RelSatForm", 0.024, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.001, 1.); ps_vec.push_back(pPs);
 	pFunc = new Func( datatype::TOTPROFILE, elements::SOILGAS_NO, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 
@@ -855,7 +855,7 @@ funcname = "N0 Production From Nitrification Moisture Response";
 
 
 	pPs = new Ps(&NO_pH_Coef, datatype::SIMPROFILE, elements::SOILGAS_NO, fysprocess::STORAGE, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);	ps_vec.push_back(pPs);
-		Define(pPs, "NO pHCoef", 4.7, "-", "Trace Gas Emissions > 0", 2., 10.);
+		Define(pPs, "NO pHCoef", 4.7, UNIT_TYPES::NO_UNIT, "Trace Gas Emissions > 0", 2., 10.);
 
 	pFunc = new Func( datatype::TOTPROFILE, elements::SOILGAS_NO, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
@@ -873,7 +873,7 @@ funcname = "N0 Production From Nitrification Moisture Response";
 		plotpar.X_Label += unit;
 		plotpar.Y_ScalingCoef = 0;
 	pPs= new Ps(&Denit_Act_PowerCoef, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-	Define(pPs, "Denit Act PowerCoef", 1., "-", "Trace Gas Emissions > 0", 1., 5.); ps_vec.push_back(pPs);
+	Define(pPs, "Denit Act PowerCoef", 1., UNIT_TYPES::NO_UNIT, "Trace Gas Emissions > 0", 1., 5.); ps_vec.push_back(pPs);
 	
 	pFunc = new Func( datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
@@ -892,9 +892,9 @@ unit = p_ModelInfo->GetUnitString(UNIT_TYPES::NO_UNIT,true);
 plotpar.X_Label += unit;
 plotpar.Y_ScalingCoef = 0;
 	pPs= new Ps(&IntDiffRedFrac, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-		Define(pPs,   "IntDiffRedFrac", 0.01, "-","Trace Gas Emissions > 0",0.1E-8, 1.);  ps_vec.push_back(pPs);
+		Define(pPs,   "IntDiffRedFrac", 0.01, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.1E-8, 1.);  ps_vec.push_back(pPs);
 	pPs= new Ps(&IntDiffRedFracBase, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-		Define(pPs,   "IntDiffRedFracBase", 0.0001, "-","Trace Gas Emissions > 0",0.0, 1.);	ps_vec.push_back(pPs);
+		Define(pPs,   "IntDiffRedFracBase", 0.0001, UNIT_TYPES::NO_UNIT,"Trace Gas Emissions > 0",0.0, 1.);	ps_vec.push_back(pPs);
 	pFunc = new Func( datatype::TOTPROFILE, elements::ANAROBIC_GAS, fysprocess::DIFFUSION, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
 ;
@@ -918,7 +918,7 @@ plotpar.Y_ScalingCoef = 0;
 		initv.assign(pSoil->NL,5.);
 
 	pP= new P(&pH_Value, pNL, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::STORAGE, bioprocess::OXIDATION, userlevel::NORMAL); 
-		Define(pP, pNL,"pH value",initv,"-","Nitrogen and Carbon > 0|Trace Gas Emissions > 0",1.,10.);
+		Define(pP, pNL,"pH value",initv,UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon > 0|Trace Gas Emissions > 0",1.,10.);
 		mTab_Ph.push_back(pP);
 
 	pTab= new Tab(&mTab_Ph, datatype::SIMPROFILE, elements::ANAROBIC_GAS, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -932,17 +932,17 @@ plotpar.Y_ScalingCoef = 0;
 	initv.assign(p_Plant->NumPlants, 0.3);
 	pP = new P(&Porosity_Tiller, pNumPlants, datatype::PLANT, elements::PLANT_SHAPE, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	mTab_Aere.push_back(pP);
-	Define(pP, pNumPlants, "Porosity of Tiller", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 1.);	 
+	Define(pP, pNumPlants, "Porosity of Tiller", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 1.);	 
 	
 	initv.assign(p_Plant->NumPlants, 0.5);
 	pP = new P(&NPP_Ratio, pNumPlants, datatype::PLANT, elements::PLANT_SHAPE, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	mTab_Aere.push_back(pP);
-    Define(pP, pNumPlants, "NPP Ratio", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 1.); 
+    Define(pP, pNumPlants, "NPP Ratio", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 1.); 
 
 	initv.assign(p_Plant->NumPlants, 3.);
 	pP = new P(&Rob, pNumPlants, datatype::PLANT, elements::PLANT_SHAPE, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);    
 	mTab_Aere.push_back(pP);
-	Define(pP, pNumPlants, "Ratio Root len. to Depth", initv, "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 20.);
+	Define(pP, pNumPlants, "Ratio Root len. to Depth", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 20.);
 		
 	//Tab* pTab;
 	pTab = new Tab(&mTab_Aere, datatype::PLANT, elements::PLANT_SHAPE, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);

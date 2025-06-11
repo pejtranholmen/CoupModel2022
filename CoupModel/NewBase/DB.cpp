@@ -2216,14 +2216,14 @@ string DB::CreateFlagString(SimB* currentParameter, bool GDType, int FlagValue)
 					//If this is the last flag in the list and it is selected
 					if ((i==(((G*)currentParameter)->GetNumberOfFlags()-1))&&selected==FlagValue)
 					{
-						outString+=STD_ItoAscii(updateSequenceStart+1)+"-"+STD_ItoAscii(((G*)currentParameter)->GetNumberOfFlags());
+						outString+=STD_ItoAscii(updateSequenceStart+1)+UNIT_TYPES::NO_UNIT+STD_ItoAscii(((G*)currentParameter)->GetNumberOfFlags());
 					}
 					else
 					{
 						if ((i-updateSequenceStart)==1)
 							outString+=STD_ItoAscii(updateSequenceStart+1)+",";
 						else
-							outString+=STD_ItoAscii(updateSequenceStart+1)+"-"+STD_ItoAscii(i)+",";
+							outString+=STD_ItoAscii(updateSequenceStart+1)+UNIT_TYPES::NO_UNIT+STD_ItoAscii(i)+",";
 						//Reset updateSequenceStart
 						updateSequenceStart=-1;
 					}
@@ -2271,14 +2271,14 @@ string DB::CreateFlagString(SimB* currentParameter, bool GDType, int FlagValue)
 					//If this is the last flag in the list and it is selected
 					if ((i==(((X*)currentParameter)->GetNumberOfFlags()-1))&&selected==FlagValue)
 					{
-						outString+=STD_ItoAscii(updateSequenceStart+1)+"-"+STD_ItoAscii(((X*)currentParameter)->GetNumberOfFlags());
+						outString+=STD_ItoAscii(updateSequenceStart+1)+UNIT_TYPES::NO_UNIT+STD_ItoAscii(((X*)currentParameter)->GetNumberOfFlags());
 					}
 					else
 					{
 						if ((i-updateSequenceStart)==1)
 							outString+=STD_ItoAscii(updateSequenceStart+1)+",";
 						else
-							outString+=STD_ItoAscii(updateSequenceStart+1)+"-"+STD_ItoAscii(i)+",";
+							outString+=STD_ItoAscii(updateSequenceStart+1)+UNIT_TYPES::NO_UNIT+STD_ItoAscii(i)+",";
 						//Reset updateSequenceStart
 						updateSequenceStart=-1;
 					}

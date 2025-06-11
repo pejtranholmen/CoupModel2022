@@ -2456,7 +2456,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 				break;
 			case 8:
 				str+=" A0";
-				if (simb.pBase != nullptr) str+=" ("+simb.pBase->GetUnit()+")";
+				if (simb.pBase != nullptr) str+=" ("+string(simb.pBase->GetUnit())+")";
 				break;
 			case 9:
 				str+=" A1";
@@ -2464,11 +2464,11 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 				break;
 			case 10:
 				str+=" ME";
-				if (simb.pBase != nullptr) str+=" ("+simb.pBase->GetUnit()+")";
+				if (simb.pBase != nullptr) str+=" ("+string(simb.pBase->GetUnit())+")";
 				break;
 			case 11:
 				str+=" RMSE";
-				if (simb.pBase != nullptr) str+=" ("+simb.pBase->GetUnit()+")";
+				if (simb.pBase != nullptr) str+=" ("+string(simb.pBase->GetUnit())+")";
 				break;
 			case 14:
 				str+=" LogLi";
@@ -2526,7 +2526,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 
 		}
 		else if(simb.pBase!=nullptr)
-			str+=" ("+simb.pBase->GetUnit()+")";
+			str+=" ("+string(simb.pBase->GetUnit())+")";
 
 
 		m_pProp->SetFirstIndepString(var,str);
@@ -2617,7 +2617,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 				break;
 			case 8:
 				str+=" A0";
-				str+=" ("+simb.pBase->GetUnit()+")";
+				str+=" ("+string(simb.pBase->GetUnit())+")";
 				break;
 			case 9:
 				str+=" A1";
@@ -2625,11 +2625,11 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 				break;
 			case 10:
 				str+=" ME";
-				str+=" ("+simb.pBase->GetUnit()+")";
+				str+=" ("+string(simb.pBase->GetUnit())+")";
 				break;
 			case 11:
 				str+=" RMSE";
-				str+=" ("+simb.pBase->GetUnit()+")";
+				str+=" ("+string(simb.pBase->GetUnit())+")";
 				break;
 			case 13:
 				str+=" LogLi";
@@ -2645,7 +2645,7 @@ bool  DocCommands::MultiRunPlotCommand(int col, int row, int item, enum vartype 
 			str += " Measured";
 		}
 		else 
-			str+=" ("+simb.pBase->GetUnit()+")";
+			str+=" ("+string(simb.pBase->GetUnit())+")";
 
 
 
