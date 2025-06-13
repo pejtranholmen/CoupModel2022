@@ -838,7 +838,7 @@ bool MakeSimSheets::Make_SwitchesSheet()
 				for(int i=3; i<col+1;i++) 
 					SetColWidth(i,250);
 				
-				QuickSetText(0,-1, p_ModelInfo->GetGroupCategoryNames(m_ViewCategory));
+				QuickSetText(0,-1, p_ModelInfo->GetGroupCategoryName(m_ViewCategory));
 				if(m_ShowProcesses)
 					QuickSetText(1,-1, "Process");
 				else
@@ -999,7 +999,7 @@ bool MakeSimSheets::Make_ParameterSheet()
 	SetColWidth(1,180);
 	SetColWidth(2,200);
 	SetColWidth(8,280);
-	QuickSetText(0,-1, p_ModelInfo->GetGroupCategoryNames(m_ViewCategory));
+	QuickSetText(0,-1, p_ModelInfo->GetGroupCategoryName(m_ViewCategory));
 	if(m_ShowProcesses)
 		QuickSetText(1,-1, "Process");
 	else
@@ -1456,7 +1456,7 @@ bool MakeSimSheets::Make_ParameterTableSheet()
 				for(int i=8;i<MaxCol+4;i++)
 					SetColWidth(i,110);
 
-				QuickSetText(0,-1, p_ModelInfo->GetGroupCategoryNames(m_ViewCategory));
+				QuickSetText(0,-1, p_ModelInfo->GetGroupCategoryName(m_ViewCategory));
 				if(m_ShowProcesses)
 					QuickSetText(1,-1, "Process");
 				else
@@ -2344,7 +2344,7 @@ bool MakeSimSheets::Make_OutputSheet()
 					QuickSetText(-1,-1,"+");
 				QuickSetText(0,-1, "Type");
 				QuickSetBackColor(0, -1, m_ColorClick);
-				QuickSetText(1,-1, p_ModelInfo->GetGroupCategoryNames(m_ViewCategory));
+				QuickSetText(1,-1, p_ModelInfo->GetGroupCategoryName(m_ViewCategory));
 				QuickSetBackColor(1, -1, m_ColorClick);
 				if(m_ShowSoilProfile&&m_ShowPlantVectors&&m_ShowScalar)
 					QuickSetText(3,-1, "All Variables");
@@ -2789,7 +2789,7 @@ bool MakeSimSheets::Make_AnnimationSheet()
 	else
 		QuickSetText(-1,-1,"+");
 	QuickSetText(0,-1, "Type");
-	QuickSetText(1,-1, p_ModelInfo->GetGroupCategoryNames(m_ViewCategory));
+	QuickSetText(1,-1, p_ModelInfo->GetGroupCategoryName(m_ViewCategory));
 	QuickSetText(2,-1, "Variable");
 
 

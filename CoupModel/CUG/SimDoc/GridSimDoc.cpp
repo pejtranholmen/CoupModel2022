@@ -661,7 +661,7 @@ int GridSimDoc::OnMenuStart(int col,long row,int section)
 				if(m_ViewCategory!=0) AddMenuItem(7100,"View all Categories");
 			for(int i=1;i<9;i++) {
 				string str="View : ";
-				str+=p_ModelInfo->GetGroupCategoryNames(i);
+				str+=p_ModelInfo->GetGroupCategoryName(i);
 				if(m_ViewCategory!=i) AddMenuItem(7100+i,str);
 			}
 			if(sheet==5) {

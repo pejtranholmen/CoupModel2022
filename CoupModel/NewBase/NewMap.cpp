@@ -247,7 +247,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 	bool hit_made = false;
 
 	auto set_switch = [&](size_t group_cat_no, size_t groupno, size_t catno) {
-		string group_cat_str = string(m_pCommonModelInfo->GetGroupCategoryNames(group_cat_no));
+		string group_cat_str = string(m_pCommonModelInfo->GetGroupCategoryName(group_cat_no));
 		m_pCommonModelInfo->trim_xml(group_cat_str);
 		v_all.clear();
 		if (m_pCommonModelInfo->GetGroupCategoryNo(groupno) == group_cat_no) {
@@ -286,7 +286,7 @@ bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled 
 			modelcat[catno] = node.append_child(group_cat_str.c_str());
 			hit_made = true;
 		}
-		string groupname = string(m_pCommonModelInfo->GetGroupNames(groupno));
+		string groupname = string(m_pCommonModelInfo->GetGroupName(groupno));
 		m_pCommonModelInfo->trim_xml(groupname);
 		if (v_all.size() > 0) {
 			auto group_node = modelcat[catno].append_child(groupname.c_str());

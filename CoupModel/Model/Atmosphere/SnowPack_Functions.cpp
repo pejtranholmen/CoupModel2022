@@ -152,7 +152,7 @@ bool SnowPack_Functions::Def()
 	pPs= new Ps(&SnowDepthInitial , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 	,"SnowDepthInitial", 0., "m", "SnowPack >= 1",0.,10.);
  	pPs= new Ps(&SnowMassInitial , datatype::SINGLE, elements::SNOW, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-    Define(pPs 	,"SnowMassInitial", 0., "mm", "SnowPack >= 1",0.,4000.);
+    Define(pPs 	,"SnowMassInitial", 0.,UNIT_TYPES::WATERMASS_UNIT, "SnowPack >= 1",0.,4000.);
  	
  	pPs= new Ps(&SDensNewImport , datatype::SINGLE, elements::SNOW, fysprocess::SHRINKING, bioprocess::NOBPROC, userlevel::NORMAL);
     Define(pPs 	    ,"DensityOfImportSnow",300.,"Kg/m3","SnowPack >= 1|WaterEq > 0|SnowPloughInput>0",100.,920.);
@@ -274,7 +274,7 @@ functorprop.FuncName = MyFunc::RA_SNOW_NEUTRAL; functorprop.Arg = MyArgType::D2;
  	pPs= new Ps(&SAgeM1 , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
     Define(pPs 		,"MeltCoefGlobRadAge1",2.,UNIT_TYPES::NO_UNIT,"SnowPack >= 1|SnowMeltFunction=0", 0.,10.);	
  	pPs= new Ps(&SAgeM2 , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
-    Define(pPs 		,"MeltCoefGlobRadAge2",0.1,"1/day","SnowPack >= 1|SnowMeltFunction=0",0.,1.);	
+    Define(pPs 		,"MeltCoefGlobRadAge2",0.1,UNIT_TYPES::RATECOEF_UNIT,"SnowPack >= 1|SnowMeltFunction=0",0.,1.);	
 	pPs = new Ps(&MeltTemp, datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "MeltCoefAirTemp", 2., "Kg/Cm2day", "SnowPack >= 1|SnowMeltFunction=0", 0., 10.);
 	pPs= new Ps(&MeltReFr , datatype::SINGLE, elements::SNOW, fysprocess::SNOW_MELTING, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 

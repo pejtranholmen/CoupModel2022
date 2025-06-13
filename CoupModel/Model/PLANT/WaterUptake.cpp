@@ -23,6 +23,9 @@ bool WaterUptake::Def()
 	Salt::Def();
 
 	ModuleNo = 20;
+	_GroupName = GROUPNAME::WATER_UPTAKE;
+	if(ModuleNo!= static_cast<size_t>(_GroupName)) // if the module number is not set yet
+		ModuleNo= static_cast<size_t>(_GroupName); // set it to the group name	
 
 	ModuleConditions = "PlantType>0";
 	Func *pFunc;
@@ -73,7 +76,7 @@ bool WaterUptake::Def()
 	Define(pPs, "CritThresholdDry", 400., UNIT_TYPES::PRESSUREHEAD_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 10000.);
 	pPs = new Ps(&WupF, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "DemandRelCoef", 0.3, UNIT_TYPES::INVERSE_WATERFLOW_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 2.);
-	//!010213	Define(pPs, WupFThres,"DemandRelThreshold"  ,0.3,"1/day", "PlantType > 0|WaterEq = 1|Demand influence=2|Basic equation =0",0.,2.,view=1901)	
+	//!010213	Define(pPs, WupFThres,"DemandRelThreshold"  ,0.3,UNIT_TYPES::RATECOEF_UNIT, "PlantType > 0|WaterEq = 1|Demand influence=2|Basic equation =0",0.,2.,view=1901)	
 	pPs = new Ps(&WupFB, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
 	Define(pPs, "NonDemandRelCoef", 0.1,UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1|Basic equation =0|WaterUptakeFunction=0", 0., 20.);
 	
@@ -192,9 +195,9 @@ bool WaterUptake::Def()
 
 
 	pPs = new Ps(&PlantMaxSuction, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "PlantMaxSuction", 15000., "cm water", "Basic equation>0", 1000., 30000.);
+	Define(pPs, "PlantMaxSuction", 15000.,UNIT_TYPES::PRESSUREHEAD_UNIT, "Basic equation>0", 1000., 30000.);
 	pPs = new Ps(&LeafThresholdSuction, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "LeafThresholdSuction", 1000., "cm water", "PlantWaterStorage>0", 100., 30000.);
+	Define(pPs, "LeafThresholdSuction", 1000.,UNIT_TYPES::PRESSUREHEAD_UNIT, "PlantWaterStorage>0", 100., 30000.);
 
 	functorprop.FunctorInitOption = std::string::npos;
 	functorprop.FuncName = MyFunc::STOMATA_RELATIVEOPENING_FROM_PLANTWATERPOTENTIAL; functorprop.Arg = MyArgType::D1;
@@ -206,7 +209,7 @@ bool WaterUptake::Def()
 
 
 	pPs = new Ps(&PlantWatRelLAI, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "PlantWatRelLAI", 1., "mm", "PlantWaterStorage=1", 0.01, 10.);
+	Define(pPs, "PlantWatRelLAI", 1.,UNIT_TYPES::WATERMASS_UNIT, "PlantWaterStorage=1", 0.01, 10.);
 
 
 	functorprop.FunctorInitOption = std::string::npos;
@@ -352,7 +355,7 @@ bool WaterUptake::Def()
 	initv.assign(NumPlants, 0.);
 	pX = new X(&PlantWater, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pX, pNumPlants, "PlantWater", initv, "mm", "PlantWaterStorage>0");
+	Define(pX, pNumPlants, "PlantWater", initv,UNIT_TYPES::WATERMASS_UNIT, "PlantWaterStorage>0");
 
 	T* pT;
 	NE *pNL = m_pModelMap->GetNEPointer("Number of Layers");
@@ -375,7 +378,7 @@ bool WaterUptake::Def()
 	pGs = new Gs(&WupTrigTemp, datatype::ALLPLANTS, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "WaterUptake TrigTemp", 0., "°C", "Temperature response>0|WaterEq = 1");
 	pGs = new Gs(&RedWupTotal_All, datatype::ALLPLANTS, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pGs, "RedCTotal all plant", 0., "mm", "PlantType > 3|WaterEq = 1|PlantWaterStorage <1");
+	Define(pGs, "RedCTotal all plant", 0.,UNIT_TYPES::WATERMASS_UNIT, "PlantType > 3|WaterEq = 1|PlantWaterStorage <1");
 
 	initv.assign(NumPlants, 0.);
 	G *pG = new G(&RedWupPsi, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -387,7 +390,7 @@ bool WaterUptake::Def()
 	Define(pG, pNumPlants, "RedCTotal", initv, UNIT_TYPES::NO_UNIT, "PlantType > 0|WaterEq = 1");
 	pG = new G(&PlantWaterPotential, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(NumPlants, 0.);
-	Define(pG, pNumPlants, "PlantWaterPotential", initv, "cm water", "PlantWaterStorage>0");
+	Define(pG, pNumPlants, "PlantWaterPotential", initv,UNIT_TYPES::PRESSUREHEAD_UNIT, "PlantWaterStorage>0");
 	pG = new G(&MC_PotWaterUptake, pNumPlants, datatype::PLANT, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNumPlants, "Plant PotWaterUptake", initv,UNIT_TYPES::WATERFLOW_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq = 1");
 

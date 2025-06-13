@@ -44,19 +44,19 @@ bool HBV::Def()
 	m_pPlant = &pPlant->m_WaterUptake;
 
 	pPs = new Ps(&Initial_SoilStorage, datatype::SINGLE, elements::WATER, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "Initial Soil Storage", 30., "mm", "", 0., 300.);
+	Define(pPs, "Initial Soil Storage", 30.,UNIT_TYPES::WATERMASS_UNIT, "", 0., 300.);
 	pPs = new Ps(&Initial_PeakStorage, datatype::SINGLE, elements::WATER, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "Initial Peak Storage", 30., "mm", "", 0., 300.);
+	Define(pPs, "Initial Peak Storage", 30.,UNIT_TYPES::WATERMASS_UNIT, "", 0., 300.);
 	pPs = new Ps(&Initial_BaseStorage, datatype::SINGLE, elements::WATER, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "Initial Base Storage", 30., "mm", "", 0., 300.);
+	Define(pPs, "Initial Base Storage", 30.,UNIT_TYPES::WATERMASS_UNIT, "", 0., 300.);
 
 
 	pPs = new Ps(&FieldCapacity, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	ps_vec.push_back(pPs);
-	Define(pPs, "FieldCapacity", 50., "mm", "", 10., 400.);
+	Define(pPs, "FieldCapacity", 50.,UNIT_TYPES::WATERMASS_UNIT, "", 10., 400.);
 	pPs = new Ps(&CriticalUptakeFrac, datatype::SINGLE, elements::WATER, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	ps_vec.push_back(pPs);
-	Define(pPs, "Critical Uptake Frac", .45, "mm", "", 0.1, 1.0);
+	Define(pPs, "Critical Uptake Frac", .45,UNIT_TYPES::WATERMASS_UNIT, "", 0.1, 1.0);
 
 	functorprop.FuncName = MyFunc::HBV_ACTUALEVAPORATION; functorprop.Arg = MyArgType::D2;
 	functorprop.FunctorInitOption = std::string::npos;
@@ -105,11 +105,11 @@ bool HBV::Def()
 
 
 	pPs = new Ps(&DisCoefk1, datatype::SINGLE, elements::WATER, fysprocess::RUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);	ps_vec.push_back(pPs);
-	Define(pPs, "Discharge K1", .16, "1/day", "", 0.1, .3);
+	Define(pPs, "Discharge K1", .16,UNIT_TYPES::RATECOEF_UNIT, "", 0.1, .3);
 	pPs = new Ps(&DisCoefAlfa, datatype::SINGLE, elements::WATER, fysprocess::RUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Discharge Alfa", 0., "mm", "", 0., 1.);
+	Define(pPs, "Discharge Alfa", 0.,UNIT_TYPES::WATERMASS_UNIT, "", 0., 1.);
 	pPs = new Ps(&T_Step, datatype::SINGLE, elements::WATER, fysprocess::RUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "HBV TStep", 1., "mm", "", 0.001, 1.);
+	Define(pPs, "HBV TStep", 1.,UNIT_TYPES::WATERMASS_UNIT, "", 0.001, 1.);
 
 	functorprop.FuncName = MyFunc::HBV_PEAK_RUNOFF; functorprop.Arg = MyArgType::D1;
 	funcname = "Peak Discharge Function";
@@ -129,7 +129,7 @@ bool HBV::Def()
 	ps_vec.clear();
 
 	pPs = new Ps(&DisCoefk2, datatype::SINGLE, elements::WATER, fysprocess::RUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "Discharge K2", 0.016, "mm", "", 0.001, 0.1);
+	Define(pPs, "Discharge K2", 0.016,UNIT_TYPES::WATERMASS_UNIT, "", 0.001, 0.1);
 
 	functorprop.FuncName = MyFunc::HBV_BASE_RUNOFF; functorprop.Arg = MyArgType::D1;
 	funcname = "Base Discharge Function";
@@ -185,11 +185,11 @@ bool HBV::Def()
 
 	Xs* pXs;
 	pXs = new Xs(&SoilStorage, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pXs, "Soil Storage", 0., "mm");
+	Define(pXs, "Soil Storage", 0.,UNIT_TYPES::WATERMASS_UNIT);
 	pXs = new Xs(&PeakStorage, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pXs, "Peak GW Storage", 0., "mm");
+	Define(pXs, "Peak GW Storage", 0.,UNIT_TYPES::WATERMASS_UNIT);
 	pXs = new Xs(&BaseStorage, datatype::SINGLE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pXs, "Base GW Storage", 0., "mm");
+	Define(pXs, "Base GW Storage", 0.,UNIT_TYPES::WATERMASS_UNIT);
 
 	Ts* pTs;
 	pTs = new Ts(&HBV_Input_Soil, datatype::SINGLE, elements::WATER, fysprocess::INFILTRATION, bioprocess::NOBPROC, userlevel::NORMAL);

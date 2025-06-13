@@ -99,12 +99,12 @@ bool Soil_Frost_Functions::Def()
 
 
 	pPs= new Ps(&AlphaHT  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs  		 ,"AlphaHeatCoef" , 1000.,"W/mC","HeatEq > 0|FrFlowDomain > 0|WaterEq > 0",0.01, 20000.,0.1, 100000.);
+		Define(pPs  		 ,"AlphaHeatCoef" , 1000.,UNIT_TYPES::HEATCOND_UNIT,"HeatEq > 0|FrFlowDomain > 0|WaterEq > 0",0.01, 20000.,0.1, 100000.);
 
 	pPs= new Ps(&MaxSwell  , datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs 	,"MaxSwell", 0.05,UNIT_TYPES::NO_UNIT,"HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0.,1.);
 	pPs= new Ps(&ShrinkRateFraction, datatype::ALL_SOIL_LAYERS, elements::WATER, fysprocess::REDISTRIBUTION, bioprocess::NOBPROC, userlevel::NORMAL);
-		Define(pPs  ,"ShrinkRateFraction", 0.05,"1/day","HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0., 0.1);
+		Define(pPs  ,"ShrinkRateFraction", 0.05,UNIT_TYPES::RATECOEF_UNIT,"HeatEq > 0|FrostSwelling = 1|WaterEq > 0",0., 0.1);
 
 	X* pX;
 	NE* pNL;

@@ -68,9 +68,9 @@ bool Soil_WaterF_Functions::Def()
 	Define(pG, pNL, "HysEffect", initv, UNIT_TYPES::NO_UNIT,"Hysteresis = 1");
  	pG= new G(&MeanTransitTime,pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 
-	Define(pG, pNL, "MeanTransitTime",initv,"Days", "TransitTime>0");
+	Define(pG, pNL, "MeanTransitTime",initv,UNIT_TYPES::TIME_UNIT, "TransitTime>0");
 	Gs* pGs = new Gs(&TotMeanTransitTime, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pGs,"TotMeanTransitTime", 0.,"Days", "TransitTime>0");
+	Define(pGs,"TotMeanTransitTime", 0.,UNIT_TYPES::TIME_UNIT, "TransitTime>0");
 
 	Ps *pPs=new Ps(&DVapTortuosity, datatype::SINGLE, elements::VAPOUR, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::DETAILED);
 	Define(pPs, "DVapTortuosity", 0.66, UNIT_TYPES::NO_UNIT,"SoilVapour >= 1", 0.01,4.);
@@ -115,7 +115,7 @@ bool Soil_WaterF_Functions::Def()
 	P *pP=new P(&IniPsiValues, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=60.;
 
-	Define(pP,pNL,"IniPressureHeads",initv , "cm water","Initial water conditions =3",0.,10000.);
+	Define(pP,pNL,"IniPressureHeads",initv ,UNIT_TYPES::PRESSUREHEAD_UNIT,"Initial water conditions =3",0.,10000.);
 	mTab_InitP.push_back(pP);
 	pP=new P(&IniThetaValues, pNL, datatype::SIMPROFILE, elements::WATER, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	for(auto i=initv.begin(); i!=initv.end();++i) *i=10.;

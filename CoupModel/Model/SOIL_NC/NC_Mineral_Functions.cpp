@@ -301,7 +301,7 @@ pPs = new Ps(&NitriTemQ10, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess
 	Define(pTab,"Plant specific flexible uptake","Flex Degree","Flexible Uptake > 0");
 	
 	pPs= new Ps(&DeniActivityRateCoef, datatype::TOTPROFILE, elements::NITRATE, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-	Define(pPs,    "DeniActivityRateCoef", 0.5, "1/day","Nitrogen and Carbon > 0|Denitrification > 1",0.1, 1.);
+	Define(pPs,    "DeniActivityRateCoef", 0.5,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon > 0|Denitrification > 1",0.1, 1.);
 	pPs= new Ps(&InitDenitBiomass, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 	Define(pPs,  "InitDenitBiomass",2.,"gN/m2", "Denitrification =2",0.,500.);
 	pPs= new Ps(&NXOY_HalfRateCoef, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
@@ -310,22 +310,22 @@ pPs = new Ps(&NitriTemQ10, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess
 		Define(pPs,  "NXOY_Doc_HalfRateCoef",17.,"mg/l", "Denitrification =2",0.,100.);
 ;
 	pPs= new Ps(&DMic_GrowthCoef_NO3, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"DMic_GrowthCoef_NO3",16.,"/day", "Denitrification =2",0.,100.);
+		Define(pPs,  	"DMic_GrowthCoef_NO3",16.,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 	pPs= new Ps(&DMic_GrowthCoef_NO2, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"DMic_GrowthCoef_NO2",16.,"/day", "Denitrification =2",0.,100.);
+		Define(pPs,  	"DMic_GrowthCoef_NO2",16.,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 	pPs= new Ps(&DMic_GrowthCoef_NO, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"DMic_GrowthCoef_NO",8.2,"/day", "Denitrification =2",0.,100.);
+		Define(pPs,  	"DMic_GrowthCoef_NO",8.2,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 	pPs= new Ps(&DMic_GrowthCoef_N2O, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"DMic_GrowthCoef_N2O",8.2,"/day", "Denitrification =2",0.,100.);
+		Define(pPs,  	"DMic_GrowthCoef_N2O",8.2,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 ;
 	pPs= new Ps(&DMic_RespCoef_NO3, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-	 	Define(pPs,  	"Dmic_RespCoef_NO3",2.2,"/day", "Denitrification =2",0.,100.);
+	 	Define(pPs,  	"Dmic_RespCoef_NO3",2.2,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 	pPs= new Ps(&DMic_RespCoef_NO2, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"Dmic_RespCoef_NO2",0.84,"/day", "Denitrification =2",0.,100.);
+		Define(pPs,  	"Dmic_RespCoef_NO2",0.84,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 	pPs= new Ps(&DMic_RespCoef_NO, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"Dmic_RespCoef_NO",0.84,"/day", "Denitrification =2",0.,100.);
+		Define(pPs,  	"Dmic_RespCoef_NO",0.84,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 	pPs= new Ps(&DMic_RespCoef_N2O, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"Dmic_RespCoef_N2O",1.9,"/day", "Denitrification =2",0.,100.);
+		Define(pPs,  	"Dmic_RespCoef_N2O",1.9,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,100.);
 ;
 	pPs= new Ps(&DMic_EffCoef_NO3, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 	 	Define(pPs,  	"Dmic_EffCoef_NO3",0.401,UNIT_TYPES::NO_UNIT, "Denitrification =2",0.1,1.);
@@ -340,9 +340,9 @@ pPs = new Ps(&NitriTemQ10, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess
 		Define(pPs,  	"D_InhiHalfRateNO3_N2O",0.3,"mg/l", "Denitrification =2",0.,1.E5);
 ;
 	pPs= new Ps(&DMic_DeathRateCoef, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"DMic_DeathRateCoef",0.01,"/day", "Denitrification =2",0.,1.);
+		Define(pPs,  	"DMic_DeathRateCoef",0.01,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,1.);
 	pPs= new Ps(&DMic_DeathCDormancy, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
-		Define(pPs,  	"DMic_DeathCDormancy",0.0001,"/day", "Denitrification =2",0.,0.01);
+		Define(pPs,  	"DMic_DeathCDormancy",0.0001,UNIT_TYPES::RATECOEF_UNIT, "Denitrification =2",0.,0.01);
 	pPs= new Ps(&DMic_DormancyThreshold, datatype::TOTPROFILE, elements::DENITRIFIERS, fysprocess::NOFPROC, bioprocess::DENITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "DMic_DormancyThreshold",0.1,"g/N/m", "Denitrification =2",0.,10.)	;
 ;
@@ -353,14 +353,14 @@ pPs = new Ps(&NitriTemQ10, datatype::TOTPROFILE, elements::MINERAL_N, fysprocess
 	
 	pPs= new Ps(&NitriGrowthCoef, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		
-	Define(pPs, "NitriGrowthCoef", .01, "1/day","Nitrogen and Carbon > 0|Nitrification > 0",0.00001, 10.);
+	Define(pPs, "NitriGrowthCoef", .01,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon > 0|Nitrification > 0",0.00001, 10.);
 	pPs= new Ps(&NitriHalfRateDOC, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
-		Define(pPs,     "NitriHalfRateDOC", 5.25, "mg/l","Nitrogen and Carbon > 0|Nitrification > 0",1.E-10, 10.);
+		Define(pPs,     "NitriHalfRateDOC", 5.25,UNIT_TYPES::mMASS_LITER_UNIT,"Nitrogen and Carbon > 0|Nitrification > 0",1.E-10, 10.);
 	pPs= new Ps(&NitriHalfRateNO3, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
-		Define(pPs,     "NitriHalfRateNO3", 1.6, "mg/l","Nitrogen and Carbon > 0|Nitrification > 0",1.E-10, 10.);
+		Define(pPs,     "NitriHalfRateNO3", 1.6,UNIT_TYPES::mMASS_LITER_UNIT,"Nitrogen and Carbon > 0|Nitrification > 0",1.E-10, 10.);
 
 	pPs= new Ps(&NitriDeathCoef, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
-		Define(pPs,    "NitriDeathCoef", .005, "1/day","Nitrogen and Carbon > 0|Nitrification > 0",1.E-7, 10.);
+		Define(pPs,    "NitriDeathCoef", .005,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon > 0|Nitrification > 0",1.E-7, 10.);
 
 	pPs= new Ps(&InitNitriFracExpTail, datatype::TOTPROFILE, elements::NITRIFIERS, fysprocess::NOFPROC, bioprocess::NITRIFICATION, userlevel::NORMAL);
 		Define(pPs,  "InitNitriFracExpTail",0.1,UNIT_TYPES::NO_UNIT, "Initial Nitrifier = 2|Nitrification >0",0.,1.);

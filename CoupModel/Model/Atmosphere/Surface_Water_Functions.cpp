@@ -73,7 +73,7 @@ bool Surface_Water_Functions::Def()
 	pPs= new Ps(&SPCovMax , datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs, "SP Max cover", 1.,UNIT_TYPES::NO_UNIT,"WaterEq = 1",0.001, 1.);
 	pPs = new Ps(&SPCovTot, datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "SPCoverTotal", 50., "mm", "WaterEq = 1", 0.001, 1000.);
+	Define(pPs, "SPCoverTotal", 50.,UNIT_TYPES::WATERMASS_UNIT, "WaterEq = 1", 0.001, 1000.);
 	pPs= new Ps(&SPCovPot, datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs); 
 	Define(pPs,  "SPCovPot", 1.,UNIT_TYPES::NO_UNIT,"WaterEq = 1",0.001, 10.);
 	
@@ -91,11 +91,11 @@ bool Surface_Water_Functions::Def()
 	pPs= new Ps(&PumpRate , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs,  "PumpRate", 40.,UNIT_TYPES::WATERFLOW_UNIT,"WaterEq = 1|PumpStation >0", 0., 1000.);
 	pPs= new Ps(&PumpLevelStart , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
-    Define(pPs, "PumpLevelStart", 20., "mm","WaterEq = 1|PumpStation >0", 0., 1000.);
+    Define(pPs, "PumpLevelStart", 20.,UNIT_TYPES::WATERMASS_UNIT,"WaterEq = 1|PumpStation >0", 0., 1000.);
 	pPs= new Ps(&PumpLevelStop , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
-    Define(pPs,  "PumpLevelStop", 2., "mm","WaterEq = 1|PumpStation >0", 0., 10.);
+    Define(pPs,  "PumpLevelStop", 2.,UNIT_TYPES::WATERMASS_UNIT,"WaterEq = 1|PumpStation >0", 0., 10.);
 	pPs= new Ps(&PumpPartitioning , datatype::WATERPOND, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);
-    Define(pPs, "PumpPartitioning", 0.5, "mm","WaterEq = 1|PumpStation >0", 0., 1.);
+    Define(pPs, "PumpPartitioning", 0.5,UNIT_TYPES::WATERMASS_UNIT,"WaterEq = 1|PumpStation >0", 0., 1.);
 
 	Xs *pXs;
 	pXs= new Xs(&SurfacePool , datatype::SURFACEPOOL, elements::WATER, fysprocess::SURFACERUNOFF, bioprocess::NOBPROC, userlevel::NORMAL);

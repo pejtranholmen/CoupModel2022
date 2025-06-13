@@ -71,9 +71,9 @@ bool Interception::Def()
 	Define(pFunc, functorprop, funcname, ps_vec); ps_vec.clear();
 
 	pPs = new Ps(&IntLAI, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "WaterCapacityPerLAI", 0.2, "mm/m2", "PlantType > 1|PrecInterception > 0|WaterEq > 0", 0.05, 1., 0.1, 0.5);
+	Define(pPs, "WaterCapacityPerLAI", 0.2,UNIT_TYPES::WATERMASS_UNIT, "PlantType > 1|PrecInterception > 0|WaterEq > 0", 0.05, 1., 0.1, 0.5);
 	pPs = new Ps(&IntBase, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "WaterCapacityBase", 0., "mm", "PlantType > 1|PrecInterception > 0|WaterEq > 0", 0.0, 10., 0., 6.);
+	Define(pPs, "WaterCapacityBase", 0.,UNIT_TYPES::WATERMASS_UNIT, "PlantType > 1|PrecInterception > 0|WaterEq > 0", 0.0, 10., 0., 6.);
 
 
 	functorprop.FuncName = MyFunc::INTERCEPTION_RAIN_CAPACITY; functorprop.Arg = MyArgType::D1;
@@ -84,7 +84,7 @@ bool Interception::Def()
 
 
 	pPs = new Ps(&IntLAIFrozen, datatype::ATMBOUNDARY, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "SnowCapacityPerLAI", 1.0, "mm/m2", "PlantType > 1|SnowInterception > 0|WaterEq > 0", .05, 10., 0.1, 4.);
+	Define(pPs, "SnowCapacityPerLAI", 1.0,UNIT_TYPES::WATERMASS_UNIT, "PlantType > 1|SnowInterception > 0|WaterEq > 0", .05, 10., 0.1, 4.);
 
 	functorprop.FuncName = MyFunc::INTERCEPTION_SNOW_TA; functorprop.Arg = MyArgType::D2;
 	funcname = "Water and Snow Interception Function from Temp";
@@ -162,11 +162,11 @@ bool Interception::Def()
 		"Maximal Cover|LAI Cover Sensitivity", "PlantType = 3|PrecInterception >0|WaterEq >0");
 
 	Gs* pGs = new Gs(&IntCapacity, datatype::SINGLEPLANT, elements::WATER, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pGs, "InterceptionCapacity", 0., "mm");
+	Define(pGs, "InterceptionCapacity", 0.,UNIT_TYPES::WATERMASS_UNIT);
 	pGs = new Gs(&IntRate, datatype::SINGLEPLANT, elements::WATER, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "InterceptionRate", 0.,UNIT_TYPES::WATERFLOW_UNIT);
 	pGs = new Gs(&IntStorage, datatype::SINGLEPLANT, elements::WATER, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pGs, "InterceptionStorage", 0., "mm");
+	Define(pGs, "InterceptionStorage", 0.,UNIT_TYPES::WATERMASS_UNIT);
 	pGs = new Gs(&ThroughFall, datatype::SINGLEPLANT, elements::WATER, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "Throughfall", 0.,UNIT_TYPES::WATERFLOW_UNIT);
 	pGs = new Gs(&EvaPotInt, datatype::SINGLEPLANT, elements::WATER, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -179,10 +179,10 @@ bool Interception::Def()
 	X *pX; G *pG;
 	initv.assign(NumPlants, 0.);
 	pX = new X(&MC_IntStorage, pNumPlants, datatype::PLANT, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pX, pNumPlants, "Canopy IntercStorage", initv, "mm", "PrecInterception > 0|PlantType = 3|WaterEq > 0");
+	Define(pX, pNumPlants, "Canopy IntercStorage", initv,UNIT_TYPES::WATERMASS_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq > 0");
 
 	pG = new G(&MC_IntCapacity, pNumPlants, datatype::PLANT, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNumPlants, "Canopy Interc Capac", initv, "mm", "PrecInterception > 0|PlantType = 3|WaterEq > 0");
+	Define(pG, pNumPlants, "Canopy Interc Capac", initv,UNIT_TYPES::WATERMASS_UNIT, "PrecInterception > 0|PlantType = 3|WaterEq > 0");
 
 
 	T* pT = new T(&MC_EvaActInt, pNumPlants, datatype::PLANT, elements::PRECIPITATION, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);

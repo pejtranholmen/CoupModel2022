@@ -209,7 +209,7 @@ bool NC_Plant_Functions::Def()
 
 	SimPlantAge.assign(p_Plant->NumPlants, 0.);
 	pX = new X(&SimPlantAge, pNumPlants, datatype::PLANT, elements::TIME, fysprocess::STORAGE, bioprocess::PHENOLOGY, userlevel::NORMAL);
-	Define(pX, pNumPlants, "SimPlantAge", initv, "Days", "Nitrogen and Carbon >= 1|Growth >0");
+	Define(pX, pNumPlants, "SimPlantAge", initv,UNIT_TYPES::TIME_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 	pX = new X(&GrowthStageIndex, pNumPlants, datatype::PLANT, elements::TIME, fysprocess::STORAGE, bioprocess::PHENOLOGY, userlevel::NORMAL);
 	Define(pX, pNumPlants, "GrowthStageIndex", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Growth >0");
 	;
@@ -962,10 +962,10 @@ bool NC_Plant_Functions::Def()
 	Define(pTab, "Allocation to Stem from Leaf", "C Leaf to Stem", "Nitrogen and Carbon > 0|Growth > 0|Grain Development > 0");
 	;
 	pP = new P(&AlloFromRootLeafCoef, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::REALLOCATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.02);
-	Define(pP, pNumPlants, "RateCoef_fRoot", initv, "/day", "Nitrogen and Carbon >= 1", 0., .1);
+	Define(pP, pNumPlants, "RateCoef_fRoot", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1", 0., .1);
 	mTab_AlloLeaf.push_back(pP);
 	pP = new P(&AlloFromRootLeafRatio, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::REALLOCATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 1.);
-	Define(pP, pNumPlants, "Root Leaf Ratio", initv, "/day", "Nitrogen and Carbon >= 1", 0.5, 25.);
+	Define(pP, pNumPlants, "Root Leaf Ratio", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1", 0.5, 25.);
 	mTab_AlloLeaf.push_back(pP);
 
 	pTab = new Tab(&mTab_AlloLeaf, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::REALLOCATION, userlevel::NORMAL);
@@ -1491,7 +1491,7 @@ bool NC_Plant_Functions::Def_PhotoSynthesis()
 	Define(pP, pNumPlants, "UpB Coef", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Growth =1");
 	mTab_Nup.push_back(pP);
 	pP = new P(&UptakeCCoef, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);  p_vec.push_back(pP); initv.assign(p_Plant->NumPlants, .12);
-	Define(pP, pNumPlants, "UpC Coef", initv, "/day", "Nitrogen and Carbon >= 1|Growth =1");
+	Define(pP, pNumPlants, "UpC Coef", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth =1");
 	mTab_Nup.push_back(pP);
 	pP = new P(&UptakeCNRatio, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL); p_vec.push_back(pP); initv.assign(p_Plant->NumPlants, 25);
 	Define(pP, pNumPlants, "Up CN Ratio", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Growth =1");
@@ -2083,10 +2083,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	p_vec.clear();
 
 	pP = new P(&Leaf_LitterRateC1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.001);
-	Define(pP, pNumPlants, "LeafRate1", initv, "/day", "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "LeafRate1", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Leaf_LitterRateC2, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.05);
-	Define(pP, pNumPlants, "LeafRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.7); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "LeafRate2", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.7); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Leaf_LitterTsum1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
 	Define(pP, pNumPlants, "LeafTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
@@ -2113,10 +2113,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pP = new P(&Stem_LitterRateC1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.00001);
-	Define(pP, pNumPlants, "StemRate1", initv, "/day", "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "StemRate1", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Stem_LitterRateC2, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.00002);
-	Define(pP, pNumPlants, "StemRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.7); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "StemRate2", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.7); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Stem_LitterTsum1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
 	Define(pP, pNumPlants, "StemTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 10000.); p_vec.push_back(pP);
@@ -2134,10 +2134,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pP = new P(&Grain_LitterRateC1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.001);
-	Define(pP, pNumPlants, "GrainRate1", initv, "/day", "Nitrogen and Carbon >= 1|Grain Development >0", 0., 0.1); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "GrainRate1", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Grain Development >0", 0., 0.1); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Grain_LitterRateC2, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.05);
-	Define(pP, pNumPlants, "GrainRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 0., 0.7); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "GrainRate2", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 0., 0.7); p_vec.push_back(pP);
 	mTab_LitterA.push_back(pP);
 	pP = new P(&Grain_LitterTsum1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
 	Define(pP, pNumPlants, "GrainTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0|Grain Development >0", 0., 3000.); p_vec.push_back(pP);
@@ -2170,10 +2170,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 	p_vec.clear();
 
 	pP = new P(&Root_LitterRateC1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.01);
-	Define(pP, pNumPlants, "RootRate1", initv, "/day", "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "RootRate1", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&Root_LitterRateC2, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.05);
-	Define(pP, pNumPlants, "RootRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.5); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "RootRate2", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.5); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&Root_LitterTsum1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
 	Define(pP, pNumPlants, "RootTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
@@ -2199,10 +2199,10 @@ bool NC_Plant_Functions::Def_LitterFall() {
 
 
 	pP = new P(&CoarseRoot_LitterRateC1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.0001);
-	Define(pP, pNumPlants, "CoarseRootRate1", initv, "/day", "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "CoarseRootRate1", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1", 0., 0.1); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&CoarseRoot_LitterRateC2, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.0001);
-	Define(pP, pNumPlants, "CoarseRootRate2", initv, "/day", "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.5); p_vec.push_back(pP);
+	Define(pP, pNumPlants, "CoarseRootRate2", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 0.5); p_vec.push_back(pP);
 	mTab_LitterB.push_back(pP);
 	pP = new P(&CoarseRoot_LitterTsum1, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::LITTERFALL, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 1200.);
 	Define(pP, pNumPlants, "CoarseRootTsum1", initv, UNIT_TYPES::TEMPSUM_UNIT, "Nitrogen and Carbon >= 1|Litter fall dynamics > 0", 0., 3000.); p_vec.push_back(pP);
@@ -2477,7 +2477,7 @@ bool NC_Plant_Functions::Def_Respiration() {
 	funcname = "Growth Respiration";
 	p_vec.clear();
 	pP = new P(&RespGCoef, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.21); p_vec.push_back(pP);
-	Define(pP, pNumPlants, "GrowthCoef", initv, "1/day", "Nitrogen and Carbon >= 1|Growth >0|PlantRespiration>0", 0.0001, 0.6);
+	Define(pP, pNumPlants, "GrowthCoef", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth >0|PlantRespiration>0", 0.0001, 0.6);
 
 
 	pFunc = new Func( datatype::PLANT, elements::CARBON, fysprocess::NOFPROC, bioprocess::RESPIRATION, userlevel::NORMAL);
@@ -2491,32 +2491,32 @@ bool NC_Plant_Functions::Def_Respiration() {
 	mTab_PResp.push_back(pP);
 
 	pP = new P(&RespMCoefGrain, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.011);
-	Define(pP, pNumPlants, "MCoefGrain", initv, "1/day", "Nitrogen and Carbon >= 1|Growth >0", 0.0001, 0.1);
+	Define(pP, pNumPlants, "MCoefGrain", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth >0", 0.0001, 0.1);
 	mTab_PResp.push_back(pP);
 	pP = new P(&RespMCoefLeaf, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.034);
-	Define(pP, pNumPlants, "MCoefLeaf", initv, "1/day", "Nitrogen and Carbon >= 1|Growth >0", 0.0001, 0.1);
+	Define(pP, pNumPlants, "MCoefLeaf", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth >0", 0.0001, 0.1);
 	mTab_PResp.push_back(pP);
 	pP = new P(&RespMCoefStem, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.017);
-	Define(pP, pNumPlants, "MCoefStem", initv, "1/day", "Nitrogen and Carbon >= 1|Growth >0", 1.E-5, 0.1);
+	Define(pP, pNumPlants, "MCoefStem", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth >0", 1.E-5, 0.1);
 	mTab_PResp.push_back(pP);
 	pP = new P(&RespMCoefRoot, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.011);
-	Define(pP, pNumPlants, "MCoefRoot", initv, "1/day", "Nitrogen and Carbon >= 1|Growth >0", 0.0001, 0.1);
+	Define(pP, pNumPlants, "MCoefRoot", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth >0", 0.0001, 0.1);
 	mTab_PResp.push_back(pP);
 	pP = new P(&RespMCoefCoarseRoot, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.011);
-	Define(pP, pNumPlants, "MCoefCoarseRoot", initv, "1/day", "Nitrogen and Carbon >= 1|Growth >0", 1.E-5, 0.1);
+	Define(pP, pNumPlants, "MCoefCoarseRoot", initv,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth >0", 1.E-5, 0.1);
 	mTab_PResp.push_back(pP);
 
 	pTab = new Tab(&mTab_PResp, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL);
 	Define(pTab, "Respiration of plants", "GrowthCoef|MCoefGrain|MCoefLeaf|MCoefStem|MCoefRoot|MCoefCoarseRoot", "Nitrogen and Carbon > 0");
 	;
 	pP = new P(&RespNO3Coef, pNumPlants, datatype::PLANT, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 2.61);
-	Define(pP, pNumPlants, "NO3Coef", initv, "gC/gN", "Nitrogen and Carbon >= 1|PlantRespiration >1", 0.0, 10.0);
+	Define(pP, pNumPlants, "NO3Coef", initv,UNIT_TYPES::MASS_RATIO_UNIT, "Nitrogen and Carbon >= 1|PlantRespiration >1", 0.0, 10.0);
 	mTab_PRespN.push_back(pP);
 	pP = new P(&RespNH4Coef, pNumPlants, datatype::PLANT, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.79);
-	Define(pP, pNumPlants, "NH4Coef", initv, "gC/gN", "Nitrogen and Carbon >= 1|PlantRespiration >1", 0.0, 10.0);
+	Define(pP, pNumPlants, "NH4Coef", initv,UNIT_TYPES::MASS_RATIO_UNIT, "Nitrogen and Carbon >= 1|PlantRespiration >1", 0.0, 10.0);
 	mTab_PRespN.push_back(pP);
 	pP = new P(&RespNOrgCoef, pNumPlants, datatype::PLANT, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 0.);
-	Define(pP, pNumPlants, "NOrgCoef", initv, "gC/gN", "Nitrogen and Carbon >= 1|PlantRespiration >1", 0.0, 100.0);
+	Define(pP, pNumPlants, "NOrgCoef", initv,UNIT_TYPES::MASS_RATIO_UNIT, "Nitrogen and Carbon >= 1|PlantRespiration >1", 0.0, 100.0);
 	mTab_PRespN.push_back(pP);
 	pTab = new Tab(&mTab_PRespN, datatype::PLANT, elements::NITROGEN, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL);
 	Define(pTab, "Root NitrogenUptake Respiration", "NO3Coef|NH4Coef|NOrgCoef", "Nitrogen and Carbon > 0|PlantRespiration>1");
@@ -2524,7 +2524,7 @@ bool NC_Plant_Functions::Def_Respiration() {
 
 
 	pPs = new Ps(&RespRateCoef, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::RESPIRATION, userlevel::NORMAL);
-	Define(pPs, "RespRateCoef", .0001, "1/day", "Nitrogen and Carbon >= 1|Growth >0|PlantRespiration=0", 0.0, 0.1);
+	Define(pPs, "RespRateCoef", .0001,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Growth >0|PlantRespiration=0", 0.0, 0.1);
 
 
 	functorprop.FuncName = MyFunc::PLANTRESP_Q10_RESPONSE; functorprop.Arg = MyArgType::T_D1;

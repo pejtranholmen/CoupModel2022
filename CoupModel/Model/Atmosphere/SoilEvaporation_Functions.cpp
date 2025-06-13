@@ -113,9 +113,9 @@ bool SoilEvaporation_Functions::Def()
 	pPs = new Ps(&MaxSoilCondens, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "MaxSoilCondens", 2.,UNIT_TYPES::WATERFLOW_UNIT, "Evaporation > 1|Evaporation Method > 0|WaterEq = 1", 0., 1000., 1., 4.);
 	pPs = new Ps(&MaxSurfDeficit, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "MaxSurfDeficit", -2., "mm", "Evaporation > 1|Evaporation Method > 0|Evaporation Method < 4|WaterEq = 1", -4., 0., -3., -1.);
+	Define(pPs, "MaxSurfDeficit", -2.,UNIT_TYPES::WATERMASS_UNIT, "Evaporation > 1|Evaporation Method > 0|Evaporation Method < 4|WaterEq = 1", -4., 0., -3., -1.);
 	pPs = new Ps(&MaxSurfExcess, datatype::ATMBOUNDARY, elements::VAPOUR, fysprocess::SOILEVAPORATION, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "MaxSurfExcess", 1., "mm", "Evaporation > 1|Evaporation Method > 0|Evaporation Method < 4|WaterEq = 1", 0., 3., 0.5, 2.);
+	Define(pPs, "MaxSurfExcess", 1.,UNIT_TYPES::WATERMASS_UNIT, "Evaporation > 1|Evaporation Method > 0|Evaporation Method < 4|WaterEq = 1", 0., 3., 0.5, 2.);
 
 
 

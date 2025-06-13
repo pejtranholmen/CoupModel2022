@@ -93,7 +93,7 @@ bool Additional_Variables_Functions::Def()
 	Define(pTab, "ZadokStages", "Zadok", "ZadokScale>0");
 	pG = new G(&ZadokDayValues, pNZadokDays, datatype::ATMBOUNDARY, elements::TEMPERATURE, fysprocess::EBAL_PARTITIONING, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv = { 0.,0.,0. };
-	Define(pG, pNZadokDays, "ZadokDays", initv, "Days", "ZadokScale>0");
+	Define(pG, pNZadokDays, "ZadokDays", initv,UNIT_TYPES::TIME_UNIT, "ZadokScale>0");
 
 	f_ZadokShifts = ZadokShift2(p_NC_Plant->ZadokIndex, ZadokDays);
 

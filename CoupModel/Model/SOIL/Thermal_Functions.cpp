@@ -286,7 +286,7 @@ bool Thermal_Functions::Def()
 	plotpar.X_Max = 10;
 	plotpar.X_MaxPar = "mSaturation";
 	plotpar.X_Label = "Water Content (vol %)";
-	plotpar.Y_Label = "Thermal Conductivity (W/m/C)";
+	plotpar.Y_Label = "Thermal Conductivity (" + p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, false) + ")";
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -321,7 +321,7 @@ bool Thermal_Functions::Def()
 	plotpar.X_Max = 10;
 	plotpar.X_MaxPar = "mSaturation";
 	plotpar.X_Label = "Water Content (vol %)";
-	plotpar.Y_Label = "Thermal Conductivity (W/m/C)";
+	plotpar.Y_Label = "Thermal Conductivity ("+p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, false) + ")";
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -377,7 +377,7 @@ bool Thermal_Functions::Def()
 
 
 	pPs = new Ps(&CFrozenSurfCorr, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
-		Define(pPs, "CFrozenSurfCorr", 0.2, "1/C", "HeatEq >= 1", 0.01, 1., 0.1, 0.5);
+		Define(pPs, "CFrozenSurfCorr", 0.2, UNIT_TYPES::INVERSE_TEMP_UNIT, "HeatEq >= 1", 0.01, 1., 0.1, 0.5);
 	pPs = new Ps(&CFrozenMaxDamp, datatype::SINGLE, elements::HEAT, fysprocess::HEAT_CONDUCTION, bioprocess::NOBPROC, userlevel::DETAILED); ps_vec.push_back(pPs);
 		Define(pPs, "CFrozenMaxDamp", 0.9, UNIT_TYPES::NO_UNIT, "HeatEq >= 1", 0., 1., 0., 0.9);
 
@@ -390,7 +390,7 @@ bool Thermal_Functions::Def()
 	plotpar.X_Min = -10;
 	plotpar.X_Max = 0;
 	plotpar.X_MaxPar = "";
-	plotpar.X_Label = "Temperature (C)";
+	plotpar.X_Label = "Temperature ("+p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT,false)+")";
 	plotpar.Y_Label = "Degree of Thermal Conductivity (-)";
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;

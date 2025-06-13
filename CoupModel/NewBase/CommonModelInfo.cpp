@@ -4,128 +4,53 @@
 using namespace std;
 CommonModelInfo::CommonModelInfo() {
 
+	m_GroupMap.clear();
+	m_GroupMap.emplace(GROUPNAME::HIDDEN, GROUPCATNAME::ALL);
+	m_GroupMap.emplace(GROUPNAME::TECHNICAL, GROUPCATNAME::MODEL_FACIL);
+	m_GroupMap.emplace(GROUPNAME::MODEL_STRUC, GROUPCATNAME::MODEL_STRUC);
+	m_GroupMap.emplace(GROUPNAME::NUMERICAL, GROUPCATNAME::MODEL_FACIL);
+	m_GroupMap.emplace(GROUPNAME::SOIL_PROFILE, GROUPCATNAME::MODEL_FACIL);
+	m_GroupMap.emplace(GROUPNAME::SOIL_HYDRAULIC, GROUPCATNAME::SOIL_WATER);
+	m_GroupMap.emplace(GROUPNAME::SOIL_THERMAL, GROUPCATNAME::SOIL_HEAT);
+	m_GroupMap.emplace(GROUPNAME::METEOROLOGICAL_DATA, GROUPCATNAME::ATM);
+	m_GroupMap.emplace(GROUPNAME::IRRIGATION, GROUPCATNAME::PLANT);
+	m_GroupMap.emplace(GROUPNAME::PLANT, GROUPCATNAME::PLANT);
+	m_GroupMap.emplace(GROUPNAME::INTERCEPTION, GROUPCATNAME::PLANT);
+	m_GroupMap.emplace(GROUPNAME::POTENTIAL_TRANSP, GROUPCATNAME::PLANT);
+	m_GroupMap.emplace(GROUPNAME::RADIATION, GROUPCATNAME::ATM);
+	m_GroupMap.emplace(GROUPNAME::SOIL_EVAPORATION, GROUPCATNAME::ATM);
+	m_GroupMap.emplace(GROUPNAME::SNOWPACK, GROUPCATNAME::ATM);
+	m_GroupMap.emplace(GROUPNAME::SOIL_FROST, GROUPCATNAME::SOIL_HEAT);
+	m_GroupMap.emplace(GROUPNAME::SOIL_HEAT_FLOW, GROUPCATNAME::SOIL_HEAT);
+	m_GroupMap.emplace(GROUPNAME::SOIL_HEAT_PUMP, GROUPCATNAME::SOIL_HEAT);
+	m_GroupMap.emplace(GROUPNAME::SOIL_WATER_FLOW, GROUPCATNAME::SOIL_WATER);
+
+	m_GroupMap.emplace(GROUPNAME::SURFACE_WATER, GROUPCATNAME::SOIL_WATER);
+	m_GroupMap.emplace(GROUPNAME::WATER_UPTAKE, GROUPCATNAME::PLANT);
+	m_GroupMap.emplace(GROUPNAME::DRAINAGE_DEEP_PERC, GROUPCATNAME::SOIL_WATER);
+	m_GroupMap.emplace(GROUPNAME::SALT_TRACER, GROUPCATNAME::SOIL_WATER);
+	m_GroupMap.emplace(GROUPNAME::ADDITION_VAR, GROUPCATNAME::MODEL_STRUC);
+	m_GroupMap.emplace(GROUPNAME::PLANT_GROWTH, GROUPCATNAME::NITROGEN_CARBON_ABOVE);
+
+	m_GroupMap.emplace(GROUPNAME::SOIL_ORGANIC, GROUPCATNAME::NITROGEN_CARBON_BELOW);
+	m_GroupMap.emplace(GROUPNAME::SOIL_MINERAL, GROUPCATNAME::NITROGEN_CARBON_BELOW);
+	m_GroupMap.emplace(GROUPNAME::ABIOTIC_DRIVING, GROUPCATNAME::NITROGEN_CARBON_BELOW);
+	m_GroupMap.emplace(GROUPNAME::COMMON_ABIOTIC_RESPONSE, GROUPCATNAME::MODEL_STRUC);
+	m_GroupMap.emplace(GROUPNAME::EXTERNAL_N_INPUT, GROUPCATNAME::NITROGEN_CARBON_ABOVE);
+	m_GroupMap.emplace(GROUPNAME::SOIL_MANAGEMENT, GROUPCATNAME::NITROGEN_CARBON_BELOW);
 
 
+	m_GroupMap.emplace(GROUPNAME::ADDITIONAL_BIOTIC, GROUPCATNAME::MODEL_STRUC);
+	m_GroupMap.emplace(GROUPNAME::GAS_PROCESSES, GROUPCATNAME::NITROGEN_CARBON_BELOW);
+	m_GroupMap.emplace(GROUPNAME::MINTEQ, GROUPCATNAME::NITROGEN_CARBON_BELOW);
+	m_GroupMap.emplace(GROUPNAME::HBV, GROUPCATNAME::SOIL_WATER);
+	m_GroupMap.emplace(GROUPNAME::VALIDATION, GROUPCATNAME::ALL);
+	m_GroupMap.emplace(GROUPNAME::SOIL_MINERAL_P, GROUPCATNAME::NITROGEN_CARBON_BELOW);
 
 
-	for (size_t i = 0; i < std::size(m_TypeNames); ++i) {
-		m_TypeNameToIndex[m_TypeNames[i]] = i;
-	}
-	static constexpr std::string_view m_ElementNames[] = { "Water", "Heat", "Carbon", "Nitrogen", "Phosphorus", "Radiation",
-		"Snow", "Salt", "Methane", "Vapour", "General", "Temperature", "Water Potential",
-		"Soil", "Atmosphere", "Air", "Precipitation", "Climate", "Organic",
-		"Dissolved Carbon", "Dissolved Nitrogen", "Dissolved Phosphorus", "Mineral N", "Mineral P", "Ammonium", "Nitrate",
-		"Phosphate", "Mycorrhize", "Denitrifiers", "Nitrofiers", "Anarobic gas", "Oxygen", "Manure",
-		 "Plant Shape", "Distance", "CO2 SOIL", "Time", "Area", "Plant Stress", "Wind Speed",
-		"Global Radiation", "LongWave Radiation", "Humidity", "GreenHouseGas", "Plant Biomass", "Nitric Oxide", "Nitrous Oxide" };
-
-	
-	static constexpr std::string_view m_FysProcessNames[] = { "Root Water Uptake", "Evapotranspiration", "Transpiration",
-		"Soil Evaporation", "Potential Transpiration", "Interception", "Turbulence", "Surface Runoff", "Aerodynamic Resistance",
-		"Snow Melting", "Redistribution", "Storage", "Transport", "Infiltration", "Drainage", "Percolation",
-		"Runoff", "biotic process", "Initial Flow", "Shrinking", "Physical Shape", "Heat Extraction",
-		"Heat Pipe", "Heat Source", "Lower Boundary", "Upper Boundary", "Water Source", "Salt Source",
-		"Enerby Balance Partitioning", "Heat Conduction", "Heat Convection", "Technical Regulation",
-		"Emission", "Adsorption", "Reflection", "Mass Balance","Measurement Sensor","Geographic Position","Frost Bondary","Hysteresis",
-		"Irrigation","Budget","Geometric","Scattering","Soil Freezing","Diffusion" };
-
-	static constexpr std::string_view m_BioProcessNames[] = { "Decomposition", "Mineralisation", "Nitrification",
-		"Denitrification", "Respiration", "Production", "Oxidation", "Re Allocation", "Phenology", "Soil Gas Dynamics",
-		"Photosynthesis", "Litterfall", "abiotic process", "Initial NC Conditions", "Initial P Conditions",
-		"Forcing Biological Conditions", "Organic Transformation", "Balancing Ratio", "Concentration",
-		"Organic Plant Uptake", "Plant Nitrogen Uptake", "Plant Phosphorus Uptake", "Sorption", "Harvest",
-		"Grazing", "Mycon Nitrogen Uptake", "Soil mixing", "Emergence", "Plant Management",
-		"Nitrogen Fixation","Living","Non Living","Growth","WoodEating","Weathering","Methane Oxidation","Methane Production",
-		"Methane Transport","Gas Equilibrium" };
+	m_GroupMap.emplace(GROUPNAME::EXTERNAL_P_INPUT, GROUPCATNAME::NITROGEN_CARBON_ABOVE);
 
 
-
-
-
-
-
-
-
-	m_GroupCategoryNo.insert(std:: pair<size_t, size_t>(0, 0));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(1,8));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(2,7));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(3,8));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(4,7));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(5,4));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(6,3));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(7,1));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(8,2));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(9,2));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(10,2));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(11,2));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(12,1));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(13,1));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(14,1));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(15,3));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(16,3));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(17,3));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(18,4));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(19,4));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(20,2));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(21,4));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(22,2));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(23,7));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(24,5));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(25,6));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(26,6));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(27,6));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(28,7));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(29,5));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(30,6));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(31,7));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(32,6));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(33,6));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(34,4));
-	m_GroupCategoryNo.insert(pair<size_t,size_t>(35,0));
-	m_GroupCategoryNo.insert(pair<size_t, size_t>(36, 6));
-	m_GroupCategoryNo.insert(pair<size_t, size_t>(37, 5));
-
-
-		m_GroupCategory.insert(pair<string_view,int>("Technical",8));
-		m_GroupCategory.insert(pair<string_view,int>("Model Structure",7));
-		m_GroupCategory.insert(pair<string_view,int>("Numerical",8));
-		m_GroupCategory.insert(pair<string_view,int>("Soil Profile",7));
-		m_GroupCategory.insert(pair<string_view,int>("Soil Hydraulic",4));
-		m_GroupCategory.insert(pair<string_view,int>("Soil Thermal",3));
-		m_GroupCategory.insert(pair<string_view,int>("Meteorological Data",1));
-
-		m_GroupCategory.insert(pair<string_view,int>("Irrigation" ,4));
-		m_GroupCategory.insert(pair<string_view,int>( "Plant",2));
-		m_GroupCategory.insert(pair<string_view,int>( "Interception",2));
-		m_GroupCategory.insert(pair<string_view,int>("Potential Transpiration" ,2));
-		m_GroupCategory.insert(pair<string_view,int>("Radiation properties" ,1));
-		m_GroupCategory.insert(pair<string_view,int>("Soil evaporation" ,1));
-		m_GroupCategory.insert(pair<string_view,int>( "SnowPack",1));
-
-		m_GroupCategory.insert(pair<string_view,int>( "Soil frost",3));
-		m_GroupCategory.insert(pair<string_view,int>("Soil heat flows" ,3));
-		m_GroupCategory.insert(pair<string_view,int>("Soil heat pump" ,3));
-		m_GroupCategory.insert(pair<string_view,int>("Soil water flows" ,4));
-		m_GroupCategory.insert(pair<string_view,int>( "Surface water",4));
-		m_GroupCategory.insert(pair<string_view,int>("Water uptake" ,2));
-
-		m_GroupCategory.insert(pair<string_view,int>("Drainage and deep percolation" ,4));
-		m_GroupCategory.insert(pair<string_view,int>("Salt Tracer" ,4));
-		m_GroupCategory.insert(pair<string_view,int>("Additional Variables" ,7));
-		m_GroupCategory.insert(pair<string_view,int>( "Plant Growth",5));
-		m_GroupCategory.insert(pair<string_view,int>("Soil organic processes",6));
-		m_GroupCategory.insert(pair<string_view, int>("Soil mineral P processes",6));
-		m_GroupCategory.insert(pair<string_view,int>("Soil mineral N processes",6));
-		m_GroupCategory.insert(pair<string_view,int>( "Abiotic driving variables",7));
-		m_GroupCategory.insert(pair<string_view,int>("Common abiotic responses" ,7));
-		m_GroupCategory.insert(pair<string_view,int>( "External N inputs" ,5));
-		m_GroupCategory.insert(pair<string_view, int>("External P inputs", 5));
-		m_GroupCategory.insert(pair<string_view,int>( "Soil Management" ,6));
-		m_GroupCategory.insert(pair<string_view,int>( "Additional Biotic Variables" ,7));
-		m_GroupCategory.insert(pair<string_view,int>( "Gas processes" ,6));
-		m_GroupCategory.insert(pair<string_view,int>( "Minteq" ,6));
-		m_GroupCategory.insert(pair<string_view,int>( "HBV" ,4));
-		m_GroupCategory.insert(pair<string_view,int>( "Validation" ,0));
 		m_RunInfo.StartMode=true;
 		m_RunInfo.ReadyToSimulate=true;
 		m_RunInfo.Running=false;
@@ -134,9 +59,9 @@ CommonModelInfo::CommonModelInfo() {
 		
 		std::map <std::string_view, elements> SortedListElementNames;
 
-		for(size_t count = 0; count < size(m_ElementNames); ++count) {
-			SortedListElementNames.insert(std::make_pair(m_ElementNames[count], elements(count)));
-			m_ElementNamesMap.insert(std::make_pair(elements(count), std::string(m_ElementNames[count])));
+		for(size_t count = 0; count < size(ElementNames); ++count) {
+			SortedListElementNames.insert(std::make_pair(ElementNames[count], elements(count)));
+			m_ElementNamesMap.insert(std::make_pair(elements(count), std::string(ElementNames[count])));
 		}
 		m_NamesElementMap = SortedListElementNames;
 		for (auto it = SortedListElementNames.begin(); it != SortedListElementNames.end(); ++it) {
@@ -163,50 +88,97 @@ CommonModelInfo::CommonModelInfo() {
 			m_BioProcessNamesSorted.push_back((*it).first);
 		}
 
-		for (size_t i = 0; i < size(m_GroupNames); i++)
-			m_GroupMap[m_GroupNames[i]] = i;
 
-		for (size_t i = 0; i < size(m_TypeNames); ++i)
-			m_TypeMap[m_TypeNames[i]] = i;
+	
 
-		for (size_t i = 0; i < size(m_GroupCategoryNames); ++i)
-			m_GroupCategory[m_GroupCategoryNames[i]] = i;
-
-		m_TypeBasedUnits.clear();
 		m_StringBasedUnits.clear();
 
+		auto koll = size(ElementNames);
+
 		for(size_t count=0; count<size(m_UnitTypeNames); count++) {
-			m_TypeBasedUnits.insert(std::make_pair(UNIT_TYPES(count), m_UnitTypeNames[count]));
         // Fix for the reported error by ensuring the correct type is used for the map value
 	        m_StringBasedUnits.insert(std::make_pair(m_UnitTypeNames[count], static_cast<UNIT_TYPES>(count)));
+		}
+		for(size_t count=0; count<size(m_GroupNames); count++) {
+			m_GroupNoMap[m_GroupNames[count]]=count;
+		}
+		for (size_t count = 0; count < static_cast<size_t>(GROUPCATNAME::COUNT); count++) {
+			auto group_cat = static_cast<GROUPCATNAME>(count);
+			auto index = static_cast<size_t>(group_cat);
+			m_GroupCategoryNo[index] = m_GroupCategoryNames[count];
+		}
+		for (size_t count = 0; count < size(m_TypeNames); count++) {
+			m_ModelTypeNoMap[m_TypeNames[count]] = count;
 		}
 
 }
 CommonModelInfo::~CommonModelInfo() {
 
 }
+size_t CommonModelInfo::GetTypeIndex(std::string_view str)
+{
+	auto it = m_ModelTypeNoMap.find(str);
+	if (it != m_ModelTypeNoMap.end()) {
+		return static_cast<size_t>((*it).second);
+	}
+	else {
+		return static_cast<size_t>(MODELTYPENAME::COUNT);
+	}
+}
+;
+size_t CommonModelInfo::GetGroupIndex(std::string_view str) {
+	auto it = m_GroupNoMap.find(str);
+	if (it != m_GroupNoMap.end()) {
+		return static_cast<size_t>((*it).second);
+	} else {
+		return static_cast<size_t>(GROUPNAME::COUNT);
+	}
 
-size_t CommonModelInfo::GetTypeIndex(string_view str) {
-	auto it=m_TypeMap.find(str);
-	if(it!=m_TypeMap.end())
-		return it->second;
-	else
-		return std::string::npos;
+};
+std::string_view CommonModelInfo::ElementName(elements elem) noexcept { if (elem < elements::COUNT) { auto index = static_cast<size_t>(elem);  return ElementNames[index]; } else return "unknow"; };
+
+std::string_view CommonModelInfo::GetUnitString(UNIT_TYPES u) noexcept { if (u < UNIT_TYPES::COUNT) { return m_UnitTypeNames[static_cast<size_t>(u)]; } else return "unknow"; }
+std::string CommonModelInfo::GetUnitString(UNIT_TYPES key, bool with_parenthesis) noexcept {
+	if (with_parenthesis) return "(" + string(GetUnitString(key)) + ")";
+	else  return string(GetUnitString(key));
 }
-size_t CommonModelInfo::GetGroupIndex(string_view str) {
-	auto it=m_GroupMap.find(str);
-	if(it!=m_GroupMap.end())
-		return it->second;
+
+std::string_view CommonModelInfo::GetGroupName(GROUPNAME group) noexcept {
+		if(group< GROUPNAME::COUNT) 
+			return m_GroupNames[static_cast<size_t>(group)];
+		else
+			return "Unknown Group";
+
+};
+std::string_view CommonModelInfo::GetGroupCatName(GROUPCATNAME groupcat) noexcept {
+	if (groupcat < GROUPCATNAME::COUNT)
+		return m_GroupCategoryNames[static_cast<size_t>(groupcat)];
 	else
-		return std::string::npos;
+		return "Unknown Groupcat";
+};
+int CommonModelInfo::GetGroupCategory(string_view group) noexcept {
+		int GroupNo = -1;
+		auto it = m_GroupNoMap.find(group);
+		if (it != m_GroupNoMap.end()) {
+			GroupNo=static_cast<int>((*it).second);
+		}
+		return GroupNo;
 }
-int CommonModelInfo::GetGroupCategory(string_view str) {
-	auto it=m_GroupCategory.find(str);
-	if(it!=m_GroupCategory.end())
-		return it->second;
-	else
-		return std::string::npos;
+int CommonModelInfo::GetGroupCategoryNo(size_t group_no) noexcept {
+	GROUPNAME group = static_cast<GROUPNAME>(group_no);
+	auto it = m_GroupMap.find(group);
+	if (it != m_GroupMap.end()) {
+		auto cat=static_cast<GROUPCATNAME>(it->second);
+		auto cat_no = static_cast<size_t>(cat);
+		return cat_no;
+	}
 }
+
+std::string_view CommonModelInfo::GetVarType(size_t index) noexcept
+{
+	return m_TypeNames[index];
+}
+
 void CommonModelInfo::trim_xml(std::string& str)
 {
 	string in, out;

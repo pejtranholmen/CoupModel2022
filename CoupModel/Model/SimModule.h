@@ -244,6 +244,8 @@ protected:
 	size_t ModuleNo;
 	
 
+	GROUPNAME _GroupName; // Group Name of the module
+
 	Structure*  m_pModelStructure;
 	ModelMap* m_pModelMap;
 

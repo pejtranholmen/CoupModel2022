@@ -320,7 +320,7 @@ void Sim_Xml::setModelGroup(const std::vector<SimB*> v_simb, CommonModelInfo* pC
 			v_simb[i]->setCommonModelPointer(pCommonModelInfo);
 		}
 	}
-	auto groupname = pCommonModelInfo->GetGroupNames(v_simb[0]->GetGroupNo());
+	auto groupname = pCommonModelInfo->GetGroupName(v_simb[0]->GetGroupNo());
 
 /*    pCommonModelInfo->trim_xml(groupname);
 	auto child = demoData->getChildByName(groupname);

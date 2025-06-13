@@ -207,7 +207,7 @@ bool P_Mineral_Functions::Def()
 		Define(pGs, "P Conc PO4 Drainage", 0., UNIT_TYPES::mikro_MASS_LITER_UNIT, "Phosphorus > 0");
 
 	pGs = new Gs(&Tot_MinP_DrainageConc, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);// Tot MinP conc by HH
-		Define(pGs, "Tot MinP Drainage Conc", 0.0, "mg/l", "Nitrogen and Carbon >= 1|Phosphorus>0");
+		Define(pGs, "Tot MinP Drainage Conc", 0.0,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Phosphorus>0");
 
 	
 	pGs = new Gs(&PTotPO4_PlantUptake, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);

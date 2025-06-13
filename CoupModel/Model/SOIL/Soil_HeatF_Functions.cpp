@@ -69,9 +69,9 @@ bool Soil_HeatF_Functions::Def()
 	pPs= new Ps(&HeatProd_Threshold, datatype::SINGLE, elements::HEAT, fysprocess::HEATSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);      
 		Define(pPs, "HeatProd_Threshold", 30. ,UNIT_TYPES::TEMP_UNIT,"Heat Source >0|Heat Source <5",0., 200.);
 	pPs= new Ps(&HeatSourceRateCoef1, datatype::SINGLE, elements::HEAT, fysprocess::HEATSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);      
- 		Define(pPs, "Source1 Decay Coef", 0. ,"1/day","Heat Source >0|Heat Source <5",0., 100.);
+ 		Define(pPs, "Source1 Decay Coef", 0. ,UNIT_TYPES::RATECOEF_UNIT,"Heat Source >0|Heat Source <5",0., 100.);
 	pPs= new Ps(&HeatSourceRateCoef2, datatype::SINGLE, elements::HEAT, fysprocess::HEATSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);      
- 		Define(pPs, "Source2 Decay Coef", 0. ,"1/day","Heat Source >2|Heat Source <5",0., 100. );
+ 		Define(pPs, "Source2 Decay Coef", 0. ,UNIT_TYPES::RATECOEF_UNIT,"Heat Source >2|Heat Source <5",0., 100. );
 	pPs = new Ps(&HeatConversionCoef, datatype::SINGLE, elements::HEAT, fysprocess::HEATSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 		Define(pPs, "HeatConversionCoef", 40.E3, "J/gC", "Heat Source=6", 0., 1.E5, 10.E3, 55.E3);
  	

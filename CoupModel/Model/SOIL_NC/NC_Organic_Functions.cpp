@@ -425,7 +425,7 @@ for (size_t jj = 0; jj < NUM_BIOELEM-1; jj++) {
 
 
 pGs = new Gs(&Tot_P_DrainageConc, datatype::TOTPROFILE, elements::PHOSPHORUS, fysprocess::TRANSPORT, bioprocess::ORGANICTRANSFORMATION, userlevel::NORMAL);// Tot P conc by HH
-Define(pGs, "Tot P Drainage Conc", 0.0, "mg/l", "Nitrogen and Carbon >= 1|DissolvedOrganics >0|Phosphorus>0");
+Define(pGs, "Tot P Drainage Conc", 0.0,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|DissolvedOrganics >0|Phosphorus>0");
 		
 
 //	Define(pGs CTotDisOrgDecomp,  	"CTotDisOrgDecomp",		0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|DissolvedOrganics >0");
@@ -686,21 +686,21 @@ Define (pTab,"Initial organic Carbon",3);
 	pP=m_pModelMap->GetPPointer("mUpper Depth");		mTab_Diss.push_back(pP);
 	pP=m_pModelMap->GetPPointer("mLower Depth");		mTab_Diss.push_back(pP);
 	pP= new P(&RateCoefDissolved ,pNL, datatype::SIMPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);	initv.assign(pSoil->NL,0.01);
-		Define(pP, pNL,  	"RateCoefDissolved", initv,"1/day","Dissolved Organics >0",0.,1.);
+		Define(pP, pNL,  	"RateCoefDissolved", initv,UNIT_TYPES::RATECOEF_UNIT,"Dissolved Organics >0",0.,1.);
 		mTab_Diss.push_back(pP);
 	pTab= new Tab(&mTab_Diss, datatype::SIMPROFILE, elements::NITROGEN, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL); 
 	Define(pTab,"Rate Coefficient Dissolved Organics",3);
 ;
 	pPs= new Ps(&RateCoefLitter1Dis, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-		Define(pPs,  "RateCoefLitter1Dis", 0.0001  , "1/day","Nitrogen and Carbon >0|Dissolved Organics > 0",0.,0.1);
+		Define(pPs,  "RateCoefLitter1Dis", 0.0001  ,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0",0.,0.1);
 	pPs= new Ps(&RateCoefLitter2Dis, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-		Define(pPs,  "RateCoefLitter2Dis", 0.0001  , "1/day","Nitrogen and Carbon >0|Dissolved Organics > 0|LitterPools >0",0.,0.1);
+		Define(pPs,  "RateCoefLitter2Dis", 0.0001  ,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0|LitterPools >0",0.,0.1);
 	pPs= new Ps(&RateCoefFaecesDis, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-		Define(pPs,  "RateCoefFaecesDis", 0.0001  , "1/day","Nitrogen and Carbon >0|Dissolved Organics > 0|FaecesPool >0",0.,0.1);
+		Define(pPs,  "RateCoefFaecesDis", 0.0001  ,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0|FaecesPool >0",0.,0.1);
 	pPs= new Ps(&RateCoefMicrobeDis, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-		Define(pPs,  "RateCoefMicrobeDis", 0.0001  , "1/day","Nitrogen and Carbon >0|Dissolved Organics > 0|Microbes >0",0.,0.1);
+		Define(pPs,  "RateCoefMicrobeDis", 0.0001  ,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0|Microbes >0",0.,0.1);
 	pPs= new Ps(&RateCoefHumusDis, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-		Define(pPs,  "RateCoefHumusDis", 1.E-5  , "1/day","Nitrogen and Carbon >0|Dissolved Organics > 0",0.,0.001);
+		Define(pPs,  "RateCoefHumusDis", 1.E-5  ,UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0",0.,0.001);
 	pPs= new Ps(&DocSolFraction, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
 		Define(pPs,  "DocSolutionFrac", 1.0  , UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0",0.0001,1.);
 
@@ -708,7 +708,7 @@ Define (pTab,"Initial organic Carbon",3);
 		
 		;
 	pPs= new Ps(&Init_CDissConc, datatype::TOTPROFILE, elements::DOC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
-		Define(pPs,  "Init_CDissConc", 1.  , "mg/l","Nitrogen and Carbon >0|Dissolved Organics > 0",0.,300.);
+		Define(pPs,  "Init_CDissConc", 1.  ,UNIT_TYPES::mMASS_LITER_UNIT,"Nitrogen and Carbon >0|Dissolved Organics > 0",0.,300.);
 	pPs= new Ps(&CN_Threshold_Org, datatype::TOTPROFILE, elements::DOC, fysprocess::NOFPROC, bioprocess::INITB, userlevel::NORMAL);
 		Define(pPs,  "CN Threshold Org", 22.  , UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >0|Organic Uptake > 1",0.,300.);
 //	Response function;
@@ -750,20 +750,20 @@ bool NC_Organic_Functions::FunctionDef() {
 
 
 	pPs = new Ps(&RateCoefLitter1, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "RateCoefLitter1", .035, "1/day", "Nitrogen and Carbon >0|Microbes = 0", 0.1E-6, 1.);
+	Define(pPs, "RateCoefLitter1", .035,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|Microbes = 0", 0.1E-6, 1.);
 	pPs = new Ps(&RateCoefLitter2, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "RateCoefLitter2", .1, "1/day", "Nitrogen and Carbon >0|Microbes = 0|LitterPools >0", 0.1E-6, 1.);
+	Define(pPs, "RateCoefLitter2", .1,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|Microbes = 0|LitterPools >0", 0.1E-6, 1.);
 	pPs = new Ps(&RateCoefFaeces, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "RateCoefFaeces", .035, "1/day", "Nitrogen and Carbon >0|FaecesPool >0|Microbes = 0", 0.1E-6, 1.);
+	Define(pPs, "RateCoefFaeces", .035,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|FaecesPool >0|Microbes = 0", 0.1E-6, 1.);
 	pPs = new Ps(&RateCoefHumus, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "RateCoefHumus", 5.E-5, "1/day", "Nitrogen and Carbon >0|Microbes = 0", 0.1E-8, .1E-2);
+	Define(pPs, "RateCoefHumus", 5.E-5,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|Microbes = 0", 0.1E-8, .1E-2);
 	;
 	pPs = new Ps(&HumFracLitter1, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "HumFracLitter1", .2, "1/day", "Nitrogen and Carbon >0|Microbes = 0", 0.1, 0.9);
+	Define(pPs, "HumFracLitter1", .2,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|Microbes = 0", 0.1, 0.9);
 	pPs = new Ps(&HumFracLitter2, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "HumFracLitter2", .2, "1/day", "Nitrogen and Carbon >0|Microbes = 0|LitterPools >0", 0.1, 0.9);
+	Define(pPs, "HumFracLitter2", .2,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|Microbes = 0|LitterPools >0", 0.1, 0.9);
 	pPs = new Ps(&HumFracFaeces, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
-	Define(pPs, "HumFracFaeces", .2, "1/day", "Nitrogen and Carbon >0|Microbes = 0", 0.1, 0.9);
+	Define(pPs, "HumFracFaeces", .2,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|Microbes = 0", 0.1, 0.9);
 	pPs = new Ps(&PO4ConcentrationResponsePO4_Max, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); 
 	Define(pPs, "RateResponse PO4 Max", 50., UNIT_TYPES::MASSDENSITY_UNIT, "Nitrogen and Carbon >0|Phosphorus > 0", 10., 100.);
 	pPs = new Ps(&PO4ConcentrationResponsePO4_Min, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
@@ -911,9 +911,9 @@ bool NC_Organic_Functions::FunctionDef() {
 
 
 	pPs = new Ps(&RateResponseCN_Max, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "RateResponse CN Max", 50., "1/day", "Nitrogen and Carbon >0|CN Ratio Influence > 0", 10., 100.);
+	Define(pPs, "RateResponse CN Max", 50.,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|CN Ratio Influence > 0", 10., 100.);
 	pPs = new Ps(&RateResponseCN_Min, datatype::TOTPROFILE, elements::CARBON, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL); ps_vec.push_back(pPs);
-	Define(pPs, "RateResponse CN Min", 10., "1/day", "Nitrogen and Carbon >0|CN Ratio Influence > 0", 5., 20.);
+	Define(pPs, "RateResponse CN Min", 10.,UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >0|CN Ratio Influence > 0", 5., 20.);
 
 	
 

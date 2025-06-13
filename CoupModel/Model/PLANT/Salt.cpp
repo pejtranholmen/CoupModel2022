@@ -537,16 +537,16 @@ bool Salt::Def()
 	Gs *pGs = new Gs(&DepthofFront, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "Depth of Front", 0.0, "m", "");
 	pPs = new Ps(&ConcForFront, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "ConcForFront", 2., "mg/l", "", 1.E-20, 1.E3);
+	Define(pPs, "ConcForFront", 2.,UNIT_TYPES::mMASS_LITER_UNIT, "", 1.E-20, 1.E3);
 	pPs = new Ps(&SaltInitConc, datatype::SINGLE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "SaltInitConc", 2., "mg/l", "Initial Salt Concentration =0", 1.E-20, 1.E5);
+	Define(pPs, "SaltInitConc", 2.,UNIT_TYPES::mMASS_LITER_UNIT, "Initial Salt Concentration =0", 1.E-20, 1.E5);
 	pPs = new Ps(&SaltInputConcPar, datatype::SINGLE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "SaltInputConc", 1., "mg/l", "SaltTracer = 1", 1.E-6, 1.E6);
+	Define(pPs, "SaltInputConc", 1.,UNIT_TYPES::mMASS_LITER_UNIT, "SaltTracer = 1", 1.E-6, 1.E6);
 	pPs = new Ps(&SaltIrrigationConcPar, datatype::SINGLE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "SaltIrrigationConc", 1., "mg/l", "SaltTracer = 1|Irrigation > 0|IrrigConcInput < 1", 1.E-20, 1.E6);
+	Define(pPs, "SaltIrrigationConc", 1.,UNIT_TYPES::mMASS_LITER_UNIT, "SaltTracer = 1|Irrigation > 0|IrrigConcInput < 1", 1.E-20, 1.E6);
 
 	pPs = new Ps(&SaltGWSoFlowConc, datatype::SINGLE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "SaltGW Source Conc", 1., "mg/l", "SaltTracer = 1|Irrigation > 0|IrrigConcInput < 1|GroundWaterFlow >= 1", 1.E-20, 1.E6);
+	Define(pPs, "SaltGW Source Conc", 1.,UNIT_TYPES::mMASS_LITER_UNIT, "SaltTracer = 1|Irrigation > 0|IrrigConcInput < 1|GroundWaterFlow >= 1", 1.E-20, 1.E6);
 	pPs = new Ps(&ConcV_Index, datatype::SINGLE, elements::SALT, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "Index in PG-file", 1., "#", "IrrigConcInput >= 1", 1., 100.);
 
@@ -599,7 +599,7 @@ bool Salt::Def()
 
 	pP = new P(&SaltInitConcDist, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
 	initv.assign(p_Soil_WaterF->NL, 2.);
-	Define(pP, pNL, "Init Salt Conc", initv, "mg/l", "Initial Salt Concentration > 0", 0., 1.E3);
+	Define(pP, pNL, "Init Salt Conc", initv,UNIT_TYPES::mMASS_LITER_UNIT, "Initial Salt Concentration > 0", 0., 1.E3);
 	mTab_Salt.push_back(pP);
 	Tab *pTab;
 	pTab = new Tab(&mTab_Salt, datatype::SIMPROFILE, elements::SALT, fysprocess::INITF, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -614,16 +614,16 @@ bool Salt::Def()
 
 
 	G* pG = new G(&SaltConc, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pG, pNL, "SaltConc", initv, "mg/l", "SaltTracer >= 1");
+	Define(pG, pNL, "SaltConc", initv,UNIT_TYPES::mMASS_LITER_UNIT, "SaltTracer >= 1");
 	pG = new G(&OsmoticPressure, pNL, datatype::SIMPROFILE, elements::SALT, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pG, pNL, "OsmoticPressure", initv, "cm", "SaltTracer >= 1");
 	pGs = new Gs(&TotalSaltDrainFlow, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pGs, "TotalSaltDrainFlow", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "");
 
 	Ds *pDs = new Ds(&SaltInfilConc, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs, "SaltInfilConc", 0., "mg/l", "SaltTracer >= 1");
+	Define(pDs, "SaltInfilConc", 0.,UNIT_TYPES::mMASS_LITER_UNIT, "SaltTracer >= 1");
 	pDs = new Ds(&SaltIrrigationConc, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pDs, "SaltIrrigationConc", 0., "mg/l", "SaltTracer >= 1");
+	Define(pDs, "SaltIrrigationConc", 0.,UNIT_TYPES::mMASS_LITER_UNIT, "SaltTracer >= 1");
 	pDs = new Ds(&SaltAirDeposition, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pDs, "SaltAirDeposition", 0.,UNIT_TYPES::mMASSFLOW_UNIT, "SaltTracer >= 1|SaltRoadStorage=0|SaltDeposition>0");
 	pDs = new Ds(&SaltPloughDeposition, datatype::SINGLE, elements::SALT, fysprocess::TRANSPORT, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -779,7 +779,7 @@ bool Salt::Def()
 	pPs = new Ps(&ActiveUptEffRoots, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pPs, "ActiveUptEffRoots", 1.E-6, "mg/g", "TraceElementUptake>0|ActiveUptake>0", 0., 10.);
 	pPs = new Ps(&ActiveUptMaxEffConc, datatype::SINGLE, elements::SALT, fysprocess::WATERUPTAKE, bioprocess::NOBPROC, userlevel::NORMAL);
-	Define(pPs, "ActiveUptMaxEffConc", 1.E-6, "mg/l", "TraceElementUptake>0|ActiveUptake>0", 0., 10.);
+	Define(pPs, "ActiveUptMaxEffConc", 1.E-6,UNIT_TYPES::mMASS_LITER_UNIT, "TraceElementUptake>0|ActiveUptake>0", 0., 10.);
 
 	F* pF = new F(&m_PG_RoadSurface, datatype::ROADSURFACE, elements::SALT, fysprocess::SALTSOURCE, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "Salt Road Deposition", "SaltRoadFile.bin", "WaterEq = 1|SaltTracer>0|EnableInputPGSalt>=1");

@@ -195,7 +195,7 @@ void CFileView::FillFileView()
 			dg_pDoc = (CCoupModelDoc*)pChild->GetActiveDocument();
 			if(dg_pDoc!=nullptr) {
 				MySingle::instance().GetCugPointer()->SetDocument(dg_pDoc);
-				if(dg_pDoc->m_Doc.m_DocumentType==0)
+				if(dg_pDoc->m_Doc.m_DocumentType==size_t(0))
 					MySingle::instance().GetCugPointer()->OnSetup();
 				else
 					MySingle::instance().GetPGCugPointer()->OnSetup();

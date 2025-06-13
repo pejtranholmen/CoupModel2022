@@ -113,7 +113,7 @@ string DB_Storage::GetGroupString(size_t db_index, size_t index) {
 	CommonModelInfo *p_ModelInfo;
 	p_ModelInfo=nullptr;
 	return "";
-	//return p_ModelInfo->GetGroupNames(m_Group[db_index][index]);
+	//return p_ModelInfo->GetGroupName(m_Group[db_index][index]);
 }
 
 size_t DB_Storage::GetPlantTypeIndex(size_t db_index, std::string name)
