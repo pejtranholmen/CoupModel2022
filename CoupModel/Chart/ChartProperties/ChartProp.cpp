@@ -321,9 +321,9 @@ bool ChartProp::ChangeChartTypeForward()
 	return true;
 	
 }
-std::string_view ChartProp::GetChartTypeString()
+std::string ChartProp::GetChartTypeString()
 {
-	string_view str;
+	string str;
 	switch (m_ChartType) {
 	case CHART_TYPES::SCATTER:
 		str = "Scatter:";
@@ -343,13 +343,13 @@ std::string_view ChartProp::GetChartTypeString()
 	}
 	return str;
 }
-vector<string_view> ChartProp::GetChartTypeOptions(bool Complete)
+vector<string> ChartProp::GetChartTypeOptions(bool Complete)
 {
-	vector<string_view> out;
+	vector<string> out;
 	if (Complete) 
-		for (size_t i = 0; i < 5; i++)	out.push_back(m_ChartTypesOptions[i].typtext);
+		for (size_t i = 0; i < 5; i++)	out.push_back(string(m_ChartTypesOptions[i].typtext));
 	else
-		for (size_t i = 1; i < 4; i++)	out.push_back(m_ChartTypesOptions[i].typtext);
+		for (size_t i = 1; i < 4; i++)	out.push_back(string(m_ChartTypesOptions[i].typtext));
 	return out;
 }
 CHART_TYPES ChartProp::GetChartTypeIndex() const noexcept

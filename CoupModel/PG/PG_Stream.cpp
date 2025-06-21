@@ -40,9 +40,13 @@ bool PG_Stream::SetActBufferSize(size_t ind_buf)
 	pg.status.b.buf_TotSize = ind_buf*pg.Shape.NumVar;
 	pg.status.b.buf_Size = ind_buf;
 
+
 	pg.status.b.NumberOfBuf = (pg.Shape.NumRecords - 1) / pg.status.b.buf_Size + 1;
 	if (!pg.status.CompleteFileRead&& !pg.status.CompleteRepRead)	pg.Var.v.resize(pg.Shape.RecordIndexSize*pg.status.b.buf_Size);
 	else pg.status.b.buf_Size = ind_buf;
+	if (pg.Shape.NumRepetitions > pg.status.b.NumberOfBuf) {  // When number of repetitions is larger than number of buffers
+		pg.status.b.NumberOfBuf=pg.Shape.NumRepetitions* pg.status.b.NumberOfBuf;
+	}
 
 	if (m_MainPGStreamReadWrite.good())
 		return true;
@@ -562,7 +566,7 @@ bool PG_Stream::WritePGFileStartHeader(size_t nrecords, size_t nrepititions, siz
 	pPGOutStream->write((char*)&totnumrecords, 4);
 	pPGOutStream->write((char*)&lengthRecord, 4);
 
-	if (nrepititions<1&&lengthRecord>8) {
+	if (nrepititions<=1&&lengthRecord>8) {   // changed from <1 to <=1 June 2025
 		unsigned int NewNumberOfRepititions = 0;
 		pPGOutStream->write((char*)&NewNumberOfRepititions, 4);
 	}
@@ -1146,7 +1150,7 @@ bool PG_Stream::WritePGFileFrame(size_t InputRepNo, fstream *pPGOutStream, bool 
 
 	if (valid) {
 		if (NoRepetitions) valid = WriteDescriptionsToStream(pPGOutStream);
-		else valid = WriteDescriptionsToStream(pPGOutStream,InputRepNo-1);
+		else valid = WriteDescriptionsToStream(pPGOutStream,InputRepNo);
 
 	}
 	bool closeAll = true;
@@ -1306,12 +1310,6 @@ bool PG_Stream::ReadNewBuffer(size_t BufferNum) {
 }
 bool PG_Stream::ReadNewBuffer(size_t CurrentRec, size_t CurrentBuf)
 {
-	//size_t CurrentRecRead;
-
-	/*if (CurrentBuf <= pg.status.b.NumberOfBuf)
-		pg.status.b.buf_Size = pg.status.b.buf_Size;
-	else
-		pg.status.b.buf_Size = (pg.Shape.NumRecords - 1) % pg.status.b.buf_Size;*/
 
 	std::streamsize newpos;
 	if (CurrentBuf == 0)
@@ -1320,7 +1318,9 @@ bool PG_Stream::ReadNewBuffer(size_t CurrentRec, size_t CurrentBuf)
 		newpos = pg.Shape.RecordSize*CurrentBuf*pg.status.b.buf_Size + pg.Shape.RecordSize;
 
 	m_MainPGStreamReadWrite.seekg(newpos, ios::beg);
-	m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0], pg.Shape.RecordSize*pg.status.b.buf_Size);
+	size_t bufByteSize = pg.Shape.RecordSize * pg.status.b.buf_Size;
+	//m_MainPGStreamReadWrite.read((char*)&pg.Var.v[0], pg.Shape.RecordSize*pg.status.b.buf_Size);
+	m_MainPGStreamReadWrite.read(reinterpret_cast<char*>(&pg.Var.v[0]), bufByteSize);
 	if (m_MainPGStreamReadWrite.good()) {
 		pg.status.b.PrevBuf = CurrentBuf;
 		m_ResetBuffer = false;
@@ -1332,24 +1332,33 @@ bool PG_Stream::ReadNewBuffer(size_t CurrentRec, size_t CurrentBuf)
 }
 bool PG_Stream::WriteNewBuffer(size_t CurrentBuf)
 {
-	std::streamsize newpos, actpos;
-	if (CurrentBuf<pg.status.b.NumberOfBuf)
-		pg.status.b.buf_Size = pg.status.b.buf_Size;
-	else
-		pg.status.b.buf_Size = (pg.Shape.NumRecords - 1) % pg.status.b.buf_Size;
-	if (pg.Shape.RepetitionMode)
-		newpos = pg.Shape.RecordSize*CurrentBuf*pg.status.b.buf_Size + pg.Shape.RecordSize;
-	else if (CurrentBuf>0)
-		newpos = pg.Shape.RecordSize*CurrentBuf*pg.status.b.buf_Size + pg.Shape.RecordSize;
-	else
-		newpos = pg.Shape.RecordSize;
-	m_MainPGStreamReadWrite.seekp(newpos, ios::beg);
-	actpos = m_MainPGStreamReadWrite.tellp();
+	size_t recordSize = pg.Shape.RecordSize;
+	size_t bufSize = pg.status.b.buf_Size;
+
+	// Räkna ut antal poster att skriva
+	size_t recordsToWrite = (CurrentBuf < pg.status.b.NumberOfBuf)
+		? bufSize
+		: (pg.Shape.NumRecords - 1) % bufSize;
+
+	// Räkna ut startposition
+	size_t startRecord = CurrentBuf * bufSize + 1;
+	std::streamsize newpos = recordSize * startRecord;
+
+	m_MainPGStreamReadWrite.seekp(newpos, std::ios::beg);
+	std::streamsize actpos = m_MainPGStreamReadWrite.tellp();
+
 	if (actpos == newpos) {
-		m_MainPGStreamReadWrite.write((char*)&pg.Var.v[0], pg.Shape.RecordSize*pg.status.b.buf_Size);
+		m_MainPGStreamReadWrite.write(
+			reinterpret_cast<const char*>(&pg.Var.v[0]),
+			recordSize * recordsToWrite
+		);
 		pg.status.FileModified = true;
+
 	}
-	if (m_MainPGStreamReadWrite.good()) pg.status.b.PrevBuf = CurrentBuf;
+
+	if (m_MainPGStreamReadWrite.good())
+		pg.status.b.PrevBuf = CurrentBuf;
+
 	return m_MainPGStreamReadWrite.good();
 
 }
@@ -1396,8 +1405,8 @@ bool PG_Stream::WriteSeparateSplitFiles()
 		}
 		if (!m_ExtraPGStreamWrite.good())
 			good = false;
-
-		if (!WritePGFileFrame(irep+1, &m_ExtraPGStreamWrite, true))
+		//m_OnlyNewFile = true;
+		if (!WritePGFileFrame(irep, &m_ExtraPGStreamWrite, true))
 			good = false;
 		if (!good) return good;
 

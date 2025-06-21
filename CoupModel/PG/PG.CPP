@@ -3374,8 +3374,6 @@ size_t CPG::GetVarKey(size_t index, size_t repit)
 double CPG::GetVarLat(size_t index, size_t repit)
 {
 	size_t add=0;
-	if(index==0) index=1;
-	if(repit==0) repit=1;
 	add=repit*pg.Shape.NumVar;
 	index+=add;
 	if(pg.Des.addinfo.size()>=index&&index>0)

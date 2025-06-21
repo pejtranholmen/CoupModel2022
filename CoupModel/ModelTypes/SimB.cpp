@@ -7,9 +7,8 @@
 
 SimB::SimB() = default;
 
-SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v, enum userlevel user_v)
+SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v, enum userlevel user_v): SimB()
 {
-	SimB();
 	_enabled=true;
 	_stype=d_vt;
 	_def.data=d_v;
@@ -19,9 +18,8 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v, enum userle
 	_def.ulev=user_v;
 	m_ChildChange = false;
 }
-SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v,enum fysprocess fproc, enum bioprocess bproc, enum userlevel user_v)
+SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v,enum fysprocess fproc, enum bioprocess bproc, enum userlevel user_v) : SimB()
 {
-	SimB();
 	_stype=d_vt;
 	_def.data=d_v;
 	_def.elem=el_v;
@@ -30,9 +28,9 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v,enum fysproc
 	_def.ulev=user_v;
 	m_ChildChange = false;
 }
-SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v)
+SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v) : SimB()
 {
-	SimB();
+
 	_stype=d_vt;
 	_def.data=d_v;
 	_def.elem=el_v;
@@ -41,16 +39,14 @@ SimB::SimB(enum simtype d_vt, enum datatype d_v, enum elements el_v)
 	_def.ulev=userlevel::NORMAL;
 	m_ChildChange = false;
 }
-SimB::SimB(enum simtype d_vt, definitions def) 
+SimB::SimB(enum simtype d_vt, definitions def) :SimB()
 {
-	SimB();
 	_stype=d_vt;
 	_def=def;
 	m_ChildChange = false;
 }
-SimB::SimB(enum simtype d_vt) 
+SimB::SimB(enum simtype d_vt) :SimB()
 {
-	SimB();
 	_stype=d_vt;
 	m_ChildChange = false;
 }

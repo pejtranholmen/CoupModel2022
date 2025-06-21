@@ -109,10 +109,10 @@ public:
 	void ResetChartType() {
 		SetChartType(m_PreviousChartType);
 	};
-	std::vector<std::string_view> GetChartTypeOptions(bool Complete = true);
+	std::vector<std::string> GetChartTypeOptions(bool Complete = true);
 	CHART_TYPES GetChartTypeIndex() const noexcept;
-	std::string_view GetCurrentChartTypeOption() { return m_ChartTypesOptions[size_t(m_ChartType)].typtext; };
-	std::string_view GetChartTypeString();
+	std::string GetCurrentChartTypeOption() { return string(m_ChartTypesOptions[size_t(m_ChartType)].typtext); };
+	std::string GetChartTypeString();
 
 	bool CheckChartType_Based_On_IndependentVar();
 	void MakeCumTranformation(std::vector<double> *pVector);

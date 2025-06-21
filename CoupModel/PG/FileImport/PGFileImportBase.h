@@ -33,7 +33,7 @@ public:
 	};
 	void SetStartMinuteWhenImport(size_t min) { m_itimbase = min; m_minst_a = min; };
 
-	std::vector<string_view> m_SuccessFullImportedFileNames;
+	std::vector<string> m_SuccessFullImportedFileNames;
 
 
 

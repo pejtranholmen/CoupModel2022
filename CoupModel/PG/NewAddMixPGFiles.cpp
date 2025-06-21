@@ -87,29 +87,29 @@ CPG * NewAddMixPGFiles::AddFileToNewPGFile(bool Reshape) {
 				unsigned int mintime;
 				mintime = pgst-abs(m_AddScalingCoefVector[i]) * (pgend - pgst+pCPG->GetNormalTimeInterval());
 				for (long j = 0; j < nrec*abs(m_AddScalingCoefVector[i]); j++) {
-					float *pvar = (float*)pCPG->GetRecordPointer(j%nrec + 1, repet + 1);
+					float *pvar = (float*)pCPG->GetRecordPointer(j%nrec + 1, repet);
 					icount = icount + 1;
 					pPG->SetRecordPointer(pvar);
 					pPG->SetDatePointer(&mintime,0);
-					pPG->WritePGFileRecord(icount, repet + 1);
+					pPG->WritePGFileRecord(icount, repet);
 					mintime += pCPG->GetNormalTimeInterval();
 				}
 			}
 			for (long j = 0; j < nrec; j++) {
-				float *pvar = (float*)pCPG->GetRecordPointer(j + 1, repet + 1);
+				float *pvar = (float*)pCPG->GetRecordPointer(j + 1, repet);
 				icount = icount + 1;
 				pPG->SetRecordPointer(pvar);
-				pPG->WritePGFileRecord(icount, repet + 1);
+				pPG->WritePGFileRecord(icount, repet);
 			}
 			if (m_AddScalingCoefVector[i] > 0) {
 				unsigned int mintime;
 				mintime = pgend + pCPG->GetNormalTimeInterval();
 				for (long j = 0; j < nrec*abs(m_AddScalingCoefVector[i]); j++) {
-					float *pvar = (float*)pCPG->GetRecordPointer(j%nrec + 1, repet + 1);
+					float *pvar = (float*)pCPG->GetRecordPointer(j%nrec + 1, repet);
 					icount = icount + 1;
 					pPG->SetRecordPointer(pvar);
 					pPG->SetDatePointer(&mintime, 0);
-					pPG->WritePGFileRecord(icount, repet + 1);
+					pPG->WritePGFileRecord(icount, repet);
 					mintime += pCPG->GetNormalTimeInterval();
 				}
 			}
@@ -126,10 +126,10 @@ CPG * NewAddMixPGFiles::AddFileToNewPGFile(bool Reshape) {
 			fmax = MISSING;
 			fmin = abs(MISSING);
 			pCPG = m_PGPointerVector[0];
-			pPG->SetVarName(i + 1, pCPG->GetVarName(i + 1), repet + 1);
-			pPG->SetVarUnit(i + 1, string(pCPG->GetVarUnit(i + 1)), repet + 1);
-			pPG->SetVarId(i + 1, pCPG->GetVarId(i + 1), repet + 1);
-			pPG->SetVarPos(i + 1, pCPG->GetVarPos(i + 1), repet + 1);
+			pPG->SetVarName(i + 1, pCPG->GetVarName(i + 1), repet);
+			pPG->SetVarUnit(i + 1, string(pCPG->GetVarUnit(i + 1)), repet);
+			pPG->SetVarId(i + 1, pCPG->GetVarId(i + 1), repet);
+			pPG->SetVarPos(i + 1, pCPG->GetVarPos(i + 1), repet);
 			if (pCPG->GetVarMin(i + 1) < fmin)
 				fmin = pCPG->GetVarMin(i + 1);
 			if (pCPG->GetVarMax(i + 1) > fmax)
@@ -141,19 +141,19 @@ CPG * NewAddMixPGFiles::AddFileToNewPGFile(bool Reshape) {
 				if (pCPG->GetVarMax(i + 1) > fmax)
 					fmax = pCPG->GetVarMax(i + 1);
 			}
-			auto alt=pCPG->GetVarAlt(i + 1, repet + 1);
+			auto alt=pCPG->GetVarAlt(i + 1, repet);
 			pPG->SetVarAlt(i + 1, alt, repet + 1);
-			auto longi = pCPG->GetVarLong(i + 1, repet + 1);
-			pPG->SetVarLong(i + 1, longi, repet + 1);
-			auto lati = pCPG->GetVarLat(i + 1, repet + 1);
+			auto longi = pCPG->GetVarLong(i + 1, repet);
+			pPG->SetVarLong(i + 1, longi, repet);
+			auto lati = pCPG->GetVarLat(i + 1, repet);
 			pPG->SetVarLat(i + 1, lati, repet + 1);
-			auto stati = pCPG->GetVarStation(i + 1, repet + 1);
+			auto stati = pCPG->GetVarStation(i + 1, repet);
 			pPG->SetVarStation(i + 1, stati, repet + 1);
-			auto counti = pCPG->GetVarCountry(i + 1, repet + 1);
+			auto counti = pCPG->GetVarCountry(i + 1, repet);
 			pPG->SetVarCountry(i + 1, counti, repet + 1);
 
-			pPG->SetVarMin(i + 1, fmin, repet + 1);
-			pPG->SetVarMax(i + 1, fmax, repet + 1);
+			pPG->SetVarMin(i + 1, fmin, repet);
+			pPG->SetVarMax(i + 1, fmax, repet);
 		}
 	}
 	//pPG->WritePGFileFrame();

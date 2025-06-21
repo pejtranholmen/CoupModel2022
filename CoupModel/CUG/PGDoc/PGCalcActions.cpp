@@ -130,7 +130,7 @@ void PGCalcActions::Make_PG_Calc(bool newvar, bool allrep, size_t SeqNo, size_t 
 }
 BOOL PGCalcActions::OnNewCalculateVar()
 {
-	CPG *pCPG = m_pPG;
+	CPG* pCPG = m_pPG;
 	MFC_Util m;
 	int expression, expression_type;
 	int var;
@@ -143,9 +143,11 @@ BOOL PGCalcActions::OnNewCalculateVar()
 	expression = pCPG->GetVarFunction();
 	var = pCPG->GetCalcVarNew();
 
+	pCPG->MakeFileToEnableWriting(true);
+
 	auto WriteResultofActualBuftoFile = [&](int irep, int nbuf) {
 		if (!pCPG->GetCompleteRead()) {
-			if (pCPG->GetNumRepititions()>1)
+			if (pCPG->GetNumRepititions() > 1)
 				status = pCPG->WriteNewBuffer(irep);
 			else
 				status = pCPG->WriteNewBuffer(nbuf);
@@ -156,9 +158,9 @@ BOOL PGCalcActions::OnNewCalculateVar()
 			}
 		}
 		return TRUE;
-	};
+		};
 	auto MakeVariableCalc = [&](int ii, int irep) {
-		if (pCPG->GetToBeCalc(ii + irep*pCPG->GetNumVariables()) && (!jump || m_CalcAllRepetitions)) {
+		if (pCPG->GetToBeCalc(ii + irep * pCPG->GetNumVariables()) && (!jump || m_CalcAllRepetitions)) {
 			var_in = ii + 1;
 			var_out = ii + 1;
 			pCPG->SetCalcVarNew(var_out);
@@ -168,8 +170,14 @@ BOOL PGCalcActions::OnNewCalculateVar()
 				pCPG->SetCalcVarNew(var_out);
 				jump = TRUE;
 			}
-			for (size_t nbuf = 0; nbuf <= pCPG->GetNumBuffers(); nbuf++) {
-				if (pCPG->GetNumRepititions() > 1&&nbuf>1) pCPG->SetActBuffer(nbuf);
+
+			size_t maxsteps = pCPG->GetNumBuffers();
+			if (pCPG->GetNumBuffers() == pCPG->GetNumRepititions()) {
+				maxsteps = 1;
+			}
+			for (size_t nbuf = 0; nbuf < maxsteps; nbuf++) {
+				if (pCPG->GetNumRepititions() <= 1) pCPG->SetActBuffer(nbuf);
+				else pCPG->SetActBuffer(irep);
 				if (expression_type == 1) {
 					if (expression == 1) pCPG->CalcVarScaling(var_in, var_out, irep);
 					else if (expression == 2)pCPG->CalcVarMissing(var_in, var_out);
@@ -195,13 +203,21 @@ BOOL PGCalcActions::OnNewCalculateVar()
 				}
 				else
 					jump = FALSE;
-				WriteResultofActualBuftoFile(irep, nbuf);
+				if (pCPG->GetNumRepititions() <= 1) WriteResultofActualBuftoFile(irep, nbuf);
 			}
 
 		}
-	};
+		};
 	auto MakeTimeCalc = [&](int irep) {
-		for (size_t nbuf = 0; nbuf <= pCPG->GetNumBuffers(); nbuf++) {
+
+		size_t maxsteps = pCPG->GetNumBuffers();
+		if (pCPG->GetNumBuffers() == pCPG->GetNumRepititions()) {
+			maxsteps = 1;
+
+
+		}
+
+		for (size_t nbuf = 0; nbuf < maxsteps; nbuf++) {
 			if (pCPG->GetNumRepititions() <= 1) pCPG->SetActBuffer(nbuf);
 			if (expression == 6) {
 				if (pCPG->CalcVarTimeDerivate())
@@ -214,39 +230,40 @@ BOOL PGCalcActions::OnNewCalculateVar()
 				if (pCPG->CalcTimeChange(irep));
 			WriteResultofActualBuftoFile(irep, nbuf);
 		}
-	};
+		};
 
 	m.SetPaneMessage("Calculation of with Transformations Started - Results will be saved in actual file");
 	auto actual_rep = pCPG->GetRepititionSequence();
-	pCPG->ReadFirst_Buffer();
-	for (int irep = 0; irep<pCPG->GetNumRepititions(); irep++) {
-		if (irep>0) {
-			if (!pCPG->ReadNewBuffer(irep)) {
-				m.SetPaneMessage("Read of Current Data from File Failed");
-				return FALSE;
-			}
+	if (!pCPG->ReadFirst_Buffer()) {
+		m.SetPaneMessage("Failed to read first buffer");
+
+	}
+
+	actual_rep = pCPG->GetRepititionSequence();
+	for (int irep = 0; irep < pCPG->GetNumRepititions(); irep++) {
+
+		if (!pCPG->ReadNewBuffer(irep)) {
+			m.SetPaneMessage("Read of Current Data from File Failed");
+			return FALSE;
 		}
-		for (int ii = 0; ii<pCPG->GetNumVariables(); ii++) {
+
+		for (int ii = 0; ii < pCPG->GetNumVariables(); ii++) {
 			expression_type = pCPG->GetVarFunctionType();
 			if (expression_type == 0 && ii == 0) MakeTimeCalc(irep);
 			else if (expression_type != 0)
 				MakeVariableCalc(ii, irep);
 		}
-		pCPG->WriteNewBuffer(irep);
-		if(irep+1==pCPG->GetNumRepititions()) pCPG->SetCompleteRead(true);
+		if (!pCPG->WriteNewBuffer(irep)) {
+			m.SetPaneMessage("Failed to write buffer");
+		};
+		//if (irep + 1 == pCPG->GetNumRepititions()) pCPG->SetCompleteRead(true);
 	}
-	if (pCPG->GetNumRepititions()>1) pCPG->SetRepititionSequence(actual_rep, true);
+	if (pCPG->GetNumRepititions() > 1) pCPG->SetRepititionSequence(actual_rep, true);
 
-	if (!pCPG->GetCompleteRead())
-		pCPG->CloseFile();
 
-	if (pCPG->WritePGFile()) {
 		m.SetPaneMessage("Calculation of with Transformations Completed - Results are saved in actual file");
-		m_Changed_Data = false;
-		m_Changed_Description = false;
-	}
-	else
-		m.SetPaneMessage("Failed to save file");
+
+
 
 	return TRUE;
 }

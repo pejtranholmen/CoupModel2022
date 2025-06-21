@@ -15,12 +15,12 @@ struct CLICK_BUTTON {
 	int Col_end;
 	int Row;
 	bool NormalState;
-	std::vector<std::string_view> VectorNames;
+	std::vector<std::string> VectorNames;
 	std::vector<bool> VectorState;
 	bool VerticalDirection;
-	std::string_view Text;
-	std::string_view HintText;
-	std::string_view TextOptional;
+	std::string Text;
+	std::string HintText;
+	std::string TextOptional;
 	CPG* pPG;
 };
 struct HINTLIST {

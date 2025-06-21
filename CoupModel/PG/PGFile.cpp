@@ -1140,8 +1140,10 @@ float CPGFile::GetVarValue(size_t varno, size_t var_rec, size_t repit_no)
 		size_t koll=pg.Var.v.size();
 
 
-		size_t ind=(var_rec-1+pg.status.a.LocalStartRecord)*pg.Shape.RecordIndexSize+varno;
+		size_t ind=(var_rec-1)*pg.Shape.RecordIndexSize+varno;
+		
 		size_t ind2 = (var_rec - 1 ) * pg.Shape.RecordIndexSize + varno+(repit_no)* pg.Shape.RecordIndexSize*pg.Shape.NumRecords;
+		if (pg.Var.v.size() <= ind2) ind2 = ind;
 		auto koll3=pg.Var.v[ind2];
 		if(ind2<koll)
 			return pg.Var.v[ind2];

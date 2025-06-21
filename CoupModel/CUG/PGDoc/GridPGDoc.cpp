@@ -2964,7 +2964,7 @@ void GridPGDoc::Make_OutputFileInformationLines(int startline, int linetomake)
 		for (size_t i = 0; i < m_PGFileImport.m_CurrentFileInfo.ValidVariables.size(); ++i)
 			if (m_PGFileImport.m_CurrentFileInfo.ValidVariables[i]) {
 				
-				vector<string_view> previous = m_UnitTypeNewVariables.VectorNames;
+				vector<string> previous = m_UnitTypeNewVariables.VectorNames;
 				vector<UNIT_TYPES> types=GetUnitOptions(m_PGFileImport.m_CurrentFileInfo.Des.addinfo[i].Element);
 
 				m_UnitTypeNewVariables.VectorNames =p_ModelInfo->GetSelectedStringBasedUnits(types);
@@ -4195,7 +4195,7 @@ bool GridPGDoc::OnGetFileDescriptionFillGrid(CPG *pCPG)
 
 				m_UnitTypeVariables.Row = ind;
 				UNIT_TYPES unit = pCPG->GetVarUnitType(i + 1, nrep);
-				vector<string_view> previous = m_UnitTypeVariables.VectorNames;
+				vector<string> previous = m_UnitTypeVariables.VectorNames;
 				vector<UNIT_TYPES> types = GetUnitOptions(elem);
 				if (types.size() > 0) m_UnitTypeVariables.VectorNames = p_ModelInfo->GetSelectedStringBasedUnits(types);
 				m_UnitTypeVariables.Text = p_ModelInfo->GetUnitString(unit);
@@ -5019,9 +5019,12 @@ void GridPGDoc::DefineComboList()
 	c.Col_start = 0;
 	c.Col_end = 0;
 	c.VectorNames.clear();
+	auto names= p_ModelInfo->GetSortedListofElements();
+	for (const auto& name : names) {
+		if (name != "Not Used") c.VectorNames.push_back(string(name));
+	}
 
-
-	c.VectorNames=p_ModelInfo->GetSortedListofElements();
+	//c.VectorNames=p_ModelInfo->GetSortedListofElements();
 	m_ElementTypeNewVariables = c;
 	SetClickButtonMap(c);
 
@@ -5038,7 +5041,7 @@ void GridPGDoc::DefineComboList()
 	c.VectorNames.clear();
 
 	for (size_t ii = 0; ii < p_ModelInfo->GetNumUnits(); ++ii)
-		c.VectorNames.push_back(p_ModelInfo->GetUnitString(UNIT_TYPES(ii)));
+		c.VectorNames.push_back(string(p_ModelInfo->GetUnitString(UNIT_TYPES(ii))));
 	m_UnitTypeNewVariables = c;
 	SetClickButtonMap(c);
 	

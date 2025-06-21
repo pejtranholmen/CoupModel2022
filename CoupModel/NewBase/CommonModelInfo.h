@@ -128,11 +128,13 @@ public:
 			return UNIT_TYPES::NO_UNIT;
 	};
 
-	std::vector<std::string_view> GetSelectedStringBasedUnits(std::vector<UNIT_TYPES> key) {
-		std::vector<std::string_view> out;
+	std::vector<std::string> GetSelectedStringBasedUnits(std::vector<UNIT_TYPES> key) {
+		std::vector<std::string> out;
 		for_each(key.begin(), key.end(), [&](UNIT_TYPES& key) {
 			auto it = m_TypeBasedUnits.find(key);
-			out.push_back((*it).second);
+			std::string str = "";
+			str = std::string(it->second);
+			out.push_back(str);
 			});
 		return out;
 	};

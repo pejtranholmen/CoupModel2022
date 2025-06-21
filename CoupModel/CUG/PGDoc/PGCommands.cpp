@@ -609,7 +609,7 @@ else {
 			size_t ivar = pPG->GetViewVariable(col - 1);
 			size_t irep=0;
 			if(pPG->GetNumRepititions()>1)	irep = pPG->GetViewRepetition(col - 1);
-			SeqNo = ivar + pPG->GetNumVariables()*irep;
+			SeqNo = ivar + pPG->GetNumVariables()*(irep-1);
 			if (item == 1703 || item == 1705) newvar = false;
 			if (item == 1704 || item == 1705) allrep = true;
 
@@ -1278,7 +1278,6 @@ bool PGCommands::SplitIntoNoRepetionsFiles(int col, int row){
 			pPG=(CPG*)m_pPGArchive->m_PGFileArray[index].pFile;
 		else
 			pPG=m_pGSource;
-		//NetCDFTransfer transfer;
 		m_spatialPG.SetSourceFile(pPG);
 		return m_spatialPG.SplitPGFile();
 }

@@ -22,7 +22,7 @@ public:
 	CPGView(void);
 	~CPGView(void);
 	size_t GetNumToView() {return m_DataView.size();};
-	size_t GetViewRepetition(size_t index) {if(index<m_DataView.size()) return m_DataView[index].Repit; else return 1;};
+	size_t GetViewRepetition(size_t index) {if(index<m_DataView.size()) return m_DataView[index].Repit; else return 0;};
 	size_t GetViewVariable(size_t index) {if(index<m_DataView.size()) return m_DataView[index].NumVar; else return 1;};
 	bool GetViewOrder() {return m_RepetitionsFirst;};
 	void SetViewOrder(bool value) {m_RepetitionsFirst=value; UpdateViewOrder();};
