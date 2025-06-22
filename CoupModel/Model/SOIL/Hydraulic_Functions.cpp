@@ -707,7 +707,7 @@ bool Hydraulic_Functions::ReCalc() {
 
 	f_AirEntry = AirEntry_fromTexture();
 	auto koll = f_AirEntry(.3, .12, 40.);
-	auto koll2 = FUtil::PedoFunc_AirEntry(.3, .12, 40);
+	auto koll2 = PedoFunc::AirEntry(.3, .12, 40);
 	SOILPROPEVAPORATION pevap;
 	pevap.ret_ulayer = c.ret[0];
 	pevap.cond_ulayer = c.cond[0];

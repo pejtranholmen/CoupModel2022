@@ -1241,13 +1241,13 @@ bool MakeSimSheets::Make_HistorySheet()
 					}
 					else if(hinfo==HIST_INFO::RUN_INFO ){
 						CRunInfo* pRuninfo;
-						pRuninfo = static_cast<CRunInfo*>(pCP);
+						pRuninfo = dynamic_cast<CRunInfo*>(pCP);
 						if (pRuninfo != nullptr) {
 							Group = ((CRunInfo*)pCP)->GetGroup();
-							Name = ((CRunInfo*)pCP)->GetName().c_str();
+							Name = ((CRunInfo*)pCP)->GetName();
 						}
 						if (Group == "General") {
-							Type == "Koll";
+							Type = "Koll";
 						}
 						strvalue=m_pSimDoc->History_GetString(index).c_str();
 						Type = "Run info";

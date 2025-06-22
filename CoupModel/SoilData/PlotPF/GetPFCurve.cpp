@@ -7,6 +7,7 @@
 #include "GausKreuger.h"
 #include "../../Util/StatUtil.h"
 #include <sys/stat.h>
+#include "../../ModelTypes/SimB.h"
 #ifndef COUPSTD
 #include "../../Util/MFC_Util.h"
 #endif
@@ -613,15 +614,15 @@ BC_ESTIMATE GetPFCurve::Estimate_BC_Texture(double sand, double clay, double por
 {
 	BC_ESTIMATE out;
 	out.R2=0;
-	out.Lambda=float(FUtil::PedoFunc_Lambda(sand,clay, poro));
-	out.AirEntry=float(FUtil::PedoFunc_AirEntry(sand,clay, poro));
-	out.Residual=float(FUtil::PedoFunc_Residual(sand,clay, poro));
+	out.Lambda=float(PedoFunc::Lambda(sand,clay, poro));
+	out.AirEntry=float(PedoFunc::AirEntry(sand,clay, poro));
+	out.Residual=float(PedoFunc::Residual(sand,clay, poro));
 	out.good=true;
 return out;
 }
 
 double GetPFCurve::Estimate_HydraulicCond_Texture(double sand, double clay, double poro) {
-	return FUtil::PedoFunc_HydraulicCond(sand,clay, poro);
+	return PedoFunc::HydraulicCond(sand,clay, poro);
 }
 size_t GetPFCurve::SetComments(string kalle)
 {	string comfilename, filbas;

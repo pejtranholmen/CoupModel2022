@@ -30,7 +30,7 @@ public:
 	size_t GetGroupIndex(std::string_view str);
 
 	std::string_view GetGroupCategoryName (size_t index) { if (index<size(m_GroupCategoryNames)) return m_GroupCategoryNames[index]; return "All Modules"; };
-	std::string_view GetGroupName(size_t index) {if(index<size(m_GroupNames)) return m_GroupNames[index];return "";};
+	std::string_view GetGroupName(size_t index) noexcept {if(index<size(m_GroupNames)) return m_GroupNames[index];return "";};
 	std::string_view GetFysProcName(fysprocess fys_proc) noexcept { auto index = static_cast<size_t>(fys_proc); if(index < m_FysProcessNames.size()) return m_FysProcessNames[index]; else return "";};
 	std::string_view GetBioProcName(bioprocess bioproc) noexcept { auto index = static_cast<size_t>(bioproc); if (index < m_BioProcessNames.size()) return m_BioProcessNames[index]; else return "";};
 	std::string_view ElementName(elements elem) noexcept;

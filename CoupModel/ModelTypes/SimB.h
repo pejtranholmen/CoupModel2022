@@ -3,7 +3,7 @@
 #ifndef _HAS_STD_BYTE
 #define _HAS_STD_BYTE 0
 #endif
-#include "SimBConst.h"
+
 
 #ifndef MISSING
 #define MISSING -1.1E38f
@@ -21,6 +21,70 @@
 #include <algorithm>
 #include <memory>
 #include <functional>
+#include <cmath>
+
+namespace Fix {
+	constexpr double DENSW = 1000.;
+	constexpr double DENSICE = 917.;
+	constexpr double LATMELT = 3.34E5;
+	constexpr double LATE = 2.45E6;
+	constexpr double LATESUB = 2.84E6;
+	constexpr double DENSA = 1.220;
+	constexpr double KARMAN = 0.41;
+	constexpr double SPECA = 1004.;
+	constexpr double SPECI = 2.1E3;
+	constexpr double SPECW = 4.2E3;
+	constexpr double GAMMA = 66.;
+	constexpr double STEFB = 5.67E-8;
+	constexpr double SOLAR_CONST = 1361.;
+	constexpr double SECPERDAY = 86400.;
+	constexpr double GRAVCONST = 9.80665;
+	constexpr double RGAS = 8.314;
+	constexpr double RGAS_L_ATM_K = 0.082057;
+	constexpr double DNOT = 2.29E-5;
+	constexpr double MOLW = 18.016;
+	constexpr double RGASC = 47.04;
+	constexpr double PI = 3.1415927;
+	constexpr double LOG_PI = 0.918939;
+	constexpr double RAD = 0.01745329;
+	constexpr double DensityofSolidSoil = 2.65;
+	constexpr double HeatCapSolidSoil = 2.E6;
+	constexpr double TempCompFrozenSoil = -6.;
+	constexpr double MolMassSalt = 35.4527;
+	constexpr double PatoCmWater = 0.1 / 9.80665;
+	constexpr double BiomassToCarbon = 0.45;
+	constexpr double DNOT_O2 = 2.6E-5;
+	constexpr double DNOT_CO2 = 1.92E-5;
+	constexpr double DNOT_CH4 = 2.6E-5;
+	constexpr double MOL_C = 12.011;
+	constexpr double MOL_CH4 = 16.011;
+	constexpr double MOL_NO = 30.061;
+	constexpr double MOL_CO2 = 44.0098;
+	constexpr double MOL_O2 = 31.998;
+	constexpr double MOL_AIR = 29.0;
+	constexpr double MOL_RATIO_O2_C = 2.664058;
+	constexpr double MOL_RATIO_O2_AIR = 1.10;
+	constexpr double MOL_RATIO_NO_AIR = MOL_NO / MOL_AIR;
+	constexpr double MOL_RATIO_CO2_AIR = MOL_CO2 / MOL_AIR;
+	constexpr double MOL_VOL_AIR = 44.6;
+	constexpr double ABS_ZERO = 273.15;
+	constexpr double NORM_ATMPRES = 1.013E5;
+	constexpr double PO2 = 20.5E3;
+	constexpr double MOL_RATIO_CH4_AIR = 0.552;
+	constexpr double TempToOsmoticP = -8.19E-5;
+	constexpr double ThermalCond_Air = 0.025;
+	constexpr double ThermalCond_Organic = 0.25;
+	constexpr double ThermalCond_Mineral = 2.5;
+	constexpr double ThermalCond_Quarts = 8;
+	constexpr double ThermalCond_Water = 0.57;
+	constexpr double ThermalCond_Ice = 2.21;
+	constexpr double GWP_C_CO2 = 3.6666 * 1. * 3.6525;
+	constexpr double GWP_C_CH4 = 1.3333 * 28. * 1. * 3.6525;
+	constexpr double GWP_N_N2O = 1.5714 * 265. * 1. * 3.6525;
+	constexpr double PERCENT_FRAC = 100.;
+	constexpr double PPM_FRAC = 1.E6;
+	constexpr double KILO = 1000.;
+}
 
 struct OUTPUT_SUMMARY_RESULTS
 {
@@ -201,32 +265,32 @@ struct definitions {enum class datatype data; enum class elements elem; enum cla
 class SimB
 	{
 	public:
-		SimB(void);
-		SimB(enum simtype,enum datatype, enum elements,enum fysprocess fproc, enum bioprocess bproc, enum userlevel);
-		SimB(enum simtype,enum datatype, enum elements, enum userlevel);
-		SimB(enum simtype,enum datatype, enum elements);
-		SimB(enum simtype, definitions);
-		SimB(enum simtype);
+	SimB(void) ;
+	[[nodiscard]] SimB(enum simtype,enum datatype, enum elements,enum fysprocess fproc, enum bioprocess bproc, enum userlevel) ;
+	[[nodiscard]] SimB(enum simtype,enum datatype, enum elements, enum userlevel) ;
+	[[nodiscard]] SimB(enum simtype,enum datatype, enum elements) ;
+	[[nodiscard]] SimB(enum simtype, definitions) ;
+	[[nodiscard]] SimB(enum simtype) ;
 		virtual ~SimB(void);
 		void SetEnable(bool value) noexcept {_enabled=value;};
 		void SetDBEnable(bool value) noexcept {_DBenabled=value;};
 		void SetChildChange(bool value) noexcept { m_ChildChange = value; };
-		bool IsChildChanged() noexcept { return m_ChildChange; };
+inline [[nodiscard]] bool IsChildChanged() noexcept { return m_ChildChange; };
 		void SetModuleNo(size_t value) noexcept {_ModuleNo=value;};
 		void SetName(std::string str) {_name=str;};
 		void SetConditions(std::string str)  {cond=str;};
 		void SetUnit(std::string_view str)  {_unit=str;};
 		//void SetDefValue(double value) { _orgFValue=value;};
 		virtual bool IsEnabled() noexcept {if(_enabled) return false; return true;};
-		bool IsDBEnabled() noexcept {return _DBenabled;};
+inline [[nodiscard]] bool IsDBEnabled() noexcept {return _DBenabled;};
 		bool Is_PTable() noexcept {if(_stype==simtype::PAR_TABLE) return true; return false;};
 		bool Is_DB() noexcept {if(_stype==simtype::DB) return true; return false;};
 		bool Is_P() noexcept {if(_stype==simtype::PAR_SINGLE) return true; return false;};
 		bool Is_Vector() noexcept {if(_stype<=simtype::DRIVE) return true; return false;};
-		simtype GetType() noexcept {return _stype;};
-		std::string GetTypeName() const;
-		int  GetUserLevel() const noexcept {return int(_def.ulev);};
-		size_t  GetGroupNo() const noexcept {return _ModuleNo;};
+inline [[nodiscard]] simtype GetType() noexcept {return _stype;};
+		[[nodiscard]] std::string GetTypeName() const;
+inline [[nodiscard]] int  GetUserLevel() const noexcept {return int(_def.ulev);};
+inline [[nodiscard]] size_t  GetGroupNo() const noexcept {return _ModuleNo;};
 		virtual bool IsOldValue() noexcept {return false;};
 		virtual int GetIntValue() noexcept {return -1;};
 		virtual std::string GetOption(size_t ) {return "";};
@@ -268,28 +332,28 @@ class SimB
 		virtual double GetOriginalValue()  noexcept {return MISSING;};
 		
 		virtual double GetOriginalValue(size_t index)  noexcept {if(index<_orgFVector.size()) return _orgFVector[index]; return MISSING;};
-		size_t GetOriginalSize()  noexcept {return _orgFVector.size();};
+inline [[nodiscard]] size_t GetOriginalSize()  noexcept {return _orgFVector.size();};
 		//int GetGroupCategory() {return ::GetGroupCategory(GetGroup());};
-		size_t GetFysProcess()  noexcept {return size_t(_def.fproc);};
-		size_t GetBioProcess()  noexcept {return size_t(_def.bproc);};
-		std::string_view GetFysProcessName() const;
-		std::string_view GetBioProcessName() const;
+inline [[nodiscard]] size_t GetFysProcess()  noexcept {return size_t(_def.fproc);};
+inline [[nodiscard]] size_t GetBioProcess()  noexcept {return size_t(_def.bproc);};
+inline [[nodiscard]] std::string_view GetFysProcessName() const;
+inline [[nodiscard]] std::string_view GetBioProcessName() const;
 
-		enum elements GetElement()   noexcept { return _def.elem; };
-		enum datatype GetDataType() noexcept {return _def.data;};
+inline [[nodiscard]] enum elements GetElement()   noexcept { return _def.elem; };
+inline [[nodiscard]] enum datatype GetDataType() noexcept {return _def.data;};
 
-		std::string GetDepName(size_t) const;
+inline [[nodiscard]] std::string GetDepName(size_t) const;
 		virtual std::string_view GetUnit() const {return _unit;};		
-		UNIT_TYPES GetUnitType() const  noexcept { return _def.unittype; };
-		std::string_view GetDepUnit(size_t) const;	   			// Get name of dependent variables 
-		std::string_view GetGroup();
-		std::string_view GetProcessName();
-		std::string_view GetElementName();
+inline [[nodiscard]] UNIT_TYPES GetUnitType() const  noexcept { return _def.unittype; };
+inline [[nodiscard]] std::string_view GetDepUnit(size_t) const;	   			// Get name of dependent variables
+[[nodiscard]] std::string_view GetGroup();
+[[nodiscard]] std::string_view GetProcessName() noexcept;
+[[nodiscard]] std::string_view GetElementName() noexcept;
 
-		enum simtype GetSim()   noexcept {return _stype;};
+inline [[nodiscard]] enum simtype GetSim()   noexcept {return _stype;};
 		void SetSimType(simtype value)  noexcept {_stype=value;};
-		bool	IsTrue(size_t) const;	
-		virtual void	Notice();
+inline [[nodiscard]] bool	IsTrue(size_t) const;
+		virtual void	Notice() noexcept;
 		virtual void	SetIsOriginalValue()  noexcept {m_IsNotOriginal=false;};
 		virtual void	SetNotOriginalValue()  noexcept {m_IsNotOriginal=true;};			// Sets the original value to the current value
 		virtual void SetOriginalValue(double )  noexcept {;};
@@ -298,29 +362,29 @@ class SimB
 		virtual bool	IsNotOriginalValue() const  noexcept {return m_IsNotOriginal;};
 		void SetBackOriginalValue()  noexcept {m_IsNotOriginal=false;};
 
-		std::string GetCondition(size_t) const;
-		void	AddToNoticeList(SimB*); 
-		void	BuildDependencies(NewMap*);
+[[nodiscard]] std::string GetCondition(size_t) const;
+void	AddToNoticeList(SimB*) noexcept;
+void	BuildDependencies(NewMap*) noexcept;
 
-		void AddHistoryIndex(size_t value) {m_HistoryIndex[0].push_back(value); };
-		void AddHistoryIndex(size_t index, size_t value) { if(index<100) m_HistoryIndex[index].push_back(value);};
-		size_t GetHistoryIndex(size_t index)  noexcept {	if(index<100) return m_HistoryIndex[0][index];	return 0; };
-		size_t GetHistoryIndex(size_t index1, size_t index2) noexcept {	if(index2<m_HistoryIndex[index1].size()) return m_HistoryIndex[index1][index2]; return 0; };
-		size_t GetNumOfHistoryIndex()  noexcept {	return m_HistoryIndex[0].size();};
-		size_t GetNumOfHistoryIndex(size_t index1)  noexcept { if(index1<100)	return m_HistoryIndex[index1].size(); return 0;};
+inline void AddHistoryIndex(size_t value) {m_HistoryIndex[0].push_back(value); };
+inline void AddHistoryIndex(size_t index, size_t value) { if(index<100) m_HistoryIndex[index].push_back(value);};
+inline [[nodiscard]] size_t GetHistoryIndex(size_t index)  noexcept {	if(index<100) return m_HistoryIndex[0][index];	return 0; };
+[[nodiscard]] size_t GetHistoryIndex(size_t index1, size_t index2) noexcept {	if(index2<m_HistoryIndex[index1].size()) return m_HistoryIndex[index1][index2]; return 0; };
+inline [[nodiscard]] size_t GetNumOfHistoryIndex()  noexcept {	return m_HistoryIndex[0].size();};
+inline [[nodiscard]] size_t GetNumOfHistoryIndex(size_t index1)  noexcept { if(index1<100)	return m_HistoryIndex[index1].size(); return 0;};
 		void SetReadOnly(bool value)  noexcept { m_ReadOnly = value; };
-		bool IsReadOnly()  noexcept { return m_ReadOnly; };
+inline [[nodiscard]] bool IsReadOnly()  noexcept { return m_ReadOnly; };
 
 
 		virtual bool SetAnnimateChart(int , int )  noexcept {return false;};
 		virtual bool SetAnnimateChart(size_t , int , int)  noexcept {return false;};
-		CommonModelInfo* getCommonModelPointer() noexcept { return m_pCommonModelInfo; };
+inline [[nodiscard]] CommonModelInfo* getCommonModelPointer() noexcept { return m_pCommonModelInfo; };
 		void setCommonModelPointer(CommonModelInfo* p) noexcept { m_pCommonModelInfo = p; };
-		std::vector<Condition> GetArrayConditions() { return conditions_Array; };
+inline [[nodiscard]] std::vector<Condition> GetArrayConditions() { return conditions_Array; };
 	protected:
 
-		SimB*	GetDepPtr(size_t) const;
-		void	SendNotice() const;	
+inline [[nodiscard]] SimB*	GetDepPtr(size_t) const;
+		void SendNotice() const;
 		NewMap* pfMap = nullptr;
 		std::string_view _unit;
 		size_t _DBIntValue = 0;
@@ -348,8 +412,8 @@ class SimB
 		std::vector<SimB*> noticelist_Array;
 		std::vector<size_t> m_HistoryIndex[100];
 
-		void Decode(std::string);		 	// Decodes condition std::string
-		SIMB_COMP OpDecode(std::string,bool*) const;		// Decodes operators
-		int	ValDecode(std::string) const;	  	// Decodes std::string to integer number
+inline void Decode(std::string) noexcept;		 	// Decodes condition std::string
+inline [[nodiscard]] SIMB_COMP OpDecode(std::string,bool*) const;		// Decodes operators
+inline [[nodiscard]] int	ValDecode(std::string) const;	  	// Decodes std::string to integer number
 	};
 

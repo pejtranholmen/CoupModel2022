@@ -1470,7 +1470,7 @@ BOOL RealTime::AddChartVar(int chartno, SimB *pBase, std::string Type, int index
 	response=false;
 
 //	if(pBase->IsKindOf(RUNTIME_CLASS(X))
-		Group=pBase->GetGroup();
+		Group=string(pBase->GetGroup());
 		Name=pBase->GetName();
 
 		int ityp;

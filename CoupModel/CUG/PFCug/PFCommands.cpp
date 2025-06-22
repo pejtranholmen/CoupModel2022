@@ -790,7 +790,7 @@ string PFCommands::EstimateHydraulicCondByTexture(size_t Layer, bool All) {
 	if(min_frac>0) {
 		double sand=(100.-texture[3]-texture[7])/min_frac;
 		double clay=texture[0]/min_frac;
-		double cond=FUtil::PedoFunc_HydraulicCond(sand, clay, pfcoef.Saturation/100);
+		double cond=PedoFunc::HydraulicCond(sand, clay, pfcoef.Saturation/100);
 		pfcoef.TotConductivity=cond;
 		pfcoef.MatConductivity=cond;
 	}

@@ -71,12 +71,12 @@ bool SimB::IsTrue(size_t i) const{
 		default	:								return true;
 	};
 }
-void SimB::Notice() {
+void SimB::Notice() noexcept {
 	_enabled = false;
 	for(size_t i=0;i<conditions_Array.size();i++)
 		if (!IsTrue(i)) _enabled=true;
 }
- void SimB::AddToNoticeList(SimB *point) 
+ void SimB::AddToNoticeList(SimB *point) noexcept
 {
 	noticelist_Array.push_back(point);		
 }
@@ -92,7 +92,7 @@ void SimB::SendNotice() const{
 		noticelist_Array[i]->Notice();
 	}
 }
-void SimB::Decode(string ConditionString) {
+void SimB::Decode(string ConditionString) noexcept {
 	bool		is_value;
 	int			i = 0, lenght;
 	//conditions.clear();
@@ -204,7 +204,7 @@ SIMB_COMP SimB::OpDecode(string OperandString,bool *BoolValue) const{
 //	if (OperandString == "OFF"){*BoolValue = false; return OFF;};
 return SIMB_COMP::NOVALUE;
 }
-void SimB::BuildDependencies(NewMap* fmap) {	 
+void SimB::BuildDependencies(NewMap* fmap) noexcept {	 
 	//The line below is for not having to pass mappointer as a parameter
 	//That is not fine but fully functional. This means that
 	//worldmap points to the wmap structure in CFortranmap
@@ -273,16 +273,16 @@ SimB* SimB::GetDepPtr(size_t i) const{
 		return noticelist_Array[i]; 
 	return nullptr;}
 
-string_view SimB::GetGroup()  {
+string_view SimB::GetGroup() {
 	return p_ModelInfo->GetGroupName(_ModuleNo);
 }
-string_view SimB::GetProcessName() {
+string_view SimB::GetProcessName() noexcept {
 	if(_def.bproc==bioprocess::NOBPROC&&_def.fproc==fysprocess::NOFPROC)  return GetElementName();
 	else if(_def.fproc== fysprocess::NOFPROC) return p_ModelInfo->GetBioProcName(_def.bproc);
 	else if(_def.bproc!= bioprocess::NOBPROC) return p_ModelInfo->GetBioProcName(_def.bproc);
 	else return GetFysProcessName();
 }
-string_view SimB::GetElementName()  {
+string_view SimB::GetElementName()  noexcept {
 	return p_ModelInfo->ElementName(_def.elem);
 }
 string_view SimB::GetFysProcessName() const {
