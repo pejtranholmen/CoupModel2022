@@ -273,16 +273,16 @@ SimB* SimB::GetDepPtr(size_t i) const{
 		return noticelist_Array[i]; 
 	return nullptr;}
 
-string_view SimB::GetGroup() {
+string_view SimB::GetGroup() const noexcept{
 	return p_ModelInfo->GetGroupName(_ModuleNo);
 }
-string_view SimB::GetProcessName() noexcept {
+string_view SimB::GetProcessName() const noexcept {
 	if(_def.bproc==bioprocess::NOBPROC&&_def.fproc==fysprocess::NOFPROC)  return GetElementName();
 	else if(_def.fproc== fysprocess::NOFPROC) return p_ModelInfo->GetBioProcName(_def.bproc);
 	else if(_def.bproc!= bioprocess::NOBPROC) return p_ModelInfo->GetBioProcName(_def.bproc);
 	else return GetFysProcessName();
 }
-string_view SimB::GetElementName()  noexcept {
+string_view SimB::GetElementName() const  noexcept {
 	return p_ModelInfo->ElementName(_def.elem);
 }
 string_view SimB::GetFysProcessName() const {

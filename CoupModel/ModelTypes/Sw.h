@@ -22,7 +22,7 @@ public:
 	bool IsOldValue() noexcept {return _IsOldValue;};
 	size_t SetStrValue(std::string str);
 	size_t SetDBStrValue(std::string str);
-	std::string GetName() {return SimB::GetName();};
+	std::string GetName() const {return SimB::GetName();};
 	void SetDBIntValue(size_t value) noexcept {_DBIntValue=value; };
 	size_t GetDBIntValue()  noexcept {return _DBIntValue;};
 	size_t GetOldIntValue()  noexcept {return old_value;};

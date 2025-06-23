@@ -258,6 +258,7 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
     <None Include="Model\Functions.csv" />
+    <None Include="Util\FUtil.tpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoupModel.h">

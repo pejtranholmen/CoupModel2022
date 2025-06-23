@@ -1,6 +1,12 @@
 #pragma once
 #include <cmath>
 #include <algorithm>
+#include <string>
+#include <vector>
+#include <functional>
+
+
+
 class Doc;
 struct SIMB;
 class Ps;
@@ -129,12 +135,16 @@ public:
 	static int GetPositionSumInitialFromOutSheet();
 
 	static std::vector<Doc*> GetReadyDoc(Doc* CurrentDoc);
-	static std::vector<SIMB> SortSimB_ByGroup(std::vector<SIMB> v_in);
-	static std::vector<SIMB> SortSimB_ByName(std::vector<SIMB> v_in);
-	static std::vector<SIMB> SortSimB_ByProcess(std::vector<SIMB> v_in);
-	static std::vector<SIMB> SortSimB_ByElement(std::vector<SIMB> v_in);
+
+
+	template<typename T, typename KeyFunc>
+	static std::vector<T> SortBy(const std::vector<T>& vec, KeyFunc keyFunc);
+	static std::vector<SIMB> SortSimB_ByGroup(const std::vector<SIMB>& v_in);
+	static std::vector<SIMB> SortSimB_ByName(const std::vector<SIMB>& v_in);
+	static std::vector<SIMB> SortSimB_ByProcess(const std::vector<SIMB>& v_in);
+	static std::vector<SIMB> SortSimB_ByElement(const std::vector<SIMB>& v_in);
 	static std::vector<SIMB> SortSimB_ByType(std::vector<SIMB> v_in);
-	static std::vector<Ps*> SortSimB_ByGroup(std::vector<Ps*> v_in);
+	static std::vector<Ps*> SortSimB_ByGroup(const std::vector<Ps*>& v_in);
 	static std::vector<Ps*> SortSimB_ByName(std::vector<Ps*> v_in);
 	static std::vector<Ps*> SortSimB_ByProcess(std::vector<Ps*> v_in);
 	static std::vector<Ps*> SortSimB_ByElement(std::vector<Ps*> v_in);
@@ -173,4 +183,5 @@ private:
 
 
 };
+#include "./FUtil.tpp"
 

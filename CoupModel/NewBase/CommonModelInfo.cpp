@@ -172,6 +172,7 @@ int CommonModelInfo::GetGroupCategoryNo(size_t group_no) noexcept {
 		auto cat_no = static_cast<size_t>(cat);
 		return cat_no;
 	}
+	return -1;	
 }
 
 std::string_view CommonModelInfo::GetVarType(size_t index) noexcept

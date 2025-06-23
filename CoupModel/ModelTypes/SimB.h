@@ -119,10 +119,6 @@ struct VALID_TEST_RESULTS
 	double value_prior;
 };
 
-
-
-
-
 enum class DATA_TYPES {
 	ANYDATA, SIM_X, SIM_T, SIM_G, SIM_D, SIM_VAL,
 	SIM_PERFORMANCE, SIM_PAR, SIM_OUTSUM, SIM_SUMVAR, PGDATA, MEASURED_VAL, SIM_OUTSUM_X, SIM_OUTSUM_Y, SIM_ACCEPTED_PERFORMANCE
@@ -294,7 +290,7 @@ inline [[nodiscard]] size_t  GetGroupNo() const noexcept {return _ModuleNo;};
 		virtual bool IsOldValue() noexcept {return false;};
 		virtual int GetIntValue() noexcept {return -1;};
 		virtual std::string GetOption(size_t ) {return "";};
-		virtual std::string GetName() {return _name;};
+		virtual std::string GetName() const {return _name;};
 		virtual void SetDBIntValue(size_t value) noexcept {_DBIntValue=value;};
 		virtual size_t GetDBIntValue() noexcept {return _DBIntValue;};
 		virtual int MR_Get_Dim() noexcept {return -1;};
@@ -346,9 +342,9 @@ inline [[nodiscard]] std::string GetDepName(size_t) const;
 		virtual std::string_view GetUnit() const {return _unit;};		
 inline [[nodiscard]] UNIT_TYPES GetUnitType() const  noexcept { return _def.unittype; };
 inline [[nodiscard]] std::string_view GetDepUnit(size_t) const;	   			// Get name of dependent variables
-[[nodiscard]] std::string_view GetGroup();
-[[nodiscard]] std::string_view GetProcessName() noexcept;
-[[nodiscard]] std::string_view GetElementName() noexcept;
+[[nodiscard]] std::string_view GetGroup() const noexcept;
+[[nodiscard]] std::string_view GetProcessName() const noexcept;
+[[nodiscard]] std::string_view GetElementName() const noexcept;
 
 inline [[nodiscard]] enum simtype GetSim()   noexcept {return _stype;};
 		void SetSimType(simtype value)  noexcept {_stype=value;};

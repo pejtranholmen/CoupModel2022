@@ -680,8 +680,7 @@ bool FUtil::IsFileExisting(string str)
 	 return index;
 }
 string FUtil::GetOptionString(string optionlist, int Index)
-{
-	int ipos=optionlist.find("\n");
+{	int ipos=optionlist.find("\n");
 	int count=0;
 	string str="";
 	while(ipos>0) {
@@ -693,272 +692,98 @@ string FUtil::GetOptionString(string optionlist, int Index)
 		count++;
 	}
 	return str;
-
 }
-#ifndef NOSIMMODEL
-vector<SIMB> FUtil::SortSimB_ByGroup(vector<SIMB> v_in) {
-	
-
-	vector<SIMB> v_out;
-	multimap<string, SIMB> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, SIMB>(v_in[i].pBase->GetGroup(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-
-	return v_out;
-
+vector<SIMB> FUtil::SortSimB_ByProcess(const vector<SIMB>& v_in) {
+	return SortBy<SIMB>(v_in, [](const SIMB& s) {
+		return s.pBase ? s.pBase->GetProcessName() : "";
+	});
+}
+vector<SIMB> FUtil::SortSimB_ByGroup(const std::vector<SIMB>& v_in) {
+	return SortBy<SIMB>(v_in, [](const SIMB& s) {
+		return  s.pBase ? s.pBase->GetGroup() : "";
+	});
+}
+vector<SIMB> FUtil::SortSimB_ByName(const vector<SIMB>& v_in) {
+	return SortBy<SIMB>(v_in, [](const SIMB& s) {
+		return s.pBase ? s.pBase->GetName() : "";
+	});
+}
+vector<SIMB> FUtil::SortSimB_ByElement(const vector<SIMB>& v_in) {
+	return SortBy<SIMB>(v_in, [](const SIMB& s) {
+		return s.pBase ? s.pBase->GetElementName() : "";
+	});
 }
 
-vector<SIMB> FUtil::SortSimB_ByName(vector<SIMB> v_in) {
-	vector<SIMB> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, SIMB> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		string str = v_in[i].pBase->GetName();
-		SortMap.insert(pair<string, SIMB>(str, v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
-}
-vector<SIMB> FUtil::SortSimB_ByProcess(vector<SIMB> v_in) {
-	vector<SIMB> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, SIMB> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		string str = string(v_in[i].pBase->GetProcessName());
-		SortMap.insert(pair<string, SIMB>(str, v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
-}
-vector<SIMB> FUtil::SortSimB_ByElement(vector<SIMB> v_in) {
-	vector<SIMB> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, SIMB> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		string str = string(v_in[i].pBase->GetElementName());
-		SortMap.insert(pair<string, SIMB>(str, v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
-}
 vector<SIMB> FUtil::SortSimB_ByType(vector<SIMB> v_in) {
-	vector<SIMB> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, SIMB> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		string str = v_in[i].pBase->GetTypeName();
-		SortMap.insert(pair<string, SIMB>(str, v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<SIMB>(v_in, [](const SIMB& s) {
+		return s.pBase ? s.pBase->GetElementName() : "";
+	});
 }
 
-vector<Ps*> FUtil::SortSimB_ByGroup(vector<Ps*> v_in) {
-	vector<Ps*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Ps*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Ps*>(v_in[i]->GetGroup(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+vector<Ps*> FUtil::SortSimB_ByGroup(const std::vector<Ps*>& v_in) {
+	return SortBy<Ps*>(v_in, [](const Ps* s) {
+		return  s->GetGroup() ;
+	});
 }
 vector<Ps*> FUtil::SortSimB_ByName(vector<Ps*> v_in) {
-	vector<Ps*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Ps*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Ps*>(v_in[i]->GetName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Ps*>(v_in, [](const Ps* s) {
+		return  s->GetName();
+	});
 }
 vector<Ps*> FUtil::SortSimB_ByProcess(vector<Ps*> v_in) {
-	vector<Ps*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Ps*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Ps*>(v_in[i]->GetProcessName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
+	return SortBy<Ps*>(v_in, [](const Ps* s) {
+		return  s->GetProcessName();
+	});
 
 }
 vector<Ps*> FUtil::SortSimB_ByElement(vector<Ps*> v_in) {
-	vector<Ps*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Ps*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Ps*>(v_in[i]->GetElementName(), v_in[i]));
-	}
+	return SortBy<Ps*>(v_in, [](const Ps* s) {
+		return  s->GetElementName();
+	});
 
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
 
 }
 
 vector<Sw*> FUtil::SortSimB_ByGroup(vector<Sw*> v_in) {
-	vector<Sw*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Sw*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Sw*>(v_in[i]->GetGroup(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Sw*>(v_in, [](const Sw* s) {
+		return  s->GetGroup();
+	});
 }
 vector<Sw*> FUtil::SortSimB_ByName(vector<Sw*> v_in) {
-	vector<Sw*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Sw*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Sw*>(v_in[i]->GetName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Sw*>(v_in, [](const Sw* s) {
+		return  s->GetName();
+	});
 }
 vector<Sw*> FUtil::SortSimB_ByProcess(vector<Sw*> v_in) {
-	vector<Sw*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Sw*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Sw*>(v_in[i]->GetProcessName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Sw*>(v_in, [](const Sw* s) {
+		return  s->GetProcessName();
+	});
 }
 vector<Sw*> FUtil::SortSimB_ByElement(vector<Sw*> v_in) {
-	vector<Sw*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Sw*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Sw*>(v_in[i]->GetElementName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Sw*>(v_in, [](const Sw* s) {
+		return  s->GetElementName();
+	});
 }
 
 vector<Tab*> FUtil::SortSimB_ByGroup(vector<Tab*> v_in) {
-	vector<Tab*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Tab*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Tab*>(v_in[i]->GetGroup(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Tab*>(v_in, [](const Tab* s) {
+		return  s->GetGroup();
+	});
 }
 vector<Tab*> FUtil::SortSimB_ByName(vector<Tab*> v_in) {
-	vector<Tab*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Tab*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Tab*>(v_in[i]->GetName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Tab*>(v_in, [](const Tab* s) {
+		return  s->GetName();
+	});
 }
 vector<Tab*> FUtil::SortSimB_ByProcess(vector<Tab*> v_in) {
-	vector<Tab*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Tab*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Tab*>(v_in[i]->GetProcessName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Tab*>(v_in, [](const Tab* s) {
+		return  s->GetProcessName();
+	});
 }
 vector<Tab*> FUtil::SortSimB_ByElement(vector<Tab*> v_in) {
-	vector<Tab*> v_out;
-#ifndef NOSIMMODEL
-	multimap<string, Tab*> SortMap;
-	for (size_t i = 0; i < v_in.size(); i++) {
-		SortMap.insert(pair<string, Tab*>(v_in[i]->GetElementName(), v_in[i]));
-	}
-
-	for (auto it = SortMap.begin(); it != SortMap.end(); ++it) {
-		v_out.push_back((*it).second);
-	}
-#endif
-	return v_out;
-
+	return SortBy<Tab*>(v_in, [](const Tab* s) {
+		return  s->GetElementName();
+	});
 }
 
 
@@ -1055,5 +880,5 @@ bool FUtil::SetOutPutFlag_FromLineInput(string line, Doc* pSimDoc) {
 
 }
 
-#endif
+
 
