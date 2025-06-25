@@ -1,6 +1,8 @@
+#ifndef COUPSTD
 #include "../../StdAfx.h"
-#include "../../Std.h"
-#include "../../Util.h"
+#endif
+#include "../Std.h"
+#include "../Util.h"
 #include "NewReShaped.h"
 
 NewReShaped::NewReShaped()

@@ -908,7 +908,7 @@ bool CResiduals::SmartUpdateTimeSerieEnsembleStatistic(bool AcceptedOnly, void *
 	auto pSw2 = m_pNewMap->GetSw("PreDefinedEnsembles");
 	size_t n_cycle_withinPGFile=1;
 	size_t max_RecL_ObsFile = std::string::npos;
-	CPG* pPG_ObsFile;
+	CPG* pPG_ObsFile=nullptr;
 
 	if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0) {
 		//if (m_ValidationFileIndex != std::string::npos) {
@@ -921,6 +921,8 @@ bool CResiduals::SmartUpdateTimeSerieEnsembleStatistic(bool AcceptedOnly, void *
 
 		//}
 	}
+	else
+		return false;
 
 	auto Act_RecL = m_RecL;
 	if(Act_RecL>max_RecL_ObsFile) Act_RecL=max_RecL_ObsFile;

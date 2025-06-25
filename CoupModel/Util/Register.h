@@ -1,10 +1,12 @@
 #pragma once
 #include "../std.h"
+using namespace std;
+
 class Register{
 public:
 	Register();
 	~Register();
-	string GetString(string item) {
+	std::string GetString(std::string item) {
 		if (m_MapString.empty()) return "";
 		auto it = m_MapString.find(item);
 		if (it != m_MapString.end())

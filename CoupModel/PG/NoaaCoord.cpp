@@ -1,5 +1,5 @@
 #include "NoaaCoord.h"
-#include "../Document/codecogs/maths/approximation/regression/linear.h"
+#include "../codecogs/maths/approximation/regression/linear.h"
 #ifndef STD
 #include "../stdafx.h"
 #include "../NewBase/FileScanner.h"

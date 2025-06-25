@@ -406,7 +406,7 @@ void CalcCug::OnSetup()
 				for(size_t ii=0;ii<m_pPG->GetNumVariables();ii++) {
 
 					if(m_pPG->GetToBeCalc(line)&&!jump) {
-						if(m_pPG->GetNumRepititions()>1) {
+						if(m_pPG->GetNumRepititions()>=1) {
 							s1=MFC_Util::ItoAscii(ii+1)+"-" + MFC_Util::ItoAscii(irep + 1);
 						}
 						else {
@@ -417,14 +417,14 @@ void CalcCug::OnSetup()
 							str=_T("(")+MFC_Util::ItoAscii(num)+") :"+s1;
 							first=false;
 							if(replace)
-								str_out=_T("(")+MFC_Util::ItoAscii(num)+") :"+MFC_Util::ItoAscii(line+2);
+								str_out=_T("(")+MFC_Util::ItoAscii(num)+") :"+MFC_Util::ItoAscii(line+1);
 							else
 								str_out=str;
 						}
 						else {
 							str+=_T(",")+s1;
-							if(replace)
-								str_out+=_T(",")+MFC_Util::ItoAscii(line+2);
+							if(!replace)
+								str_out+=_T(",")+MFC_Util::ItoAscii(line+1);
 							else
 								str_out=str;
 						}
@@ -825,14 +825,14 @@ void CalcCug::OnSetup()
 		SetNumberRows (m_row*repit);
 		long line=0;
 		for( int irep=0; irep<repit;irep++) {
-			if(repit>1) {
+			if(repit>=1) {
 				QuickSetNumber(-2,line, irep+1);
 				JoinCells(-2, line,-2, line+m_row-1);
 			}
 			for(int i=0; i<m_row;i++) {
 				QuickSetNumber(-1,line, i+1);
-				QuickSetText(0,line,m_pPG->GetVarName(i+1, irep+1));
-				QuickSetText(1,line,m_pPG->GetVarId(i+1, irep+1));
+				QuickSetText(0,line,m_pPG->GetVarName(i+1, irep));
+				QuickSetText(1,line,m_pPG->GetVarId(i+1, irep));
 				if(m_pPG->GetToBeCalc(line)&&m_expression_type==1){
 					QuickSetBackColor(0,line,m_ColorSelected);
 					QuickSetBackColor(1,line,m_ColorSelected);

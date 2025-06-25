@@ -7274,9 +7274,11 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 			vector<string> strlink = { "Link to P", "Link to X", "Link to T", "Link to G", "Link to D" };
 			vector<SimB*> ptrvector;
 			auto iv = ElementNameArray.size();
+			std::ofstream file("NE.txt");
 			for (size_t i = 0; i < iv; i++) {
 				auto name = ElementNameArray[i];
 				pNE = GetNEPointer(name);
+				file << name << ",";
 				auto nelement = pNE->GetNEValue();
 				auto defvalue = pNE->GetOriginalNEValue();
 				ws.cell(2, 2 + lineno).value("Elements");
@@ -7339,6 +7341,7 @@ string NewMap::Sim2XLSX(bool reading, bool AllItems) {
 					ws.cell(1, 1+lineno - iline).fill(newcol);
 				};
 			};
+			file.close();
 
 		}
 	};

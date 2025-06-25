@@ -171,7 +171,7 @@ BOOL PGCalcActions::OnNewCalculateVar()
 				jump = TRUE;
 			}
 
-			size_t maxsteps = pCPG->GetNumBuffers();
+			size_t maxsteps = max(1,pCPG->GetNumBuffers());
 			if (pCPG->GetNumBuffers() == pCPG->GetNumRepititions()) {
 				maxsteps = 1;
 			}
@@ -210,7 +210,7 @@ BOOL PGCalcActions::OnNewCalculateVar()
 		};
 	auto MakeTimeCalc = [&](int irep) {
 
-		size_t maxsteps = pCPG->GetNumBuffers();
+		size_t maxsteps = max(1,pCPG->GetNumBuffers());
 		if (pCPG->GetNumBuffers() == pCPG->GetNumRepititions()) {
 			maxsteps = 1;
 

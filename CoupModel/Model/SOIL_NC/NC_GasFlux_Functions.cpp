@@ -302,7 +302,7 @@ plotpar.Y_ScalingCoef = 6;
     pPs = new Ps(&BubbleFrac, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
         Define(pPs, "CH4 Frac in Bubble", 0.57, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane Ebullition=2", 1.E-02, 1.);
 	pPs = new Ps(&RatioPressThreshold, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-		Define(pPs, "CH4 Frac in Bubble", 0.15, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0||Methane Ebullition=2", 1.E-02, .2);
+		Define(pPs, "CH4 Threshold in Bubble", 0.15, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0||Methane Ebullition=2", 1.E-02, .2);
 
 
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_REGULATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
