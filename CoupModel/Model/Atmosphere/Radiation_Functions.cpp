@@ -1,7 +1,7 @@
 #include "Radiation_Functions.h"
 #include "../SOIL/SoilModel.h"
 #include "../PLANT/PlantModel.h"
-//#include "../PhysConst.h"
+//
 #include "../../Simulator/Simulator.h"
 #include "../Structure/Structure.h"
 #include "./Functors/Radiation_Functors.h"

@@ -521,7 +521,6 @@
     <ClInclude Include="Model\HBV\HBV.h" />
     <ClInclude Include="Model\HBV\HBVModel.h" />
     <ClInclude Include="Model\ModelConst.h" />
-    <ClInclude Include="Model\PhysConst.h" />
     <ClInclude Include="Model\PLANT\Interception.h" />
     <ClInclude Include="Model\PLANT\Plant.h" />
     <ClInclude Include="Model\PLANT\PlantModel.h" />
@@ -879,7 +878,6 @@
     <ClCompile Include="Model\HBV\HBV.cpp" />
     <ClCompile Include="Model\HBV\HBVModel.cpp" />
     <ClCompile Include="Model\ModelConst.cpp" />
-    <ClCompile Include="Model\PhysConst.cpp" />
     <ClCompile Include="Model\PLANT\Interception.cpp" />
     <ClCompile Include="Model\PLANT\Plant.cpp" />
     <ClCompile Include="Model\PLANT\PlantModel.cpp" />

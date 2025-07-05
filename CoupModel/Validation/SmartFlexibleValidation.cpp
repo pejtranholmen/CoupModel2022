@@ -662,15 +662,15 @@ BAYES option;
 
 
 	if (option==GAUSSIAN) {
-		out = -0.5*pow((sim - sumv.ObsValue) / E_Meas, 2) - Constants::C().LOG_PI - log(E_Meas);
+		out = -0.5*pow((sim - sumv.ObsValue) / E_Meas, 2) - Fix::LOG_PI - log(E_Meas);
 
 	}
 	else {	
 		double ri = (sim - sumv.ObsValue) / E_Meas;
 		if (abs(ri)<1.E-10)
-			out = -Constants::C().LOG_PI - log(2 * E_Meas);
+			out = -Fix::LOG_PI - log(2 * E_Meas);
 		else
-			out = log(1 - exp(-0.5*pow(ri, 2))) - log(pow(ri, 2)) - Constants::C().LOG_PI - log(E_Meas);
+			out = log(1 - exp(-0.5*pow(ri, 2))) - log(pow(ri, 2)) - Fix::LOG_PI - log(E_Meas);
 
 	}
 

@@ -3,7 +3,7 @@
 #include "../PLANT/PlantModel.h"
 #include "../PLANT_NC/PlantOrgModel.h"
 #include "../PLANT_NC/NC_Plant.h"
-#include "../PhysConst.h"
+
 SoilEvaporation_Functions::SoilEvaporation_Functions(void)
 {
 	ModuleNo = 13;

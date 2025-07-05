@@ -1,5 +1,5 @@
 #include "Radiation.h"
-#include "../PhysConst.h"
+
 #include "../../Simulator/Simulator.h"
 #include "./Functors/Radiation_Functors.h"
 						   

@@ -1430,6 +1430,7 @@ bool MR::PreDefined_Criteria_Process(bool OnlyNewConstrain) {
 	auto pDim1Index = GetP("MR Dim1 Index");
 
 	if (pSw != nullptr) {
+		if (pSw->GetIntValue() == 0) return true;
 		//reset();
 		auto numens = 1;
 		

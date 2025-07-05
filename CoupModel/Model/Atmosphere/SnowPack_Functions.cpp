@@ -1,7 +1,6 @@
 #include "SnowPack_Functions.h"
 #include "../SOIL/SoilModel.h"
 #include "../PLANT/PlantModel.h"
-#include "../PhysConst.h"
 #include "../../Simulator/Simulator.h"
 SnowPack_Functions::SnowPack_Functions(void)
 {
