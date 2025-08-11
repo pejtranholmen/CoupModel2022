@@ -154,7 +154,8 @@ bool TimeSeriePlot::MakeTimeSeriePlot()
 	m_pProp->Reset_Selected_Or_All_BasicVector(m_ChartInfo.NumVariables, m_pProp->GetNumOfChartsOnSceen(), false);
 
 	if (LoadTimeSerieData()) {
-
+		MFC_Util m;
+		m.SetPaneMessage("Data loaded to Prepare the Chart for Plotting");
 		if (OnInit(&m_pView->m_ChartViewer)) {
 			//m_ChartViewer=&m_pView->m_ChartViewer;
 			if (!m_pUtil->m_Displayed)
@@ -190,6 +191,7 @@ void TimeSeriePlot::DrawTimeSeriePlot(CChartViewer *viewer)
 
 	
 	UpdateDataDist();
+	m.SetPaneMessage("Data Dist made the Chart for Plotting");
 	CreateViewPortData(TotNumPrior);
 	AggregateData();
 	MultiChart *mc;
@@ -205,7 +207,7 @@ void TimeSeriePlot::DrawTimeSeriePlot(CChartViewer *viewer)
 		m_pColorAxis.resize(0);
 	}
 	bool DifferentScales=MakeAllMultiCharts(mc, TotNumPrior);
-
+	m.SetPaneMessage("Different Scales");
 	if (m_pProp->m_ReShape.m_CommonScale&&DifferentScales||m_pProp->m_SyncAxis) {
 		SetCommonScaleTo_Y_or_Z_Axis();
 		DifferentScales = MakeAllMultiCharts(mc, TotNumPrior);

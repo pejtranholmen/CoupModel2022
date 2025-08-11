@@ -25,6 +25,9 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 {
 
 	if (m_pSimDoc == nullptr) return false;
+
+	
+
 	time_t t = time(0);
 	struct tm ymd;
 	localtime_s(&ymd, &t);
@@ -64,8 +67,20 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 
 	// Allocate first index of double array
 	size_t ncurves = m_pSimDoc->m_PlotStorage.GetNumVar(m_pProp->m_ChartNumber);
+
 	int j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, 0);
- 	p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
+	p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
+
+
+
+	
+
+
+
+	if (ncurves == 0) {
+		ncurves = 1;
+	}
+
 	// make sure the ChartType corresponds to the correct data Type
 	auto previous_ChartType = m_pProp->m_ChartType;
 	if (!ForcedNewChartType) {
@@ -79,7 +94,8 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 		}
 	}
 
-
+	MFC_Util m;
+	m.SetPaneMessage("Loading data to Chart 1" +  FUtil::STD_ItoAscii(ncurves));
 
 	size_t n_factor = 2;
 	n_factor = m_pSimDoc->m_MStorage.m_AcceptedRuns.size() + 1;
@@ -87,6 +103,13 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 	if (m_pUtil->m_MultiRunPlot && !m_pProp->IsSecondIndepSet()/* && !m_pProp->IsFirstIndepSet()*/) AllocateNumberOfCurves(ncurves*n_factor);
 	else AllocateNumberOfCurves(ncurves);
 
+
+	m.SetPaneMessage("Loading data to Chart 2" + FUtil::STD_ItoAscii(ncurves));
+
+	m.SetPaneMessage("Loading data to Chart 3 " + FUtil::STD_ItoAscii(j)+"-"+ FUtil::STD_ItoAscii(m_pProp->m_ChartNumber));
+
+
+	
 	if (m_pSimDoc->m_PlotStorage.IsValidIndepPGVar() && (p_info.DataType == DATA_TYPES::SIM_VAL||
 		
 		p_info.DataType == DATA_TYPES::MEASURED_VAL)) {
@@ -110,7 +133,6 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 	AllocateNumberOfBands(nbands + 1);
 	size_t i_band = 0;
 	for (size_t icurve = 0; icurve<ncurves; icurve++) {
-		MFC_Util m;
 		m.SetPaneMessage("Loading data to Chart " + FUtil::STD_ItoAscii(icurve + 1) + "(" + FUtil::STD_ItoAscii(ncurves)+")");
 		size_t j = m_pSimDoc->m_PlotStorage.GetArrayIndex(m_pProp->m_ChartNumber, icurve);
 		p_info = m_pSimDoc->m_PlotStorage.GetPlotInfo(j);
@@ -294,6 +316,7 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 		m_pProp->ResetDistScale();
 	m_pUtil->m_Displayed = false;
 	m_EstimateNewDist = true;
+
 
 	return true;
 }

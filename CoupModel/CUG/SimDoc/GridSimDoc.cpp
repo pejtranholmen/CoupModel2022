@@ -52,6 +52,7 @@ GridSimDoc::GridSimDoc(void)
 	if (MFC_Util::GetProfileIntNo("Show_Climate", 0) != 0) m_Show_Climate = true;
 	m_Show_All_Elements = false;
 	if (MFC_Util::GetProfileIntNo("Show_All_Elements", 1) != 0) m_Show_All_Elements = true;
+	m_newChart = false;
 
 }
 

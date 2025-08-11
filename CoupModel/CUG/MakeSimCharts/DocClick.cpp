@@ -921,8 +921,6 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 
 	int ValFileNo=1;
 
-
-
 	pSw=nullptr;
 
 	if(row<0) return -1;
@@ -941,7 +939,7 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 
 							int iv=m_pSimDoc->m_SelectValTime.size();
 						}
-						 
+				 
 						if(cell.GetBool()||m_pSimDoc->m_SelectValTime.size()<=1) {
 							if(m_pSimDoc->m_SelectValTime.size()==0)
 									m_CurrentSubChart=1;
@@ -967,12 +965,11 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 								}
 							}
 						}
-						VariableType=5;
+
+							VariableType=5;
 						if(m_pSimDoc->m_SelectValTime.size()>0)
 							TimeSerieChartClick(col, row, isheet, pSw, 0, VariableType, "", ValFileNo);	
 						UpdatePlotStatusBar(1);
-
-
 
 				}
 				else if(col==3) { // Simulated only

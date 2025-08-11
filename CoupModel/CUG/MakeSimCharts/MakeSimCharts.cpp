@@ -803,7 +803,7 @@ void MakeSimCharts::UpdateCurrentChart(bool multi)
 			}
 			else
 				m_VarNo=0;
-			if(!m_newChart)
+			if(!m_newChart|| m_CurrentChart==0)
 				m_CurrentChart++;
 
 
@@ -873,10 +873,15 @@ bool MakeSimCharts::CreateZoomPlotWindow(bool multi, std::string FileName)
 					pChart->RealTimeMode(false);
 					pChart->ParameterPlotMode(false);
 					pChart->Init(m_pSimDoc);
-					if(pChart->m_TimeSeriePlot.MakeTimeSeriePlot()) 
+					m_pFrame->UpdatePaneText(0, "Start prepare making time serie plot");
+					if (pChart->m_TimeSeriePlot.MakeTimeSeriePlot()) {
 						pChart->OnSetup();
-					else
+					}
+					else {
+
 						return false;
+					}
+					m_pFrame->UpdatePaneText(0, "Preparation made for making time serie plot");
 					return true;
 
 			}
@@ -932,6 +937,9 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 		Doc *pSimDoc=nullptr;
 		int	Isubchart;
 
+
+
+
 		int prov=m_VarNo;
 		if(m_pSimDoc->m_SelectedDocuments.size()==0) {
 			m_pSimDoc->m_SelectedDocuments.push_back(m_pSimDoc);
@@ -952,7 +960,10 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 			
 			UpdateCurrentChart(false);
 			if(isheet==6) {
-
+				auto koll_file = m_pSimDoc->GetCurrentWorkDirectory();
+			//	koll_file += "Dump_PlotInfo.txt";
+			//	std::ofstream out_dump(koll_file, std::ios::app); //
+				//out_dump << " Document Time Serie Var Click" << std::endl;
 				//if(m_pSimDoc->m_SelectValTime.size()>0) {				
 					m_pSimDoc->m_PrevSheet=6;
 					for(int j=0;j<m_NumOpenDoc;j++) {
@@ -963,6 +974,8 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 
 						int keeptype=0;
 						//pDoc->m_Doc.m_ValidationData.Init(pDoc);
+
+						//out_dump << " m_SelectValTime Size pos 3 -" << m_pSimDoc->m_SelectValTime.size() << std::endl;
 
 						for(int ii=0;ii<m_pSimDoc->m_SelectValTime.size();ii++) {
 
@@ -989,7 +1002,15 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 							m_pProp->SetSecondIndepVarType(vartype::NO_USE);
 							m_pProp->m_multi_ResidualSequence = 0;
 
-							if (m_pUtil->GetEnsembleViewOption() == 0) {
+							/*out_dump << " EnsembleViewOption - " << m_pUtil->GetEnsembleViewOption() << std::endl;
+							out_dump << " Actual Ensemble - " << m_pSimDoc->m_MStorage.m_ActualEnsemble << std::endl;
+
+							auto vEnsemblesToPlot = m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
+							out_dump << " Num of Ensembles to plot - " << vEnsemblesToPlot.size() << std::endl;*/
+
+
+
+							if (m_pUtil->GetEnsembleViewOption() == 0||col==1) {
 	 							EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
 							}
 							else {
@@ -1003,8 +1024,20 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 								m_pUtil->m_MultiRunPlot=true;
 							}
 
+							/*out_dump << " m_Ensembles to plot Size pos 1 - " << EnsemblesToPlot.size() << std::endl;
+							if(EnsemblesToPlot.size()==0) EnsemblesToPlot.push_back(0);
+
+							out_dump << " m_Ensembles to plot Size pos 2 - " << EnsemblesToPlot.size() << std::endl;
+							out_dump << " Document Index - " << j << std::endl;*/
+
+
 							for (size_t i = 0; i<EnsemblesToPlot.size(); i++) {
 								PLOTv plotinfo = m_pPlotInfo->MakeValidationChartInfo(ii, j, ResidualPlot);
+								/*out_dump << " Plot info.chart- " << plotinfo.Chart << std::endl;
+								out_dump << " Plot info.EnsembleNo- " << plotinfo.EnsembleNo << std::endl;
+
+								out_dump << " Actual Ensemble - " << m_pSimDoc->m_MStorage.m_ActualEnsemble << std::endl;*/
+
 								
 								plotinfo.EnsembleNo = EnsemblesToPlot[i];
 								if (m_pSimDoc->m_MStorage.m_ActualEnsemble == plotinfo.EnsembleNo||m_pUtil->GetEnsembleViewOption()!=0) {
@@ -1013,11 +1046,13 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 									plotinfo.PG_FilterVarIndex = pmoreinfo.first; plotinfo.PG_FilterVarValue = pmoreinfo.second;
 									if (j > 0 && plotinfo.DataType == DATA_TYPES::MEASURED_VAL) continue;
 
+
 									if (!m_pSimDoc->m_PlotStorage.AddPlotInfo(plotinfo, m_CurrentChart)) {
 										;//, m_CurrentChartType,string(pSimDoc->GetCurrentSimFile()), ValFileNo, ValFileIndex, mrunno,0,Isubchart, logli)) {
 										m_pSimDoc->SetOutputValidBinFileMissing();
 										return;
 									}
+
 								}
 							}
 						}
@@ -1162,7 +1197,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 				}
 			}
 			else {
-				 m_pFrame->UpdatePaneText(0,"Problems when making time serie chart - File may be missing or currupt");
+				// m_pFrame->UpdatePaneText(0,"Problems when making time serie chart - File may be missing or currupt");
 				 if (isheet == 6 && col == 4) {
 					 // Estimated mean value
 

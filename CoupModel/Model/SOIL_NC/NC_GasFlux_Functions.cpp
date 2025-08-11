@@ -942,7 +942,7 @@ plotpar.Y_ScalingCoef = 0;
 	initv.assign(p_Plant->NumPlants, 3.);
 	pP = new P(&Rob, pNumPlants, datatype::PLANT, elements::PLANT_SHAPE, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);    
 	mTab_Aere.push_back(pP);
-	Define(pP, pNumPlants, "Ratio Root len. to Depth", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 20.);
+	Define(pP, pNumPlants, "Ratio Root length to Depth", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 20.);
 		
 	//Tab* pTab;
 	pTab = new Tab(&mTab_Aere, datatype::PLANT, elements::PLANT_SHAPE, fysprocess::INTERCEPTION, bioprocess::NOBPROC, userlevel::NORMAL);

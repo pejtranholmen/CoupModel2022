@@ -46,6 +46,7 @@ CPlotStorage::CPlotStorage()
 	m_PlotArray.clear();
 	m_pProp=MySingle::instance().GetChartPropPointer();
 	m_ValidIndepPGVar=false;
+
 }
 
 CPlotStorage::~CPlotStorage()
@@ -197,6 +198,7 @@ bool CPlotStorage::Add(void *pXG, size_t type, size_t index, size_t chartnum, CH
 	return true;
 }
 size_t CPlotStorage::AddPlotInfo(PLOTv add, size_t chartnum) {
+
 	if(chartnum==0) chartnum=GetCurrentChart()+1;
 	add.Chart=size_t(chartnum);
 	m_PlotArray.push_back(add);

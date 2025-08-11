@@ -7,9 +7,8 @@
 
 #endif
 static TCHAR buffer[900000];
-CString IDCODE = _T("CoupModel");
-
-CString COLORLINE[12], HCOLORLINE[12];
+static CString IDCODE = _T("CoupModel");
+static CString COLORLINE[12], HCOLORLINE[12];
 
 
 void GetDesktopResolution(int& horizontal, int& vertical)

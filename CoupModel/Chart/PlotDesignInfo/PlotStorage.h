@@ -54,7 +54,7 @@ struct PLOTv
 	size_t PGFileIndex=0;
 	size_t Doc=0;
 	size_t Residual_VarNum=0;
-	size_t Residual_RunNo=0;
+	size_t Residual_RunNo = 0;
 	size_t Residual_Sequence = 0;
 	size_t PGSection=0;
 	size_t SubChart_No=0;
