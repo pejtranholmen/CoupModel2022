@@ -3266,9 +3266,12 @@ bool MakeSimSheets::Make_ValidationSheet()
 			QuickSetText(0,-1,"");
 			QuickSetText(2,-1,"Pick");
 
-			for(int i=0;i<ncol;i++) {
-				GetCell(2+i,1,&cell);
+			for (int i = 0; i < ncol; i++) {
+				GetCell(2 + i, 1, &cell);
+
+
 				cell.SetCellTypeEx(UGCT_NORMALMULTILINE);
+
 				test=m_pSimDoc->m_ValidationData.GetValName(i).c_str();
 				int iv=m_pSimDoc->m_ValidationData.GetValLocalIndex(i);
 				if(iv>-1) test+=_T("(")+MFC_Util::ItoAscii(iv+1)+_T(")");
@@ -5118,9 +5121,18 @@ void MakeSimSheets::Val_Post_Data(size_t NumLines, size_t NumLinesSV) {
 						pValFile->CallDataDescription();
 						test = pValFile->GetDataDescription(ind).c_str();
 						GetCell(1, i, &cell);
-						cell.SetCellType(UGCT_CHECKBOX);
-						cell.SetBool(FALSE);
-						cell.SetLabelText(test.c_str());
+						if (m_pSimDoc->m_PlotStorage.IsValidIndepPGVar()) {
+							cell.SetCellType(UGCT_NORMAL);
+							cell.SetReadOnly(TRUE);
+							cell.SetStdText(test);
+						}
+						else {
+							cell.SetReadOnly(FALSE);
+							cell.SetCellType(UGCT_CHECKBOX);
+							cell.SetBool(FALSE);
+							cell.SetLabelText(test.c_str());
+						}
+						
 						SetCell(1, i, &cell);
 					}
 					test=m_pSimDoc->m_ValidationData.GetValGroup(i).c_str();

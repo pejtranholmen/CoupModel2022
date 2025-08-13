@@ -960,7 +960,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 			
 			UpdateCurrentChart(false);
 			if(isheet==6) {
-				auto koll_file = m_pSimDoc->GetCurrentWorkDirectory();
+				//auto koll_file = m_pSimDoc->GetCurrentWorkDirectory();
 			//	koll_file += "Dump_PlotInfo.txt";
 			//	std::ofstream out_dump(koll_file, std::ios::app); //
 				//out_dump << " Document Time Serie Var Click" << std::endl;
@@ -1010,7 +1010,7 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 
 
 
-							if (m_pUtil->GetEnsembleViewOption() == 0||col==1) {
+							if (m_pUtil->GetEnsembleViewOption() == 0||col==1||col==3) {
 	 							EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
 							}
 							else {
@@ -1022,6 +1022,13 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 							}
 							if(EnsemblesToPlot.size()>0) {
 								m_pUtil->m_MultiRunPlot=true;
+							}
+							else {
+
+								MFC_Util::MessageBox(" No Valid selection to plot");
+								return;
+
+
 							}
 
 							/*out_dump << " m_Ensembles to plot Size pos 1 - " << EnsemblesToPlot.size() << std::endl;

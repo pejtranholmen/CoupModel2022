@@ -1012,7 +1012,7 @@ int DocClick::ValidationVarClick(int col, int row, bool All) {
 
 
 						}
-						if (m_pSimDoc->m_SelectValTime.size() >= 0) {
+						if (m_pSimDoc->m_SelectValTime.size() > 0) {
 							m_pProp->m_ChartType = CHART_TYPES::TIME_SERIE;
 							TimeSerieChartClick(col, row, isheet, pSw, 0, int(val.MeanIndicator), "", ValFileNo);
 						}

@@ -795,7 +795,10 @@ void TimeSeriePlot::UpdateDataDist()
 
 		for (size_t i = 0; i < m_ChartInfo.NumVariables; i++) {
 			double xmin = 1.E38, xmax = -1E38;
-
+			if (m_dataSeriesA[i].len == 0) {
+				m_ChartInfo.NumVariables = i;
+				continue;
+			}
 			for (int j = 0; j < m_ChartInfo.NumOfPoints; j++) {
 
 				if (m_dataSeriesA[i][j] > xmax && m_dataSeriesA[i][j] != Chart::NoValue)
@@ -1351,6 +1354,8 @@ size_t TimeSeriePlot::GetPrior_UpdateNumberOfVariables() {
 		 numensembles++;
 
 	}
+	auto SwitchValue = m_pSimDoc->GetSwValue("ValidationMode");
+	if (SwitchValue == 0) numensembles = 0;
 
 	size_t nfactor = numensembles + 1;
 

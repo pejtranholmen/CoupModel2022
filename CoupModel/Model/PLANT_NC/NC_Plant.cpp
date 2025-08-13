@@ -1519,7 +1519,10 @@ void NC_Plant::Integ()
 
 
 
-			if (AccLitterFall_ResetOptions_Sw(AccLitterFall_ResetOptions) == AccLitterFall_ResetOptions_Sw::on) 
+			if (AccLitterFall_ResetOptions_Sw(AccLitterFall_ResetOptions) == AccLitterFall_ResetOptions_Sw::on) {
+				// Unknow meaning for the moment Aug 2025	BUGG
+
+			}
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 
 				InFlow(AccBelowLitter[jj], TotPlantLitter[jj] - TotAbovePlantLitter[jj]);
@@ -3540,9 +3543,8 @@ void NC_Plant::Summation_Fluxes() {
 
 		if (TotHarvest[jj] > 0) {
 			YearTotalHarvest[jj] = 0;
-			for (size_t iplant = 0;iplant< P_Harvest[_GRAIN][jj].size(); iplant++) {
-				YearTotalHarvest[jj] += TotHarvest[jj]*T_Step;
-			}
+			YearTotalHarvest[jj] += TotHarvest[jj]*T_Step;
+
 		}
 
 		TotPlantLitter[jj] = sum(P_LitterFall[_NEWMOBILE][jj]);

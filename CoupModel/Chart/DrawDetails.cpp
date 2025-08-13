@@ -626,6 +626,8 @@ DataSet* DrawDetails::TimeSerieFrequenceChart( int ivar,int TotNumPrior, bool ac
 
 
 				numensembles = m_pSimDoc->m_MStorage.m_AcceptedRuns.size();
+				auto SwitchValue = m_pSimDoc->GetSwValue("ValidationMode");
+				if (SwitchValue == 0) numensembles = 0;
 				size_t count_to_plot = 0;
 				for (size_t i = 0; i < numensembles; i++) {
 					if ((m_pSimDoc->m_MStorage.IsToBePlotted(i) && m_pUtil->GetEnsembleViewOption() == 1) || i == m_pSimDoc->m_MStorage.m_ActualEnsemble) {

@@ -1639,12 +1639,23 @@ int DocCommands::ValidationVarCommand(int col, int row, int item) {
 					// Independent Variable settings
 
 					m_pSimDoc->m_PlotStorage.SetValidIndepPGVar(true);
-					TimeSerieChartClick(col, row, 6);//, pSw, index, 0, Type.c_str());
+					OnSheetSetup(6);
+					m_pProp->m_ReShape.m_RegLine = true;
+
+					if(m_pSimDoc->m_SelectValTime.size()>0)	TimeSerieChartClick(col, row, 6);
+					else {
+						string message = "Measured Variables are now independent of those selected simulated. \n";
+						message+="Please click on a simulated variable in the next moment to make a scatter plot!\n ";
+						MFC_Util::MessageBox(message);
+
+					}//, pSw, index, 0, Type.c_str());
 				
 
 				}
 				else if(item==5011) {
 					m_pSimDoc->m_PlotStorage.SetValidIndepPGVar(false);
+					OnSheetSetup(6);
+					m_pProp->m_ReShape.m_RegLine = false;
 					TimeSerieChartClick(col, row, 6);
 					// Independent Variable settings
 

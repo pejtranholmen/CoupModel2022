@@ -632,11 +632,21 @@ float SelectedEnsembles::GetValidSumAll(unsigned long rec, unsigned long ip)
 }
 float SelectedEnsembles::GetSumV(unsigned long rec, unsigned long ip)
 {
+	size_t index = ip + m_NumSum * rec;
+	if (m_VarSum.size() <= index) {
+		return MISSING;
+
+	}
 	return m_VarSum[ip+m_NumSum*rec];
 }
 float SelectedEnsembles::GetSumV_Selected(unsigned long rec, unsigned long ip)
 {
 	unsigned long ipp=SelSumV_Index_Get(ip);
+	size_t index = ipp + m_NumSum * rec;
+	if (m_VarSum.size() <= index) {
+		return MISSING;
+
+	}
 	if(ipp>=0)
 		return m_VarSum[ipp+m_NumSum*rec];
 	else

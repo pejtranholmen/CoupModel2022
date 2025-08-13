@@ -625,7 +625,7 @@ void LoadDataToChart::SetChartInfo(CURVEINFO c_info, PLOTv plotv) {
 		m_ChartInfo.NumOfPoints = c_info.pPG1->GetNumRepititions();
 		m_pProp->SetPGSource(nullptr);
 	}
-	else {
+	else if(c_info.pPG1!=nullptr) {
 
 		auto k2 = c_info.pPG1->GetNumRepititions();
 		auto k3 = c_info.pPG1->GetNumRecords();
@@ -784,7 +784,10 @@ void LoadDataToChart::AddExtraValidSerie(size_t icurve) {
 	if (allensembles)
 		numensembles = m_pSimDoc->m_MStorage.m_AcceptedRuns.size();
 
+	// Check if with Validation
 
+	auto SwitchValue = m_pSimDoc->GetSwValue("ValidationMode");
+	if (SwitchValue == 0) numensembles = 0;
 
 	for (size_t iens = 0; iens < numensembles; iens++) {
 		int firstnum = 0;
@@ -796,6 +799,8 @@ void LoadDataToChart::AddExtraValidSerie(size_t icurve) {
 
 		m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
 		if (plot.DataType == DATA_TYPES::SIM_PAR|| plot.DataType == DATA_TYPES::SIM_OUTSUM|| plot.DataType == DATA_TYPES::SIM_PERFORMANCE) {
+			auto koll2 = m_pSimDoc->m_MStorage.m_Valid_TSV[iens].v->size();
+			if (koll2 < E_PRIOR_MEAN) continue;
 			auto koll = m_pSimDoc->m_MStorage.m_Valid_TSV[iens].v[E_PRIOR_MEAN][plot.Index];
 
 			

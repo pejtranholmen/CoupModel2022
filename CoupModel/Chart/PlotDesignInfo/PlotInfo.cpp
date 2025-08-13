@@ -91,6 +91,12 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 			out.pPG=pF->GetPGResPointer(); // The file with simulated data
 
 		if(out.pPG!=nullptr) out.PGFileName=out.pPG->GetFileName();
+		else {
+			string outdir = m_pSimDoc->GetCurrentSubDirectory();
+			string filename = outdir + "V" + FUtil::STD_ItoAscii(out.ValFileNo) + "_COUP_";
+			string SimRunNo = FUtil::STD_ItoAscii(out.pSimDoc->m_DocFile.m_SimulationRunNo);
+			MFC_Util::MessageBox("Error  - No Output Validation File Exist "+filename+SimRunNo+".Bin\n"+"Check if your files exist in an other directory !");
+		}
 
 		if(!out.pSimDoc->IsMultiSimulation()) {
 			out.DataType= DATA_TYPES::SIM_VAL;

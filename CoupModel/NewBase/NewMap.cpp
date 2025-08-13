@@ -6424,7 +6424,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 						else {
 							number_of_runs_per_ensemble.push_back(numout);
 						}
-						allvalues.resize(numout);
+						allvalues.resize(numout*2); 
 						vector<vector<double>> MeanEnsembleValues;
 						MeanEnsembleValues.resize(m_pSimDoc->m_MStorage.m_AcceptedIdString.size());
 						size_t count2 = 0;
@@ -6438,7 +6438,7 @@ string NewMap::Export_XLSX(bool AcceptedOnly,  ExportOptions option, int IndexOu
 									irun = m_pSimDoc->m_MStorage.Get_AcceptedRuns(nomulrun); allvalues[count2][0] = float(irun + 1);	allvalues[count2][1] = float(iens + 1);
 								}
 								else {
-									irun = nomulrun + 1; allvalues[count2][0] = float(irun);	allvalues[count2][1] = float(iens + 1);
+									irun = nomulrun; allvalues[count2][0] = float(irun+1);	allvalues[count2][1] = float(iens + 1);     // changed irun from +1 to +0 
 								}
 								for (size_t var = 0; var < sumindexvector.size(); var++) {
 									int ip = sumindexvector[var] + ivartyp - 6;
