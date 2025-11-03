@@ -82,6 +82,8 @@ public:
 	size_t Seedling_Management;
 	size_t AccLitterFall_ResetOptions;
 
+	size_t ScaledPlantDemand;
+
 	size_t ZadokScale, ZadokForcingFromFileInput;
 	size_t CanopyCO2_Storage;
 	CPG m_PG_Zadok, m_PG_LitterFallResetDates;
@@ -280,6 +282,7 @@ vector<double> InitCNCoarseRoots,InitCNOldCoarseRoots;
 ;
 ;
 vector<double> CN_RatioMinLeaf, CN_RatioMinStem, CN_RatioMinRoots, CN_RatioMinCoarseRoots;
+vector<double> CN_RatioMinScaleRoot, CN_RatioMinScaleStem, CN_RatioMinScaleLeaf;
 vector<double> CP_RatioMinLeaf, CP_RatioMinStem, CP_RatioMinRoots, CP_RatioMinCoarseRoots;
 vector<double> CN_RatioMaxLeaf, CP_RatioMaxLeaf;
 ;
@@ -700,6 +703,9 @@ std::function<bool(size_t year, size_t dayno)> f_sow, f_emergence, f_harvest;
 vector<double> m_RootDensity;	// Local auxiliary variable
 
 std::function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_PlantDemand[2];
+std::function <vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&,
+	std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&, std::vector<double>&)> f_ScaledPlantDemand[2];
+
 std::function < std::vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&)> f_FungiDemand;
 std::function < std::vector<double>(vector<double>&, std::vector<double>&, std::vector<double>&)> f_FungiPDemand;
 std::function <vector<double>(size_t index, std::vector<double>&, std::vector<double>&)> f_FungiPotentialUptake;

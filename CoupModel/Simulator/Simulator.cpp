@@ -1,4 +1,6 @@
+#ifndef COUPSTD
 #include "../stdafx.h"
+#endif
 #include "../std.h"
 #include "../Util.h"
 #include "Simulator.h"
@@ -10,6 +12,7 @@
 #include "../Simulator/ModelInfo.h"
 #include "../Util/StatUtil.h"
 #include "../PG/NewReShaped.h"
+#include "../NewBase/Sim.h"
 
 
 
@@ -351,7 +354,7 @@ bool Simulator::Run(bool MultiFlag)
 					string str;
 	
 					char buffer[50];
-					size_t n=snprintf(buffer,50, "MultiSim %u (%u) - ", m_pModelInfo->ActualNoMulRun, m_pModelInfo->TotalNoMulRun);
+					size_t n=snprintf(buffer,50, "MultiSim %zu (%zu) - ", m_pModelInfo->ActualNoMulRun, m_pModelInfo->TotalNoMulRun);
 					str.assign(&buffer[0],n);
 					string numstr=FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo);
 					numstr+=" - ";
@@ -430,7 +433,7 @@ bool Simulator::End(bool Multi, bool Final, bool First)
 	if(Multi) {
 		char buffer[10000];
 		string str;
-		size_t n=snprintf(buffer,60, "MultiSimulation %d (%d) Completed - ", m_pModelInfo->ActualNoMulRun, m_pModelInfo->TotalNoMulRun);
+		size_t n=snprintf(buffer,60, "MultiSimulation %zu (%zu) Completed - ", m_pModelInfo->ActualNoMulRun, m_pModelInfo->TotalNoMulRun);
 		if (n>10&& n < 200&& m_pModelInfo->ActualNoMulRun== m_pModelInfo->TotalNoMulRun) {
 			str.assign(&buffer[0], n);
 			str += "RunNo " + FUtil::STD_ItoAscii(m_pSim->m_DocFile.m_SimulationRunNo + 1 - m_pModelInfo->TotalNoMulRun) + " - ";

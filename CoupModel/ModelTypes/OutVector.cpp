@@ -1,4 +1,6 @@
+#ifndef COUPSTD
 #include "../stdafx.h"
+#endif
 #include "../std.h"
 #include "../Util/FUtil.h"
 #include "OutVector.h"

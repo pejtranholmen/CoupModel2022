@@ -1,4 +1,6 @@
+#ifndef COUPSTD
 #include "stdafx.h"
+#endif
 #include "./std.h"
 MySingle::MySingle() {
 	m_pCug = nullptr;

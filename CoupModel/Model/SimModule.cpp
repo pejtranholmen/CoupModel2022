@@ -3,7 +3,7 @@
 #include "../NewBase/ModelMap.h"
 #include "../ModelTypes/NewModelType.h"
 #include "./PLANT/WaterUptake.h"
-#ifndef STD
+#ifndef COUPSTD
 #include "../stdafx.h"
 #include "../MainFrm.h"
 #endif

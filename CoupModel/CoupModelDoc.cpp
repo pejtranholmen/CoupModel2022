@@ -163,8 +163,6 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 
 	//init.InitGlobalPointer(&F);	//	DSM error
 
-	
-
 	CMainFrame *p_mainframe;
 	p_mainframe = (CMainFrame*) AfxGetMainWnd();
 
@@ -285,6 +283,13 @@ BOOL CCoupModelDoc::OnOpenDocument(LPCTSTR pzPathName)
 
 		MySingle::instance().GetSimArchivePointer()->AddSimDoc(Fil);
 
+		CStdioFile f;
+		if (!f.Open(pzPathName, CFile::modeRead | CFile::shareDenyNone))  // tillåt delning!
+			return FALSE;
+
+		f.Close();
+
+	
 	/*	PVOID OldValue = nullptr;
 		Wow64DisableWow64FsRedirection(&OldValue);
 		auto filenamex = LPCSTR(file.c_str());

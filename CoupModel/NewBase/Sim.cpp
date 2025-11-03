@@ -93,8 +93,6 @@ UINT _cdecl Run_SingleCoupModel_Background(void *param)
 	pRunDoc->SetRunning(false);
 	p_ModelInfo->SetViewStatus(1);
 	p_mainframe->UpdatePaneText(0, "Completed Single Run - Click to continue");
-	
-
 	return 1;
 		
 	

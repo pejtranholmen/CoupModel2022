@@ -863,11 +863,11 @@ unsigned int PGUtil::cminut(char *date)
 {  size_t jy,jm,ja,jd;
    size_t   iyear, imonth, iday, ihour, iminut;
 #if MS_CODE
-   sscanf_s(date, "%4u", &iyear);
-   sscanf_s(&date[4], "%2u", &imonth);
-   sscanf_s(&date[6], "%2u", &iday);
-   sscanf_s(&date[8], "%2u", &ihour);
-   sscanf_s(&date[10], "%2u", &iminut);
+   sscanf_s(date, "%4zu", &iyear);
+   sscanf_s(&date[4], "%2zu", &imonth);
+   sscanf_s(&date[6], "%2zu", &iday);
+   sscanf_s(&date[8], "%2zu", &ihour);
+   sscanf_s(&date[10], "%2zu", &iminut);
 #else
    sscanf(date,     "%4u", &iyear);
    sscanf(&date[4], "%2u", &imonth);

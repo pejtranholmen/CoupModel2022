@@ -1,5 +1,7 @@
 #ifndef NOSIMFILES
+#ifndef COUPSTD
 #include "../stdafx.h"
+#endif
 #include "../std.h"
 #endif
 #include "../Util.h"

@@ -1,6 +1,7 @@
 ﻿#include "../std.h"
 #include "./CommonModelInfo.h"
 #include "../ModelTypes/SimB.h"
+#include <string_view>
 using namespace std;
 CommonModelInfo::CommonModelInfo() {
 

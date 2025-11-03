@@ -7,6 +7,8 @@
 #define TIMBASE_SHIFT 11644473600
 
 //#include "../External.h"
+#include <filesystem>
+#include <system_error>
 #include <xlnt/xlnt.hpp>
 #include <nlohmann/json.hpp>
 #include "./NewMap.h"
@@ -177,7 +179,6 @@ string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level, bool ChildDoc
 	};
 
 	pugi::xml_document doc;
-	doc.reset();
 
 	pugi::xml_node node = doc.append_child("CoupModel");
 
@@ -210,7 +211,7 @@ string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level, bool ChildDoc
 
 
 	WriteHeaderToXmlFile(descr);
-
+	using std::filesystem::path;
 	WriteSimB_ToXmlFile(switches, simtype::SWITCH, enable_level);
 	WriteSimB_ToXmlFile(parameters, simtype::PAR_SINGLE, enable_level);
 	WriteSimB_ToXmlFile(parameters_arrays, simtype::PAR_TABLE, enable_level);
@@ -237,8 +238,61 @@ string NewMap::WriteEntireModelToXmlFile(doc_enabled enable_level, bool ChildDoc
 
 	auto filename = GetFileName();
 
-	doc.save_file(filename.c_str());
-	return filename;
+
+
+	const path target = GetFileName();
+	const path tmp = target.string() + ".tmp";
+
+	// 1) Skriv till tempfil via stream (tydligare felhantering)
+	{
+		std::ofstream out(tmp, std::ios::binary | std::ios::trunc);
+		if (!out) {
+			// t.ex. katalog saknas / ej rättighet
+			return {};
+		}
+		doc.save(out);
+		if (!out.good()) {
+			return {};  // XML-skrivning misslyckades (disk full? fel stream?)
+		}
+
+	} // o
+
+		// 2) Försök ersätta befintlig fil atomärt
+	std::error_code ec;
+
+	// Om målet är read-only, ta bort write-skyddet (annars fail på rename/remove)
+	std::filesystem::permissions(
+		target,
+		std::filesystem::perms::owner_write | std::filesystem::perms::owner_read,
+		std::filesystem::perm_options::add,	ec
+	); // ignorerar ec här – filen kan ju saknas
+
+
+
+	std::filesystem::rename(tmp, target, ec);
+	if (ec) {
+		
+		// Plan B: ta bort mål och försök igen
+		std::filesystem::remove(target, ec);     
+		// om låst -> ec = access_denied
+		ec.clear();
+		std::filesystem::rename(tmp, target, ec);
+		if (ec) {
+			// Städa: ta bort temp om vi misslyckats
+			//std::filesystem::remove(tmp, ec);
+			//return {};
+		}
+	}
+
+/*	auto results = doc.save_file(filename.c_str());
+
+	if (!results) {
+		std::filesystem::remove(filename.c_str());
+
+		auto res2 = doc.save_file(filename.c_str());
+
+	}*/
+	return target.string();
 }
 bool NewMap::WriteSimB_ToXmlFile(pugi::xml_node node, simtype type, doc_enabled _doc_enabled) {
 
@@ -2093,9 +2147,11 @@ bool NewMap::ReadDocFile(string file, bool WithParentDependence)
 			if (ReadXmlDocFile(xmlfile)) {
 #ifndef COUPSTD
 				m_PlotStorage.Update(m_DocFile.m_SimulationRunNo, m_FileVersionNumberRead);
+				m_DocFileIn.close();
 #endif
 				return true;
 			}
+		
 		}
 
 
@@ -2321,6 +2377,8 @@ bool NewMap::ReadXmlDocFile(string xmlfile) {
 		else if (levelname == "AllFinalState") 			Read_AllFinalState_FromXmlFile(child);
 		else											Read_SimB_FromXmlFile(child);
 	}
+
+	auto koll2 = doc.end();
 	//Post Setting to make sure the Document is complete
 #ifndef COUPSTD
 	m_PlotStorage.Update(m_DocFile.m_SimulationRunNo, m_FileVersionNumberRead);

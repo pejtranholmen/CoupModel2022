@@ -1,5 +1,7 @@
 #pragma once
+#include <vector>
 #include "../../../../std.h"
+using std::vector;
 class RootDensity {
 public:
 	RootDensity(vector<double> LayerThickness) : LayerThickness(LayerThickness) {};
@@ -39,6 +41,15 @@ public:
 				max(0., (A3[i] - R3[i]) / CN_Stem[i]) + max(0., (A4[i] - R4[i]) / CN_Leaf[i]);
 		}
 		return demand;	
+	};
+	vector<double> operator() (vector<double>& A1, std::vector<double>& A2, std::vector<double>& A3, std::vector<double>& A4,
+		vector<double>& R1, std::vector<double>& R2, std::vector<double>& R3, std::vector<double>& R4,
+		std::vector<double> &scaleroot, std::vector<double> &scalestem, std::vector<double> &scaleleaf, std::vector<double>& demand) {
+		for (size_t i = 0; i < A1.size(); i++) {
+			demand[i] = max(0., (A1[i] - R1[i]) /(scaleroot[i]*CN_RatioRoot[i])) + max(0., (A2[i] - R2[i]) /(scaleroot[i]* CN_CoarseRoot[i])) +
+				max(0., (A3[i] - R3[i]) / (scalestem[i]*CN_Stem[i])) + max(0., (A4[i] - R4[i]) / (scaleleaf[i]*CN_Leaf[i]));
+		}
+		return demand;
 	};
 private:
 	vector<double> CN_RatioRoot, CN_CoarseRoot, CN_Leaf, CN_Stem;
@@ -244,6 +255,7 @@ public:
 	UptakeResults operator() (vector<double> &DistWithDepth,  size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
 		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &RootDensity, UptakeResults &out) {
 		out.RemainFrac = 0.;
+		if (N_Tot_Demand <= 0.) return out;
 		for (size_t ii = 0; ii < out.UptNH4.size(); ii++) {
 			Ratio[ii] = (SoilNitrate[ii] + 1.E-20) / (SoilNitrate[ii] + SoilAmmonium[ii] + 1.E-20);
 			Ratio[ii] = max(0., min(1., Ratio[ii]));
@@ -260,7 +272,7 @@ public:
 	UptakeResults operator() (vector<double> &DistWithDepth,  size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
 		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, UptakeResults &out) {
 		out.RemainFrac = 0.;
-
+		if (N_Tot_Demand <= 0.) return out;
 		if (N_DemandPlant<=0.) {
 			out.UptNH4.assign(out.UptNH4.size(), 0.);
 			out.UptNO3.assign(out.UptNO3.size(), 0.);
@@ -284,6 +296,7 @@ public:
 		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &FungiRootCover, bool Fungi, UptakeResults &out) {//HH
 
 		out.RemainFrac = 0.; 
+		if (N_Tot_Demand <= 0.) return out;
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
 			Ratio[ii] = (SoilNitrate[ii] + 1.E-20) / (SoilNitrate[ii] + SoilAmmonium[ii] + 1.E-20);
 			Ratio[ii] = max(0., min(1., Ratio[ii]));
@@ -301,6 +314,7 @@ public:
 	UptakeResults operator() (vector<double> &DistWithDepth, size_t PlantIndex, double N_DemandPlant, double N_Tot_Demand,
 		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, std::vector<double> &RootDensity, std::vector<double> &FungiRootCover, bool Fungi, UptakeResults &out) {
 		out.RemainFrac = 0.;
+		if (N_Tot_Demand <= 0.) return out;
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
 			Ratio[ii] = (SoilNitrate[ii] + 1.E-20) / (SoilNitrate[ii] + SoilAmmonium[ii] + 1.E-20);
 			Ratio[ii] = max(0., min(1., Ratio[ii]));
@@ -317,6 +331,7 @@ public:
 	// 1 operator for Compensatory Uptake by roots
 	UptakeResults operator() (vector<double> &DistWithDepth, size_t NumLayers,  double N_DemandPlant, double N_Tot_Demand,
 		vector<double> Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, UptakeResults &uptprev, double ScaleComp, UptakeResults &out) {
+		if (N_Tot_Demand <= 0.) return out;
 		for (size_t ii = 0; ii < out.UptNO3.size(); ii++) {
 			Ratio[ii] = (SoilNitrate[ii] + 1.E-20) / (SoilNitrate[ii] + SoilAmmonium[ii] + 1.E-20);
 			Ratio[ii] = max(0., min(1., Ratio[ii]));

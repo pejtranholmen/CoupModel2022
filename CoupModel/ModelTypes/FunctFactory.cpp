@@ -1,5 +1,7 @@
 
+#ifndef COUPSTD
 #include "../stdafx.h"
+#endif
 #include "../std.h"
 #include "../ModelTypes/SimB.h"
 #include "../Model/SOIL/Functors/Profile_Functors.h"

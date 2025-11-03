@@ -1,7 +1,9 @@
+#ifndef COUPSTD
 #include "../stdafx.h"
+#endif
 #include "../std.h"
 #include "../ModelTypes/SimB.h"
-
+#include "../NewBase/Doc.h"
 
 #include "../MultiRun/Residuals.h"
 
@@ -791,7 +793,6 @@ size_t CPG::GetNumRecordsDays(size_t days, size_t rep)
 		tmp.Format("%02u", 0);
 		Datum+=tmp;*/
 		Datum.resize(13);
-		auto koll=snprintf(&Datum[0],13,"%04u%02u%02u%02u%02u",iy,im,id,0,0);
 		prior=PGUtil::MinutConv(Datum);
 		iy=GetYear(pg.Shape.NumRecords);
 		im=GetMonth(pg.Shape.NumRecords);
@@ -806,7 +807,6 @@ size_t CPG::GetNumRecordsDays(size_t days, size_t rep)
 		Datum+=tmp;
 		tmp.Format("%02u", 0);
 		Datum+=tmp;*/
-		koll=snprintf(&Datum[0],13,"%04u%02u%02u%02u%02u",iy,im,id,24,0);
 		last=PGUtil::MinutConv(Datum);
 		m_numrecords_Days=(last-prior)/(days*1440);
 		m_varx_days= new float[pg.Shape.RecordSize*m_numrecords_Days];
@@ -868,8 +868,6 @@ size_t CPG::GetNumMonths() {
 		size_t prior;
 		string Datum,tmp;
 		Datum.resize(13);
-
-		auto koll=snprintf(&Datum[0],13,"%04u%02u%02u%02u%02u",iy,im,1,0,0);
 		prior=PGUtil::MinutConv(Datum);
 		m_numrecords_Months=(iye-iy)*12+ime-im+1;
 		return m_numrecords_Months;
@@ -878,7 +876,7 @@ size_t CPG::GetNumMonths() {
 size_t CPG::GetNumRecordsMonth(size_t months, size_t rep)
 {
 	if(!m_varxMonths) {
-		size_t im=GetMonth(1);
+		std::size_t im=GetMonth(1);
 		size_t iy=GetYear(1);
 		size_t ime=GetMonth(pg.Shape.NumRecords);
 		size_t iye=GetYear(pg.Shape.NumRecords);
@@ -1044,7 +1042,7 @@ size_t CPG::GetNumRecordsYear(size_t years, size_t repn)
 			count++;
 			iy++;
 			prior=next;
-			snprintf(&Datum[0],13,"%04u%02u%02u%02u%02u",iy,1,1,0,0);
+			snprintf(&Datum[0],13,"%04zu%02zu%02zu%02u%02zu",iy,1,1,0,0);
 			next=PGUtil::MinutConv(Datum);
 		}
 		delete []inum;
@@ -1148,7 +1146,7 @@ size_t CPG::GetMinuteStartNextYear(size_t var_rec)
 	str.resize(10);
 	if(year<0||year>10000) return 0;
 	//str.Format("%u4",year);
-	snprintf(&str[0],6,"%u",year);
+	snprintf(&str[0],6,"%zu",year);
 	//str=FUtil::ItoNumAscii(year);
 	string newyear=str.substr(0,4)+"01010000";
 

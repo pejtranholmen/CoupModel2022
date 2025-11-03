@@ -180,12 +180,17 @@ bool NC_Plant_Functions::Def()
 	pSw = new Sw(&AccLitterFall_ResetOptions, datatype::PLANT, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pSw, "LitterFallReset", 0, "start|PG - FileSpecified", "Nitrogen and Carbon > 0 | Growth >2");
 
+	pSw = new Sw(&ScaledPlantDemand, datatype::PLANT, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
+	Define(pSw, "Scaled Plant Demand", 0, "off|On at GSI 3|From GSI 2-3|From GSI 2-4", "Nitrogen and Carbon > 0 | Growth >2");
+
 	F* pF;
 	pF = new F(&m_PG_Zadok, datatype::PLANT, elements::WATER, fysprocess::FYS_SHAPE, bioprocess::PHENOLOGY, userlevel::NORMAL);
 	Define(pF, "Zadok Forcing", "ZadokInput.bin", "ZadokFocingFromFileInput >= 1");
 
 	pF = new F(&m_PG_LitterFallResetDates, datatype::PLANT, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 	Define(pF, "LitterFall Reset Dates", "LitterFallResetDates.bin", "Nitrogen and Carbon > 0| Growth >2 |LitterFallReset > 0");
+
+
 
 	auto icarb = static_cast<size_t>(elements::CARBON);
 	auto initro = static_cast<size_t>(elements::NITROGEN);
@@ -913,6 +918,17 @@ bool NC_Plant_Functions::Def()
 	pP = new P(&CN_RatioMinCoarseRoots, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 25.);
 	Define(pP, pNumPlants, "CN Ratio Min CRoots", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1", 5., 600.);
 	mTab_PlantCN.push_back(pP);
+	pP = new P(&CN_RatioMinScaleRoot, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 1.5);
+	Define(pP, pNumPlants, "CN Scale Root", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Scaled Plant Demand >0", 1., 4.);
+	mTab_PlantCN.push_back(pP);
+	pP = new P(&CN_RatioMinScaleStem, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 2.);
+	Define(pP, pNumPlants, "CN Scale Stem", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Scaled Plant Demand >0", 1., 4.);
+	mTab_PlantCN.push_back(pP);
+	pP = new P(&CN_RatioMinScaleLeaf, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL); initv.assign(p_Plant->NumPlants, 2.);
+	Define(pP, pNumPlants, "CN Scale Leaf", initv, UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Scaled Plant Demand >0", 1., 4.);
+	mTab_PlantCN.push_back(pP);
+
+
 	//	Define(pP, pNumPlants,  CN_RatioMinFungi   	,"CN Ratio Min Fungi"	,16.	,p_Plant->NumPlants,UNIT_TYPES::NO_UNIT,"Nitrogen and Carbon >= 1|Mycorrhiza Fungal Growth>0",15.,25.);
 	pTab = new Tab(&mTab_PlantCN, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::PLANT_NUPTAKE, userlevel::NORMAL);
 	Define(pTab, "Minimum CN Ratios of plants", "CN Ratio Min Roots|CN Ratio Min Stem|CN Ratio Min Leaf|CN Ratio Min CRoots", "Nitrogen and Carbon > 0");

@@ -1,15 +1,18 @@
 // Residuals.cpp : implementation file
 //
-
+#ifndef COUPSTD
 #include "../stdafx.h"
+#else
+#include "../NewBase/Doc.h"
 #include "../std.h"
 #include "./ResidualsBase.h"
-
+#endif
 #ifndef COUPSTD
 #include "../NewBase/FileScanner.h"
 #include "../MainFrm.h"
 #endif
 
+using namespace std;	
 struct RES_STAT {
 	vector<float> accepted_mean;
 	vector<float> accepted_min;

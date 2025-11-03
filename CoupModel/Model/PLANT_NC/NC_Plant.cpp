@@ -1,4 +1,4 @@
-#include "NC_Plant.h"
+﻿#include "NC_Plant.h"
 #include "./Functors/NC_Plant_Functors.h"
 #include "../SOIL_NC/SoilOrgModel.h"
 #include "../SOIL_NC/NC_SoilManagement.h"
@@ -1022,8 +1022,19 @@ bool NC_Plant::IniFunctors() {
 
 	auto SetRootUptakeFunctors = [&]() {
 
-		if (N_Fixed_Supply_Sw(N_Fixed_Supply) > N_Fixed_Supply_Sw::off) f_PlantDemand[_N_ - 1] = PlantDemand(CN_RatioMinRoots, CN_RatioMinCoarseRoots, CN_RatioMinStem, CN_RatioMinLeaf);
-		else f_PlantDemand[_N_ - 1] = PlantDemand(CN_RatioMinRoots, CN_RatioMinCoarseRoots, CN_RatioMinStem, CNLeafThres, CNLeafOpt, N_MinDegreeSupply);
+		if (N_Fixed_Supply_Sw(N_Fixed_Supply) == N_Fixed_Supply_Sw::off) {
+			if (ScaledPlantDemand > 0)
+				f_ScaledPlantDemand[_N_ - 1] = PlantDemand(CN_RatioMinRoots, CN_RatioMinCoarseRoots, CN_RatioMinStem, CN_RatioMinLeaf);
+			else
+				f_PlantDemand[_N_ - 1] = PlantDemand(CN_RatioMinRoots, CN_RatioMinCoarseRoots, CN_RatioMinStem, CN_RatioMinLeaf);
+		}
+		else {
+
+			if (ScaledPlantDemand > 0)
+				f_ScaledPlantDemand[_N_ - 1] = PlantDemand(CN_RatioMinRoots, CN_RatioMinCoarseRoots, CN_RatioMinStem, CNLeafThres, CNLeafOpt, N_MinDegreeSupply);
+			else
+				f_PlantDemand[_N_ - 1] = PlantDemand(CN_RatioMinRoots, CN_RatioMinCoarseRoots, CN_RatioMinStem, CNLeafThres, CNLeafOpt, N_MinDegreeSupply);
+		}
 
 		if (Phosphorus_Model_Sw(m_pModelStructure->Phosphorus_Model) > Phosphorus_Model_Sw::off) {
 			f_PlantDemand[_P_ - 1] = PlantDemand(CP_RatioMinRoots, CP_RatioMinCoarseRoots, CP_RatioMinStem, CPLeafThres, CPLeafOpt, N_MinDegreeSupply);//P demand
@@ -2918,8 +2929,54 @@ void NC_Plant::MineralOrganic_Uptake() {
 
 	auto EstimateDemandfromPlant = [&]() {
 		for (size_t jj = 1; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-			DemandUptake[jj - 1].Demand = f_PlantDemand[jj - 1](P_CarbonAlloNewMobile.Roots, P_CarbonAlloNewMobile.CoarseRoots, P_CarbonAlloNewMobile.Stem, P_CarbonAlloNewMobile.Leaf,
-				P_Respiration[_ROOT], P_Respiration[_COARSE_ROOT], P_Respiration[_STEM], P_Respiration[_LEAF], DemandUptake[jj - 1].Demand);
+			if (ScaledPlantDemand > 0) {
+				vector<double> DemandScaleRoot, DemandScaleStem, DemandScaleLeaf;
+
+				size_t NumPlants = GrowthStageIndex.size();
+				DemandScaleRoot.assign(NumPlants, 1.); DemandScaleStem.assign(NumPlants, 1.); DemandScaleLeaf.assign(NumPlants, 1.);
+
+				for (size_t i = 0; i < NumPlants; ++i) {
+
+					// --- Fall 1: ren CN-styrning vid sent growth stage ---
+					if (ScaledPlantDemand == 1 && GrowthStageIndex[i] >= 3) {
+						DemandScaleRoot[i] = CN_RatioMinScaleRoot[i];
+						DemandScaleStem[i] = CN_RatioMinScaleStem[i];
+						DemandScaleLeaf[i] = CN_RatioMinScaleLeaf[i];
+						continue;
+					}
+
+					// --- Fall 2: GSI-baserad skalning ---
+					double GsiScaleFactor = 0.0;
+
+					if (GrowthStageIndex[i] >= 2.0) {
+
+						double denom = (ScaledPlantDemand == 2) ? 1.0 :
+							(ScaledPlantDemand == 3) ? 2.0 : 0.0;
+
+						if (denom > 0.0) {
+							GsiScaleFactor = max(0.0, (GrowthStageIndex[i] - 2.0) / denom);
+							// Linjär interpolering: 1 → CP_RatioMinScale* med GsiScaleFactor
+							DemandScaleRoot[i] = 1.0 + GsiScaleFactor * (CN_RatioMinScaleRoot[i] - 1.0);
+							DemandScaleStem[i] = 1.0 + GsiScaleFactor * (CN_RatioMinScaleStem[i] - 1.0);
+							DemandScaleLeaf[i] = 1.0 + GsiScaleFactor * (CN_RatioMinScaleLeaf[i] - 1.0);
+						}
+					}
+					else if (GrowthStageIndex[i] < 0.) {
+						DemandScaleRoot[i] = CN_RatioMinScaleRoot[i];
+						DemandScaleStem[i] = CN_RatioMinScaleStem[i];
+						DemandScaleLeaf[i] = CN_RatioMinScaleLeaf[i];
+					}
+				}
+
+				DemandUptake[jj - 1].Demand = f_ScaledPlantDemand[jj - 1](P_CarbonAlloNewMobile.Roots, P_CarbonAlloNewMobile.CoarseRoots, P_CarbonAlloNewMobile.Stem, P_CarbonAlloNewMobile.Leaf,
+					P_Respiration[_ROOT], P_Respiration[_COARSE_ROOT], P_Respiration[_STEM], P_Respiration[_LEAF], DemandScaleRoot, DemandScaleStem, DemandScaleLeaf, DemandUptake[jj - 1].Demand);
+			}
+			else {
+				DemandUptake[jj - 1].Demand = f_PlantDemand[jj - 1](P_CarbonAlloNewMobile.Roots, P_CarbonAlloNewMobile.CoarseRoots, P_CarbonAlloNewMobile.Stem, P_CarbonAlloNewMobile.Leaf,
+					P_Respiration[_ROOT], P_Respiration[_COARSE_ROOT], P_Respiration[_STEM], P_Respiration[_LEAF], DemandUptake[jj - 1].Demand);
+			}
+
+
 			DemandUptake[jj - 1].TotalDemand = sum(DemandUptake[jj - 1].Demand);
 
 

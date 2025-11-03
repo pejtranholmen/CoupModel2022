@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <memory>
 #include <functional>
+#include <string_view>
 
 
 #ifndef NOSIMMODEL

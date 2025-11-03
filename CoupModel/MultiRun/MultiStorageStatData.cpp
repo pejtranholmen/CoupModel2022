@@ -1,7 +1,8 @@
 // MultiStorageStatData.cpp : implementation file
 //
-
+#ifndef COUPSTD
 #include "../stdafx.h"
+#endif
 #include "../std.h"
 #include "../Util.h"
 #include "../NewBase/NewMap.h"

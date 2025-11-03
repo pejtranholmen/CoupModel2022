@@ -1,4 +1,7 @@
+
+#ifndef COUPSTD
 #include "../stdafx.h"
+#endif
 #include "FunctionProperties.h"
 #include "../ModelTypes/P.h"
 #include "../ModelTypes/Ps.h"
