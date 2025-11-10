@@ -1828,6 +1828,7 @@ auto Growth_Stage = [&](size_t index) {
 			out = 1. + f_GrainStartWithReset(false, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			if (out >= 2 && Max_GSI[index] > 2) {
 				Emergence_Done[index] = false;
+
 				f_GrainStartWithReset(true, index, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 			}
 		}
@@ -2432,6 +2433,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 			MoveFromPlantToLitter = true;
 			GrowthStageIndex[i_plant] = Min_GSI[i_plant];
 			Grain_Develop_Done[i_plant] = true;
+			if (GrowthStageIndex[i_plant] < 0.) SimPlantAge[i_plant] = 0.;
 
 			////// For Grazing = 2 above		
 
@@ -2479,6 +2481,7 @@ void NC_Plant::Cleaning_Harvest_Events() {
 			if (pNCSoil->PloughingYear == 0 || pNCSoil->PloughingYear == PGUtil::YearNumFunction(m_pModelInfo->m_ActMin)) {
 				MoveFromPlantToLitter = KillAboveGroundPlant(i_plant);
 				OK = KillBelowGroundPlant(i_plant);
+				SimPlantAge[i_plant] = 0.;
 				HarvestPloughingMade = true;
 			}
 
@@ -2770,7 +2773,7 @@ void NC_Plant::SplitofPlant_At_Harvest(bool WithGrazingEvent) {
 		}
 
 		GrowthStageIndex[i] = Min_GSI[i];
-		//SimPlantAge[i] = 0.;
+		if(GrowthStageIndex[i]<0.) SimPlantAge[i] = 0.;
 
 	};
 	auto GrazingExportAsHarvest = [&](size_t i) { 
@@ -3390,6 +3393,7 @@ void NC_Plant::At_YearShifting() {//year shift for P added by HH
 		DormingTempSum[i] = 0.;
 		Emergence_Done[i] = false;
 		Grain_Develop_Done[i] = false;
+		f_GrainStartWithReset(true, i, m_pModelInfo->DayLength, NDrivTAir, T_Step);
 		f_GrainFillWithReset(true, i, NDrivTAir, T_Step);
 
 	};
@@ -3402,16 +3406,22 @@ void NC_Plant::At_YearShifting() {//year shift for P added by HH
 			}
 		yearshift = false;
 
-		if (m_pModelInfo->JDayNum == 1 && Max_Plant_LifeTime[iplant] > 1. && pAtm->Latitude > 0 && SimPlantAge[iplant] > 180.0 && YearShiftToBeDone[iplant]) {
-
-			MakeShiftCurrent2Old(iplant);
-			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-				RemainOldLeaf[jj][iplant] = max(0., (P_State[_OLD_LEAF][jj][iplant]) * (1. - 1. / max(1., (Max_Leaf_Lifetime[iplant] - 1.))));
-				RemainOldLeaf[jj][iplant] = P_State[_OLD_LEAF][jj][iplant] + P_ReAllocation[LEAF_OLD_LEAF][jj][iplant];
+		if (m_pModelInfo->JDayNum == 1 && Max_Plant_LifeTime[iplant] > 1. && pAtm->Latitude > 0. && YearShiftToBeDone[iplant]) {
+			if (SimPlantAge[iplant] > 180.) {
+				MakeShiftCurrent2Old(iplant);
+				for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+					RemainOldLeaf[jj][iplant] = max(0., (P_State[_OLD_LEAF][jj][iplant]) * (1. - 1. / max(1., (Max_Leaf_Lifetime[iplant] - 1.))));
+					RemainOldLeaf[jj][iplant] = P_State[_OLD_LEAF][jj][iplant] + P_ReAllocation[LEAF_OLD_LEAF][jj][iplant];
+				}
+				//if (Winter_Regulation == 1)
+		//			GrowthStageIndex[iplant] = Min_GSI[iplant];
 			}
-			//if (Winter_Regulation == 1)
-	//			GrowthStageIndex[iplant] = Min_GSI[iplant];
+			else {
 
+				Grain_Develop_Done[iplant] = false;
+				f_GrainStartWithReset(true, iplant, m_pModelInfo->DayLength, NDrivTAir, T_Step);
+
+			}
 			yearshift = true;
 			YearShiftToBeDone[iplant] = false;
 			ResetYearShiftDay = 2;
