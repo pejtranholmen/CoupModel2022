@@ -59,8 +59,12 @@ void PFCommands::OnMenuCommand(int col,long row,int section,int item)
 			// Create new profile.... by reading from file
 			}
 			else {
-				if (p_PFCurve->Set_Header(p_PFCurve->GetNewHeader())) {
-					p_PFCurve->UpdateHeaderFile();
+				auto numprof = p_PFCurve->GetNumProfiles();
+				auto newhead= p_PFCurve->GetNewHeader();
+				if (p_PFCurve->AddNewProfile(newhead)) {
+					auto updated=p_PFCurve->ResetHeaderFile();
+					auto actprof=p_PFCurve->GetActProfile();
+					numprof = p_PFCurve->GetNumProfiles();
 					p_PFCurve->OpenEditMainDataBase();
 					if (!p_PFCurve->SaveNewFormat());
 					MySingle::instance().GetPFCugPointer()->MakeBaseSheet();

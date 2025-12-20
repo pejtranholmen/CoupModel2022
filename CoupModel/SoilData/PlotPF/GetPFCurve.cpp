@@ -1,3 +1,4 @@
+#pragma once
 #define STD
 #define COUPSTD
 #include "../../std.h"
@@ -32,47 +33,92 @@ GetPFCurve::~GetPFCurve(void)
 }
 void GetPFCurve::ReadHeaderFile()
 {
-	
-	m_HeaderFile.seekg(0,ios::end);
-	auto n=m_HeaderFile.tellg();
-
-	m_HeaderFile.seekg(0,ios::beg);
-	m_HeaderFile.read(&buffer[0],NSizeHeader);
-	short int imaxp;
-	imaxp=*(int*)&buffer[0];
-	size_t imaxpp=0;
-	std::streamsize n2=0;
-	if(m_NewHeaderFile.is_open()) {
-		m_NewHeaderFile.seekg(0,ios::end);
-		n2=m_NewHeaderFile.tellg();
-		
-		m_NewHeaderFile.seekg(0,ios::beg);
-		if(n2>0)
-			m_NewHeaderFile.read((char*)&imaxpp,4);
-
-
-	}
 	size_t count = 0;
-	if (m_RwNewHeader.GetInputFileSize()== std::string::npos) {
+	if (m_RwNewHeader.IsBinaryFile()) {
+		if (m_HeaderFile.good()) {
+			m_HeaderFile.seekg(0, ios::end);
+			auto n = m_HeaderFile.tellg();
 
-		if (m_NewHeaderFile.is_open() && n2>0) { /// Reading New Header File
-			m_ActProfile.County.resize(2);
-			m_ActProfile.Country.resize(2);
-			size_t numplace;
-			auto koll = sizeof(unsigned int);
-			int byte_toread = 48 + koll;
-			while (m_NewHeaderFile.tellg()<n2&&count<imaxpp) {
-				m_NewHeaderFile.read((char*)&m_ActProfile.KeyProf, 4);
-				m_NewHeaderFile.read((char*)&numplace, 4);
-				m_ActProfile.Name.resize(numplace);
-				m_NewHeaderFile.read((char*)&m_ActProfile.Name[0], numplace);
-				m_NewHeaderFile.read((char*)&m_ActProfile.County[0], 2);
-				m_NewHeaderFile.read((char*)&m_ActProfile.Country[0], 2);
-				m_NewHeaderFile.read((char*)&m_ActProfile.Lat, byte_toread);
+			m_HeaderFile.seekg(0, ios::beg);
+			m_HeaderFile.read(&buffer[0], NSizeHeader);
+			short int imaxp;
+			imaxp = *(int*)&buffer[0];
+			size_t imaxpp = 0;
+			std::streamsize n2 = 0;
+			if (m_NewHeaderFile.is_open()) {
+				auto koll = m_NewHeaderFile.good();
+				m_NewHeaderFile.seekg(0, ios::end);
+				n2 = m_NewHeaderFile.tellg();
+
+				m_NewHeaderFile.seekg(0, ios::beg);
+				if (n2 > 0)
+					m_NewHeaderFile.read((char*)&imaxpp, 4);
+
+
+			}
+			size_t count = 0;
+			if (m_RwNewHeader.GetInputFileSize() == std::string::npos) {
+
+				if (m_NewHeaderFile.is_open() && n2 > 0) { /// Reading New Header File
+					m_ActProfile.County.resize(2);
+					m_ActProfile.Country.resize(2);
+					size_t numplace;
+					auto koll = sizeof(unsigned int);
+					int byte_toread = 48 + koll;
+					while (m_NewHeaderFile.tellg() < n2 && count < imaxpp) {
+						m_NewHeaderFile.read((char*)&m_ActProfile.KeyProf, 4);
+						m_NewHeaderFile.read((char*)&numplace, 4);
+						m_ActProfile.Name.resize(numplace);
+						m_NewHeaderFile.read((char*)&m_ActProfile.Name[0], numplace);
+						m_NewHeaderFile.read((char*)&m_ActProfile.County[0], 2);
+						m_NewHeaderFile.read((char*)&m_ActProfile.Country[0], 2);
+						m_NewHeaderFile.read((char*)&m_ActProfile.Lat, byte_toread);
+						auto recp = m_Records.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, m_ActProfile.RecLayers));
+						if (recp.second == false) continue;
+						m_HeaderRec.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, count));
+						m_HeaderPos.push_back(m_ActProfile.RecHeader);
+						m_ActProfile.OldKey = FUtil::ItoNumAscii(m_ActProfile.KeyProf / 100);
+						m_ActProfile.OldKey = m_ActProfile.OldKey.substr(2);
+						m_ActProfile.OldKey += ":";
+						string s;
+						s = FUtil::ItoNumAscii(m_ActProfile.KeyProf % 100);
+						s = s.substr(3);
+						m_ActProfile.OldKey += s;
+						m_AllProfiles.push_back(m_ActProfile);
+						count++;
+					}
+					IsNewFormatFile = true;
+					SaveNewFormat();
+					return;
+				}
+
+			}
+		}
+	}
+	if (m_RwNewHeader.IsFileInGood()) {
+		if (m_RwNewHeader.IsBinaryFile()) {
+			m_AllProfiles.clear();
+
+			m_Records.clear();
+			m_HeaderRec.clear();
+			size_t start = 0;
+			size_t version, numprof;
+
+			auto koll = m_RwNewHeader.SetGetPosition(&start);
+
+			m_RwNewHeader.m_DocFileIn.read((char*)&version, 4);
+
+			m_RwNewHeader.m_DocFileIn.read((char*)&numprof, 4);
+
+
+			while (m_RwNewHeader.IsFileInGood() && count < numprof) {
+
+				auto result = ReadWrite_NewHeaderLine(true);
 				auto recp = m_Records.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, m_ActProfile.RecLayers));
-				if (recp.second == false) continue;
 				m_HeaderRec.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, count));
+				if (m_ActProfile.RecHeader > count) m_ActProfile.RecHeader = count;
 				m_HeaderPos.push_back(m_ActProfile.RecHeader);
+
 				m_ActProfile.OldKey = FUtil::ItoNumAscii(m_ActProfile.KeyProf / 100);
 				m_ActProfile.OldKey = m_ActProfile.OldKey.substr(2);
 				m_ActProfile.OldKey += ":";
@@ -83,42 +129,55 @@ void GetPFCurve::ReadHeaderFile()
 				m_AllProfiles.push_back(m_ActProfile);
 				count++;
 			}
-			IsNewFormatFile = true;
-			SaveNewFormat();
-			return;
 		}
+		else { // No binary header
+			size_t version, numprof;
+			std::string line;
+			line.resize(1000);
+			auto k=m_RwNewHeader.m_DocFileIn.good();
+			m_RwNewHeader.m_DocFileIn.seekg(0, ios::beg);
+			//m_RwNewHeader.m_DocFileIn >> version;
+			//m_RwNewHeader.m_DocFileIn >> numprof;
 
-	}
-	m_RwNewHeader.m_DocFileIn.clear();
-	if (m_RwNewHeader.IsFileInGood()) {
-		m_AllProfiles.clear();
-
-		m_Records.clear();
-		m_HeaderRec.clear();
-		size_t start = 0;
-		size_t version, numprof;
-		m_RwNewHeader.SetGetPosition(&start);
-
-		m_RwNewHeader.rsize_t(&version);
-	
-		m_RwNewHeader.rsize_t(&numprof);
+			m_RwNewHeader.m_DocFileIn.getline(&line[0], 1000);
+			size_t nc = m_RwNewHeader.m_DocFileIn.gcount();
+			line.resize(nc);
+			auto pos = line.find(';');
+			auto sub = line.substr(0, pos);
+			auto after = line.substr(pos + 1);
+			numprof = FUtil::AtoInt(after);
+			line.resize(1000);
+			m_RwNewHeader.m_DocFileIn.getline(&line[0], 1000);
+			nc = m_RwNewHeader.m_DocFileIn.gcount();
 
 
-		while (m_RwNewHeader.IsFileInGood() &&count<numprof) {
-			ReadWrite_NewHeaderLine(true);
-			auto recp = m_Records.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, m_ActProfile.RecLayers));
-			m_HeaderRec.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, count));
-			m_HeaderPos.push_back(m_ActProfile.RecHeader);
+			while (m_RwNewHeader.m_DocFileIn.good()&&count<numprof) {
 
-			m_ActProfile.OldKey = FUtil::ItoNumAscii(m_ActProfile.KeyProf / 100);
-			m_ActProfile.OldKey = m_ActProfile.OldKey.substr(2);
-			m_ActProfile.OldKey += ":";
-			string s;
-			s = FUtil::ItoNumAscii(m_ActProfile.KeyProf % 100);
-			s = s.substr(3);
-			m_ActProfile.OldKey += s;
-			m_AllProfiles.push_back(m_ActProfile);
-			count++;
+				auto result = ReadWrite_NewHeaderLine(true);
+				auto recp = m_Records.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, m_ActProfile.RecLayers));
+				m_HeaderRec.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, count));
+				if (m_ActProfile.RecHeader > count) m_ActProfile.RecHeader = count;
+				m_HeaderPos.push_back(m_ActProfile.RecHeader);
+
+				m_ActProfile.OldKey = FUtil::ItoNumAscii(m_ActProfile.KeyProf / 100);
+				m_ActProfile.OldKey = m_ActProfile.OldKey.substr(2);
+				m_ActProfile.OldKey += ":";
+				string s;
+				s = FUtil::ItoNumAscii(m_ActProfile.KeyProf % 100);
+				s = s.substr(3);
+				m_ActProfile.OldKey += s;
+				m_AllProfiles.push_back(m_ActProfile);
+				count++;
+
+
+
+
+
+			}
+
+
+
+
 		}
 		IsNewFormatFile = true;
 	}
@@ -126,6 +185,10 @@ void GetPFCurve::ReadHeaderFile()
 
 
 	if(count==0)  {  //Reading Old Header File
+
+		m_NewHeaderFile.seekg(0, ios::end);
+		auto n = m_HeaderFile.tellg();
+		m_NewHeaderFile.seekg(0, ios::beg);
 		m_Records.clear();
 		m_HeaderRec.clear();
 		m_AllProfiles.clear();
@@ -182,73 +245,70 @@ void GetPFCurve::ReadHeaderFile()
 //	int profnum=(str[0]);
 }
 bool GetPFCurve::SaveNewFormat()
+
 {
-	InitSaveRecord(m_Records.size());
-	if(m_AllProfiles.size()==0) {
-		for(size_t i=0; i<m_Records.size(); i++) {
-			m_ActProfile=GetHeader(i+1,false);
-			m_AllProfiles.push_back(m_ActProfile);
-		}
-	}
-	auto  PrevProfile=m_ActProfile;
+	auto koll=InitSaveRecord(m_Records.size());
 	for(size_t i=0; i<m_AllProfiles.size();i++) {
 		m_ActProfile=m_AllProfiles[i];
-		if(!SaveRecord(false)) return false; // Saving all profiles in a sequence
+		if(!SaveRecord(true)) return false; // Saving all profiles in a sequence
 	}
-	if(PrevProfile.KeyProf>0) m_ActProfile=PrevProfile;
 	m_RwNewHeader.CloseFileOut();
 	return true;
+	return true;
+	return true;
+}
+bool GetPFCurve::IsFileReading() {
+	auto koll = m_RwNewHeader.m_DocFileIn.tellg();
+	auto p = m_RwNewHeader.m_DocFileIn.tellg();
+	auto p2 = m_RwNewHeader.m_DocFileOut.tellp();
+	auto good = m_RwNewHeader.m_DocFileOut.good();
+	auto good2 = m_RwNewHeader.m_DocFileIn.good();
+	if (p) return true;
+	else return false;
+
+
+
+
+
 }
 bool GetPFCurve::SaveRecord(bool New)
 {
-	if (!m_NewHeaderFile.good() || !m_NewHeaderFile.is_open()) {
-		if (New) {
-			m_NewHeaderFile.seekp(m_ActProfile.RecHeader, ios::beg);
-			auto check = m_NewHeaderFile.tellp();
-			if (m_NewHeaderFile.good()) {
-				if ((unsigned int)check != m_ActProfile.RecHeader) return false;
-				if (!UpdateHeaderFile()) return false;
-			}
-		}
-		else {
-			m_ActProfile.RecHeader = m_NewHeaderFile.tellp();
-		}
-		auto koll = sizeof(unsigned long);
-		int byte_towrite = 48 + koll;
-		if (m_NewHeaderFile.good()) {
-			m_NewHeaderFile.write((char*)&m_ActProfile.KeyProf, 4);
-			size_t numchar = m_ActProfile.Name.size();
-			m_NewHeaderFile.write((char*)&numchar, 4);
-			m_NewHeaderFile.write((char*)&m_ActProfile.Name[0], m_ActProfile.Name.size());
-			m_NewHeaderFile.write((char*)&m_ActProfile.County[0], 2);
-			m_NewHeaderFile.write((char*)&m_ActProfile.Country[0], 2);
-			m_NewHeaderFile.write((char*)&m_ActProfile.Lat, byte_towrite);
-		}
-	}
-
 	if (!New) {
+		auto koll = m_RwNewHeader.m_DocFileIn.tellg();
+		auto p = m_RwNewHeader.m_DocFileIn.tellg();
+		auto p2 = m_RwNewHeader.m_DocFileOut.tellp();
+		auto good = m_RwNewHeader.m_DocFileOut.good();
+		auto good2 = m_RwNewHeader.m_DocFileIn.good();
+		m_ActProfile.RecHeader = p;
 		return ReadWrite_NewHeaderLine(false);
 
 	}
-	return true;
+	else {
+		//return true;
+		auto koll = m_RwNewHeader.m_DocFileIn.tellg();
+		auto p = m_RwNewHeader.m_DocFileOut.tellg();
+		auto p2 = m_RwNewHeader.m_DocFileOut.tellp();
+		auto good = m_RwNewHeader.m_DocFileOut.good();
+		auto good2 = m_RwNewHeader.m_DocFileIn.good();
+		m_ActProfile.RecHeader = p;
 
-	//return ReadWrite_NewHeaderLine(false);
+		return ReadWrite_NewHeaderLine(false);
+
+	}
 }
 bool GetPFCurve::InitSaveRecord(size_t numprofile)
 {
-	if (m_RwNewHeader.IsFileInGood() || m_RwNewHeader.IsFileOutGood()) {
-		unsigned int k = static_cast<unsigned int>(m_PF_FileVersion);
-		unsigned int n = static_cast<unsigned int>(numprofile);
+	if (m_RwNewHeader.m_DocFileOut.good()) {
+		m_RwNewHeader.m_DocFileOut.seekp(0, ios::beg);
+		m_RwNewHeader.m_DocFileOut << m_PF_FileVersion << ';' << numprofile << '\n';
+		//m_RwNewHeader.m_DocFileOut.write((char*)&m_PF_FileVersion, 4);
+		//m_RwNewHeader.m_DocFileOut.write((char*)&numprofile, 4);
+		m_RwNewHeader.m_DocFileOut << "Key;Name;County;Country;Lat;Long;Upper_Clay;Upper_Sand;Upper_Org;Lower_Clay;Lower_Sand;Lower_Org;NumLayers;LowDepth;Year;RecLayers;RecHeader;CreateDate;CreatedBy;ModifiedBy;ModifiedDate\n";
 
-		m_RwNewHeader.wInt(&k);
-		m_RwNewHeader.wInt(&n);
-		return true;
+
+
 	}
-	if(!m_NewHeaderFile.good()) return false;
-	m_NewHeaderFile.seekp(0, ios::beg);
-	m_NewHeaderFile.write((char*)&numprofile,4);
-
-	return true;
+	return m_RwNewHeader.m_DocFileOut.good();
 }
 bool GetPFCurve::InitNewScan(bool Extra) {
 	std::fstream *stream;
@@ -730,10 +790,10 @@ bool GetPFCurve::DeleteActHeader()
 	if(itr!=m_Records.end()) {
 		m_Records.erase(itr);
 	}
-	/*auto ith=m_HeaderRec.find(m_ActProfile.KeyProf);
+	auto ith=m_HeaderRec.find(m_ActProfile.KeyProf);
 	if(ith!=m_HeaderRec.end()) {
 		m_HeaderRec.erase(ith);
-	}*/
+	}
 	//Update second argument in Header map
 	//scan all and check if second header is greater then irec - then minus 1
 
@@ -760,6 +820,22 @@ string GetPFCurve::GetComFileName() {
 	    std::string directory=GetDataBaseDirectory();
 	    return directory+"Comments\\"+filbas+".pfn";
 }
+bool GetPFCurve::ResetHeaderFile() {
+	size_t start = 0;
+
+	auto koll = m_RwNewHeader.SetGetPosition(&start);
+	size_t version = 0;
+	size_t numprof = GetNumProfiles();
+
+	koll = m_RwNewHeader.rsize_t(&version);
+
+	koll = m_RwNewHeader.rsize_t(&numprof);
+	size_t count;
+	return SaveNewFormat();
+
+	IsNewFormatFile = true;
+}
+
 bool GetPFCurve::UpdateHeaderFile() {
 	// Needs to rewrite headerFile after m_ActProfile
 	// Needs copy of previous file:
@@ -823,5 +899,4 @@ bool GetPFCurve::ExportMainDataBasetoCSVFile()
 
 	return false;
 }
-
 

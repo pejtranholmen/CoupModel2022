@@ -312,9 +312,9 @@ void CUserSetup::OnButtonBrowseDb()
 				LPCTSTR lpszDefExt;
 				LPCTSTR lpszFilter;
 				int fileDlgResult;
-				lpszDefExt=_T("dba");
-				lpszFilter =_T("Data BaseExcel (*.dba)|*.dba||");
-				pszFileName=CString(m_DataBaseDirectory.c_str())+_T("Pfprof.dba");
+				lpszDefExt=_T("db");
+				lpszFilter =_T("Data Base(*.db)");
+				pszFileName=CString(m_DataBaseDirectory.c_str())+_T("Pfprof.db");
 			
 				CFileDialog	DriveFileDlg(TRUE,lpszDefExt,pszFileName, OFN_OVERWRITEPROMPT|OFN_NOCHANGEDIR,lpszFilter);
 			

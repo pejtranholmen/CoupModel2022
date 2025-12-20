@@ -36,62 +36,74 @@ bool ReadWriteTypes::OpenDocFileIn(std::string filename, bool binary_type )
 		m_DocFileIn.clear();
 		m_DocFileIn.open(filename);
 	}
-	/*
-	m_DocFileIn.seekg(0, ios::end);
+	
+	m_DocFileIn.seekg(0, std::ios::end);
 	auto end=m_DocFileIn.tellg();
 
-	m_DocFileIn.seekg(0, ios::beg);
+	m_DocFileIn.seekg(0, std::ios::beg);
 	char buffer[40000] = { 0 };
 	char buf[1000] = {0 };
-	vector<size_t> bufm;
+	std::vector<size_t> bufm;
 
 	char byte;
 	size_t count=0;
 	size_t all = 0;
-	m_DocFileIn.seekg(0, ios::beg);
+	m_DocFileIn.seekg(0, std::ios::beg);
 	auto pos_prior = m_DocFileIn.tellg();
 
 
 	signed char il;
 
-	m_DocFileIn.read((char*)(&il), 1);
+	m_DocFileIn.read(buf, 1000);
+	for (size_t i = 0; i < 100; ++i) {
+		if (buf[i] == 'K' && buf[i + 1] == 'e' && buf[i + 2] == 'y') {
+			m_DocFileIn.close();
+			m_DocFileIn.open(filename, std::ios_base::in);
+			m_binary = false;
+			std::string line;
+
+			line.resize(1000);
+			m_DocFileIn.getline(&line[0],1000);
+
+			return m_DocFileIn.good();
+			size_t nc = m_DocFileIn.gcount();
+			while (m_DocFileIn.good()) {
+				line.resize(1000);
+				m_DocFileIn.getline(&line[0], 1000);
+				nc = m_DocFileIn.gcount();
+				line.resize(nc);
+				size_t Pos = 0;
+				while (line.find(';') != std::string::npos) {
+					std::string sub = line.substr(0,line.find(';'));
+					float fvalue = FUtil::AtoFloat(sub);
+					int intvalue = FUtil::AtoInt(sub);
+
+					line= line.substr(line.find(';')+1);
+					Pos++;
+					switch (Pos) {
+					case 1:
+						break;
 
 
 
 
 
-	m_DocFileIn.read(buf, 100);
-	auto pos_post = m_DocFileIn.tellg();
-	pos_post -= 1;
-	m_DocFileIn.seekg(pos_post, ios::beg);
+					};
+				}
 
-	
-	while (m_DocFileIn.good()) {
-		all++;
-		m_DocFileIn.read((char*)(&il), 1);
-		//m_DocFileIn.read(&byte, 1);
-		auto pos_post = m_DocFileIn.tellg();
-		auto pos_prior = pos_post;
-		bufm.push_back(size_t(pos_post));
-		buffer[all - 1] = il;
-	}
+			}
 
-
-
-	vector<size_t> kollpos;
-	for (size_t i = 0; i < all; i++) {
-		if (buffer[i] == 83 && buffer[i + 1] == 69) {
-			kollpos.push_back(i);
 		}
+	
+	
 	}
+	
 
-
-	m_DocFileIn.seekg(0, ios::beg);*/
-
-
-
-
-	m_FileName = filename;
+	size_t version = 0;
+	m_DocFileIn.seekg(0, std::ios::beg);
+	m_DocFileIn.read((char*)(&version), 4);
+	size_t numprof = 0;	
+	m_DocFileIn.read((char*)(&numprof), 4);
 
 
 	return m_DocFileIn.good();
@@ -124,8 +136,9 @@ bool ReadWriteTypes::wString(std::string* str)
 {
 	size_t il = str->size();
 	if (il > 0)
-		m_DocFileOut << *str << std::endl;
-
+		m_DocFileOut << *str << ';';
+	else
+		m_DocFileOut << ';';
 	return true;
 }
 
@@ -491,19 +504,19 @@ bool ReadWriteTypes::rDouble(double* f)
 
 bool ReadWriteTypes::wInt(int* iv)
 {
-	m_DocFileOut << *iv << std::endl;
+	m_DocFileOut << *iv << ';';
 	return true;
 }
 
 bool ReadWriteTypes::wInt(unsigned int* iv)
 {
-	m_DocFileOut << *iv << std::endl;
+	m_DocFileOut << *iv << ';';
 	return m_DocFileOut.good();
 }
 
 bool ReadWriteTypes::wSize_t(size_t* iv)
 {
-	m_DocFileOut << *iv << std::endl;
+	m_DocFileOut << *iv << ';';
 	return m_DocFileOut.good();
 }
 
@@ -511,37 +524,37 @@ bool ReadWriteTypes::wPosition()
 {
 	auto pos = m_DocFileOut.tellp();
 	size_t ipos = size_t(pos);
-	m_DocFileOut << ipos << std::endl;
+	m_DocFileOut << ipos << ';';
 	return m_DocFileOut.good();
 }
 
 bool ReadWriteTypes::wbool(bool* iv)
 {
-	m_DocFileOut << *iv << std::endl;
+	m_DocFileOut << *iv << ';';
 	return true;
 }
 
 bool ReadWriteTypes::wLong(long* iv)
 {
-	m_DocFileOut << *iv << std::endl;
+	m_DocFileOut << *iv << ';';
 	return true;
 }
 
 bool ReadWriteTypes::wFloat(float* f)
 {
-	m_DocFileOut << *f << std::endl;
+	m_DocFileOut << *f << ';';
 	return true;
 }
 
 bool ReadWriteTypes::wDouble(double* f)
 {
-	m_DocFileOut << *f << std::endl;
+	m_DocFileOut << *f << ';';
 	return true;
 }
 
 bool ReadWriteTypes::wTime(time_t* time)
 {
-	m_DocFileOut << *time << std::endl;
+	m_DocFileOut << *time << ';';
 	return true;
 }
 

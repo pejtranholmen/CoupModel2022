@@ -62,6 +62,7 @@ public:
 	void ReadHeaderFile();
 	void ReadLevelFile();
 	bool SaveNewFormat();
+	bool IsFileReading();
 	bool SaveRecord(bool NewRecord=false);
 	bool InitSaveRecord(size_t numprofile);
 	std::vector<float> GetPF_Pressure(size_t record);
@@ -117,6 +118,7 @@ public:
 
 
 	bool UpdateHeaderFile();
+	bool ResetHeaderFile();
 	bool ExportMainDataBasetoCSVFile();
 
 
@@ -135,4 +137,3 @@ private:
 	int m_TopRow;
 
 };
-

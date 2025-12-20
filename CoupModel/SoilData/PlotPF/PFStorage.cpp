@@ -1,6 +1,7 @@
 #include "../../std.h"
 #include "PFStorage.h"
 #include "../../Util/FUtil.h"
+#include <sstream> 
 using namespace std;
 
 PFStorage::PFStorage(void)
@@ -46,6 +47,7 @@ bool PFStorage::OpenMainFile(string name,  bool write)
 	testname=name;
 	string testname_n= testname + ".dbn";
 	string testname_db = testname + ".db";
+
 	if(!FUtil::IsFileExisting(testname_n)&& !FUtil::IsFileExisting(testname_db)) {
 		//m_NewHeaderFile.open(testname_n, ios::binary|ios::out);
 		testname=name;
@@ -60,17 +62,10 @@ bool PFStorage::OpenMainFile(string name,  bool write)
 		m_RwNewHeader.OpenDocFileout(testname_db);
 
 	}
-	else if (FUtil::IsFileExisting(testname_n) && !FUtil::IsFileExisting(testname_db))	{
-		
-		m_NewHeaderFile.open(testname_n, ios::binary|ios::in);
-
-		m_RwNewHeader.OpenDocFileout(testname_db);
-		IsNewFormatFile = true;
-
-	}
 	else {
 		IsNewFormatFile=true;
 		if (write) {
+			//m_RwNewHeader.OpenDocFileIn(testname_db, true);
 			m_RwNewHeader.OpenDocFileout(testname_db);
 		}
 		else {
@@ -80,7 +75,7 @@ bool PFStorage::OpenMainFile(string name,  bool write)
 		}
 
 	}
-/*	testname=name;
+	testname=name;
 	testname+=".dbl";
 
 	if(!FUtil::IsFileExisting(testname)) 
@@ -90,7 +85,7 @@ bool PFStorage::OpenMainFile(string name,  bool write)
 			m_NewLevelFile.open(testname,ios::binary|ios::in|ios::out);
 		else
 			m_NewLevelFile.open(testname,ios::binary|ios::in);
-	}*/
+	}
 
 	if(m_HeaderFile.is_open()&&m_LevelFile.is_open()) {
 		if(write) IsMainEditOpen=true;
@@ -145,7 +140,7 @@ bool PFStorage::OpenEditMainDataBase()
 { 
 
 	if(m_LevelFile.is_open()) m_LevelFile.close();
-	//if(m_HeaderFile.is_open()) m_HeaderFile.close();
+	if(m_HeaderFile.is_open()) m_HeaderFile.close();
 	if(m_NewHeaderFile.is_open()) m_NewHeaderFile.close();
 	m_RwNewHeader.CloseFileIn();
 	m_RwNewHeader.CloseFileOut();
@@ -158,13 +153,14 @@ bool PFStorage::OpenEditExtraDataBase()
 	return true;
 }
 
-bool PFStorage::ReadWrite_NewHeaderLine(bool read)
-{
+bool PFStorage::ReadWrite_NewHeaderLine(bool read) {
 	if (read) {
+		if (m_RwNewHeader.IsBinaryFile()) {
+
 		bool check;
 		auto koll = m_RwNewHeader.m_DocFileIn.tellg();
-		check=m_RwNewHeader.rsize_t(&m_ActProfile.KeyProf);
-	
+		check = m_RwNewHeader.rsize_t(&m_ActProfile.KeyProf);
+
 		check = m_RwNewHeader.rString(&m_ActProfile.Name);
 
 		check = m_RwNewHeader.rString(&m_ActProfile.Country);
@@ -173,7 +169,7 @@ bool PFStorage::ReadWrite_NewHeaderLine(bool read)
 		m_RwNewHeader.rFloat(&m_ActProfile.Long);
 
 
-		
+
 		m_RwNewHeader.rFloat(&m_ActProfile.Upper_Clay);
 
 		m_RwNewHeader.rFloat(&m_ActProfile.Upper_Sand);
@@ -197,7 +193,47 @@ bool PFStorage::ReadWrite_NewHeaderLine(bool read)
 		m_RwNewHeader.rString(&m_ActProfile.ModifiedDate);
 		return m_RwNewHeader.IsFileInGood();
 	}
-	else {
+		else {
+
+			std::string line;
+			std::getline(m_RwNewHeader.m_DocFileIn, line);
+
+			std::vector<std::string> fields;
+			std::stringstream ss(line);
+			std::string item;
+
+			while (std::getline(ss, item, ';'))
+				fields.push_back(item);
+
+			if (fields.size() >= 20) {
+
+				m_ActProfile.KeyProf = FUtil::AtoInt(fields[0]);
+				m_ActProfile.Name = fields[1];
+				m_ActProfile.Country = fields[2];
+				m_ActProfile.County = fields[3];
+				m_ActProfile.Lat = FUtil::AtoFloat(fields[4]);
+				m_ActProfile.Long = FUtil::AtoFloat(fields[5]);
+				m_ActProfile.Upper_Clay = FUtil::AtoFloat(fields[6]);
+				m_ActProfile.Upper_Sand = FUtil::AtoFloat(fields[7]);
+				m_ActProfile.Upper_Org = FUtil::AtoFloat(fields[8]);
+				m_ActProfile.Lower_Clay = FUtil::AtoFloat(fields[9]);
+				m_ActProfile.Lower_Sand = FUtil::AtoFloat(fields[10]);
+				m_ActProfile.Lower_Org = FUtil::AtoFloat(fields[11]);
+				m_ActProfile.NumLayers = FUtil::AtoInt(fields[12]);
+				m_ActProfile.LowDepth = FUtil::AtoInt(fields[13]);
+				m_ActProfile.Year = FUtil::AtoInt(fields[14]);
+				m_ActProfile.RecLayers = FUtil::AtoInt(fields[15]);
+				m_ActProfile.RecHeader = FUtil::AtoInt(fields[16]);
+				m_ActProfile.CreateDate = fields[17];
+				m_ActProfile.CreatedBy = fields[18];
+				m_ActProfile.ModifiedBy = fields[19];
+			}
+		}
+
+	}
+	else { //Write
+
+		auto p2 = m_RwNewHeader.m_DocFileOut.tellp();
 		m_RwNewHeader.wSize_t(&m_ActProfile.KeyProf);
 		m_RwNewHeader.wString(&m_ActProfile.Name);
 		m_RwNewHeader.wString(&m_ActProfile.Country);
@@ -220,7 +256,8 @@ bool PFStorage::ReadWrite_NewHeaderLine(bool read)
 		m_RwNewHeader.wString(&m_ActProfile.CreatedBy);
 		m_RwNewHeader.wString(&m_ActProfile.ModifiedBy);
 		m_RwNewHeader.wString(&m_ActProfile.ModifiedDate);
-
+		m_RwNewHeader.m_DocFileOut << p2<< '\n';
+		p2 = m_RwNewHeader.m_DocFileOut.tellp();
 		return m_RwNewHeader.IsFileOutGood();
 	}
 }

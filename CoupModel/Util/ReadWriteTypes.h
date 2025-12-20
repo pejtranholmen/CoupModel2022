@@ -10,6 +10,7 @@ public:
 	bool IsFileInGood() noexcept {return m_DocFileIn.good();};
 	bool IsFileOutGood() noexcept  {return m_DocFileOut.good();};
 	bool SetGetPosition(size_t iv);
+	bool IsBinaryFile() noexcept { return m_binary; };
 	bool wInt(int *iv);
 	bool wSize_t(size_t *iv);
 	bool wInt(unsigned int *iv);

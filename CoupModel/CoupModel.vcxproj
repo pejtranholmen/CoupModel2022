@@ -408,6 +408,7 @@
     <ClInclude Include="CUG\ugxpthemes.h" />
     <ClInclude Include="CUG\utbstrop.h" />
     <ClInclude Include="CUG\UTMaskedEdit.h" />
+    <ClInclude Include="SoilData\PlotPF\ReadWriteFile.hpp" />
     <ClInclude Include="Util\CWinAPIFileHandler.h" />
     <ClInclude Include="DBDataWnd.h" />
     <ClInclude Include="DBWnd.h" />

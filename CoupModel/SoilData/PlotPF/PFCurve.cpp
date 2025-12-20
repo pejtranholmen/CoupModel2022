@@ -80,8 +80,20 @@ bool PFCurve::Set_Header(NEWHEADER head, bool Extra)
 	if(!IsMainEditOpen&&!Extra) return false;
 
 	auto start=GetHeaderRecord(head.KeyProf);
-	//start=(m_ActProfile.RecLayers-1)*NSizeHeader;
+	if (start == string::npos) {
+
+
+		head.RecHeader = m_Records.size();
+		m_ActProfile.RecHeader = m_Records.size();
+		start= m_Records.size();
+		return true;
+	}
+	start=(m_ActProfile.RecHeader)*NSizeHeader;
 	m_NewHeaderFile.seekp(start,ios::beg);
+	
+	m_RwNewHeader.IsFileInGood();
+	m_RwNewHeader.IsFileOutGood();
+
 	auto actpos=m_NewHeaderFile.tellp();
 	if(actpos==std::streampos(start)&&start!= std::string::npos) {
 		m_ActProfile=head;
@@ -233,10 +245,13 @@ NEWHEADER PFCurve::GetNewHeader() {
 	}
 	return m_IniHeader;
 }
-bool PFCurve::AddNewProfile(bool Extra) {
-
-	//m_Records.push_back(m_ActProfile.RecLayers);
-
+bool PFCurve::AddNewProfile(NEWHEADER head, bool Extra) {
+	m_ActProfile = head;
+	auto rec_inserted=m_Records.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, m_ActProfile.RecLayers));
+	auto count = m_Records.size();
+	m_HeaderRec.insert(pair<size_t, size_t>(m_ActProfile.KeyProf, count-1));
+	m_HeaderPos.push_back(m_ActProfile.RecHeader);
+	m_AllProfiles.push_back(m_ActProfile);
 
 	return true;
 }

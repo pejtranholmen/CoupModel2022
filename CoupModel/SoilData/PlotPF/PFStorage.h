@@ -3,7 +3,6 @@
 #include "../../Util/ReadWriteTypes.h"
 
 
-
 struct NEWHEADER
 {	size_t KeyProf;
 	std::string OldKey;

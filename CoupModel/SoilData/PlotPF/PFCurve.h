@@ -1,3 +1,5 @@
+
+
 #pragma once
 #include "./GetPFCurve.h"
 class PFCurve :
@@ -11,7 +13,7 @@ public:
 	bool SetPF_Theta(size_t row, std::vector<float> theta, bool extra = false);
 	bool SetPF_Coef(size_t row, PFCOEF pfcoef, bool extra=false);
 	bool SetPF_Texture(size_t row, std::vector<float> texture, bool extra=false);
-	bool AddNewProfile(bool Extra=false);
+	bool AddNewProfile(NEWHEADER head, bool Extra=false);
 	bool DeleteProfile(size_t row, bool Extra=false);
 	bool CleanMainDataBase();
 	bool UpdateActualProfile();

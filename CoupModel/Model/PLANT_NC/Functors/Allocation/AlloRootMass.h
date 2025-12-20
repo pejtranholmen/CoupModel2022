@@ -2,6 +2,7 @@
 #include "../../../../std.h"
 #include "../../../../ModelTypes/SimB.h"
 #include "../../../../ModelTypes/FixedInteger_PlantComp.h"
+using std::vector;
 struct AlloNewMobile {
 	vector<double> Roots;
 	vector<double> Leaf;
@@ -231,8 +232,9 @@ private:
 class AlloNewMobile_To_All {
 public:
 	AlloNewMobile_To_All(function<double(size_t, double)> f_Mass, function<double(size_t, double)> f_Nitrogen, function<double(size_t, double)> f_Phosphorus, function<double(size_t, double)> f_Water,
-		vector<double> RateCoef, size_t optionRoot, std::vector<double> AlloLeaf1, std::vector<double> AlloLeaf2, std::vector<double> AlloLeaf3, size_t optionLeaf,
-		vector<double> FractionCoarseRoot) :
+		vector<double> RateCoef, size_t optionRoot,
+		std::vector<double> AlloLeaf1, std::vector<double> AlloLeaf2, std::vector<double> AlloLeaf3,
+		size_t optionLeaf, vector<double> FractionCoarseRoot) :
 		f_Root_Mass(f_Mass), f_Root_Nitrogen(f_Nitrogen), f_Root_Phosphorus(f_Phosphorus), f_Root_Water(f_Water), RateCoef(RateCoef), OptionRoot(optionRoot), OptionLeaf(optionLeaf),
 		FractionCoarseRoot(FractionCoarseRoot)
 	
