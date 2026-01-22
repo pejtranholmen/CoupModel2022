@@ -393,7 +393,7 @@ bool ResidualsBase::OpenResidualFile(bool reading) {
 
 
 	if (reading) {
-		if (!m_ResidualFile.OpenDocFileIn(m_FileName)) return false;
+		if (!m_ResidualFile.OpenDocFileIn(m_FileName, true)) return false;
 		m_FileSize = m_ResidualFile.GetStdInputFileSize();
 		if (m_FileSize == 0 || m_FileSize == std::string::npos) {
 			return false;

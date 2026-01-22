@@ -40,70 +40,7 @@ bool ReadWriteTypes::OpenDocFileIn(std::string filename, bool binary_type )
 	m_DocFileIn.seekg(0, std::ios::end);
 	auto end=m_DocFileIn.tellg();
 
-	m_DocFileIn.seekg(0, std::ios::beg);
-	char buffer[40000] = { 0 };
-	char buf[1000] = {0 };
-	std::vector<size_t> bufm;
 
-	char byte;
-	size_t count=0;
-	size_t all = 0;
-	m_DocFileIn.seekg(0, std::ios::beg);
-	auto pos_prior = m_DocFileIn.tellg();
-
-
-	signed char il;
-
-	m_DocFileIn.read(buf, 1000);
-	for (size_t i = 0; i < 100; ++i) {
-		if (buf[i] == 'K' && buf[i + 1] == 'e' && buf[i + 2] == 'y') {
-			m_DocFileIn.close();
-			m_DocFileIn.open(filename, std::ios_base::in);
-			m_binary = false;
-			std::string line;
-
-			line.resize(1000);
-			m_DocFileIn.getline(&line[0],1000);
-
-			return m_DocFileIn.good();
-			size_t nc = m_DocFileIn.gcount();
-			while (m_DocFileIn.good()) {
-				line.resize(1000);
-				m_DocFileIn.getline(&line[0], 1000);
-				nc = m_DocFileIn.gcount();
-				line.resize(nc);
-				size_t Pos = 0;
-				while (line.find(';') != std::string::npos) {
-					std::string sub = line.substr(0,line.find(';'));
-					float fvalue = FUtil::AtoFloat(sub);
-					int intvalue = FUtil::AtoInt(sub);
-
-					line= line.substr(line.find(';')+1);
-					Pos++;
-					switch (Pos) {
-					case 1:
-						break;
-
-
-
-
-
-					};
-				}
-
-			}
-
-		}
-	
-	
-	}
-	
-
-	size_t version = 0;
-	m_DocFileIn.seekg(0, std::ios::beg);
-	m_DocFileIn.read((char*)(&version), 4);
-	size_t numprof = 0;	
-	m_DocFileIn.read((char*)(&numprof), 4);
 
 
 	return m_DocFileIn.good();

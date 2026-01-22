@@ -98,7 +98,7 @@ NcType NcVar::getType() const {
 
   // first get the typeid
   nc_type xtypep;
-  ncCheck(nc_inq_vartype(groupId,myId,&xtypep),__FILE__,__LINE__);
+  ncCheck(nc_inq_vartype(groupId, myId, &xtypep), __FILE__, __LINE__);
 
   if(xtypep ==  ncByte.getId()    ) return ncByte;
   if(xtypep ==  ncUbyte.getId()   ) return ncUbyte;
