@@ -71,7 +71,7 @@ bool PFStorage::OpenMainFile(string name,  bool write)
 		else {
 			if (!FUtil::IsFileExisting(testname_db)) 
 				m_RwNewHeader.OpenDocFileout(testname_db);
-			m_RwNewHeader.OpenDocFileIn(testname_db, true);
+			m_RwNewHeader.OpenDocFileIn(testname_db, false);
 		}
 
 	}
