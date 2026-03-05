@@ -1008,18 +1008,23 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 							auto vEnsemblesToPlot = m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
 							out_dump << " Num of Ensembles to plot - " << vEnsemblesToPlot.size() << std::endl;*/
 
-
-
-							if (m_pUtil->GetEnsembleViewOption() == 0||col==1||col==3) {
-	 							EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
+							EnsemblesToPlot.clear();
+							if (m_pUtil->GetEnsembleViewOption() == 0) {
+								EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
 							}
-							else {
+							else if (m_pUtil->GetEnsembleViewOption() == 1) {
 								if (m_pSimDoc->m_SelectValTime[ii].MeanIndicator > ENSEMBLE_TYPE::NO || col == 1 || col == 3) {
 									EnsemblesToPlot = m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
 								}
 								else
 									EnsemblesToPlot.push_back(0);
 							}
+							else if (m_pUtil->GetEnsembleViewOption() == 2) {
+								for (size_t i = 0; i < m_pSimDoc->m_MStorage.GetNumberofEnsembles(); ++i) {
+									EnsemblesToPlot.push_back(i);
+								}
+							}
+
 							if(EnsemblesToPlot.size()>0) {
 								m_pUtil->m_MultiRunPlot=true;
 							}
@@ -1086,12 +1091,17 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 								if (m_pUtil->GetEnsembleViewOption() == 0) {
 									EnsemblesToPlot.push_back(m_pSimDoc->m_MStorage.m_ActualEnsemble);
 								}
-								else {
+								else if(m_pUtil->GetEnsembleViewOption() == 1) {
 									if (m_pSimDoc->m_SelectOut[i].MeanIndicator > ENSEMBLE_TYPE::NO || col == 1 || col == 3) {
 										EnsemblesToPlot = m_pSimDoc->m_MStorage.GetEnsemblesToPlot();
 									}
 									else
 										EnsemblesToPlot.push_back(0);
+								}
+								else if (m_pUtil->GetEnsembleViewOption() == 2) {
+									for (size_t i = 0; i < m_pSimDoc->m_MStorage.GetNumberofEnsembles(); ++i) {
+										EnsemblesToPlot.push_back(i);
+									}
 								}
 								for (size_t i2 = 0; i2 < EnsemblesToPlot.size(); i2++) {
 									PLOTv plotinfo = m_pPlotInfo->MakeOutPutChartInfo(i, j);

@@ -286,7 +286,7 @@ bool Thermal_Functions::Def()
 	plotpar.X_Max = 10;
 	plotpar.X_MaxPar = "mSaturation";
 	plotpar.X_Label = "Water Content (vol %)";
-	plotpar.Y_Label = "Thermal Conductivity (" + p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, false) + ")";
+	plotpar.Y_Label = "Thermal Conductivity (" + string(p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, false)) + ")";
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -321,7 +321,7 @@ bool Thermal_Functions::Def()
 	plotpar.X_Max = 10;
 	plotpar.X_MaxPar = "mSaturation";
 	plotpar.X_Label = "Water Content (vol %)";
-	plotpar.Y_Label = "Thermal Conductivity ("+p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, false) + ")";
+	plotpar.Y_Label = "Thermal Conductivity ("+string(p_ModelInfo->GetUnitString(UNIT_TYPES::THERMAL_CONDUCTIVY_UNIT, false)) + ")";
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;
 	plotpar.Num_Of_Opt = 1;
@@ -390,7 +390,7 @@ bool Thermal_Functions::Def()
 	plotpar.X_Min = -10;
 	plotpar.X_Max = 0;
 	plotpar.X_MaxPar = "";
-	plotpar.X_Label = "Temperature ("+p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT,false)+")";
+	plotpar.X_Label = "Temperature ("+string(p_ModelInfo->GetUnitString(UNIT_TYPES::TEMP_UNIT,false))+")";
 	plotpar.Y_Label = "Degree of Thermal Conductivity (-)";
 	plotpar.LogXScale = false;
 	plotpar.LogYScale = false;

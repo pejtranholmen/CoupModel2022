@@ -101,12 +101,12 @@ public:
 	fysprocess GetPhysProcFromString(std::string str);
 	bioprocess GetBioProcFromString(std::string str);
 
-	std::string_view GetUnitString(UNIT_TYPES) noexcept;
-	std::string GetUnitString(UNIT_TYPES key, bool withparanthesis) noexcept;
+	//std::string_view GetUnitString(UNIT_TYPES) noexcept;
+	//std::string_view GetUnitString(UNIT_TYPES key, bool withparanthesis) noexcept;
 
 
 	size_t GetNumUnits()  noexcept { return m_TypeBasedUnits.size(); };
-	/*std::string_view GetUnitString(UNIT_TYPES key, bool withparanthesis = false) {
+	std::string_view GetUnitString(UNIT_TYPES key, bool withparanthesis = false) {
 		auto it = m_TypeBasedUnits.find(key);
 		if (it != m_TypeBasedUnits.end()) {
 			if (withparanthesis) {
@@ -119,7 +119,7 @@ public:
 		else {
 			return "";
 		}
-	}*/
+	}
 	UNIT_TYPES GetUnitType(std::string key) {
 		auto it = m_StringBasedUnits.find(key);
 		if (it != m_StringBasedUnits.end())
@@ -193,13 +193,13 @@ private:
 	"Gas processes","Minteq","HBV","Validation","Soil mineral P Processes","External P Inputs" };
 
 
-	static constexpr std::array<std::string_view,static_cast<size_t>(UNIT_TYPES::COUNT)> m_UnitTypeNames = {"MJ/m\xB2/d","J/m\xB2/d","J/m\xB2","J/m\xB3","MJ/m\xB3",
-		"\xB0""C","\xB0""Cd", "W/m/\xB0""C","g/m\xB2","gC/m\xB2","gC/m\xB2/d","gN/m\xB2","gN/m\xB2/d","g/m\xB2/d","m/s",
-		"mm/d","Vol %","cm water","m\xB2","g/m\xB3", "Kg/m\xB3", "m\xB2/g",
-		"mg/m\xB2","mg/m\xB2/d","mm","Pa","m","m/s","s/m",
-		"\xB5mol/m\xB2/d","m\xB2/d","m\xB2/s","cm\xB2/s","gm\xB2","PPM", "yr", "%", "d", "J/mol",
-		"mg/l","\xB5g/l","-","1/d","d/mm","dm\xB2/g","g/g","m\xB3/m\xB3",
-		"\xB5g/\xB5g","xB5g/m\xB2/d","\xB5g/d","min","rad","W/m/\xB0""C","1/m\xB2","DOY",
+	static constexpr std::array<std::string_view,static_cast<size_t>(UNIT_TYPES::COUNT)> m_UnitTypeNames = {"MJ/m\xB2/d","J/m\xB2/d","J/m\xB2","J/m\xB3","MJ/m\xB3",//5
+		"\xB0""C","\xB0""Cd", "W/m/\xB0""C","g/m\xB2","gC/m\xB2","gC/m\xB2/d","gN/m\xB2","gN/m\xB2/d","g/m\xB2/d","m/s",//15
+		"mm/d","Vol %","cm water","m\xB2","g/m\xB3", "Kg/m\xB3", "m\xB2/g",//22
+		"mg/m\xB2","mg/m\xB2/d","mm","Pa","m","m/s","s/m",//29
+		"\xB5mol/m\xB2/d","m\xB2/d","m\xB2/s","cm\xB2/s","gm\xB2","PPM", "yr", "%", "d", "J/mol",//39
+		"mg/l","\xB5g/l","-","1/d","d/mm","dm\xB2/g","g/g","m\xB3/m\xB3",//47
+		"\xB5g/\xB5g","xB5g/m\xB2/d","\xB5g/d","min","rad","W/m/\xB0""C","1/m\xB2","DOY",//55
 		"1/\xB0""C","Vol %"};
 
 	std::map <std::string_view, size_t> m_ModelTypeNoMap, m_GroupNoMap;

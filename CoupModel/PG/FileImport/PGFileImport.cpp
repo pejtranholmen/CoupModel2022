@@ -1632,6 +1632,13 @@ FILEINFO PGFileImport::CheckHeadingAndFileInformation(FILEINFO out)
 		out.Des.addinfo.resize(num);
 		for_each(out.Des.addinfo.begin(), out.Des.addinfo.end(), [](AddInfo& info) {
 			info.Unit = UNIT_TYPES::NO_UNIT; info.Element = elements::GENERAL; } );
+		if (out.FirstValidHeads.size() > out.Des.base.Name.size()) {
+			out.Des.base.Name.resize(num);
+			for (size_t i = 0; i < num; ++i) {
+				out.Des.base.Name[i] = out.FirstValidHeads[i];
+			}
+
+		}
 		out.Des.base.Name.resize(num);
 		out.Des.base.Unit.resize(num);
 		out.Des.base.Id.resize(num);

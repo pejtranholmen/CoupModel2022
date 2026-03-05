@@ -93,11 +93,13 @@ CommonModelInfo::CommonModelInfo() {
 	
 
 		m_StringBasedUnits.clear();
+		m_TypeBasedUnits.clear();
 
 		auto koll = size(ElementNames);
 
 		for(size_t count=0; count<size(m_UnitTypeNames); count++) {
         // Fix for the reported error by ensuring the correct type is used for the map value
+			m_TypeBasedUnits.insert(std::make_pair(static_cast<UNIT_TYPES>(count), m_UnitTypeNames[count]));
 	        m_StringBasedUnits.insert(std::make_pair(m_UnitTypeNames[count], static_cast<UNIT_TYPES>(count)));
 		}
 		for(size_t count=0; count<size(m_GroupNames); count++) {
@@ -138,11 +140,11 @@ size_t CommonModelInfo::GetGroupIndex(std::string_view str) {
 };
 std::string_view CommonModelInfo::ElementName(elements elem) noexcept { if (elem < elements::COUNT) { auto index = static_cast<size_t>(elem);  return ElementNames[index]; } else return "unknow"; };
 
-std::string_view CommonModelInfo::GetUnitString(UNIT_TYPES u) noexcept { if (u < UNIT_TYPES::COUNT) { return m_UnitTypeNames[static_cast<size_t>(u)]; } else return "unknow"; }
-std::string CommonModelInfo::GetUnitString(UNIT_TYPES key, bool with_parenthesis) noexcept {
+//std::string_view CommonModelInfo::GetUnitString(UNIT_TYPES u) noexcept { if (u < UNIT_TYPES::COUNT) { return m_UnitTypeNames[static_cast<size_t>(u)]; } else return "unknow"; }
+/*std::string CommonModelInfo::GetUnitString(UNIT_TYPES key, bool with_parenthesis) noexcept {
 	if (with_parenthesis) return "(" + string(GetUnitString(key)) + ")";
 	else  return string(GetUnitString(key));
-}
+}*/
 
 std::string_view CommonModelInfo::GetGroupName(GROUPNAME group) noexcept {
 		if(group< GROUPNAME::COUNT) 

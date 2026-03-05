@@ -408,6 +408,10 @@
     <ClInclude Include="CUG\ugxpthemes.h" />
     <ClInclude Include="CUG\utbstrop.h" />
     <ClInclude Include="CUG\UTMaskedEdit.h" />
+    <ClInclude Include="MultiRun\ConStrainByInput.h" />
+    <ClInclude Include="MultiRun\DimNewValue.h" />
+    <ClInclude Include="MultiRun\MultiRun.h" />
+    <ClInclude Include="MultiRun\MultiRunTable.h" />
     <ClInclude Include="SoilData\PlotPF\ReadWriteFile.hpp" />
     <ClInclude Include="Util\CWinAPIFileHandler.h" />
     <ClInclude Include="DBDataWnd.h" />
@@ -469,7 +473,6 @@
     <ClInclude Include="Model\Structure\Functors\Numerical_Functors.h" />
     <ClInclude Include="Model\Structure\Functors\Structure_Functors.h" />
     <ClInclude Include="Model\Structure\Functors\Technical_Functors.h" />
-    <ClInclude Include="MultiRun\ConStrainByInput.h" />
     <ClInclude Include="NewBase\Nelder_Mead\optimizer.h" />
     <ClInclude Include="NewBase\PhysFunc.h" />
     <ClInclude Include="PG\NewReShaped.h" />
@@ -579,9 +582,6 @@
     <ClInclude Include="Model\Structure\Structure_Functions.h" />
     <ClInclude Include="Model\Structure\Technical.h" />
     <ClInclude Include="Model\Structure\Technical_Functions.h" />
-    <ClInclude Include="MultiRun\DimNewValue.h" />
-    <ClInclude Include="MultiRun\MultiRun.h" />
-    <ClInclude Include="MultiRun\MultiRunTable.h" />
     <ClInclude Include="MultiRun\MultiStorageData.h" />
     <ClInclude Include="MultiRun\MultiStorageStatData.h" />
     <ClInclude Include="MultiRun\Residuals.h" />
@@ -807,6 +807,10 @@
     <ClCompile Include="CUG\ugvscrol.cpp" />
     <ClCompile Include="CUG\UGXPThemes.cpp" />
     <ClCompile Include="CUG\UTBStrOp.cpp" />
+    <ClCompile Include="MultiRun\ConStrainByInput.cpp" />
+    <ClCompile Include="MultiRun\DimNewValue.cpp" />
+    <ClCompile Include="MultiRun\MultiRun.cpp" />
+    <ClCompile Include="MultiRun\MultiRunTable.cpp" />
     <ClCompile Include="Util\CWinAPIFileHandler.cpp" />
     <ClCompile Include="DBDataWnd.cpp" />
     <ClCompile Include="DBWnd.cpp" />
@@ -825,7 +829,6 @@
     <ClCompile Include="Model\SOIL_NC\P_ExternalInputs_Functions.cpp" />
     <ClCompile Include="Model\SOIL_NC\P_Mineral.cpp" />
     <ClCompile Include="Model\SOIL_NC\P_Mineral_Functions.cpp" />
-    <ClCompile Include="MultiRun\ConStrainByInput.cpp" />
     <ClCompile Include="PG\NewReShaped.cpp" />
     <ClCompile Include="PG\FileImport\ExtraLinkedInformation.cpp" />
     <ClCompile Include="FileView.cpp" />
@@ -932,9 +935,6 @@
     <ClCompile Include="Model\Structure\Structure_Functions.cpp" />
     <ClCompile Include="Model\Structure\Technical.cpp" />
     <ClCompile Include="Model\Structure\Technical_Functions.cpp" />
-    <ClCompile Include="MultiRun\DimNewValue.cpp" />
-    <ClCompile Include="MultiRun\MultiRun.cpp" />
-    <ClCompile Include="MultiRun\MultiRunTable.cpp" />
     <ClCompile Include="MultiRun\MultiStorageData.cpp" />
     <ClCompile Include="MultiRun\MultiStorageStatData.cpp" />
     <ClCompile Include="MultiRun\Residuals.cpp" />

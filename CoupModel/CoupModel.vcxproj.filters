@@ -489,14 +489,8 @@
     <ClInclude Include="Chart\RealTime.h">
       <Filter>Source Files\Chart</Filter>
     </ClInclude>
-    <ClInclude Include="MultiRun\MultiRunTable.h">
-      <Filter>Source Files\MultiRun</Filter>
-    </ClInclude>
     <ClInclude Include="SP\SP_Retrieve.h">
       <Filter>Source Files\SP</Filter>
-    </ClInclude>
-    <ClInclude Include="CUG\SimpleCug.h">
-      <Filter>Source Files\CUG</Filter>
     </ClInclude>
     <ClInclude Include="Validation\ValidationVariables.h">
       <Filter>Source Files\Validation</Filter>
@@ -513,17 +507,11 @@
     <ClInclude Include="PG\CreatePG.h">
       <Filter>Source Files\PG</Filter>
     </ClInclude>
-    <ClInclude Include="MultiRun\MultiRun.h">
-      <Filter>Source Files\MultiRun</Filter>
-    </ClInclude>
     <ClInclude Include="Run\ChaParDuringRun.h">
       <Filter>Source Files\Run</Filter>
     </ClInclude>
     <ClInclude Include="PG\CalculateVariable.h">
       <Filter>Source Files\PG</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiRun\DimNewValue.h">
-      <Filter>Source Files\MultiRun</Filter>
     </ClInclude>
     <ClInclude Include="DB\DB_Plant.h">
       <Filter>Source Files\DB</Filter>
@@ -1296,9 +1284,6 @@
     <ClInclude Include="Model\PLANT_NC\Functors\PhotoSynthesis\GPP_Drivers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MultiRun\ConStrainByInput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ModelTypes\FixedInteger_PlantComp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1471,6 +1456,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SoilData\PlotPF\ReadWriteFile.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiRun\MultiRunTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiRun\MultiRun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CUG\SimpleCug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiRun\ConStrainByInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiRun\DimNewValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1682,14 +1682,8 @@
     <ClCompile Include="CUG\ColourPickerDlg.cpp">
       <Filter>Source Files\CUG</Filter>
     </ClCompile>
-    <ClCompile Include="MultiRun\MultiRunTable.cpp">
-      <Filter>Source Files\MultiRun</Filter>
-    </ClCompile>
     <ClCompile Include="SP\SP_Retrieve.cpp">
       <Filter>Source Files\SP</Filter>
-    </ClCompile>
-    <ClCompile Include="CUG\Simplecug.cpp">
-      <Filter>Source Files\CUG</Filter>
     </ClCompile>
     <ClCompile Include="Validation\ValidationVariables.cpp">
       <Filter>Source Files\Validation</Filter>
@@ -1706,17 +1700,11 @@
     <ClCompile Include="PG\CreatePG.cpp">
       <Filter>Source Files\PG</Filter>
     </ClCompile>
-    <ClCompile Include="MultiRun\MultiRun.cpp">
-      <Filter>Source Files\MultiRun</Filter>
-    </ClCompile>
     <ClCompile Include="Run\ChaParDuringRun.cpp">
       <Filter>Source Files\Run</Filter>
     </ClCompile>
     <ClCompile Include="PG\CalculateVariable.cpp">
       <Filter>Source Files\PG</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiRun\DimNewValue.cpp">
-      <Filter>Source Files\MultiRun</Filter>
     </ClCompile>
     <ClCompile Include="DB\DB_Plant.cpp">
       <Filter>Source Files\DB</Filter>
@@ -2204,9 +2192,6 @@
     <ClCompile Include="Model\PLANT\Salt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MultiRun\ConStrainByInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PG\PG_MEMORY.cpp">
       <Filter>Source Files\PG</Filter>
     </ClCompile>
@@ -2502,6 +2487,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Util\CWinAPIFileHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiRun\MultiRunTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiRun\MultiRun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CUG\Simplecug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiRun\ConStrainByInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiRun\DimNewValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

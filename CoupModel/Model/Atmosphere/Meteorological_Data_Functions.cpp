@@ -5,6 +5,7 @@
 #include "../SOIL/Soil_HeatF.h"
 #include "../Structure/StructureModel.h"
 #include "../../NewBase/ModelBase.h"
+#include "../../Util/MFC_Util.h"
 
 
 
@@ -362,9 +363,11 @@ bool Meteorological_Data_Functions::OpenSweClimFile() {
 	string FileScenario;
 	
 	string dir;
-	/*	auto pMod = static_cast<ModelBase>(m_pModelMap);
-	dir = pMod->m_DataBaseDirectory;
+	//auto pMod = m_pModelMap;
+	//dir = pMod->m_DataBaseDirectory;
+	string m_DataBaseDirectory = "\\CoupModel\\SoilProperties\\";
 
+	dir = MFC_Util::GetProfileStringStd("DataBaseDirectory", m_DataBaseDirectory);
 
 	if(SweClimScenarious==1)
 		FileScenario = dir + "RCAO_HadAM3-A2.Par";
@@ -374,7 +377,7 @@ bool Meteorological_Data_Functions::OpenSweClimFile() {
 		FileScenario = dir + "RCAO_ECHAM4-A2.Par";
 	else if (SweClimScenarious == 4)
 		FileScenario = dir + "RCAO_ECHAM4-B2.Par";
-	*/
+
 
 	ifstream file;
 	file.open(FileScenario, ios::in);
