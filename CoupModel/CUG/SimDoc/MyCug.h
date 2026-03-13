@@ -189,7 +189,7 @@ private:
 	virtual void OnDataSourceNotify(int ID,long msg,long param);
 
 	//cell type notifications
-	virtual int OnCellTypeNotify(long ID,int col,long row,long msg,long param);
+	virtual int OnCellTypeNotify(long ID,int col,long row,long msg,long param) override;
 
 	//editing
 	virtual int OnEditStart(int col, long row,CWnd **edit);

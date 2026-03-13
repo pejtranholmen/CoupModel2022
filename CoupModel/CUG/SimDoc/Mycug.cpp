@@ -2734,13 +2734,16 @@ void MyCug::OnDataSourceNotify(int ID,long msg,long param)
 //	Return:
 //		TRUE - to allow celltype event
 //		FALSE - to disallow the celltype event
-int MyCug::OnCellTypeNotify(long ID,int col,long row,long msg,long param)
+int MyCug::OnCellTypeNotify(long ID, int col, long row, long msg, long param) 
 {
 	UNREFERENCED_PARAMETER(ID);
 	UNREFERENCED_PARAMETER(col);
 	UNREFERENCED_PARAMETER(row);
 	UNREFERENCED_PARAMETER(msg);
 	UNREFERENCED_PARAMETER(param);
+
+	TRACE("MyCug::OnCellTypeNotify this=%p ID=%ld col=%d row=%ld msg=%ld param=%ld\n",
+		this, ID, col, row, msg, param);
 
 	SimB *pSw;
 	Tab *pTab;

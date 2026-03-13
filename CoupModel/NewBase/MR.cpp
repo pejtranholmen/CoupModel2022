@@ -1884,8 +1884,12 @@ bool MR::EstimateNewTransformedPerformance(size_t cumulated, size_t dim1_index, 
 							count = i_rep * active_points / rephits.size();
 							for (size_t irec = 0; irec < active_points/rephits.size(); irec++) {
 								size_t hit_index = (rephits[i_rep]) * active_points/rephits.size() + irec;
-								sim[count+irec] = double(meas_v[hit_index]) - double(res_v[hit_index]);
-								obs[count+irec] = double(meas_v[hit_index]);
+								if (abs(res_v[hit_index]) < 1.E38) {
+									sim[count + irec] = double(meas_v[hit_index]) - double(res_v[hit_index]);
+									obs[count + irec] = double(meas_v[hit_index]);
+								}
+								else
+									obs[count + irec] = MISSING;
 							}
 							
 						}
@@ -2233,6 +2237,7 @@ vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, s
 			out.push_back(i);
 		}
 	}
+	if (out.size() == 0) out.push_back(0);
 	return out;
 }
 
