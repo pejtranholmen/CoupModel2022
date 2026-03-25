@@ -1969,7 +1969,7 @@ size_t MultiStorageData::ReduceCriteria(PERFORMANCE_VAR Indicator, size_t VarInd
 					meanvalueout = StatUtil::mean(distout);
 				}
 				if (distout.size() >= Threshold) endloop = true;
-				if (meanvalueout>goal&&nposlow==1||meanvalueout<goal&&nposhigh==dist.size()-2) endloop = true;
+				if (meanvalueout>goal&&nposlow==1||meanvalueout<goal&&nposhigh==dist.size()-1) endloop = true;
 			}
 			StatUtil::SortArray(&distout[0], distout.size());
 			dist = distout;

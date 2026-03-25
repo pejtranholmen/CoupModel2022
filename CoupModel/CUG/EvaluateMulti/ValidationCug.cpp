@@ -2832,9 +2832,9 @@ void ValidationCug::OnSH_LClicked(int col,long row,int updn,RECT *rect,POINT *po
 				else
 					m_pSimDoc->m_MStorage.ChangeEnsembleNo(1);
 				m_pSimDoc->m_MStorage.SetActual_AcceptedEnsemble();
-			//	if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
-			//		m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
-			//	}
+				if (m_pSimDoc->m_MStorage.Check_Change_PerformanceIndicator_ToActual_Ensemble()) {
+					m_pSimDoc->m_MStorage.CompleteProcessingOfInputFiles_MultiStorage();
+				}
 			}
 			//auto charts = m_pSimDoc->m_PlotStorage.m_PlotArray.size();
 			/*if (charts > 0) {

@@ -21,7 +21,7 @@ struct LayerOutput
 };
 class PlantDemand {
 public:
-	PlantDemand(vector<double> CN_RatioMinRoots, std::vector<double> CN_RatioMinCoarseRoots, std::vector<double> CN_RatioMinLeaf, std::vector<double> CN_RatioMinStem)
+	PlantDemand(vector<double> CN_RatioMinRoots, std::vector<double> CN_RatioMinCoarseRoots, std::vector<double> CN_RatioMinStem, std::vector<double> CN_RatioMinLeaf)
 		: CN_RatioRoot(CN_RatioMinRoots), CN_CoarseRoot(CN_RatioMinCoarseRoots),  CN_Stem(CN_RatioMinStem), CN_Leaf(CN_RatioMinLeaf)  {
 
 	};

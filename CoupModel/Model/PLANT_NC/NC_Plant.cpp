@@ -1591,7 +1591,28 @@ void NC_Plant::Integ()
 		
 
 	};
-	
+	auto Grazing_Integ = [&]() {
+		// From Plant
+		OutFlow(P_State[_LEAF][_C_], CLeafGrazing);
+		OutFlow(P_State[_LEAF][_N_], NLeafGrazing);
+		OutFlow(P_State[_OLD_LEAF][_C_], COldLeafGrazing);
+		OutFlow(P_State[_OLD_LEAF][_N_], NOldLeafGrazing);
+		OutFlow(P_State[_STEM][_C_], CStemGrazing);
+		OutFlow(P_State[_STEM][_N_], NStemGrazing);
+
+		// to Faeeces pool of uppermost layers
+		InFlow(pNCSoil->O_State[_F][_C_][0], C_GrazingManure);
+		InFlow(pNCSoil->O_State[_F][_N_][0], N_GrazingManure);
+
+		// to Ammonium pool of uppermost layer
+		InFlow(pNCSoil->SoilAmmonium[0], N_GrazingAmmonium);
+
+		// to Grazing Organism
+
+		InFlow(C_GrazingOrganism, C_GrazingGrowth);
+		InFlow(N_GrazingOrganism, N_GrazingGrowth);
+
+	};	
 
 	ReAllocationFlow();
 	RespirationFlow();
@@ -1600,6 +1621,7 @@ void NC_Plant::Integ()
 	PlantUptakeFlow();
 	InflowBelowGroundComponentsToSoilHorizon();
 
+	if (Grazing_Sw(Grazing) > Grazing_Sw::off) Grazing_Integ();
 	AccFlowsMovedFromAddition();
 }
 
@@ -2570,7 +2592,7 @@ void NC_Plant::Grazing_Events() {
 
 
 
-		double TotalCSourceRate = max(0., TotalCSource / T_Step);
+		double TotalCSourceRate = max(0.000001, TotalCSource / T_Step);
 
 
 		C_GrazingRate = min(pot_grazingrate, TotalCSourceRate*Max_AvailGrazingFraction);
@@ -2580,64 +2602,81 @@ void NC_Plant::Grazing_Events() {
 
 
 		for (size_t i = 0; i < P_State[_LEAF][_C_].size(); i++) {
+			if (pot_grazingrate < 0.001 || TotalCSourceRate < 0.001) {
+				CLeafGrazing[i] = 0.;
+				COldLeafGrazing[i] = 0.;
+				CStemGrazing[i] = 0.;
+				NLeafGrazing[i] = 0.;
+				NOldLeafGrazing[i] = 0.;
+				NStemGrazing[i] = 0.;
+				continue;
+			}
 			CLeafGrazing[i] = relgrazing * P_State[_LEAF][_C_][i] / TotalCSource * pot_grazingrate;
 			COldLeafGrazing[i] = relgrazing * P_State[_OLD_LEAF][_C_][i] / TotalCSource * pot_grazingrate;
 			CStemGrazing[i] = relgrazing * P_State[_STEM][_C_][i] / TotalCSource * pot_grazingrate;
 			if (P_State[_LEAF][_C_][i] > 0) {
 				NLeafGrazing[i] = CLeafGrazing[i] * P_State[_LEAF][_N_][i] / P_State[_LEAF][_C_][i];
-				PLeafGrazing[i] = CLeafGrazing[i] * P_State[_LEAF][_P_][i] / P_State[_LEAF][_C_][i];
+				if(m_pModelStructure->m_NumActPlantElements>2)
+					PLeafGrazing[i] = CLeafGrazing[i] * P_State[_LEAF][_P_][i] / P_State[_LEAF][_C_][i];
 			}
 			else {
 				NLeafGrazing[i] = 0.;
-				PLeafGrazing[i] = 0.;
+				if (m_pModelStructure->m_NumActPlantElements > 2)
+					PLeafGrazing[i] = 0.;
 			}
 			if (P_State[_OLD_LEAF][_C_][i] > 0.0001) {
 				NOldLeafGrazing[i] = COldLeafGrazing[i] * P_State[_OLD_LEAF][_N_][i] / P_State[_OLD_LEAF][_C_][i];
-				POldLeafGrazing[i] = COldLeafGrazing[i] * P_State[_OLD_LEAF][_P_][i] / P_State[_OLD_LEAF][_C_][i];
+				if (m_pModelStructure->m_NumActPlantElements > 2)
+					POldLeafGrazing[i] = COldLeafGrazing[i] * P_State[_OLD_LEAF][_P_][i] / P_State[_OLD_LEAF][_C_][i];
 			}
 			else {
 				NOldLeafGrazing[i] = 0.;
-				POldLeafGrazing[i] = 0.;
+				if (m_pModelStructure->m_NumActPlantElements > 2)
+					POldLeafGrazing[i] = 0.;
 			}
 			if (P_State[_STEM][_C_][i] > 0.) {
 				NStemGrazing[i] = CStemGrazing[i] * P_State[_STEM][_N_][i] / P_State[_STEM][_C_][i];
-				PStemGrazing[i] = CStemGrazing[i] * P_State[_STEM][_P_][i] / P_State[_STEM][_C_][i];
+				if (m_pModelStructure->m_NumActPlantElements > 2)
+					PStemGrazing[i] = CStemGrazing[i] * P_State[_STEM][_P_][i] / P_State[_STEM][_C_][i];
 			}
 			else {
 				NStemGrazing[i] = 0.;
-				PStemGrazing[i] = 0.;
+				if (m_pModelStructure->m_NumActPlantElements > 2)
+					PStemGrazing[i] = 0.;
 			}
 		}
 		N_GrazingRate = 0;
 		for (size_t i = 0; i < NLeafGrazing.size(); i++) {
 			N_GrazingRate += NLeafGrazing[i] + NOldLeafGrazing[i] + NStemGrazing[i];
-			P_GrazingRate += PLeafGrazing[i] + POldLeafGrazing[i] + PStemGrazing[i];
+			if (m_pModelStructure->m_NumActPlantElements > 2)
+				P_GrazingRate += PLeafGrazing[i] + POldLeafGrazing[i] + PStemGrazing[i];
 		}
 		GrazingRespiration = GrazingRespFraction * C_GrazingRate;
 		C_GrazingExport = C_GrazingExportFraction * C_GrazingRate;
 		C_GrazingMethaneEmission = C_GrazingCH4Fraction * C_GrazingRate;
 		N_GrazingExport = N_GrazingExportFraction * N_GrazingRate;
-		P_GrazingExport = P_GrazingExportFraction * P_GrazingRate;
+		if (m_pModelStructure->m_NumActPlantElements > 2)
+			P_GrazingExport = P_GrazingExportFraction * P_GrazingRate;
 
 
 		if (GrazingClosure == 0) {
 			C_GrazingManure = C_GrazingManureFraction * C_GrazingRate;
 			N_GrazingManure = N_GrazingManureFraction * N_GrazingRate;
-			P_GrazingManure = P_GrazingManureFraction * P_GrazingRate;
+			if (m_pModelStructure->m_NumActPlantElements > 2)	P_GrazingManure = P_GrazingManureFraction * P_GrazingRate;
 			C_GrazingGrowth = C_GrazingRate - GrazingRespiration - C_GrazingExport - C_GrazingManure - C_GrazingMethaneEmission;
 			N_GrazingGrowth = N_GrazingRate - N_GrazingExport - N_GrazingManure;
-			P_GrazingGrowth = P_GrazingRate - P_GrazingExport - P_GrazingManure;
+			if (m_pModelStructure->m_NumActPlantElements > 2) P_GrazingGrowth = P_GrazingRate - P_GrazingExport - P_GrazingManure;
 		}
 		else {
 			C_GrazingGrowth = C_GrazingGrowthFraction * C_GrazingRate;
 			N_GrazingGrowth = N_GrazingGrowthFraction * N_GrazingRate;
-			P_GrazingGrowth = P_GrazingGrowthFraction * P_GrazingRate;
+			if (m_pModelStructure->m_NumActPlantElements > 2) P_GrazingGrowth = P_GrazingGrowthFraction * P_GrazingRate;
 			C_GrazingManure = C_GrazingRate - GrazingRespiration - C_GrazingExport - C_GrazingGrowth - C_GrazingMethaneEmission;
 			N_GrazingManure = N_GrazingRate - N_GrazingExport - N_GrazingGrowth;
-			P_GrazingManure = P_GrazingRate - P_GrazingExport - P_GrazingGrowth;
+			if (m_pModelStructure->m_NumActPlantElements > 2) P_GrazingManure = P_GrazingRate - P_GrazingExport - P_GrazingGrowth;
 		}
 		N_GrazingFaeces = min(C_GrazingManureFraction / CN_GrazingOrganic * N_GrazingRate, N_GrazingManure);
-		P_GrazingFaeces = min(C_GrazingManureFraction / CP_GrazingOrganic * P_GrazingRate, P_GrazingManure);
+		if (m_pModelStructure->m_NumActPlantElements > 2)  P_GrazingFaeces = min(C_GrazingManureFraction / CP_GrazingOrganic * P_GrazingRate, P_GrazingManure);
 		double ResidualMinN = max(0., N_GrazingManure - N_GrazingFaeces);
 		N_GrazingAmmonia = ResidualMinN * N_GrazingManureAmmoniaFraction;
 		N_GrazingAmmonium = ResidualMinN * (1. - N_GrazingManureAmmoniaFraction);

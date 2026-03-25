@@ -415,6 +415,15 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 			IsMaxUpdated[m_ActualEnsemble] =false;
 		}
 		else {
+			// individual indicators
+			for (unsigned long isplit = 0; isplit <= m_NumSplitPeriod; isplit++) {
+				for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; testcond_tsv(iv, isplit), iv++);
+
+				// Mean Indicators
+				if (m_NumValid > 6) testcond_tsv_mean();
+
+			}
+
 			m_Valid_TSV[m_ActualEnsemble].History.clear();
 			SetAllToAcceptedRuns();		
 		}

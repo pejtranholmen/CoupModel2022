@@ -84,6 +84,10 @@ public:
 	
 	bool SaveBase(bool updatetest=false);
 	bool SaveStat();
+	bool ResetVarValidTransformed(size_t i) {
+		if (m_VarValidTransformed.size() > i) { m_VarValidTransformed.clear(); return true; }
+		else return false;
+	}
 	void ReOpenSplitFile();
 	bool Export();
 	bool IsFileMissing() {return m_IsMissing;};

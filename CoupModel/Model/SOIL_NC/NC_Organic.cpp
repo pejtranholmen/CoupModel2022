@@ -180,9 +180,16 @@ bool NC_Organic::Ini()	{
 
 				
 					for (size_t i = 0; i < pSoil->NL; i++) {
-						O_State[_DIS][_C_][i] = Init_CDissConc * pSoil->AThicknessLayers[i] * pSoil->Theta[i] / 100.;
-						O_State[_DIS][_N_][i] = O_State[_DIS][_C_][i] / Org_State_IniCarbonRatio[_H][_N_ - 1].Tot_Profile;
-						if(m_pModelStructure->m_NumActPlantElements>2) O_State[_DIS][_P_][i] = O_State[_DIS][_C_][i] / Org_State_IniCarbonRatio[_H][_P_ - 1].Tot_Profile;
+						if (O_State[_H][_L1][i] > 1.) {
+							O_State[_DIS][_C_][i] = Init_CDissConc * pSoil->AThicknessLayers[i] * pSoil->Theta[i] * 10.;
+							O_State[_DIS][_N_][i] = O_State[_DIS][_C_][i] / Org_State_IniCarbonRatio[_H][_N_ - 1].Tot_Profile;
+							if (m_pModelStructure->m_NumActPlantElements > 2) O_State[_DIS][_P_][i] = O_State[_DIS][_C_][i] / Org_State_IniCarbonRatio[_H][_P_ - 1].Tot_Profile;
+						}
+						else {
+							O_State[_DIS][_C_][i] = 0.0001;
+							O_State[_DIS][_N_][i] = O_State[_DIS][_C_][i] / Org_State_IniCarbonRatio[_H][_N_ - 1].Tot_Profile;
+							if (m_pModelStructure->m_NumActPlantElements > 2) O_State[_DIS][_P_][i] = 0.0001 / Org_State_IniCarbonRatio[_H][_P_ - 1].Tot_Profile;
+						}
 					}
 					for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++)
 						Dissolved[jj].Conc.resize(pSoil->NL);

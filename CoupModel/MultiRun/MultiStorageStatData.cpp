@@ -1083,6 +1083,7 @@ bool MultiStorageStatData::SetActualPerformanceVector_TSV_Variables(size_t Actua
 		for (size_t i = 0; i < m_VarValidTransformed[newindex].VarValidVector.size();i++)
 			m_VarValid[i] = m_VarValidTransformed[newindex].VarValidVector[i];
 		m_Valid_TSV[m_ActualEnsemble].VarTranformed = m_CumulatedPerformance;
+		//m_Valid_TSV[m_ActualEnsemble].v = m_VarValidTransformed[newindex].VarValidVector;
 		if (dim1_index != std::string::npos) m_Valid_TSV[m_ActualEnsemble].Dim1_Par_Index = dim1_index;
 	}
 	else
