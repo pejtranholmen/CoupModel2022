@@ -473,6 +473,10 @@ BOOL CCoupModelDoc::OnSaveDocument(LPCTSTR pzPathName)
 		return TRUE; // No saving ov Bin File documents
 
 
+
+   auto pheat = static_cast<X*>(m_Doc.GetPtrByName("SoilHeat"));
+   auto value = pheat->GetValue(0);
+   auto value2 = pheat->GetFinal(0);
 	 m_Doc.SetPathName(CT2A(PathName).m_psz);
    if (!m_Doc.WriteDocFile(m_ToBeChild)) return FALSE;
 

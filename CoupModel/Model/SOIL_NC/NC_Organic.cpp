@@ -19,17 +19,16 @@ bool NC_Organic::Ini()	{
 //Use Profile
 //Use NC_Drivings, Only	:	NDrivTheta
 
-
+	
 	NC_Mineral::Ini();
+
 	SoilModel* p_Soil=(SoilModel*)m_pModelInfo->GetModelPtr("Soil Model");
 	Soil_Frost* pSoil=&p_Soil->m_SoilFrost;
 
 	PlantModel* pPlant = (PlantModel*)m_pModelInfo->GetModelPtr("Plant Model");
 	WaterUptake* p_Plant = &pPlant->m_WaterUptake;
 
-
-
-
+	if(m_pModelStructure->StartWithPrevious==1) m_pModelInfo->StartStateValue = true;
 
 	if (m_pModelStructure->m_NumActPlantElements < 3) {
 		f_TurnOver_CN[_L1] = Get_OrgTurnOverFunctor(MyFunc::LITTER_TURNOVER);
@@ -198,6 +197,13 @@ bool NC_Organic::Ini()	{
 
 		
 		
+	}
+	else {
+		int ii = 0;
+		for (size_t i = 0; i < pSoil->NL; i++) {
+			if (O_State[_DIS][_C_][i] > 1.)  ii = 5;
+		}
+
 	}
 
 	for(size_t i=0; i<pSoil->NL; i++) 

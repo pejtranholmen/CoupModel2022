@@ -14,7 +14,8 @@
 #include "./NewMap.h"
 #include "../ModelTypes/NewModelType.h"
 #include "../Util/CoupSim_XML.h"
-
+#include "Doc.h"
+#include "SimArchive.h"
 #ifndef COUPSTD
 
 
@@ -1627,6 +1628,8 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 	vector<SimB*> vpp, vp_final;
 	size_t iv = 0;
 
+
+	
 	vpp = GetPtrVector("State Variables", "");
 	for (size_t i = 0; i < vpp.size(); i++) {
 		auto pPtr = (SimB*)vpp[i];
@@ -1657,7 +1660,7 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 			for (size_t ii = 0; ii < nn; ii++) {
 				string subrow = "row_" + FUtil::STD_ItoAscii(ii + 1);
 				auto rownode = xnode.append_child(subrow.c_str());
-				rownode.append_attribute("FinalValue") = pXT->GetFinal(ii);
+				rownode.append_attribute("FinalValue") = pXT->GetValue(ii);
 				rownode.append_attribute("InitialValue") = pXT->GetInitial(ii);
 			}
 		}
@@ -1672,17 +1675,40 @@ bool NewMap::WriteAllFinalStateToXmlFile(pugi::xml_node node)
 
 bool NewMap::Read_AllFinalState_FromXmlFile(pugi::xml_node node)
 {
+	auto pDoc = dynamic_cast<Doc*>(this);
+	auto arc = MySingle::instance().GetSimArchivePointer();
+	auto num = arc->GetNumSimDoc();
+	for (size_t i = 0; i < num; i++) {
+		auto doc = arc->GetSimDocPointer(i);
+		auto name = doc->m_CurrentFile;
+
+	}
+
+
 	for (pugi::xml_node level1 = node.first_child(); level1; level1 = level1.next_sibling()) {
 		auto namestring = std::string(level1.name());
 
 		auto group= level1.attribute("Group").as_string();
 		auto name = level1.attribute("Name").as_string();
 		auto num = level1.attribute("NumberofValue").as_uint();
-		for (pugi::xml_node level2 = level1.first_child(); level2; level2=level2.next_sibling()) {
-			auto final = level2.attribute("FinalValue").as_double();
-			auto initial = level2.attribute("InitalValue").as_double();
+		if (num == 0) {
+			auto item_name = m_pCommonModelInfo->getOrigName(name);
+			auto pXs = static_cast<OutSingle*>(GetPtrByName(item_name));
+			auto final = level1.attribute("FinalValue").as_double();
+			if (pXs != nullptr)	pXs->SetOptInitialValue(final);
 		}
+		else {
 
+				auto item_name = m_pCommonModelInfo->getOrigName(name);
+				auto pX = static_cast<OutVector*>(GetPtrByName(item_name));
+				size_t index = 0;
+				for (pugi::xml_node level2 = level1.first_child(); level2; level2 = level2.next_sibling()) {
+					auto final = level2.attribute("FinalValue").as_double();
+					auto initial = level2.attribute("InitalValue").as_double();
+					pX->SetValue(index, final);
+					index++;
+				}
+			}
 	}
 	return false;
 }

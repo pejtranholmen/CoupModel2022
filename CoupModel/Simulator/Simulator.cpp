@@ -87,6 +87,8 @@ bool Simulator::Start(bool MultiFlag, bool First)
 
 
 	m_pModelInfo->Set_SimStart_Parameters();
+	if (m_StructureModel.m_Structure.StartWithPrevious == 1) m_pModelInfo->StartStateValue = true;
+
 	m_pModelInfo->m_OutInterval=(m_pSim->RunOpt.oiminutes+m_pSim->RunOpt.oidays*1440);
 
 
@@ -224,7 +226,7 @@ bool Simulator::Start(bool MultiFlag, bool First)
 
 	}
 //	unsigned int test=m_ValPGFile[0].file->GetLongTime(1);
-//m_pSim->m_PG_OutPutFile.AdjustSize(m_OutRecord, m_NumOutputs);
+	//m_pSim->m_PG_OutPutFile.AdjustSize(m_OutRecord, m_NumOutputs);
 
 	return true;
 }
@@ -241,6 +243,7 @@ bool Simulator::Run(bool MultiFlag)
 	unsigned int itid1, NC_MinStep;
     bool START=true;
     bool LAST=false;
+	if (m_StructureModel.m_Structure.StartWithPrevious == 1) m_pModelInfo->StartStateValue = true;
       bool CHANGE_T=false;
       bool StartDelay=false;
 	  bool StartedSimPeriod = false;

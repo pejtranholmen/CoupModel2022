@@ -29,7 +29,7 @@ bool Numerical_Functions::Def()
 Sw* pSw;
 pSw= new Sw(&m_pModelInfo->NumMethod, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
  
-Define(pSw, "NumMethod", 1, "Central Difference|Forward Difference","OnlyNC <1");
+Define(pSw, "NumMethod", 1, "Central Difference|Forward Difference","");
 pSw= new Sw(&TimeStepOption, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);
 Define(pSw, "TimeStepOption",0,"Empirical|Mathematical|Constant","OnlyNC <1");
 pSw= new Sw(&FindTimeStep, datatype::SINGLE, elements::GENERAL, fysprocess::NOFPROC, bioprocess::NOBPROC, userlevel::NORMAL);

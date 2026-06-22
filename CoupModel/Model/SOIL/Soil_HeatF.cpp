@@ -74,11 +74,13 @@ bool Soil_HeatF::Ini()	{
           ThCondV[i]=f_ThermalCond(i,p_Soil_WaterF->Theta[i],0.);
 		}
 
-		if(p_Soil_WaterF->ConvectiveGasFlow!=0) {
-			for(size_t i=0; i<p_Soil_WaterF->MassAir.size();i++)
-				p_Soil_WaterF->MassAir[i]=max(0.,(p_Soil_WaterF->M_Saturation[i]-p_Soil_WaterF->Theta[i])/100.*p_Soil_WaterF->ThicknessLayers[i]*AirDensityTempFunc(Temp[i]));
-		
-		}
+
+
+	}
+
+	if (p_Soil_WaterF->ConvectiveGasFlow != 0) {
+		for (size_t i = 0; i < p_Soil_WaterF->MassAir.size(); i++)
+			p_Soil_WaterF->MassAir[i] = max(0., (p_Soil_WaterF->M_Saturation[i] - p_Soil_WaterF->Theta[i]) / 100. * p_Soil_WaterF->ThicknessLayers[i] * AirDensityTempFunc(Temp[i]));
 
 	}
 

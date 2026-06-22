@@ -2261,8 +2261,6 @@ bool MakeSimSheets::Make_OutputSheet()
 
 	EnableUpdate(TRUE);
 
-
-
 	QuickSetBackColor(-1,-1,m_ColorClick);
 	SetSheetNumber(5); 
 	m_ShowTimeSerieTable=false; // To disable first output option

@@ -634,7 +634,7 @@ bool Sim::OnSimStart()
 	}
 
 
-		ApplyOptStartValues();
+		//ApplyOptStartValues(); Removed May 2026
 
 		//m_ValidationData.SendValIndextof90();
 

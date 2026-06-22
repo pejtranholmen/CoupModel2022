@@ -5,7 +5,9 @@
 #include "../SOIL/Soil_HeatF.h"
 #include "../Structure/StructureModel.h"
 #include "../../NewBase/ModelBase.h"
+#ifndef COUPSTD
 #include "../../Util/MFC_Util.h"
+#endif
 
 
 
@@ -366,17 +368,21 @@ bool Meteorological_Data_Functions::OpenSweClimFile() {
 	//auto pMod = m_pModelMap;
 	//dir = pMod->m_DataBaseDirectory;
 	string m_DataBaseDirectory = "\\CoupModel\\SoilProperties\\";
-
-	dir = MFC_Util::GetProfileStringStd("DataBaseDirectory", m_DataBaseDirectory);
+	string file_str = "";
+#ifndef COUPSTD
+	file_str = MFC_Util::GetProfileStringStd("DataBaseDirectory", file_str);
+#else
+	file_str = FUtil::GetProfileStringStd("DataBaseDirectory", file_str	);
+#endif
 
 	if(SweClimScenarious==1)
-		FileScenario = dir + "RCAO_HadAM3-A2.Par";
+		FileScenario = file_str + "RCAO_HadAM3-A2.Par";
 	else if (SweClimScenarious == 2)
-		FileScenario = dir + "RCAO_HadAM3-B2.Par";
+		FileScenario = file_str + "RCAO_HadAM3-B2.Par";
 	else if (SweClimScenarious == 3)
-		FileScenario = dir + "RCAO_ECHAM4-A2.Par";
+		FileScenario = file_str + "RCAO_ECHAM4-A2.Par";
 	else if (SweClimScenarious == 4)
-		FileScenario = dir + "RCAO_ECHAM4-B2.Par";
+		FileScenario = file_str + "RCAO_ECHAM4-B2.Par";
 
 
 	ifstream file;

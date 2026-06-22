@@ -308,6 +308,7 @@ bool NC_Plant::Ini()	{
 		PreviousThinningYear = 0;
 		ICountHarvestCycle = 1;
 		m_pModelInfo->StartStateValue = false;
+		
 
 		m_pModelStructure->m_NumActPlantElements = 2;
 		if (m_pModelStructure->Phosphorus_Model > 0) m_pModelStructure->m_NumActPlantElements = 3;

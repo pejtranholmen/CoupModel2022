@@ -2,6 +2,7 @@
 #include "../stdafx.h"
 #endif
 #include "../std.h"
+#include <cmath>
 #include "../ModelTypes/SimB.h"
 #include "../NewBase/Doc.h"
 
@@ -3037,7 +3038,8 @@ bool CPG::EstimateMultiStatistics(bool all, std::vector<size_t> *acceptedruns, s
 				while(n_files<addedfirstRunNo->size()&&rep>=(addedfirstRunNo->at(n_files)-FirstRunNo)) {
 					n_files++;
 				}
-				n_files=max(1, n_files); // n_files=0 if no added files, n_files=1 if one added file, n_files=2 if two added files (addedfirstRunNo->size()=2
+				if (n_files == 0) n_files = 1;
+				//n_files=std::max(size_t(1), n_files); // n_files=0 if no added files, n_files=1 if one added file, n_files=2 if two added files (addedfirstRunNo->size()=2
 				auto filename = addedfilenames->at(n_files-1);
 
 				auto pos = filename.find_last_of(".MBin");

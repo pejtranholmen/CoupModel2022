@@ -7108,6 +7108,11 @@ void MyCug::MakeSingleRun()
 				return;
 			}
 
+			auto pheat = static_cast<X*>(m_pSimDoc->GetPtrByName("SoilHeat"));
+			auto value = pheat->GetValue(0);
+			auto value2 = pheat->GetFinal(0);
+
+
 			if(pzPathName==m_created_pathname)
 				remove(pzPathName.c_str());
 

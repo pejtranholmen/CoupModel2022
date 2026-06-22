@@ -2747,10 +2747,10 @@ void NC_Plant_Functions::Def_Grazing() {
 
 	vector<double> initv;
 	P *pP = new P(&StubbleLeaf, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::GRAZING, userlevel::NORMAL); initv.assign(pNumPlants->GetNEValue(), 15.);
-	Define(pP, pNumPlants, "Stubble Leaf", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=3", 0., 100.);
+	Define(pP, pNumPlants, "Stubble Leaf", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=2", 0., 100.);
 	mTab_Graz.push_back(pP);
 	pP = new P(&StubbleStem, pNumPlants, datatype::PLANT, elements::ORGANIC, fysprocess::TRANSPORT, bioprocess::GRAZING, userlevel::NORMAL); initv.assign(pNumPlants->GetNEValue(), 25.);
-	Define(pP, pNumPlants, "Stubble Stem", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=3", 0., 500.);
+	Define(pP, pNumPlants, "Stubble Stem", initv, UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Grazing>=2", 0., 500.);
 	mTab_Graz.push_back(pP);
 
 

@@ -279,7 +279,7 @@ bool CH::ApplyOptStartValues()
 		   		}
 			}
 			else {
-
+				//pXT->ApplyInitialValue();
 
 
 			}
