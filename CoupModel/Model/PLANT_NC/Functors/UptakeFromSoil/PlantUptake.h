@@ -2,6 +2,8 @@
 #include <vector>
 #include "../../../../std.h"
 using std::vector;
+using std::max;
+using std::min;
 class RootDensity {
 public:
 	RootDensity(vector<double> LayerThickness) : LayerThickness(LayerThickness) {};
@@ -286,7 +288,7 @@ public:
 		out=GetNitrate(DistWithDepth,  N_DemandPlant, N_Tot_Demand, Dist_Tot, SoilNitrate, out);
 		out=GetAmmonium(DistWithDepth, N_DemandPlant, N_Tot_Demand, Dist_Tot, SoilAmmonium, out);
 		if (out.RemainFrac > 0.0001) {
-			double ScaleComp = 1 / out.RemainFrac*FlexDegree[PlantIndex];
+			double ScaleComp = 1./out.RemainFrac*FlexDegree[PlantIndex];
 			out=GetAdditionalCompUptake(DistWithDepth,  N_DemandPlant, N_Tot_Demand, Dist_Tot, SoilNitrate, SoilAmmonium, ScaleComp, out);
 		}
 
@@ -363,6 +365,7 @@ private:
 	UptakeResults GetAdditionalCompUptake(vector<double> &DistWithDepth, double N_DemandPlant, double N_Tot_Demand,
 		vector<double> &Dist_Tot, std::vector<double> &SoilNitrate, std::vector<double> &SoilAmmonium, double ScaleComp, UptakeResults &out) {
 		double plant_ratio = N_DemandPlant / N_Tot_Demand;
+		double tot_upt = 0.;
 		for (size_t ii = 0; ii < out.UptNH4.size(); ii++) {
 			if (Dist_Tot[ii] * N_Tot_Demand > 0.) {
 				double Demand = Ratio[ii] * Dist_Tot[ii] * N_Tot_Demand;
@@ -379,8 +382,15 @@ private:
 				}
 
 			}
+			tot_upt += out.UptNO3[ii];
+			tot_upt += out.UptNH4[ii];
+
 
 		};
+		if (N_DemandPlant < tot_upt) {
+
+			int koll = 3;
+		}
 		return out;
 	};
 	UptakeResults GetAmmonium(vector<double> &DistWithDepth,  double N_DemandPlant, double N_Tot_Demand,

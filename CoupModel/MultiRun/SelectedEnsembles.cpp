@@ -232,8 +232,9 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		float fval;
 		fval = MISSING;
 		if (ip < m_NumValid) {
-			if (index_trans != std::string::npos) {
-				size_t indextsv = ip + irun*m_NumValid;
+			size_t indextsv = ip + irun * m_NumValid;
+			if (index_trans != std::string::npos&&indextsv< m_VarValidTransformed[index_trans].VarValidVector.size()) {
+				//size_t indextsv = ip + irun*m_NumValid;
 				fval = m_VarValidTransformed[index_trans].VarValidVector[indextsv];
 			}
 			else
@@ -300,7 +301,7 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 			float fval;
 			for (size_t iper= 0; iper < 6; iper++) {
 				if (m_MeanTSV_All[iper].size() == 0)  return;
-
+				if (m_MeanTSV_All[iper].size() <= i) return;
 			}
 			if (GetAcceptedRunNo(i)) {
 				for (size_t iper = 0; iper < 6; iper++) {
@@ -416,13 +417,13 @@ unsigned long SelectedEnsembles::UpdateAcceptedRuns(bool Reset, bool SaveToFile)
 		}
 		else {
 			// individual indicators
-			for (unsigned long isplit = 0; isplit <= m_NumSplitPeriod; isplit++) {
+			/*for (unsigned long isplit = 0; isplit <= m_NumSplitPeriod; isplit++) {
 				for (unsigned long iv = 0; iv < m_NumValid + m_NumExtraValid; testcond_tsv(iv, isplit), iv++);
 
 				// Mean Indicators
 				if (m_NumValid > 6) testcond_tsv_mean();
 
-			}
+			}*/
 
 			m_Valid_TSV[m_ActualEnsemble].History.clear();
 			SetAllToAcceptedRuns();		

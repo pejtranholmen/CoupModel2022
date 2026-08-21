@@ -360,7 +360,7 @@ SOILEBAL_OUT SoilEvaporation::SurfEvalSolution(SOILEBAL_IN Input, enum soil_surf
 
  out.Surface_Temp=((Soil_HeatF*)p_Soil_HeatF)->Temp.front();
 
- double Change;
+ double Change=1.;
  while(	abs(Input.SoilEbal)>1.E5 && Irep<40) {
 	 //1  L
 
@@ -409,12 +409,13 @@ SOILEBAL_OUT SoilEvaporation::SurfEvalSolution(SOILEBAL_IN Input, enum soil_surf
 		 Input.SoilEbal=out.RadNet-out.SensibleF-out.LatentF-out.SoilSurfHeatFlow;
      }
 
-     if(Irep<=3) {
-        if(Input.SoilEbal>0.) Change=0.5;
-        if(Input.SoilEbal<0.) Change=-0.5;
+     if (Irep <= 1) {
+        if(Input.SoilEbal>0.) Change=1.;
+        if(Input.SoilEbal<0.) Change=-1.;
      }
      if(Input.SoilEbal>5.E4) {
         if(NEG) Change=-1.*Change/2	;
+        if (POS && Change < 0.) Change *= -1.;
         out.Surface_Temp=out.Surface_Temp+Change;
         Irep++;
         NEG=false;
@@ -422,6 +423,7 @@ SOILEBAL_OUT SoilEvaporation::SurfEvalSolution(SOILEBAL_IN Input, enum soil_surf
 	  }
      else if(Input.SoilEbal<-5.E4) {
         if(POS) Change=-1.*Change/2;
+        if (NEG&&Change>0.) Change *= -1;
         out.Surface_Temp=out.Surface_Temp+Change;
         Irep++;
         NEG=true;

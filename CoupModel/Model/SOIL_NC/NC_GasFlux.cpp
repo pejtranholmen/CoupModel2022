@@ -228,8 +228,10 @@ void NC_GasFlux::Flux()
 			//	Oxygen_Conc[i]=Oxygen_Conc[i]/Fix::MOL_RATIO_O2_AIR/AirDensityTempFunc(pSoilHeat->Temp[i]); //Wenxin 
 			if (i >= p_Soil_WaterF->LayerOfSatLevel)
 				An_VolFraction[i] = 1;
-			else
-				An_VolFraction[i] = f_AnaerobicFraction(Oxygen_Conc[i] / Fix::PERCENT_FRAC);
+			else {
+				const double vol_conc = Oxygen_Conc[i] / Fix::MOL_RATIO_O2_AIR / AirDensityTempFunc(pSoilHeat->Temp[i]) / Fix::PERCENT_FRAC;
+				An_VolFraction[i] = f_AnaerobicFraction(vol_conc);
+			}
 		}
 		NitrousGas_Fluxes();
 		MethaneGas_Fluxes();

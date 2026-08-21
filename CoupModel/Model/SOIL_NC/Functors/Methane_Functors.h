@@ -216,11 +216,11 @@ public:
 	};
 
 	double operator() (double ConcSurface) noexcept {
-		return ( ConcSurface- atm_conc) / ra;
+		return (ConcSurface / Fix::KILO -atm_conc) / ra;
 	};
 	double operator() (double ConcSurface, double TempSurface) { // This is the default fixed ra operator
 		double MassConcAtm = atm_conc * f_AirDensity(TempSurface);  // g Methane/m3
-		double flux = (ConcSurface - MassConcAtm) / (ra*scalecoef);
+		double flux = (ConcSurface/Fix::KILO - MassConcAtm) / (ra*scalecoef);
 		if (TempSurface < 0.) // No possible uptake of Methane during freezing conditions
 			return max(0., flux);
 		else
@@ -229,7 +229,7 @@ public:
 	double operator() (double ConcSurface, double TempSurface, double AirResistance) { //This is the operator for dynamics scaling of surface flux
 		f_AirDensity = AirDensityTempFunction();																				// Input units are (mg/L, C, s/m)
 		double MassConcAtm = atm_conc * f_AirDensity(TempSurface);
-		double flux = (ConcSurface - MassConcAtm) / (scalecoef*AirResistance/Fix::SECPERDAY);
+		double flux = (ConcSurface/Fix::KILO - MassConcAtm) / (scalecoef*AirResistance/Fix::SECPERDAY);
 		if (TempSurface < 0.)
 			return max(0., flux);
 		else
