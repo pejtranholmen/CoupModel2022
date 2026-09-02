@@ -4,7 +4,7 @@
 #include "../Atmosphere/AtmModel.h"
 #include "../Atmosphere/Irrigation.h"
 #include "./Functors/NC_Soil_Functors.h"
-
+#include "../Structure/Structure.h"
 						   
 NC_Mineral::NC_Mineral(void)
 {
@@ -24,6 +24,8 @@ bool NC_Mineral::Ini()	{
 	size_t  Init;
 
 //!	Initial Conditions
+
+	if (m_pModelStructure->StartWithPrevious == 1) m_pModelInfo->StartStateValue = true;
 	if(!m_pModelInfo->StartStateValue) {
 		if(InitialMineral_N==0) {
 			for(size_t i=0; i<SoilNitrate.size();i++) SoilNitrate[i]=InitNitrateConc*pSoil->AThicknessLayers[i]*p_NC_Plant->NDrivTheta[i]/100.;

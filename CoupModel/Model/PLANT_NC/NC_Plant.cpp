@@ -313,6 +313,8 @@ bool NC_Plant::Ini()	{
 		m_pModelStructure->m_NumActPlantElements = 2;
 		if (m_pModelStructure->Phosphorus_Model > 0) m_pModelStructure->m_NumActPlantElements = 3;
 
+		if (m_pModelStructure->StartWithPrevious == 1) m_pModelInfo->StartStateValue = true;
+
 		if (!m_pModelInfo->StartStateValue) {
 
 			TotalPlantLitterFall->assign(m_pModelStructure->m_NumActPlantElements,0.);
@@ -362,8 +364,7 @@ bool NC_Plant::Ini()	{
 				C_RatioPlant[jj].resize(pPlant->NumPlants);
 			}
 
-			NRootUptake.assign(pPlant->NumPlants, 0.0);//HH initi
-			if (m_pModelStructure->Phosphorus_Model > 0) PRootUptake.assign(pPlant->NumPlants, 0.0);//HH P initi
+
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
 				for (size_t j = _LEAF; j < NUM_PLANT_FUNGI_COMP; j++) {
 					if (j == _MOBILE&& Winter_Regulation_Sw(Winter_Regulation) == Winter_Regulation_Sw::off) continue;
@@ -417,28 +418,7 @@ bool NC_Plant::Ini()	{
 					}
 				}
 			}
-			auto GetAllRoots = [&](size_t i_plant, size_t jj_element) {
-				double out = 0; for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++)
-					out += P_State[j][jj_element][i_plant];	return out;	};
-			auto GetEntirePlant = [&](size_t i_plant, size_t jj_element) {
-				double out = P_SumPlant[_ROOT_ALL][jj_element][i_plant];
-				for (size_t j = _NEWMOBILE; j <= _OLD_STEM; j++)	out += P_State[j][jj_element][i_plant];
-				return out;	};
-			auto GetLeaves = [&](size_t i_plant, size_t jj_element) {
-				return P_State[_LEAF][jj_element][i_plant] + P_State[_OLD_LEAF][jj_element][i_plant]; };
 
-			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
-				for (size_t i = 0; i < pPlant->NumPlants; i++) {
-					P_SumPlant[_ROOT_ALL][jj][i] = GetAllRoots(i, jj);
-					P_SumPlant[_PLANT_WHOLE][jj][i] = GetEntirePlant(i, jj);
-					P_SumPlant[_LEAF_ALL][jj][i] = GetLeaves(i, jj);
-				}
-				P_AllPlants[_ROOT_ALL][jj] = sum(P_SumPlant[_ROOT_ALL][jj]);
-				P_AllPlants[_PLANT_WHOLE][jj] = sum(P_SumPlant[_PLANT_WHOLE][jj]);
-				P_AllPlants[_LEAF_ALL][jj] = sum(P_SumPlant[_LEAF_ALL][jj]);
-
-				IniPlant[jj] = P_AllPlants[_PLANT_WHOLE][jj];
-			}
 		
 
 			for (size_t i = 0; i < Initial_GSI.size(); i++) {
@@ -454,6 +434,51 @@ bool NC_Plant::Ini()	{
 				DormingTempSum[i] = 0.;
 			}
 		} // StartValues
+		else {
+			NRootUptake.assign(pPlant->NumPlants, 0.0);//HH initi
+			if (m_pModelStructure->Phosphorus_Model > 0) PRootUptake.assign(pPlant->NumPlants, 0.0);//HH P initi
+
+			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+				TotalPlantLitterFall[jj].assign(pPlant->NumPlants, 0.);
+				P_SumPlant[_ROOT_ALL][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_ROOT_ALL][jj].assign(pPlant->NumPlants, 0.);
+
+				P_SumPlant[_PLANT_WHOLE][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_PLANT_WHOLE][jj].assign(pPlant->NumPlants, 0.);
+				P_SumPlant[_LEAF_ALL][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_LEAF_ALL][jj].assign(pPlant->NumPlants, 0.);
+				P_SumPlant[_ABOVE_GROUND][jj].resize(pPlant->NumPlants);
+				P_SumPlant[_ABOVE_GROUND][jj].assign(pPlant->NumPlants, 0.);
+
+				C_RatioPlant[jj].resize(pPlant->NumPlants);
+			}
+
+		}
+
+		auto GetAllRoots = [&](size_t i_plant, size_t jj_element) {
+			double out = 0; for (size_t j = _ROOT; j <= _OLD_COARSE_ROOT; j++)
+				out += P_State[j][jj_element][i_plant];	return out;	};
+		auto GetEntirePlant = [&](size_t i_plant, size_t jj_element) {
+			double out = P_SumPlant[_ROOT_ALL][jj_element][i_plant];
+			for (size_t j = _NEWMOBILE; j <= _OLD_STEM; j++)	out += P_State[j][jj_element][i_plant];
+			return out;	};
+		auto GetLeaves = [&](size_t i_plant, size_t jj_element) {
+			return P_State[_LEAF][jj_element][i_plant] + P_State[_OLD_LEAF][jj_element][i_plant]; };
+
+		for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {
+			for (size_t i = 0; i < pPlant->NumPlants; i++) {
+				P_SumPlant[_ROOT_ALL][jj][i] = GetAllRoots(i, jj);
+				P_SumPlant[_PLANT_WHOLE][jj][i] = GetEntirePlant(i, jj);
+				P_SumPlant[_LEAF_ALL][jj][i] = GetLeaves(i, jj);
+			}
+			P_AllPlants[_ROOT_ALL][jj] = sum(P_SumPlant[_ROOT_ALL][jj]);
+			P_AllPlants[_PLANT_WHOLE][jj] = sum(P_SumPlant[_PLANT_WHOLE][jj]);
+			P_AllPlants[_LEAF_ALL][jj] = sum(P_SumPlant[_LEAF_ALL][jj]);
+
+			IniPlant[jj] = P_AllPlants[_PLANT_WHOLE][jj];
+		}
+
+
 		C_Seed_Added = 0.;
 		N_Seed_Added = 0.;
 		P_Seed_Added = 0.;

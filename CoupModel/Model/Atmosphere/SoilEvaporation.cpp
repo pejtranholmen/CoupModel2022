@@ -379,13 +379,13 @@ SOILEBAL_OUT SoilEvaporation::SurfEvalSolution(SOILEBAL_IN Input, enum soil_surf
         out.SoilSurfHeatFlow=Fix::SECPERDAY*(out.Surface_Temp-((Soil_HeatF*)p_Soil_HeatF)->Temp.front())/Rsoil;
      else
         out.SoilSurfHeatFlow=Fix::SECPERDAY*ThCond_Upper(Thetau,((Soil_HeatF*)p_Soil_HeatF)->ThQual.front())*(out.Surface_Temp-((Soil_HeatF*)p_Soil_HeatF)->Temp.front())/(p_Soil_WaterF->ThicknessLayers.front()/2.)*((Soil_HeatF*)p_Soil_HeatF)->SurfFlowDamp(out.Surface_Temp);
-	 double VapourFlowSurf;
+
      if(m_pModelStructure->SoilVapour==1||m_pModelStructure->SoilVapour==2) {
-	    double VapourFlowSurf=((Soil_HeatF*)p_Soil_HeatF)->SurfaceVapourFlow(out.Surface_Temp);
-        out.SoilSurfHeatFlow=out.SoilSurfHeatFlow+Fix::LATE*VapourFlowSurf;//		!C Energy flow
+        p_Soil_WaterF->VapourFlowSurf=((Soil_HeatF*)p_Soil_HeatF)->SurfaceVapourFlow(out.Surface_Temp);
+        out.SoilSurfHeatFlow=out.SoilSurfHeatFlow+Fix::LATE*p_Soil_WaterF->VapourFlowSurf;//		!C Energy flow
 	 }
 	 else
-        VapourFlowSurf=0.;
+         p_Soil_WaterF->VapourFlowSurf=0.;
 
 
 	 
