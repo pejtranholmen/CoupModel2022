@@ -6,7 +6,17 @@
 #include "../PLANT/Salt.h"
 
 
-NC_GasFlux_Functions::NC_GasFlux_Functions(void)
+NC_GasFlux_Functions::NC_GasFlux_Functions(void): GasDiffusionSoilCH4Flux_(
+	GasElement::CH4,
+	ArrheniusActWater,
+	ArrheniusTemp0Water,
+	DCH4_Tortuosity_Water,
+	DCH4_Tortuosity_Air), GasDiffusionSoilCOSFlux_(
+	GasElement::COS,
+	ArrheniusActWater,
+	ArrheniusTemp0Water,
+	DCOS_Tortuosity_Water,
+	DCOS_Tortuosity_Air)
 {
 
 
@@ -119,6 +129,9 @@ bool NC_GasFlux_Functions::Def()
 
 	 pSw = new Sw(&Methane_OxygenStress, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 	 Define(pSw, "Methane Oxygen limitation", 0, "off|on", "Nitrogen and Carbon > 0|Methane Model>0");
+
+	 pSw = new Sw(&WaterDiffusionTempResponse, datatype::SIMPROFILE, elements::WATER, fysprocess::DIFFUSION, bioprocess::NOBPROC, userlevel::NORMAL);
+	 Define(pSw, "TempDependence Water Diffusion", 0, "off|Arrhenius type", "Nitrogen and Carbon > 0|Trace Gas Emissions >0");
 
 
 	pSw= new Sw(&N2O_YearlyFluxes , datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
@@ -550,7 +563,11 @@ plotpar.LegendsVec.clear();
 		pPs = new Ps(&Redoxlag_vertical, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 		Define(pPs, "Vertical Redox LagTime", 30., "days", "Nitrogen and Carbon >=1|Methane Model>0", 0., 100.);
 		
-		
+	pPs = new Ps(&ArrheniusActWater, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
+		Define(pPs, "Arrhenius Act Water",  18900., UNIT_TYPES::ENERGY_MOLE, "Nitrogen and Carbon > 0|TempDependence Water Diffusion>0", 18000., 20000.); 
+	pPs = new Ps(&ArrheniusTemp0Water, datatype::SIMPROFILE, elements::ORGANIC, fysprocess::NOFPROC, bioprocess::DECOMPOSITION, userlevel::NORMAL);
+		Define(pPs, "Arrhenius Temp0", 10., UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon > 0|TempDependence Water Diffusion>0", 1., 20.); 
+
 		
 		
 	pPs = new Ps(&O2_CONC_Atm, datatype::SIMPROFILE, elements::OXYGEN, fysprocess::STORAGE, bioprocess::INITB, userlevel::NORMAL);

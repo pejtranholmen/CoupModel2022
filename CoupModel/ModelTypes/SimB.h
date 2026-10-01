@@ -84,6 +84,14 @@ namespace Fix {
 	constexpr double DNOT_CH4 = 2.6E-5;
 	constexpr double DNOT_COS = 1.24E-5;
 
+	// ============================================================
+	// Molecular diffusion coefficients in water [m2/s]
+	// ============================================================
+
+	constexpr double DWATER_O2 = 2.0E-9;
+	constexpr double DWATER_CO2 = 1.8E-9;
+	constexpr double DWATER_CH4 = 1.5E-9;
+	constexpr double DWATER_COS = 1.4E-9;
 
 	// ============================================================
 	// Molecular masses [g/mol]

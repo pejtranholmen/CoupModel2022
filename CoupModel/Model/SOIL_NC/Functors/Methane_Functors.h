@@ -1,6 +1,7 @@
 #pragma once
 #include "../../../std.h"
 #include "../../Basic_Functors.h"
+
 enum class Methane_Model_Sw { off, SimpleWithStaticTempControl, WithTempControl};
 enum class MethaneProductionModel_Sw{Temp_Function, Temp_pH_Function, Temp_pH_Redox_Function};
 enum class Dissolved_OxygenGas_Sw {Implicit, Explicit};
@@ -12,6 +13,7 @@ enum class Ebullition_Sw { Off, SolubilityBased, PressureBased };
 enum class Methane_SoilBoundary_Flux_Sw { Fixed_Air_Resistance, Dynamic_Air_Resistance, Dynamic_Surface_Pool };
 enum class Methane_Aerenchyma_Emission_Sw{ off, on};
 enum class MethaneConvectionSoilFlux_Sw { off, on };
+enum class WaterDiffusionTempResponse_Sw { off, Arrhenius };
 
 enum class N2O_YearlyFluxes_Sw { off, on };
 
@@ -385,53 +387,74 @@ private:
 	double coef;
 
 };
-
 class GasDiffusionSoilFlux {
-	// The DiffusionCoef as input is m2/s and converted to m2/day and
-	// also scaled to have flux in g/m2/day instead of mg/m2/day.
-	// Note that concentration in water is in mg/dm3 = g/m3
-	// mg/l = 1E-3 g/(1E-3 m3) = g/m3
 public:
-	GasDiffusionSoilFlux(GasElement element, double LogScale) {
-		f_DiffusionWater = SoilWaterDiffusion(element);
-		scalecoef = pow(10., LogScale);
-		//diffcoef_m2_day = MethaneDiffCoefWater * 86400.; //.E - 6;
-	};
-	//GasDiffusionSoilFlux(GasElement element, double tourtous) {
-	//	f_DiffusionAir = SoilAirDiffusion(element, 0.66);
-	//};
-	GasDiffusionSoilFlux(GasElement element, double tourtous, double LogScale) {
-		f_DiffusionAir = SoilAirDiffusion(element, 0.66);
-		scalecoef = pow(10., LogScale);
+	GasDiffusionSoilFlux(
+		GasElement element,
+		double ArrheniusActWater,
+		double ArrheniusTemp0Water,
+		double tortuosity_water,
+		double tortuosity_air)
+		: f_DiffusionWater_(
+			element,
+			ArrheniusActWater,
+			ArrheniusTemp0Water,
+			tortuosity_water),
+		f_DiffusionAir_(
+			element,
+			tortuosity_air)
+	{}
 
-	};
-	void operator() (int LevelOfSat, vector<double>& WaterConc, vector<double>& WaterSat,  vector<double>& Temp, vector<double>& MidDistance, vector<double>* flux) {
-		for (size_t i = 1; i < flux->size(); i++){
-			double meanwatersat = (WaterSat[i - 1] + WaterSat[i]) / 2.;
-			if (i-1 >= LevelOfSat) {
-				flux->at(i - 1) = -f_DiffusionWater(meanwatersat, Temp[i - 1]) * Fix::SECPERDAY * (WaterConc[i] - WaterConc[i - 1]) / MidDistance[i];
-			}
-			else
-				flux->at(i - 1) = -scalecoef * f_DiffusionWater(meanwatersat, Temp[i - 1]) * Fix::SECPERDAY * (WaterConc[i] - WaterConc[i - 1]) / MidDistance[i];
+	void WaterFlux(
+		const vector<double>& WaterConc,
+		const vector<double>& WaterCont,
+		const vector<double>& Temp,
+		const vector<double>& MidDistance,
+		vector<double>* flux)
+	{
+		for (size_t i = 1; i < WaterConc.size(); ++i) {
+
+			const double meanWaterContent =
+				0.5 * (WaterCont[i - 1] + WaterCont[i]);
+
+			const double meanTemp =
+				0.5 * (Temp[i - 1] + Temp[i]);
+
+			flux->at(i - 1) =
+				-f_DiffusionWater_(meanWaterContent, meanTemp)
+				* (WaterConc[i] - WaterConc[i - 1])
+				/ MidDistance[i];
 		}
-	};
-	void operator() (int LevelOfSat, vector<double>& AirConc, vector<double>& WaterSatContent, vector<double>& AirContent, vector<double>& Temp, vector<double>& MidDistance, vector<double>* flux) {
-		for (size_t i = 1; i < flux->size(); i++) {
-			double meansaturation = (WaterSatContent[i - 1] + WaterSatContent[i]) / 2.;
-			double meanaircontent = (AirContent[i - 1] + AirContent[i]) / 2.;
-			if (i-1 < LevelOfSat)
-				flux->at(i - 1) = -f_DiffusionAir(meansaturation, meanaircontent, Temp[i - 1]) * (AirConc[i] - AirConc[i - 1]) / MidDistance[i];
-			else
-				flux->at(i - 1) = -scalecoef * f_DiffusionAir(meansaturation, meanaircontent, Temp[i - 1]) * (AirConc[i] - AirConc[i - 1]) / MidDistance[i];
+	}
+
+	void AirFlux(
+		const vector<double>& AirConc,
+		const vector<double>& AirContent,
+		const vector<double>& Temp,
+		const vector<double>& MidDistance,
+		vector<double>* flux)
+	{
+		for (size_t i = 1; i < AirConc.size(); ++i) {
+
+			const double meanAirContent =
+				0.5 * (AirContent[i - 1] + AirContent[i]);
+
+			const double meanTemp =
+				0.5 * (Temp[i - 1] + Temp[i]);
+
+			flux->at(i - 1) =
+				-f_DiffusionAir_(meanAirContent, meanTemp)
+				* (AirConc[i] - AirConc[i - 1])
+				/ MidDistance[i];
 		}
-	};
+	}
 
 private:
-	//double diffcoef_m2_day;
-	function<double(double,double,double)> f_DiffusionAir;
-	function<double(double,double)> f_DiffusionWater;
-	double scalecoef;
+	SoilAirDiffusion f_DiffusionAir_;
+	SoilWaterDiffusion f_DiffusionWater_;
 };
+
+
 
 
 class GasConvectiveSoilFlux {

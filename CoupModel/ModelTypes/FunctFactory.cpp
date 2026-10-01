@@ -613,14 +613,7 @@ std::function<double(double, double, double)> FunctFactory::Set_D3_Functor() {
 			return Infiltration(m_Ps_Par[0], m_Ps_Par[1]);
 		}
 		break;
-	case MyFunc::DiFFUSION_SOIL_OXYGEN:
-		if (m_Ps_Par.size() == 1)
-			return SoilAirDiffusion(GasElement::OXYGEN, m_Ps_Par[0]);
-		break;
-	case MyFunc::DiFFUSION_SOIL_CO2:
-		if (m_Ps_Par.size() == 4)
-			return SoilAirDiffusion(GasElement::CO2, m_Ps_Par[0], m_Ps_Par[1], m_Ps_Par[2], m_Ps_Par[3]);
-		break;
+
 
 
 	case MyFunc::THERMALCOND_KERSTEN_CLAY:

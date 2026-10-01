@@ -1,5 +1,6 @@
 #pragma once
 #include "./NC_Organic.h"
+#include "./Functors/NC_GasFluxFunctors.h"
 
 class NC_GasFlux_Functions : public NC_Organic
 {
@@ -19,6 +20,7 @@ public:
         Methane_Aerenchyma_Emission, Ebullition,
         MethaneConvectionSoilFlux, Methane_OxygenStress;
 
+    size_t WaterDiffusionTempResponse;
     size_t Dissolved_OxygenGas, MethaneProductionModel;
     size_t COS_Model, COS_PlantModel, COS_SoilModel, COS_LitterModel;
     size_t SIF_Model;
@@ -41,6 +43,8 @@ public:
     double OxygenMassConcAtm, CO2MassConcAtm;
     double O2_CONC_Atm, O2_CONC_Rain, CO2_CONC_Atm;
     double CO2_Flux_Out;
+
+    double ArrheniusActWater, ArrheniusTemp0Water;
 
     // =====================================================================
     // Methane: state and layer variables
@@ -223,15 +227,19 @@ public:
     // =====================================================================
     // Gas transport / concentration conversion function bindings
     // =====================================================================
+
+    function<void(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionCH4_Flux;
+    function<void(vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionCOS_Flux;
     function<double(double)> f_AirDensityTempFunction;
+
     function<double(double)> f_GasWaterConcCH4, f_GasWaterConcO2,
         f_GasWaterConcCO2, f_GasWaterConcCOS;
-
-    function<double(double, double, double)> f_OxygenDiffuctionCoef;
-    function<double(double, double, double)> f_CarbonDiOxideDiffuctionCoef;
+	function<double(double)> f_WaterDiffusionTempFunction, f_GasDiffusionTempFunction;
+    function<double(double, double)> f_OxygenDiffusionCoef;
+    function<double(double, double)> f_CarbonDiOxideDiffusionCoef;
 
     function<double(double, double)> f_DiffWater_CH4, f_DiffWater_O2;
-    function<double(double, double, double)> f_DiffGas_CH4, f_DiffGas_O2;
+    function<double(double, double)> f_DiffGas_CH4, f_DiffGas_O2;
 
     function<double(double, double)> f_OxygenDensityFrom_Volume_Temp,
         f_OxygenVolumeFrom_Density_Temp;
@@ -240,6 +248,14 @@ public:
         f_MethaneDensityFrom_Volume_Temp;
     function<double(double, double)> f_COSDensityFrom_Volume_Temp;
     function<double(double, double, double)> f_MethaneAirConcFrom_water_Temp;
+
+    function<void(vector<double>, vector<double>, vector<double>*)> f_ConvectiveFlux;
+    function<void(vector<double>, vector<double>, vector<double>*)> f_ConvectiveCOSFlux;
+
+	function<void(int, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionAirSoilFlux;
+	function<double(double, double, double)> f_delta_conc;
+
+
 
     // =====================================================================
     // Nitrogen / denitrification function bindings
@@ -259,4 +275,12 @@ public:
     bool YearShift, FullYear;
 
     bool DenitrifierUpdate();
+    GasDiffusionSoilFlux GasDiffusionSoilCH4Flux_;
+    GasDiffusionSoilFlux GasDiffusionSoilCOSFlux_;
+
+    double DCH4_Tortuosity_Water = pow(10., Diff_CH4LogScale);
+    double DCH4_Tortuosity_Air = pow(10., Diff_CH4AirLogScale);
+    double DCOS_Tortuosity_Water = pow(10., Diff_COSLogScale);
+    double DCOS_Tortuosity_Air = pow(10., Diff_COSAirLogScale);
+
 };

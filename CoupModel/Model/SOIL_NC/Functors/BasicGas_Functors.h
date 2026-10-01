@@ -107,6 +107,16 @@ public:
 private:
 	double abstemp, powercoef;
 };
+class TempWaterDiffusionFunc {
+public:
+	TempWaterDiffusionFunc() { abstemp = 273.15, powercoef = 1.75; }
+	double operator() (double Temp) {
+		return pow((Temp + abstemp) / abstemp, powercoef);
+	}
+private:
+	double abstemp, powercoef;
+};
+
 
 class SoilAirDiffusion {
 public:
@@ -132,7 +142,7 @@ public:
 			break;
 		}
 		f_Temp = TempDiffusionFunc();
-		D_Coef *= 86400.;
+		D_Coef *= 864.;
 		D_MinValue = D_Coef / 1.E4;
 		Simple = true;
 	}
@@ -155,33 +165,32 @@ public:
 			D_Coef = Fix::DNOT_COS;
 			break;
 		}
-		D_Coef *= 86400.;	 // Note this to convert from m2/s to m2/day, considering the Air Percentage instead of Air Fraction
+		D_Coef *= 864.;	 // Note this to convert from m2/s to m2/day, considering the Air Percentage instead of Air Fraction
 						 // 864 instead of 86400	
 		D_MinValue = D_Coef / 1.E4;
 		f_Temp = TempDiffusionFunc();
 		Simple = false;
 	}
 
-	double operator() (double Saturation,double AirPerCentFraction) {
-		if (Simple) return SimpleDiffusion(Saturation,AirPerCentFraction);
-		else return ComplexDiffusion(Saturation,AirPerCentFraction);
+	double operator() (double AirPerCentFraction) {
+		if (Simple) return SimpleDiffusion(AirPerCentFraction);
+		else return ComplexDiffusion(AirPerCentFraction);
 
 	}
-	double operator() (double Saturation, double AirPerCentFraction, double Temp) {
-		if (Simple) return SimpleDiffusion(Saturation,AirPerCentFraction) * f_Temp(Temp);
-		else return ComplexDiffusion(Saturation,AirPerCentFraction) * f_Temp(Temp);
+	double operator() (double AirPerCentFraction, double Temp) {
+		if (Simple) return SimpleDiffusion(AirPerCentFraction) * f_Temp(Temp);
+		else return ComplexDiffusion(AirPerCentFraction) * f_Temp(Temp);
 	}
 private:
-	double SimpleDiffusion(double Saturation,double AirPerCentFraction) {
+	double SimpleDiffusion(double AirPerCentFraction) {
 		if (AirPerCentFraction >= 1.)
-			return tourtousf * AirPerCentFraction / Saturation * D_Coef;
+			return tourtousf * AirPerCentFraction * D_Coef;
 		else
 			return D_MinValue;
 			//return max(D_MinValue, tourtousf * pow(AirPerCentFraction/100.,10./3.)/pow(Saturation/100.,2) * D_Coef);
 	}
-	double ComplexDiffusion(double Saturation, double AirPerCentFraction) {
-		if (AirPerCentFraction >= D_AirThreshold)
-			return D_MinValue + pow((AirPerCentFraction - D_AirThreshold)/100., D_PowerCoef)/pow(Saturation/100.,2) * tourtousf * D_Coef;
+	double ComplexDiffusion(double AirPerCentFraction) {
+		if (AirPerCentFraction >= D_AirThreshold)			return D_MinValue + pow((AirPerCentFraction - D_AirThreshold)/100., D_PowerCoef) * tourtousf * D_Coef;
 		else
 			return D_MinValue;
 	}
@@ -194,40 +203,32 @@ private:
 
 class SoilWaterDiffusion {
 public:
-	SoilWaterDiffusion(GasElement element) : element(element) {
+	SoilWaterDiffusion(GasElement element, double actArr, double temp0, double tortuousity) : f_Arrhenius_(actArr, temp0), tortuosity(tortuousity) {
 		switch (element) {
 		case GasElement::OXYGEN:
-			a = 1.172;
-			b = 0.03443;
-			c = 0.0005048;
-			scale = 1.e-9;
+			D_WaterCoef = Fix::DWATER_O2;
 			break;
 		case GasElement::CH4:
-			a = 0.9798;
-			b = 0.02986;
-			c = 0.0004381;
-			scale = 1.e-9;
+			D_WaterCoef = Fix::DWATER_CH4;
 			break;
 		case GasElement::CO2:
-			a = 0.939;
-			b = 0.02671;
-			c = 0.0004095;
-			scale = 1.e-9;
+			D_WaterCoef = Fix::DWATER_CO2;
+			break;
 		case GasElement::COS:
-			a = 0.939;
-			b = 0.02671;
-			c = 0.0004095;
-			scale = 1.e-9;
+			D_WaterCoef = Fix::DWATER_COS;
+			break;
 		}
+		D_WaterCoef *= 864.;
 	}
 
-	double operator() (double sat,double Temp) {
-		return sat*sat*(a + b * Temp + c * Temp * Temp)*scale*1.E-4; // m2/s
+	double operator() (double Theta, double Temp) { // Note Theta Volume Fraction in %, Temp in C
+		return Theta*tortuosity*D_WaterCoef * f_Arrhenius_(Temp);
 	}
 
 private:
-	double a, b, c, scale;
-	GasElement element;
+	double D_WaterCoef;
+	Arrhenius f_Arrhenius_;
+	double tortuosity;	
 };
 
 class ChangeConcentration {

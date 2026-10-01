@@ -23,12 +23,7 @@ class NC_GasFlux : public NC_GasFlux_Functions
 		Irrigation* p_Atm;
 
 	private:
-		function<void(vector<double>, vector<double>, vector<double>*)> f_ConvectiveFlux;
-		function<void(int, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionFlux;
-		function<void(int, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionAirSoilFlux;
-		function<double(double, double, double)> f_delta_conc;
-		function<void(vector<double>, vector<double>, vector<double>*)> f_ConvectiveCOSFlux;
-		function<void(int, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionCOSFlux;
-		function<void(int, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>, vector<double>*)> f_DiffusionAirSoilCOSFlux;
+
+		
 
 };
