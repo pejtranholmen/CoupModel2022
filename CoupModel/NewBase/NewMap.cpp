@@ -21,6 +21,7 @@
 
 #include "../MainFrm.h"
 #include "../SP/SP_Retrieve.h"
+#include "./FuncMetaExporter.h"
 
 auto getexcel_col = [](int no) {
 	auto newcol = xlnt::fill::solid(xlnt::rgb_color(255, 255, 255));
@@ -5392,6 +5393,7 @@ bool NewMap::MakeMapComplete() {
 	vptr = GetPtrVector(typ, true);
 	for (size_t j = 0; j < vptr.size(); j++) 
 		vptr[j]->BuildDependencies(this);
+
 	return true;
 }
 vector<SIMB> NewMap::SortSimB_ByGroup(vector<SIMB> v_in) {

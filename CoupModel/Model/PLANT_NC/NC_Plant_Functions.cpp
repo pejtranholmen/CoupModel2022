@@ -672,6 +672,8 @@ bool NC_Plant_Functions::Def()
 	Define(pG, pNumPlants, "PCOS Surface", initv, "ppt", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
 	pGs = new Gs(&PCOS_Boundary, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pGs, "PCOS Canopy", 0.0, "ppb", "Nitrogen and Carbon >= 1|Growth>=3|COS PlantModel >1");
+	pGs = new Gs(&coscas, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
+	Define(pGs, "COS_CAS", 0.0, "ppt", "Nitrogen and Carbon >= 1|Growth>=3");
 	pG = new G(&PCOS_Internal, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
 	Define(pG, pNumPlants, "PCOS Stomata", initv, "ppt", "Nitrogen and Carbon >= 1|Growth=4|COS PlantModel >1");
 	pG = new G(&SIF, pNumPlants, datatype::PLANT, elements::CARBON, fysprocess::TRANSPORT, bioprocess::PHOTOSYNTHESIS, userlevel::NORMAL);
@@ -3674,7 +3676,7 @@ Photo NC_Plant_Functions:: PhoSib(size_t index) {
 
 		double c4flag;
 		double T_s, poros, theta_w;
-		double cosprev, coscas;
+		double cosprev;
 		T_s = 0.;
 		poros = 0.;
 		theta_w = 0.;

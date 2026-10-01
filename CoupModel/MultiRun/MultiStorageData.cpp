@@ -376,13 +376,20 @@ bool MultiStorageData::OpenFile(string filename, bool SetFileName)
 			m_MBinHeader.n_runs = m_pNewMap->MR_Get_TotalNumberofAddedRuns(0);
 		}
 	}
+	bool validationDimensionChanged = false;
 	if (m_pNewMap != nullptr) {
 		if (m_NumValid != m_pNewMap->m_Val_Array.size() * m_ValidStatBase) {
 			m_NumValid = m_pNewMap->m_Val_Array.size() * m_ValidStatBase;
 			m_NumExtraValid = 0;
 			m_NumValidAll = m_NumValid + m_NumExtraValid;
+			validationDimensionChanged = true;
 		}
 	}
+	// Criteria/statistics are read before the current model's validation count is
+	// reconciled above. Resize them again when that count changed so no saved
+	// statistic vector retains an obsolete dimension.
+	if (validationDimensionChanged)
+		VarValidAllo();
 
 	
 		m_TotalNumberRuns=GetNumberOfTotalRunsWithAttachedFiles();
@@ -1297,7 +1304,12 @@ bool MultiStorageData::CalculateMeanValidValues(bool SV_Variables)
 	return	true;
 }
 void MultiStorageData::AllocateMeanValidVar() {
+	const size_t requiredSize = m_NumValid + m_NumExtraValid;
 
+	if (m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV].size() != requiredSize ||
+		m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV].size() != requiredSize) {
+		AllocateValid_TSV(m_ActualEnsemble);
+	}
 	if (m_NumValid == 7) {
 		m_NumValidVar = m_NumValid/m_ValidStatBase ;
 		m_ValidDynLogLi.resize(m_NumValidVar * 13 * 7 * 2);

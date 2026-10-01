@@ -76,7 +76,7 @@ double LitterInputProfile[NUM_BIOELEM];
 
 pair<size_t, size_t> Org_Link[NUM_ORG_TRANSFORMATION];
 
-double  CTotSoilRespRate;
+double  CTotSoilRespRate, COS_TotSoilUptake;
 double  Humusformation[NUM_BIOELEM - 1];
 double  NTotLitter1NH4Rate,NTotLitter2NH4Rate,NTotHumusNH4Rate, NTotMicrobeNH4Rate ;
 double  NTotFaecesNH4Rate, NTotOrgNH4Rate, PTotOrgPO4Rate;

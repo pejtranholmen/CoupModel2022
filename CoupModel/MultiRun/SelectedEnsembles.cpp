@@ -111,7 +111,12 @@ void SelectedEnsembles::SetAllToAcceptedRuns() {
 			m_Valid_TSV[m_ActualEnsemble].meancriteria[i] = CRITERIA_STATE::NO_SET;
 	}
 
+	const size_t requiredSize = m_NumValid + m_NumExtraValid;
 
+	if (m_Valid_TSV[m_ActualEnsemble].v[E_POST_CV].size() != requiredSize ||
+		m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_CV].size() != requiredSize) {
+		AllocateValid_TSV(m_ActualEnsemble);
+	}
 
 
 	if (m_Valid_SV[m_ActualEnsemble].v[0].size() == 0) return;
@@ -923,6 +928,7 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators(bool Only_Prior) {
 	auto numvalidvar = m_pNewMap->GetNumAll_TSV_ValVariables();
 	for (unsigned long split = 0; split <= m_NumSplitPeriod; split++) {
 		for (unsigned long i = 0; i<m_NumValid + m_NumExtraValid; i++) {
+			if (m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN].size() == 0) continue;
 			if (m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][i % numvalidvar] == MISSING) {
 					m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MEAN][i] = MISSING;
 					m_Valid_TSV[m_ActualEnsemble].v[E_PRIOR_MIN][i] = MISSING;
@@ -936,8 +942,8 @@ void SelectedEnsembles::SetMinMaxOfPerformanceIndicators(bool Only_Prior) {
 					m_Valid_TSV[m_ActualEnsemble].v[E_SELECT_HIGH][i] = MISSING;
 			}
 			else {
-				if (Only_Prior) SetValidStat(i, false, split);
-				else SetValidStat(i, true, split);
+				if (Only_Prior) SetValidStat(i, false, m_ActualEnsemble, split);
+				else SetValidStat(i, true, m_ActualEnsemble	, split);
 				
 			}
 		}
@@ -1461,6 +1467,16 @@ void SelectedEnsembles::Update_TSV_VarStat(bool AcceptedOnly) {
 	size_t irun;
 	size_t icount;
 	if (m_NumValid == 0) return;
+	const size_t numStatistics = E_SELECT_HIGH + 1;
+	const size_t requiredTSVValues =
+		(m_NumValid + m_NumExtraValid) * (m_NumSplitPeriod + 1);
+	auto& validTSV = m_Valid_TSV[m_ActualEnsemble];
+	for (size_t statistic = 0; statistic < numStatistics; ++statistic) {
+		if (validTSV.v[statistic].size() < requiredTSVValues)
+			validTSV.v[statistic].resize(requiredTSVValues, MISSING);
+	}
+	if (validTSV.criteria.size() < requiredTSVValues)
+		validTSV.criteria.resize(requiredTSVValues, CRITERIA_STATE::NO_SET);
 #ifndef COUPSTD
 	MFC_Util mfc_util;
 

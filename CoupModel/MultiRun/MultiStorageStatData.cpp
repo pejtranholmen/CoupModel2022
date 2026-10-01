@@ -1002,6 +1002,7 @@ void MultiStorageStatData::UpdateMeanValidValues(bool SV_Variables)
 		}
 
 		size_t icount;
+		if (sample.size() == 0) return;
 		SStat(&sample[0], sample.size(), &icount, &stat);
 		if (SV_Variables) {
 			if (icount > 1) {

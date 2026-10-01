@@ -206,9 +206,9 @@ PLOTv PlotInfo::MakeValidationChartInfo(size_t i, size_t i_doc, int ResidualPlot
 		if (pSw2->GetIntValue() > 0 && pSw->GetIntValue() > 0&&file_good) {
 			out.RepitDataType = true;
 			auto cycle=out.pPG_MeasValFile->GetCycleWithCommonTime();
-			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
+/*			auto NumberofDim1 = m_pSimDoc->m_MultiRun_Array[0].NumberOfRepeatitionsWithinDimension;
 			
-			/*if (out.PG_FilterVarIndex == 0) {
+			if (out.PG_FilterVarIndex == 0) {
 				m_pSimDoc->m_MStorage.SetCyclicNumbers(1);
 
 

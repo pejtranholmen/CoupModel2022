@@ -57,44 +57,49 @@ bool NC_GasFlux_Functions::Def()
 	pSw= new Sw(&Oxygen_Model, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pSw, "Oxygen Model",0,"Steady state|Dynamic","Trace Gas Emissions >0");
 
-	pSw = new Sw(&COS_Model, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
-	Define(pSw, "COS Model", 0, "Off|Only Plant|Both Plant and Soil", "Nitrogen and Carbon > 0");
-	
-	pSw = new Sw(&COS_PlantModel, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
-	Define(pSw, "COS PlantModel", 0, "Off|Tranpiration Base|PhotoSynthesis Base|Experimental", "Nitrogen and Carbon > 0|COS Model>0");
+	pSw = new Sw(&SIF_Model, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
+	Define(pSw, "SIF Model", 0, "Off|GPP Regression|Mechanistic", "Nitrogen and Carbon > 0");
 
+	pSw = new Sw(&COS_Model, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
+	Define(pSw, "COS Model", 0, "Off|Both Plant and Soil", "Nitrogen and Carbon > 0");
+	pSw = new Sw(&COS_PlantModel, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
+	Define(pSw, "COS PlantModel", 0, "Off|Tranpiration Base|PhotoSynthesis Base|Experimental|Mechanistic", "Nitrogen and Carbon > 0|COS Model>0");
 	pSw = new Sw(&COS_SoilModel, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
-	Define(pSw, "COS SoilModel", 0, "Off|Heteorotrophic Respiration Base", "Nitrogen and Carbon > 0|COS Model>1");
+	Define(pSw, "COS SoilModel", 0, "Off|Heteorotrophic Respiration Base|COSM|Ogee", "Nitrogen and Carbon > 0|COS Model>0");
+	pSw = new Sw(&COS_LitterModel, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
+	Define(pSw, "COS LitterModel", 0, "Off|On", "Nitrogen and Carbon > 0|COS SoilModel==2");
 
 	pGs = new Gs(&COS_TotPlantUptake, datatype::ALLPLANTS, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
 	Define(pGs, "COS PlantUptake", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>0");
 	pGs = new Gs(&COS_TotSoilUptake, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS SoilUptake", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+	Define(pGs, "COS SoilUptake", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>0");
+	pGs = new Gs(&COS_TotSoilProductionFlux, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+	Define(pGs, "COS SoilProduction", 0.0, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS SoilModel==2");
+	pGs = new Gs(&COS_TotSoilOxic, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+	Define(pGs, "COS SoilOxic", 0.0, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS SoilModel==2");
+	pGs = new Gs(&COS_TotSoilAnoxic, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+	Define(pGs, "COS SoilAnoxic", 0.0, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS SoilModel==2");
+	pGs = new Gs(&COS_TotSoilSink, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+	Define(pGs, "COS SoilSink", 0.0, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS SoilModel==2");
 	pGs = new Gs(&COS_EcoSystemFlux, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS EcoSystemFlux", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
-
+	Define(pGs, "COS EcoSystemFlux", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>0");
 	pGs = new Gs(&COS_Option1, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS Opt1 Transp", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
-
+	Define(pGs, "COS Opt1 Transp", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS PlantModel==3");
 	pGs = new Gs(&COS_Option2, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS Opt2 PotTransp", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+	Define(pGs, "COS Opt2 PotTransp", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS PlantModel==3");
 	pGs = new Gs(&COS_Option3, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS Opt3 MaxPotTransp", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
-
-
+	Define(pGs, "COS Opt3 MaxPotTransp", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS PlantModel==3");
 	pGs = new Gs(&COS_Option4, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS Opt4 CanRes", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
-
+	Define(pGs, "COS Opt4 CanRes", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS PlantModel==3");
 	pGs = new Gs(&COS_Option5, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS Opt5 AirRes", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
+	Define(pGs, "COS Opt5 AirRes", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS PlantModel==3");
 	pGs = new Gs(&COS_Option6, datatype::TOTPROFILE, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
-	Define(pGs, "COS Opt6 GlobalRad", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
-
+	Define(pGs, "COS Opt6 GlobalRad", 0.0,UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS PlantModel==3");
 
 	pSw= new Sw(&Methane_Model, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 	    Define(pSw, "Methane Model",0,"off|Simplified|Detailed width temp control","Trace Gas Emissions >0");
 	pSw = new Sw(&MethaneProductionModel, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
-		Define(pSw, "Methane Production Model", 0, "Temp_Control|Temp_pH_Control", "Trace Gas Emissions >0");
+		Define(pSw, "Methane Production Model", 0, "Temp_Control|Temp_pH_Control|Temp_pH_Redox_Control", "Trace Gas Emissions >0");
 	pSw = new Sw(&Dissolved_OxygenGas, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pSw, "Dissolved oxygen gas", 0, "Implicit|Explicit", "Trace Gas Emissions >0");
 	pSw= new Sw(&Methane_Plant_Oxidation , datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::METHANE_OXIDATION, userlevel::NORMAL);
@@ -111,6 +116,11 @@ bool NC_GasFlux_Functions::Def()
 		Define(pSw, "Methane Convection SoilFlux", 0, "off|on", "Nitrogen and Carbon > 0|Trace Gas Emissions >0|Methane Model>0");
 	pSw = new Sw(&Ebullition, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 		Define(pSw, "Methane Ebullition", 1, "off|Solubility based| Pressure based", "Trace Gas Emissions >0|Methane Model>0");
+
+	 pSw = new Sw(&Methane_OxygenStress, datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+	 Define(pSw, "Methane Oxygen limitation", 0, "off|on", "Nitrogen and Carbon > 0|Methane Model>0");
+
+
 	pSw= new Sw(&N2O_YearlyFluxes , datatype::SIMPROFILE, elements::AIR, fysprocess::NOFPROC, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 	    Define(pSw,"N2O Yearly Flux Statistics",0,"off|on","Nitrogen and Carbon > 0|Trace Gas Emissions >0");
 
@@ -118,15 +128,17 @@ bool NC_GasFlux_Functions::Def()
 	pX= new X(&CH4,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
 	initv.assign(pSoil->NL,0.);
     Define(pX, pNL  , "Methane content",initv,UNIT_TYPES::MASS_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
+	pX = new X(&OCS, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::SOIL_GAS_DYNAMICS, userlevel::NORMAL);
+	Define(pX, pNL, "COS content", initv, UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon > 0|COS SoilModel==2");
 
 
 ////State variables added by Marco
 	pXs= new Xs(&CH4_AccBubbles, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 		Define(pXs,   "Acc CH4 Bubble Emission",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0");
-	pXs= new Xs(&CH4_AccPlant, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+	pXs= new Xs(&CH4_AccEmissionPlant, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 		Define(pXs,   "Acc CH4 Plant Emission",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
-	pXs= new Xs(&CH4_AccEmission, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	    Define(pXs,  "Acc CH4 Emission",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
+	pXs= new Xs(&CH4_AccEmissionSoil, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+	    Define(pXs,  "Acc CH4 SoilEmission",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
 	pXs= new Xs(&CH4_DiffTotStorage, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
 	    Define(pXs,   "Diff CH4 Storage",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
 	pXs= new Xs(&CH4_MassBalanceCheck, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
@@ -135,6 +147,20 @@ bool NC_GasFlux_Functions::Def()
 	    Define(pXs,  "Acc CH4 Production",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
 	pXs= new Xs(&CH4_AccOxidation, datatype::ACCUMULATOR, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_OXIDATION, userlevel::NORMAL);
 	    Define(pXs,   "Acc CH4 Oxidation",0.,UNIT_TYPES::MASS_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0") ;
+	pXs = new Xs(&COS_AccEmission, datatype::ACCUMULATOR, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pXs, "Acc COS Emission", 0., UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pXs = new Xs(&COS_AccProduction, datatype::ACCUMULATOR, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pXs, "Acc COS Production", 0., UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pXs = new Xs(&COS_AccOxic, datatype::ACCUMULATOR, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pXs, "Acc COS Oxic", 0., UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pXs = new Xs(&COS_AccAnoxic, datatype::ACCUMULATOR, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pXs, "Acc COS Anoxic", 0., UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pXs = new Xs(&COS_AccSoilSink, datatype::ACCUMULATOR, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pXs, "Acc COS Sink", 0., UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pXs = new Xs(&COS_DiffTotStorage, datatype::ACCUMULATOR, elements::COS, fysprocess::STORAGE, bioprocess::NOBPROC, userlevel::NORMAL);
+		Define(pXs, "Diff COS Storage", 0., UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pXs = new Xs(&COS_MassBalanceCheck, datatype::ACCUMULATOR, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pXs, "COS MassBalanceCheck", 0., UNIT_TYPES::MIKRO_CARBON_MASS_UNIT, "Nitrogen and Carbon >= 1|Methane Model>0");
 	initv.assign(pSoil->NL,0.);
 	pT= new T(&CH4_Prod ,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL); 
 		Define(pT, pNL  , "CH4 Source flux",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
@@ -142,6 +168,16 @@ bool NC_GasFlux_Functions::Def()
 	    Define(pT, pNL  , "CH4 Sink flux",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
 	pT= new T(&CH4_SoilFlux,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL); 
 		Define(pT, pNL  , "CH4 soil water flux",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
+	pT = new T(&COS_SoilFlux, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pT, pNL, "COS soil water flux", initv, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pT = new T(&COS_Prod, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pT, pNL, "COS soil production", initv, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pT = new T(&COS_Oxic, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pT, pNL, "COS soil oxic uptake", initv, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pT = new T(&COS_Anoxic, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pT, pNL, "COS soil anoxic emiss", initv, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pT = new T(&COS_NetSink, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pT, pNL, "COS net soil sink", initv, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
 
 	pT = new T(&O2_Aere, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::TRANSPORT, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 		Define(pT, pNL, "Oxygen Flux Aerenchyma", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0 |Methane Model>0|Methane emission by aerenchyma>0");
@@ -163,6 +199,8 @@ bool NC_GasFlux_Functions::Def()
 		Define(pT, pNL  , "CH4 aerobic oxidation",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
 	pT= new T(&CH4_OxidationPlantRoot ,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_OXIDATION, userlevel::NORMAL); 	
 		Define(pT, pNL  , "CH4 plant oxidation",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
+	pT = new T(&CH4_OxidationInPlant, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_OXIDATION, userlevel::NORMAL);
+		Define(pT, pNL, "CH4 in-plant oxidation", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
  ;
 	pT= new T(&CH4_Ebullition ,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::EMISSION, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL); 
 		Define(pT, pNL  , "CH4 ebullition rate",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
@@ -172,8 +210,14 @@ bool NC_GasFlux_Functions::Def()
 		Define(pT, pNL, "CH4 plant transport", initv, UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0");
 	pTs= new Ts(&CH4_SurfaceEmission, datatype::SOILSURFACE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	    Define(pTs,   "CH4 surface Emission",0.,UNIT_TYPES::MASSFLOW_UNIT,"Nitrogen and Carbon >= 1|Methane Model>0");
+	pTs = new Ts(&COS_SurfaceFlux, datatype::SOILSURFACE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pTs, "COS surface Flux", 0., UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
+	pTs = new Ts(&COS_Litter, datatype::SOILSURFACE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pTs, "COS litter flux", 0.0, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
 	pT= new T(&CH4_AirSoilFlux ,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	    Define(pT, pNL  , "CH4 soil air flux",initv,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0");
+	pT = new T(&COS_AirSoilFlux, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pT, pNL, "COS soil air flux", initv, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel==2");
 
   ;
 // CH4 Parameters;
@@ -196,14 +240,24 @@ bool NC_GasFlux_Functions::Def()
 
 	pPs= new Ps(&CH4_RateCoefRatio, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL); 
 	    Define(pPs,  "CH4 RateCoefRatio",.003, UNIT_TYPES::RATECOEF_UNIT,"Nitrogen and Carbon >=1|Methane Model>0",0.,50.); ps_vec.push_back(pPs);
-	pPs = new Ps(&CH4_ProductionQ10, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+	pPs = new Ps(&CH4_ProdQ10, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 		Define(pPs, "CH4 ProductionQ10", 3., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >=1|Methane Model>1", 1., 5.); ps_vec.push_back(pPs);
+	pPs = new Ps(&CH4_ProdTref, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+		Define(pPs, "CH4 Prodref. Temp", 20., UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >=1|Methane Model>1", 1., 35.);ps_vec.push_back(pPs);
+	pPs = new Ps(&CH4_ProdTbase, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+		Define(pPs, "CH4 Prodbase Temp", 5., UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >=1|Methane Model>1", 1., 10.);ps_vec.push_back(pPs);
     pFunc = new Func( datatype::TOTPROFILE, elements::METHANE, fysprocess::NOFPROC, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 	ps_vec.push_back((Ps*)m_pModelMap->GetPsPointer("RateCoefLitter1"));
 	ps_vec.push_back((Ps*)m_pModelMap->GetPsPointer("RateCoefLitter2"));
 	ps_vec.push_back((Ps*)m_pModelMap->GetPsPointer("RateCoefHumus"));
 
 	Define(pFunc, functorprop, funcname, ps_vec, plotpar);	ps_vec.clear();
+	pPs = new Ps(&CH4_OxidQ10, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+	Define(pPs, "CH4 OxidationQ10", 2., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >=1|Methane Model>1", 1., 15.);
+	pPs = new Ps(&CH4_OxidTref, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+	Define(pPs, "CH4 Oxid. ref. Temp", 12., UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >=1|Methane Model>1", 1., 35.);
+	pPs = new Ps(&CH4_OxidTbase, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
+	Define(pPs, "CH4 Oxid. base Temp", 5., UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >=1|Methane Model>1", 1., 10.);
 
 ;
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_OF_WATERUPTAKE; functorprop.Arg = MyArgType::D1;
@@ -299,10 +353,10 @@ plotpar.Y_ScalingCoef = 6;
 
 ;
 
-    pPs = new Ps(&BubbleFrac, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-        Define(pPs, "CH4 Frac in Bubble", 0.57, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane Ebullition=2", 1.E-02, 1.);
-	pPs = new Ps(&RatioPressThreshold, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-		Define(pPs, "CH4 Threshold in Bubble", 0.15, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0||Methane Ebullition=2", 1.E-02, .2);
+    pPs = new Ps(&CH4_BubbleRate, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+        Define(pPs, "CH4 Bubble Rate", 0.57, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane Ebullition=2", 1.E-02, 1.);
+	//pPs = new Ps(&RatioPressThreshold, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+	//	Define(pPs, "CH4 Threshold in Bubble", 0.15, UNIT_TYPES::RATECOEF_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0||Methane Ebullition=2", 1.E-02, .2);
 
 
 functorprop.FuncName = MyFunc::METHANE_PLANTOXIDATION_REGULATION_BY_ROOTRESPIRATION; functorprop.Arg = MyArgType::D1;
@@ -411,7 +465,10 @@ plotpar.LegendsVec.clear();
 		Define(pPs, "O2 HenryCoefTempSens", -1500., "K", "Nitrogen and Carbon >=1|Methane Model>0|Dissolved oxygen gas>0", -10000., 10000.); //	 ps_vec.push_back(pPs);
 		//pPs = new Ps(&O2_HConst, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::SOIL_GAS_EQUILIBRIUM, userlevel::NORMAL);
 		//	Define(pPs, "O2 HenryConst", 769.23, "L.atm/mol", "Nitrogen and Carbon >=1|Methane Model>0", 10., 1000.);	 ps_vec.push_back(pPs);
-
+	pPs = new Ps(&CO2_HStandard, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::SOIL_GAS_EQUILIBRIUM, userlevel::NORMAL);
+		Define(pPs, "CO2 HenryStdCoef_cp", 0.034, "Mol/atm", "Nitrogen and Carbon >=1|Methane Model>0", 0.001, 0.1);
+	pPs = new Ps(&CO2_HTempSens, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::SOIL_GAS_EQUILIBRIUM, userlevel::NORMAL);
+		Define(pPs, "CO2 HenryCoefTempSens", 2400., "K", "Nitrogen and Carbon >=1|Methane Model>0", 1000., 3000.);
 	
 	functorprop.FuncName = MyFunc::METHANE_TRANSPIRATION_EFFICIENCY; functorprop.Arg = MyArgType::D1;
 	functorprop.FunctorInitOption = std::string::npos;
@@ -476,7 +533,27 @@ plotpar.LegendsVec.clear();
 	pPs = new Ps(&CH4_ResistanceAirLogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 		Define(pPs, "CH4 AirResistance LogScale", 0., UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >=1|Methane Model>0", -2., 4.);  // Changed to allway make use of possible scaling of air resistance
 
-   pPs = new Ps(&O2_CONC_Atm, datatype::SIMPROFILE, elements::OXYGEN, fysprocess::STORAGE, bioprocess::INITB, userlevel::NORMAL);
+		pPs = new Ps(&OxidUnSat_LogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "CH4 Unsaturated Oxid. LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -5., 5.);
+		pPs = new Ps(&CH4_ResistanceAirLogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "CH4 AirResistance LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0|Methane SoilBoundary>=0", -5., 5.);
+		pPs = new Ps(&Diff_CH4AirLogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "CH4 AirDiffusion LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -5., 5.);
+		pPs = new Ps(&Diff_CO2AirLogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "CO2 AirDiffusion LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -5., 5.);
+		pPs = new Ps(&Diff_O2AirLogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "O2 AirDiffusion LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -5., 5.);
+		pPs = new Ps(&Diff_CH4LogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "CH4 Diffusion LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -5., 5.);
+		pPs = new Ps(&Diff_O2LogScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "O2 Diffusion LogScale", 0., "-", "Nitrogen and Carbon >=1|Methane Model>0", -5., 5.);
+		pPs = new Ps(&Redoxlag_vertical, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "Vertical Redox LagTime", 30., "days", "Nitrogen and Carbon >=1|Methane Model>0", 0., 100.);
+		
+		
+		
+		
+	pPs = new Ps(&O2_CONC_Atm, datatype::SIMPROFILE, elements::OXYGEN, fysprocess::STORAGE, bioprocess::INITB, userlevel::NORMAL);
 		Define(pPs, "O2 Air Conc", 20.95, UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0", 0., 100.); 
 
 	pPs = new Ps(&CO2_CONC_Atm, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::INITB, userlevel::NORMAL);
@@ -484,23 +561,91 @@ plotpar.LegendsVec.clear();
 		 //wenxin
 	pPs= new Ps(&CH4_InitConc, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	    Define(pPs,   "CH4 init Conc",200.,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",1.E-02,5.E3);
-
+		pPs = new Ps(&AereScale_CH4, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "CH4 Aerenchyma LogScale", 0., "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0", -5., 5.);
+		pPs = new Ps(&AereScale_O2, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pPs, "O2 Aerenchyma LogScale", 0., "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0", -5., 5.);
     //pPs= new Ps(&NPPyr, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	//    Define(pPs,   "Annual NPP",600.,"gC/m2/yr", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,5.E3);
 	//pPs= new Ps(&Porosity_Tiller, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	//    Define(pPs,   "Porosity of tiller",0.3,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
 	//pPs= new Ps(&NPP_Ratio, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	//    Define(pPs,   "NPP Ratio",0.5,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,1.);
-	pPs= new Ps(&AereScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	    Define(pPs,   "Aerenchyma LogScale",0.,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",-5.,5.);
+	//pPs= new Ps(&AereScale, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+	//    Define(pPs,   "Aerenchyma LogScale",0.,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",-5.,5.);
 	//pPs= new Ps(&Rob, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	//    Define(pPs,   "Ratio Root Len. to Depth",3.,UNIT_TYPES::NO_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,20.);
-	pPs= new Ps(&D_CH4_Aere, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	    Define(pPs,   "Diffusivity CH4 through Aerenchyma",0.1875,"cm2/s", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",0.,1.);
-	pPs= new Ps(&D_O2_Aere, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	    Define(pPs,   "Diffusivity O2 through Aerenchyma",0.1759,"cm2/s", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",0.,1.);
+	//pPs= new Ps(&D_CH4_Aere, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+	//    Define(pPs,   "Diffusivity CH4 through Aerenchyma",0.1875,"cm2/s", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",0.,1.);
+	//pPs= new Ps(&D_O2_Aere, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+	//   Define(pPs,   "Diffusivity O2 through Aerenchyma",0.1759,"cm2/s", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0",0.,1.);
     //pPs= new Ps(&LAI_Aere, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 	//    Define(pPs,   "Aerenchyma LAI",4.,"cm2/cm2", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",0.,10.);
+
+		pPs = new Ps(&Oxic_SoilType, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Soil Oxic Type", 1., "-", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 0., 1.);
+		pPs = new Ps(&COS_CONC_Atm, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Air Conc", 500., "ppt", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 0., 1000.);
+		pPs = new Ps(&COS_InitConc, datatype::ALLPLANTS,elements::COS, fysprocess::STORAGE,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS init Conc", 0., "ug/m3", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 1.E-03, 5.E6);
+		pPs = new Ps(&Diff_COSLogScale, datatype::SIMPROFILE,elements::COS, fysprocess::STORAGE,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Diffusion LogScale", 0., "-", "Nitrogen and Carbon >=1|COS SoilModel==2", -5., 5.); 
+		pPs = new Ps(&Diff_COSAirLogScale, datatype::SIMPROFILE,elements::COS, fysprocess::STORAGE,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS AirDiffusion LogScale", 0., "-", "Nitrogen and Carbon >=1|COS SoilModel==2", -5., 5.);
+		pPs = new Ps(&Henry_alpha, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Henry's law alpha", -20., "-", "Nitrogen and Carbon >= 1|COS SoilModel == 2", -25., -15.);
+		pPs = new Ps(&Henry_beta, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Henry's law beta", 4050., "-", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 3500., 4500.);
+		pPs = new Ps(&COSProd_max, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Prod. Capacity", 103.68, "ug/m3/day", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 10., 1.e3);
+		pPs = new Ps(&COS_ProdQ10, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Prod. Q10", 1.9, "-", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 0.5, 4.);
+		pPs = new Ps(&COS_ProdTref, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Prod. Tref", 25, UNIT_TYPES::TEMP_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel >= 2", 10., 35.);
+		pPs = new Ps(&COS_ProdTbase, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Prod. Tbase", 5, "-", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 1., 10.);
+		pPs = new Ps(&COS_HalfRateUptConstant, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS HalfRate Uptake", 23.e6, "ug/m3", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 1.e6, 5.E7);
+		pPs = new Ps(&Theta_factor, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Moisture limitation factor", 11.56, "-", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 5., 20.);
+		pPs = new Ps(&G_cat, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Activation free energy", 84.10e3, UNIT_TYPES::ENERGY_MOLE, "Nitrogen and Carbon >= 1|COS SoilModel == 2", 5.1e4, 8.8e4);
+		pPs = new Ps(&H_eq, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Enthalpy change", 358.9e3, UNIT_TYPES::ENERGY_MOLE, "Nitrogen and Carbon >= 1|COS SoilModel == 2", 8.6e4, 8.26e5);
+		pPs = new Ps(&T_eq, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Temp. Equal", 293.14, "K", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 280., 300.);
+		pPs = new Ps(&Theta_opt, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Opt. moisture content", 0.20, UNIT_TYPES::VOLUME_RATIO_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel == 2", 0.05, 0.5);
+		pPs = new Ps(&COS_ResistanceAirLogScale, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS AirResistance LogScale", 0., "-", "Nitrogen and Carbon >= 1|COS SoilModel == 2", -5., 5.);
+		pPs = new Ps(&Litter_Thickness, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Litter Thickness", 0.02, UNIT_TYPES::LENGTH_UNIT, "Nitrogen and Carbon >= 1|COS SoilModel == 2", 0., 0.1);
+		pPs = new Ps(&LitterCOSProd_max, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Litter Prod. Capacity", 13.79, "ug/m3/day", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 1.e-6, 1.e-4);
+		pPs = new Ps(&LitterCOSUpt_max, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Litter Upt. Capacity", 1741.82, "g/m3/day", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 100., 1.e4);
+		pPs = new Ps(&COSOxic_max, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Oxic Capacity", 103680., "g/m3/day", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 1.e4, 1.e6);
+		pPs = new Ps(&COS_AnoxicRef, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Anoxic Ref.", 10.368, "ug/m2/day", "Nitrogen and Carbon >= 1|COS SoilModel == 2", 1., 1.e2);
+		pPs = new Ps(&COSProdAlpha, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Prod. base", 4.86, "pmol/m3/s", "Nitrogen and Carbon >= 1|COS SoilModel == 3", 3., 8.);
+		pPs = new Ps(&COSProdBeta, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "COS Prod. exponent", 0.1011, "-", "Nitrogen and Carbon >= 1|COS SoilModel == 3", 0.05, 0.2);
+		pPs = new Ps(&pKw, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Dissociation const. of water", 14.0, "-", "Nitrogen and Carbon >= 1|COS SoilModel == 3", 5., 25.);
+		pPs = new Ps(&fCA, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "CA enhancement factor", 32000., "-", "Nitrogen and Carbon >= 1|COS SoilModel == 3", 2.e4, 3.5e5);
+		pPs = new Ps(&DHa, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "DHa", 4.E4, UNIT_TYPES::ENERGY_MOLE, "Nitrogen and Carbon >= 1|COS SoilModel == 3", 2.e4, 5.e4);
+		pPs = new Ps(&DHd, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "DHd", 2.E5, UNIT_TYPES::ENERGY_MOLE, "Nitrogen and Carbon >= 1|COS SoilModel == 3", 1.e5, 3.e5);
+		pPs = new Ps(&DSd, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "DSd", 660., "J/mol/K", "Nitrogen and Carbon >= 1|COS SoilModel == 3", 300., 800.);
+		pPs = new Ps(&Z_max, datatype::ALLPLANTS,elements::COS,fysprocess::NOFPROC,bioprocess::COS_TRANSPORT,userlevel::NORMAL);
+		Define(pPs, "Z max", 0.1, "m", "Nitrogen and Carbon >= 1|COS SoilModel == 3", 0.01, 0.2);
+
+
 
 	pPs = new Ps(&COS_TranspirationRatio, datatype::ALLPLANTS, elements::COS, fysprocess::NOFPROC, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
 	  Define(pPs, "COS Transpiration Ratio", 15., UNIT_TYPES::MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS PlantModel >= 1", 1.E-03, 1.E3);
@@ -530,13 +675,29 @@ plotpar.LegendsVec.clear();
 	  Define(pPs, "COS Soil Respiration Ratio", 1.6, UNIT_TYPES::MIKRO_MASS_RATIO, "Nitrogen and Carbon >= 1|COS Model >= 1", 1.E-03, 1.E3);
 ;
 ;	initv.assign(pSoil->NL,0.);
-	pG= new G(&CH4_CONC_AIR,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL); 
-	    Define(pG, pNL,   "CH4 air concentration",initv,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+	pG = new G(&CH4_CONC_AIR, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pG, pNL, "CH4 air concentration", initv, UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+	pG = new G(&CO2_CONC_AIR, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pG, pNL, "CO2 air concentration", initv, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+	initv.assign(pSoil->NL, 0.);
+	pG = new G(&O2_CONC_AIR, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+		Define(pG, pNL, "O2 air concentration", initv, UNIT_TYPES::VOLPERCENTAGE_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+	pG = new G(&COS_CONC_AIR, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pG, pNL, "COS air concentration", initv, "ug/m3", "Nitrogen and Carbon >= 1|COS SoilModel == 2");
+	pG = new G(&COS_Conc_Water, pNL, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+		Define(pG, pNL, "COS water conc", initv, "ug/m3", "Nitrogen and Carbon >= 1|COS SoilModel == 2");
 ;
     //initv.assign(pSoil->NL, 0.);
     //pG = new G(&CH4_Conc, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
     //    Define(pG, pNL, "CH4 concentration", initv, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
 //;
+
+
+
+
+
+
+
 	pGs = new Gs(&CH4_TotSoilStorage, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_PRODUCTION, userlevel::NORMAL);
 	Define(pGs, "CH4 total soil Storage", 0.0, UNIT_TYPES::MASSFLOW_UNIT, "Methane Model>0");
 
@@ -552,6 +713,8 @@ plotpar.LegendsVec.clear();
 	    Define(pGs,     "CH4 total Plant Oxidation", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Methane Model>0")  ;
 	pGs = new Gs(&CH4_TotSoilOxidation, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_OXIDATION, userlevel::NORMAL);
 		Define(pGs, "CH4 total Soil Oxidation", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Methane Model>0");
+	pGs = new Gs(&CH4_TotEbullition, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_OXIDATION, userlevel::NORMAL);
+		Define(pGs, "CH4 total Ebullition", 0.0, UNIT_TYPES::MASSFLOW_UNIT, "Methane Model>0");
 
 		
 		;
@@ -576,11 +739,26 @@ plotpar.LegendsVec.clear();
  //;
    	pGs= new Gs(&CH4_TotSysFlux, datatype::TOTPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL); 
 	Define(pGs,     "Methane ecosystem flux", 0.0,UNIT_TYPES::MASSFLOW_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0|Methane Model>0")  ;
+	pGs = new Gs(&COS_TotSoilStorage, datatype::SIMPROFILE, elements::COS, fysprocess::STORAGE, bioprocess::COS_TRANSPORT, userlevel::NORMAL);
+	Define(pGs, "COS total soil Storage", 0.0, UNIT_TYPES::MIKRO_MASS_FLOW_UNIT, "Nitrogen and Carbon > 0|COS Model>1");
 ;
+
+
 
 	pG= new G(&CH4_Conc_Water,pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL); 
 	initv.assign(pSoil->NL,0.);
     Define(pG, pNL ,"CH4 water conc",initv,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+
+	pG = new G(&CO2_Conc_Water, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess:: METHANE_TRANSPORT, userlevel::NORMAL);
+	initv.assign(pSoil->NL, 0.);
+	Define(pG, pNL, "CO2 water conc", initv, UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+	pG = new G(&Oxygen_Conc_Water, pNL, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
+	initv.assign(pSoil->NL, 0.);
+	Define(pG, pNL, "O2 water conc", initv, UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions > 0");
+
+
+
+
 
 ; initv.assign(pSoil->NL, .1);
 	pX = new X(&CO2Soil, pNL, datatype::SIMPROFILE, elements::SOILCO2, fysprocess::STORAGE, bioprocess::RESPIRATION, userlevel::NORMAL);

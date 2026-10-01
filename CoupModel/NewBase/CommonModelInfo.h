@@ -200,7 +200,8 @@ private:
 		"\xB5mol/m\xB2/d","m\xB2/d","m\xB2/s","cm\xB2/s","gm\xB2","PPM", "yr", "%", "d", "J/mol",//39
 		"mg/l","\xB5g/l","-","1/d","d/mm","dm\xB2/g","g/g","m\xB3/m\xB3",//47
 		"\xB5g/\xB5g","xB5g/m\xB2/d","\xB5g/d","min","rad","W/m/\xB0""C","1/m\xB2","DOY",//55
-		"1/\xB0""C","Vol %"};
+		"1/\xB0""C","Vol %", "\xB5gC/m\xB2",
+	"\xB5gC/m\xB2/d"};
 
 	std::map <std::string_view, size_t> m_ModelTypeNoMap, m_GroupNoMap;
 	std::map < size_t,std::string_view> m_GroupCategoryNo;

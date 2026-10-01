@@ -89,7 +89,8 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 			if (m_pPG_Active->Is_LatLong_FieldSensitive())
 				m_Label.st = FUtil::STD_DtoAscii(m_pPG_Active->GetVarLat(p_info.PGFileIndex, repit)) + "N " + FUtil::STD_DtoAscii(m_pPG_Active->GetVarLong(p_info.PGFileIndex, repit)) + "E";
 			else
-				m_Label.st = "("+FUtil::STD_ItoAscii(repit)+")";
+				m_Label.st = m_pPG_Active->GetVarId(p_info.PGFileIndex, repit);
+				if(m_Label.st=="") m_Label.st="("+FUtil::STD_ItoAscii(repit) + ")";
 		}
 		else {
 			repit = 0;
@@ -149,10 +150,18 @@ bool DrawVariableLegends::FindIdForVariablesToPlot(int Index_In_PlotArray, PLOTv
 			if (p_info.EnsembleType == ENSEMBLE_TYPE::NO) {
 				if(m_Label.st.size()==0) m_Label.st += FUtil::STD_ItoAscii(m_pSimDoc->m_PlotStorage.GetPGRepitNo(Index_In_PlotArray) + 1) + "(" + FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
 			}
-			else if (SelBand || p_info.EnsembleType == ENSEMBLE_TYPE::ACCEPTED)
-				m_Label.st += " Mean of Accepted " + FUtil::STD_ItoAscii(int(m_pSimDoc->m_MStorage.GetNumAccepted())) + "(" + FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
-			else
-				m_Label.st += " Mean of All (" +  FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
+			else if (SelBand || p_info.EnsembleType == ENSEMBLE_TYPE::ACCEPTED) {
+				if (p_info.EnsembleNo < m_pSimDoc->m_MStorage.m_AcceptedIdString.size()) 
+					m_Label.st = m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
+				else
+					m_Label.st += " Mean of Accepted " + FUtil::STD_ItoAscii(int(m_pSimDoc->m_MStorage.GetNumAccepted())) + "(" + FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
+			}
+			else if(p_info.EnsembleType != ENSEMBLE_TYPE::ACCEPTED) {
+				if (p_info.EnsembleNo < m_pSimDoc->m_MStorage.m_AcceptedIdString.size())
+					m_Label.st = m_pSimDoc->m_MStorage.m_AcceptedIdString[p_info.EnsembleNo];
+				else 
+					m_Label.st += " Mean of All (" + FUtil::STD_ItoAscii(m_pSimDoc->MR_Get_TotalNumberofRuns()) + ")";
+			}
 			FUtil::trim(m_Label.st);
 		}
 		break;

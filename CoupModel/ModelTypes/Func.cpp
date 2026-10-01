@@ -849,7 +849,7 @@ std::function<pair<double, double>(size_t, double, double, double)> Func::Get_Pa
 }
 
 
-MyArgType Func::GetArgumentTypes()
+MyArgType Func::GetArgumentTypes() const
 {
 	return 	m_FunctorProp.Arg;
 }

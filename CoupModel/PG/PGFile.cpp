@@ -1667,8 +1667,8 @@ bool CPGFile::CheckDescriptors() {
 			auto index = ivar + nrep * pg.Shape.NumVar;
 			if (pg.Des.base.Id[index] != IdField) m_IdField_Sensitive = true;
 			if (pg.Des.addinfo.size() >= index) {
-				if (lat != pg.Des.addinfo[index].Lat)  m_LatLong_FieldSensitive = true;
-				if (longi != pg.Des.addinfo[index].Long)  m_LatLong_FieldSensitive = true;
+				if (lat != pg.Des.addinfo[index].Lat&&lat>0.)  m_LatLong_FieldSensitive = true;
+				if (longi != pg.Des.addinfo[index].Long&&longi>0.)  m_LatLong_FieldSensitive = true;
 			}
 		}
 

@@ -69,7 +69,7 @@ class MultiStorageData
 public:
 	MultiStorageData();
 	virtual ~MultiStorageData();
-	void SetCyclicNumbers(size_t CycleLength, size_t CycleStartPos = 0, size_t Dim1Value=0) { m_CyclicNumber = CycleLength; m_CyclicStartPos = CycleStartPos; m_Dim1Value = Dim1Value; };
+	void SetCyclicNumbers(size_t CycleLength, size_t CycleStartPos = 0, size_t Dim1Value=0) { m_CyclicNumber = CycleLength; if(CycleStartPos<m_CyclicNumber) m_CyclicStartPos = CycleStartPos; m_Dim1Value = Dim1Value; };
 	void UpdateCyclicNumbers(size_t ActualEnsemble, size_t Dim1_Value= std::string::npos, size_t Transform_Index= std::string::npos);
 
 	

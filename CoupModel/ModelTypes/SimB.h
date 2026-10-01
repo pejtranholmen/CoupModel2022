@@ -24,66 +24,176 @@
 #include <cmath>
 
 namespace Fix {
+
+	// ============================================================
+	// Physical constants
+	// ============================================================
+
 	constexpr double DENSW = 1000.;
 	constexpr double DENSICE = 917.;
 	constexpr double LATMELT = 3.34E5;
 	constexpr double LATE = 2.45E6;
 	constexpr double LATESUB = 2.84E6;
 	constexpr double DENSA = 1.220;
+
 	constexpr double KARMAN = 0.41;
+
 	constexpr double SPECA = 1004.;
 	constexpr double SPECI = 2.1E3;
 	constexpr double SPECW = 4.2E3;
+
 	constexpr double GAMMA = 66.;
 	constexpr double STEFB = 5.67E-8;
 	constexpr double SOLAR_CONST = 1361.;
+
 	constexpr double SECPERDAY = 86400.;
 	constexpr double GRAVCONST = 9.80665;
+
 	constexpr double RGAS = 8.314;
 	constexpr double RGAS_L_ATM_K = 0.082057;
-	constexpr double DNOT = 2.29E-5;
-	constexpr double MOLW = 18.016;
-	constexpr double RGASC = 47.04;
+	static constexpr double RGASC = 47.04;//
+
 	constexpr double PI = 3.1415927;
 	constexpr double LOG_PI = 0.918939;
 	constexpr double RAD = 0.01745329;
+
+
+	// ============================================================
+	// Soil
+	// ============================================================
+
 	constexpr double DensityofSolidSoil = 2.65;
 	constexpr double HeatCapSolidSoil = 2.E6;
 	constexpr double TempCompFrozenSoil = -6.;
+
 	constexpr double MolMassSalt = 35.4527;
+
 	constexpr double PatoCmWater = 0.1 / 9.80665;
+
 	constexpr double BiomassToCarbon = 0.45;
+
+
+	// ============================================================
+	// Molecular diffusion coefficients in air [m2/s]
+	// ============================================================
+
+	constexpr double DNOT = 2.29E-5;
+
 	constexpr double DNOT_O2 = 2.6E-5;
 	constexpr double DNOT_CO2 = 1.92E-5;
 	constexpr double DNOT_CH4 = 2.6E-5;
+	constexpr double DNOT_COS = 1.24E-5;
+
+
+	// ============================================================
+	// Molecular masses [g/mol]
+	// ============================================================
+
+	constexpr double MOLW = 18.016;
+
 	constexpr double MOL_C = 12.011;
 	constexpr double MOL_CH4 = 16.011;
 	constexpr double MOL_NO = 30.061;
 	constexpr double MOL_CO2 = 44.0098;
 	constexpr double MOL_O2 = 31.998;
+
+	// Added for COS transport
+	constexpr double MOL_COS = 60.075;
+
 	constexpr double MOL_AIR = 29.0;
-	constexpr double MOL_RATIO_O2_C = 2.664058;
+
+
+	// ============================================================
+	// Carbon mass conversions
+	//
+	// New NC_GasFlux convention:
+	// CH4, CO2 and COS pools/fluxes are expressed as carbon mass.
+	//
+	// GAS_TO_C:
+	//      g gas -> g C
+	//
+	// C_TO_GAS:
+	//      g C -> g gas
+	// ============================================================
+
+	constexpr double CH4_TO_C = MOL_C / MOL_CH4;
+	constexpr double CO2_TO_C = MOL_C / MOL_CO2;
+	constexpr double COS_TO_C = MOL_C / MOL_COS;
+
+	constexpr double C_TO_CH4 = MOL_CH4 / MOL_C;
+	constexpr double C_TO_CO2 = MOL_CO2 / MOL_C;
+	constexpr double C_TO_COS = MOL_COS / MOL_C;
+
+
+	// ============================================================
+	// Existing molecular mass ratios
+	// ============================================================
+
+	constexpr double MOL_RATIO_O2_C =
+		MOL_O2 / MOL_C;
+
 	constexpr double MOL_RATIO_O2_AIR = 1.10;
-	constexpr double MOL_RATIO_NO_AIR = MOL_NO / MOL_AIR;
-	constexpr double MOL_RATIO_CO2_AIR = MOL_CO2 / MOL_AIR;
-	constexpr double MOL_VOL_AIR = 44.6;
-	constexpr double ABS_ZERO = 273.15;
-	constexpr double NORM_ATMPRES = 1.013E5;
-	constexpr double PO2 = 20.5E3;
+
+	constexpr double MOL_RATIO_NO_AIR =
+		MOL_NO / MOL_AIR;
+
+	constexpr double MOL_RATIO_CO2_AIR =
+		MOL_CO2 / MOL_AIR;
+
 	constexpr double MOL_RATIO_CH4_AIR = 0.552;
+	constexpr double MOL_RATIO_COS_AIR = MOL_COS / MOL_AIR;
+
+	constexpr double MOL_VOL_AIR = 44.6;
+
+
+	// ============================================================
+	// Temperature / atmospheric constants
+	// ============================================================
+
+	constexpr double ABS_ZERO = 273.15;
+
+	constexpr double NORM_ATMPRES = 1.013E5;
+
+	constexpr double PO2 = 20.5E3;
+
+
+	// ============================================================
+	// Thermal properties
+	// ============================================================
+
 	constexpr double TempToOsmoticP = -8.19E-5;
+
 	constexpr double ThermalCond_Air = 0.025;
 	constexpr double ThermalCond_Organic = 0.25;
 	constexpr double ThermalCond_Mineral = 2.5;
-	constexpr double ThermalCond_Quarts = 8;
+	constexpr double ThermalCond_Quarts = 8.;
 	constexpr double ThermalCond_Water = 0.57;
 	constexpr double ThermalCond_Ice = 2.21;
-	constexpr double GWP_C_CO2 = 3.6666 * 1. * 3.6525;
-	constexpr double GWP_C_CH4 = 1.3333 * 28. * 1. * 3.6525;
-	constexpr double GWP_N_N2O = 1.5714 * 265. * 1. * 3.6525;
+
+
+	// ============================================================
+	// Global warming potential factors
+	// ============================================================
+
+	constexpr double GWP_C_CO2 =
+		3.6666 * 1. * 3.6525;
+
+	constexpr double GWP_C_CH4 =
+		1.3333 * 28. * 1. * 3.6525;
+
+	constexpr double GWP_N_N2O =
+		1.5714 * 265. * 1. * 3.6525;
+
+
+	// ============================================================
+	// General conversion constants
+	// ============================================================
+
 	constexpr double PERCENT_FRAC = 100.;
 	constexpr double PPM_FRAC = 1.E6;
+	constexpr double PPT_FRAC = 1.E12;
 	constexpr double KILO = 1000.;
+
 }
 
 struct OUTPUT_SUMMARY_RESULTS
@@ -167,7 +277,7 @@ enum class UNIT_TYPES {
 	MIKRO_MOL_SEC_RATE, AREA_PER_TIME_UNIT, AREA_PER_SEC_TIME_UNIT, CM_AREA_PER_SEC_TIME_UNIT, GAS_MASS_UNIT, PPM_CONC_UNIT, YEAR_AGE_UNIT, PERCENTAGE, TIME_UNIT, ENERGY_MOLE,//39
 	mMASS_LITER_UNIT, mikro_MASS_LITER_UNIT, NO_UNIT, RATECOEF_UNIT, INVERSE_WATERFLOW_UNIT, INVERSE_SQUARED_FLUX_PER_VOLUME, MASS_RATIO_UNIT, VOLUME_RATIO_UNIT,//47
 	MIKRO_MASS_RATIO, MIKRO_MASS_FLOW_UNIT, MIKRO_MASS_RATE, TIME_MINUTE_UNIT, ANGLE_UNIT, THERMAL_CONDUCTIVY_UNIT, INVERSE_AREA_UNIT, DAYOFYEAR_UNIT,//55
-	INVERSE_TEMP_UNIT, WATERCONTENT_UNIT, COUNT //58
+	INVERSE_TEMP_UNIT, WATERCONTENT_UNIT, MIKRO_CARBON_MASS_UNIT, MIKRO_CARBON_FLOW_UNIT, COUNT //58
 
 };
 struct DEPTH_type {

@@ -2221,6 +2221,7 @@ vector<size_t> MR::ActualRepetitionInMeasFile(size_t ensembleno, CPG* pPGMeas, s
 	}
 	size_t pg_filter_index = m_Val_Array[index_val].PG_FilterIndex;
 	auto numrep = pPGMeas->GetNumRepititions();
+	auto koll=pPGMeas->SetRepititionSequence(0);
 
 	size_t valid_Value;
 	for (size_t i = 0; i < numrep; i++) {

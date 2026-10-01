@@ -305,6 +305,7 @@ bool NC_Plant::Ini()	{
 		DormingStartDayNum.assign(pPlant->NumPlants, 0.0);
 		RemovedCompAtHarvest.assign(pPlant->NumPlants, false);
 		Grain_Develop_Done.assign(pPlant->NumPlants, false);
+		NRootUptake.assign(pPlant->NumPlants, 0.0);//HH initi
 		PreviousThinningYear = 0;
 		ICountHarvestCycle = 1;
 		m_pModelInfo->StartStateValue = false;
@@ -316,7 +317,7 @@ bool NC_Plant::Ini()	{
 		if (m_pModelStructure->StartWithPrevious == 1) m_pModelInfo->StartStateValue = true;
 
 		if (!m_pModelInfo->StartStateValue) {
-
+			
 			TotalPlantLitterFall->assign(m_pModelStructure->m_NumActPlantElements,0.);
 
 			AccNPP_Plant.assign(pPlant->NumPlants, 0.0);
@@ -435,7 +436,7 @@ bool NC_Plant::Ini()	{
 			}
 		} // StartValues
 		else {
-			NRootUptake.assign(pPlant->NumPlants, 0.0);//HH initi
+		
 			if (m_pModelStructure->Phosphorus_Model > 0) PRootUptake.assign(pPlant->NumPlants, 0.0);//HH P initi
 
 			for (size_t jj = 0; jj < m_pModelStructure->m_NumActPlantElements; jj++) {

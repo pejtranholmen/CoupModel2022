@@ -408,6 +408,7 @@
     <ClInclude Include="CUG\ugxpthemes.h" />
     <ClInclude Include="CUG\utbstrop.h" />
     <ClInclude Include="CUG\UTMaskedEdit.h" />
+    <ClInclude Include="NewBase\FuncMetaExporter.h" />
     <ClInclude Include="MultiRun\ConStrainByInput.h" />
     <ClInclude Include="MultiRun\DimNewValue.h" />
     <ClInclude Include="MultiRun\MultiRun.h" />
@@ -807,6 +808,7 @@
     <ClCompile Include="CUG\ugvscrol.cpp" />
     <ClCompile Include="CUG\UGXPThemes.cpp" />
     <ClCompile Include="CUG\UTBStrOp.cpp" />
+    <ClCompile Include="NewBase\FuncMetaExporter.cpp" />
     <ClCompile Include="MultiRun\ConStrainByInput.cpp" />
     <ClCompile Include="MultiRun\DimNewValue.cpp" />
     <ClCompile Include="MultiRun\MultiRun.cpp" />

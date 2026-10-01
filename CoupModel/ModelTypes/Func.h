@@ -72,12 +72,12 @@ public:
 
 
 
-    enum MyArgType GetArgumentTypes();
-	bool IsTableType() { return m_TableType; };
+    enum MyArgType	GetArgumentTypes() const;
+	bool IsTableType() const { return m_TableType; };
 
 
 
-	PLOT_PARAM GetPlotParam() {return m_PlotParam;};
+	PLOT_PARAM GetPlotParam() const {return m_PlotParam;};
 	Hydraulic* Get_PointerHydraulic() { return m_FunctorProp.pHyd; };
 	MyFunc Get_FunctorName() { return m_FunctorProp.FuncName; };
 
@@ -91,11 +91,11 @@ public:
 	void   SetFunctor(std::function<bool(bool)> functor) { m_D1Functor= functor; };
 	bool   MakeBool();
 	bool m_FunctorFunctions;
-	std::vector<std::string> GetParDep_Ps_Names() { std::vector<std::string> out; 
+	std::vector<std::string> GetParDep_Ps_Names() const { std::vector<std::string> out; 
 		for (size_t i = 0; i < m_Ps_Vector.size(); i++) out.push_back(((SimB*)m_Ps_Vector[i])->GetName());
 		return out;
 	};
-	std::vector<std::string> GetParDep_P_Names() {
+	std::vector<std::string> GetParDep_P_Names()const  {
 		std::vector<std::string> out;
 		for (size_t i = 0; i<m_P_vector.size(); i++) out.push_back(((SimB*)m_P_vector[i])->GetName());
 		return out;

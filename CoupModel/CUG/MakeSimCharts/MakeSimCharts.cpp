@@ -979,22 +979,6 @@ void MakeSimCharts::TimeSerieChartClick(long col, long row, long isheet, SimB *P
 
 						for(int ii=0;ii<m_pSimDoc->m_SelectValTime.size();ii++) {
 
-						/*	if (col == 4) { // To check if Mean value is calculated
-								GetCell(4, row, &cell);
-								if (cell.GetBool() == false) {
-									cell.SetBool(FALSE);
-									SetCell(4, row, &cell);
-									return;
-								}
-									size_t FileNo = m_pSimDoc->m_ValidationData.GetValFileNumber(row);
-									CResiduals* pRes = m_pSimDoc->GetValidResidualPointer(FileNo);
-									if (!pRes->EnableEstimatesMade()) {
-										MFC_Util::MessageBox("Error Please right click and select option to estimated mean value");
-										m_pSimDoc->m_SelectValTime.clear();
-										OnSheetSetup(6);
-										return;			// Return without plot if not estimated					
-									}
-							}*/
 							vector<size_t> EnsemblesToPlot;
 							
 							

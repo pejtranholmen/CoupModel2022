@@ -372,7 +372,7 @@ vector<double> AlloCoarseRoots;
 vector<double> C3Type, Vcmax, QEff, RBoundary, VascularType, Hmoss;
 double P_ATheta, P_BTheta, P_Surface, CO2_A, PCO2_Boundary;
 
-double COS_A, PCOS_Boundary, Alpha_COS; // Mousong 
+double COS_A, PCOS_Boundary, Alpha_COS, coscas; // Mousong 
 
 vector<double> PCO2_Internal, PCO2_Surface ;
 vector<double> PCOS_Internal, PCOS_Surface;

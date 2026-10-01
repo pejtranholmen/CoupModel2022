@@ -1473,6 +1473,9 @@
     <ClInclude Include="MultiRun\DimNewValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NewBase\FuncMetaExporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoupModel.cpp">
@@ -2502,6 +2505,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MultiRun\DimNewValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewBase\FuncMetaExporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

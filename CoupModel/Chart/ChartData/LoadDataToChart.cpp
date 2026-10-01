@@ -174,6 +174,7 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 			m_pPG_Active = p_info.pPG;
 			c_info.pPG1= p_info.pPG;
 			c_info.MeasuredAsSource = false;
+			if (p_info.RepitDataType) m_ChartInfo.PGRepitMode = true;
 
 		}
 		else if (p_info.DataType == DATA_TYPES::SIM_T|| p_info.DataType == DATA_TYPES::SIM_G||
@@ -182,6 +183,7 @@ bool LoadDataToChart::LoadTimeSerieData(bool ForcedNewChartType)
 			m_pPG_Active = p_info.pPG;
 			c_info.pPG1 = p_info.pPG;
 			c_info.MeasuredAsSource = false;
+			if (p_info.RepitDataType) m_ChartInfo.PGRepitMode = true;
 
 		}
 		else if (p_info.DataType == DATA_TYPES::MEASURED_VAL) {
@@ -1067,6 +1069,7 @@ bool LoadDataToChart::LoadSelectedVariables(int j, size_t icurve, size_t i_band,
 {
 
 	Doc *pDocAct;
+	if (j < 0) return false;
 	auto datatype = m_pSimDoc->m_PlotStorage.GetDataType(j);
 	int IndexVal = m_pSimDoc->m_PlotStorage.GetValVarNo(j);
 	int SectionNo = m_pSimDoc->m_PlotStorage.GetPGSectionNo(j);
