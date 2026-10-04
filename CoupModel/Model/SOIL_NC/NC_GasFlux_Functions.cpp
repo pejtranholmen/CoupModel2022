@@ -577,7 +577,7 @@ plotpar.LegendsVec.clear();
 		Define(pPs, "CO2 Air Conc", 30., UNIT_TYPES::PPM_CONC_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Soil CO2Model>0", 2.E-04, 7.E-04);
 		 //wenxin
 	pPs= new Ps(&CH4_InitConc, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
-	    Define(pPs,   "CH4 init Conc",200.,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",1.E-02,5.E3);
+	    Define(pPs,   "CH4 init Conc",2.,UNIT_TYPES::mMASS_LITER_UNIT, "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0",1.E-02,5.E3);
 		pPs = new Ps(&AereScale_CH4, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
 		Define(pPs, "CH4 Aerenchyma LogScale", 0., "-", "Nitrogen and Carbon >= 1|Trace Gas Emissions >= 1|Methane Model>0|Methane emission by aerenchyma>0", -5., 5.);
 		pPs = new Ps(&AereScale_O2, datatype::SIMPROFILE, elements::METHANE, fysprocess::STORAGE, bioprocess::METHANE_TRANSPORT, userlevel::NORMAL);
